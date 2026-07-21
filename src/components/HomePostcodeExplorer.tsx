@@ -4,8 +4,8 @@ import {
   useDeferredValue,
   useEffect,
   useMemo,
+  useRef,
   useState,
-  useTransition,
 } from "react";
 import dynamic from "next/dynamic";
 import type { SchoolRecord } from "@/lib/types";
@@ -36,6 +36,11 @@ const NearbyMap = dynamic(
 
 const RADIUS_OPTIONS_KM = [1, 2, 3, 5, 8, 10] as const;
 
+/** Allow denser rings to surface more schools as the range widens. */
+function listLimitForRadius(radiusKm: number): number {
+  return Math.min(120, Math.max(40, Math.round(radiusKm * 14)));
+}
+
 export function HomePostcodeExplorer({
   schools,
   selectedUrns,
@@ -61,8 +66,11 @@ export function HomePostcodeExplorer({
   const [radiusKm, setRadiusKm] = useState<number>(3);
   const [error, setError] = useState<string | null>(null);
   const [lookingUp, setLookingUp] = useState(false);
-  const [nearby, setNearby] = useState<NearbySchool[]>([]);
-  const [roadsPending, startRoads] = useTransition();
+  const [roadByUrn, setRoadByUrn] = useState<
+    Record<string, { metres: number | null; minutes: number | null }>
+  >({});
+  const [roadsPending, setRoadsPending] = useState(false);
+  const roadRequestId = useRef(0);
   const deferredRaw = useDeferredValue(rawPostcode);
 
   const parsedPreview = useMemo(
@@ -93,7 +101,6 @@ export function HomePostcodeExplorer({
     if (!normalised) {
       setError("Enter a full UK postcode (for example SO40 2HR or so402hr).");
       setHome(null);
-      setNearby([]);
       return;
     }
     setLookingUp(true);
@@ -103,7 +110,6 @@ export function HomePostcodeExplorer({
       if (!geo) {
         setError(`No match for ${normalised}. Check the postcode and try again.`);
         setHome(null);
-        setNearby([]);
         return;
       }
       setRawPostcode(geo.postcode);
@@ -120,52 +126,82 @@ export function HomePostcodeExplorer({
     }
   }
 
-  useEffect(() => {
-    if (!home) {
-      setNearby([]);
-      return;
-    }
-    const straight = findNearbySchools(
+  const nearbyStraight = useMemo(() => {
+    if (!home) return [] as NearbySchool[];
+    return findNearbySchools(
       home,
       schools,
       radiusKm * 1000,
-      35,
+      listLimitForRadius(radiusKm),
       (school) => schoolMatchesPhases(school, stageFilter),
     );
-    setNearby(straight);
-
-    const withCoords = straight.filter(
-      (s) => s.latitude != null && s.longitude != null,
-    );
-    startRoads(() => {
-      void (async () => {
-        try {
-          const roads = await fetchRoadDistances(
-            { latitude: home.latitude, longitude: home.longitude },
-            withCoords.map((s) => ({
-              latitude: s.latitude as number,
-              longitude: s.longitude as number,
-            })),
-          );
-          setNearby((prev) =>
-            prev.map((school) => {
-              const idx = withCoords.findIndex((s) => s.urn === school.urn);
-              if (idx < 0) return school;
-              return {
-                ...school,
-                roadMetres: roads[idx]?.metres ?? null,
-                roadMinutes: roads[idx]?.minutes ?? null,
-              };
-            }),
-          );
-        } catch {
-          // Straight-line distances remain usable if routing fails.
-        }
-      })();
-    });
   }, [home, schools, radiusKm, stageFilter]);
 
+  const nearby = useMemo(
+    () =>
+      nearbyStraight.map((school) => {
+        const road = roadByUrn[school.urn];
+        if (!road) return school;
+        return {
+          ...school,
+          roadMetres: road.metres,
+          roadMinutes: road.minutes,
+        };
+      }),
+    [nearbyStraight, roadByUrn],
+  );
+
+  useEffect(() => {
+    if (!home || nearbyStraight.length === 0) {
+      setRoadByUrn({});
+      setRoadsPending(false);
+      return;
+    }
+
+    const requestId = ++roadRequestId.current;
+    setRoadsPending(true);
+    const withCoords = nearbyStraight.filter(
+      (s) => s.latitude != null && s.longitude != null,
+    );
+
+    void (async () => {
+      try {
+        const roads = await fetchRoadDistances(
+          { latitude: home.latitude, longitude: home.longitude },
+          withCoords.map((s) => ({
+            latitude: s.latitude as number,
+            longitude: s.longitude as number,
+          })),
+        );
+        if (requestId !== roadRequestId.current) return;
+        const next: Record<
+          string,
+          { metres: number | null; minutes: number | null }
+        > = {};
+        withCoords.forEach((school, idx) => {
+          next[school.urn] = {
+            metres: roads[idx]?.metres ?? null,
+            minutes: roads[idx]?.minutes ?? null,
+          };
+        });
+        setRoadByUrn(next);
+      } catch {
+        if (requestId !== roadRequestId.current) return;
+        setRoadByUrn({});
+      } finally {
+        if (requestId === roadRequestId.current) setRoadsPending(false);
+      }
+    })();
+  }, [home, nearbyStraight]);
+
   const atMax = selectedUrns.length >= max;
+
+  function handleRadiusChange(km: number) {
+    setRadiusKm(km);
+    // Drop stale road times immediately so the list reflects the new ring
+    // without waiting for the next OSRM response.
+    setRoadByUrn({});
+  }
 
   return (
     <>
@@ -263,7 +299,8 @@ export function HomePostcodeExplorer({
                   className={
                     km === radiusKm ? "radius-chip active" : "radius-chip"
                   }
-                  onClick={() => setRadiusKm(km)}
+                  aria-pressed={km === radiusKm}
+                  onClick={() => handleRadiusChange(km)}
                 >
                   {km} km
                 </button>
@@ -290,14 +327,17 @@ export function HomePostcodeExplorer({
                     {nearby.length} school{nearby.length === 1 ? "" : "s"} within{" "}
                     {radiusKm} km
                   </strong>
-                  <span>Tick to compare · road distance where available</span>
+                  <span>
+                    List updates with the range ring · tick to compare
+                  </span>
                 </div>
                 {nearby.length === 0 ? (
                   <p className="footnote" style={{ padding: "1rem" }}>
-                    No indexed schools in this ring. Try a wider range.
+                    No indexed schools in this ring. Try a wider range or another
+                    stage.
                   </p>
                 ) : (
-                  <ul>
+                  <ul key={`nearby-${radiusKm}-${stageFilter.join("-")}`}>
                     {nearby.map((school) => {
                       const checked = selectedUrns.includes(school.urn);
                       const disabled = !checked && atMax;

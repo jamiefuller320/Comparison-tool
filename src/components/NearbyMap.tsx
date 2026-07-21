@@ -58,8 +58,11 @@ export function NearbyMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layersRef = useRef<L.LayerGroup | null>(null);
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
 
   const selectedSet = useMemo(() => new Set(selectedUrns), [selectedUrns]);
+  const schoolKey = schools.map((s) => s.urn).join(",");
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -77,6 +80,9 @@ export function NearbyMap({
     layersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
+    // Ensure tiles/layout settle when the section first appears.
+    requestAnimationFrame(() => map.invalidateSize());
+
     return () => {
       map.remove();
       mapRef.current = null;
@@ -93,7 +99,7 @@ export function NearbyMap({
 
     layers.clearLayers();
 
-    L.circle([home.latitude, home.longitude], {
+    const ring = L.circle([home.latitude, home.longitude], {
       radius: radiusMetres,
       ...RING_STYLE,
     }).addTo(layers);
@@ -117,22 +123,25 @@ export function NearbyMap({
           `${school.rwmExpected != null ? `${school.rwmExpected}% RWM · ` : ""}` +
           `tap list to compare`,
       );
-      marker.on("click", () => onSelect(school.urn));
+      marker.on("click", () => onSelectRef.current(school.urn));
       marker.addTo(layers);
     }
 
-    const bounds = L.latLngBounds([
-      [home.latitude, home.longitude],
-      ...schools
-        .filter((s) => s.latitude != null && s.longitude != null)
-        .map((s) => [s.latitude as number, s.longitude as number] as [number, number]),
-    ]);
-    if (bounds.isValid()) {
-      map.fitBounds(bounds.pad(0.18), { animate: true, maxZoom: 13 });
-    } else {
-      map.setView([home.latitude, home.longitude], 12);
-    }
-  }, [home, schools, radiusMetres, selectedSet, focusUrn, onSelect]);
+    map.invalidateSize();
+    // Always frame the selected range ring so changing km visibly rescales.
+    map.fitBounds(ring.getBounds(), {
+      animate: true,
+      padding: [28, 28],
+      maxZoom: 15,
+    });
+  }, [home, schools, schoolKey, radiusMetres, selectedSet, focusUrn]);
 
-  return <div ref={containerRef} className="nearby-map" role="img" aria-label="Map of nearby schools" />;
+  return (
+    <div
+      ref={containerRef}
+      className="nearby-map"
+      role="img"
+      aria-label={`Map of schools within ${Math.round(radiusMetres / 1000)} kilometres`}
+    />
+  );
 }
