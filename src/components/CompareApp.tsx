@@ -5,9 +5,8 @@ import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 import { SchoolSearch } from "@/components/SchoolSearch";
 import { ComparisonBoard } from "@/components/ComparisonBoard";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
+import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
-
-const DEFAULT_URNS = ["116338", "116051", "116007"];
 
 export function CompareApp({ index }: { index: SchoolsIndex }) {
   const byUrn = useMemo(
@@ -15,30 +14,31 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
     [index.schools],
   );
 
-  const defaultUrns = DEFAULT_URNS.filter((urn) => byUrn.has(urn));
-  const [selected, setSelected] = useState<string[]>(
-    defaultUrns.length >= 2 ? defaultUrns.slice(0, 3) : [],
-  );
+  const [selected, setSelected] = useState<string[]>([]);
   const [pending, startTransition] = useTransition();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const raw = params.get("schools") || params.get("urns");
-    if (!raw) return;
-    const urns = raw
-      .split(",")
-      .map((u) => u.trim())
-      .filter((u) => byUrn.has(u))
-      .slice(0, 4);
-    if (urns.length) setSelected(urns);
+    if (raw) {
+      const urns = raw
+        .split(",")
+        .map((u) => u.trim())
+        .filter((u) => byUrn.has(u))
+        .slice(0, 4);
+      if (urns.length) setSelected(urns);
+    }
+    setHydrated(true);
   }, [byUrn]);
 
   useEffect(() => {
+    if (!hydrated) return;
     const url = new URL(window.location.href);
     if (selected.length) url.searchParams.set("schools", selected.join(","));
     else url.searchParams.delete("schools");
     window.history.replaceState({}, "", url.toString());
-  }, [selected]);
+  }, [selected, hydrated]);
 
   const selectedSchools: SchoolRecord[] = selected
     .map((urn) => byUrn.get(urn))
@@ -61,6 +61,16 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
     });
   }
 
+  function toggleSchool(urn: string) {
+    startTransition(() => {
+      setSelected((prev) => {
+        if (prev.includes(urn)) return prev.filter((u) => u !== urn);
+        if (prev.length >= 4) return prev;
+        return [...prev, urn];
+      });
+    });
+  }
+
   function removeSchool(urn: string) {
     startTransition(() => {
       setSelected((prev) => prev.filter((u) => u !== urn));
@@ -69,14 +79,19 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
 
   return (
     <>
+      <HomePostcodeExplorer
+        schools={index.schools}
+        selectedUrns={selected}
+        onToggle={toggleSchool}
+      />
+
       <section className="section" id="compare">
         <div className="shell">
           <div className="section-head">
             <h2>Build your shortlist</h2>
             <p>
               Search any English school with published Key Stage 2 results, then
-              compare up to four side by side. Figures are for parents weighing
-              a choice — not a governing-board briefing.
+              compare up to four side by side.
             </p>
             <div className="stats-line">
               <span>
@@ -89,6 +104,14 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
               <span>
                 Refreshed <strong>{index.generatedAt}</strong>
               </span>
+              {index.stats.withCoordinates != null ? (
+                <span>
+                  <strong>
+                    {index.stats.withCoordinates.toLocaleString("en-GB")}
+                  </strong>{" "}
+                  with map coordinates
+                </span>
+              ) : null}
             </div>
           </div>
 

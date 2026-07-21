@@ -9,16 +9,20 @@
     "build:pages": "GITHUB_PAGES=true next build",
     "start": "npx --yes serve out",
     "lint": "tsc --noEmit",
-    "harvest": "python3 scripts/harvest-schools.py",
-    "harvest:sample": "python3 scripts/harvest-schools.py --sample 40"
+    "harvest": "python3 scripts/harvest-schools.py && python3 scripts/enrich-geocode.py",
+    "harvest:sample": "python3 scripts/harvest-schools.py --sample 40 && python3 scripts/enrich-geocode.py",
+    "geocode": "python3 scripts/enrich-geocode.py",
+    "test:postcode": "npx --yes tsx scripts/test-postcode.mjs"
   },
   "dependencies": {
+    "leaflet": "^1.9.4",
     "next": "^16.2.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^3.9.2"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.21",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

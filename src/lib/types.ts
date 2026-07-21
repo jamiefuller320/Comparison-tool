@@ -49,6 +49,8 @@ export interface SchoolRecord extends SchoolMetrics {
   nonMobilePercent?: number | null;
   period?: string;
   compareUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface DirectorySchool {
@@ -84,6 +86,7 @@ export interface SchoolsIndex {
     schoolCount: number;
     withRwm: number;
     localAuthorityCount: number;
+    withCoordinates?: number;
   };
 }
 

@@ -21,6 +21,7 @@ export default function RootLayout({
               School<span>side</span>
             </a>
             <nav className="nav-links" aria-label="Primary">
+              <a href="#nearby">Near home</a>
               <a href="#compare">Compare</a>
               <a href="#how">How to read this</a>
               <a href="#data">Data</a>

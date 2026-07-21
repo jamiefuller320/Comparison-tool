@@ -17,7 +17,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Harvest national KS2 index
-        run: python3 scripts/harvest-schools.py
+        run: |
+          python3 scripts/harvest-schools.py
+          python3 scripts/enrich-geocode.py
       - name: Commit refreshed data
         run: |
           git config user.name "github-actions[bot]"

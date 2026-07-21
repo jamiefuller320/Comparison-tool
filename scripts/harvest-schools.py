@@ -526,6 +526,8 @@ LEAN_KEYS = [
     "girlsRwmExpected",
     "disadvantagedRwmExpected",
     "notDisadvantagedRwmExpected",
+    "latitude",
+    "longitude",
 ]
 
 
