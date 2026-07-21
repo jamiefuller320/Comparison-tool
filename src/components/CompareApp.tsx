@@ -5,9 +5,26 @@ import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 import { SchoolSearch } from "@/components/SchoolSearch";
 import { ComparisonBoard } from "@/components/ComparisonBoard";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
+import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
+import { PhaseSelector } from "@/components/PhaseSelector";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
+import {
+  DEFAULT_PHASES,
+  PHASE_OPTIONS,
+  type PhaseId,
+} from "@/lib/phases";
 
-const DEFAULT_URNS = ["116338", "116051", "116007"];
+function parseStagesParam(raw: string | null): PhaseId[] {
+  if (!raw) return DEFAULT_PHASES;
+  const allowed = new Set(PHASE_OPTIONS.map((o) => o.id));
+  const parsed = raw
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .map((s) => (s === "ey" ? "early-years" : s))
+    .map((s) => (s === "sec" ? "secondary" : s))
+    .filter((s): s is PhaseId => allowed.has(s as PhaseId));
+  return parsed.length ? parsed : DEFAULT_PHASES;
+}
 
 export function CompareApp({ index }: { index: SchoolsIndex }) {
   const byUrn = useMemo(
@@ -15,30 +32,34 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
     [index.schools],
   );
 
-  const defaultUrns = DEFAULT_URNS.filter((urn) => byUrn.has(urn));
-  const [selected, setSelected] = useState<string[]>(
-    defaultUrns.length >= 2 ? defaultUrns.slice(0, 3) : [],
-  );
+  const [selected, setSelected] = useState<string[]>([]);
+  const [stages, setStages] = useState<PhaseId[]>(DEFAULT_PHASES);
   const [pending, startTransition] = useTransition();
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const raw = params.get("schools") || params.get("urns");
-    if (!raw) return;
-    const urns = raw
-      .split(",")
-      .map((u) => u.trim())
-      .filter((u) => byUrn.has(u))
-      .slice(0, 4);
-    if (urns.length) setSelected(urns);
+    if (raw) {
+      const urns = raw
+        .split(",")
+        .map((u) => u.trim())
+        .filter((u) => byUrn.has(u))
+        .slice(0, 4);
+      if (urns.length) setSelected(urns);
+    }
+    setStages(parseStagesParam(params.get("stages") || params.get("phase")));
+    setHydrated(true);
   }, [byUrn]);
 
   useEffect(() => {
+    if (!hydrated) return;
     const url = new URL(window.location.href);
     if (selected.length) url.searchParams.set("schools", selected.join(","));
     else url.searchParams.delete("schools");
+    url.searchParams.set("stages", stages.join(","));
     window.history.replaceState({}, "", url.toString());
-  }, [selected]);
+  }, [selected, stages, hydrated]);
 
   const selectedSchools: SchoolRecord[] = selected
     .map((urn) => byUrn.get(urn))
@@ -47,15 +68,25 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
   const focus = selectedSchools[0];
   const suggestions = useMemo(() => {
     if (!focus) return [];
-    return suggestAlternatives(focus, index.schools, 6).filter(
+    return suggestAlternatives(focus, index.schools, 6, stages).filter(
       (s) => !selected.includes(s.urn),
     );
-  }, [focus, index.schools, selected]);
+  }, [focus, index.schools, selected, stages]);
 
   function addSchool(urn: string) {
     startTransition(() => {
       setSelected((prev) => {
         if (prev.includes(urn) || prev.length >= 4) return prev;
+        return [...prev, urn];
+      });
+    });
+  }
+
+  function toggleSchool(urn: string) {
+    startTransition(() => {
+      setSelected((prev) => {
+        if (prev.includes(urn)) return prev.filter((u) => u !== urn);
+        if (prev.length >= 4) return prev;
         return [...prev, urn];
       });
     });
@@ -67,16 +98,28 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
     });
   }
 
+  function changeStages(next: PhaseId[]) {
+    startTransition(() => setStages(next));
+  }
+
   return (
     <>
+      <HomePostcodeExplorer
+        schools={index.schools}
+        selectedUrns={selected}
+        onToggle={toggleSchool}
+        stageFilter={stages}
+        onStageFilterChange={changeStages}
+      />
+
       <section className="section" id="compare">
         <div className="shell">
           <div className="section-head">
             <h2>Build your shortlist</h2>
             <p>
-              Search any English school with published Key Stage 2 results, then
-              compare up to four side by side. Figures are for parents weighing
-              a choice — not a governing-board briefing.
+              Search any English school in the index for the stages you selected,
+              then compare up to four side by side. Published attainment here is
+              Key Stage 2 where available.
             </p>
             <div className="stats-line">
               <span>
@@ -89,13 +132,24 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
               <span>
                 Refreshed <strong>{index.generatedAt}</strong>
               </span>
+              {index.stats.withCoordinates != null ? (
+                <span>
+                  <strong>
+                    {index.stats.withCoordinates.toLocaleString("en-GB")}
+                  </strong>{" "}
+                  with map coordinates
+                </span>
+              ) : null}
             </div>
           </div>
+
+          <PhaseSelector selected={stages} onChange={changeStages} />
 
           <SchoolSearch
             schools={index.schools}
             selectedUrns={selected}
             onAdd={addSchool}
+            stageFilter={stages}
           />
           <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
 
@@ -132,9 +186,9 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
             <div className="section-head">
               <h2>Other schools you might weigh</h2>
               <p>
-                Suggested from the same local authority or postcode area, with a
-                similar phase and cohort size — then ordered toward stronger
-                published outcomes.
+                Suggested from the same local authority or postcode area, with
+                overlapping stages and similar cohort size — then ordered toward
+                stronger published outcomes.
               </p>
             </div>
             <SuggestAlternatives suggestions={suggestions} onAdd={addSchool} />

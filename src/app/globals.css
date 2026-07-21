@@ -527,6 +527,313 @@ a {
   background: rgba(255, 255, 255, 0.4);
 }
 
+.hero-postcode {
+  margin-top: 0.35rem;
+  max-width: 36rem;
+  animation: riseIn 0.85s ease-out both;
+}
+
+.hero-postcode .postcode-row input {
+  background: rgba(255, 247, 239, 0.95);
+  border-color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+}
+
+.hero-postcode-meta {
+  color: rgba(247, 251, 255, 0.78);
+}
+
+.hero-postcode-meta strong {
+  color: #fff7ef;
+}
+
+.hero .postcode-error {
+  color: #ffd7bf;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.phase-selector {
+  margin: 1rem 0 1.15rem;
+}
+
+.phase-selector-label {
+  display: block;
+  font-weight: 600;
+  color: var(--sea-deep);
+  margin-bottom: 0.45rem;
+  font-size: 0.95rem;
+}
+
+.phase-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.phase-chip {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--sea-deep);
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.phase-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(11, 79, 108, 0.35);
+}
+
+.phase-chip.active {
+  background: var(--sea);
+  border-color: var(--sea);
+  color: #fff7ef;
+}
+
+.phase-selector-hint {
+  margin: 0.55rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  max-width: 40rem;
+}
+
+.hero-phase {
+  margin-top: 1.1rem;
+  max-width: 40rem;
+}
+
+.hero-phase .phase-selector-label {
+  color: rgba(247, 251, 255, 0.9);
+}
+
+.hero-phase .phase-chip {
+  background: rgba(255, 247, 239, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #fff7ef;
+}
+
+.hero-phase .phase-chip.active {
+  background: #fff7ef;
+  border-color: #fff7ef;
+  color: var(--sea-deep);
+}
+
+.hero-phase .phase-selector-hint {
+  color: rgba(247, 251, 255, 0.72);
+}
+
+.postcode-form {
+  margin-bottom: 1rem;
+}
+
+.postcode-label {
+  display: block;
+  font-weight: 600;
+  color: var(--sea-deep);
+  margin-bottom: 0.45rem;
+}
+
+.postcode-row {
+  display: flex;
+  gap: 0.65rem;
+  align-items: stretch;
+}
+
+.postcode-row input {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 1rem;
+  padding: 0.95rem 1.1rem;
+  font: inherit;
+  font-size: 1.08rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+  outline: none;
+  box-shadow: 0 12px 40px rgba(11, 79, 108, 0.06);
+}
+
+.postcode-row input:focus {
+  border-color: rgba(11, 79, 108, 0.45);
+  box-shadow: 0 12px 40px rgba(11, 79, 108, 0.12);
+}
+
+.postcode-meta {
+  margin-top: 0.55rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.postcode-error {
+  margin: 0.55rem 0 0;
+  color: var(--coral);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.radius-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 1rem 0 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.radius-chip {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--sea-deep);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.radius-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(11, 79, 108, 0.35);
+}
+
+.radius-chip.active {
+  background: var(--sea);
+  border-color: var(--sea);
+  color: #fff7ef;
+}
+
+.nearby-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.9fr);
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.nearby-map {
+  min-height: 380px;
+  height: 100%;
+  border-radius: 1.25rem;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background: var(--foam);
+  animation: riseIn 0.45s ease-out both;
+}
+
+.nearby-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  font: inherit;
+}
+
+.school-marker,
+.home-marker {
+  background: transparent;
+  border: none;
+}
+
+.nearby-list {
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: rgba(255, 252, 247, 0.78);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 420px;
+  animation: riseIn 0.5s ease-out both;
+}
+
+.nearby-list-head {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(20, 35, 58, 0.08);
+  background: rgba(11, 79, 108, 0.05);
+  display: grid;
+  gap: 0.15rem;
+}
+
+.nearby-list-head span {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.nearby-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+.nearby-item {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(20, 35, 58, 0.06);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.nearby-item:hover {
+  background: var(--foam);
+}
+
+.nearby-item.selected {
+  background: rgba(196, 92, 38, 0.1);
+}
+
+.nearby-item.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.nearby-item input {
+  margin-top: 0.2rem;
+  accent-color: var(--coral);
+}
+
+.nearby-item-body {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.nearby-item-body strong {
+  color: var(--sea-deep);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.nearby-item-meta {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
 @media (max-width: 720px) {
   .nav-links {
     display: none;
@@ -536,12 +843,21 @@ a {
     padding-top: 3.25rem;
   }
 
-  .search-box {
+  .search-box,
+  .postcode-row {
     flex-direction: column;
   }
 
   .compare-table tbody th {
     width: 9.5rem;
+  }
+
+  .nearby-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .nearby-list {
+    max-height: 320px;
   }
 }
 

@@ -25,23 +25,29 @@ export function CompareLoader() {
 
   if (error) {
     return (
-      <section className="section" id="compare">
-        <div className="shell">
-          <div className="empty-compare">
-            Could not load the school index. {error}
+      <>
+        <section className="hero">
+          <div className="shell hero-inner">
+            <p className="hero-brand">
+              School<em>side</em>
+            </p>
+            <h1>Compare English schools side by side when you are choosing.</h1>
+            <p className="postcode-error">{error}</p>
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     );
   }
 
   if (!index) {
     return (
-      <section className="section" id="compare">
-        <div className="shell">
-          <div className="empty-compare" aria-live="polite">
-            Loading English school performance data…
-          </div>
+      <section className="hero">
+        <div className="shell hero-inner">
+          <p className="hero-brand">
+            School<em>side</em>
+          </p>
+          <h1>Compare English schools side by side when you are choosing.</h1>
+          <p>Loading English school performance data…</p>
         </div>
       </section>
     );

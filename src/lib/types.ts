@@ -33,6 +33,7 @@ export interface SchoolRecord extends SchoolMetrics {
   telephone?: string | null;
   ageRange?: string | null;
   phase?: string | null;
+  phases?: Array<"early-years" | "ks1" | "ks2" | "secondary"> | null;
   schoolType?: string | null;
   schoolTypeLabel?: string | null;
   religiousDenomination?: string | null;
@@ -49,6 +50,8 @@ export interface SchoolRecord extends SchoolMetrics {
   nonMobilePercent?: number | null;
   period?: string;
   compareUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface DirectorySchool {
@@ -84,6 +87,7 @@ export interface SchoolsIndex {
     schoolCount: number;
     withRwm: number;
     localAuthorityCount: number;
+    withCoordinates?: number;
   };
 }
 

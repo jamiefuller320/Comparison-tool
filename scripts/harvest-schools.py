@@ -465,28 +465,44 @@ def harvest_benchmarks(year: str) -> dict:
     return {"england": england, "localAuthorities": local_authorities, "laById": la_by_id}
 
 
-def suggest_phase(age_range: str | None) -> str:
+def phases_from_age_range(age_range: str | None) -> list[str]:
+    """Return every parental stage a setting covers (multi-phase aware)."""
     if not age_range:
-        return "unknown"
+        return []
     text = age_range.lower().replace("–", "-").replace("to", "-")
-    nums = []
+    nums: list[int] = []
     for part in text.replace(" ", "").split("-"):
         try:
             nums.append(int(part))
         except ValueError:
-            pass
-    if len(nums) >= 2:
-        lo, hi = nums[0], nums[1]
-        if lo >= 7 and hi <= 11:
-            return "junior"
-        if lo <= 5 and hi <= 11:
-            return "primary"
-        if lo >= 11 and hi >= 16:
-            return "secondary"
-        if lo <= 5 and hi >= 16:
-            return "all-through"
-        if hi <= 7:
-            return "infant"
+            continue
+    if len(nums) < 2 or nums[0] > nums[1]:
+        return []
+    lo, hi = nums[0], nums[1]
+    phases: list[str] = []
+    if lo <= 4:
+        phases.append("early-years")
+    if lo <= 5 and hi >= 7:
+        phases.append("ks1")
+    if lo <= 10 and hi >= 9:
+        phases.append("ks2")
+    if hi >= 12:
+        phases.append("secondary")
+    return phases
+
+
+def suggest_phase(age_range: str | None) -> str:
+    phases = phases_from_age_range(age_range)
+    if "secondary" in phases and ("ks2" in phases or "ks1" in phases):
+        return "all-through"
+    if "secondary" in phases:
+        return "secondary"
+    if "ks2" in phases and "ks1" in phases:
+        return "primary"
+    if "ks2" in phases:
+        return "junior"
+    if "ks1" in phases or "early-years" in phases:
+        return "infant"
     return "other"
 
 
@@ -499,6 +515,7 @@ LEAN_KEYS = [
     "address",
     "ageRange",
     "phase",
+    "phases",
     "schoolTypeLabel",
     "religiousDenomination",
     "compareUrl",
@@ -526,6 +543,8 @@ LEAN_KEYS = [
     "girlsRwmExpected",
     "disadvantagedRwmExpected",
     "notDisadvantagedRwmExpected",
+    "latitude",
+    "longitude",
 ]
 
 
@@ -554,6 +573,7 @@ def merge_index(
             **profile,
             "period": year if "/" in year else year,
             "phase": suggest_phase(profile.get("ageRange")),
+            "phases": phases_from_age_range(profile.get("ageRange")),
             **metrics,
         }
         schools.append(lean_school(school))
