@@ -18,6 +18,13 @@ import {
   type NearbySchool,
 } from "@/lib/nearby";
 import { fmtPct } from "@/lib/format";
+import { PhaseSelector } from "@/components/PhaseSelector";
+import {
+  formatPhases,
+  phasesFromAgeRange,
+  schoolMatchesPhases,
+  type PhaseId,
+} from "@/lib/phases";
 
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
@@ -33,11 +40,15 @@ export function HomePostcodeExplorer({
   schools,
   selectedUrns,
   onToggle,
+  stageFilter,
+  onStageFilterChange,
   max = 4,
 }: {
   schools: SchoolRecord[];
   selectedUrns: string[];
   onToggle: (urn: string) => void;
+  stageFilter: PhaseId[];
+  onStageFilterChange: (next: PhaseId[]) => void;
   max?: number;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
@@ -114,7 +125,13 @@ export function HomePostcodeExplorer({
       setNearby([]);
       return;
     }
-    const straight = findNearbySchools(home, schools, radiusKm * 1000, 35);
+    const straight = findNearbySchools(
+      home,
+      schools,
+      radiusKm * 1000,
+      35,
+      (school) => schoolMatchesPhases(school, stageFilter),
+    );
     setNearby(straight);
 
     const withCoords = straight.filter(
@@ -146,7 +163,7 @@ export function HomePostcodeExplorer({
         }
       })();
     });
-  }, [home, schools, radiusKm]);
+  }, [home, schools, radiusKm, stageFilter]);
 
   const atMax = selectedUrns.length >= max;
 
@@ -217,6 +234,12 @@ export function HomePostcodeExplorer({
             </div>
             {error ? <p className="postcode-error">{error}</p> : null}
           </form>
+
+          <PhaseSelector
+            selected={stageFilter}
+            onChange={onStageFilterChange}
+            tone="hero"
+          />
         </div>
       </section>
 
@@ -298,18 +321,27 @@ export function HomePostcodeExplorer({
                             <span className="nearby-item-body">
                               <strong>{school.name}</strong>
                               <span className="nearby-item-meta">
-                                {fmtDistance(
-                                  school.roadMetres ?? school.straightLineMetres,
-                                )}
-                                {school.roadMetres != null
-                                  ? " by road"
-                                  : " straight-line"}
-                                {school.roadMinutes != null
-                                  ? ` · ${fmtDrive(school.roadMinutes)} drive`
-                                  : ""}
-                                {school.rwmExpected != null
-                                  ? ` · ${fmtPct(school.rwmExpected)} RWM`
-                                  : ""}
+                                {[
+                                  formatPhases(
+                                    phasesFromAgeRange(school.ageRange),
+                                  ),
+                                  `${fmtDistance(
+                                    school.roadMetres ??
+                                      school.straightLineMetres,
+                                  )}${
+                                    school.roadMetres != null
+                                      ? " by road"
+                                      : " straight-line"
+                                  }`,
+                                  school.roadMinutes != null
+                                    ? `${fmtDrive(school.roadMinutes)} drive`
+                                    : null,
+                                  school.rwmExpected != null
+                                    ? `${fmtPct(school.rwmExpected)} RWM`
+                                    : null,
+                                ]
+                                  .filter(Boolean)
+                                  .join(" · ")}
                               </span>
                             </span>
                           </label>

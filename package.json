@@ -12,7 +12,8 @@
     "harvest": "python3 scripts/harvest-schools.py && python3 scripts/enrich-geocode.py",
     "harvest:sample": "python3 scripts/harvest-schools.py --sample 40 && python3 scripts/enrich-geocode.py",
     "geocode": "python3 scripts/enrich-geocode.py",
-    "test:postcode": "npx --yes tsx scripts/test-postcode.mjs"
+    "test:postcode": "npx --yes tsx scripts/test-postcode.mjs",
+    "test:phases": "npx --yes tsx scripts/test-phases.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

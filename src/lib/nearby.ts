@@ -28,10 +28,12 @@ export function findNearbySchools(
   schools: SchoolRecord[],
   radiusMetres: number,
   limit = 40,
+  matches?: (school: SchoolRecord) => boolean,
 ): NearbySchool[] {
   const hits: NearbySchool[] = [];
   for (const school of schools) {
     if (school.latitude == null || school.longitude == null) continue;
+    if (matches && !matches(school)) continue;
     const straightLineMetres = haversineMetres(
       home.latitude,
       home.longitude,

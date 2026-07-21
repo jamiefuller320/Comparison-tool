@@ -33,6 +33,7 @@ export interface SchoolRecord extends SchoolMetrics {
   telephone?: string | null;
   ageRange?: string | null;
   phase?: string | null;
+  phases?: Array<"early-years" | "ks1" | "ks2" | "secondary"> | null;
   schoolType?: string | null;
   schoolTypeLabel?: string | null;
   religiousDenomination?: string | null;

@@ -23,9 +23,11 @@ export default function HomePage() {
             </p>
             <p>
               Road distances use open routing data and are a guide to travel, not an
-              admissions catchment. Small Year 6 cohorts bounce around more than large
-              ones. Ofsted judgements, admissions rules and ethos are outside this
-              dataset — check those separately.
+              admissions catchment. Stage filters use each school&apos;s published age
+              range, so primary and all-through settings appear under every stage they
+              offer. Small Year 6 cohorts bounce around more than large ones. Ofsted
+              judgements, admissions rules and ethos are outside this dataset — check
+              those separately.
             </p>
           </div>
         </div>

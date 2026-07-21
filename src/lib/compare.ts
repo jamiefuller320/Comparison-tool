@@ -1,18 +1,19 @@
 import type { SchoolRecord } from "@/lib/types";
 import { ppGap } from "@/lib/format";
+import {
+  phasesFromAgeRange,
+  schoolMatchesPhases,
+  type PhaseId,
+} from "@/lib/phases";
 
 export interface SimilarSchool extends SchoolRecord {
   similarityScore: number;
   reasons: string[];
 }
 
-function phaseCompatible(a?: string | null, b?: string | null): boolean {
-  if (!a || !b) return true;
-  if (a === b) return true;
-  if ((a === "junior" || a === "primary") && (b === "junior" || b === "primary")) {
-    return true;
-  }
-  return false;
+function phasesOverlap(a: PhaseId[], b: PhaseId[]): boolean {
+  if (!a.length || !b.length) return true;
+  return a.some((phase) => b.includes(phase));
 }
 
 function postcodeArea(postcode?: string | null): string | null {
@@ -23,21 +24,26 @@ function postcodeArea(postcode?: string | null): string | null {
 
 /**
  * Suggest other schools a parent might weigh — same LA / nearby postcode area,
- * similar phase and cohort size, ranked by a blend of similarity and outcomes.
+ * overlapping stages and similar cohort size, ranked by similarity + outcomes.
  */
 export function suggestAlternatives(
   focus: SchoolRecord,
   pool: SchoolRecord[],
   limit = 6,
+  stageFilter: PhaseId[] = [],
 ): SimilarSchool[] {
   const focusArea = postcodeArea(focus.postcode);
   const focusN = focus.eligiblePupils ?? focus.pupilsAged11 ?? null;
+  const focusPhases = phasesFromAgeRange(focus.ageRange);
 
   const scored: SimilarSchool[] = [];
   for (const school of pool) {
     if (school.urn === focus.urn) continue;
     if (school.closed) continue;
-    if (!phaseCompatible(focus.phase, school.phase)) continue;
+    if (!schoolMatchesPhases(school, stageFilter)) continue;
+
+    const schoolPhases = phasesFromAgeRange(school.ageRange);
+    if (!phasesOverlap(focusPhases, schoolPhases)) continue;
 
     let score = 0;
     const reasons: string[] = [];
@@ -57,9 +63,10 @@ export function suggestAlternatives(
       reasons.push(`Same postcode area (${area})`);
     }
 
-    if (focus.phase && school.phase && focus.phase === school.phase) {
-      score += 15;
-      reasons.push(`Same phase (${school.phase})`);
+    const shared = schoolPhases.filter((p) => focusPhases.includes(p));
+    if (shared.length) {
+      score += 10 * shared.length;
+      reasons.push(`Shared stages: ${shared.join(", ")}`);
     }
 
     const n = school.eligiblePupils ?? school.pupilsAged11 ?? null;
@@ -94,14 +101,16 @@ export function suggestAlternatives(
     }
     const gapA = ppGap(a.rwmExpected, focus.rwmExpected) ?? -999;
     const gapB = ppGap(b.rwmExpected, focus.rwmExpected) ?? -999;
-    // Prefer stronger outcomes when similarity ties — parents exploring options
     return gapB - gapA;
   });
 
   return scored.slice(0, limit);
 }
 
-export function headlineForParents(school: SchoolRecord, englandRwm?: number | null): string {
+export function headlineForParents(
+  school: SchoolRecord,
+  englandRwm?: number | null,
+): string {
   const rwm = school.rwmExpected;
   if (rwm == null) {
     return "Latest published combined reading, writing and maths results are not available for this school.";

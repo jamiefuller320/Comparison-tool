@@ -3,16 +3,24 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { DirectorySchool, SchoolRecord } from "@/lib/types";
 import { searchSchools } from "@/lib/search";
+import {
+  formatPhases,
+  phasesFromAgeRange,
+  schoolMatchesPhases,
+  type PhaseId,
+} from "@/lib/phases";
 
 export function SchoolSearch({
   schools,
   selectedUrns,
   onAdd,
+  stageFilter,
   max = 4,
 }: {
   schools: Array<DirectorySchool | SchoolRecord>;
   selectedUrns: string[];
   onAdd: (urn: string) => void;
+  stageFilter: PhaseId[];
   max?: number;
 }) {
   const [query, setQuery] = useState("");
@@ -20,12 +28,17 @@ export function SchoolSearch({
   const wrapRef = useRef<HTMLDivElement>(null);
   const listId = useId();
 
+  const pool = useMemo(
+    () => schools.filter((s) => schoolMatchesPhases(s, stageFilter)),
+    [schools, stageFilter],
+  );
+
   const results = useMemo(() => {
     if (!query.trim()) return [];
-    return searchSchools(schools, query, 10).filter(
+    return searchSchools(pool, query, 10).filter(
       (s) => !selectedUrns.includes(s.urn),
     );
-  }, [schools, query, selectedUrns]);
+  }, [pool, query, selectedUrns]);
 
   useEffect(() => {
     function onDocClick(event: MouseEvent) {
@@ -78,27 +91,38 @@ export function SchoolSearch({
 
       {open && results.length > 0 && !atMax ? (
         <div className="search-results" id={listId} role="listbox">
-          {results.map((school) => (
-            <button
-              key={school.urn}
-              type="button"
-              className="search-result"
-              role="option"
-              onClick={() => {
-                onAdd(school.urn);
-                setQuery("");
-                setOpen(false);
-              }}
-            >
-              <strong>{school.name}</strong>
-              <span>
-                {[school.town, school.localAuthority, school.postcode, `URN ${school.urn}`]
-                  .filter(Boolean)
-                  .join(" · ")}
-                {school.rwmExpected != null ? ` · RWM ${school.rwmExpected}%` : ""}
-              </span>
-            </button>
-          ))}
+          {results.map((school) => {
+            const phases = formatPhases(phasesFromAgeRange(school.ageRange));
+            return (
+              <button
+                key={school.urn}
+                type="button"
+                className="search-result"
+                role="option"
+                onClick={() => {
+                  onAdd(school.urn);
+                  setQuery("");
+                  setOpen(false);
+                }}
+              >
+                <strong>{school.name}</strong>
+                <span>
+                  {[
+                    phases,
+                    school.town,
+                    school.localAuthority,
+                    school.postcode,
+                    `URN ${school.urn}`,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                  {school.rwmExpected != null
+                    ? ` · RWM ${school.rwmExpected}%`
+                    : ""}
+                </span>
+              </button>
+            );
+          })}
         </div>
       ) : null}
     </div>

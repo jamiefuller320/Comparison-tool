@@ -563,8 +563,81 @@ a {
   border: 0;
 }
 
-.nearby-results {
-  margin-top: 0.25rem;
+.phase-selector {
+  margin: 1rem 0 1.15rem;
+}
+
+.phase-selector-label {
+  display: block;
+  font-weight: 600;
+  color: var(--sea-deep);
+  margin-bottom: 0.45rem;
+  font-size: 0.95rem;
+}
+
+.phase-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.phase-chip {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--sea-deep);
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.phase-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(11, 79, 108, 0.35);
+}
+
+.phase-chip.active {
+  background: var(--sea);
+  border-color: var(--sea);
+  color: #fff7ef;
+}
+
+.phase-selector-hint {
+  margin: 0.55rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  max-width: 40rem;
+}
+
+.hero-phase {
+  margin-top: 1.1rem;
+  max-width: 40rem;
+}
+
+.hero-phase .phase-selector-label {
+  color: rgba(247, 251, 255, 0.9);
+}
+
+.hero-phase .phase-chip {
+  background: rgba(255, 247, 239, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #fff7ef;
+}
+
+.hero-phase .phase-chip.active {
+  background: #fff7ef;
+  border-color: #fff7ef;
+  color: var(--sea-deep);
+}
+
+.hero-phase .phase-selector-hint {
+  color: rgba(247, 251, 255, 0.72);
 }
 
 .postcode-form {
