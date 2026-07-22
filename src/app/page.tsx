@@ -24,10 +24,11 @@ export default function HomePage() {
             <p>
               Road distances use open routing data and are a guide to travel, not an
               admissions catchment. Stage filters use each school&apos;s published age
-              range, so primary and all-through settings appear under every stage they
-              offer. Small Year 6 cohorts bounce around more than large ones. Ofsted
-              judgements, admissions rules and ethos are outside this dataset — check
-              those separately.
+              range with <strong>AND</strong> logic when several stages are selected.
+              Pure secondary schools come from GIAS for KS3/KS4 search; KS2 attainment
+              figures appear where published. Small Year 6 cohorts bounce around more
+              than large ones. Ofsted judgements, admissions rules and ethos are
+              outside this dataset — check those separately.
             </p>
           </div>
         </div>
