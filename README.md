@@ -18,7 +18,8 @@ After merge to `main` and Pages is enabled:
 
 ## What it does
 
-- **Stage selector** for Early years / KS1 / KS2 / KS3 / KS4 — multi-phase settings (primary, all-through, etc.) stay included whenever any of their stages is selected
+- **Stage selector** for Early years / KS1 / KS2 / KS3 / KS4 — multiple selections use **AND** (a school must offer every selected stage); multi-phase settings still appear under each stage they cover individually
+- Secondary / KS3–KS4 settings are enriched from GIAS Edubase (so schools like Hounsdown appear even without KS2 results)
 - **Home postcode** at the top of the page, with parsing for common syntax (`SO40 2HR`, `so402hr`, `SO40-2HR`)
 - **Map of nearby schools** with a selectable range ring, door-to-door road distance, and tick-to-compare suggestions
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables

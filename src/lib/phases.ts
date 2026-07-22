@@ -100,7 +100,7 @@ export function normalizePhaseIds(raw: string[]): PhaseId[] {
   return out;
 }
 
-/** School matches if it offers any of the selected phases (OR). */
+/** School matches if it offers every selected phase (AND). */
 export function schoolMatchesPhases(
   school: { ageRange?: string | null; phases?: string[] | null },
   selected: PhaseId[],
@@ -110,7 +110,7 @@ export function schoolMatchesPhases(
   // even when the harvested JSON still carries a legacy "phases" array.
   const offered = phasesFromAgeRange(school.ageRange);
   if (!offered.length) return false;
-  return selected.some((phase) => offered.includes(phase));
+  return selected.every((phase) => offered.includes(phase));
 }
 
 export function formatPhases(phases: PhaseId[]): string {

@@ -36,8 +36,13 @@ async function main() {
       process.exit(1);
     }
   }
+  // AND: primary must NOT match KS2+KS3 together
+  if (schoolMatchesPhases(primary, ["ks2", "ks3"])) {
+    console.error("FAIL primary should not match KS2 AND KS3");
+    process.exit(1);
+  }
   if (schoolMatchesPhases(primary, ["ks3"]) || schoolMatchesPhases(primary, ["ks4"])) {
-    console.error("FAIL primary should not match KS3/KS4");
+    console.error("FAIL primary should not match KS3/KS4 alone");
     process.exit(1);
   }
 
@@ -48,17 +53,32 @@ async function main() {
       process.exit(1);
     }
   }
+  if (!schoolMatchesPhases(allThrough, ["ks3", "ks4"])) {
+    console.error("FAIL all-through should match KS3 AND KS4");
+    process.exit(1);
+  }
+  if (!schoolMatchesPhases(allThrough, ["ks2", "ks3", "ks4"])) {
+    console.error("FAIL all-through should match KS2+KS3+KS4 AND");
+    process.exit(1);
+  }
 
-  // Legacy JSON phases must not block KS3 matching
-  const legacy = { ageRange: "11 to 16", phases: ["secondary"] };
-  if (!schoolMatchesPhases(legacy, ["ks3"]) || !schoolMatchesPhases(legacy, ["ks4"])) {
-    console.error("FAIL legacy secondary school should match KS3/KS4 via age range");
+  const secondary = { ageRange: "11 to 16" };
+  if (!schoolMatchesPhases(secondary, ["ks3", "ks4"])) {
+    console.error("FAIL secondary should match KS3 AND KS4");
+    process.exit(1);
+  }
+  if (schoolMatchesPhases(secondary, ["ks2", "ks3"])) {
+    console.error("FAIL secondary should not match KS2 AND KS3");
     process.exit(1);
   }
 
   const junior = { ageRange: "7 to 11" };
-  if (!schoolMatchesPhases(junior, ["ks1", "ks2"])) {
-    console.error("FAIL junior should match when KS2 is among selected");
+  if (schoolMatchesPhases(junior, ["ks1", "ks2"])) {
+    console.error("FAIL junior should not match KS1 AND KS2");
+    process.exit(1);
+  }
+  if (!schoolMatchesPhases(junior, ["ks2"])) {
+    console.error("FAIL junior should match KS2 alone");
     process.exit(1);
   }
 
@@ -67,7 +87,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`phase coverage ok (${cases.length} age ranges + inclusion checks)`);
+  console.log(`phase coverage ok (${cases.length} age ranges + AND inclusion checks)`);
 }
 
 main();

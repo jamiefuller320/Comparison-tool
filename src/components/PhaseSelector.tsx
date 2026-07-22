@@ -46,8 +46,10 @@ export function PhaseSelector({
         })}
       </div>
       <p className="phase-selector-hint">
-        Settings that span more than one stage (for example primary or all-through)
-        stay listed whenever any of their stages is selected.
+        When several stages are selected, only settings that offer{" "}
+        <strong>all</strong> of them are listed (for example KS3 + KS4 shows
+        secondary and all-through schools). Multi-phase schools still appear
+        under each individual stage they cover.
       </p>
     </div>
   );
