@@ -4,11 +4,13 @@ const cases = [
   ["7 to 11", ["ks2"]],
   ["3 to 7", ["early-years", "ks1"]],
   ["4 to 7", ["early-years", "ks1"]],
-  ["11 to 16", ["secondary"]],
-  ["11 to 18", ["secondary"]],
-  ["4 to 16", ["early-years", "ks1", "ks2", "secondary"]],
-  ["3 to 19", ["early-years", "ks1", "ks2", "secondary"]],
-  ["9 to 13", ["ks2", "secondary"]],
+  ["11 to 16", ["ks3", "ks4"]],
+  ["11 to 18", ["ks3", "ks4"]],
+  ["11 to 14", ["ks3"]],
+  ["14 to 18", ["ks4"]],
+  ["4 to 16", ["early-years", "ks1", "ks2", "ks3", "ks4"]],
+  ["3 to 19", ["early-years", "ks1", "ks2", "ks3", "ks4"]],
+  ["9 to 13", ["ks2", "ks3"]],
   ["5 to 11", ["ks1", "ks2"]],
 ];
 
@@ -16,6 +18,7 @@ async function main() {
   const {
     phasesFromAgeRange,
     schoolMatchesPhases,
+    normalizePhaseIds,
   } = await import("../src/lib/phases.ts");
 
   for (const [age, expected] of cases) {
@@ -26,7 +29,6 @@ async function main() {
     }
   }
 
-  // Multi-phase primary must appear under EY, KS1 and KS2 selectors
   const primary = { ageRange: "3 to 11" };
   for (const phase of ["early-years", "ks1", "ks2"]) {
     if (!schoolMatchesPhases(primary, [phase])) {
@@ -34,28 +36,34 @@ async function main() {
       process.exit(1);
     }
   }
-  if (schoolMatchesPhases(primary, ["secondary"])) {
-    console.error("FAIL primary should not match secondary-only");
+  if (schoolMatchesPhases(primary, ["ks3"]) || schoolMatchesPhases(primary, ["ks4"])) {
+    console.error("FAIL primary should not match KS3/KS4");
     process.exit(1);
   }
 
-  // All-through always included for every stage
   const allThrough = { ageRange: "4 to 18" };
-  for (const phase of ["early-years", "ks1", "ks2", "secondary"]) {
+  for (const phase of ["early-years", "ks1", "ks2", "ks3", "ks4"]) {
     if (!schoolMatchesPhases(allThrough, [phase])) {
       console.error("FAIL include all-through for", phase);
       process.exit(1);
     }
   }
 
-  // OR across multiple selected stages
+  // Legacy JSON phases must not block KS3 matching
+  const legacy = { ageRange: "11 to 16", phases: ["secondary"] };
+  if (!schoolMatchesPhases(legacy, ["ks3"]) || !schoolMatchesPhases(legacy, ["ks4"])) {
+    console.error("FAIL legacy secondary school should match KS3/KS4 via age range");
+    process.exit(1);
+  }
+
   const junior = { ageRange: "7 to 11" };
   if (!schoolMatchesPhases(junior, ["ks1", "ks2"])) {
     console.error("FAIL junior should match when KS2 is among selected");
     process.exit(1);
   }
-  if (schoolMatchesPhases(junior, ["early-years", "ks1"])) {
-    console.error("FAIL junior should not match EY/KS1 only");
+
+  if (JSON.stringify(normalizePhaseIds(["secondary", "ks2"])) !== JSON.stringify(["ks3", "ks4", "ks2"])) {
+    console.error("FAIL normalize secondary", normalizePhaseIds(["secondary", "ks2"]));
     process.exit(1);
   }
 

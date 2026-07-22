@@ -10,19 +10,13 @@ import { PhaseSelector } from "@/components/PhaseSelector";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   DEFAULT_PHASES,
-  PHASE_OPTIONS,
+  normalizePhaseIds,
   type PhaseId,
 } from "@/lib/phases";
 
 function parseStagesParam(raw: string | null): PhaseId[] {
   if (!raw) return DEFAULT_PHASES;
-  const allowed = new Set(PHASE_OPTIONS.map((o) => o.id));
-  const parsed = raw
-    .split(",")
-    .map((s) => s.trim().toLowerCase())
-    .map((s) => (s === "ey" ? "early-years" : s))
-    .map((s) => (s === "sec" ? "secondary" : s))
-    .filter((s): s is PhaseId => allowed.has(s as PhaseId));
+  const parsed = normalizePhaseIds(raw.split(","));
   return parsed.length ? parsed : DEFAULT_PHASES;
 }
 

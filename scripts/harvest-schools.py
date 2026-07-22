@@ -486,17 +486,24 @@ def phases_from_age_range(age_range: str | None) -> list[str]:
         phases.append("ks1")
     if lo <= 10 and hi >= 9:
         phases.append("ks2")
-    if hi >= 12:
-        phases.append("secondary")
+    if lo <= 13 and hi >= 12:
+        phases.append("ks3")
+    if lo <= 15 and hi >= 15:
+        phases.append("ks4")
     return phases
 
 
 def suggest_phase(age_range: str | None) -> str:
     phases = phases_from_age_range(age_range)
-    if "secondary" in phases and ("ks2" in phases or "ks1" in phases):
+    has_secondary = "ks3" in phases or "ks4" in phases
+    if has_secondary and ("ks2" in phases or "ks1" in phases):
         return "all-through"
-    if "secondary" in phases:
+    if "ks3" in phases and "ks4" in phases:
         return "secondary"
+    if "ks4" in phases:
+        return "ks4"
+    if "ks3" in phases:
+        return "ks3"
     if "ks2" in phases and "ks1" in phases:
         return "primary"
     if "ks2" in phases:

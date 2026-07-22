@@ -46,6 +46,7 @@ export function NearbyMap({
   radiusMetres,
   selectedUrns,
   focusUrn,
+  refreshToken,
   onSelect,
 }: {
   home: { latitude: number; longitude: number; postcode: string };
@@ -53,6 +54,8 @@ export function NearbyMap({
   radiusMetres: number;
   selectedUrns: string[];
   focusUrn?: string | null;
+  /** Changes whenever range/stages/results change — forces a redraw + rescale. */
+  refreshToken?: string;
   onSelect: (urn: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,7 +83,6 @@ export function NearbyMap({
     layersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
-    // Ensure tiles/layout settle when the section first appears.
     requestAnimationFrame(() => map.invalidateSize());
 
     return () => {
@@ -88,7 +90,6 @@ export function NearbyMap({
       mapRef.current = null;
       layersRef.current = null;
     };
-    // Intentionally once — subsequent updates go through the layer effect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -128,13 +129,20 @@ export function NearbyMap({
     }
 
     map.invalidateSize();
-    // Always frame the selected range ring so changing km visibly rescales.
     map.fitBounds(ring.getBounds(), {
       animate: true,
       padding: [28, 28],
       maxZoom: 15,
     });
-  }, [home, schools, schoolKey, radiusMetres, selectedSet, focusUrn]);
+  }, [
+    home,
+    schools,
+    schoolKey,
+    radiusMetres,
+    selectedSet,
+    focusUrn,
+    refreshToken,
+  ]);
 
   return (
     <div
