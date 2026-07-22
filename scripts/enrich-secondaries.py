@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Merge open secondary / KS3–KS4 settings from GIAS Edubase into the school index.
+"""Merge open GIAS Edubase settings into the school index.
 
-The core harvest is KS2 performance tables, so pure secondaries (e.g. Hounsdown)
-were missing from map search. This script adds open establishments that offer
-KS3 and/or KS4 based on statutory age range, then geocodes new postcodes.
+The core harvest is KS2 performance tables, so pure infants / nurseries /
+secondaries were missing from map search. This script adds open establishments
+that offer any of EY / KS1 / KS2 / KS3 / KS4 from statutory age range, then
+geocodes new postcodes.
 
 Usage:
   python3 scripts/enrich-secondaries.py
@@ -166,9 +167,9 @@ def main() -> int:
         except ValueError:
             continue
         phases = phases_from_ages(lo, hi)
-        # Only pull in settings that cover KS3 and/or KS4 (and aren't already
-        # present from the KS2 harvest unless we want phase/age refresh).
-        if "ks3" not in phases and "ks4" not in phases:
+        # Include every open setting that offers at least one parental stage
+        # (EY, KS1, KS2, KS3, KS4) — not only secondaries.
+        if not phases:
             continue
 
         age_range = f"{lo} to {hi}"
@@ -210,6 +211,7 @@ def main() -> int:
                 f"https://www.compare-school-performance.service.gov.uk/school/{urn}"
             ),
             "source": "gias",
+            "giasPhase": (row.get("PhaseOfEducation (name)") or "").strip() or None,
         }
         new_schools.append(school)
         by_urn[urn] = school
@@ -248,7 +250,15 @@ def main() -> int:
     payload["stats"]["localAuthorityCount"] = len(
         {s.get("localAuthority") for s in schools if s.get("localAuthority")}
     )
-    payload["stats"]["secondaryEnriched"] = True
+    payload["stats"]["giasEnriched"] = True
+    infant_only = sum(
+        1
+        for s in schools
+        if set(s.get("phases") or []).issubset({"early-years", "ks1"})
+        and (s.get("phases") or [])
+        and "ks2" not in (s.get("phases") or [])
+    )
+    payload["stats"]["infantOrNurseryCount"] = infant_only
 
     INDEX.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
 

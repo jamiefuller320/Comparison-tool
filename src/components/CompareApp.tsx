@@ -7,6 +7,7 @@ import { ComparisonBoard } from "@/components/ComparisonBoard";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
+import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   DEFAULT_PHASES,
@@ -20,7 +21,13 @@ function parseStagesParam(raw: string | null): PhaseId[] {
   return parsed.length ? parsed : DEFAULT_PHASES;
 }
 
-export function CompareApp({ index }: { index: SchoolsIndex }) {
+export function CompareApp({
+  index,
+  onIndexReload,
+}: {
+  index: SchoolsIndex;
+  onIndexReload: () => Promise<void>;
+}) {
   const byUrn = useMemo(
     () => new Map(index.schools.map((s) => [s.urn, s])),
     [index.schools],
@@ -138,6 +145,11 @@ export function CompareApp({ index }: { index: SchoolsIndex }) {
           </div>
 
           <PhaseSelector selected={stages} onChange={changeStages} />
+
+          <MissingSchoolButton
+            schools={index.schools}
+            onIndexReload={onIndexReload}
+          />
 
           <SchoolSearch
             schools={index.schools}

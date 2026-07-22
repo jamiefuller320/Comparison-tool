@@ -24,7 +24,13 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
-      - run: npm run build:pages
+      - name: Build static site
+        env:
+          # Optional fine-grained PAT (Actions: write) so "A school is missing"
+          # can queue repository_dispatch. Workflow still enforces 1 refresh/day.
+          NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN: ${{ secrets.MISSING_SCHOOL_DISPATCH_TOKEN }}
+          NEXT_PUBLIC_GITHUB_REPO: ${{ github.repository }}
+        run: npm run build:pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

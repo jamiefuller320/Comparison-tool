@@ -19,7 +19,8 @@ After merge to `main` and Pages is enabled:
 ## What it does
 
 - **Stage selector** for Early years / KS1 / KS2 / KS3 / KS4 — multiple selections use **AND** (a school must offer every selected stage); multi-phase settings still appear under each stage they cover individually
-- Secondary / KS3–KS4 settings are enriched from GIAS Edubase (so schools like Hounsdown appear even without KS2 results)
+- Secondary / infant / nursery settings are enriched from GIAS Edubase (so EY–KS1-only and KS3–KS4 schools appear even without KS2 results)
+- **“A school is missing”** queues a directory rebuild (one force refresh per UTC day; also limited once per browser/day)
 - **Home postcode** at the top of the page, with parsing for common syntax (`SO40 2HR`, `so402hr`, `SO40-2HR`)
 - **Map of nearby schools** with a selectable range ring, door-to-door road distance, and tick-to-compare suggestions
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables
@@ -47,7 +48,15 @@ npm start              # serves the out/ folder
 
 Shareable comparison links use `?schools=URN,URN,URN`, `?postcode=SO40+2HR` and `?stages=ks2,ks3,ks4`.
 
-## Harvest
+## Force refresh (missing school)
+
+The site button **A school is missing** searches the live index first, then can queue a full rebuild.
+
+1. Create a fine-grained GitHub PAT with **Actions: Read and write** on this repository
+2. Add repo secret `MISSING_SCHOOL_DISPATCH_TOKEN` with that PAT
+3. Redeploy Pages (so `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN` is baked into the static build)
+
+The `Force school data refresh` workflow still enforces **one successful refresh per UTC day** even if the token is reused.
 
 ```bash
 python3 scripts/harvest-schools.py

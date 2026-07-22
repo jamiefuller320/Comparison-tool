@@ -1,0 +1,98 @@
+name: Force school data refresh
+
+# Triggered by "A school is missing" (repository_dispatch) or manually.
+# Hard-limited to one successful refresh per UTC day.
+
+on:
+  workflow_dispatch:
+    inputs:
+      school:
+        description: "Missing school name or URN (optional)"
+        required: false
+        type: string
+  repository_dispatch:
+    types: [missing-school]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: force-school-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enforce one force refresh per UTC day
+        id: gate
+        run: |
+          set -euo pipefail
+          STATE=public/data/force-refresh-state.json
+          TODAY=$(date -u +%F)
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+          if [ -f "$STATE" ]; then
+            LAST=$(python3 -c "import json; print(json.load(open('$STATE')).get('lastForcedDate',''))")
+            if [ "$LAST" = "$TODAY" ]; then
+              echo "Already forced a refresh on $TODAY UTC — skipping."
+              echo "allowed=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          echo "allowed=true" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.allowed == 'true'
+        with:
+          python-version: "3.12"
+
+      - name: Harvest and enrich school index
+        if: steps.gate.outputs.allowed == 'true'
+        run: |
+          python3 scripts/harvest-schools.py
+          python3 scripts/enrich-geocode.py
+          python3 scripts/enrich-secondaries.py
+
+      - name: Record force-refresh stamp
+        if: steps.gate.outputs.allowed == 'true'
+        env:
+          TODAY: ${{ steps.gate.outputs.today }}
+          SCHOOL: ${{ github.event.client_payload.school || inputs.school || '' }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          from datetime import datetime, timezone
+          path = Path("public/data/force-refresh-state.json")
+          payload = {
+            "lastForcedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "lastForcedDate": os.environ["TODAY"],
+            "school": (os.environ.get("SCHOOL") or "").strip() or None,
+            "triggeredBy": os.environ.get("GITHUB_ACTOR") or "workflow",
+          }
+          path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+          print(payload)
+          PY
+
+      - name: Commit refreshed data
+        if: steps.gate.outputs.allowed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/schools-index.json public/data/schools-directory.json public/data/harvest-summary.json public/data/force-refresh-state.json src/data/harvest-summary.json
+          if git diff --staged --quiet; then
+            # Still commit stamp if harvest produced no diff but stamp is new
+            git add public/data/force-refresh-state.json
+            if git diff --staged --quiet; then
+              echo "No data changes"
+            else
+              git commit -m "Record force-refresh stamp"
+              git push
+            fi
+          else
+            git commit -m "Force refresh school index (missing-school request)"
+            git push
+          fi
