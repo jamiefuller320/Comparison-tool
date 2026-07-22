@@ -563,8 +563,63 @@ a {
   border: 0;
 }
 
-.phase-selector {
-  margin: 1rem 0 1.15rem;
+.missing-school {
+  margin: 0 0 1rem;
+}
+
+.missing-school-trigger {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--sea-deep);
+}
+
+.missing-school-panel {
+  margin-top: 0.75rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(255, 252, 247, 0.9);
+  animation: riseIn 0.3s ease-out both;
+}
+
+.missing-school-panel > p {
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.missing-school-matches {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.missing-school-matches li {
+  display: grid;
+  gap: 0.1rem;
+  font-size: 0.9rem;
+}
+
+.missing-school-matches span {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+.missing-school-ok {
+  margin: 0.7rem 0 0;
+  color: var(--good);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.missing-school-warn {
+  margin: 0.7rem 0 0;
+  color: var(--watch);
+  font-weight: 600;
+  font-size: 0.92rem;
 }
 
 .phase-selector-label {

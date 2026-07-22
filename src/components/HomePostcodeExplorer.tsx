@@ -34,7 +34,7 @@ const NearbyMap = dynamic(
   },
 );
 
-const RADIUS_OPTIONS_KM = [1, 2, 3, 5, 8, 10] as const;
+const RADIUS_OPTIONS_KM = [1, 2, 3, 5, 8, 10, 15] as const;
 
 /** Allow denser rings to surface more schools as the range widens. */
 function listLimitForRadius(radiusKm: number): number {

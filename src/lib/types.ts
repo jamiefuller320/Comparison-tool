@@ -88,6 +88,8 @@ export interface SchoolsIndex {
     withRwm: number;
     localAuthorityCount: number;
     withCoordinates?: number;
+    giasEnriched?: boolean;
+    infantOrNurseryCount?: number;
   };
 }
 
