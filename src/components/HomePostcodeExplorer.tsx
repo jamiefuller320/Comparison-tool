@@ -312,10 +312,12 @@ export function HomePostcodeExplorer({
 
             <div className="nearby-layout">
               <NearbyMap
+                key={`map-${home.postcode}-${radiusKm}-${stageFilter.join("-")}`}
                 home={home}
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}
                 selectedUrns={selectedUrns}
+                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${nearby.map((s) => s.urn).join(",")}`}
                 onSelect={(urn) => {
                   if (selectedUrns.includes(urn) || !atMax) onToggle(urn);
                 }}
