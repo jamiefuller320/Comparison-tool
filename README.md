@@ -19,7 +19,8 @@ After merge to `main` and Pages is enabled:
 ## What it does
 
 - **Stage selector** for Early years / KS1 / KS2 / KS3 / KS4 — multiple selections use **AND** (a school must offer every selected stage); multi-phase settings still appear under each stage they cover individually
-- **Sector selector** for **state** vs **independent** (private / public) schools — defaults to state-funded, because independents rarely publish the same KS2 performance-table figures
+- **Sector selector** for **state** vs **independent** (private / public) schools — defaults to state-funded
+- **Separate comparison tables**: state schools use Key Stage 2 attainment; independents use published **Key Stage 4** outcomes (Attainment 8, English & maths, EBacc) plus **Ofsted** grades for non-association independents
 - Secondary / infant / nursery settings are enriched from GIAS Edubase (so EY–KS1-only and KS3–KS4 schools appear even without KS2 results)
 - **“A school is missing”** queues a directory rebuild (one force refresh per UTC day; also limited once per browser/day)
 - **Home postcode** at the top of the page, with parsing for common syntax (`SO40 2HR`, `so402hr`, `SO40-2HR`)
@@ -33,8 +34,9 @@ After merge to `main` and Pages is enabled:
 
 ```bash
 npm install
-npm run harvest        # full England index (DfE API)
+npm run harvest        # full England index (DfE KS2 + GIAS + indie KS4/Ofsted)
 # or: npm run harvest:sample
+# or: npm run enrich:independents   # refresh indie KS4/Ofsted only
 npm run dev
 ```
 

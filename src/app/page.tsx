@@ -26,9 +26,11 @@ export default function HomePage() {
               admissions catchment. Stage filters use each school&apos;s published age
               range with <strong>AND</strong> logic when several stages are selected.
               Pure secondary schools come from GIAS for KS3/KS4 search; KS2 attainment
-              figures appear where published. Small Year 6 cohorts bounce around more
-              than large ones. Ofsted judgements, admissions rules and ethos are
-              outside this dataset — check those separately.
+              figures appear where published for state schools. Independents are
+              compared on published Key Stage 4 outcomes and Ofsted non-association
+              inspection grades where available (ISI-inspected association schools are
+              not in that Ofsted file). Small cohorts bounce around more than large
+              ones. Admissions rules and ethos are still outside this dataset.
             </p>
           </div>
         </div>
@@ -39,16 +41,18 @@ export default function HomePage() {
           <div className="section-head">
             <h2>Where the numbers come from</h2>
             <p>
-              Algorithmic harvest from the DfE Explore Education Statistics API,
-              school coordinates from postcodes.io, and road distances from OSRM —
-              expanded from the collation approach used for Bartley Insight.
+              Algorithmic harvest from the DfE Explore Education Statistics API
+              (KS2 and KS4), Ofsted independent-school management information, school
+              coordinates from postcodes.io, and road distances from OSRM — expanded
+              from the collation approach used for Bartley Insight.
             </p>
           </div>
           <div className="footnote">
             <p>
-              Institution-level Key Stage 2 attainment for parental choice comparison,
-              not school governance. Progress measures are sparse for 2024/25 because
-              of missing KS1 baselines.
+              State schools: institution-level Key Stage 2 attainment for parental
+              choice comparison, not school governance. Independents: Key Stage 4
+              tables plus Ofsted non-association inspections. Progress measures are
+              sparse for 2024/25 because of missing KS1 baselines.
             </p>
             <p>
               Refresh locally with <code>npm run harvest</code>. Official school pages:{" "}

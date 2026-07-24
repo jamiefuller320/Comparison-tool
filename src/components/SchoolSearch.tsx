@@ -133,9 +133,14 @@ export function SchoolSearch({
                     .join(" · ")}
                   {school.rwmExpected != null
                     ? ` · RWM ${school.rwmExpected}%`
-                    : sector === "Independent"
-                      ? " · No published KS2 table figures"
-                      : ""}
+                    : "att8Average" in school &&
+                        typeof school.att8Average === "number"
+                      ? ` · Att8 ${school.att8Average}`
+                      : "ofstedOverall" in school && school.ofstedOverall
+                        ? ` · Ofsted ${school.ofstedOverall}`
+                        : sector === "Independent"
+                          ? " · No published KS2 table figures"
+                          : ""}
                 </span>
               </button>
             );
