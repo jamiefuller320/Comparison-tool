@@ -27,9 +27,10 @@ export default function HomePage() {
               range with <strong>AND</strong> logic when several stages are selected.
               Pure secondary schools come from GIAS for KS3/KS4 search; KS2 attainment
               figures appear where published for state schools. Independents are
-              compared on published Key Stage 4 outcomes and Ofsted non-association
-              inspection grades where available (ISI-inspected association schools are
-              not in that Ofsted file). Small cohorts bounce around more than large
+              compared on published Key Stage 4 outcomes (nil/zero English &amp; maths
+              GCSE returns cleared; EBacc subject pillars used as fallbacks), Ofsted
+              grades for non-association schools, and ISI/website links from GIAS when
+              Ofsted grades are absent. Small cohorts bounce around more than large
               ones. Admissions rules and ethos are still outside this dataset.
             </p>
           </div>

@@ -24,9 +24,9 @@ import {
 
 const CHART_KEYS = [
   "engMath94Percent",
-  "engMath95Percent",
   "anyPassPercent",
-  "ebaccEnteringPercent",
+  "ebaccMat94Percent",
+  "ebaccEng94Percent",
 ] as const;
 
 function formatValue(
@@ -71,8 +71,8 @@ export function IndependentComparisonBoard({
   const groups = ["outcomes", "pathways", "inspection", "cohort"] as const;
   const groupTitles = {
     outcomes: "Published GCSE outcomes",
-    pathways: "Curriculum pathways",
-    inspection: "Inspection (Ofsted non-association)",
+    pathways: "Subject pathways (incl. alternatives when combined basics are nil)",
+    inspection: "Inspection",
     cohort: "Cohort context",
   };
 
@@ -95,21 +95,31 @@ export function IndependentComparisonBoard({
   const palette = ["#0b4f6c", "#c45c26", "#1f6b4a", "#6b4f8a"];
   const hasAnyKs4 = schools.some((s) => s.att8Average != null);
   const hasAnyOfsted = schools.some((s) => s.ofstedOverall || s.ofstedIssCompliance);
+  const hasNilCleared = schools.some(
+    (s) => (s.ks4ClearedNilFields && s.ks4ClearedNilFields.length > 0) || s.engMathMeasureUnavailable,
+  );
+  const hasIsi = schools.some(
+    (s) => (s.inspectorateName || "").toUpperCase() === "ISI" || s.isiReportsUrl,
+  );
 
   return (
     <div>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
         Independent schools are compared on published Key Stage 4 figures and
-        Ofsted inspection outcomes where available — not the Key Stage 2 tables
-        used for state primaries.
+        inspection outcomes — not the Key Stage 2 tables used for state primaries.
+        Zero percent English &amp; maths GCSE returns are treated as missing when
+        other attainment shows the school is active (common with IGCSEs).
         {independentBench?.att8Average != null
-          ? ` Indie benchmark is the mean Attainment 8 of ${independentBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} independents in this index (${independentBench.period}).`
+          ? ` Indie benchmark is the mean Attainment 8 of ${independentBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} independents with usable figures (${independentBench.period}).`
           : null}
         {!hasAnyKs4
           ? " None of these schools have published KS4 figures in the latest tables."
           : null}
-        {!hasAnyOfsted
-          ? " Association schools inspected by ISI are not in the Ofsted non-association dataset."
+        {hasNilCleared
+          ? " Some combined English & maths cells were cleared as nil returns; check EBacc English/maths pillars instead."
+          : null}
+        {hasIsi && !hasAnyOfsted
+          ? " ISI-inspected schools link to the ISI reports directory rather than Ofsted grades."
           : null}
       </p>
 
@@ -140,6 +150,11 @@ export function IndependentComparisonBoard({
                     {school.ks4Period ? (
                       <span>KS4 {school.ks4Period}</span>
                     ) : null}
+                    {school.engMath94IsPillarFallback ? (
+                      <span>English &amp; maths 4+ from EBacc pillars</span>
+                    ) : school.engMathMeasureUnavailable ? (
+                      <span>Combined English &amp; maths GCSE measure not published</span>
+                    ) : null}
                     {school.ofstedReportUrl ? (
                       <a
                         href={school.ofstedReportUrl}
@@ -147,6 +162,23 @@ export function IndependentComparisonBoard({
                         rel="noreferrer"
                       >
                         Ofsted reports ↗
+                      </a>
+                    ) : school.isiReportsUrl ? (
+                      <a
+                        href={school.isiReportsUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        ISI reports ↗
+                      </a>
+                    ) : null}
+                    {school.schoolWebsite ? (
+                      <a
+                        href={school.schoolWebsite}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        School website ↗
                       </a>
                     ) : null}
                     {school.compareUrl ? (
