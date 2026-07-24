@@ -10,15 +10,29 @@ permissions:
   pages: write
   id-token: write
 
+# One live Pages deploy at a time. cancel-in-progress drops older runs so a
+# stale manual dispatch cannot overwrite a newer main push mid-flight.
 concurrency:
-  group: pages
+  group: pages-deploy
   cancel-in-progress: true
 
 jobs:
   build:
+    # Manual runs must target main; never publish an old feature-branch checkout.
+    if: github.event_name == 'push' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout deploy tip
+        uses: actions/checkout@v4
+        with:
+          # Push events deploy the exact SHA that triggered the run.
+          # workflow_dispatch always rebuilds the tip of main, even if the
+          # Actions UI was opened from another branch.
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.sha }}
+      - name: Confirm deploy commit
+        run: |
+          echo "Deploying $(git rev-parse --short HEAD) from $(git rev-parse --abbrev-ref HEAD || echo detached)"
+          git log -1 --oneline
       - uses: actions/setup-node@v4
         with:
           node-version: "22"

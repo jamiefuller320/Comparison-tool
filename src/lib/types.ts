@@ -39,6 +39,15 @@ export interface IndependentMetrics {
   ks4Pupils?: number | null;
   ks4Period?: string | null;
   ks4ClearedNilFields?: string[] | null;
+  /** 16–18 / KS5 (A level) outcomes where published. */
+  ks5ApsPerEntry?: number | null;
+  ks5Best3Aps?: number | null;
+  ks5Students?: number | null;
+  ks5AlevelStudents?: number | null;
+  ks5ValueAdded?: number | null;
+  ks5Period?: string | null;
+  ks5Cohort?: string | null;
+  ks5ClearedNilFields?: string[] | null;
   ofstedOverall?: string | null;
   ofstedOverallCode?: string | null;
   ofstedQualityOfEducation?: string | null;
@@ -54,6 +63,7 @@ export interface IndependentMetrics {
   inspectorateName?: string | null;
   isiReportsUrl?: string | null;
   inspectionReportsUrl?: string | null;
+  giasUrl?: string | null;
 }
 
 export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
@@ -112,7 +122,9 @@ export interface BenchmarkSet extends SchoolMetrics {}
 
 export interface IndependentBenchmarkSet extends IndependentMetrics {
   period?: string | null;
+  ks5Period?: string | null;
   schoolCount?: number | null;
+  ks5SchoolCount?: number | null;
   note?: string | null;
 }
 
@@ -141,9 +153,11 @@ export interface SchoolsIndex {
     stateCount?: number;
     independentCount?: number;
     independentWithKs4?: number;
+    independentWithKs5?: number;
     independentWithOfsted?: number;
     independentEnriched?: boolean;
     ks4Period?: string;
+    ks5Period?: string;
     ofstedAsAt?: string;
   };
 }

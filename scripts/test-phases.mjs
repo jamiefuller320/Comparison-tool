@@ -87,6 +87,25 @@ async function main() {
     process.exit(1);
   }
 
+  const { defaultPhasesForSectors, DEFAULT_PHASES_INDEPENDENT } = await import(
+    "../src/lib/phases.ts"
+  );
+  if (
+    JSON.stringify(defaultPhasesForSectors(["independent"])) !==
+    JSON.stringify(DEFAULT_PHASES_INDEPENDENT)
+  ) {
+    console.error("FAIL indie stage default", defaultPhasesForSectors(["independent"]));
+    process.exit(1);
+  }
+  if (JSON.stringify(defaultPhasesForSectors(["state"])) !== JSON.stringify(["ks2"])) {
+    console.error("FAIL state stage default");
+    process.exit(1);
+  }
+  if (defaultPhasesForSectors(["state", "independent"]) !== null) {
+    console.error("FAIL both should not force stages");
+    process.exit(1);
+  }
+
   console.log(`phase coverage ok (${cases.length} age ranges + AND inclusion checks)`);
 }
 

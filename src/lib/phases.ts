@@ -37,7 +37,26 @@ export type PhaseId = (typeof PHASE_OPTIONS)[number]["id"];
 
 export const DEFAULT_PHASES: PhaseId[] = ["ks2"];
 
+/** Sensible stage defaults when the exclusive School type control changes. */
+export const DEFAULT_PHASES_INDEPENDENT: PhaseId[] = ["ks3", "ks4"];
+
 const PHASE_IDS = new Set<string>(PHASE_OPTIONS.map((o) => o.id));
+
+/**
+ * Stages to apply when School type becomes an exclusive selection.
+ * Returns null for “Both” so the user’s stage chips are left alone.
+ */
+export function defaultPhasesForSectors(
+  sectors: Array<"state" | "independent">,
+): PhaseId[] | null {
+  if (sectors.length === 1 && sectors[0] === "independent") {
+    return [...DEFAULT_PHASES_INDEPENDENT];
+  }
+  if (sectors.length === 1 && sectors[0] === "state") {
+    return [...DEFAULT_PHASES];
+  }
+  return null;
+}
 
 export function parseAgeBounds(
   ageRange?: string | null,
