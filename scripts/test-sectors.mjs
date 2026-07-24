@@ -59,6 +59,14 @@ async function main() {
     console.error("FAIL default sectors");
     process.exit(1);
   }
+  if (!schoolMatchesSectors(indie, ["independent"])) {
+    console.error("FAIL indie exclusive match");
+    process.exit(1);
+  }
+  if (schoolMatchesSectors(state, ["independent"])) {
+    console.error("FAIL state should not match independent-only");
+    process.exit(1);
+  }
 
   console.log(`sector classifier ok (${cases.length} types)`);
 }

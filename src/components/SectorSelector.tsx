@@ -11,45 +11,60 @@ export function SectorSelector({
   onChange: (next: SectorId[]) => void;
   tone?: "light" | "hero";
 }) {
-  function toggle(id: SectorId) {
-    if (selected.includes(id)) {
-      if (selected.length === 1) return;
-      onChange(selected.filter((s) => s !== id));
-      return;
-    }
-    onChange([...selected, id]);
+  const bothSelected =
+    selected.includes("state") && selected.includes("independent");
+
+  function selectOne(id: SectorId) {
+    onChange([id]);
+  }
+
+  function selectBoth() {
+    onChange(["state", "independent"]);
   }
 
   return (
     <div
       className={
-        tone === "hero" ? "phase-selector hero-phase sector-selector" : "phase-selector sector-selector"
+        tone === "hero"
+          ? "phase-selector hero-phase sector-selector"
+          : "phase-selector sector-selector"
       }
-      role="group"
+      role="radiogroup"
       aria-label="School funding sector"
     >
       <span className="phase-selector-label">School type</span>
       <div className="phase-chips">
         {SECTOR_OPTIONS.map((option) => {
-          const active = selected.includes(option.id);
+          const active = !bothSelected && selected.includes(option.id);
           return (
             <button
               key={option.id}
               type="button"
               title={option.hint}
-              aria-pressed={active}
+              role="radio"
+              aria-checked={active}
               className={active ? "phase-chip active" : "phase-chip"}
-              onClick={() => toggle(option.id)}
+              onClick={() => selectOne(option.id)}
             >
               {option.label}
             </button>
           );
         })}
+        <button
+          type="button"
+          title="Show both state-funded and independent schools"
+          role="radio"
+          aria-checked={bothSelected}
+          className={bothSelected ? "phase-chip active" : "phase-chip"}
+          onClick={selectBoth}
+        >
+          Both
+        </button>
       </div>
       <p className="phase-selector-hint">
-        Independent schools (also called private or public schools) rarely publish
-        the same Key Stage 2 table figures as state-funded schools, so they are
-        listed separately.
+        Map, nearby list and search refresh to the selected type. Independent
+        schools (also called private or public) use different published measures
+        from state schools.
       </p>
     </div>
   );

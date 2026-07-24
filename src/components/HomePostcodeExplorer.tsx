@@ -137,6 +137,8 @@ export function HomePostcodeExplorer({
     }
   }
 
+  // Schools are already sector/stage filtered by the parent; keep a defensive
+  // match here so the map and list always track the active School type chips.
   const nearbyStraight = useMemo(() => {
     if (!home) return [] as NearbySchool[];
     return findNearbySchools(
@@ -149,6 +151,12 @@ export function HomePostcodeExplorer({
         schoolMatchesSectors(school, sectorFilter),
     );
   }, [home, schools, radiusKm, stageFilter, sectorFilter]);
+
+  useEffect(() => {
+    // Drop stale road times as soon as the sector/stage filter changes so the
+    // nearby pane does not briefly show distances for the previous set.
+    setRoadByUrn({});
+  }, [sectorFilter, stageFilter]);
 
   const nearby = useMemo(
     () =>
@@ -303,8 +311,15 @@ export function HomePostcodeExplorer({
             <div className="section-head">
               <h2>Schools near {home.postcode}</h2>
               <p>
-                Range ring on the map, door-to-door road distance in the list.
-                Tick schools to add them to your comparison shortlist.
+                Showing{" "}
+                {sectorFilter.includes("state") &&
+                sectorFilter.includes("independent")
+                  ? "state and independent"
+                  : sectorFilter.includes("independent")
+                    ? "independent"
+                    : "state"}{" "}
+                schools for the stages you selected. Range ring on the map,
+                door-to-door road distance in the list — tick to compare.
               </p>
             </div>
 
