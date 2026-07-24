@@ -425,6 +425,31 @@ a {
   animation: riseIn 0.3s ease-out both;
 }
 
+.history-panel-inline {
+  margin: 0.35rem 0 0.85rem;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.compare-table tr.history-row > td {
+  padding: 0.35rem 0.75rem 0.85rem;
+  background: rgba(11, 79, 108, 0.03);
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.history-chart {
+  width: 100%;
+  min-width: 0;
+}
+
+.history-chart .recharts-responsive-container {
+  width: 100% !important;
+  min-width: 0;
+}
+
 .history-panel-head {
   display: flex;
   align-items: baseline;
