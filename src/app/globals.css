@@ -375,6 +375,91 @@ a {
   max-width: 12rem;
 }
 
+.metric-history-trigger {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.metric-history-trigger:hover .metric-history-label,
+.metric-history-trigger:focus-visible .metric-history-label {
+  color: var(--sea);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.metric-history-trigger.active .metric-history-label {
+  color: var(--sea);
+}
+
+.metric-history-cta {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--sea);
+  opacity: 0.85;
+}
+
+.metric-row-active {
+  background: rgba(11, 79, 108, 0.05);
+}
+
+.history-panel {
+  margin: 1rem 0 1.5rem;
+  padding: 1rem 1.1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: rgba(255, 252, 247, 0.85);
+  box-shadow: 0 12px 36px rgba(20, 35, 58, 0.05);
+  animation: riseIn 0.3s ease-out both;
+}
+
+.history-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.history-panel-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--sea-deep);
+}
+
+.history-close {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.history-close:hover {
+  color: var(--sea-deep);
+  border-color: var(--sea);
+}
+
+.history-chart-note {
+  margin: 0 0 0.6rem;
+}
+
 .compare-board {
   overflow-x: auto;
   border-radius: 1.25rem;

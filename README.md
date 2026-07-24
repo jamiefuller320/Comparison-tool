@@ -34,13 +34,16 @@ After merge to `main` and Pages is enabled:
 
 ```bash
 npm install
-npm run harvest        # full England index (DfE KS2 + GIAS + indie KS4/Ofsted)
+npm run harvest        # full England index (DfE KS2 + GIAS + indie KS4/Ofsted + KS2 history)
 # or: npm run harvest:sample
 # or: npm run enrich:independents   # refresh indie KS4/Ofsted only
+# or: npm run history:ks2           # multi-year CSP KS2 archive only
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+On the state-school comparison table, click a **measure name** to open a year-by-year trend for the shortlisted schools (2015/16–2018/19 and 2022/23–2024/25; COVID gap for unpublished years).
 
 ### Static build (GitHub Pages)
 
@@ -72,11 +75,12 @@ Writes:
 - `public/data/schools-index.json` — full school records + England/LA benchmarks
 - `public/data/schools-directory.json` — lean search index
 - `public/data/harvest-summary.json` — run stats
+- `public/data/ks2-history/` — multi-year KS2 archive (`meta.json` + `uXX.json` shards), from the same Compare school performance CSV downloads used by Bartley
 
 ## Stack
 
-Next.js (static export) · TypeScript · Tailwind CSS · Recharts · GitHub Pages · DfE EES API
+Next.js (static export) · TypeScript · Tailwind CSS · Recharts · GitHub Pages · DfE EES API · CSP KS2 downloads
 
 ## Relationship to Bartley
 
-Bartley Insight is a single-school governor monitor (URN 116338) with peer overlays and meeting-pack framing. Schoolside reuses the same public KS2 sources and metric vocabulary, generalises harvesting to **any English school set**, and reframes presentation around **parental choice**.
+Bartley Insight is a single-school governor monitor (URN 116338) with peer overlays and meeting-pack framing. Schoolside reuses the same public KS2 sources and metric vocabulary, generalises harvesting to **any English school set**, and reframes presentation around **parental choice**. Multi-year subject trends use the same CSP KS2 CSV archive pattern as Bartley, sharded nationally so shortlisted state schools can open a history chart from each comparison-table row label.

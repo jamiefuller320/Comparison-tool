@@ -302,6 +302,7 @@ export function CompareApp({
             <p>
               State and independent shortlists use different published measures,
               so they are compared in separate tables when both are selected.
+              On the state table, click a measure name for its multi-year trend.
             </p>
           </div>
 
