@@ -16,7 +16,8 @@
     "enrich:independents": "python3 scripts/enrich-independents.py",
     "test:postcode": "npx --yes tsx scripts/test-postcode.mjs",
     "test:phases": "npx --yes tsx scripts/test-phases.mjs",
-    "test:sectors": "npx --yes tsx scripts/test-sectors.mjs"
+    "test:sectors": "npx --yes tsx scripts/test-sectors.mjs",
+    "test:indie-sanitize": "python3 scripts/test-indie-sanitize.py"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

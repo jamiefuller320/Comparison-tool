@@ -5,6 +5,8 @@ export type IndependentMetricKey =
   | "engMath94Percent"
   | "engMath95Percent"
   | "anyPassPercent"
+  | "ebaccEng94Percent"
+  | "ebaccMat94Percent"
   | "ebaccEnteringPercent"
   | "ebacc94Percent"
   | "ebaccAps"
@@ -12,7 +14,8 @@ export type IndependentMetricKey =
   | "ofstedOverall"
   | "ofstedQualityOfEducation"
   | "ofstedLeadership"
-  | "ofstedIssCompliance";
+  | "ofstedIssCompliance"
+  | "inspectorateName";
 
 export interface IndependentMetric {
   key: IndependentMetricKey;
@@ -23,14 +26,14 @@ export interface IndependentMetric {
   get: (s: SchoolRecord) => number | string | null | undefined;
 }
 
-/** Parental metrics for independent schools (KS4 + Ofsted), not KS2 tables. */
+/** Parental metrics for independent schools (KS4 + inspection), not KS2 tables. */
 export const INDEPENDENT_METRICS: IndependentMetric[] = [
   {
     key: "att8Average",
     label: "Attainment 8",
     group: "outcomes",
     unit: "score",
-    parentHint: "Average GCSE point score across eight subjects (published KS4 tables).",
+    parentHint: "Average point score across eight qualifications in the KS4 tables.",
     get: (s) => s.att8Average,
   },
   {
@@ -38,7 +41,8 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     label: "English & maths grade 4+",
     group: "outcomes",
     unit: "pct",
-    parentHint: "Share achieving grade 4 or above in both English and maths GCSEs.",
+    parentHint:
+      "Combined GCSE English & maths 4+. Nil/IGCSE returns are shown as —; where needed this uses the lower of the EBacc English and maths pillars.",
     get: (s) => s.engMath94Percent,
   },
   {
@@ -46,7 +50,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     label: "English & maths grade 5+",
     group: "outcomes",
     unit: "pct",
-    parentHint: "Share achieving grade 5 or above in both English and maths GCSEs.",
+    parentHint: "Combined GCSE English & maths 5+, when the DfE measure is published.",
     get: (s) => s.engMath95Percent,
   },
   {
@@ -58,11 +62,29 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     get: (s) => s.anyPassPercent,
   },
   {
+    key: "ebaccEng94Percent",
+    label: "EBacc English 4+",
+    group: "pathways",
+    unit: "pct",
+    parentHint:
+      "English pillar at grade 4+ — useful when the combined English & maths GCSE measure is a nil return.",
+    get: (s) => s.ebaccEng94Percent,
+  },
+  {
+    key: "ebaccMat94Percent",
+    label: "EBacc maths 4+",
+    group: "pathways",
+    unit: "pct",
+    parentHint:
+      "Maths pillar at grade 4+ — often still published when combined English & maths is missing.",
+    get: (s) => s.ebaccMat94Percent,
+  },
+  {
     key: "ebaccEnteringPercent",
     label: "Entering EBacc",
     group: "pathways",
     unit: "pct",
-    parentHint: "Share entered for the English Baccalaureate subject combination.",
+    parentHint: "Share entered for the full English Baccalaureate subject combination.",
     get: (s) => s.ebaccEnteringPercent,
   },
   {
@@ -70,7 +92,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     label: "EBacc grade 4+",
     group: "pathways",
     unit: "pct",
-    parentHint: "Share achieving grades 4 or above across the EBacc subjects.",
+    parentHint: "Share achieving grades 4+ across the full EBacc (blank if nobody entered).",
     get: (s) => s.ebacc94Percent,
   },
   {
@@ -82,12 +104,20 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     get: (s) => s.ebaccAps,
   },
   {
+    key: "inspectorateName",
+    label: "Inspectorate",
+    group: "inspection",
+    unit: "text",
+    parentHint: "Ofsted inspects non-association independents; ISI inspects most association schools.",
+    get: (s) => s.inspectorateName || s.ofstedInspectorate,
+  },
+  {
     key: "ofstedOverall",
     label: "Ofsted overall",
     group: "inspection",
     unit: "text",
     parentHint:
-      "Latest published Ofsted grade for non-association independents (ISI schools use a different inspectorate).",
+      "Latest Ofsted grade for non-association independents. ISI schools link out to ISI reports instead.",
     get: (s) => s.ofstedOverall,
   },
   {
@@ -111,7 +141,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     label: "Independent School Standards",
     group: "inspection",
     unit: "text",
-    parentHint: "Whether the school met the Independent School Standards at the latest standard inspection.",
+    parentHint: "Whether Independent School Standards were met at the latest standard inspection.",
     get: (s) => s.ofstedIssCompliance,
   },
   {

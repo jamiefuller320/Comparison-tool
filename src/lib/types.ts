@@ -24,12 +24,21 @@ export interface IndependentMetrics {
   att8Average?: number | null;
   engMath94Percent?: number | null;
   engMath95Percent?: number | null;
+  engMathEnteringPercent?: number | null;
+  engMathMeasureUnavailable?: boolean | null;
+  engMath94IsPillarFallback?: boolean | null;
   anyPassPercent?: number | null;
   ebaccEnteringPercent?: number | null;
   ebacc94Percent?: number | null;
   ebaccAps?: number | null;
+  ebaccEng94Percent?: number | null;
+  ebaccMat94Percent?: number | null;
+  ebaccSci94Percent?: number | null;
+  ebaccEngEnteringPercent?: number | null;
+  ebaccMatEnteringPercent?: number | null;
   ks4Pupils?: number | null;
   ks4Period?: string | null;
+  ks4ClearedNilFields?: string[] | null;
   ofstedOverall?: string | null;
   ofstedOverallCode?: string | null;
   ofstedQualityOfEducation?: string | null;
@@ -41,6 +50,10 @@ export interface IndependentMetrics {
   ofstedPublicationDate?: string | null;
   ofstedReportUrl?: string | null;
   ofstedPupilsOnRoll?: number | null;
+  schoolWebsite?: string | null;
+  inspectorateName?: string | null;
+  isiReportsUrl?: string | null;
+  inspectionReportsUrl?: string | null;
 }
 
 export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
