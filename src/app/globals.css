@@ -450,6 +450,53 @@ a {
   min-width: 0;
 }
 
+.history-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0.15rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  gap: 0.45rem 0.85rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.history-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.history-legend-item.england {
+  order: -1;
+}
+
+.history-legend-swatch {
+  flex: 0 0 auto;
+  width: 1.35rem;
+  height: 0.22rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.history-legend-swatch.dashed {
+  height: 0;
+  border-top-width: 2px;
+  border-top-style: dashed;
+  border-radius: 0;
+  background: transparent !important;
+}
+
+.history-legend-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .history-panel-head {
   display: flex;
   align-items: baseline;
