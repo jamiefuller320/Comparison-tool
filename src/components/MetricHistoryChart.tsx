@@ -25,7 +25,6 @@ import {
   type SchoolHistorySeries,
 } from "@/lib/ks2History";
 import { CovidAwareYearTick, CovidGapBand } from "@/components/CovidGapBand";
-import { shortName } from "@/lib/format";
 
 const PALETTE = ["#0b4f6c", "#c45c26", "#1f6b4a", "#6b4f8a"];
 const ENGLAND_COLOR = "rgba(20,35,58,0.55)";
@@ -203,7 +202,7 @@ export function MetricHistoryChart({
               key={school.urn}
               type="monotone"
               dataKey={school.urn}
-              name={shortName(school.name, 28)}
+              name={school.name}
               stroke={PALETTE[i % PALETTE.length]}
               strokeWidth={2.5}
               dot={{ r: 3.5, fill: PALETTE[i % PALETTE.length] }}
