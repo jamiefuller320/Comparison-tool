@@ -14,7 +14,8 @@
     "geocode": "python3 scripts/enrich-geocode.py",
     "enrich:secondaries": "python3 scripts/enrich-secondaries.py",
     "test:postcode": "npx --yes tsx scripts/test-postcode.mjs",
-    "test:phases": "npx --yes tsx scripts/test-phases.mjs"
+    "test:phases": "npx --yes tsx scripts/test-phases.mjs",
+    "test:sectors": "npx --yes tsx scripts/test-sectors.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

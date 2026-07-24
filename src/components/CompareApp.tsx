@@ -7,6 +7,7 @@ import { ComparisonBoard } from "@/components/ComparisonBoard";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
+import { SectorSelector } from "@/components/SectorSelector";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
@@ -14,11 +15,22 @@ import {
   normalizePhaseIds,
   type PhaseId,
 } from "@/lib/phases";
+import {
+  DEFAULT_SECTORS,
+  normalizeSectorIds,
+  type SectorId,
+} from "@/lib/sectors";
 
 function parseStagesParam(raw: string | null): PhaseId[] {
   if (!raw) return DEFAULT_PHASES;
   const parsed = normalizePhaseIds(raw.split(","));
   return parsed.length ? parsed : DEFAULT_PHASES;
+}
+
+function parseSectorsParam(raw: string | null): SectorId[] {
+  if (!raw) return DEFAULT_SECTORS;
+  const parsed = normalizeSectorIds(raw.split(","));
+  return parsed.length ? parsed : DEFAULT_SECTORS;
 }
 
 export function CompareApp({
@@ -35,6 +47,7 @@ export function CompareApp({
 
   const [selected, setSelected] = useState<string[]>([]);
   const [stages, setStages] = useState<PhaseId[]>(DEFAULT_PHASES);
+  const [sectors, setSectors] = useState<SectorId[]>(DEFAULT_SECTORS);
   const [pending, startTransition] = useTransition();
   const [hydrated, setHydrated] = useState(false);
 
@@ -50,6 +63,9 @@ export function CompareApp({
       if (urns.length) setSelected(urns);
     }
     setStages(parseStagesParam(params.get("stages") || params.get("phase")));
+    setSectors(
+      parseSectorsParam(params.get("sectors") || params.get("sector")),
+    );
     setHydrated(true);
   }, [byUrn]);
 
@@ -59,8 +75,16 @@ export function CompareApp({
     if (selected.length) url.searchParams.set("schools", selected.join(","));
     else url.searchParams.delete("schools");
     url.searchParams.set("stages", stages.join(","));
+    if (
+      sectors.length === DEFAULT_SECTORS.length &&
+      sectors[0] === DEFAULT_SECTORS[0]
+    ) {
+      url.searchParams.delete("sectors");
+    } else {
+      url.searchParams.set("sectors", sectors.join(","));
+    }
     window.history.replaceState({}, "", url.toString());
-  }, [selected, stages, hydrated]);
+  }, [selected, stages, sectors, hydrated]);
 
   const selectedSchools: SchoolRecord[] = selected
     .map((urn) => byUrn.get(urn))
@@ -69,10 +93,10 @@ export function CompareApp({
   const focus = selectedSchools[0];
   const suggestions = useMemo(() => {
     if (!focus) return [];
-    return suggestAlternatives(focus, index.schools, 6, stages).filter(
+    return suggestAlternatives(focus, index.schools, 6, stages, sectors).filter(
       (s) => !selected.includes(s.urn),
     );
-  }, [focus, index.schools, selected, stages]);
+  }, [focus, index.schools, selected, stages, sectors]);
 
   function addSchool(urn: string) {
     startTransition(() => {
@@ -103,6 +127,10 @@ export function CompareApp({
     startTransition(() => setStages(next));
   }
 
+  function changeSectors(next: SectorId[]) {
+    startTransition(() => setSectors(next));
+  }
+
   return (
     <>
       <HomePostcodeExplorer
@@ -111,6 +139,8 @@ export function CompareApp({
         onToggle={toggleSchool}
         stageFilter={stages}
         onStageFilterChange={changeStages}
+        sectorFilter={sectors}
+        onSectorFilterChange={changeSectors}
       />
 
       <section className="section" id="compare">
@@ -118,15 +148,32 @@ export function CompareApp({
           <div className="section-head">
             <h2>Build your shortlist</h2>
             <p>
-              Search any English school in the index for the stages you selected,
-              then compare up to four side by side. Published attainment here is
-              Key Stage 2 where available.
+              Search any English school in the index for the stages and sector
+              you selected, then compare up to four side by side. Published
+              attainment here is Key Stage 2 where available — independent
+              schools often have little or none of that table data.
             </p>
             <div className="stats-line">
               <span>
                 <strong>{index.stats.schoolCount.toLocaleString("en-GB")}</strong>{" "}
                 schools indexed
               </span>
+              {index.stats.stateCount != null ? (
+                <span>
+                  <strong>
+                    {index.stats.stateCount.toLocaleString("en-GB")}
+                  </strong>{" "}
+                  state
+                </span>
+              ) : null}
+              {index.stats.independentCount != null ? (
+                <span>
+                  <strong>
+                    {index.stats.independentCount.toLocaleString("en-GB")}
+                  </strong>{" "}
+                  independent
+                </span>
+              ) : null}
               <span>
                 Latest year <strong>{index.period}</strong>
               </span>
@@ -145,6 +192,7 @@ export function CompareApp({
           </div>
 
           <PhaseSelector selected={stages} onChange={changeStages} />
+          <SectorSelector selected={sectors} onChange={changeSectors} />
 
           <MissingSchoolButton
             schools={index.schools}
@@ -156,6 +204,7 @@ export function CompareApp({
             selectedUrns={selected}
             onAdd={addSchool}
             stageFilter={stages}
+            sectorFilter={sectors}
           />
           <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
 
@@ -176,7 +225,8 @@ export function CompareApp({
             <p>
               Expected standards, scaled scores, cohort context and group
               differences — with England shown as the parental benchmark on
-              percentage measures.
+              percentage measures. Independent schools are labelled separately
+              because they often do not publish comparable KS2 figures.
             </p>
           </div>
           <ComparisonBoard
@@ -193,8 +243,8 @@ export function CompareApp({
               <h2>Other schools you might weigh</h2>
               <p>
                 Suggested from the same local authority or postcode area, with
-                overlapping stages and similar cohort size — then ordered toward
-                stronger published outcomes.
+                overlapping stages, matching sector and similar cohort size —
+                then ordered toward stronger published outcomes.
               </p>
             </div>
             <SuggestAlternatives suggestions={suggestions} onAdd={addSchool} />

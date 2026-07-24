@@ -19,6 +19,7 @@ After merge to `main` and Pages is enabled:
 ## What it does
 
 - **Stage selector** for Early years / KS1 / KS2 / KS3 / KS4 — multiple selections use **AND** (a school must offer every selected stage); multi-phase settings still appear under each stage they cover individually
+- **Sector selector** for **state** vs **independent** (private / public) schools — defaults to state-funded, because independents rarely publish the same KS2 performance-table figures
 - Secondary / infant / nursery settings are enriched from GIAS Edubase (so EY–KS1-only and KS3–KS4 schools appear even without KS2 results)
 - **“A school is missing”** queues a directory rebuild (one force refresh per UTC day; also limited once per browser/day)
 - **Home postcode** at the top of the page, with parsing for common syntax (`SO40 2HR`, `so402hr`, `SO40-2HR`)
@@ -46,7 +47,7 @@ npm run build:pages
 npm start              # serves the out/ folder
 ```
 
-Shareable comparison links use `?schools=URN,URN,URN`, `?postcode=SO40+2HR` and `?stages=ks2,ks3,ks4`.
+Shareable comparison links use `?schools=URN,URN,URN`, `?postcode=SO40+2HR`, `?stages=ks2,ks3,ks4` and `?sectors=state,independent`.
 
 ## Force refresh (missing school)
 

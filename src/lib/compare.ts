@@ -5,6 +5,7 @@ import {
   schoolMatchesPhases,
   type PhaseId,
 } from "@/lib/phases";
+import { schoolMatchesSectors, type SectorId } from "@/lib/sectors";
 
 export interface SimilarSchool extends SchoolRecord {
   similarityScore: number;
@@ -31,6 +32,7 @@ export function suggestAlternatives(
   pool: SchoolRecord[],
   limit = 6,
   stageFilter: PhaseId[] = [],
+  sectorFilter: SectorId[] = [],
 ): SimilarSchool[] {
   const focusArea = postcodeArea(focus.postcode);
   const focusN = focus.eligiblePupils ?? focus.pupilsAged11 ?? null;
@@ -41,6 +43,7 @@ export function suggestAlternatives(
     if (school.urn === focus.urn) continue;
     if (school.closed) continue;
     if (!schoolMatchesPhases(school, stageFilter)) continue;
+    if (!schoolMatchesSectors(school, sectorFilter)) continue;
 
     const schoolPhases = phasesFromAgeRange(school.ageRange);
     if (!phasesOverlap(focusPhases, schoolPhases)) continue;

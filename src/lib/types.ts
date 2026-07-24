@@ -36,6 +36,7 @@ export interface SchoolRecord extends SchoolMetrics {
   phases?: Array<"early-years" | "ks1" | "ks2" | "ks3" | "ks4"> | null;
   schoolType?: string | null;
   schoolTypeLabel?: string | null;
+  sector?: "state" | "independent" | null;
   religiousDenomination?: string | null;
   closed?: boolean;
   pupilsAged11?: number | null;
@@ -63,6 +64,7 @@ export interface DirectorySchool {
   ageRange?: string | null;
   phase?: string | null;
   schoolTypeLabel?: string | null;
+  sector?: "state" | "independent" | null;
   rwmExpected?: number | null;
   eligiblePupils?: number | null;
 }
@@ -90,6 +92,8 @@ export interface SchoolsIndex {
     withCoordinates?: number;
     giasEnriched?: boolean;
     infantOrNurseryCount?: number;
+    stateCount?: number;
+    independentCount?: number;
   };
 }
 

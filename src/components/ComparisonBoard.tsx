@@ -13,6 +13,7 @@ import {
 import type { BenchmarkSet, SchoolRecord } from "@/lib/types";
 import { PARENT_METRICS } from "@/lib/metrics";
 import { fmtNum, fmtPct, fmtPp, ppGap, shortName } from "@/lib/format";
+import { formatSector, resolveSchoolSector } from "@/lib/sectors";
 
 const SUBJECT_KEYS = [
   "rwmExpected",
@@ -100,12 +101,25 @@ export function ComparisonBoard({
                   {shortName(school.name, 32)}
                   <div className="school-meta">
                     <span>
-                      {[school.town, school.localAuthority].filter(Boolean).join(" · ")}
+                      {[
+                        formatSector(resolveSchoolSector(school)),
+                        school.town,
+                        school.localAuthority,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </span>
                     <span>
                       {school.ageRange ? `Ages ${school.ageRange}` : null}
                       {school.schoolTypeLabel ? ` · ${school.schoolTypeLabel}` : null}
                     </span>
+                    {resolveSchoolSector(school) === "independent" &&
+                    school.rwmExpected == null ? (
+                      <span>
+                        Independent schools often do not publish KS2 table
+                        figures comparable with state schools.
+                      </span>
+                    ) : null}
                     {school.compareUrl ? (
                       <a href={school.compareUrl} target="_blank" rel="noreferrer">
                         Official tables ↗

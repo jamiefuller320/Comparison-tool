@@ -9,18 +9,26 @@ import {
   schoolMatchesPhases,
   type PhaseId,
 } from "@/lib/phases";
+import {
+  formatSector,
+  resolveSchoolSector,
+  schoolMatchesSectors,
+  type SectorId,
+} from "@/lib/sectors";
 
 export function SchoolSearch({
   schools,
   selectedUrns,
   onAdd,
   stageFilter,
+  sectorFilter,
   max = 4,
 }: {
   schools: Array<DirectorySchool | SchoolRecord>;
   selectedUrns: string[];
   onAdd: (urn: string) => void;
   stageFilter: PhaseId[];
+  sectorFilter: SectorId[];
   max?: number;
 }) {
   const [query, setQuery] = useState("");
@@ -29,8 +37,13 @@ export function SchoolSearch({
   const listId = useId();
 
   const pool = useMemo(
-    () => schools.filter((s) => schoolMatchesPhases(s, stageFilter)),
-    [schools, stageFilter],
+    () =>
+      schools.filter(
+        (s) =>
+          schoolMatchesPhases(s, stageFilter) &&
+          schoolMatchesSectors(s, sectorFilter),
+      ),
+    [schools, stageFilter, sectorFilter],
   );
 
   const results = useMemo(() => {
@@ -93,6 +106,7 @@ export function SchoolSearch({
         <div className="search-results" id={listId} role="listbox">
           {results.map((school) => {
             const phases = formatPhases(phasesFromAgeRange(school.ageRange));
+            const sector = formatSector(resolveSchoolSector(school));
             return (
               <button
                 key={school.urn}
@@ -108,6 +122,7 @@ export function SchoolSearch({
                 <strong>{school.name}</strong>
                 <span>
                   {[
+                    sector,
                     phases,
                     school.town,
                     school.localAuthority,
@@ -118,7 +133,9 @@ export function SchoolSearch({
                     .join(" · ")}
                   {school.rwmExpected != null
                     ? ` · RWM ${school.rwmExpected}%`
-                    : ""}
+                    : sector === "Independent"
+                      ? " · No published KS2 table figures"
+                      : ""}
                 </span>
               </button>
             );
