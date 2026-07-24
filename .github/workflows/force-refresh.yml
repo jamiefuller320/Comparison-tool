@@ -56,6 +56,7 @@ jobs:
           python3 scripts/enrich-geocode.py
           python3 scripts/enrich-secondaries.py
           python3 scripts/enrich-independents.py
+          python3 scripts/extract-ks2-history.py
 
       - name: Record force-refresh stamp
         if: steps.gate.outputs.allowed == 'true'
@@ -83,7 +84,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/schools-index.json public/data/schools-directory.json public/data/harvest-summary.json public/data/force-refresh-state.json src/data/harvest-summary.json
+          git add public/data/schools-index.json public/data/schools-directory.json public/data/harvest-summary.json public/data/force-refresh-state.json src/data/harvest-summary.json public/data/ks2-history
           if git diff --staged --quiet; then
             # Still commit stamp if harvest produced no diff but stamp is new
             git add public/data/force-refresh-state.json
