@@ -63,6 +63,21 @@ def suggest_phase(phases: list[str]) -> str:
     return "other"
 
 
+INDEPENDENT_TYPE_FRAGMENTS = (
+    "independent",
+    "non-maintained special",
+    "british schools overseas",
+    "offshore schools",
+)
+
+
+def sector_from_type(school_type: str | None) -> str:
+    text = (school_type or "").lower()
+    if any(frag in text for frag in INDEPENDENT_TYPE_FRAGMENTS):
+        return "independent"
+    return "state"
+
+
 def download_edubase() -> Path:
     if CACHE.exists() and CACHE.stat().st_size > 1_000_000:
         return CACHE
@@ -184,10 +199,15 @@ def main() -> int:
 
         if urn in by_urn:
             existing = by_urn[urn]
-            # Refresh age/phase metadata; keep KS2 attainment fields.
+            # Refresh age/phase/sector metadata; keep KS2 attainment fields.
             existing["ageRange"] = age_range
             existing["phases"] = phases
             existing["phase"] = suggest_phase(phases)
+            existing["schoolTypeLabel"] = school_type or existing.get("schoolTypeLabel")
+            existing["sector"] = sector_from_type(
+                existing.get("schoolTypeLabel") or school_type
+            )
+            existing["giasPhase"] = (row.get("PhaseOfEducation (name)") or "").strip() or existing.get("giasPhase")
             if postcode and not existing.get("postcode"):
                 existing["postcode"] = postcode
             if town and not existing.get("town"):
@@ -206,6 +226,7 @@ def main() -> int:
             "phase": suggest_phase(phases),
             "phases": phases,
             "schoolTypeLabel": school_type,
+            "sector": sector_from_type(school_type),
             "religiousDenomination": religion,
             "compareUrl": (
                 f"https://www.compare-school-performance.service.gov.uk/school/{urn}"
@@ -242,6 +263,10 @@ def main() -> int:
         school["longitude"] = round(pair[1], 6)
         with_coords += 1
 
+    # Ensure every school has a sector, even if only in the KS2 harvest.
+    for school in by_urn.values():
+        school["sector"] = sector_from_type(school.get("schoolTypeLabel"))
+
     schools = sorted(by_urn.values(), key=lambda s: (s.get("localAuthority") or "", s.get("name") or ""))
     payload["schools"] = schools
     payload["stats"]["schoolCount"] = len(schools)
@@ -251,6 +276,10 @@ def main() -> int:
         {s.get("localAuthority") for s in schools if s.get("localAuthority")}
     )
     payload["stats"]["giasEnriched"] = True
+    payload["stats"]["stateCount"] = sum(1 for s in schools if s.get("sector") == "state")
+    payload["stats"]["independentCount"] = sum(
+        1 for s in schools if s.get("sector") == "independent"
+    )
     infant_only = sum(
         1
         for s in schools
@@ -275,6 +304,7 @@ def main() -> int:
                 "ageRange",
                 "phase",
                 "schoolTypeLabel",
+                "sector",
                 "rwmExpected",
                 "eligiblePupils",
             ]

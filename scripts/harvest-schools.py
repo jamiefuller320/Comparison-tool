@@ -89,6 +89,20 @@ NFTYPE_LABELS = {
     "IND": "Independent",
 }
 
+INDEPENDENT_TYPE_FRAGMENTS = (
+    "independent",
+    "non-maintained special",
+    "british schools overseas",
+    "offshore schools",
+)
+
+
+def sector_from_type(school_type: str | None) -> str:
+    text = (school_type or "").lower()
+    if any(frag in text for frag in INDEPENDENT_TYPE_FRAGMENTS):
+        return "independent"
+    return "state"
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "public" / "data"
 SRC_DATA = ROOT / "src" / "data"
@@ -268,6 +282,7 @@ def harvest_profiles(sample_urns: set[str] | None = None) -> dict[str, dict]:
             "ageRange": decoded.get("agerange"),
             "schoolType": nftype,
             "schoolTypeLabel": NFTYPE_LABELS.get(nftype, nftype or None),
+            "sector": sector_from_type(NFTYPE_LABELS.get(nftype, nftype or None)),
             "religiousDenomination": None
             if decoded.get("reldenom") in {None, "Does not apply", "None", "z"}
             else decoded.get("reldenom"),
@@ -524,6 +539,7 @@ LEAN_KEYS = [
     "phase",
     "phases",
     "schoolTypeLabel",
+    "sector",
     "religiousDenomination",
     "compareUrl",
     "period",
@@ -659,6 +675,7 @@ def main() -> int:
             "ageRange": s.get("ageRange"),
             "phase": s.get("phase"),
             "schoolTypeLabel": s.get("schoolTypeLabel"),
+            "sector": s.get("sector"),
             "rwmExpected": s.get("rwmExpected"),
             "eligiblePupils": s.get("eligiblePupils"),
         }

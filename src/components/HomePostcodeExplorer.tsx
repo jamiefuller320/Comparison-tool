@@ -19,12 +19,19 @@ import {
 } from "@/lib/nearby";
 import { fmtPct } from "@/lib/format";
 import { PhaseSelector } from "@/components/PhaseSelector";
+import { SectorSelector } from "@/components/SectorSelector";
 import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
   type PhaseId,
 } from "@/lib/phases";
+import {
+  formatSector,
+  resolveSchoolSector,
+  schoolMatchesSectors,
+  type SectorId,
+} from "@/lib/sectors";
 
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
@@ -47,6 +54,8 @@ export function HomePostcodeExplorer({
   onToggle,
   stageFilter,
   onStageFilterChange,
+  sectorFilter,
+  onSectorFilterChange,
   max = 4,
 }: {
   schools: SchoolRecord[];
@@ -54,6 +63,8 @@ export function HomePostcodeExplorer({
   onToggle: (urn: string) => void;
   stageFilter: PhaseId[];
   onStageFilterChange: (next: PhaseId[]) => void;
+  sectorFilter: SectorId[];
+  onSectorFilterChange: (next: SectorId[]) => void;
   max?: number;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
@@ -133,9 +144,11 @@ export function HomePostcodeExplorer({
       schools,
       radiusKm * 1000,
       listLimitForRadius(radiusKm),
-      (school) => schoolMatchesPhases(school, stageFilter),
+      (school) =>
+        schoolMatchesPhases(school, stageFilter) &&
+        schoolMatchesSectors(school, sectorFilter),
     );
-  }, [home, schools, radiusKm, stageFilter]);
+  }, [home, schools, radiusKm, stageFilter, sectorFilter]);
 
   const nearby = useMemo(
     () =>
@@ -276,6 +289,11 @@ export function HomePostcodeExplorer({
             onChange={onStageFilterChange}
             tone="hero"
           />
+          <SectorSelector
+            selected={sectorFilter}
+            onChange={onSectorFilterChange}
+            tone="hero"
+          />
         </div>
       </section>
 
@@ -312,12 +330,12 @@ export function HomePostcodeExplorer({
 
             <div className="nearby-layout">
               <NearbyMap
-                key={`map-${home.postcode}-${radiusKm}-${stageFilter.join("-")}`}
+                key={`map-${home.postcode}-${radiusKm}-${stageFilter.join("-")}-${sectorFilter.join("-")}`}
                 home={home}
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}
                 selectedUrns={selectedUrns}
-                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${nearby.map((s) => s.urn).join(",")}`}
+                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${nearby.map((s) => s.urn).join(",")}`}
                 onSelect={(urn) => {
                   if (selectedUrns.includes(urn) || !atMax) onToggle(urn);
                 }}
@@ -335,14 +353,17 @@ export function HomePostcodeExplorer({
                 </div>
                 {nearby.length === 0 ? (
                   <p className="footnote" style={{ padding: "1rem" }}>
-                    No indexed schools in this ring. Try a wider range or another
-                    stage.
+                    No indexed schools in this ring. Try a wider range, another
+                    stage, or include independent schools.
                   </p>
                 ) : (
-                  <ul key={`nearby-${radiusKm}-${stageFilter.join("-")}`}>
+                  <ul
+                    key={`nearby-${radiusKm}-${stageFilter.join("-")}-${sectorFilter.join("-")}`}
+                  >
                     {nearby.map((school) => {
                       const checked = selectedUrns.includes(school.urn);
                       const disabled = !checked && atMax;
+                      const sector = formatSector(resolveSchoolSector(school));
                       return (
                         <li key={school.urn}>
                           <label
@@ -364,6 +385,7 @@ export function HomePostcodeExplorer({
                               <strong>{school.name}</strong>
                               <span className="nearby-item-meta">
                                 {[
+                                  sector,
                                   formatPhases(
                                     phasesFromAgeRange(school.ageRange),
                                   ),
@@ -380,7 +402,9 @@ export function HomePostcodeExplorer({
                                     : null,
                                   school.rwmExpected != null
                                     ? `${fmtPct(school.rwmExpected)} RWM`
-                                    : null,
+                                    : sector === "Independent"
+                                      ? "No published KS2 figures"
+                                      : null,
                                 ]
                                   .filter(Boolean)
                                   .join(" · ")}
