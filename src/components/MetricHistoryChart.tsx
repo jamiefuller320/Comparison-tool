@@ -30,7 +30,12 @@ const PALETTE = ["#0b4f6c", "#c45c26", "#1f6b4a", "#6b4f8a"];
 const ENGLAND_COLOR = "rgba(20,35,58,0.55)";
 
 function isEnglandEntry(entry: LegendPayload): boolean {
-  return entry.dataKey === "england" || entry.value === "England";
+  const label = entry.value ?? "";
+  return (
+    entry.dataKey === "england" ||
+    label === "England" ||
+    label.startsWith("England ")
+  );
 }
 
 /** England first, then schools in shortlist order (payload order). */
@@ -123,7 +128,9 @@ export function MetricHistoryChart({
         {meta.source?.years?.length
           ? ` (${meta.periods[0]?.replace("/20", "/")}–${meta.periods.at(-1)?.replace("/20", "/")})`
           : null}
-        . England is the dashed line (first in the key).
+        {metric === "eligiblePupils"
+          ? " England (dashed) is the mean Year 6 cohort across KS2 table schools (total ÷ number of records)."
+          : " England is the dashed line (first in the key)."}
         {gapRange ? ` ${COVID_GAP_NOTE}` : null}
       </p>
       <ResponsiveContainer width="100%" height={chartHeight} minWidth={0}>
@@ -189,7 +196,7 @@ export function MetricHistoryChart({
           <Line
             type="monotone"
             dataKey="england"
-            name="England"
+            name={metric === "eligiblePupils" ? "England (avg)" : "England"}
             stroke={ENGLAND_COLOR}
             strokeWidth={2}
             strokeDasharray="5 4"

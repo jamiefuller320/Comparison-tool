@@ -153,6 +153,8 @@ def extract_years(years: list[str]) -> tuple[list[str], dict, dict[str, dict]]:
 
         eng_row: dict[str, str] | None = None
         school_rows = 0
+        cohort_total = 0.0
+        cohort_records = 0
         for row in reader:
             rectype = row.get("RECTYPE")
             if rectype == "1":
@@ -164,12 +166,27 @@ def extract_years(years: list[str]) -> tuple[list[str], dict, dict[str, dict]]:
                 )
                 pad_school(bucket, len(periods) - 1)
                 for metric, cols in METRIC_COLS.items():
-                    bucket[metric].append(parse_metric(first(row, cols)))
+                    value = parse_metric(first(row, cols))
+                    bucket[metric].append(value)
+                    if metric == "eligiblePupils" and value is not None:
+                        cohort_total += float(value)
+                        cohort_records += 1
                 school_rows += 1
             elif rectype in {"4", "5"} and eng_row is None:
                 eng_row = row
 
         for metric, cols in METRIC_COLS.items():
+            if metric == "eligiblePupils":
+                # National TELIG is a pupil total (~650k). For cohort-size charts
+                # parents need mean school size: total ÷ KS2 school records.
+                if cohort_records > 0:
+                    avg = cohort_total / cohort_records
+                    england[metric].append(
+                        int(round(avg)) if abs(avg - round(avg)) < 1e-9 else round(avg, 1)
+                    )
+                else:
+                    england[metric].append(None)
+                continue
             england[metric].append(
                 parse_metric(first(eng_row, cols)) if eng_row else None
             )
@@ -179,7 +196,9 @@ def extract_years(years: list[str]) -> tuple[list[str], dict, dict[str, dict]]:
 
         print(
             f"  {period}: {school_rows:,} school rows · "
-            f"{len(schools):,} urns · England RWM {england['rwmExpected'][-1]}",
+            f"{len(schools):,} urns · England RWM {england['rwmExpected'][-1]} · "
+            f"mean cohort {england['eligiblePupils'][-1]} "
+            f"(n={cohort_records:,})",
             flush=True,
         )
 
@@ -239,7 +258,10 @@ def write_archive(
             "url": "https://www.compare-school-performance.service.gov.uk/download-data",
             "note": (
                 "School-level KS2 performance tables (RECTYPE 1) plus England "
-                "(RECTYPE 4/5). No tables for 2019/20–2021/22 (COVID). "
+                "(RECTYPE 4/5). eligiblePupils England series is the mean Year 6 "
+                "cohort (sum of school TELIG ÷ number of KS2 school records with "
+                "a published cohort), not the national pupil total. "
+                "No tables for 2019/20–2021/22 (COVID). "
                 "2014/15 and earlier excluded (different assessment framework)."
             ),
             "years": years,
