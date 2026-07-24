@@ -55,6 +55,7 @@ jobs:
           python3 scripts/harvest-schools.py
           python3 scripts/enrich-geocode.py
           python3 scripts/enrich-secondaries.py
+          python3 scripts/enrich-independents.py
 
       - name: Record force-refresh stamp
         if: steps.gate.outputs.allowed == 'true'

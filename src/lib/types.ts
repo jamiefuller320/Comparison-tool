@@ -20,7 +20,30 @@ export interface SchoolMetrics {
   notDisadvantagedRwmExpected?: number | null;
 }
 
-export interface SchoolRecord extends SchoolMetrics {
+export interface IndependentMetrics {
+  att8Average?: number | null;
+  engMath94Percent?: number | null;
+  engMath95Percent?: number | null;
+  anyPassPercent?: number | null;
+  ebaccEnteringPercent?: number | null;
+  ebacc94Percent?: number | null;
+  ebaccAps?: number | null;
+  ks4Pupils?: number | null;
+  ks4Period?: string | null;
+  ofstedOverall?: string | null;
+  ofstedOverallCode?: string | null;
+  ofstedQualityOfEducation?: string | null;
+  ofstedLeadership?: string | null;
+  ofstedSafeguardingEffective?: string | null;
+  ofstedIssCompliance?: string | null;
+  ofstedInspectorate?: string | null;
+  ofstedInspectionDate?: string | null;
+  ofstedPublicationDate?: string | null;
+  ofstedReportUrl?: string | null;
+  ofstedPupilsOnRoll?: number | null;
+}
+
+export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   urn: string;
   name: string;
   laEstab?: string;
@@ -53,6 +76,7 @@ export interface SchoolRecord extends SchoolMetrics {
   compareUrl?: string;
   latitude?: number | null;
   longitude?: number | null;
+  source?: string | null;
 }
 
 export interface DirectorySchool {
@@ -67,9 +91,17 @@ export interface DirectorySchool {
   sector?: "state" | "independent" | null;
   rwmExpected?: number | null;
   eligiblePupils?: number | null;
+  att8Average?: number | null;
+  ofstedOverall?: string | null;
 }
 
 export interface BenchmarkSet extends SchoolMetrics {}
+
+export interface IndependentBenchmarkSet extends IndependentMetrics {
+  period?: string | null;
+  schoolCount?: number | null;
+  note?: string | null;
+}
 
 export interface SchoolsIndex {
   generatedAt: string;
@@ -83,6 +115,7 @@ export interface SchoolsIndex {
   benchmarks: {
     england: BenchmarkSet;
     localAuthorities: Record<string, BenchmarkSet>;
+    independent?: IndependentBenchmarkSet;
   };
   schools: SchoolRecord[];
   stats: {
@@ -94,6 +127,11 @@ export interface SchoolsIndex {
     infantOrNurseryCount?: number;
     stateCount?: number;
     independentCount?: number;
+    independentWithKs4?: number;
+    independentWithOfsted?: number;
+    independentEnriched?: boolean;
+    ks4Period?: string;
+    ofstedAsAt?: string;
   };
 }
 

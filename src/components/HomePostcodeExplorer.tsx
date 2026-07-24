@@ -402,9 +402,13 @@ export function HomePostcodeExplorer({
                                     : null,
                                   school.rwmExpected != null
                                     ? `${fmtPct(school.rwmExpected)} RWM`
-                                    : sector === "Independent"
-                                      ? "No published KS2 figures"
-                                      : null,
+                                    : school.att8Average != null
+                                      ? `Att8 ${school.att8Average}`
+                                      : school.ofstedOverall
+                                        ? `Ofsted ${school.ofstedOverall}`
+                                        : sector === "Independent"
+                                          ? "No published KS2 figures"
+                                          : null,
                                 ]
                                   .filter(Boolean)
                                   .join(" · ")}

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 import { SchoolSearch } from "@/components/SchoolSearch";
 import { ComparisonBoard } from "@/components/ComparisonBoard";
+import { IndependentComparisonBoard } from "@/components/IndependentComparisonBoard";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
@@ -18,6 +19,7 @@ import {
 import {
   DEFAULT_SECTORS,
   normalizeSectorIds,
+  resolveSchoolSector,
   type SectorId,
 } from "@/lib/sectors";
 
@@ -90,6 +92,13 @@ export function CompareApp({
     .map((urn) => byUrn.get(urn))
     .filter((s): s is SchoolRecord => Boolean(s));
 
+  const stateSelected = selectedSchools.filter(
+    (s) => resolveSchoolSector(s) === "state",
+  );
+  const independentSelected = selectedSchools.filter(
+    (s) => resolveSchoolSector(s) === "independent",
+  );
+
   const focus = selectedSchools[0];
   const suggestions = useMemo(() => {
     if (!focus) return [];
@@ -149,9 +158,9 @@ export function CompareApp({
             <h2>Build your shortlist</h2>
             <p>
               Search any English school in the index for the stages and sector
-              you selected, then compare up to four side by side. Published
-              attainment here is Key Stage 2 where available — independent
-              schools often have little or none of that table data.
+              you selected, then compare up to four side by side. State schools
+              use Key Stage 2 tables; independents use Key Stage 4 outcomes and
+              Ofsted inspection grades where published.
             </p>
             <div className="stats-line">
               <span>
@@ -172,6 +181,14 @@ export function CompareApp({
                     {index.stats.independentCount.toLocaleString("en-GB")}
                   </strong>{" "}
                   independent
+                </span>
+              ) : null}
+              {index.stats.independentWithKs4 != null ? (
+                <span>
+                  <strong>
+                    {index.stats.independentWithKs4.toLocaleString("en-GB")}
+                  </strong>{" "}
+                  independents with KS4
                 </span>
               ) : null}
               <span>
@@ -223,16 +240,43 @@ export function CompareApp({
           <div className="section-head">
             <h2>Side by side</h2>
             <p>
-              Expected standards, scaled scores, cohort context and group
-              differences — with England shown as the parental benchmark on
-              percentage measures. Independent schools are labelled separately
-              because they often do not publish comparable KS2 figures.
+              State and independent shortlists use different published measures,
+              so they are compared in separate tables when both are selected.
             </p>
           </div>
-          <ComparisonBoard
-            schools={selectedSchools}
-            england={index.benchmarks.england}
-          />
+
+          {selectedSchools.length === 0 ? (
+            <ComparisonBoard
+              schools={selectedSchools}
+              england={index.benchmarks.england}
+            />
+          ) : null}
+
+          {stateSelected.length > 0 ? (
+            <div style={{ marginBottom: independentSelected.length ? "2rem" : 0 }}>
+              {independentSelected.length > 0 ? (
+                <h3 className="compare-subhead">State schools — Key Stage 2</h3>
+              ) : null}
+              <ComparisonBoard
+                schools={stateSelected}
+                england={index.benchmarks.england}
+              />
+            </div>
+          ) : null}
+
+          {independentSelected.length > 0 ? (
+            <div>
+              {stateSelected.length > 0 ? (
+                <h3 className="compare-subhead">
+                  Independent schools — Key Stage 4 &amp; inspection
+                </h3>
+              ) : null}
+              <IndependentComparisonBoard
+                schools={independentSelected}
+                independentBench={index.benchmarks.independent}
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
