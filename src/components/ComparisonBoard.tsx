@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Bar,
   BarChart,
@@ -79,6 +79,7 @@ export function ComparisonBoard({
   > | null>(null);
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [historyPending, setHistoryPending] = useState(false);
+  const historyPanelRef = useRef<HTMLDivElement | null>(null);
 
   const urnKey = schools.map((s) => s.urn).join(",");
 
@@ -97,7 +98,7 @@ export function ComparisonBoard({
 
     void (async () => {
       try {
-        const nextMeta = meta ?? (await loadKs2HistoryMeta());
+        const nextMeta = await loadKs2HistoryMeta();
         const series = await loadSchoolHistorySeries(urns);
         if (cancelled) return;
         setMeta(nextMeta);
@@ -117,9 +118,19 @@ export function ComparisonBoard({
     return () => {
       cancelled = true;
     };
-    // meta intentionally omitted: once loaded it is reused via closure/state.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeMetric, urnKey]);
+
+  // Bring the inline chart into view — it used to render below the whole table,
+  // so clicks on top rows looked like a no-op.
+  useEffect(() => {
+    if (!activeMetric || historyPending) return;
+    const node = historyPanelRef.current;
+    if (!node) return;
+    const id = window.setTimeout(() => {
+      node.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 50);
+    return () => window.clearTimeout(id);
+  }, [activeMetric, historyPending, historyError, schoolSeries]);
 
   if (schools.length === 0) {
     return (
@@ -156,11 +167,54 @@ export function ComparisonBoard({
     schoolSeries &&
     schools.some((s) => seriesHasHistory(schoolSeries[s.urn], activeMetric));
 
+  const historyBody =
+    activeMetric && activeDef ? (
+      <div
+        ref={historyPanelRef}
+        className="history-panel history-panel-inline"
+        id={`history-${activeMetric}`}
+        role="region"
+        aria-label={`History for ${activeDef.label}`}
+      >
+        <div className="history-panel-head">
+          <h3>{activeDef.label} over time</h3>
+          <button
+            type="button"
+            className="history-close"
+            onClick={() => setActiveMetric(null)}
+          >
+            Close
+          </button>
+        </div>
+        {historyPending ? (
+          <p className="footnote">Loading multi-year figures…</p>
+        ) : null}
+        {historyError ? <p className="footnote">{historyError}</p> : null}
+        {!historyPending && !historyError && meta && schoolSeries ? (
+          hasAnyHistoryForActive ? (
+            <MetricHistoryChart
+              key={`${activeMetric}-${urnKey}`}
+              meta={meta}
+              metric={activeMetric}
+              unit={activeDef.unit}
+              schools={schools.map((s) => ({ urn: s.urn, name: s.name }))}
+              schoolSeries={schoolSeries}
+            />
+          ) : (
+            <p className="footnote">
+              None of these schools have archived figures for this measure in
+              the KS2 history pack.
+            </p>
+          )
+        ) : null}
+      </div>
+    ) : null;
+
   return (
     <div>
       <p className="footnote" style={{ marginBottom: "0.85rem" }}>
-        Click a measure name to open its year-by-year trend for the schools in
-        your shortlist (state KS2 archive from Compare school performance).
+        Click a measure name to open its year-by-year trend directly under that
+        row (state KS2 archive from Compare school performance).
       </p>
 
       <div className="compare-board">
@@ -216,6 +270,12 @@ export function ComparisonBoard({
                   onToggleMetric={(key) =>
                     setActiveMetric((prev) => (prev === key ? null : key))
                   }
+                  historyPanel={
+                    activeMetric &&
+                    metrics.some((m) => m.key === activeMetric)
+                      ? historyBody
+                      : null
+                  }
                 />
               );
             })}
@@ -223,50 +283,8 @@ export function ComparisonBoard({
         </table>
       </div>
 
-      {activeMetric && activeDef ? (
-        <div
-          className="history-panel"
-          id={`history-${activeMetric}`}
-          role="region"
-          aria-label={`History for ${activeDef.label}`}
-        >
-          <div className="history-panel-head">
-            <h3>{activeDef.label} over time</h3>
-            <button
-              type="button"
-              className="history-close"
-              onClick={() => setActiveMetric(null)}
-            >
-              Close
-            </button>
-          </div>
-          {historyPending ? (
-            <p className="footnote">Loading multi-year figures…</p>
-          ) : null}
-          {historyError ? (
-            <p className="footnote">{historyError}</p>
-          ) : null}
-          {!historyPending && !historyError && meta && schoolSeries ? (
-            hasAnyHistoryForActive ? (
-              <MetricHistoryChart
-                meta={meta}
-                metric={activeMetric}
-                unit={activeDef.unit}
-                schools={schools.map((s) => ({ urn: s.urn, name: s.name }))}
-                schoolSeries={schoolSeries}
-              />
-            ) : (
-              <p className="footnote">
-                None of these schools have archived figures for this measure in
-                the KS2 history pack.
-              </p>
-            )
-          ) : null}
-        </div>
-      ) : null}
-
       <div className="chart-wrap" aria-label="Expected standard comparison chart">
-        <ResponsiveContainer width="100%" height={320}>
+        <ResponsiveContainer width="100%" height={320} minWidth={0}>
           <BarChart data={chartData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(20,35,58,0.1)" />
             <XAxis dataKey="label" tick={{ fill: "#3d4f66", fontSize: 12 }} />
@@ -310,6 +328,7 @@ function GroupRows({
   england,
   activeMetric,
   onToggleMetric,
+  historyPanel,
 }: {
   title: string;
   metrics: ParentMetric[];
@@ -317,6 +336,7 @@ function GroupRows({
   england: BenchmarkSet;
   activeMetric: HistoryMetricKey | null;
   onToggleMetric: (key: HistoryMetricKey) => void;
+  historyPanel: ReactNode;
 }) {
   return (
     <>
@@ -330,53 +350,90 @@ function GroupRows({
             : bestUrn(schools, metric.get, true);
         const active = activeMetric === metric.key;
         return (
-          <tr key={metric.key} className={active ? "metric-row-active" : undefined}>
-            <th scope="row">
-              <button
-                type="button"
-                className={
-                  active ? "metric-history-trigger active" : "metric-history-trigger"
-                }
-                aria-expanded={active}
-                aria-controls={`history-${metric.key}`}
-                onClick={() => onToggleMetric(metric.key as MetricKey)}
-              >
-                <span className="metric-history-label">{metric.label}</span>
-                <span className="metric-history-cta">
-                  {active ? "Hide trend" : "Year trend"}
-                </span>
-              </button>
-              <span className="hint">{metric.parentHint}</span>
-            </th>
-            {schools.map((school) => {
-              const value = metric.get(school);
-              const englandValue = england[metric.key as keyof BenchmarkSet] as
-                | number
-                | null
-                | undefined;
-              const gap =
-                metric.unit === "pct" ? ppGap(value, englandValue) : null;
-              return (
-                <td
-                  key={school.urn}
-                  className={winner === school.urn ? "best-cell metric-cell" : "metric-cell"}
-                >
-                  {formatValue(value, metric.unit)}
-                  {gap != null ? (
-                    <span
-                      className={
-                        gap > 1 ? "vs vs-up" : gap < -1 ? "vs vs-down" : "vs vs-flat"
-                      }
-                    >
-                      {fmtPp(gap)} vs England
-                    </span>
-                  ) : null}
-                </td>
-              );
-            })}
-          </tr>
+          <MetricFragment
+            key={metric.key}
+            metric={metric}
+            schools={schools}
+            england={england}
+            winner={winner}
+            active={active}
+            onToggleMetric={onToggleMetric}
+            historyPanel={active ? historyPanel : null}
+          />
         );
       })}
+    </>
+  );
+}
+
+function MetricFragment({
+  metric,
+  schools,
+  england,
+  winner,
+  active,
+  onToggleMetric,
+  historyPanel,
+}: {
+  metric: ParentMetric;
+  schools: SchoolRecord[];
+  england: BenchmarkSet;
+  winner: string | null;
+  active: boolean;
+  onToggleMetric: (key: HistoryMetricKey) => void;
+  historyPanel: ReactNode;
+}) {
+  return (
+    <>
+      <tr className={active ? "metric-row-active" : undefined}>
+        <th scope="row">
+          <button
+            type="button"
+            className={
+              active ? "metric-history-trigger active" : "metric-history-trigger"
+            }
+            aria-expanded={active}
+            aria-controls={`history-${metric.key}`}
+            onClick={() => onToggleMetric(metric.key as MetricKey)}
+          >
+            <span className="metric-history-label">{metric.label}</span>
+            <span className="metric-history-cta">
+              {active ? "Hide trend" : "Year trend"}
+            </span>
+          </button>
+          <span className="hint">{metric.parentHint}</span>
+        </th>
+        {schools.map((school) => {
+          const value = metric.get(school);
+          const englandValue = england[metric.key as keyof BenchmarkSet] as
+            | number
+            | null
+            | undefined;
+          const gap = metric.unit === "pct" ? ppGap(value, englandValue) : null;
+          return (
+            <td
+              key={school.urn}
+              className={winner === school.urn ? "best-cell metric-cell" : "metric-cell"}
+            >
+              {formatValue(value, metric.unit)}
+              {gap != null ? (
+                <span
+                  className={
+                    gap > 1 ? "vs vs-up" : gap < -1 ? "vs vs-down" : "vs vs-flat"
+                  }
+                >
+                  {fmtPp(gap)} vs England
+                </span>
+              ) : null}
+            </td>
+          );
+        })}
+      </tr>
+      {historyPanel ? (
+        <tr className="history-row">
+          <td colSpan={schools.length + 1}>{historyPanel}</td>
+        </tr>
+      ) : null}
     </>
   );
 }
