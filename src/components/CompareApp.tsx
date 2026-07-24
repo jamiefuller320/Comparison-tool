@@ -14,12 +14,14 @@ import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   DEFAULT_PHASES,
   normalizePhaseIds,
+  schoolMatchesPhases,
   type PhaseId,
 } from "@/lib/phases";
 import {
   DEFAULT_SECTORS,
   normalizeSectorIds,
   resolveSchoolSector,
+  schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
 
@@ -137,13 +139,23 @@ export function CompareApp({
   }
 
   function changeSectors(next: SectorId[]) {
-    startTransition(() => setSectors(next));
+    // Apply immediately so map / nearby / search refresh without deferred lag.
+    setSectors(next);
   }
+
+  const filteredSchools = useMemo(
+    () =>
+      index.schools.filter(
+        (s) =>
+          schoolMatchesPhases(s, stages) && schoolMatchesSectors(s, sectors),
+      ),
+    [index.schools, stages, sectors],
+  );
 
   return (
     <>
       <HomePostcodeExplorer
-        schools={index.schools}
+        schools={filteredSchools}
         selectedUrns={selected}
         onToggle={toggleSchool}
         stageFilter={stages}
@@ -217,7 +229,8 @@ export function CompareApp({
           />
 
           <SchoolSearch
-            schools={index.schools}
+            key={`search-${stages.join("-")}-${sectors.join("-")}`}
+            schools={filteredSchools}
             selectedUrns={selected}
             onAdd={addSchool}
             stageFilter={stages}
