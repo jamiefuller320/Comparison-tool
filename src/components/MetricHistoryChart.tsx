@@ -9,6 +9,8 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type DefaultLegendContentProps,
+  type LegendPayload,
 } from "recharts";
 import {
   COVID_GAP_LABEL,
@@ -26,6 +28,52 @@ import { CovidAwareYearTick, CovidGapBand } from "@/components/CovidGapBand";
 import { shortName } from "@/lib/format";
 
 const PALETTE = ["#0b4f6c", "#c45c26", "#1f6b4a", "#6b4f8a"];
+const ENGLAND_COLOR = "rgba(20,35,58,0.55)";
+
+function isEnglandEntry(entry: LegendPayload): boolean {
+  return entry.dataKey === "england" || entry.value === "England";
+}
+
+/** England first, then schools in shortlist order (payload order). */
+function orderLegendPayload(payload: readonly LegendPayload[]): LegendPayload[] {
+  const england = payload.filter(isEnglandEntry);
+  const schools = payload.filter((entry) => !isEnglandEntry(entry));
+  return [...england, ...schools];
+}
+
+function HistoryLegendContent({ payload }: DefaultLegendContentProps) {
+  if (!payload?.length) return null;
+  const items = orderLegendPayload(payload);
+
+  return (
+    <ul className="history-legend">
+      {items.map((entry) => {
+        const england = isEnglandEntry(entry);
+        const color = entry.color || (england ? ENGLAND_COLOR : "#0b4f6c");
+        const label = entry.value ?? "";
+        return (
+          <li
+            key={String(entry.dataKey ?? label)}
+            className={
+              england ? "history-legend-item england" : "history-legend-item"
+            }
+          >
+            <span
+              className={
+                england ? "history-legend-swatch dashed" : "history-legend-swatch"
+              }
+              style={{ background: england ? "transparent" : color, borderColor: color }}
+              aria-hidden
+            />
+            <span className="history-legend-label" style={{ color }}>
+              {label}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 export function MetricHistoryChart({
   meta,
@@ -66,6 +114,8 @@ export function MetricHistoryChart({
   const domain: [number | "auto", number | "auto"] =
     unit === "pct" ? [0, 100] : unit === "score" ? [80, 120] : ["auto", "auto"];
   const xTicks = rows.map((row) => row.x);
+  // Extra bottom room when several school names need a second legend row.
+  const chartHeight = schools.length >= 3 ? 340 : 320;
 
   return (
     <div className="history-chart">
@@ -74,11 +124,14 @@ export function MetricHistoryChart({
         {meta.source?.years?.length
           ? ` (${meta.periods[0]?.replace("/20", "/")}–${meta.periods.at(-1)?.replace("/20", "/")})`
           : null}
-        . England shown as a dashed line.
+        . England is the dashed line (first in the key).
         {gapRange ? ` ${COVID_GAP_NOTE}` : null}
       </p>
-      <ResponsiveContainer width="100%" height={300} minWidth={0}>
-        <LineChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 4 }}>
+      <ResponsiveContainer width="100%" height={chartHeight} minWidth={0}>
+        <LineChart
+          data={rows}
+          margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+        >
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(20,35,58,0.1)" />
           <XAxis
             type="number"
@@ -121,14 +174,36 @@ export function MetricHistoryChart({
               borderRadius: 8,
             }}
           />
-          <Legend />
+          <Legend
+            verticalAlign="bottom"
+            align="left"
+            itemSorter={null}
+            content={(props) => <HistoryLegendContent {...props} />}
+            wrapperStyle={{
+              width: "100%",
+              paddingTop: 8,
+              overflow: "visible",
+            }}
+          />
           {gapRange ? <CovidGapBand x0={gapRange.x0} x1={gapRange.x1} /> : null}
+          {/* England first so the key order stays stable with itemSorter={null}. */}
+          <Line
+            type="monotone"
+            dataKey="england"
+            name="England"
+            stroke={ENGLAND_COLOR}
+            strokeWidth={2}
+            strokeDasharray="5 4"
+            dot={{ r: 3, fill: ENGLAND_COLOR }}
+            connectNulls={false}
+            isAnimationActive={false}
+          />
           {schools.map((school, i) => (
             <Line
               key={school.urn}
               type="monotone"
               dataKey={school.urn}
-              name={shortName(school.name, 22)}
+              name={shortName(school.name, 28)}
               stroke={PALETTE[i % PALETTE.length]}
               strokeWidth={2.5}
               dot={{ r: 3.5, fill: PALETTE[i % PALETTE.length] }}
@@ -136,17 +211,6 @@ export function MetricHistoryChart({
               isAnimationActive={false}
             />
           ))}
-          <Line
-            type="monotone"
-            dataKey="england"
-            name="England"
-            stroke="rgba(20,35,58,0.55)"
-            strokeWidth={2}
-            strokeDasharray="5 4"
-            dot={{ r: 3, fill: "rgba(20,35,58,0.55)" }}
-            connectNulls={false}
-            isAnimationActive={false}
-          />
         </LineChart>
       </ResponsiveContainer>
     </div>
