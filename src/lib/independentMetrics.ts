@@ -10,6 +10,10 @@ export type IndependentMetricKey =
   | "ebaccEnteringPercent"
   | "ebacc94Percent"
   | "ebaccAps"
+  | "ks5ApsPerEntry"
+  | "ks5Best3Aps"
+  | "ks5ValueAdded"
+  | "ks5AlevelStudents"
   | "ks4Pupils"
   | "ofstedOverall"
   | "ofstedQualityOfEducation"
@@ -20,10 +24,27 @@ export type IndependentMetricKey =
 export interface IndependentMetric {
   key: IndependentMetricKey;
   label: string;
-  group: "outcomes" | "pathways" | "inspection" | "cohort";
+  group: "outcomes" | "pathways" | "ks5" | "inspection" | "cohort";
   unit: "pct" | "score" | "count" | "text";
   parentHint: string;
   get: (s: SchoolRecord) => number | string | null | undefined;
+  /** Optional per-cell note when the value is blank. */
+  blankHint?: (s: SchoolRecord) => string | null;
+}
+
+function engMathBlankHint(school: SchoolRecord): string | null {
+  if (school.engMath94IsPillarFallback) return null;
+  if (school.engMathMeasureUnavailable) {
+    return "Nil / IGCSE-style return — not comparable GCSE basics";
+  }
+  const cleared = school.ks4ClearedNilFields || [];
+  if (
+    cleared.includes("engMath94Percent") ||
+    cleared.includes("engMath95Percent")
+  ) {
+    return "Cleared as a nil return — see EBacc English/maths pillars";
+  }
+  return null;
 }
 
 /** Parental metrics for independent schools (KS4 + inspection), not KS2 tables. */
@@ -44,6 +65,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     parentHint:
       "Combined GCSE English & maths 4+. Nil/IGCSE returns are shown as —; where needed this uses the lower of the EBacc English and maths pillars.",
     get: (s) => s.engMath94Percent,
+    blankHint: engMathBlankHint,
   },
   {
     key: "engMath95Percent",
@@ -52,6 +74,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "pct",
     parentHint: "Combined GCSE English & maths 5+, when the DfE measure is published.",
     get: (s) => s.engMath95Percent,
+    blankHint: engMathBlankHint,
   },
   {
     key: "anyPassPercent",
@@ -102,6 +125,40 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "score",
     parentHint: "Average points across the EBacc pillars.",
     get: (s) => s.ebaccAps,
+  },
+  {
+    key: "ks5ApsPerEntry",
+    label: "A-level APS per entry",
+    group: "ks5",
+    unit: "score",
+    parentHint:
+      "Average point score per A-level entry for students at the end of 16–18 study.",
+    get: (s) => s.ks5ApsPerEntry,
+  },
+  {
+    key: "ks5Best3Aps",
+    label: "Best 3 A-levels APS",
+    group: "ks5",
+    unit: "score",
+    parentHint: "Average points across each student’s best three A-level entries.",
+    get: (s) => s.ks5Best3Aps,
+  },
+  {
+    key: "ks5ValueAdded",
+    label: "A-level value added",
+    group: "ks5",
+    unit: "score",
+    parentHint:
+      "Progress score versus similar starters (positive = above average progress).",
+    get: (s) => s.ks5ValueAdded,
+  },
+  {
+    key: "ks5AlevelStudents",
+    label: "A-level cohort",
+    group: "ks5",
+    unit: "count",
+    parentHint: "Students entered for at least one A level in the published year.",
+    get: (s) => s.ks5AlevelStudents ?? s.ks5Students,
   },
   {
     key: "inspectorateName",

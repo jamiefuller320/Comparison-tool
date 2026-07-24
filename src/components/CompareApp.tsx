@@ -13,6 +13,7 @@ import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   DEFAULT_PHASES,
+  defaultPhasesForSectors,
   normalizePhaseIds,
   schoolMatchesPhases,
   type PhaseId,
@@ -54,6 +55,7 @@ export function CompareApp({
   const [sectors, setSectors] = useState<SectorId[]>(DEFAULT_SECTORS);
   const [pending, startTransition] = useTransition();
   const [hydrated, setHydrated] = useState(false);
+  const [sectorNote, setSectorNote] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -141,6 +143,33 @@ export function CompareApp({
   function changeSectors(next: SectorId[]) {
     // Apply immediately so map / nearby / search refresh without deferred lag.
     setSectors(next);
+
+    const stageDefault = defaultPhasesForSectors(next);
+    if (stageDefault) setStages(stageDefault);
+
+    setSelected((prev) => {
+      const kept = prev.filter((urn) => {
+        const school = byUrn.get(urn);
+        return school ? schoolMatchesSectors(school, next) : false;
+      });
+      const removed = prev.length - kept.length;
+      if (removed > 0) {
+        const label =
+          next.length === 1 && next[0] === "independent"
+            ? "independent"
+            : next.length === 1 && next[0] === "state"
+              ? "state"
+              : "selected";
+        setSectorNote(
+          removed === 1
+            ? `Removed 1 school from your shortlist that sits outside the ${label} filter.`
+            : `Removed ${removed} schools from your shortlist that sit outside the ${label} filter.`,
+        );
+      } else {
+        setSectorNote(null);
+      }
+      return kept;
+    });
   }
 
   const filteredSchools = useMemo(
@@ -203,6 +232,14 @@ export function CompareApp({
                   independents with KS4
                 </span>
               ) : null}
+              {index.stats.independentWithKs5 != null ? (
+                <span>
+                  <strong>
+                    {index.stats.independentWithKs5.toLocaleString("en-GB")}
+                  </strong>{" "}
+                  with 16–18
+                </span>
+              ) : null}
               <span>
                 Latest year <strong>{index.period}</strong>
               </span>
@@ -238,10 +275,20 @@ export function CompareApp({
           />
           <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
 
+          {sectorNote ? (
+            <p className="footnote sector-prune-note" role="status">
+              {sectorNote}
+            </p>
+          ) : null}
+
           {focus ? (
             <p className="footnote" style={{ marginTop: "1rem" }}>
               <strong>{focus.name}:</strong>{" "}
-              {headlineForParents(focus, index.benchmarks.england.rwmExpected)}
+              {headlineForParents(
+                focus,
+                index.benchmarks.england.rwmExpected,
+                index.benchmarks.independent,
+              )}
               {pending ? " Updating…" : null}
             </p>
           ) : null}
@@ -281,7 +328,7 @@ export function CompareApp({
             <div>
               {stateSelected.length > 0 ? (
                 <h3 className="compare-subhead">
-                  Independent schools — Key Stage 4 &amp; inspection
+                  Independent schools — KS4, 16–18 &amp; inspection
                 </h3>
               ) : null}
               <IndependentComparisonBoard

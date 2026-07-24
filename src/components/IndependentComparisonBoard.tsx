@@ -68,10 +68,11 @@ export function IndependentComparisonBoard({
     );
   }
 
-  const groups = ["outcomes", "pathways", "inspection", "cohort"] as const;
+  const groups = ["outcomes", "pathways", "ks5", "inspection", "cohort"] as const;
   const groupTitles = {
     outcomes: "Published GCSE outcomes",
     pathways: "Subject pathways (incl. alternatives when combined basics are nil)",
+    ks5: "16–18 / A-level outcomes",
     inspection: "Inspection",
     cohort: "Cohort context",
   };
@@ -94,6 +95,7 @@ export function IndependentComparisonBoard({
 
   const palette = ["#0b4f6c", "#c45c26", "#1f6b4a", "#6b4f8a"];
   const hasAnyKs4 = schools.some((s) => s.att8Average != null);
+  const hasAnyKs5 = schools.some((s) => s.ks5ApsPerEntry != null);
   const hasAnyOfsted = schools.some((s) => s.ofstedOverall || s.ofstedIssCompliance);
   const hasNilCleared = schools.some(
     (s) => (s.ks4ClearedNilFields && s.ks4ClearedNilFields.length > 0) || s.engMathMeasureUnavailable,
@@ -105,21 +107,25 @@ export function IndependentComparisonBoard({
   return (
     <div>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
-        Independent schools are compared on published Key Stage 4 figures and
-        inspection outcomes — not the Key Stage 2 tables used for state primaries.
-        Zero percent English &amp; maths GCSE returns are treated as missing when
-        other attainment shows the school is active (common with IGCSEs).
+        Independent schools are compared on published Key Stage 4 and 16–18
+        figures plus inspection outcomes — not the Key Stage 2 tables used for
+        state primaries. Zero percent English &amp; maths GCSE returns are
+        treated as missing when other attainment shows the school is active
+        (common with IGCSEs).
         {independentBench?.att8Average != null
           ? ` Indie benchmark is the mean Attainment 8 of ${independentBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} independents with usable figures (${independentBench.period}).`
           : null}
         {!hasAnyKs4
           ? " None of these schools have published KS4 figures in the latest tables."
           : null}
+        {hasAnyKs5
+          ? " Sixth-form rows use A-level APS where the school appears in the 16–18 tables."
+          : null}
         {hasNilCleared
           ? " Some combined English & maths cells were cleared as nil returns; check EBacc English/maths pillars instead."
           : null}
         {hasIsi && !hasAnyOfsted
-          ? " ISI-inspected schools link to the ISI reports directory rather than Ofsted grades."
+          ? " ISI-inspected schools link to the ISI reports directory (postcode search when available) rather than Ofsted grades."
           : null}
       </p>
 
@@ -150,6 +156,9 @@ export function IndependentComparisonBoard({
                     {school.ks4Period ? (
                       <span>KS4 {school.ks4Period}</span>
                     ) : null}
+                    {school.ks5Period ? (
+                      <span>16–18 {school.ks5Period}</span>
+                    ) : null}
                     {school.engMath94IsPillarFallback ? (
                       <span>English &amp; maths 4+ from EBacc pillars</span>
                     ) : school.engMathMeasureUnavailable ? (
@@ -179,6 +188,15 @@ export function IndependentComparisonBoard({
                         rel="noreferrer"
                       >
                         School website ↗
+                      </a>
+                    ) : null}
+                    {school.giasUrl ? (
+                      <a
+                        href={school.giasUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        GIAS record ↗
                       </a>
                     ) : null}
                     {school.compareUrl ? (
@@ -289,6 +307,10 @@ function GroupRows({
             </th>
             {schools.map((school) => {
               const value = metric.get(school);
+              const blank =
+                (value == null || value === "") && metric.blankHint
+                  ? metric.blankHint(school)
+                  : null;
               const benchValue = independentBenchmarkValue(bench, metric.key);
               const gap =
                 metric.unit === "pct" && typeof value === "number"
@@ -302,6 +324,7 @@ function GroupRows({
                   }
                 >
                   {formatValue(value, metric.unit)}
+                  {blank ? <span className="cell-blank-hint">{blank}</span> : null}
                   {gap != null ? (
                     <span
                       className={

@@ -17,7 +17,8 @@
     "test:postcode": "npx --yes tsx scripts/test-postcode.mjs",
     "test:phases": "npx --yes tsx scripts/test-phases.mjs",
     "test:sectors": "npx --yes tsx scripts/test-sectors.mjs",
-    "test:indie-sanitize": "python3 scripts/test-indie-sanitize.py"
+    "test:indie-sanitize": "python3 scripts/test-indie-sanitize.py",
+    "test:headlines": "npx --yes tsx scripts/test-headlines.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

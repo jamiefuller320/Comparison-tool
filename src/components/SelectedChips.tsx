@@ -24,7 +24,13 @@ export function SuggestAlternatives({
         >
           <strong>{school.name}</strong>
           <p>
-            {fmtPct(school.rwmExpected)} RWM expected
+            {school.att8Average != null
+              ? `Attainment 8 ${school.att8Average}`
+              : school.ks5ApsPerEntry != null
+                ? `A-level APS ${school.ks5ApsPerEntry}`
+                : school.rwmExpected != null
+                  ? `${fmtPct(school.rwmExpected)} RWM expected`
+                  : "Limited published outcomes"}
             {school.localAuthority ? ` · ${school.localAuthority}` : ""}
           </p>
           <p>{school.reasons.join(" · ")}</p>
