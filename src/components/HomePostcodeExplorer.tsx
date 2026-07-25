@@ -32,6 +32,7 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import { isEyDirectorySetting } from "@/lib/eyMetrics";
 import { requestTourStart } from "@/lib/tour";
 
 const NearbyMap = dynamic(
@@ -147,9 +148,17 @@ export function HomePostcodeExplorer({
       schools,
       radiusKm * 1000,
       listLimitForRadius(radiusKm),
-      (school) =>
-        schoolMatchesPhases(school, stageFilter) &&
-        schoolMatchesSectors(school, sectorFilter),
+      (school) => {
+        if (!schoolMatchesPhases(school, stageFilter)) return false;
+        // Day care + consented childminders bypass school-type chips in EY.
+        if (
+          isEyDirectorySetting(school) &&
+          stageFilter.includes("early-years")
+        ) {
+          return true;
+        }
+        return schoolMatchesSectors(school, sectorFilter);
+      },
     );
   }, [home, schools, radiusKm, stageFilter, sectorFilter]);
 

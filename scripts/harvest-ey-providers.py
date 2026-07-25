@@ -525,7 +525,8 @@ def main() -> None:
             "note": (
                 "Hampshire seed scope: named non-domestic Full/Sessional day care "
                 "on the Early Years Register, plus EYFSP England/Hampshire "
-                "benchmarks. Childminders deferred (names redacted in Ofsted MI)."
+                "benchmarks. Consented childminders are harvested separately "
+                "(npm run harvest:childminders)."
             ),
         },
         "benchmarks": {"eyfsp": eyfsp},

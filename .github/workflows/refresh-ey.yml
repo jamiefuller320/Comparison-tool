@@ -1,0 +1,39 @@
+name: Refresh Hampshire early years
+
+# Ofsted overwrites the consented childminder addresses file each quarter.
+# Re-resolve the latest CSV weekly so the directory stays closely synced.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  harvest-ey:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Harvest day care + consented childminders
+        run: |
+          python3 scripts/harvest-ey-providers.py
+          python3 scripts/harvest-childminders.py
+      - name: Commit refreshed EY data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/data/ey-providers-index.json \
+            public/data/childminders-index.json \
+            public/data/harvest-summary.json \
+            src/data/harvest-summary.json
+          if git diff --staged --quiet; then
+            echo "No EY data changes"
+          else
+            git commit -m "Refresh Hampshire early years day care and childminders"
+            git push
+          fi

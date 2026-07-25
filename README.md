@@ -24,7 +24,7 @@ Until uptake is clearer, prefer **depth in a bounded slice** over a full nationa
 
 Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHORITY = "Hampshire"`).
 
-**Hampshire EY MVP (live in product):** Ofsted childcare MI for named Early Years Register full/sessional day care in Hampshire (`public/data/ey-providers-index.json`), plus England/Hampshire **EYFSP** area benchmarks (DfE does not publish provider-level EYFSP). Refresh with `npm run harvest:ey`. Childminders deferred (names redacted in Ofsted MI).
+**Hampshire EY MVP (live in product):** Ofsted childcare MI for named Early Years Register full/sessional day care in Hampshire (`public/data/ey-providers-index.json`); **consented childminders** directory + map (`public/data/childminders-index.json` from Ofsted’s quarterly consented-addresses file — incomplete by design; no phone/email); parent **vetting checklist**; plus England/Hampshire **EYFSP** area benchmarks (DfE does not publish provider-level EYFSP). Refresh with `npm run harvest:ey` (always resolves the latest consented CSV). A weekly GitHub Action (`refresh-ey.yml`) re-harvests so the directory stays closely synced after Ofsted’s quarterly overwrite.
 
 The current national KS2/KS4 harvest is a capability scaffold; the product path above is how we intend to grow coverage without assuming demand.
 
@@ -53,7 +53,7 @@ After merge to `main` and Pages is enabled:
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables
 - Lets parents **search** by name, town, postcode or URN and compare **up to four schools** side by side
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
-- Matches comparison tables to selected stages: **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent); early years remains an age-range filter until EYFSP is added
+- Matches comparison tables to selected stages: **Early years → day-care Ofsted + consented childminder directory/checklist + EYFSP area context**, **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent)
 - Keeps the language parental: shortlists and fit, not board packs or SIP targets
 
 ## Run locally
@@ -62,7 +62,8 @@ After merge to `main` and Pages is enabled:
 npm install
 npm run harvest        # full England index + Hampshire EY pack + KS2 history
 # or: npm run harvest:sample
-# or: npm run harvest:ey            # Hampshire Ofsted day care + EYFSP benches only
+# or: npm run harvest:ey            # Hampshire day care + consented childminders + EYFSP
+# or: npm run harvest:childminders  # latest Ofsted consented addresses only
 # or: npm run enrich:independents   # refresh indie KS4/Ofsted only
 # or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
 # or: npm run history:ks2           # multi-year CSP KS2 archive only

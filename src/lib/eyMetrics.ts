@@ -8,6 +8,26 @@ export function isEyProvider(record: {
   return Boolean(record.urn && record.urn.startsWith("ey:"));
 }
 
+/** Consented childminder / domestic childcare (directory + map, not Ofsted board). */
+export function isChildminder(record: {
+  urn?: string | null;
+  source?: string | null;
+}): boolean {
+  if (record.source === "ofsted-consented-childminder") return true;
+  return Boolean(record.urn && record.urn.startsWith("cm:"));
+}
+
+/**
+ * Hampshire EY settings that bypass school-type filters in search/map when
+ * Early years is selected (day care + consented childminders).
+ */
+export function isEyDirectorySetting(record: {
+  urn?: string | null;
+  source?: string | null;
+}): boolean {
+  return isEyProvider(record) || isChildminder(record);
+}
+
 export interface EyDisplayMetric {
   key: string;
   label: string;

@@ -1,4 +1,8 @@
-import type { EyProvidersIndex, SchoolsIndex } from "@/lib/types";
+import type {
+  ChildmindersIndex,
+  EyProvidersIndex,
+  SchoolsIndex,
+} from "@/lib/types";
 
 /** Resolve data URLs for both local and GitHub Pages basePath. */
 export function dataUrl(path: string): string {
@@ -39,6 +43,30 @@ export async function loadEyProvidersIndex(
       throw new Error(`Failed to load early years index (${res.status})`);
     }
     return res.json() as Promise<EyProvidersIndex>;
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith("Failed to load")) {
+      throw err;
+    }
+    return null;
+  }
+}
+
+export async function loadChildmindersIndex(
+  fetchImpl: typeof fetch = fetch,
+  cacheBust = false,
+): Promise<ChildmindersIndex | null> {
+  const url = cacheBust
+    ? `${dataUrl("/data/childminders-index.json")}?t=${Date.now()}`
+    : dataUrl("/data/childminders-index.json");
+  try {
+    const res = await fetchImpl(url, {
+      cache: cacheBust ? "no-store" : "default",
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) {
+      throw new Error(`Failed to load childminders index (${res.status})`);
+    }
+    return res.json() as Promise<ChildmindersIndex>;
   } catch (err) {
     if (err instanceof Error && err.message.startsWith("Failed to load")) {
       throw err;
