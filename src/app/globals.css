@@ -772,6 +772,93 @@ a {
   background: rgba(255, 255, 255, 0.4);
 }
 
+.vetting-checklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.vetting-checklist li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.vetting-checklist li:last-child {
+  border-bottom: 0;
+}
+
+.vetting-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.45rem;
+  background: var(--foam);
+  color: var(--sea-deep);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.vetting-checklist strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--ink);
+}
+
+.vetting-checklist p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.childminder-directory {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.childminder-directory li {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.childminder-directory li:last-child {
+  border-bottom: 0;
+}
+
+.childminder-directory-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  align-items: baseline;
+  margin-bottom: 0.35rem;
+}
+
+.childminder-directory-head span {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.childminder-directory p {
+  margin: 0.2rem 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.childminder-directory a {
+  color: var(--sea);
+}
+
 .hero-postcode {
   margin-top: 0.35rem;
   max-width: 36rem;

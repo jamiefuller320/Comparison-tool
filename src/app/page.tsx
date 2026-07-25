@@ -27,6 +27,8 @@ export default function HomePage() {
               Road distances use open routing data and are a guide to travel, not an
               admissions catchment. Stage filters use each school&apos;s published age
               range with <strong>AND</strong> logic when several stages are selected.
+              Childminders are listed only when they consented to publish an address —
+              use the vetting checklist and Ofsted report, not a grade league table.
               Pure secondary schools come from GIAS for KS3/KS4 search; KS2 attainment
               figures appear where published for state schools. Independents are
               compared on published Key Stage 4 outcomes (nil/zero English &amp; maths
@@ -52,12 +54,14 @@ export default function HomePage() {
           </div>
           <div className="footnote">
             <p>
-              Hampshire early years: Ofsted childcare day-care inspections plus
-              EYFSP England/Hampshire area context (provider-level EYFSP is not
-              published). State schools: institution-level Key Stage 2 attainment
-              plus local-authority phonics for KS1. Independents: Key Stage 4
-              tables plus Ofsted non-association inspections. Progress measures
-              are sparse for 2024/25 because of missing KS1 baselines.
+              Hampshire early years: Ofsted childcare day-care inspections;
+              consented childminder names/addresses (Ofsted quarterly file —
+              re-harvest regularly); plus EYFSP England/Hampshire area context
+              (provider-level EYFSP is not published). State schools:
+              institution-level Key Stage 2 attainment plus local-authority
+              phonics for KS1. Independents: Key Stage 4 tables plus Ofsted
+              non-association inspections. Progress measures are sparse for
+              2024/25 because of missing KS1 baselines.
             </p>
             <p>
               Refresh locally with <code>npm run harvest</code>. Official school pages:{" "}

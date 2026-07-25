@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import type { EyProvidersIndex, SchoolRecord, SchoolsIndex } from "@/lib/types";
+import type {
+  ChildmindersIndex,
+  EyProvidersIndex,
+  SchoolRecord,
+  SchoolsIndex,
+} from "@/lib/types";
 import { SchoolSearch } from "@/components/SchoolSearch";
 import { ComparisonBoard } from "@/components/ComparisonBoard";
 import { IndependentComparisonBoard } from "@/components/IndependentComparisonBoard";
 import { PhonicsComparisonBoard } from "@/components/PhonicsComparisonBoard";
 import { EarlyYearsComparisonBoard } from "@/components/EarlyYearsComparisonBoard";
 import { EyfspComparisonBoard } from "@/components/EyfspComparisonBoard";
+import { ChildminderDirectoryBoard } from "@/components/ChildminderDirectoryBoard";
+import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChecklist";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
@@ -15,7 +22,11 @@ import { SectorSelector } from "@/components/SectorSelector";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import { ProductTour } from "@/components/ProductTour";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
-import { isEyProvider } from "@/lib/eyMetrics";
+import {
+  isChildminder,
+  isEyDirectorySetting,
+  isEyProvider,
+} from "@/lib/eyMetrics";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import {
   DEFAULT_PHASES,
@@ -55,10 +66,12 @@ function parseSectorsParam(raw: string | null): SectorId[] {
 export function CompareApp({
   index,
   eyIndex = null,
+  childmindersIndex = null,
   onIndexReload,
 }: {
   index: SchoolsIndex;
   eyIndex?: EyProvidersIndex | null;
+  childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
 }) {
   const byUrn = useMemo(() => {
@@ -66,8 +79,11 @@ export function CompareApp({
     for (const provider of eyIndex?.providers ?? []) {
       map.set(provider.urn, provider);
     }
+    for (const provider of childmindersIndex?.providers ?? []) {
+      map.set(provider.urn, provider);
+    }
     return map;
-  }, [index.schools, eyIndex]);
+  }, [index.schools, eyIndex, childmindersIndex]);
 
   const [selected, setSelected] = useState<string[]>([]);
   const [stages, setStages] = useState<PhaseId[]>(DEFAULT_PHASES);
@@ -123,6 +139,9 @@ export function CompareApp({
   const showEarlyNotice = wantsEarlyYearsOnlyNotice(stages, hasEyData);
 
   const eySelected = selectedSchools.filter((s) => showEy && isEyProvider(s));
+  const childminderSelected = selectedSchools.filter(
+    (s) => showEy && isChildminder(s),
+  );
   const ks1Selected = selectedSchools.filter(
     (s) =>
       showKs1 &&
@@ -139,13 +158,16 @@ export function CompareApp({
     (s) => showKs4 && schoolOffersSecondary(s),
   );
   const showPhonicsBoard = showKs1 && Boolean(index.benchmarks.phonics);
-  const showEyBoards = showEy && hasEyData;
+  const hasChildminders = Boolean(childmindersIndex?.providers?.length);
+  const showEyBoards = showEy && (hasEyData || hasChildminders);
   const hasAnyCompareBoard =
     eySelected.length > 0 ||
+    childminderSelected.length > 0 ||
     ks1Selected.length > 0 ||
     ks2Selected.length > 0 ||
     ks4Selected.length > 0 ||
-    (showEyBoards && Boolean(eyIndex?.benchmarks.eyfsp));
+    (showEy && hasEyData && Boolean(eyIndex?.benchmarks.eyfsp)) ||
+    (showEy && hasChildminders);
   const ks4AllIndie =
     ks4Selected.length > 0 &&
     ks4Selected.every((s) => resolveSchoolSector(s) === "independent");
@@ -159,12 +181,22 @@ export function CompareApp({
     if (!focus) return [];
     const pool = [
       ...(showEy && eyIndex ? eyIndex.providers : []),
+      ...(showEy && childmindersIndex ? childmindersIndex.providers : []),
       ...index.schools,
     ];
     return suggestAlternatives(focus, pool, 6, stages, sectors).filter(
       (s) => !selected.includes(s.urn),
     );
-  }, [focus, index.schools, eyIndex, showEy, selected, stages, sectors]);
+  }, [
+    focus,
+    index.schools,
+    eyIndex,
+    childmindersIndex,
+    showEy,
+    selected,
+    stages,
+    sectors,
+  ]);
 
   function addSchool(urn: string) {
     startTransition(() => {
@@ -206,8 +238,10 @@ export function CompareApp({
       const kept = prev.filter((urn) => {
         const school = byUrn.get(urn);
         if (!school) return false;
-        // Hampshire EY day-care providers stay available whenever EY is in view.
-        if (isEyProvider(school) && stages.includes("early-years")) return true;
+        // Hampshire EY directory settings stay available whenever EY is in view.
+        if (isEyDirectorySetting(school) && stages.includes("early-years")) {
+          return true;
+        }
         return schoolMatchesSectors(school, next);
       });
       const removed = prev.length - kept.length;
@@ -235,14 +269,18 @@ export function CompareApp({
       (s) =>
         schoolMatchesPhases(s, stages) && schoolMatchesSectors(s, sectors),
     );
-    if (!stages.includes("early-years") || !eyIndex?.providers?.length) {
+    if (!stages.includes("early-years")) {
       return fromSchools;
     }
-    // Seed EY pack: include Hampshire Ofsted day-care providers alongside schools.
+    // Seed EY pack: day care + consented childminders alongside schools.
     const seen = new Set(fromSchools.map((s) => s.urn));
-    const providers = eyIndex.providers.filter((p) => !seen.has(p.urn));
-    return [...providers, ...fromSchools];
-  }, [index.schools, eyIndex, stages, sectors]);
+    const extra = [
+      ...(eyIndex?.providers ?? []),
+      ...(childmindersIndex?.providers ?? []),
+    ].filter((p) => !seen.has(p.urn));
+    if (!extra.length) return fromSchools;
+    return [...extra, ...fromSchools];
+  }, [index.schools, eyIndex, childmindersIndex, stages, sectors]);
 
   return (
     <>
@@ -262,10 +300,10 @@ export function CompareApp({
           <div className="section-head">
             <h2>Build your shortlist</h2>
             <p>
-              Search schools and {SEED_GEOGRAPHY_LABEL} early years day-care for
-              the stages you selected, then compare up to four side by side.
-              Early years shows Ofsted childcare outcomes plus EYFSP area
-              context; KS1 shows local-authority phonics; KS2 Year 6; KS3/KS4
+              Search schools, {SEED_GEOGRAPHY_LABEL} day care, and consented
+              childminders for the stages you selected. Early years: Ofsted
+              day-care comparison, childminder directory + vetting checklist,
+              and EYFSP area context. KS1: LA phonics; KS2 Year 6; KS3/KS4
               GCSE / 16–18.
             </p>
             <div className="stats-line">
@@ -275,6 +313,16 @@ export function CompareApp({
                     {eyIndex.stats.providerCount.toLocaleString("en-GB")}
                   </strong>{" "}
                   {SEED_GEOGRAPHY_LABEL} EY day-care
+                </span>
+              ) : null}
+              {childmindersIndex?.stats.providerCount != null ? (
+                <span>
+                  <strong>
+                    {childmindersIndex.stats.providerCount.toLocaleString(
+                      "en-GB",
+                    )}
+                  </strong>{" "}
+                  consented childminders
                 </span>
               ) : null}
               <span>
@@ -418,6 +466,7 @@ export function CompareApp({
               style={{
                 marginBottom:
                   eySelected.length ||
+                  childminderSelected.length ||
                   ks1Selected.length ||
                   ks2Selected.length ||
                   ks4Selected.length
@@ -425,33 +474,60 @@ export function CompareApp({
                     : 0,
               }}
             >
-              {(ks1Selected.length > 0 ||
-                ks2Selected.length > 0 ||
-                ks4Selected.length > 0 ||
-                eySelected.length > 0) && (
-                <h3 className="compare-subhead">
-                  Early years — {SEED_GEOGRAPHY_LABEL} context
-                </h3>
-              )}
-              <EyfspComparisonBoard eyfsp={eyIndex?.benchmarks.eyfsp} />
-              {eySelected.length > 0 ? (
-                <div style={{ marginTop: "1.5rem" }}>
-                  <h3 className="compare-subhead">
-                    Early years — Ofsted day-care comparison
-                  </h3>
-                  <EarlyYearsComparisonBoard
-                    providers={eySelected}
-                    ofstedAsAt={eyIndex?.ofstedAsAt}
-                    sourcePage={eyIndex?.source.ofstedChildcareMiPage}
-                  />
-                </div>
-              ) : showEy && selectedSchools.length > 0 ? (
-                <div className="empty-compare" role="status" style={{ marginTop: "1rem" }}>
-                  Shortlist a {SEED_GEOGRAPHY_LABEL} early years day-care
-                  provider (search or map) to compare Ofsted inspection outcomes.
-                  EYFSP area figures above are for context only.
-                </div>
+              {hasEyData ? (
+                <>
+                  {(ks1Selected.length > 0 ||
+                    ks2Selected.length > 0 ||
+                    ks4Selected.length > 0 ||
+                    eySelected.length > 0 ||
+                    childminderSelected.length > 0) && (
+                    <h3 className="compare-subhead">
+                      Early years — {SEED_GEOGRAPHY_LABEL} context
+                    </h3>
+                  )}
+                  <EyfspComparisonBoard eyfsp={eyIndex?.benchmarks.eyfsp} />
+                  {eySelected.length > 0 ? (
+                    <div style={{ marginTop: "1.5rem" }}>
+                      <h3 className="compare-subhead">
+                        Early years — Ofsted day-care comparison
+                      </h3>
+                      <EarlyYearsComparisonBoard
+                        providers={eySelected}
+                        ofstedAsAt={eyIndex?.ofstedAsAt}
+                        sourcePage={eyIndex?.source.ofstedChildcareMiPage}
+                      />
+                    </div>
+                  ) : selectedSchools.length > 0 &&
+                    childminderSelected.length === 0 ? (
+                    <div
+                      className="empty-compare"
+                      role="status"
+                      style={{ marginTop: "1rem" }}
+                    >
+                      Shortlist a {SEED_GEOGRAPHY_LABEL} early years day-care
+                      provider (search or map) to compare Ofsted inspection
+                      outcomes. Childminders use the directory and checklist
+                      below instead. EYFSP area figures above are for context
+                      only.
+                    </div>
+                  ) : null}
+                </>
               ) : null}
+              {childminderSelected.length > 0 ? (
+                <ChildminderDirectoryBoard
+                  providers={childminderSelected}
+                  consentedAsAt={childmindersIndex?.consentedAsAt}
+                />
+              ) : null}
+              <div style={{ marginTop: hasEyData ? "1.5rem" : 0 }}>
+                <ChildminderVettingChecklist
+                  consentedAsAt={childmindersIndex?.consentedAsAt}
+                  sourcePage={
+                    childmindersIndex?.source.consentedAddressesPage
+                  }
+                  providerCount={childmindersIndex?.stats.providerCount}
+                />
+              </div>
             </div>
           ) : null}
 

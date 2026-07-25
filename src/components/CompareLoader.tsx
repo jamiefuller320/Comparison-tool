@@ -1,23 +1,35 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { EyProvidersIndex, SchoolsIndex } from "@/lib/types";
-import { loadEyProvidersIndex, loadSchoolsIndex } from "@/lib/data";
+import type {
+  ChildmindersIndex,
+  EyProvidersIndex,
+  SchoolsIndex,
+} from "@/lib/types";
+import {
+  loadChildmindersIndex,
+  loadEyProvidersIndex,
+  loadSchoolsIndex,
+} from "@/lib/data";
 import { CompareApp } from "@/components/CompareApp";
 
 export function CompareLoader() {
   const [index, setIndex] = useState<SchoolsIndex | null>(null);
   const [eyIndex, setEyIndex] = useState<EyProvidersIndex | null>(null);
+  const [childmindersIndex, setChildmindersIndex] =
+    useState<ChildmindersIndex | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
 
   const reloadIndex = useCallback(async () => {
-    const [data, ey] = await Promise.all([
+    const [data, ey, childminders] = await Promise.all([
       loadSchoolsIndex(fetch, true),
       loadEyProvidersIndex(fetch, true),
+      loadChildmindersIndex(fetch, true),
     ]);
     setIndex(data);
     setEyIndex(ey);
+    setChildmindersIndex(childminders);
     setError(null);
     setReloadToken((n) => n + 1);
   }, []);
@@ -27,11 +39,13 @@ export function CompareLoader() {
     Promise.all([
       loadSchoolsIndex(fetch, reloadToken > 0),
       loadEyProvidersIndex(fetch, reloadToken > 0),
+      loadChildmindersIndex(fetch, reloadToken > 0),
     ])
-      .then(([data, ey]) => {
+      .then(([data, ey, childminders]) => {
         if (!cancelled) {
           setIndex(data);
           setEyIndex(ey);
+          setChildmindersIndex(childminders);
           setError(null);
         }
       })
@@ -75,6 +89,7 @@ export function CompareLoader() {
     <CompareApp
       index={index}
       eyIndex={eyIndex}
+      childmindersIndex={childmindersIndex}
       onIndexReload={reloadIndex}
     />
   );
