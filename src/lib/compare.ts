@@ -114,22 +114,23 @@ export function suggestAlternatives(
   return scored.slice(0, limit);
 }
 
-function independentHeadline(
+function ks4Headline(
   school: SchoolRecord,
-  indieBench?: IndependentBenchmarkSet | null,
+  ks4Bench?: IndependentBenchmarkSet | null,
+  benchNoun = "schools",
 ): string {
   const att8 = school.att8Average;
-  const bench = indieBench?.att8Average;
+  const bench = ks4Bench?.att8Average;
   if (att8 != null && Number.isFinite(att8)) {
     if (bench != null && Number.isFinite(bench)) {
       const gap = Math.round((att8 - bench) * 10) / 10;
       if (gap >= 2) {
-        return `Attainment 8 of ${att8} — ${gap} points above the mean for independents with published KS4 figures (${bench}).`;
+        return `Attainment 8 of ${att8} — ${gap} points above the mean for ${benchNoun} with published KS4 figures (${bench}).`;
       }
       if (gap <= -2) {
-        return `Attainment 8 of ${att8} — ${Math.abs(gap)} points below the mean for independents with published KS4 figures (${bench}).`;
+        return `Attainment 8 of ${att8} — ${Math.abs(gap)} points below the mean for ${benchNoun} with published KS4 figures (${bench}).`;
       }
-      return `Attainment 8 of ${att8} — broadly in line with the independent-school mean (${bench}).`;
+      return `Attainment 8 of ${att8} — broadly in line with the ${benchNoun} mean (${bench}).`;
     }
     return `Attainment 8 of ${att8} in the latest published Key Stage 4 tables.`;
   }
@@ -159,20 +160,34 @@ function independentHeadline(
     return `Inspectorate: ${inspectorate}. Latest published attainment tables are limited for this school.`;
   }
 
-  return "Limited published outcomes for this independent school in the latest DfE tables — check the school website and inspection reports.";
+  return "Limited published outcomes for this school in the latest DfE tables — check the school website and inspection reports.";
 }
 
 export function headlineForParents(
   school: SchoolRecord,
   englandRwm?: number | null,
   indieBench?: IndependentBenchmarkSet | null,
+  opts?: {
+    preferKs4?: boolean;
+    stateKs4Bench?: IndependentBenchmarkSet | null;
+  },
 ): string {
-  if (resolveSchoolSector(school) === "independent") {
-    return independentHeadline(school, indieBench);
+  const preferKs4 = Boolean(opts?.preferKs4);
+  const isIndie = resolveSchoolSector(school) === "independent";
+  const ks4Bench = isIndie
+    ? indieBench
+    : (opts?.stateKs4Bench ?? indieBench);
+  const benchNoun = isIndie ? "independents" : "state schools";
+
+  if (isIndie || preferKs4 || (school.att8Average != null && school.rwmExpected == null)) {
+    return ks4Headline(school, ks4Bench, benchNoun);
   }
 
   const rwm = school.rwmExpected;
   if (rwm == null) {
+    if (school.att8Average != null) {
+      return ks4Headline(school, ks4Bench, benchNoun);
+    }
     return "Latest published combined reading, writing and maths results are not available for this school.";
   }
   if (englandRwm == null) {

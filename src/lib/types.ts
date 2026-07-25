@@ -141,6 +141,7 @@ export interface SchoolsIndex {
     england: BenchmarkSet;
     localAuthorities: Record<string, BenchmarkSet>;
     independent?: IndependentBenchmarkSet;
+    stateKs4?: IndependentBenchmarkSet;
   };
   schools: SchoolRecord[];
   stats: {
@@ -153,7 +154,11 @@ export interface SchoolsIndex {
     stateCount?: number;
     independentCount?: number;
     independentWithKs4?: number;
+    stateWithKs4?: number;
+    withKs4?: number;
     independentWithKs5?: number;
+    stateWithKs5?: number;
+    withKs5?: number;
     independentWithOfsted?: number;
     independentEnriched?: boolean;
     ks4Period?: string;
