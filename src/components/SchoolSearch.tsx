@@ -15,6 +15,7 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import { isEyProvider } from "@/lib/eyMetrics";
 
 export function SchoolSearch({
   schools,
@@ -38,11 +39,12 @@ export function SchoolSearch({
 
   const pool = useMemo(
     () =>
-      schools.filter(
-        (s) =>
-          schoolMatchesPhases(s, stageFilter) &&
-          schoolMatchesSectors(s, sectorFilter),
-      ),
+      schools.filter((s) => {
+        if (!schoolMatchesPhases(s, stageFilter)) return false;
+        // Hampshire Ofsted day-care sits outside state/independent school filters.
+        if (isEyProvider(s) && stageFilter.includes("early-years")) return true;
+        return schoolMatchesSectors(s, sectorFilter);
+      }),
     [schools, stageFilter, sectorFilter],
   );
 

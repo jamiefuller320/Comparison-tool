@@ -5,7 +5,7 @@ export const PHASE_OPTIONS = [
     id: "early-years",
     label: "Early years",
     short: "EY",
-    hint: "Nursery and reception (typically ages 0–5)",
+    hint: "Nursery and reception (typically ages 0–5) — Hampshire day care + EYFSP area context",
   },
   {
     id: "ks1",
@@ -35,10 +35,14 @@ export const PHASE_OPTIONS = [
 
 export type PhaseId = (typeof PHASE_OPTIONS)[number]["id"];
 
-export const DEFAULT_PHASES: PhaseId[] = ["ks2"];
+/** Seed-path default: early years first (Hampshire EY MVP). */
+export const DEFAULT_PHASES: PhaseId[] = ["early-years"];
 
 /** Sensible stage defaults when the exclusive School type control changes. */
 export const DEFAULT_PHASES_INDEPENDENT: PhaseId[] = ["ks3", "ks4"];
+
+/** State-funded school path when user explicitly picks state only. */
+export const DEFAULT_PHASES_STATE: PhaseId[] = ["ks2"];
 
 const PHASE_IDS = new Set<string>(PHASE_OPTIONS.map((o) => o.id));
 
@@ -53,9 +57,14 @@ export function defaultPhasesForSectors(
     return [...DEFAULT_PHASES_INDEPENDENT];
   }
   if (sectors.length === 1 && sectors[0] === "state") {
-    return [...DEFAULT_PHASES];
+    return [...DEFAULT_PHASES_STATE];
   }
   return null;
+}
+
+/** Selected stages ask for early-years provider / EYFSP context boards. */
+export function wantsEyMetrics(stages: PhaseId[]): boolean {
+  return stages.includes("early-years");
 }
 
 /** Selected stages ask for Key Stage 2 (Year 6) attainment tables. */
@@ -77,11 +86,14 @@ export function wantsKs1Metrics(stages: PhaseId[]): boolean {
 }
 
 /**
- * Only early years selected (no KS1/KS2/secondary tables apply).
- * EYFSP is not harvested; KS1 now has LA phonics context instead.
+ * Early years selected but the Hampshire EY pack is unavailable.
+ * Callers should pass `hasEyData` from the loaded ey-providers index.
  */
-export function wantsEarlyYearsOnlyNotice(stages: PhaseId[]): boolean {
-  if (!stages.length) return false;
+export function wantsEarlyYearsOnlyNotice(
+  stages: PhaseId[],
+  hasEyData = false,
+): boolean {
+  if (!stages.length || !wantsEyMetrics(stages)) return false;
   if (
     wantsKs1Metrics(stages) ||
     wantsKs2Metrics(stages) ||
@@ -89,7 +101,8 @@ export function wantsEarlyYearsOnlyNotice(stages: PhaseId[]): boolean {
   ) {
     return false;
   }
-  return stages.every((s) => s === "early-years");
+  // Only-EY filter with no harvested pack → show the empty notice.
+  return !hasEyData;
 }
 
 export function schoolOffersKs1(school: {

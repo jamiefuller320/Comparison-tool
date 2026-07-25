@@ -234,8 +234,9 @@ export function HomePostcodeExplorer({
           </p>
           <h1>Compare English schools side by side when you are choosing.</h1>
           <p>
-            Start with your home postcode to map nearby schools, then compare Key
-            Stage 2 results — parental shortlists, not a governance pack.
+            Start with your home postcode to map nearby schools and Hampshire
+            early years day care, then compare published outcomes — parental
+            shortlists, not a governance pack.
           </p>
           <p className="hero-tour-launch">
             <button

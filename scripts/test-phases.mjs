@@ -113,6 +113,11 @@ async function main() {
     console.error("FAIL both should not force stages");
     process.exit(1);
   }
+  const { DEFAULT_PHASES, wantsEyMetrics } = await import("../src/lib/phases.ts");
+  if (JSON.stringify(DEFAULT_PHASES) !== JSON.stringify(["early-years"])) {
+    console.error("FAIL default stages should be early-years", DEFAULT_PHASES);
+    process.exit(1);
+  }
   if (!wantsKs2Metrics(["ks2"]) || wantsKs2Metrics(["ks1"])) {
     console.error("FAIL wantsKs2Metrics");
     process.exit(1);
@@ -121,12 +126,17 @@ async function main() {
     console.error("FAIL wantsKs1Metrics");
     process.exit(1);
   }
+  if (!wantsEyMetrics(["early-years"]) || wantsEyMetrics(["ks1"])) {
+    console.error("FAIL wantsEyMetrics");
+    process.exit(1);
+  }
   if (!wantsKs4Metrics(["ks3"]) || !wantsKs4Metrics(["ks4"]) || wantsKs4Metrics(["ks2"])) {
     console.error("FAIL wantsKs4Metrics");
     process.exit(1);
   }
   if (
-    !wantsEarlyYearsOnlyNotice(["early-years"]) ||
+    !wantsEarlyYearsOnlyNotice(["early-years"], false) ||
+    wantsEarlyYearsOnlyNotice(["early-years"], true) ||
     wantsEarlyYearsOnlyNotice(["ks1"]) ||
     wantsEarlyYearsOnlyNotice(["ks1", "ks2"])
   ) {

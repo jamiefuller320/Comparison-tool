@@ -51,6 +51,8 @@ export interface IndependentMetrics {
   ofstedOverall?: string | null;
   ofstedOverallCode?: string | null;
   ofstedQualityOfEducation?: string | null;
+  ofstedBehaviourAndAttitudes?: string | null;
+  ofstedPersonalDevelopment?: string | null;
   ofstedLeadership?: string | null;
   ofstedSafeguardingEffective?: string | null;
   ofstedIssCompliance?: string | null;
@@ -59,6 +61,12 @@ export interface IndependentMetrics {
   ofstedPublicationDate?: string | null;
   ofstedReportUrl?: string | null;
   ofstedPupilsOnRoll?: number | null;
+  /** Ofsted childcare provider URN (when source is ofsted-childcare). */
+  ofstedUrn?: string | null;
+  providerType?: string | null;
+  providerSubtype?: string | null;
+  places?: number | null;
+  placesIncludingEstimates?: number | null;
   schoolWebsite?: string | null;
   inspectorateName?: string | null;
   isiReportsUrl?: string | null;
@@ -144,6 +152,51 @@ export interface PhonicsBenchmarkSet {
   note?: string | null;
   england: PhonicsAreaBench;
   localAuthorities: Record<string, PhonicsAreaBench>;
+}
+
+/** Local-authority / England EYFSP figures (not provider-level). */
+export interface EyfspAreaBench {
+  gldPercent?: number | null;
+  gldCount?: number | null;
+  allElgsExpectedPercent?: number | null;
+  commLangLitExpectedPercent?: number | null;
+  elgsExpectedAverage?: number | null;
+  childrenCount?: number | null;
+}
+
+export interface EyfspBenchmarkSet {
+  period?: string | null;
+  note?: string | null;
+  sourceUrl?: string | null;
+  england: EyfspAreaBench;
+  localAuthorities: Record<string, EyfspAreaBench>;
+}
+
+/** Hampshire seed early-years childcare index (Ofsted MI + EYFSP benches). */
+export interface EyProvidersIndex {
+  generatedAt: string;
+  localAuthority: string;
+  ofstedAsAt?: string;
+  source: {
+    ofstedChildcareMiPage?: string;
+    ofstedChildcareMiCsv?: string;
+    eyfspDataset?: string;
+    eyfspPeriod?: string;
+    eyfspPublication?: string;
+    note?: string;
+  };
+  benchmarks: {
+    eyfsp?: EyfspBenchmarkSet;
+  };
+  providers: SchoolRecord[];
+  stats: {
+    providerCount: number;
+    withInspectionGrade?: number;
+    withCoordinates?: number;
+    ofstedAsAt?: string;
+    eyfspPeriod?: string;
+    localAuthority?: string;
+  };
 }
 
 export interface SchoolsIndex {

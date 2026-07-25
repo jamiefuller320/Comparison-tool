@@ -24,6 +24,8 @@ Until uptake is clearer, prefer **depth in a bounded slice** over a full nationa
 
 Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHORITY = "Hampshire"`).
 
+**Hampshire EY MVP (live in product):** Ofsted childcare MI for named Early Years Register full/sessional day care in Hampshire (`public/data/ey-providers-index.json`), plus England/Hampshire **EYFSP** area benchmarks (DfE does not publish provider-level EYFSP). Refresh with `npm run harvest:ey`. Childminders deferred (names redacted in Ofsted MI).
+
 The current national KS2/KS4 harvest is a capability scaffold; the product path above is how we intend to grow coverage without assuming demand.
 
 ## Live site (GitHub Pages)
@@ -58,8 +60,9 @@ After merge to `main` and Pages is enabled:
 
 ```bash
 npm install
-npm run harvest        # full England index (DfE KS2 + GIAS + indie KS4/Ofsted + phonics LA + KS2 history)
+npm run harvest        # full England index + Hampshire EY pack + KS2 history
 # or: npm run harvest:sample
+# or: npm run harvest:ey            # Hampshire Ofsted day care + EYFSP benches only
 # or: npm run enrich:independents   # refresh indie KS4/Ofsted only
 # or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
