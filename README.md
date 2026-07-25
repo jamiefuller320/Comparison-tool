@@ -19,8 +19,10 @@ Everything else — harvests, stages, maps, tours, charts — should serve that 
 Until uptake is clearer, prefer **depth in a bounded slice** over a full national, all-age build:
 
 1. **Age progression** — start with **early years providers**, then widen upward (KS1 → KS2 → secondary) once the EY comparison and evidence patterns are solid.
-2. **One geography first** — run a **full, maintained dataset for a single area** (e.g. one local authority or travel-to-school region) rather than pre-harvesting every English setting.
-3. **On-demand beyond that** — for schools or areas outside the seed geography, **process and cache on user request** (same spirit as today’s “school is missing” refresh), instead of paying for continuous national coverage up front.
+2. **One geography first** — seed local authority is **Hampshire** (county council LA in DfE data; not the Southampton or Portsmouth unitaries). Maintain a full dataset for that area rather than pre-harvesting every English setting.
+3. **On-demand beyond that** — for schools or areas outside Hampshire, **process and cache on user request** (same spirit as today’s “school is missing” refresh), instead of paying for continuous national coverage up front.
+
+Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHORITY = "Hampshire"`).
 
 The current national KS2/KS4 harvest is a capability scaffold; the product path above is how we intend to grow coverage without assuming demand.
 
