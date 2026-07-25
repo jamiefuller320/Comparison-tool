@@ -5,13 +5,15 @@ export default function HomePage() {
     <main>
       <CompareLoader />
 
-      <section className="section" id="how">
+      <section className="section" id="how" data-tour="how">
         <div className="shell">
           <div className="section-head">
             <h2>How to read this as a parent</h2>
             <p>
               Performance tables are one lens on a school. Use them to spot patterns
               across a shortlist, then visit, talk to staff, and weigh fit for your child.
+              New here? Use <strong>How to use</strong> in the header for a short
+              walkthrough of the page.
             </p>
           </div>
           <div className="footnote">

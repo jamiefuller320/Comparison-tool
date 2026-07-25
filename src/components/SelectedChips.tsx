@@ -48,11 +48,17 @@ export function SelectedChips({
   onRemove: (urn: string) => void;
 }) {
   if (schools.length === 0) {
-    return <div className="chip-row" aria-live="polite" />;
+    return (
+      <div className="chip-row chip-row-empty" aria-live="polite" data-tour="shortlist">
+        <span className="chip-row-placeholder">
+          Your shortlist will appear here (up to four schools).
+        </span>
+      </div>
+    );
   }
 
   return (
-    <div className="chip-row" aria-live="polite">
+    <div className="chip-row" aria-live="polite" data-tour="shortlist">
       {schools.map((school) => (
         <span className="school-chip" key={school.urn}>
           {school.name}

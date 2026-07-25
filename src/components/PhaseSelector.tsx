@@ -6,10 +6,13 @@ export function PhaseSelector({
   selected,
   onChange,
   tone = "light",
+  tourId,
 }: {
   selected: PhaseId[];
   onChange: (next: PhaseId[]) => void;
   tone?: "light" | "hero";
+  /** Optional walkthrough anchor (`data-tour`). */
+  tourId?: string;
 }) {
   function toggle(id: PhaseId) {
     if (selected.includes(id)) {
@@ -26,6 +29,7 @@ export function PhaseSelector({
       className={tone === "hero" ? "phase-selector hero-phase" : "phase-selector"}
       role="group"
       aria-label="School stages to include"
+      data-tour={tourId}
     >
       <span className="phase-selector-label">Stages</span>
       <div className="phase-chips">

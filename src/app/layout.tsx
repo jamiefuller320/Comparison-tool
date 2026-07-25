@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteHeader } from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Schoolside — compare English schools for parental choice",
@@ -15,19 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en-GB">
       <body>
-        <header className="site-header">
-          <div className="shell header-inner">
-            <a className="brand" href="#top">
-              School<span>side</span>
-            </a>
-            <nav className="nav-links" aria-label="Primary">
-              <a href="#nearby">Near home</a>
-              <a href="#compare">Compare</a>
-              <a href="#how">How to read this</a>
-              <a href="#data">Data</a>
-            </nav>
-          </div>
-        </header>
+        <SiteHeader />
         {children}
       </body>
     </html>
