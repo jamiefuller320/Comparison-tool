@@ -51,9 +51,11 @@ export default function HomePage() {
           <div className="footnote">
             <p>
               State schools: institution-level Key Stage 2 attainment for parental
-              choice comparison, not school governance. Independents: Key Stage 4
-              tables plus Ofsted non-association inspections. Progress measures are
-              sparse for 2024/25 because of missing KS1 baselines.
+              choice comparison, not school governance, plus local-authority
+              phonics context for KS1 (school-level phonics is not published).
+              Independents: Key Stage 4 tables plus Ofsted non-association
+              inspections. Progress measures are sparse for 2024/25 because of
+              missing KS1 baselines.
             </p>
             <p>
               Refresh locally with <code>npm run harvest</code>. Official school pages:{" "}

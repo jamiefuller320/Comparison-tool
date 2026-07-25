@@ -11,7 +11,7 @@ export const PHASE_OPTIONS = [
     id: "ks1",
     label: "KS1",
     short: "KS1",
-    hint: "Years 1–2 (typically ages 5–7)",
+    hint: "Years 1–2 (typically ages 5–7) — LA phonics context",
   },
   {
     id: "ks2",
@@ -69,13 +69,33 @@ export function wantsKs4Metrics(stages: PhaseId[]): boolean {
 }
 
 /**
- * Only early years / KS1 selected — we have no phonics or KS1 TA pack yet,
- * so the UI should not present KS2 tables as if they answer that filter.
+ * Selected stages ask for KS1 phonics area context (LA / England).
+ * School-level phonics is not published by the DfE.
+ */
+export function wantsKs1Metrics(stages: PhaseId[]): boolean {
+  return stages.includes("ks1");
+}
+
+/**
+ * Only early years selected (no KS1/KS2/secondary tables apply).
+ * EYFSP is not harvested; KS1 now has LA phonics context instead.
  */
 export function wantsEarlyYearsOnlyNotice(stages: PhaseId[]): boolean {
   if (!stages.length) return false;
-  if (wantsKs2Metrics(stages) || wantsKs4Metrics(stages)) return false;
-  return stages.every((s) => s === "early-years" || s === "ks1");
+  if (
+    wantsKs1Metrics(stages) ||
+    wantsKs2Metrics(stages) ||
+    wantsKs4Metrics(stages)
+  ) {
+    return false;
+  }
+  return stages.every((s) => s === "early-years");
+}
+
+export function schoolOffersKs1(school: {
+  ageRange?: string | null;
+}): boolean {
+  return phasesFromAgeRange(school.ageRange).includes("ks1");
 }
 
 export function schoolOffersKs2(school: {

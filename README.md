@@ -20,7 +20,7 @@ After merge to `main` and Pages is enabled:
 
 - **Stage selector** for Early years / KS1 / KS2 / KS3 / KS4 — multiple selections use **AND** (a school must offer every selected stage); multi-phase settings still appear under each stage they cover individually
 - **Sector selector** for **state** vs **independent** (private / public) schools — defaults to state-funded
-- **Separate comparison tables**: state schools use Key Stage 2 attainment; independents use published **Key Stage 4** outcomes (Attainment 8, English & maths, EBacc) plus **Ofsted** grades for non-association independents and **ISI / website** links from GIAS when Ofsted grades are absent. Nil/zero English & maths GCSE returns are cleared (common with IGCSEs); EBacc subject pillars are used as fallbacks when both are published
+- **Separate comparison tables** by stage: KS1 uses **local-authority phonics** context; state KS2 uses Year 6 attainment; KS3/KS4 use published **Key Stage 4** outcomes (Attainment 8, English & maths, EBacc) for state and independent secondaries, plus **Ofsted** grades for non-association independents and **ISI / website** links from GIAS when Ofsted grades are absent. Nil/zero English & maths GCSE returns are cleared (common with IGCSEs); EBacc subject pillars are used as fallbacks when both are published
 - Secondary / infant / nursery settings are enriched from GIAS Edubase (so EY–KS1-only and KS3–KS4 schools appear even without KS2 results)
 - **“A school is missing”** queues a directory rebuild (one force refresh per UTC day; also limited once per browser/day)
 - **Home postcode** at the top of the page, with parsing for common syntax (`SO40 2HR`, `so402hr`, `SO40-2HR`)
@@ -28,16 +28,17 @@ After merge to `main` and Pages is enabled:
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables
 - Lets parents **search** by name, town, postcode or URN and compare **up to four schools** side by side
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
-- Matches comparison tables to selected stages: **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent); early years / KS1 are age-range filters until phonics data is added
+- Matches comparison tables to selected stages: **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent); early years remains an age-range filter until EYFSP is added
 - Keeps the language parental: shortlists and fit, not board packs or SIP targets
 
 ## Run locally
 
 ```bash
 npm install
-npm run harvest        # full England index (DfE KS2 + GIAS + indie KS4/Ofsted + KS2 history)
+npm run harvest        # full England index (DfE KS2 + GIAS + indie KS4/Ofsted + phonics LA + KS2 history)
 # or: npm run harvest:sample
 # or: npm run enrich:independents   # refresh indie KS4/Ofsted only
+# or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
 npm run dev
 ```

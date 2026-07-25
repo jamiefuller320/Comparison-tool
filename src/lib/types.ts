@@ -128,9 +128,28 @@ export interface IndependentBenchmarkSet extends IndependentMetrics {
   note?: string | null;
 }
 
+/** Local-authority / England phonics screening figures (not school-level). */
+export interface PhonicsAreaBench {
+  year1Expected?: number | null;
+  year1Eligible?: number | null;
+  year1DisadvantagedExpected?: number | null;
+  endYear2Expected?: number | null;
+  endYear2Eligible?: number | null;
+  endYear2DisadvantagedExpected?: number | null;
+  period?: string | null;
+}
+
+export interface PhonicsBenchmarkSet {
+  period?: string | null;
+  note?: string | null;
+  england: PhonicsAreaBench;
+  localAuthorities: Record<string, PhonicsAreaBench>;
+}
+
 export interface SchoolsIndex {
   generatedAt: string;
   period: string;
+  phonicsEnrichedAt?: string;
   source: {
     api: string;
     datasets: Record<string, string>;
@@ -142,6 +161,7 @@ export interface SchoolsIndex {
     localAuthorities: Record<string, BenchmarkSet>;
     independent?: IndependentBenchmarkSet;
     stateKs4?: IndependentBenchmarkSet;
+    phonics?: PhonicsBenchmarkSet;
   };
   schools: SchoolRecord[];
   stats: {
@@ -164,6 +184,9 @@ export interface SchoolsIndex {
     ks4Period?: string;
     ks5Period?: string;
     ofstedAsAt?: string;
+    phonicsPeriod?: string;
+    phonicsLaCount?: number;
+    phonicsEnriched?: boolean;
   };
 }
 
