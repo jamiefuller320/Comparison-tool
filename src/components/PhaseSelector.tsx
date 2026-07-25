@@ -38,8 +38,8 @@ export function PhaseSelector({
           When several stages are selected, only settings that offer{" "}
           <strong>all</strong> of them are listed (for example KS3 + KS4 shows
           secondary and all-through schools). Comparison tables follow these
-          stages: KS1 → local-authority phonics context; KS2 → Year 6 results;
-          KS3/KS4 → GCSE / 16–18 measures.
+        stages: Early years → Hampshire day care + EYFSP area context; KS1 →
+        local-authority phonics; KS2 → Year 6 results; KS3/KS4 → GCSE / 16–18.
         </SelectorHelp>
       </div>
       <div className="phase-chips">

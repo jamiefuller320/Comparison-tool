@@ -1,28 +1,37 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { SchoolsIndex } from "@/lib/types";
-import { loadSchoolsIndex } from "@/lib/data";
+import type { EyProvidersIndex, SchoolsIndex } from "@/lib/types";
+import { loadEyProvidersIndex, loadSchoolsIndex } from "@/lib/data";
 import { CompareApp } from "@/components/CompareApp";
 
 export function CompareLoader() {
   const [index, setIndex] = useState<SchoolsIndex | null>(null);
+  const [eyIndex, setEyIndex] = useState<EyProvidersIndex | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
 
   const reloadIndex = useCallback(async () => {
-    const data = await loadSchoolsIndex(fetch, true);
+    const [data, ey] = await Promise.all([
+      loadSchoolsIndex(fetch, true),
+      loadEyProvidersIndex(fetch, true),
+    ]);
     setIndex(data);
+    setEyIndex(ey);
     setError(null);
     setReloadToken((n) => n + 1);
   }, []);
 
   useEffect(() => {
     let cancelled = false;
-    loadSchoolsIndex(fetch, reloadToken > 0)
-      .then((data) => {
+    Promise.all([
+      loadSchoolsIndex(fetch, reloadToken > 0),
+      loadEyProvidersIndex(fetch, reloadToken > 0),
+    ])
+      .then(([data, ey]) => {
         if (!cancelled) {
           setIndex(data);
+          setEyIndex(ey);
           setError(null);
         }
       })
@@ -62,5 +71,11 @@ export function CompareLoader() {
     );
   }
 
-  return <CompareApp index={index} onIndexReload={reloadIndex} />;
+  return (
+    <CompareApp
+      index={index}
+      eyIndex={eyIndex}
+      onIndexReload={reloadIndex}
+    />
+  );
 }
