@@ -19,6 +19,7 @@ import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
 import { SectorSelector } from "@/components/SectorSelector";
+import { EySettingSelector } from "@/components/EySettingSelector";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import { ProductTour } from "@/components/ProductTour";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
@@ -27,6 +28,13 @@ import {
   isEyDirectorySetting,
   isEyProvider,
 } from "@/lib/eyMetrics";
+import {
+  DEFAULT_EY_SETTINGS,
+  parseEySettingsParam,
+  wantsChildminders,
+  wantsNurseries,
+  type EySettingId,
+} from "@/lib/eySettings";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import {
   DEFAULT_PHASES,
@@ -63,6 +71,11 @@ function parseSectorsParam(raw: string | null): SectorId[] {
   return parsed.length ? parsed : DEFAULT_SECTORS;
 }
 
+function eySettingsEqual(a: EySettingId[], b: EySettingId[]): boolean {
+  if (a.length !== b.length) return false;
+  return a.every((id, i) => id === b[i]);
+}
+
 export function CompareApp({
   index,
   eyIndex = null,
@@ -88,6 +101,8 @@ export function CompareApp({
   const [selected, setSelected] = useState<string[]>([]);
   const [stages, setStages] = useState<PhaseId[]>(DEFAULT_PHASES);
   const [sectors, setSectors] = useState<SectorId[]>(DEFAULT_SECTORS);
+  const [eySettings, setEySettings] =
+    useState<EySettingId[]>(DEFAULT_EY_SETTINGS);
   const [pending, startTransition] = useTransition();
   const [hydrated, setHydrated] = useState(false);
   const [sectorNote, setSectorNote] = useState<string | null>(null);
@@ -107,6 +122,11 @@ export function CompareApp({
     setSectors(
       parseSectorsParam(params.get("sectors") || params.get("sector")),
     );
+    setEySettings(
+      parseEySettingsParam(
+        params.get("eySettings") || params.get("ey"),
+      ),
+    );
     setHydrated(true);
   }, [byUrn]);
 
@@ -124,23 +144,36 @@ export function CompareApp({
     } else {
       url.searchParams.set("sectors", sectors.join(","));
     }
+    if (
+      stages.includes("early-years") &&
+      !eySettingsEqual(eySettings, DEFAULT_EY_SETTINGS)
+    ) {
+      url.searchParams.set("eySettings", eySettings.join(","));
+    } else {
+      url.searchParams.delete("eySettings");
+      url.searchParams.delete("ey");
+    }
     window.history.replaceState({}, "", url.toString());
-  }, [selected, stages, sectors, hydrated]);
+  }, [selected, stages, sectors, eySettings, hydrated]);
 
   const selectedSchools: SchoolRecord[] = selected
     .map((urn) => byUrn.get(urn))
     .filter((s): s is SchoolRecord => Boolean(s));
 
   const showEy = wantsEyMetrics(stages);
+  const showNurserySettings = showEy && wantsNurseries(eySettings);
+  const showChildminderSettings = showEy && wantsChildminders(eySettings);
   const hasEyData = Boolean(eyIndex?.providers?.length);
   const showKs1 = wantsKs1Metrics(stages);
   const showKs2 = wantsKs2Metrics(stages);
   const showKs4 = wantsKs4Metrics(stages);
   const showEarlyNotice = wantsEarlyYearsOnlyNotice(stages, hasEyData);
 
-  const eySelected = selectedSchools.filter((s) => showEy && isEyProvider(s));
+  const eySelected = selectedSchools.filter(
+    (s) => showNurserySettings && isEyProvider(s),
+  );
   const childminderSelected = selectedSchools.filter(
-    (s) => showEy && isChildminder(s),
+    (s) => showChildminderSettings && isChildminder(s),
   );
   const ks1Selected = selectedSchools.filter(
     (s) =>
@@ -159,15 +192,18 @@ export function CompareApp({
   );
   const showPhonicsBoard = showKs1 && Boolean(index.benchmarks.phonics);
   const hasChildminders = Boolean(childmindersIndex?.providers?.length);
-  const showEyBoards = showEy && (hasEyData || hasChildminders);
+  const showEyBoards =
+    showEy &&
+    ((showNurserySettings && hasEyData) ||
+      (showChildminderSettings && hasChildminders));
   const hasAnyCompareBoard =
     eySelected.length > 0 ||
     childminderSelected.length > 0 ||
     ks1Selected.length > 0 ||
     ks2Selected.length > 0 ||
     ks4Selected.length > 0 ||
-    (showEy && hasEyData && Boolean(eyIndex?.benchmarks.eyfsp)) ||
-    (showEy && hasChildminders);
+    (showNurserySettings && hasEyData && Boolean(eyIndex?.benchmarks.eyfsp)) ||
+    (showChildminderSettings && hasChildminders);
   const ks4AllIndie =
     ks4Selected.length > 0 &&
     ks4Selected.every((s) => resolveSchoolSector(s) === "independent");
@@ -180,8 +216,10 @@ export function CompareApp({
   const suggestions = useMemo(() => {
     if (!focus) return [];
     const pool = [
-      ...(showEy && eyIndex ? eyIndex.providers : []),
-      ...(showEy && childmindersIndex ? childmindersIndex.providers : []),
+      ...(showNurserySettings && eyIndex ? eyIndex.providers : []),
+      ...(showChildminderSettings && childmindersIndex
+        ? childmindersIndex.providers
+        : []),
       ...index.schools,
     ];
     return suggestAlternatives(focus, pool, 6, stages, sectors).filter(
@@ -192,7 +230,8 @@ export function CompareApp({
     index.schools,
     eyIndex,
     childmindersIndex,
-    showEy,
+    showNurserySettings,
+    showChildminderSettings,
     selected,
     stages,
     sectors,
@@ -227,6 +266,30 @@ export function CompareApp({
     startTransition(() => setStages(next));
   }
 
+  function changeEySettings(next: EySettingId[]) {
+    setEySettings(next);
+    setSelected((prev) => {
+      const kept = prev.filter((urn) => {
+        const school = byUrn.get(urn);
+        if (!school) return false;
+        if (isEyProvider(school) && !wantsNurseries(next)) return false;
+        if (isChildminder(school) && !wantsChildminders(next)) return false;
+        return true;
+      });
+      const removed = prev.length - kept.length;
+      if (removed > 0) {
+        setSectorNote(
+          removed === 1
+            ? "Removed 1 early years setting from your shortlist that is hidden by the Nurseries / Childminders toggles."
+            : `Removed ${removed} early years settings from your shortlist that are hidden by the Nurseries / Childminders toggles.`,
+        );
+      } else {
+        setSectorNote(null);
+      }
+      return kept;
+    });
+  }
+
   function changeSectors(next: SectorId[]) {
     // Apply immediately so map / nearby / search refresh without deferred lag.
     setSectors(next);
@@ -240,6 +303,10 @@ export function CompareApp({
         if (!school) return false;
         // Hampshire EY directory settings stay available whenever EY is in view.
         if (isEyDirectorySetting(school) && stages.includes("early-years")) {
+          if (isEyProvider(school) && !wantsNurseries(eySettings)) return false;
+          if (isChildminder(school) && !wantsChildminders(eySettings)) {
+            return false;
+          }
           return true;
         }
         return schoolMatchesSectors(school, next);
@@ -272,15 +339,24 @@ export function CompareApp({
     if (!stages.includes("early-years")) {
       return fromSchools;
     }
-    // Seed EY pack: day care + consented childminders alongside schools.
+    // Seed EY pack: day care and/or consented childminders per toggles.
     const seen = new Set(fromSchools.map((s) => s.urn));
     const extra = [
-      ...(eyIndex?.providers ?? []),
-      ...(childmindersIndex?.providers ?? []),
+      ...(wantsNurseries(eySettings) ? (eyIndex?.providers ?? []) : []),
+      ...(wantsChildminders(eySettings)
+        ? (childmindersIndex?.providers ?? [])
+        : []),
     ].filter((p) => !seen.has(p.urn));
     if (!extra.length) return fromSchools;
     return [...extra, ...fromSchools];
-  }, [index.schools, eyIndex, childmindersIndex, stages, sectors]);
+  }, [
+    index.schools,
+    eyIndex,
+    childmindersIndex,
+    stages,
+    sectors,
+    eySettings,
+  ]);
 
   return (
     <>
@@ -293,6 +369,8 @@ export function CompareApp({
         onStageFilterChange={changeStages}
         sectorFilter={sectors}
         onSectorFilterChange={changeSectors}
+        eySettings={eySettings}
+        onEySettingsChange={changeEySettings}
       />
 
       <section className="section" id="compare">
@@ -307,7 +385,7 @@ export function CompareApp({
               GCSE / 16–18.
             </p>
             <div className="stats-line">
-              {eyIndex?.stats.providerCount != null ? (
+              {showNurserySettings && eyIndex?.stats.providerCount != null ? (
                 <span>
                   <strong>
                     {eyIndex.stats.providerCount.toLocaleString("en-GB")}
@@ -315,7 +393,8 @@ export function CompareApp({
                   {SEED_GEOGRAPHY_LABEL} EY day-care
                 </span>
               ) : null}
-              {childmindersIndex?.stats.providerCount != null ? (
+              {showChildminderSettings &&
+              childmindersIndex?.stats.providerCount != null ? (
                 <span>
                   <strong>
                     {childmindersIndex.stats.providerCount.toLocaleString(
@@ -379,6 +458,12 @@ export function CompareApp({
           </div>
 
           <PhaseSelector selected={stages} onChange={changeStages} />
+          {stages.includes("early-years") ? (
+            <EySettingSelector
+              selected={eySettings}
+              onChange={changeEySettings}
+            />
+          ) : null}
           <SectorSelector selected={sectors} onChange={changeSectors} />
 
           <MissingSchoolButton
@@ -387,7 +472,7 @@ export function CompareApp({
           />
 
           <SchoolSearch
-            key={`search-${stages.join("-")}-${sectors.join("-")}`}
+            key={`search-${stages.join("-")}-${sectors.join("-")}-${eySettings.join("-")}`}
             schools={filteredSchools}
             selectedUrns={selected}
             onAdd={addSchool}
@@ -474,7 +559,7 @@ export function CompareApp({
                     : 0,
               }}
             >
-              {hasEyData ? (
+              {showNurserySettings && hasEyData ? (
                 <>
                   {(ks1Selected.length > 0 ||
                     ks2Selected.length > 0 ||
@@ -506,9 +591,11 @@ export function CompareApp({
                     >
                       Shortlist a {SEED_GEOGRAPHY_LABEL} early years day-care
                       provider (search or map) to compare Ofsted inspection
-                      outcomes. Childminders use the directory and checklist
-                      below instead. EYFSP area figures above are for context
-                      only.
+                      outcomes.
+                      {showChildminderSettings
+                        ? " Childminders use the directory and checklist below instead."
+                        : null}{" "}
+                      EYFSP area figures above are for context only.
                     </div>
                   ) : null}
                 </>
@@ -519,15 +606,22 @@ export function CompareApp({
                   consentedAsAt={childmindersIndex?.consentedAsAt}
                 />
               ) : null}
-              <div style={{ marginTop: hasEyData ? "1.5rem" : 0 }}>
-                <ChildminderVettingChecklist
-                  consentedAsAt={childmindersIndex?.consentedAsAt}
-                  sourcePage={
-                    childmindersIndex?.source.consentedAddressesPage
-                  }
-                  providerCount={childmindersIndex?.stats.providerCount}
-                />
-              </div>
+              {showChildminderSettings ? (
+                <div
+                  style={{
+                    marginTop:
+                      showNurserySettings && hasEyData ? "1.5rem" : 0,
+                  }}
+                >
+                  <ChildminderVettingChecklist
+                    consentedAsAt={childmindersIndex?.consentedAsAt}
+                    sourcePage={
+                      childmindersIndex?.source.consentedAddressesPage
+                    }
+                    providerCount={childmindersIndex?.stats.providerCount}
+                  />
+                </div>
+              ) : null}
             </div>
           ) : null}
 
