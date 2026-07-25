@@ -104,6 +104,12 @@ def sector_from_type(school_type: str | None) -> str:
     return "state"
 
 ROOT = Path(__file__).resolve().parents[1]
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from seed_scope import SEED_LOCAL_AUTHORITY, is_seed_local_authority  # noqa: E402
+
 OUT_DIR = ROOT / "public" / "data"
 SRC_DATA = ROOT / "src" / "data"
 
@@ -605,7 +611,7 @@ def merge_index(
 
 
 def pick_sample_urns(profiles: dict[str, dict], n: int) -> set[str]:
-    """Deterministic sample biased toward Hampshire juniors + spread."""
+    """Deterministic sample biased toward the seed LA (Hampshire) + spread."""
     preferred = [
         "116338",  # Bartley
         "116051",  # Lymington
@@ -617,10 +623,24 @@ def pick_sample_urns(profiles: dict[str, dict], n: int) -> set[str]:
         "116015",
     ]
     urns: list[str] = [u for u in preferred if u in profiles]
-    # Add diversity by LA
+    # Prefer seed-LA schools next, then a thin spread of other LAs.
+    seed_urns = sorted(
+        urn
+        for urn, p in profiles.items()
+        if is_seed_local_authority(p.get("localAuthority"))
+    )
+    for urn in seed_urns:
+        if urn not in urns:
+            urns.append(urn)
+        if len(urns) >= n:
+            return set(urns[:n])
+
     by_la: dict[str, list[str]] = {}
     for urn, p in profiles.items():
-        by_la.setdefault(p.get("localAuthority") or "?", []).append(urn)
+        la = p.get("localAuthority") or "?"
+        if la == SEED_LOCAL_AUTHORITY:
+            continue
+        by_la.setdefault(la, []).append(urn)
     for la in sorted(by_la):
         for urn in sorted(by_la[la])[:2]:
             if urn not in urns:
