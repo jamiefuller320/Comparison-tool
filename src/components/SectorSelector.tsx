@@ -1,6 +1,7 @@
 "use client";
 
 import { SECTOR_OPTIONS, type SectorId } from "@/lib/sectors";
+import { SelectorHelp } from "@/components/SelectorHelp";
 
 export function SectorSelector({
   selected,
@@ -36,7 +37,14 @@ export function SectorSelector({
       aria-label="School funding sector"
       data-tour={tourId}
     >
-      <span className="phase-selector-label">School type</span>
+      <div className="phase-selector-heading">
+        <span className="phase-selector-label">School type</span>
+        <SelectorHelp label="About school type">
+          Map, nearby list and search refresh to the selected type. Independent
+          schools (also called private or public) use different published
+          measures from state schools.
+        </SelectorHelp>
+      </div>
       <div className="phase-chips">
         {SECTOR_OPTIONS.map((option) => {
           const active = !bothSelected && selected.includes(option.id);
@@ -65,11 +73,6 @@ export function SectorSelector({
           Both
         </button>
       </div>
-      <p className="phase-selector-hint">
-        Map, nearby list and search refresh to the selected type. Independent
-        schools (also called private or public) use different published measures
-        from state schools.
-      </p>
     </div>
   );
 }
