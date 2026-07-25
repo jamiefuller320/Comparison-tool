@@ -4,6 +4,16 @@ Parental-choice **school performance comparison** for English schools.
 
 Side-by-side Key Stage 2 attainment for any shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), but framed for parents choosing a school rather than governors monitoring one.
 
+## North Star
+
+Provide the most comprehensive comparison and decision-making tool possible for school choice, built on:
+
+1. **Solid, verifiable quantitative datasets** for like-for-like comparison between schools
+2. **Researched qualitative context** that rests on a verifiable, user-accessible evidence base (footnote links or equivalent)
+3. **A layperson toolset** that helps parents understand and effectively use the data presented
+
+Everything else — harvests, stages, maps, tours, charts — should serve that objective.
+
 ## Live site (GitHub Pages)
 
 After merge to `main` and Pages is enabled:
