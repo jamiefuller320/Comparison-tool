@@ -25,6 +25,21 @@ async function main() {
     process.exit(1);
   }
 
+  const stateSecondary = {
+    urn: "5",
+    name: "State High",
+    sector: "state",
+    att8Average: 52.0,
+  };
+  const stateSecLine = headlineForParents(stateSecondary, 61, null, {
+    preferKs4: true,
+    stateKs4Bench: { att8Average: 48.0 },
+  });
+  if (!stateSecLine.includes("Attainment 8") || !stateSecLine.includes("state schools")) {
+    console.error("FAIL state KS4 headline", stateSecLine);
+    process.exit(1);
+  }
+
   const isiOnly = {
     urn: "3",
     name: "ISI School",

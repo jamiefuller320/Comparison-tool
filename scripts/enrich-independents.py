@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Enrich independent schools with KS4/KS5 outcomes and Ofsted inspection MI.
+"""Enrich schools with KS4/KS5 outcomes and independent inspection MI.
 
-State schools already carry KS2 table metrics. Independents rarely do, so this
-script adds:
-  - DfE EES Key Stage 4 institution-level outcomes (Attainment 8, basics, EBacc)
-  - DfE EES 16–18 / A-level institution-level outcomes (APS, best 3, VA)
-  - Ofsted non-association independent schools most-recent inspection grades
-  - GIAS website / inspectorate links (ISI report search + GIAS record)
+State schools already carry KS2 table metrics. This script adds:
+  - DfE EES Key Stage 4 outcomes for independents and state secondaries
+  - DfE EES 16–18 / A-level outcomes where published (both sectors)
+  - Ofsted non-association independent inspection grades (independents only)
+  - GIAS website / inspectorate links for ISI schools (independents only)
 
 Usage:
   python3 scripts/enrich-independents.py
@@ -306,7 +305,7 @@ def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
         page += 1
 
     print(
-        f"  KS4 matched independents: {len(by_urn)} "
+        f"  KS4 matched schools: {len(by_urn)} "
         f"(cleared {cleared_total} nil/zero field values)",
         flush=True,
     )
@@ -373,7 +372,7 @@ def harvest_ks5(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
 
     cleared_total = sum(len(m.get("ks5ClearedNilFields") or []) for m in by_urn.values())
     print(
-        f"  KS5 matched independents: {len(by_urn)} "
+        f"  KS5 matched schools: {len(by_urn)} "
         f"(A level {len(alevel_by_urn)}; academic fill "
         f"{len(by_urn) - len(alevel_by_urn)}; cleared {cleared_total} nil fields)",
         flush=True,
@@ -634,6 +633,67 @@ def mean(values: list[float]) -> float | None:
     return round(sum(values) / len(values), 1)
 
 
+def parse_age_bounds(age_range: str | None) -> tuple[int, int] | None:
+    if not age_range:
+        return None
+    nums = [int(n) for n in re.findall(r"\d+", str(age_range))]
+    if len(nums) < 2:
+        return None
+    lo, hi = nums[0], nums[1]
+    if lo > hi:
+        return None
+    return lo, hi
+
+
+def offers_secondary(age_range: str | None) -> bool:
+    """Match src/lib/phases.ts KS3/KS4 coverage from age range."""
+    bounds = parse_age_bounds(age_range)
+    if not bounds:
+        return False
+    lo, hi = bounds
+    has_ks3 = lo <= 13 and hi >= 12
+    has_ks4 = lo <= 15 and hi >= 15
+    return has_ks3 or has_ks4
+
+
+def ks4_benchmark_block(
+    schools: list[dict],
+    *,
+    sector: str,
+    ks4_year: str,
+    ks5_year: str,
+) -> dict:
+    def collect(key: str) -> list[float]:
+        return [
+            float(s[key])
+            for s in schools
+            if s.get("sector") == sector and s.get(key) is not None
+        ]
+
+    att8_vals = collect("att8Average")
+    ks5_aps_vals = collect("ks5ApsPerEntry")
+    label = "independents" if sector == "independent" else "state schools"
+    return {
+        "att8Average": mean(att8_vals),
+        "engMath94Percent": mean(collect("engMath94Percent")),
+        "engMath95Percent": mean(collect("engMath95Percent")),
+        "ebaccEnteringPercent": mean(collect("ebaccEnteringPercent")),
+        "anyPassPercent": mean(collect("anyPassPercent")),
+        "ebaccEng94Percent": mean(collect("ebaccEng94Percent")),
+        "ebaccMat94Percent": mean(collect("ebaccMat94Percent")),
+        "ks5ApsPerEntry": mean(ks5_aps_vals),
+        "ks5Best3Aps": mean(collect("ks5Best3Aps")),
+        "period": ks4_year,
+        "ks5Period": ks5_year,
+        "schoolCount": len(att8_vals),
+        "ks5SchoolCount": len(ks5_aps_vals),
+        "note": (
+            f"Mean of {label} in this index with usable KS4 figures "
+            "(nil/zero returns removed); KS5 means use A-level APS where published"
+        ),
+    }
+
+
 def main() -> None:
     if not INDEX.exists():
         raise SystemExit(f"Missing {INDEX}; run harvest first")
@@ -645,22 +705,36 @@ def main() -> None:
         for s in schools
         if s.get("sector") == "independent" and s.get("urn")
     }
-    print(f"Independent schools in index: {len(indie_urns)}", flush=True)
+    secondary_urns = {
+        str(s.get("urn"))
+        for s in schools
+        if s.get("urn") and offers_secondary(s.get("ageRange"))
+    }
+    ks4_target_urns = indie_urns | secondary_urns
+    print(
+        f"Independent schools: {len(indie_urns)}; "
+        f"secondary-age (any sector): {len(secondary_urns)}; "
+        f"KS4/KS5 harvest targets: {len(ks4_target_urns)}",
+        flush=True,
+    )
 
-    ks4_by_urn, ks4_year, cleared_total = harvest_ks4(indie_urns)
-    ks5_by_urn, ks5_year, ks5_cleared_total = harvest_ks5(indie_urns)
+    ks4_by_urn, ks4_year, cleared_total = harvest_ks4(ks4_target_urns)
+    ks5_by_urn, ks5_year, ks5_cleared_total = harvest_ks5(ks4_target_urns)
     ofsted_by_urn, ofsted_as_at = harvest_ofsted()
     gias_by_urn = harvest_gias_directory(indie_urns)
 
     ks4_count = 0
     ks5_count = 0
+    state_ks4_count = 0
     ofsted_count = 0
     isi_count = 0
     website_count = 0
     fallback_count = 0
     for school in schools:
         urn = str(school.get("urn") or "")
-        if school.get("sector") != "independent":
+        is_indie = school.get("sector") == "independent"
+        wants_ks4 = urn in ks4_target_urns
+        if not is_indie and not wants_ks4:
             continue
 
         # Drop prior KS4/KS5 fields so sanitized nulls replace stale zeros.
@@ -672,17 +746,23 @@ def main() -> None:
         ] + KS5_FIELD_KEYS:
             school.pop(key, None)
 
-        ks4 = ks4_by_urn.get(urn)
-        if ks4:
-            school.update(ks4)
-            ks4_count += 1
-            if ks4.get("engMath94IsPillarFallback"):
-                fallback_count += 1
+        if wants_ks4:
+            ks4 = ks4_by_urn.get(urn)
+            if ks4:
+                school.update(ks4)
+                ks4_count += 1
+                if not is_indie:
+                    state_ks4_count += 1
+                if ks4.get("engMath94IsPillarFallback"):
+                    fallback_count += 1
 
-        ks5 = ks5_by_urn.get(urn)
-        if ks5:
-            school.update(ks5)
-            ks5_count += 1
+            ks5 = ks5_by_urn.get(urn)
+            if ks5:
+                school.update(ks5)
+                ks5_count += 1
+
+        if not is_indie:
+            continue
 
         ofsted = ofsted_by_urn.get(urn)
         if ofsted:
@@ -714,36 +794,19 @@ def main() -> None:
         if s.get("sector") == "independent"
         and (s.get("inspectorateName") or "").upper() == "ISI"
     )
-
-    def collect(key: str) -> list[float]:
-        return [
-            float(s[key])
-            for s in schools
-            if s.get("sector") == "independent" and s.get(key) is not None
-        ]
+    indie_ks4_count = sum(
+        1
+        for s in schools
+        if s.get("sector") == "independent" and s.get("att8Average") is not None
+    )
 
     benchmarks = payload.setdefault("benchmarks", {})
-    att8_vals = collect("att8Average")
-    ks5_aps_vals = collect("ks5ApsPerEntry")
-    benchmarks["independent"] = {
-        "att8Average": mean(att8_vals),
-        "engMath94Percent": mean(collect("engMath94Percent")),
-        "engMath95Percent": mean(collect("engMath95Percent")),
-        "ebaccEnteringPercent": mean(collect("ebaccEnteringPercent")),
-        "anyPassPercent": mean(collect("anyPassPercent")),
-        "ebaccEng94Percent": mean(collect("ebaccEng94Percent")),
-        "ebaccMat94Percent": mean(collect("ebaccMat94Percent")),
-        "ks5ApsPerEntry": mean(ks5_aps_vals),
-        "ks5Best3Aps": mean(collect("ks5Best3Aps")),
-        "period": ks4_year,
-        "ks5Period": ks5_year,
-        "schoolCount": len(att8_vals),
-        "ks5SchoolCount": len(ks5_aps_vals),
-        "note": (
-            "Mean of independents in this index with usable KS4 figures "
-            "(nil/zero returns removed); KS5 means use A-level APS where published"
-        ),
-    }
+    benchmarks["independent"] = ks4_benchmark_block(
+        schools, sector="independent", ks4_year=ks4_year, ks5_year=ks5_year
+    )
+    benchmarks["stateKs4"] = ks4_benchmark_block(
+        schools, sector="state", ks4_year=ks4_year, ks5_year=ks5_year
+    )
 
     source = payload.setdefault("source", {})
     datasets = source.setdefault("datasets", {})
@@ -753,23 +816,40 @@ def main() -> None:
     datasets["giasEdubase"] = EDUBASE_BASE
     note = source.get("note") or ""
     extra = (
-        " Independent schools carry Key Stage 4 and 16–18 (A-level) outcomes where "
-        "published (nil/zero English & maths GCSE returns cleared; EBacc subject "
-        "pillars used as fallbacks when possible), Ofsted grades for non-association "
-        "schools, and GIAS inspectorate/website links for ISI schools "
-        "(ISI search prefers postcode)."
+        " Secondary-age state and independent schools carry Key Stage 4 and 16–18 "
+        "(A-level) outcomes where published (nil/zero English & maths GCSE returns "
+        "cleared; EBacc subject pillars used as fallbacks when possible). "
+        "Independents also carry Ofsted grades for non-association schools and "
+        "GIAS inspectorate/website links for ISI schools (ISI search prefers postcode)."
     )
-    # Refresh the independent-schools note whenever we re-enrich.
     cleaned = re.sub(
-        r"\s*Independent schools (?:also )?carry[^.]*\.",
+        r"\s*(?:Independent schools|Secondary-age state)[^.]*\.",
         "",
         note,
     ).strip()
-    source["note"] = (cleaned + extra).strip()
+    # Drop older multi-sentence indie enrich notes if present.
+    cleaned = re.sub(
+        r"\s*Independent schools carry[^.]*\.",
+        "",
+        cleaned,
+    ).strip()
+    source["note"] = (cleaned + " " + extra).strip()
 
     stats = payload.setdefault("stats", {})
-    stats["independentWithKs4"] = ks4_count
-    stats["independentWithKs5"] = ks5_count
+    stats["independentWithKs4"] = indie_ks4_count
+    stats["stateWithKs4"] = state_ks4_count
+    stats["withKs4"] = ks4_count
+    stats["independentWithKs5"] = sum(
+        1
+        for s in schools
+        if s.get("sector") == "independent" and s.get("ks5ApsPerEntry") is not None
+    )
+    stats["stateWithKs5"] = sum(
+        1
+        for s in schools
+        if s.get("sector") == "state" and s.get("ks5ApsPerEntry") is not None
+    )
+    stats["withKs5"] = ks5_count
     stats["independentWithOfsted"] = ofsted_count
     stats["independentWithIsi"] = isi_count
     stats["independentWithWebsite"] = website_count
@@ -812,8 +892,12 @@ def main() -> None:
         "withRwm": stats.get("withRwm"),
         "stateCount": stats.get("stateCount"),
         "independentCount": stats.get("independentCount"),
-        "independentWithKs4": ks4_count,
-        "independentWithKs5": ks5_count,
+        "independentWithKs4": indie_ks4_count,
+        "stateWithKs4": state_ks4_count,
+        "withKs4": ks4_count,
+        "independentWithKs5": stats.get("independentWithKs5"),
+        "stateWithKs5": stats.get("stateWithKs5"),
+        "withKs5": ks5_count,
         "independentWithOfsted": ofsted_count,
         "independentWithIsi": isi_count,
         "independentWithWebsite": website_count,
@@ -837,7 +921,8 @@ def main() -> None:
         SRC_SUMMARY.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 
     print(
-        f"Done. KS4 on {ks4_count}; KS5 on {ks5_count}; Ofsted on {ofsted_count}; "
+        f"Done. KS4 on {ks4_count} (state {state_ks4_count}, indie {indie_ks4_count}); "
+        f"KS5 on {ks5_count}; Ofsted on {ofsted_count}; "
         f"ISI tagged {isi_count}; websites {website_count}; "
         f"KS4 nil fields cleared {cleared_total}; KS5 nil cleared {ks5_cleared_total}; "
         f"pillar fallbacks {fallback_count}.",

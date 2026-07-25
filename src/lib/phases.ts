@@ -58,6 +58,39 @@ export function defaultPhasesForSectors(
   return null;
 }
 
+/** Selected stages ask for Key Stage 2 (Year 6) attainment tables. */
+export function wantsKs2Metrics(stages: PhaseId[]): boolean {
+  return stages.includes("ks2");
+}
+
+/** Selected stages ask for secondary / KS4 (and 16–18) attainment tables. */
+export function wantsKs4Metrics(stages: PhaseId[]): boolean {
+  return stages.includes("ks3") || stages.includes("ks4");
+}
+
+/**
+ * Only early years / KS1 selected — we have no phonics or KS1 TA pack yet,
+ * so the UI should not present KS2 tables as if they answer that filter.
+ */
+export function wantsEarlyYearsOnlyNotice(stages: PhaseId[]): boolean {
+  if (!stages.length) return false;
+  if (wantsKs2Metrics(stages) || wantsKs4Metrics(stages)) return false;
+  return stages.every((s) => s === "early-years" || s === "ks1");
+}
+
+export function schoolOffersKs2(school: {
+  ageRange?: string | null;
+}): boolean {
+  return phasesFromAgeRange(school.ageRange).includes("ks2");
+}
+
+export function schoolOffersSecondary(school: {
+  ageRange?: string | null;
+}): boolean {
+  const phases = phasesFromAgeRange(school.ageRange);
+  return phases.includes("ks3") || phases.includes("ks4");
+}
+
 export function parseAgeBounds(
   ageRange?: string | null,
 ): { lo: number; hi: number } | null {

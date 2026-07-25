@@ -16,6 +16,11 @@ import {
   defaultPhasesForSectors,
   normalizePhaseIds,
   schoolMatchesPhases,
+  schoolOffersKs2,
+  schoolOffersSecondary,
+  wantsEarlyYearsOnlyNotice,
+  wantsKs2Metrics,
+  wantsKs4Metrics,
   type PhaseId,
 } from "@/lib/phases";
 import {
@@ -96,12 +101,26 @@ export function CompareApp({
     .map((urn) => byUrn.get(urn))
     .filter((s): s is SchoolRecord => Boolean(s));
 
-  const stateSelected = selectedSchools.filter(
-    (s) => resolveSchoolSector(s) === "state",
+  const showKs2 = wantsKs2Metrics(stages);
+  const showKs4 = wantsKs4Metrics(stages);
+  const showEarlyNotice = wantsEarlyYearsOnlyNotice(stages);
+
+  const ks2Selected = selectedSchools.filter(
+    (s) =>
+      showKs2 &&
+      resolveSchoolSector(s) === "state" &&
+      schoolOffersKs2(s),
   );
-  const independentSelected = selectedSchools.filter(
-    (s) => resolveSchoolSector(s) === "independent",
+  const ks4Selected = selectedSchools.filter(
+    (s) => showKs4 && schoolOffersSecondary(s),
   );
+  const ks4AllIndie =
+    ks4Selected.length > 0 &&
+    ks4Selected.every((s) => resolveSchoolSector(s) === "independent");
+  const ks4Bench = ks4AllIndie
+    ? index.benchmarks.independent
+    : index.benchmarks.stateKs4 ?? index.benchmarks.independent;
+  const ks4BenchLabel = ks4AllIndie ? "Indie mean" : "State mean";
 
   const focus = selectedSchools[0];
   const suggestions = useMemo(() => {
@@ -199,9 +218,9 @@ export function CompareApp({
             <h2>Build your shortlist</h2>
             <p>
               Search any English school in the index for the stages and sector
-              you selected, then compare up to four side by side. State schools
-              use Key Stage 2 tables; independents use Key Stage 4 outcomes and
-              Ofsted inspection grades where published.
+              you selected, then compare up to four side by side. Tables follow
+              your stages: KS2 shows Year 6 results; KS3/KS4 show GCSE and 16–18
+              measures. Early years / KS1 listing is by age range only for now.
             </p>
             <div className="stats-line">
               <span>
@@ -288,6 +307,10 @@ export function CompareApp({
                 focus,
                 index.benchmarks.england.rwmExpected,
                 index.benchmarks.independent,
+                {
+                  preferKs4: showKs4 && !showKs2,
+                  stateKs4Bench: index.benchmarks.stateKs4,
+                },
               )}
               {pending ? " Updating…" : null}
             </p>
@@ -300,42 +323,63 @@ export function CompareApp({
           <div className="section-head">
             <h2>Side by side</h2>
             <p>
-              State and independent shortlists use different published measures,
-              so they are compared in separate tables when both are selected.
-              On the state table, click a measure name for its multi-year trend.
+              Comparison tables match the stages you selected. KS2 rows open a
+              multi-year trend; KS3/KS4 use GCSE and 16–18 figures for state and
+              independent schools.
             </p>
           </div>
 
           {selectedSchools.length === 0 ? (
-            <ComparisonBoard
-              schools={selectedSchools}
-              england={index.benchmarks.england}
-            />
+            <div className="empty-compare">
+              Add two to four schools to see a side-by-side comparison for the
+              stages you selected.
+            </div>
           ) : null}
 
-          {stateSelected.length > 0 ? (
-            <div style={{ marginBottom: independentSelected.length ? "2rem" : 0 }}>
-              {independentSelected.length > 0 ? (
-                <h3 className="compare-subhead">State schools — Key Stage 2</h3>
+          {selectedSchools.length > 0 && showEarlyNotice ? (
+            <div className="empty-compare" role="status">
+              Early years and KS1 are filtered by age range, but this tool does
+              not yet include phonics or KS1 teacher-assessment results. Add KS2
+              to compare Year 6 tables for primary schools, or KS3/KS4 for
+              secondary measures.
+            </div>
+          ) : null}
+
+          {ks2Selected.length > 0 ? (
+            <div style={{ marginBottom: ks4Selected.length ? "2rem" : 0 }}>
+              {ks4Selected.length > 0 || showEarlyNotice ? (
+                <h3 className="compare-subhead">Key Stage 2 — Year 6 tables</h3>
               ) : null}
               <ComparisonBoard
-                schools={stateSelected}
+                schools={ks2Selected}
                 england={index.benchmarks.england}
               />
             </div>
           ) : null}
 
-          {independentSelected.length > 0 ? (
+          {ks4Selected.length > 0 ? (
             <div>
-              {stateSelected.length > 0 ? (
+              {ks2Selected.length > 0 ? (
                 <h3 className="compare-subhead">
-                  Independent schools — KS4, 16–18 &amp; inspection
+                  Key Stage 4 &amp; 16–18 — GCSE / A-level tables
                 </h3>
               ) : null}
               <IndependentComparisonBoard
-                schools={independentSelected}
-                independentBench={index.benchmarks.independent}
+                schools={ks4Selected}
+                benchmark={ks4Bench}
+                benchmarkLabel={ks4BenchLabel}
               />
+            </div>
+          ) : null}
+
+          {selectedSchools.length > 0 &&
+          !showEarlyNotice &&
+          ks2Selected.length === 0 &&
+          ks4Selected.length === 0 ? (
+            <div className="empty-compare" role="status">
+              None of the shortlisted schools offer the stages needed for the
+              published tables that match your filter. Try adding KS2 for Year 6
+              results or KS3/KS4 for GCSE measures.
             </div>
           ) : null}
         </div>

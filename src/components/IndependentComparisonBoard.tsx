@@ -56,14 +56,22 @@ function bestUrn(
 export function IndependentComparisonBoard({
   schools,
   independentBench,
+  benchmark,
+  benchmarkLabel = "Sector mean",
 }: {
   schools: SchoolRecord[];
+  /** @deprecated Prefer `benchmark` — kept for older call sites. */
   independentBench?: IndependentBenchmarkSet;
+  benchmark?: IndependentBenchmarkSet;
+  benchmarkLabel?: string;
 }) {
+  const activeBench = benchmark ?? independentBench;
+
   if (schools.length === 0) {
     return (
       <div className="empty-compare">
-        Add independent schools to see Key Stage 4 and inspection comparison.
+        Add schools to see Key Stage 4 and 16–18 comparison for the stages you
+        selected.
       </div>
     );
   }
@@ -88,8 +96,7 @@ export function IndependentComparisonBoard({
       const value = school[key];
       row[school.urn] = typeof value === "number" ? value : null;
     }
-    row.benchmark =
-      independentBenchmarkValue(independentBench, key) ?? null;
+    row.benchmark = independentBenchmarkValue(activeBench, key) ?? null;
     return row;
   });
 
@@ -103,17 +110,29 @@ export function IndependentComparisonBoard({
   const hasIsi = schools.some(
     (s) => (s.inspectorateName || "").toUpperCase() === "ISI" || s.isiReportsUrl,
   );
+  const hasState = schools.some((s) => resolveSchoolSector(s) === "state");
+  const hasIndie = schools.some((s) => resolveSchoolSector(s) === "independent");
+  const visibleGroups = groups.filter((group) => {
+    if (group === "inspection") return hasAnyOfsted || hasIsi || hasIndie;
+    if (group === "ks5") return hasAnyKs5;
+    return true;
+  });
 
   return (
     <div>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
-        Independent schools are compared on published Key Stage 4 and 16–18
-        figures plus inspection outcomes — not the Key Stage 2 tables used for
-        state primaries. Zero percent English &amp; maths GCSE returns are
-        treated as missing when other attainment shows the school is active
-        (common with IGCSEs).
-        {independentBench?.att8Average != null
-          ? ` Indie benchmark is the mean Attainment 8 of ${independentBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} independents with usable figures (${independentBench.period}).`
+        Compared on published Key Stage 4
+        {hasAnyKs5 ? " and 16–18" : ""} figures
+        {hasIndie ? " plus inspection outcomes where available" : ""}
+        {hasState && hasIndie
+          ? " — state and independent schools share these secondary measures."
+          : hasState
+            ? " for secondary stages (not the Key Stage 2 tables used for primaries)."
+            : " — not the Key Stage 2 tables used for state primaries."}{" "}
+        Zero percent English &amp; maths GCSE returns are treated as missing when
+        other attainment shows the school is active (common with IGCSEs).
+        {activeBench?.att8Average != null
+          ? ` ${benchmarkLabel} Attainment 8 is ${activeBench.att8Average} across ${activeBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} schools with usable figures (${activeBench.period}).`
           : null}
         {!hasAnyKs4
           ? " None of these schools have published KS4 figures in the latest tables."
@@ -214,7 +233,7 @@ export function IndependentComparisonBoard({
             </tr>
           </thead>
           <tbody>
-            {groups.map((group) => {
+            {visibleGroups.map((group) => {
               const metrics = INDEPENDENT_METRICS.filter((m) => m.group === group);
               return (
                 <GroupRows
@@ -222,7 +241,8 @@ export function IndependentComparisonBoard({
                   title={groupTitles[group]}
                   metrics={metrics}
                   schools={schools}
-                  bench={independentBench}
+                  bench={activeBench}
+                  benchmarkLabel={benchmarkLabel}
                 />
               );
             })}
@@ -266,7 +286,7 @@ export function IndependentComparisonBoard({
               ))}
               <Bar
                 dataKey="benchmark"
-                name="Indie mean"
+                name={benchmarkLabel}
                 fill="rgba(20,35,58,0.28)"
                 radius={[6, 6, 0, 0]}
               />
@@ -283,11 +303,13 @@ function GroupRows({
   metrics,
   schools,
   bench,
+  benchmarkLabel,
 }: {
   title: string;
   metrics: IndependentMetric[];
   schools: SchoolRecord[];
   bench?: IndependentBenchmarkSet;
+  benchmarkLabel: string;
 }) {
   return (
     <>
@@ -335,7 +357,7 @@ function GroupRows({
                             : "vs vs-flat"
                       }
                     >
-                      {fmtPp(gap)} vs indie mean
+                      {fmtPp(gap)} vs {benchmarkLabel.toLowerCase()}
                     </span>
                   ) : null}
                 </td>
