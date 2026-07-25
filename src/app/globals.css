@@ -1094,6 +1094,118 @@ a {
   color: var(--sea-deep);
 }
 
+.ey-setting-selector {
+  margin-top: 0.85rem;
+}
+
+.ey-setting-sliders {
+  display: grid;
+  gap: 0.65rem;
+  max-width: 36rem;
+}
+
+.ey-setting-slider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.ey-setting-slider.active {
+  border-color: rgba(11, 79, 108, 0.28);
+  background: rgba(232, 243, 247, 0.85);
+}
+
+.ey-setting-slider-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.ey-setting-slider-label {
+  font-weight: 650;
+  color: var(--ink);
+  font-size: 0.98rem;
+}
+
+.ey-setting-slider-hint {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.ey-switch {
+  appearance: none;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 35, 58, 0.18);
+  background: rgba(20, 35, 58, 0.12);
+  padding: 0.12rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.ey-switch.on {
+  background: var(--sea);
+  border-color: var(--sea-deep);
+}
+
+.ey-switch-thumb {
+  display: block;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(7, 58, 80, 0.25);
+  transform: translateX(0);
+  transition: transform 0.2s ease;
+}
+
+.ey-switch.on .ey-switch-thumb {
+  transform: translateX(1.15rem);
+}
+
+.hero-phase.ey-setting-selector .ey-setting-slider {
+  background: rgba(255, 247, 239, 0.12);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.hero-phase.ey-setting-selector .ey-setting-slider.active {
+  background: rgba(255, 247, 239, 0.2);
+  border-color: rgba(255, 247, 239, 0.55);
+}
+
+.hero-phase.ey-setting-selector .ey-setting-slider-label {
+  color: #fff7ef;
+}
+
+.hero-phase.ey-setting-selector .ey-setting-slider-hint {
+  color: rgba(247, 251, 255, 0.72);
+}
+
+.hero-phase.ey-setting-selector .ey-switch {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.hero-phase.ey-setting-selector .ey-switch.on {
+  background: #fff7ef;
+  border-color: #fff7ef;
+}
+
+.hero-phase.ey-setting-selector .ey-switch.on .ey-switch-thumb {
+  background: var(--sea-deep);
+}
+
 .postcode-form {
   margin-bottom: 1rem;
 }
