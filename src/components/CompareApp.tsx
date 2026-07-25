@@ -5,6 +5,7 @@ import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 import { SchoolSearch } from "@/components/SchoolSearch";
 import { ComparisonBoard } from "@/components/ComparisonBoard";
 import { IndependentComparisonBoard } from "@/components/IndependentComparisonBoard";
+import { PhonicsComparisonBoard } from "@/components/PhonicsComparisonBoard";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
@@ -16,9 +17,11 @@ import {
   defaultPhasesForSectors,
   normalizePhaseIds,
   schoolMatchesPhases,
+  schoolOffersKs1,
   schoolOffersKs2,
   schoolOffersSecondary,
   wantsEarlyYearsOnlyNotice,
+  wantsKs1Metrics,
   wantsKs2Metrics,
   wantsKs4Metrics,
   type PhaseId,
@@ -101,10 +104,17 @@ export function CompareApp({
     .map((urn) => byUrn.get(urn))
     .filter((s): s is SchoolRecord => Boolean(s));
 
+  const showKs1 = wantsKs1Metrics(stages);
   const showKs2 = wantsKs2Metrics(stages);
   const showKs4 = wantsKs4Metrics(stages);
   const showEarlyNotice = wantsEarlyYearsOnlyNotice(stages);
 
+  const ks1Selected = selectedSchools.filter(
+    (s) =>
+      showKs1 &&
+      resolveSchoolSector(s) === "state" &&
+      schoolOffersKs1(s),
+  );
   const ks2Selected = selectedSchools.filter(
     (s) =>
       showKs2 &&
@@ -114,6 +124,11 @@ export function CompareApp({
   const ks4Selected = selectedSchools.filter(
     (s) => showKs4 && schoolOffersSecondary(s),
   );
+  const showPhonicsBoard = showKs1 && Boolean(index.benchmarks.phonics);
+  const hasAnyCompareBoard =
+    ks1Selected.length > 0 ||
+    ks2Selected.length > 0 ||
+    ks4Selected.length > 0;
   const ks4AllIndie =
     ks4Selected.length > 0 &&
     ks4Selected.every((s) => resolveSchoolSector(s) === "independent");
@@ -219,8 +234,8 @@ export function CompareApp({
             <p>
               Search any English school in the index for the stages and sector
               you selected, then compare up to four side by side. Tables follow
-              your stages: KS2 shows Year 6 results; KS3/KS4 show GCSE and 16–18
-              measures. Early years / KS1 listing is by age range only for now.
+              your stages: KS1 shows local-authority phonics context; KS2 shows
+              Year 6 results; KS3/KS4 show GCSE and 16–18 measures.
             </p>
             <div className="stats-line">
               <span>
@@ -323,9 +338,10 @@ export function CompareApp({
           <div className="section-head">
             <h2>Side by side</h2>
             <p>
-              Comparison tables match the stages you selected. KS2 rows open a
-              multi-year trend; KS3/KS4 use GCSE and 16–18 figures for state and
-              independent schools.
+              Comparison tables match the stages you selected. KS1 uses
+              local-authority phonics (DfE does not publish each school&apos;s
+              check); KS2 rows open a multi-year trend; KS3/KS4 use GCSE and
+              16–18 figures for state and independent schools.
             </p>
           </div>
 
@@ -338,16 +354,58 @@ export function CompareApp({
 
           {selectedSchools.length > 0 && showEarlyNotice ? (
             <div className="empty-compare" role="status">
-              Early years and KS1 are filtered by age range, but this tool does
-              not yet include phonics or KS1 teacher-assessment results. Add KS2
-              to compare Year 6 tables for primary schools, or KS3/KS4 for
+              Early years is filtered by age range, but this tool does not yet
+              include Early Years Foundation Stage profile results. Add KS1 for
+              local phonics context, KS2 for Year 6 tables, or KS3/KS4 for
               secondary measures.
+            </div>
+          ) : null}
+
+          {selectedSchools.length > 0 &&
+          showKs1 &&
+          !showPhonicsBoard ? (
+            <div className="empty-compare" role="status">
+              KS1 is selected, but phonics area benchmarks are not in this data
+              build yet. Re-run <code>npm run enrich:phonics</code> (or a full
+              harvest), or add KS2 / KS3/KS4 for school-level tables.
+            </div>
+          ) : null}
+
+          {selectedSchools.length > 0 &&
+          showKs1 &&
+          showPhonicsBoard &&
+          ks1Selected.length === 0 ? (
+            <div className="empty-compare" role="status">
+              Phonics context is shown for state schools that offer KS1.
+              Independents are not included in the DfE phonics screening
+              tables — add a state infant or primary, or another stage.
+            </div>
+          ) : null}
+
+          {ks1Selected.length > 0 && showPhonicsBoard ? (
+            <div
+              style={{
+                marginBottom:
+                  ks2Selected.length || ks4Selected.length ? "2rem" : 0,
+              }}
+            >
+              {ks2Selected.length > 0 || ks4Selected.length > 0 ? (
+                <h3 className="compare-subhead">
+                  Key Stage 1 — phonics by local authority
+                </h3>
+              ) : null}
+              <PhonicsComparisonBoard
+                schools={ks1Selected}
+                phonics={index.benchmarks.phonics}
+              />
             </div>
           ) : null}
 
           {ks2Selected.length > 0 ? (
             <div style={{ marginBottom: ks4Selected.length ? "2rem" : 0 }}>
-              {ks4Selected.length > 0 || showEarlyNotice ? (
+              {ks1Selected.length > 0 ||
+              ks4Selected.length > 0 ||
+              showEarlyNotice ? (
                 <h3 className="compare-subhead">Key Stage 2 — Year 6 tables</h3>
               ) : null}
               <ComparisonBoard
@@ -359,7 +417,7 @@ export function CompareApp({
 
           {ks4Selected.length > 0 ? (
             <div>
-              {ks2Selected.length > 0 ? (
+              {ks1Selected.length > 0 || ks2Selected.length > 0 ? (
                 <h3 className="compare-subhead">
                   Key Stage 4 &amp; 16–18 — GCSE / A-level tables
                 </h3>
@@ -374,12 +432,13 @@ export function CompareApp({
 
           {selectedSchools.length > 0 &&
           !showEarlyNotice &&
-          ks2Selected.length === 0 &&
-          ks4Selected.length === 0 ? (
+          !hasAnyCompareBoard &&
+          !(showKs1 && showPhonicsBoard && ks1Selected.length === 0) &&
+          !(showKs1 && !showPhonicsBoard) ? (
             <div className="empty-compare" role="status">
               None of the shortlisted schools offer the stages needed for the
-              published tables that match your filter. Try adding KS2 for Year 6
-              results or KS3/KS4 for GCSE measures.
+              published tables that match your filter. Try KS1 for local phonics
+              context, KS2 for Year 6 results, or KS3/KS4 for GCSE measures.
             </div>
           ) : null}
         </div>

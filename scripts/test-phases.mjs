@@ -90,9 +90,11 @@ async function main() {
   const {
     defaultPhasesForSectors,
     DEFAULT_PHASES_INDEPENDENT,
+    wantsKs1Metrics,
     wantsKs2Metrics,
     wantsKs4Metrics,
     wantsEarlyYearsOnlyNotice,
+    schoolOffersKs1,
     schoolOffersKs2,
     schoolOffersSecondary,
   } = await import("../src/lib/phases.ts");
@@ -115,12 +117,24 @@ async function main() {
     console.error("FAIL wantsKs2Metrics");
     process.exit(1);
   }
+  if (!wantsKs1Metrics(["ks1"]) || wantsKs1Metrics(["early-years"])) {
+    console.error("FAIL wantsKs1Metrics");
+    process.exit(1);
+  }
   if (!wantsKs4Metrics(["ks3"]) || !wantsKs4Metrics(["ks4"]) || wantsKs4Metrics(["ks2"])) {
     console.error("FAIL wantsKs4Metrics");
     process.exit(1);
   }
-  if (!wantsEarlyYearsOnlyNotice(["ks1"]) || wantsEarlyYearsOnlyNotice(["ks1", "ks2"])) {
+  if (
+    !wantsEarlyYearsOnlyNotice(["early-years"]) ||
+    wantsEarlyYearsOnlyNotice(["ks1"]) ||
+    wantsEarlyYearsOnlyNotice(["ks1", "ks2"])
+  ) {
     console.error("FAIL wantsEarlyYearsOnlyNotice");
+    process.exit(1);
+  }
+  if (!schoolOffersKs1({ ageRange: "3 to 7" }) || schoolOffersKs1({ ageRange: "7 to 11" })) {
+    console.error("FAIL schoolOffersKs1");
     process.exit(1);
   }
   if (!schoolOffersKs2({ ageRange: "7 to 11" }) || schoolOffersSecondary({ ageRange: "7 to 11" })) {
