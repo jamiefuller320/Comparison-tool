@@ -343,7 +343,7 @@ function GroupRows({
       <tr className="group-label">
         <td colSpan={schools.length + 1}>{title}</td>
       </tr>
-      {metrics.map((metric) => {
+      {metrics.map((metric, metricIndex) => {
         const winner =
           metric.unit === "count"
             ? null
@@ -359,6 +359,7 @@ function GroupRows({
             active={active}
             onToggleMetric={onToggleMetric}
             historyPanel={active ? historyPanel : null}
+            tourAnchor={title === "What pupils achieved" && metricIndex === 0}
           />
         );
       })}
@@ -374,6 +375,7 @@ function MetricFragment({
   active,
   onToggleMetric,
   historyPanel,
+  tourAnchor = false,
 }: {
   metric: ParentMetric;
   schools: SchoolRecord[];
@@ -382,6 +384,8 @@ function MetricFragment({
   active: boolean;
   onToggleMetric: (key: HistoryMetricKey) => void;
   historyPanel: ReactNode;
+  /** First outcomes row — walkthrough spotlight for Year trend. */
+  tourAnchor?: boolean;
 }) {
   return (
     <>
@@ -394,6 +398,7 @@ function MetricFragment({
             }
             aria-expanded={active}
             aria-controls={`history-${metric.key}`}
+            data-tour={tourAnchor ? "year-trend" : undefined}
             onClick={() => onToggleMetric(metric.key as MetricKey)}
           >
             <span className="metric-history-label">{metric.label}</span>

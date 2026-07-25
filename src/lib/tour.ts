@@ -87,7 +87,13 @@ export const TOUR_STEPS: TourStep[] = [
     id: "boards",
     target: "boards",
     title: "Side-by-side comparison",
-    body: "Tables appear once schools are on the shortlist. On KS2, click a measure name for a multi-year trend. Gaps versus England (or a sector mean) help you spot patterns — not a final verdict.",
+    body: "Tables appear once schools are on the shortlist. Gaps versus England (or a sector mean) help you spot patterns — not a final verdict. The next step shows year-by-year trends on KS2 rows.",
+  },
+  {
+    id: "year-trend",
+    target: "year-trend",
+    title: "Expand a row for year-on-year trends",
+    body: "On Key Stage 2 tables, click a measure name (or Year trend). A graph opens under that row showing how the figure moved for each shortlisted school and for England across published years. The hatched COVID band marks 2019/20–2021/22, when KS2 tables were unpublished — lines do not connect across that gap. Use the trend to see whether a strong (or weak) latest year looks like a pattern or a one-off.",
   },
   {
     id: "how",

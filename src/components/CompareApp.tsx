@@ -352,6 +352,15 @@ export function CompareApp({
             </p>
           </div>
 
+          {ks2Selected.length === 0 ? (
+            <aside className="year-trend-tip" data-tour="year-trend">
+              <strong>Year trends on KS2:</strong> when Year 6 tables are showing,
+              click a measure name (or <em>Year trend</em>) to expand a
+              year-by-year graph under that row — schools and England, with a
+              hatched band for the COVID years when tables were unpublished.
+            </aside>
+          ) : null}
+
           {selectedSchools.length === 0 ? (
             <div className="empty-compare">
               Add two to four schools to see a side-by-side comparison for the
