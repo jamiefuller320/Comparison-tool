@@ -86,6 +86,32 @@ a {
   color: var(--coral);
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tour-launch {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--sea-deep);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tour-launch:hover {
+  border-color: rgba(11, 79, 108, 0.35);
+  background: var(--foam);
+  color: var(--sea);
+}
+
 .nav-links {
   display: flex;
   gap: 1.1rem;
@@ -100,6 +126,25 @@ a {
 
 .nav-links a:hover {
   color: var(--sea);
+}
+
+.hero-tour-launch {
+  margin: 0 0 1.25rem;
+}
+
+.hero-tour-launch .btn-ghost {
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
+}
+
+.chip-row-empty {
+  min-height: 2.75rem;
+  align-items: center;
+}
+
+.chip-row-placeholder {
+  color: var(--soft);
+  font-size: 0.92rem;
 }
 
 .hero {
@@ -1073,6 +1118,129 @@ a {
   line-height: 1.35;
 }
 
+/* Product tour / how-to-use walkthrough */
+.tour-root {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+}
+
+.tour-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 35, 58, 0.42);
+  pointer-events: auto;
+}
+
+.tour-spotlight {
+  position: fixed;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 2px rgba(255, 247, 239, 0.95),
+    0 0 0 9999px rgba(20, 35, 58, 0.48);
+  pointer-events: none;
+  transition:
+    top 0.25s ease,
+    left 0.25s ease,
+    width 0.25s ease,
+    height 0.25s ease;
+  z-index: 81;
+}
+
+.tour-card {
+  position: fixed;
+  z-index: 82;
+  pointer-events: auto;
+  background: var(--sand);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(20, 35, 58, 0.22);
+  padding: 1rem 1.1rem 1.1rem;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+}
+
+.tour-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.55rem;
+}
+
+.tour-progress {
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.tour-skip {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--sea);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+}
+
+.tour-skip:hover {
+  color: var(--coral);
+}
+
+.tour-title {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--sea-deep);
+  line-height: 1.2;
+}
+
+.tour-body {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.tour-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.tour-actions .btn-ghost {
+  color: var(--sea-deep);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.tour-actions .btn-ghost:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.tour-actions .btn-primary {
+  background: var(--sea);
+  color: #fff7ef;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-spotlight {
+    transition: none;
+  }
+}
+
 @media (max-width: 720px) {
   .nav-links {
     display: none;
@@ -1080,6 +1248,12 @@ a {
 
   .hero {
     padding-top: 3.25rem;
+  }
+
+  .tour-card {
+    left: 16px !important;
+    right: 16px;
+    width: auto !important;
   }
 
   .search-box,
@@ -1105,7 +1279,9 @@ a {
   .hero-actions,
   .search-panel,
   .suggest-grid,
-  .btn {
+  .btn,
+  .tour-root,
+  .tour-launch {
     display: none !important;
   }
 

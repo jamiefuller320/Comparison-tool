@@ -6,10 +6,13 @@ export function SectorSelector({
   selected,
   onChange,
   tone = "light",
+  tourId,
 }: {
   selected: SectorId[];
   onChange: (next: SectorId[]) => void;
   tone?: "light" | "hero";
+  /** Optional walkthrough anchor (`data-tour`). */
+  tourId?: string;
 }) {
   const bothSelected =
     selected.includes("state") && selected.includes("independent");
@@ -31,6 +34,7 @@ export function SectorSelector({
       }
       role="radiogroup"
       aria-label="School funding sector"
+      data-tour={tourId}
     >
       <span className="phase-selector-label">School type</span>
       <div className="phase-chips">

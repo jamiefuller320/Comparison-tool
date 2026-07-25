@@ -32,6 +32,7 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import { requestTourStart } from "@/lib/tour";
 
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
@@ -226,7 +227,7 @@ export function HomePostcodeExplorer({
 
   return (
     <>
-      <section className="hero" id="top">
+      <section className="hero" id="top" data-tour="hero">
         <div className="shell hero-inner">
           <p className="hero-brand">
             School<em>side</em>
@@ -236,9 +237,19 @@ export function HomePostcodeExplorer({
             Start with your home postcode to map nearby schools, then compare Key
             Stage 2 results — parental shortlists, not a governance pack.
           </p>
+          <p className="hero-tour-launch">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => requestTourStart()}
+            >
+              How to use — quick tour
+            </button>
+          </p>
 
           <form
             className="postcode-form hero-postcode"
+            data-tour="postcode"
             onSubmit={(e) => {
               e.preventDefault();
               void lookup();
@@ -296,17 +307,23 @@ export function HomePostcodeExplorer({
             selected={stageFilter}
             onChange={onStageFilterChange}
             tone="hero"
+            tourId="stages"
           />
           <SectorSelector
             selected={sectorFilter}
             onChange={onSectorFilterChange}
             tone="hero"
+            tourId="sector"
           />
         </div>
       </section>
 
       {home ? (
-        <section className="section postcode-section" id="nearby">
+        <section
+          className="section postcode-section"
+          id="nearby"
+          data-tour="nearby"
+        >
           <div className="shell">
             <div className="section-head">
               <h2>Schools near {home.postcode}</h2>
@@ -323,7 +340,12 @@ export function HomePostcodeExplorer({
               </p>
             </div>
 
-            <div className="radius-row" role="group" aria-label="Search radius">
+            <div
+              className="radius-row"
+              role="group"
+              aria-label="Search radius"
+              data-tour="radius"
+            >
               <span>Range ring</span>
               {RADIUS_OPTIONS_KM.map((km) => (
                 <button

@@ -11,6 +11,7 @@ import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
 import { SectorSelector } from "@/components/SectorSelector";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
+import { ProductTour } from "@/components/ProductTour";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   DEFAULT_PHASES,
@@ -217,6 +218,7 @@ export function CompareApp({
 
   return (
     <>
+      <ProductTour />
       <HomePostcodeExplorer
         schools={filteredSchools}
         selectedUrns={selected}
@@ -333,7 +335,12 @@ export function CompareApp({
         </div>
       </section>
 
-      <section className="section" style={{ paddingTop: 0 }}>
+      <section
+        className="section"
+        id="side-by-side"
+        data-tour="boards"
+        style={{ paddingTop: 0 }}
+      >
         <div className="shell">
           <div className="section-head">
             <h2>Side by side</h2>

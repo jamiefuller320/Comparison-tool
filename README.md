@@ -23,6 +23,7 @@ After merge to `main` and Pages is enabled:
 - **Separate comparison tables** by stage: KS1 uses **local-authority phonics** context; state KS2 uses Year 6 attainment; KS3/KS4 use published **Key Stage 4** outcomes (Attainment 8, English & maths, EBacc) for state and independent secondaries, plus **Ofsted** grades for non-association independents and **ISI / website** links from GIAS when Ofsted grades are absent. Nil/zero English & maths GCSE returns are cleared (common with IGCSEs); EBacc subject pillars are used as fallbacks when both are published
 - Secondary / infant / nursery settings are enriched from GIAS Edubase (so EY–KS1-only and KS3–KS4 schools appear even without KS2 results)
 - **“A school is missing”** queues a directory rebuild (one force refresh per UTC day; also limited once per browser/day)
+- **How to use** walkthrough — highlights the main controls on first visit (restart anytime from the header)
 - **Home postcode** at the top of the page, with parsing for common syntax (`SO40 2HR`, `so402hr`, `SO40-2HR`)
 - **Map of nearby schools** with a selectable range ring, door-to-door road distance, and tick-to-compare suggestions
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables

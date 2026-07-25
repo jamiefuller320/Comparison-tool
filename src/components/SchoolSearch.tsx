@@ -66,7 +66,7 @@ export function SchoolSearch({
   const atMax = selectedUrns.length >= max;
 
   return (
-    <div className="search-panel" ref={wrapRef}>
+    <div className="search-panel" ref={wrapRef} data-tour="search">
       <div className="search-box">
         <input
           type="search"
