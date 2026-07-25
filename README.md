@@ -14,6 +14,16 @@ Provide the most comprehensive comparison and decision-making tool possible for 
 
 Everything else — harvests, stages, maps, tours, charts — should serve that objective.
 
+## Initial scope (economic path)
+
+Until uptake is clearer, prefer **depth in a bounded slice** over a full national, all-age build:
+
+1. **Age progression** — start with **early years providers**, then widen upward (KS1 → KS2 → secondary) once the EY comparison and evidence patterns are solid.
+2. **One geography first** — run a **full, maintained dataset for a single area** (e.g. one local authority or travel-to-school region) rather than pre-harvesting every English setting.
+3. **On-demand beyond that** — for schools or areas outside the seed geography, **process and cache on user request** (same spirit as today’s “school is missing” refresh), instead of paying for continuous national coverage up front.
+
+The current national KS2/KS4 harvest is a capability scaffold; the product path above is how we intend to grow coverage without assuming demand.
+
 ## Live site (GitHub Pages)
 
 After merge to `main` and Pages is enabled:
