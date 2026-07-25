@@ -11,58 +11,75 @@ import {
 import {
   TOUR_START_EVENT,
   TOUR_STEPS,
+  cacheTourTargets,
   hasSeenTour,
   markTourSeen,
+  placeTourCard,
   resolveActiveTourSteps,
-  tourTargetSelector,
+  scrollToCachedTarget,
+  viewportRectFromCache,
   type TourStep,
+  type TourTargetCache,
+  type ViewportRect,
 } from "@/lib/tour";
 
-const PAD = 10;
 const AUTO_START_DELAY_MS = 900;
-
-type Rect = { top: number; left: number; width: number; height: number };
-
-function measureTarget(target: string): Rect | null {
-  const el = document.querySelector(tourTargetSelector(target));
-  if (!(el instanceof HTMLElement)) return null;
-  const r = el.getBoundingClientRect();
-  if (r.width <= 0 || r.height <= 0) return null;
-  return {
-    top: Math.max(8, r.top - PAD),
-    left: Math.max(8, r.left - PAD),
-    width: Math.min(window.innerWidth - 16, r.width + PAD * 2),
-    height: Math.min(window.innerHeight - 16, r.height + PAD * 2),
-  };
-}
-
-function scrollTargetIntoView(target: string) {
-  const el = document.querySelector(tourTargetSelector(target));
-  if (!(el instanceof HTMLElement)) return;
-  el.scrollIntoView({
-    behavior: "smooth",
-    block: "center",
-    inline: "nearest",
-  });
-}
 
 export function ProductTour() {
   const titleId = useId();
-  const measureTimer = useRef<number | null>(null);
+  const cacheRef = useRef<Map<string, TourTargetCache>>(new Map());
+  const scrollingRef = useRef(false);
+  const rafRef = useRef<number | null>(null);
   const [open, setOpen] = useState(false);
   const [steps, setSteps] = useState<TourStep[]>([]);
   const [index, setIndex] = useState(0);
-  const [rect, setRect] = useState<Rect | null>(null);
+  const [rect, setRect] = useState<ViewportRect | null>(null);
   const [cardPos, setCardPos] = useState<{ top: number; left: number }>({
     top: 24,
     left: 24,
   });
 
-  const close = useCallback((markSeen: boolean) => {
-    if (measureTimer.current != null) {
-      window.clearTimeout(measureTimer.current);
-      measureTimer.current = null;
+  const paintFromCache = useCallback((target: string, scrollToTarget: boolean) => {
+    const cached = cacheRef.current.get(target);
+    if (!cached) {
+      setRect(null);
+      setCardPos(
+        placeTourCard(null, window.innerWidth, window.innerHeight),
+      );
+      return;
     }
+
+    if (scrollToTarget) {
+      scrollingRef.current = true;
+      scrollToCachedTarget(cached, window.innerHeight);
+      // Instant scroll — release the guard on the next frame.
+      requestAnimationFrame(() => {
+        scrollingRef.current = false;
+      });
+    }
+
+    const next = viewportRectFromCache(
+      cached,
+      window.scrollX,
+      window.scrollY,
+      window.innerWidth,
+      window.innerHeight,
+    );
+    setRect(next);
+    setCardPos(placeTourCard(next, window.innerWidth, window.innerHeight));
+  }, []);
+
+  const rebuildCache = useCallback((active: TourStep[]) => {
+    cacheRef.current = cacheTourTargets(active);
+  }, []);
+
+  const close = useCallback((markSeen: boolean) => {
+    if (rafRef.current != null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    document.documentElement.classList.remove("tour-running");
+    cacheRef.current = new Map();
     setOpen(false);
     setSteps([]);
     setIndex(0);
@@ -73,10 +90,13 @@ export function ProductTour() {
   const start = useCallback(() => {
     const active = resolveActiveTourSteps(TOUR_STEPS);
     if (!active.length) return;
+    // Snapshot layout once so step changes only read the cache.
+    rebuildCache(active);
+    document.documentElement.classList.add("tour-running");
     setSteps(active);
     setIndex(0);
     setOpen(true);
-  }, []);
+  }, [rebuildCache]);
 
   useEffect(() => {
     function onStart() {
@@ -99,67 +119,40 @@ export function ProductTour() {
 
   const step = steps[index] ?? null;
 
-  const refreshGeometry = useCallback(() => {
-    if (!step) return;
-    scrollTargetIntoView(step.target);
-    if (measureTimer.current != null) {
-      window.clearTimeout(measureTimer.current);
-    }
-    // Wait a beat for smooth scroll / sticky header before measuring.
-    measureTimer.current = window.setTimeout(() => {
-      const next = measureTarget(step.target);
-      setRect(next);
-
-      const cardWidth = Math.min(360, window.innerWidth - 32);
-      const cardHeight = 210;
-      const narrow = window.innerWidth < 720;
-
-      if (narrow) {
-        setCardPos({
-          top: Math.max(16, window.innerHeight - cardHeight - 20),
-          left: 16,
-        });
-        return;
-      }
-
-      if (!next) {
-        setCardPos({
-          top: Math.max(16, window.innerHeight / 2 - cardHeight / 2),
-          left: Math.max(16, window.innerWidth / 2 - cardWidth / 2),
-        });
-        return;
-      }
-
-      let top = next.top + next.height + 14;
-      if (top + cardHeight > window.innerHeight - 12) {
-        top = Math.max(16, next.top - cardHeight - 14);
-      }
-      let left = next.left;
-      if (left + cardWidth > window.innerWidth - 16) {
-        left = window.innerWidth - cardWidth - 16;
-      }
-      if (left < 16) left = 16;
-      setCardPos({ top, left });
-    }, 280);
-  }, [step]);
-
   useLayoutEffect(() => {
     if (!open || !step) return;
-    refreshGeometry();
-  }, [open, step, refreshGeometry]);
+    paintFromCache(step.target, true);
+  }, [open, step, paintFromCache]);
 
   useEffect(() => {
     if (!open) return;
-    function onResize() {
-      refreshGeometry();
+
+    function schedulePaint() {
+      if (scrollingRef.current || !step) return;
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        paintFromCache(step.target, false);
+      });
     }
+
+    function onResize() {
+      // Viewport change invalidates document boxes — rebuild once, then paint.
+      rebuildCache(steps);
+      if (step) paintFromCache(step.target, false);
+    }
+
+    window.addEventListener("scroll", schedulePaint, { passive: true });
     window.addEventListener("resize", onResize);
-    window.addEventListener("scroll", onResize, true);
     return () => {
+      window.removeEventListener("scroll", schedulePaint);
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("scroll", onResize, true);
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
     };
-  }, [open, refreshGeometry]);
+  }, [open, step, steps, paintFromCache, rebuildCache]);
 
   useEffect(() => {
     if (!open) return;
@@ -178,17 +171,6 @@ export function ProductTour() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, close, steps.length]);
-
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    // Keep page scrollable so scrollIntoView can work; block only accidental
-    // background interaction via the backdrop.
-    document.body.style.overflow = prev;
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [open]);
 
   if (!open || !step) return null;
 

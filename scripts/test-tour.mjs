@@ -1,4 +1,4 @@
-/** Unit checks for walkthrough step resolution (no DOM library required). */
+/** Unit checks for walkthrough steps and layout cache helpers. */
 
 async function main() {
   const {
@@ -6,6 +6,8 @@ async function main() {
     resolveActiveTourSteps,
     tourTargetSelector,
     TOUR_STORAGE_KEY,
+    viewportRectFromCache,
+    placeTourCard,
   } = await import("../src/lib/tour.ts");
 
   if (TOUR_STEPS.length < 8) {
@@ -42,7 +44,6 @@ async function main() {
     ["shortlist", { width: 360, height: 40 }],
     ["boards", { width: 400, height: 120 }],
     ["how", { width: 400, height: 100 }],
-    // nearby / radius intentionally absent
   ]);
 
   const fakeDoc = {
@@ -82,7 +83,26 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`tour ok (${TOUR_STEPS.length} steps, optional nearby/radius gated)`);
+  const cached = {
+    target: "search",
+    top: 1200,
+    left: 40,
+    width: 360,
+    height: 56,
+  };
+  const view = viewportRectFromCache(cached, 0, 1000, 1280, 800, 10);
+  if (view.top !== 190 || view.left !== 30 || view.width !== 380 || view.height !== 76) {
+    console.error("FAIL viewportRectFromCache", view);
+    process.exit(1);
+  }
+
+  const card = placeTourCard(view, 1280, 800);
+  if (card.top < view.top || card.left < 16) {
+    console.error("FAIL placeTourCard", card);
+    process.exit(1);
+  }
+
+  console.log(`tour ok (${TOUR_STEPS.length} steps, cache helpers checked)`);
 }
 
 main();

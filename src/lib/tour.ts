@@ -1,7 +1,10 @@
-/** Interactive “How to use” walkthrough — steps and localStorage helpers. */
+/** Interactive “How to use” walkthrough — steps, cache, and localStorage helpers. */
 
 export const TOUR_STORAGE_KEY = "schoolside.tourSeen";
 export const TOUR_START_EVENT = "schoolside:start-tour";
+export const TOUR_PAD = 10;
+/** Sticky header clearance when centering a target. */
+export const TOUR_HEADER_OFFSET = 72;
 
 export interface TourStep {
   id: string;
@@ -12,6 +15,22 @@ export interface TourStep {
   /** Skip when the target is missing or not laid out (e.g. nearby before postcode). */
   optional?: boolean;
 }
+
+/** Document-space box for a tour target, captured once when the tour starts. */
+export interface TourTargetCache {
+  target: string;
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+export type ViewportRect = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+};
 
 export const TOUR_STEPS: TourStep[] = [
   {
@@ -128,4 +147,92 @@ export function resolveActiveTourSteps(
     }
     return true;
   });
+}
+
+/**
+ * Snapshot each step target’s document-space box once at tour start.
+ * Later steps reuse this cache so we avoid re-querying / re-layout thrash.
+ */
+export function cacheTourTargets(
+  steps: TourStep[],
+  doc: Document = document,
+  scrollX = typeof window !== "undefined" ? window.scrollX : 0,
+  scrollY = typeof window !== "undefined" ? window.scrollY : 0,
+): Map<string, TourTargetCache> {
+  const cache = new Map<string, TourTargetCache>();
+  for (const step of steps) {
+    const el = doc.querySelector(tourTargetSelector(step.target));
+    if (!(el instanceof HTMLElement)) continue;
+    const r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) continue;
+    cache.set(step.target, {
+      target: step.target,
+      top: r.top + scrollY,
+      left: r.left + scrollX,
+      width: r.width,
+      height: r.height,
+    });
+  }
+  return cache;
+}
+
+/** Convert a cached document box into a padded fixed-viewport spotlight rect. */
+export function viewportRectFromCache(
+  cached: TourTargetCache,
+  scrollX: number,
+  scrollY: number,
+  viewportWidth: number,
+  viewportHeight: number,
+  pad = TOUR_PAD,
+): ViewportRect {
+  return {
+    top: Math.max(8, cached.top - scrollY - pad),
+    left: Math.max(8, cached.left - scrollX - pad),
+    width: Math.min(viewportWidth - 16, cached.width + pad * 2),
+    height: Math.min(viewportHeight - 16, cached.height + pad * 2),
+  };
+}
+
+/** Instant scroll so the cached target sits near the vertical centre. */
+export function scrollToCachedTarget(
+  cached: TourTargetCache,
+  viewportHeight: number,
+  headerOffset = TOUR_HEADER_OFFSET,
+): number {
+  const centerY = cached.top + cached.height / 2;
+  const top = Math.max(0, centerY - viewportHeight / 2 - headerOffset / 2);
+  window.scrollTo({ top, left: 0, behavior: "auto" });
+  return top;
+}
+
+export function placeTourCard(
+  rect: ViewportRect | null,
+  viewportWidth: number,
+  viewportHeight: number,
+  cardWidth = Math.min(360, viewportWidth - 32),
+  cardHeight = 210,
+): { top: number; left: number } {
+  const narrow = viewportWidth < 720;
+  if (narrow) {
+    return {
+      top: Math.max(16, viewportHeight - cardHeight - 20),
+      left: 16,
+    };
+  }
+  if (!rect) {
+    return {
+      top: Math.max(16, viewportHeight / 2 - cardHeight / 2),
+      left: Math.max(16, viewportWidth / 2 - cardWidth / 2),
+    };
+  }
+  let top = rect.top + rect.height + 14;
+  if (top + cardHeight > viewportHeight - 12) {
+    top = Math.max(16, rect.top - cardHeight - 14);
+  }
+  let left = rect.left;
+  if (left + cardWidth > viewportWidth - 16) {
+    left = viewportWidth - cardWidth - 16;
+  }
+  if (left < 16) left = 16;
+  return { top, left };
 }
