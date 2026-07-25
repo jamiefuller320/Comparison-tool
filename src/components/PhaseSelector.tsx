@@ -1,6 +1,7 @@
 "use client";
 
 import { PHASE_OPTIONS, type PhaseId } from "@/lib/phases";
+import { SelectorHelp } from "@/components/SelectorHelp";
 
 export function PhaseSelector({
   selected,
@@ -31,7 +32,16 @@ export function PhaseSelector({
       aria-label="School stages to include"
       data-tour={tourId}
     >
-      <span className="phase-selector-label">Stages</span>
+      <div className="phase-selector-heading">
+        <span className="phase-selector-label">Stages</span>
+        <SelectorHelp label="About stages">
+          When several stages are selected, only settings that offer{" "}
+          <strong>all</strong> of them are listed (for example KS3 + KS4 shows
+          secondary and all-through schools). Comparison tables follow these
+          stages: KS1 → local-authority phonics context; KS2 → Year 6 results;
+          KS3/KS4 → GCSE / 16–18 measures.
+        </SelectorHelp>
+      </div>
       <div className="phase-chips">
         {PHASE_OPTIONS.map((option) => {
           const active = selected.includes(option.id);
@@ -49,13 +59,6 @@ export function PhaseSelector({
           );
         })}
       </div>
-      <p className="phase-selector-hint">
-        When several stages are selected, only settings that offer{" "}
-        <strong>all</strong> of them are listed (for example KS3 + KS4 shows
-        secondary and all-through schools). Comparison tables follow these
-        stages: KS1 → local-authority phonics context; KS2 → Year 6 results;
-        KS3/KS4 → GCSE / 16–18 measures.
-      </p>
     </div>
   );
 }
