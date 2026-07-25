@@ -1,7 +1,7 @@
 "use client";
 
 import type { SchoolRecord } from "@/lib/types";
-import { EY_PROVIDER_METRICS } from "@/lib/eyMetrics";
+import { EY_PROVIDER_METRICS, isEyProvider } from "@/lib/eyMetrics";
 import { fmtNum, shortName } from "@/lib/format";
 
 function formatValue(
@@ -15,34 +15,55 @@ function formatValue(
 
 export function EarlyYearsComparisonBoard({
   providers,
-  ofstedAsAt,
-  sourcePage,
+  childcareOfstedAsAt,
+  stateOfstedAsAt,
+  childcareSourcePage,
+  stateSourcePage,
 }: {
   providers: SchoolRecord[];
-  ofstedAsAt?: string | null;
-  sourcePage?: string | null;
+  childcareOfstedAsAt?: string | null;
+  stateOfstedAsAt?: string | null;
+  childcareSourcePage?: string | null;
+  stateSourcePage?: string | null;
 }) {
   if (providers.length === 0) {
     return (
       <div className="empty-compare">
-        Add Hampshire early years day-care providers to compare Ofsted
-        inspection outcomes side by side.
+        Add Hampshire early years day-care providers or school nursery / infant
+        settings to compare Ofsted inspection outcomes side by side.
       </div>
     );
   }
 
+  const hasChildcare = providers.some(isEyProvider);
+  const hasSchool = providers.some((p) => !isEyProvider(p));
+
   return (
     <div>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
-        Compared on published Ofsted childcare inspection outcomes for
-        Hampshire Early Years Register day-care settings (full and sessional).
-        Grades are judgements about the setting at the last full inspection —
-        not the same as reception EYFSP attainment (which DfE only publishes for
-        areas, not providers).
-        {ofstedAsAt ? ` Ofsted management information as at ${ofstedAsAt}.` : null}{" "}
-        {sourcePage ? (
-          <a href={sourcePage} target="_blank" rel="noreferrer">
-            Ofsted childcare MI source ↗
+        Compared on published Ofsted inspection outcomes for Hampshire early
+        years settings — Early Years Register day care (full and sessional) and
+        state-funded schools with a nursery or reception intake. Grades describe
+        the setting at the last graded inspection. They are not the same as
+        reception EYFSP attainment (DfE only publishes EYFSP for areas, not
+        individual providers or schools).
+        {hasChildcare && childcareOfstedAsAt
+          ? ` Childcare MI as at ${childcareOfstedAsAt}.`
+          : null}
+        {hasSchool && stateOfstedAsAt
+          ? ` State school MI as at ${stateOfstedAsAt}.`
+          : null}{" "}
+        {hasChildcare && childcareSourcePage ? (
+          <a href={childcareSourcePage} target="_blank" rel="noreferrer">
+            Ofsted childcare MI ↗
+          </a>
+        ) : null}
+        {hasChildcare && hasSchool && childcareSourcePage && stateSourcePage
+          ? " · "
+          : null}
+        {hasSchool && stateSourcePage ? (
+          <a href={stateSourcePage} target="_blank" rel="noreferrer">
+            Ofsted school inspections MI ↗
           </a>
         ) : null}
       </p>
@@ -62,8 +83,16 @@ export function EarlyYearsComparisonBoard({
                         .join(" · ")}
                     </span>
                     <span>
-                      {provider.providerSubtype || provider.schoolTypeLabel || "Early years"}
-                      {provider.places != null ? ` · ${provider.places} places` : null}
+                      {provider.providerSubtype ||
+                        provider.schoolTypeLabel ||
+                        provider.phase ||
+                        "Early years"}
+                      {provider.places != null
+                        ? ` · ${provider.places} places`
+                        : null}
+                      {isEyProvider(provider)
+                        ? " · day care"
+                        : " · school"}
                     </span>
                     {provider.ofstedReportUrl ? (
                       <span>

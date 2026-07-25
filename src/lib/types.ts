@@ -54,6 +54,8 @@ export interface IndependentMetrics {
   ofstedBehaviourAndAttitudes?: string | null;
   ofstedPersonalDevelopment?: string | null;
   ofstedLeadership?: string | null;
+  /** State-school OEIF early years provision grade (where published). */
+  ofstedEarlyYearsProvision?: string | null;
   ofstedSafeguardingEffective?: string | null;
   ofstedIssCompliance?: string | null;
   ofstedInspectorate?: string | null;
@@ -61,6 +63,8 @@ export interface IndependentMetrics {
   ofstedPublicationDate?: string | null;
   ofstedReportUrl?: string | null;
   ofstedPupilsOnRoll?: number | null;
+  /** e.g. ofsted-childcare, ofsted-state-schools, ofsted-independent */
+  ofstedSource?: string | null;
   /** Ofsted childcare provider URN (when source is ofsted-childcare). */
   ofstedUrn?: string | null;
   providerType?: string | null;
@@ -234,9 +238,12 @@ export interface SchoolsIndex {
     withKs5?: number;
     independentWithOfsted?: number;
     independentEnriched?: boolean;
+    stateWithOfsted?: number;
+    hampshireEyStateWithOfsted?: number;
     ks4Period?: string;
     ks5Period?: string;
     ofstedAsAt?: string;
+    ofstedStateAsAt?: string;
     phonicsPeriod?: string;
     phonicsLaCount?: number;
     phonicsEnriched?: boolean;

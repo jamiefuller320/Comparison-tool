@@ -5,7 +5,7 @@ export const PHASE_OPTIONS = [
     id: "early-years",
     label: "Early years",
     short: "EY",
-    hint: "Nursery and reception (typically ages 0–5) — Hampshire day care + EYFSP area context",
+    hint: "Nursery and reception (typically ages 0–5) — Hampshire day care, school nurseries/infants, + EYFSP area context",
   },
   {
     id: "ks1",

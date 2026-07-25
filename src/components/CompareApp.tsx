@@ -15,7 +15,7 @@ import { SectorSelector } from "@/components/SectorSelector";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import { ProductTour } from "@/components/ProductTour";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
-import { isEyProvider } from "@/lib/eyMetrics";
+import { isEyComparable, isEyProvider } from "@/lib/eyMetrics";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import {
   DEFAULT_PHASES,
@@ -122,7 +122,9 @@ export function CompareApp({
   const showKs4 = wantsKs4Metrics(stages);
   const showEarlyNotice = wantsEarlyYearsOnlyNotice(stages, hasEyData);
 
-  const eySelected = selectedSchools.filter((s) => showEy && isEyProvider(s));
+  const eySelected = selectedSchools.filter(
+    (s) => showEy && isEyComparable(s),
+  );
   const ks1Selected = selectedSchools.filter(
     (s) =>
       showKs1 &&
@@ -407,9 +409,11 @@ export function CompareApp({
 
           {selectedSchools.length > 0 && showEarlyNotice ? (
             <div className="empty-compare" role="status">
-              Early years is selected, but the {SEED_GEOGRAPHY_LABEL} day-care
-              pack is not in this data build. Re-run <code>npm run harvest:ey</code>
-              , or add KS1 / KS2 / KS3/KS4 for school tables.
+              Early years is selected, but the {SEED_GEOGRAPHY_LABEL} early years
+              pack is not in this data build. Re-run{" "}
+              <code>npm run harvest:ey</code> (and{" "}
+              <code>npm run enrich:ey-schools</code> for school nurseries /
+              infants), or add KS1 / KS2 / KS3/KS4 for school tables.
             </div>
           ) : null}
 
@@ -437,19 +441,30 @@ export function CompareApp({
               {eySelected.length > 0 ? (
                 <div style={{ marginTop: "1.5rem" }}>
                   <h3 className="compare-subhead">
-                    Early years — Ofsted day-care comparison
+                    Early years — Ofsted comparison
                   </h3>
                   <EarlyYearsComparisonBoard
                     providers={eySelected}
-                    ofstedAsAt={eyIndex?.ofstedAsAt}
-                    sourcePage={eyIndex?.source.ofstedChildcareMiPage}
+                    childcareOfstedAsAt={eyIndex?.ofstedAsAt}
+                    stateOfstedAsAt={index.stats.ofstedStateAsAt}
+                    childcareSourcePage={
+                      eyIndex?.source.ofstedChildcareMiPage
+                    }
+                    stateSourcePage={
+                      index.source.datasets.ofstedStateSchoolsMi
+                    }
                   />
                 </div>
               ) : showEy && selectedSchools.length > 0 ? (
-                <div className="empty-compare" role="status" style={{ marginTop: "1rem" }}>
+                <div
+                  className="empty-compare"
+                  role="status"
+                  style={{ marginTop: "1rem" }}
+                >
                   Shortlist a {SEED_GEOGRAPHY_LABEL} early years day-care
-                  provider (search or map) to compare Ofsted inspection outcomes.
-                  EYFSP area figures above are for context only.
+                  provider or a school nursery / infant (search or map) to
+                  compare Ofsted inspection outcomes. EYFSP area figures above
+                  are for context only — not the same as Ofsted grades.
                 </div>
               ) : null}
             </div>
