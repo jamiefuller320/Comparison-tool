@@ -28,6 +28,7 @@ After merge to `main` and Pages is enabled:
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables
 - Lets parents **search** by name, town, postcode or URN and compare **up to four schools** side by side
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
+- Matches comparison tables to selected stages: **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent); early years / KS1 are age-range filters until phonics data is added
 - Keeps the language parental: shortlists and fit, not board packs or SIP targets
 
 ## Run locally
