@@ -18,6 +18,7 @@ import {
   resolveActiveTourSteps,
   scrollToCachedTarget,
   viewportRectFromCache,
+  tourTargetSelector,
   type TourStep,
   type TourTargetCache,
   type ViewportRect,
@@ -30,6 +31,9 @@ export function ProductTour() {
   const cacheRef = useRef<Map<string, TourTargetCache>>(new Map());
   const scrollingRef = useRef(false);
   const rafRef = useRef<number | null>(null);
+  const demoTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const openedTrendByTourRef = useRef(false);
+  const demoTimerRef = useRef<number | null>(null);
   const [open, setOpen] = useState(false);
   const [steps, setSteps] = useState<TourStep[]>([]);
   const [index, setIndex] = useState(0);
@@ -73,19 +77,40 @@ export function ProductTour() {
     cacheRef.current = cacheTourTargets(active);
   }, []);
 
-  const close = useCallback((markSeen: boolean) => {
-    if (rafRef.current != null) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
+  const collapseTourTrendDemo = useCallback(() => {
+    if (demoTimerRef.current != null) {
+      window.clearTimeout(demoTimerRef.current);
+      demoTimerRef.current = null;
     }
-    document.documentElement.classList.remove("tour-running");
-    cacheRef.current = new Map();
-    setOpen(false);
-    setSteps([]);
-    setIndex(0);
-    setRect(null);
-    if (markSeen) markTourSeen();
+    const trigger = demoTriggerRef.current;
+    if (
+      openedTrendByTourRef.current &&
+      trigger &&
+      trigger.getAttribute("aria-expanded") === "true"
+    ) {
+      trigger.click();
+    }
+    openedTrendByTourRef.current = false;
+    demoTriggerRef.current = null;
   }, []);
+
+  const close = useCallback(
+    (markSeen: boolean) => {
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      collapseTourTrendDemo();
+      document.documentElement.classList.remove("tour-running");
+      cacheRef.current = new Map();
+      setOpen(false);
+      setSteps([]);
+      setIndex(0);
+      setRect(null);
+      if (markSeen) markTourSeen();
+    },
+    [collapseTourTrendDemo],
+  );
 
   const start = useCallback(() => {
     const active = resolveActiveTourSteps(TOUR_STEPS);
@@ -123,6 +148,53 @@ export function ProductTour() {
     if (!open || !step) return;
     paintFromCache(step.target, true);
   }, [open, step, paintFromCache]);
+
+  // On the year-trend step, expand the first KS2 measure when a live table is
+  // present so parents see the graph as well as the control.
+  useEffect(() => {
+    if (!open || !step) return;
+
+    if (step.id !== "year-trend") {
+      collapseTourTrendDemo();
+      return;
+    }
+
+    const el = document.querySelector(tourTargetSelector("year-trend"));
+    if (
+      !(el instanceof HTMLButtonElement) ||
+      !el.classList.contains("metric-history-trigger")
+    ) {
+      return;
+    }
+
+    if (el.getAttribute("aria-expanded") !== "true") {
+      el.click();
+      openedTrendByTourRef.current = true;
+      demoTriggerRef.current = el;
+    } else {
+      demoTriggerRef.current = el;
+    }
+
+    if (demoTimerRef.current != null) {
+      window.clearTimeout(demoTimerRef.current);
+    }
+    demoTimerRef.current = window.setTimeout(() => {
+      rebuildCache(steps);
+      paintFromCache("year-trend", true);
+      const panel = document.querySelector(".history-panel-inline");
+      if (panel instanceof HTMLElement) {
+        panel.scrollIntoView({ behavior: "auto", block: "nearest" });
+        paintFromCache("year-trend", false);
+      }
+    }, 420);
+
+    return () => {
+      if (demoTimerRef.current != null) {
+        window.clearTimeout(demoTimerRef.current);
+        demoTimerRef.current = null;
+      }
+    };
+  }, [open, step, steps, collapseTourTrendDemo, rebuildCache, paintFromCache]);
 
   useEffect(() => {
     if (!open) return;

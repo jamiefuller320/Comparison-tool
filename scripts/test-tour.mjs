@@ -34,6 +34,16 @@ async function main() {
     process.exit(1);
   }
 
+  if (!TOUR_STEPS.some((s) => s.id === "year-trend" && s.target === "year-trend")) {
+    console.error("FAIL year-trend step missing");
+    process.exit(1);
+  }
+  const yearTrend = TOUR_STEPS.find((s) => s.id === "year-trend");
+  if (!yearTrend?.body.toLowerCase().includes("covid")) {
+    console.error("FAIL year-trend copy should explain the graph / COVID gap");
+    process.exit(1);
+  }
+
   /** @type {Map<string, { width: number; height: number } | null>} */
   const layout = new Map([
     ["hero", { width: 400, height: 200 }],
@@ -43,6 +53,7 @@ async function main() {
     ["search", { width: 360, height: 56 }],
     ["shortlist", { width: 360, height: 40 }],
     ["boards", { width: 400, height: 120 }],
+    ["year-trend", { width: 400, height: 80 }],
     ["how", { width: 400, height: 100 }],
   ]);
 
@@ -68,7 +79,15 @@ async function main() {
     console.error("FAIL optional steps should be skipped", ids);
     process.exit(1);
   }
-  for (const id of ["welcome", "postcode", "stages", "search", "boards", "how"]) {
+  for (const id of [
+    "welcome",
+    "postcode",
+    "stages",
+    "search",
+    "boards",
+    "year-trend",
+    "how",
+  ]) {
     if (!ids.includes(id)) {
       console.error("FAIL missing required step", id, ids);
       process.exit(1);
