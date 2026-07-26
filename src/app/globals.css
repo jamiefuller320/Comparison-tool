@@ -1058,6 +1058,14 @@ a {
   max-width: 40rem;
 }
 
+.sector-selector {
+  margin-top: 1.25rem;
+}
+
+.hero-phase.sector-selector {
+  margin-top: 1.9rem;
+}
+
 .hero-phase .phase-selector-label {
   color: rgba(247, 251, 255, 0.9);
 }
@@ -1668,7 +1676,7 @@ html.tour-running .hero-inner > * {
   margin-top: 0.35rem;
 }
 
-.visit-note span {
+.visit-note > span {
   font-size: 0.82rem;
   font-weight: 650;
   color: var(--ink-soft);
@@ -1685,6 +1693,19 @@ html.tour-running .hero-inner > * {
   font-size: 0.92rem;
   background: #fff;
   color: var(--ink);
+}
+
+.visit-note-lines,
+.visit-note-print-text {
+  display: none;
+}
+
+.visit-pack-questions-sheet {
+  margin-top: 0.25rem;
+}
+
+.visit-pack-questions-sheet .visit-questions + .visit-questions {
+  margin-top: 1.5rem;
 }
 
 .visit-questions h4 {
@@ -1756,19 +1777,29 @@ html.tour-running .hero-inner > * {
 }
 
 @media print {
-  body * {
-    visibility: hidden;
+  @page {
+    margin: 12mm;
+    size: A4;
   }
 
-  .visit-pack,
-  .visit-pack * {
-    visibility: visible;
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    overflow: visible !important;
   }
 
-  .visit-pack {
-    position: absolute;
-    left: 0;
-    top: 0;
+  /* Print button path: only the cloned pack is in the document flow. */
+  body.printing-visit-pack > *:not(.visit-pack-print-clone) {
+    display: none !important;
+  }
+
+  body.printing-visit-pack .visit-pack-print-clone {
+    display: block !important;
+    position: static !important;
     width: 100%;
     border-top: 0;
     padding: 0;
@@ -1783,19 +1814,21 @@ html.tour-running .hero-inner > * {
     display: block !important;
   }
 
-  body {
-    background: white;
+  .visit-pack-print-title {
+    margin-bottom: 0.85rem;
   }
 
-  .visit-pack-print-title {
-    margin-bottom: 1rem;
+  .visit-pack-print-title p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
   }
 
   .visit-pack-brand {
     font-family: var(--font-display);
-    font-size: 1.6rem;
+    font-size: 1.55rem;
     font-weight: 700;
-    margin: 0 0 0.25rem;
+    margin: 0 0 0.25rem !important;
     color: var(--sea-deep);
   }
 
@@ -1804,8 +1837,26 @@ html.tour-running .hero-inner > * {
     color: var(--coral);
   }
 
+  .visit-pack-contacts-sheet {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .visit-pack-questions-sheet {
+    break-before: page;
+    page-break-before: always;
+    margin-top: 0;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .visit-pack-section:last-child {
+    margin-bottom: 0;
+  }
+
   .visit-contact-card {
     break-inside: avoid;
+    page-break-inside: avoid;
     background: white;
     box-shadow: none;
   }
@@ -1815,17 +1866,55 @@ html.tour-running .hero-inner > * {
   }
 
   .visit-note textarea {
-    border: 0;
-    border-bottom: 1px solid rgba(20, 35, 58, 0.25);
-    border-radius: 0;
-    min-height: 2.4rem;
+    display: none !important;
+  }
+
+  .visit-note-print-text {
+    display: block !important;
+    margin: 0 0 0.35rem;
+    white-space: pre-wrap;
+    font-size: 0.92rem;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .visit-note-lines {
+    display: block !important;
+    width: 100%;
+    height: var(--visit-print-note-height, 5.5rem);
+    min-height: 4rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(1.35rem - 1px),
+      rgba(20, 35, 58, 0.22) calc(1.35rem - 1px),
+      rgba(20, 35, 58, 0.22) 1.35rem
+    );
+    background-size: 100% 1.35rem;
+    background-repeat: repeat-y;
+  }
+
+  .visit-questions {
+    break-inside: auto;
+  }
+
+  .visit-questions + .visit-questions {
+    margin-top: 1.25rem;
   }
 
   .visit-questions li {
     break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .visit-answer-line {
     height: 1.35rem;
+  }
+
+  .visit-pack-sheet:last-child,
+  .visit-pack-questions-sheet:last-child,
+  .visit-questions:last-child {
+    break-after: avoid;
+    page-break-after: avoid;
   }
 }

@@ -1,6 +1,7 @@
 async function main() {
   const {
     NURSERY_VISIT_QUESTIONS,
+    computePrintNoteHeightPx,
     questionsForKind,
     toVisitContactRow,
     visitPackKind,
@@ -97,9 +98,21 @@ async function main() {
     process.exit(1);
   }
 
+  const noteOne = computePrintNoteHeightPx(1);
+  const noteMany = computePrintNoteHeightPx(8);
+  if (noteOne < 120 || noteOne > 240) {
+    console.error("FAIL single-contact notes should use spare page space", noteOne);
+    process.exit(1);
+  }
+  if (noteMany > noteOne || noteMany < 64) {
+    console.error("FAIL many-contact notes should stay compact", noteMany, noteOne);
+    process.exit(1);
+  }
+
   console.log(
     `visit pack ok (${NURSERY_VISIT_QUESTIONS.length} nursery Qs; ` +
-      `${CHILDMINDER_VETTING_CHECKLIST.length} childminder Qs)`,
+      `${CHILDMINDER_VETTING_CHECKLIST.length} childminder Qs; ` +
+      `note heights ${noteOne}/${noteMany}px)`,
   );
 }
 
