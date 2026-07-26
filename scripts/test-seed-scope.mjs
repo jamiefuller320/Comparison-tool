@@ -1,3 +1,7 @@
+import { spawnSync } from "node:child_process";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
 async function main() {
   const {
     SEED_LOCAL_AUTHORITY,
@@ -16,7 +20,44 @@ async function main() {
     console.error("FAIL unitaries must not count as seed Hampshire");
     process.exit(1);
   }
-  console.log("seed scope ok (Hampshire)");
+
+  const py = spawnSync(
+    "python3",
+    [
+      "-c",
+      `
+from seed_scope import (
+  SEED_LOCAL_AUTHORITY,
+  filter_schools_to_seed_la,
+  is_seed_local_authority,
+  trim_la_benchmarks,
+)
+assert SEED_LOCAL_AUTHORITY == "Hampshire"
+schools = [
+  {"urn": "1", "localAuthority": "Hampshire"},
+  {"urn": "2", "localAuthority": "Southampton"},
+  {"urn": "3", "localAuthority": "Portsmouth"},
+]
+kept = filter_schools_to_seed_la(schools)
+assert [s["urn"] for s in kept] == ["1"], kept
+benches = trim_la_benchmarks({
+  "Hampshire": {"rwmExpected": 70},
+  "Surrey": {"rwmExpected": 71},
+})
+assert list(benches) == ["Hampshire"], benches
+assert is_seed_local_authority("Hampshire")
+assert not is_seed_local_authority("Southampton")
+print("python seed_scope ok")
+`,
+    ],
+    { cwd: dirname(fileURLToPath(import.meta.url)), encoding: "utf-8" },
+  );
+  if (py.status !== 0) {
+    console.error("FAIL python seed_scope helpers", py.stdout, py.stderr);
+    process.exit(1);
+  }
+
+  console.log("seed scope ok (Hampshire + trim helpers)");
 }
 
 main();

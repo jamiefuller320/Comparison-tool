@@ -18,15 +18,18 @@ Everything else — harvests, stages, maps, tours, charts — should serve that 
 
 Until uptake is clearer, prefer **depth in a bounded slice** over a full national, all-age build:
 
-1. **Age progression** — start with **early years providers**, then widen upward (KS1 → KS2 → secondary) once the EY comparison and evidence patterns are solid.
+1. **Age progression** — **early years is live**; the maintained climb is now **Hampshire KS1 → KS2 → secondary** on the same geography.
 2. **One geography first** — seed local authority is **Hampshire** (county council LA in DfE data; not the Southampton or Portsmouth unitaries). Maintain a full dataset for that area rather than pre-harvesting every English setting.
 3. **On-demand beyond that** — for schools or areas outside Hampshire, **process and cache on user request** (same spirit as today’s “school is missing” refresh), instead of paying for continuous national coverage up front.
 
 Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHORITY = "Hampshire"`).
 
-**Hampshire EY MVP (live in product):** Ofsted childcare MI for named Early Years Register full/sessional day care in Hampshire (`public/data/ey-providers-index.json`); Ofsted state-school grades joined onto GIAS nursery/infant/primary settings with an early-years intake (`npm run enrich:ey-schools`); plus England/Hampshire **EYFSP** area benchmarks. **Childminders are a separate category** (not under Early years): consented directory + map (`public/data/childminders-index.json`) and parent **vetting checklist** for wrap-around / home-based care. Refresh with `npm run harvest:ey` (always resolves the latest consented CSV). A weekly GitHub Action (`refresh-ey.yml`) re-harvests so the directory stays closely synced after Ofsted’s quarterly overwrite.
+**Hampshire maintained set (live path):**
 
-The current national KS2/KS4 harvest is a capability scaffold; the product path above is how we intend to grow coverage without assuming demand.
+- **Early years / childminders** — Ofsted day care + school nursery Ofsted join + EYFSP area benches; consented childminder directory + vetting checklist + visit pack (`npm run harvest:ey`)
+- **School stages** — Hampshire KS1 phonics context, KS2 tables + year trends, and KS4/16–18 where published, via `npm run harvest:hampshire` (seed-LA trim of the school index + history)
+
+Scheduled refresh uses the Hampshire maintained harvest. `npm run harvest` remains the **full England scaffold** for capability / escape hatch. Out-of-area on-demand packs are still backlog.
 
 **Deferred ideas:** see [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md) for chat-mined backlog, partial work, and explicitly parked ideas (so we don’t re-litigate closed paths without new data).
 
@@ -63,7 +66,9 @@ After merge to `main` and Pages is enabled:
 
 ```bash
 npm install
-npm run harvest        # full England index + Hampshire EY pack + KS2 history
+npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 history
+# or: npm run trim:hampshire   # trim an existing national index down to Hampshire
+# or: npm run harvest          # full England scaffold (capability / escape hatch)
 # or: npm run harvest:sample
 # or: npm run harvest:ey            # Hampshire day care + childminders + EY school Ofsted + EYFSP
 # or: npm run harvest:childminders  # latest Ofsted consented addresses only

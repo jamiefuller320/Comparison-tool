@@ -7,6 +7,7 @@ school in the KS2 tables, plus England and local-authority benchmarks.
 
 Usage:
   python3 scripts/harvest-schools.py
+  python3 scripts/harvest-schools.py --seed-la
   python3 scripts/harvest-schools.py --sample 40
   python3 scripts/harvest-schools.py --years 2024/2025,2023/2024
 """
@@ -108,7 +109,12 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from seed_scope import SEED_LOCAL_AUTHORITY, is_seed_local_authority  # noqa: E402
+from seed_scope import (  # noqa: E402
+    SEED_LOCAL_AUTHORITY,
+    filter_schools_to_seed_la,
+    is_seed_local_authority,
+    trim_la_benchmarks,
+)
 
 OUT_DIR = ROOT / "public" / "data"
 SRC_DATA = ROOT / "src" / "data"
@@ -663,6 +669,14 @@ def main() -> int:
         default=0,
         help="If set, only harvest N schools (faster smoke run)",
     )
+    parser.add_argument(
+        "--seed-la",
+        action="store_true",
+        help=(
+            f"Maintained age-climb mode: keep only {SEED_LOCAL_AUTHORITY} schools "
+            "and England + seed-LA benchmarks"
+        ),
+    )
     args = parser.parse_args()
     years = [y.strip() for y in args.years.split(",") if y.strip()]
     latest = years[0]
@@ -671,6 +685,16 @@ def main() -> int:
 
     # Always pull full profiles first (needed for directory + sample selection)
     profiles = harvest_profiles(sample_urns=None)
+    if args.seed_la:
+        profiles = {
+            urn: profile
+            for urn, profile in profiles.items()
+            if is_seed_local_authority(profile.get("localAuthority"))
+        }
+        print(
+            f"Seed-LA mode: {len(profiles)} {SEED_LOCAL_AUTHORITY} profiles",
+            flush=True,
+        )
     sample_urns: set[str] | None = None
     sample_locs: set[str] | None = None
     if args.sample and args.sample > 0:
@@ -682,6 +706,8 @@ def main() -> int:
     perf = harvest_performance(latest, sample_location_ids=sample_locs)
     benchmarks = harvest_benchmarks(latest)
     schools = merge_index(profiles, perf, latest)
+    if args.seed_la:
+        schools = filter_schools_to_seed_la(schools)
 
     # Directory (search index) — lean fields
     directory = []
@@ -706,6 +732,20 @@ def main() -> int:
         name: {k: v for k, v in metrics.items() if v is not None}
         for name, metrics in (benchmarks["localAuthorities"] or {}).items()
     }
+    if args.seed_la:
+        local_authorities = trim_la_benchmarks(local_authorities)
+
+    note = (
+        "Institution-level Key Stage 2 attainment from the DfE Explore "
+        "Education Statistics API. Built for parental choice comparison, "
+        "not school governance. Progress measures are sparse for 2024/25 "
+        "because of missing KS1 baselines."
+    )
+    if args.seed_la:
+        note += (
+            f" Maintained dataset: {SEED_LOCAL_AUTHORITY} age-climb "
+            "(national full harvest remains available via npm run harvest)."
+        )
 
     payload = {
         "generatedAt": time.strftime("%Y-%m-%d"),
@@ -714,11 +754,11 @@ def main() -> int:
             "api": BASE,
             "datasets": DATASET_IDS,
             "primarySite": "https://www.compare-school-performance.service.gov.uk/",
-            "note": (
-                "Institution-level Key Stage 2 attainment from the DfE Explore "
-                "Education Statistics API. Built for parental choice comparison, "
-                "not school governance. Progress measures are sparse for 2024/25 "
-                "because of missing KS1 baselines."
+            "note": note,
+            **(
+                {"maintainedScope": SEED_LOCAL_AUTHORITY}
+                if args.seed_la
+                else {}
             ),
         },
         "benchmarks": {
@@ -732,7 +772,13 @@ def main() -> int:
             "localAuthorityCount": len(
                 {s.get("localAuthority") for s in schools if s.get("localAuthority")}
             ),
+            **(
+                {"maintainedScope": SEED_LOCAL_AUTHORITY}
+                if args.seed_la
+                else {}
+            ),
         },
+        **({"maintainedScope": SEED_LOCAL_AUTHORITY} if args.seed_la else {}),
     }
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -761,6 +807,8 @@ def main() -> int:
         "localAuthorityCount": payload["stats"]["localAuthorityCount"],
         "files": [f"public/data/{schools_path.name}", f"public/data/{directory_path.name}"],
         "sampleMode": bool(args.sample),
+        "seedLaMode": bool(args.seed_la),
+        "maintainedScope": SEED_LOCAL_AUTHORITY if args.seed_la else None,
         "indexBytes": schools_path.stat().st_size,
     }
     for dest in (OUT_DIR / "harvest-summary.json", SRC_DATA / "harvest-summary.json"):
