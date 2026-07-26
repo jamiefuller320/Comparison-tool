@@ -54,6 +54,7 @@ After merge to `main` and Pages is enabled:
 - Lets parents **search** by name, town, postcode or URN and compare **up to four schools** side by side
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
 - Matches comparison tables to selected categories: **Early years → day-care + school nursery/infant Ofsted + EYFSP area context**, **Childminders → consented directory + vetting checklist**, **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent)
+- **Visit pack** for shortlisted nurseries and childminders — printable contacts, Ofsted links, suggested interview questions, and a light per-setting contact status/notes log (browser localStorage)
 - Keeps the language parental: shortlists and fit, not board packs or SIP targets
 
 ## Run locally

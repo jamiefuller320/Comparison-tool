@@ -97,6 +97,13 @@ export const TOUR_STEPS: TourStep[] = [
     optional: true,
   },
   {
+    id: "visit-pack",
+    target: "visit-pack",
+    title: "Print a visit pack",
+    body: "When nurseries or childminders are on your shortlist, open the visit pack for addresses, Ofsted links, contact status, and suggested interview questions. Use Print / save as PDF before you go.",
+    optional: true,
+  },
+  {
     id: "year-trend",
     target: "year-trend",
     title: "Expand a row for year-on-year trends",

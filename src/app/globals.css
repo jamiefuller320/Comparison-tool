@@ -1564,26 +1564,268 @@ html.tour-running .hero-inner > * {
   }
 }
 
+.visit-pack {
+  margin-top: 0.5rem;
+  padding: 1.25rem 0 0.25rem;
+  border-top: 1px solid var(--line);
+}
+
+.visit-pack-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.btn-pack {
+  background: var(--sea);
+  color: #fff7ef;
+  box-shadow: 0 8px 22px rgba(7, 58, 80, 0.18);
+}
+
+.btn-pack:hover {
+  background: var(--sea-deep);
+}
+
+.visit-pack-section {
+  margin-bottom: 1.75rem;
+}
+
+.visit-contact-grid {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 720px) {
+  .visit-contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.visit-contact-card {
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.visit-contact-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.45rem;
+}
+
+.visit-contact-head h4 {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+}
+
+.visit-contact-meta {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+
+.visit-address {
+  margin: 0.35rem 0;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.visit-report-link {
+  margin: 0.35rem 0 0.55rem;
+  font-size: 0.92rem;
+}
+
+.visit-report-link a {
+  color: var(--sea);
+}
+
+.visit-status select {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 0.35rem 0.55rem;
+}
+
+.visit-note {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+
+.visit-note span {
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+}
+
+.visit-note textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 3.2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.55rem;
+  font: inherit;
+  font-size: 0.92rem;
+  background: #fff;
+  color: var(--ink);
+}
+
+.visit-questions h4 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+}
+
+.visit-questions ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.visit-questions li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: start;
+}
+
+.visit-question-check {
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--sea-deep);
+}
+
+.visit-questions strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--ink);
+}
+
+.visit-questions p {
+  margin: 0 0 0.45rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.visit-answer-line {
+  border-bottom: 1px dotted rgba(20, 35, 58, 0.28);
+  height: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.visit-answer-line + .visit-answer-line {
+  margin-top: 0.15rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.print-only {
+  display: none;
+}
+
 @media print {
-  .site-header,
-  .hero-actions,
-  .search-panel,
-  .suggest-grid,
-  .btn,
-  .tour-root,
-  .tour-launch {
+  body * {
+    visibility: hidden;
+  }
+
+  .visit-pack,
+  .visit-pack * {
+    visibility: visible;
+  }
+
+  .visit-pack {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border-top: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .no-print {
     display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
   }
 
   body {
     background: white;
   }
 
-  .hero::before {
-    display: none;
+  .visit-pack-print-title {
+    margin-bottom: 1rem;
   }
 
-  .hero-inner {
-    color: var(--ink);
+  .visit-pack-brand {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    color: var(--sea-deep);
+  }
+
+  .visit-pack-brand em {
+    font-style: normal;
+    color: var(--coral);
+  }
+
+  .visit-contact-card {
+    break-inside: avoid;
+    background: white;
+    box-shadow: none;
+  }
+
+  .visit-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .visit-note textarea {
+    border: 0;
+    border-bottom: 1px solid rgba(20, 35, 58, 0.25);
+    border-radius: 0;
+    min-height: 2.4rem;
+  }
+
+  .visit-questions li {
+    break-inside: avoid;
+  }
+
+  .visit-answer-line {
+    height: 1.35rem;
   }
 }
