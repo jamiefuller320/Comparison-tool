@@ -65,6 +65,40 @@ async function main() {
     process.exit(1);
   }
 
+  const childminder = {
+    urn: "cm:EY1",
+    name: "Example, Pat",
+    source: "ofsted-consented-childminder",
+    sector: "independent",
+    ofstedOverall: "Good",
+    ofstedInspectionDate: "12 Jan 2024",
+  };
+  const cmLine = headlineForParents(childminder, 61, { att8Average: 50 });
+  if (
+    !cmLine.toLowerCase().includes("childminder") ||
+    !cmLine.includes("Good") ||
+    cmLine.includes("Attainment 8") ||
+    cmLine.includes("KS4")
+  ) {
+    console.error("FAIL childminder headline", cmLine);
+    process.exit(1);
+  }
+
+  const daycare = {
+    urn: "ey:EY2",
+    name: "Oak Day Care",
+    source: "ofsted-childcare",
+    ofstedOverall: "Outstanding",
+  };
+  const eyLine = headlineForParents(daycare, 61);
+  if (
+    !eyLine.toLowerCase().includes("early years") ||
+    !eyLine.includes("Outstanding")
+  ) {
+    console.error("FAIL daycare headline", eyLine);
+    process.exit(1);
+  }
+
   console.log("headlines ok");
 }
 
