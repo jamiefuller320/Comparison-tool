@@ -33,8 +33,8 @@ async function main() {
     console.error("FAIL childminders tour step should be optional");
     process.exit(1);
   }
-  if (!optional.includes("ey-settings")) {
-    console.error("FAIL ey-settings tour step should be optional");
+  if (optional.includes("ey-settings")) {
+    console.error("FAIL nested ey-settings tour step should be removed");
     process.exit(1);
   }
   if (tourTargetSelector("stages") !== '[data-tour="stages"]') {

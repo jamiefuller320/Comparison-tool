@@ -14,12 +14,11 @@ export function ChildminderVettingChecklist({
 }) {
   return (
     <div data-tour="childminders">
-      <h3 className="compare-subhead">
-        Childminders — find nearby &amp; vet carefully
-      </h3>
+      <h3 className="compare-subhead">Vetting checklist for parents</h3>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
-        Ofsted redacts most childminder contact details in its main dataset.
-        Schoolside lists {SEED_GEOGRAPHY_LABEL} providers who have{" "}
+        Use this when assessing a childminder — including wrap-around cover
+        around school. Ofsted redacts most childminder contact details in its
+        main dataset; Schoolside lists {SEED_GEOGRAPHY_LABEL} providers who have{" "}
         <strong>consented to publish</strong> their name and address
         {providerCount != null
           ? ` (${providerCount.toLocaleString("en-GB")} in this build)`

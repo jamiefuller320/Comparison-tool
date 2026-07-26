@@ -113,7 +113,13 @@ async function main() {
     console.error("FAIL both should not force stages");
     process.exit(1);
   }
-  const { DEFAULT_PHASES, wantsEyMetrics } = await import("../src/lib/phases.ts");
+  const {
+    DEFAULT_PHASES,
+    wantsEyMetrics,
+    wantsChildminders,
+    schoolStageIds,
+    migrateStagesFromLegacyEySettings,
+  } = await import("../src/lib/phases.ts");
   if (JSON.stringify(DEFAULT_PHASES) !== JSON.stringify(["early-years"])) {
     console.error("FAIL default stages should be early-years", DEFAULT_PHASES);
     process.exit(1);
@@ -128,6 +134,52 @@ async function main() {
   }
   if (!wantsEyMetrics(["early-years"]) || wantsEyMetrics(["ks1"])) {
     console.error("FAIL wantsEyMetrics");
+    process.exit(1);
+  }
+  if (!wantsChildminders(["childminders"]) || wantsChildminders(["early-years"])) {
+    console.error("FAIL wantsChildminders");
+    process.exit(1);
+  }
+  if (
+    JSON.stringify(schoolStageIds(["early-years", "childminders", "ks1"])) !==
+    JSON.stringify(["early-years", "ks1"])
+  ) {
+    console.error("FAIL schoolStageIds should drop childminders");
+    process.exit(1);
+  }
+  // Childminders chip must not participate in school age-range AND.
+  if (schoolMatchesPhases(primary, ["childminders"])) {
+    console.error("FAIL schools should not match childminders-only via phases");
+    process.exit(1);
+  }
+  if (!schoolMatchesPhases(primary, ["early-years", "childminders"])) {
+    console.error("FAIL EY+childminders should still match primary on EY");
+    process.exit(1);
+  }
+  const migrated = migrateStagesFromLegacyEySettings(
+    ["early-years"],
+    "childminders",
+  );
+  if (JSON.stringify(migrated) !== JSON.stringify(["childminders"])) {
+    console.error("FAIL migrate childminders-only eySettings", migrated);
+    process.exit(1);
+  }
+  const migratedBoth = migrateStagesFromLegacyEySettings(
+    ["early-years"],
+    "nurseries,childminders",
+  );
+  if (
+    JSON.stringify(migratedBoth) !==
+    JSON.stringify(["early-years", "childminders"])
+  ) {
+    console.error("FAIL migrate both eySettings", migratedBoth);
+    process.exit(1);
+  }
+  if (
+    JSON.stringify(normalizePhaseIds(["cm", "ey"])) !==
+    JSON.stringify(["childminders", "early-years"])
+  ) {
+    console.error("FAIL normalize cm/ey aliases");
     process.exit(1);
   }
   if (!wantsKs4Metrics(["ks3"]) || !wantsKs4Metrics(["ks4"]) || wantsKs4Metrics(["ks2"])) {

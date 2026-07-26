@@ -1,8 +1,12 @@
 import type { IndependentBenchmarkSet, SchoolRecord } from "@/lib/types";
 import { ppGap } from "@/lib/format";
+import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 import {
   phasesFromAgeRange,
   schoolMatchesPhases,
+  schoolStageIds,
+  wantsChildminders,
+  wantsEyMetrics,
   type PhaseId,
 } from "@/lib/phases";
 import {
@@ -46,11 +50,21 @@ export function suggestAlternatives(
   for (const school of pool) {
     if (school.urn === focus.urn) continue;
     if (school.closed) continue;
-    if (!schoolMatchesPhases(school, stageFilter)) continue;
-    if (!schoolMatchesSectors(school, sectorFilter)) continue;
+
+    const isDirectoryEy = isEyProvider(school) && wantsEyMetrics(stageFilter);
+    const isDirectoryCm =
+      isChildminder(school) && wantsChildminders(stageFilter);
+    if (isDirectoryEy || isDirectoryCm) {
+      // Directory categories are already filtered into the pool by stage chips.
+    } else {
+      if (!schoolStageIds(stageFilter).length) continue;
+      if (!schoolMatchesPhases(school, stageFilter)) continue;
+      if (!schoolMatchesSectors(school, sectorFilter)) continue;
+      const schoolPhases = phasesFromAgeRange(school.ageRange);
+      if (!phasesOverlap(focusPhases, schoolPhases)) continue;
+    }
 
     const schoolPhases = phasesFromAgeRange(school.ageRange);
-    if (!phasesOverlap(focusPhases, schoolPhases)) continue;
 
     let score = 0;
     const reasons: string[] = [];

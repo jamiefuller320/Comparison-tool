@@ -20,11 +20,12 @@ import {
 import { fmtPct } from "@/lib/format";
 import { PhaseSelector } from "@/components/PhaseSelector";
 import { SectorSelector } from "@/components/SectorSelector";
-import { EySettingSelector } from "@/components/EySettingSelector";
 import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
+  wantsChildminders,
+  wantsEyMetrics,
   type PhaseId,
 } from "@/lib/phases";
 import {
@@ -33,8 +34,7 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
-import { isEyDirectorySetting } from "@/lib/eyMetrics";
-import type { EySettingId } from "@/lib/eySettings";
+import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 import { requestTourStart } from "@/lib/tour";
 
 const NearbyMap = dynamic(
@@ -60,8 +60,6 @@ export function HomePostcodeExplorer({
   onStageFilterChange,
   sectorFilter,
   onSectorFilterChange,
-  eySettings,
-  onEySettingsChange,
   max = 4,
 }: {
   schools: SchoolRecord[];
@@ -71,8 +69,6 @@ export function HomePostcodeExplorer({
   onStageFilterChange: (next: PhaseId[]) => void;
   sectorFilter: SectorId[];
   onSectorFilterChange: (next: SectorId[]) => void;
-  eySettings: EySettingId[];
-  onEySettingsChange: (next: EySettingId[]) => void;
   max?: number;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
@@ -155,14 +151,12 @@ export function HomePostcodeExplorer({
       radiusKm * 1000,
       listLimitForRadius(radiusKm),
       (school) => {
-        if (!schoolMatchesPhases(school, stageFilter)) return false;
-        // Day care + consented childminders bypass school-type chips in EY.
-        if (
-          isEyDirectorySetting(school) &&
-          stageFilter.includes("early-years")
-        ) {
+        // Directory categories bypass school-type chips and age-range AND.
+        if (isEyProvider(school) && wantsEyMetrics(stageFilter)) return true;
+        if (isChildminder(school) && wantsChildminders(stageFilter)) {
           return true;
         }
+        if (!schoolMatchesPhases(school, stageFilter)) return false;
         return schoolMatchesSectors(school, sectorFilter);
       },
     );
@@ -325,14 +319,6 @@ export function HomePostcodeExplorer({
             tone="hero"
             tourId="stages"
           />
-          {stageFilter.includes("early-years") ? (
-            <EySettingSelector
-              selected={eySettings}
-              onChange={onEySettingsChange}
-              tone="hero"
-              tourId="ey-settings"
-            />
-          ) : null}
           <SectorSelector
             selected={sectorFilter}
             onChange={onSectorFilterChange}

@@ -15,13 +15,11 @@ export function ChildminderDirectoryBoard({
 
   return (
     <div style={{ marginTop: "1.5rem" }}>
-      <h3 className="compare-subhead">
-        Early years — childminder directory (shortlist)
-      </h3>
+      <h3 className="compare-subhead">Shortlisted childminders</h3>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
-        These are registered settings that consented to publish an address — not
-        a side-by-side Ofsted league table. Use the vetting checklist below,
-        read each Ofsted report, and visit before you decide.
+        Registered settings that consented to publish an address — not a
+        nursery Ofsted league table. Use the vetting checklist, read each
+        Ofsted report, and visit before you decide.
         {consentedAsAt ? ` Register snapshot as at ${consentedAsAt}.` : null}
       </p>
       <ul className="childminder-directory">
