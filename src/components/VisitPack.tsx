@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import {
+  computePrintNoteHeightPx,
   questionsForKind,
   toVisitContactRow,
   type VisitContactRow,
@@ -88,11 +89,16 @@ function ContactCard({
       <label className="visit-note">
         <span>Notes</span>
         <textarea
+          className="no-print"
           rows={2}
           value={entry.note ?? ""}
           placeholder="Waiting list, fees heard, gut feel…"
           onChange={(e) => onNote(e.target.value)}
         />
+        {entry.note ? (
+          <p className="visit-note-print-text print-only">{entry.note}</p>
+        ) : null}
+        <div className="visit-note-lines print-only" aria-hidden />
       </label>
     </article>
   );
@@ -169,8 +175,47 @@ export function VisitPack({
   }
 
   function printPack() {
+    const pack = document.querySelector<HTMLElement>(".visit-pack");
+    if (!pack) {
+      window.print();
+      return;
+    }
+
+    const contactCount = nurseryRows.length + childminderRows.length;
+    pack.style.setProperty(
+      "--visit-print-note-height",
+      `${computePrintNoteHeightPx(contactCount)}px`,
+    );
+
+    // Clone to <body> so print layout is only the pack — avoids trailing blank
+    // pages from the rest of the (visibility:hidden) document height.
+    const existing = document.querySelector(".visit-pack-print-clone");
+    existing?.remove();
+
+    const clone = pack.cloneNode(true) as HTMLElement;
+    clone.classList.add("visit-pack-print-clone");
+    clone.querySelectorAll(".no-print").forEach((el) => el.remove());
+    clone.querySelectorAll(".print-only").forEach((el) => {
+      el.classList.remove("print-only");
+    });
+
+    const cleanup = () => {
+      clone.remove();
+      document.body.classList.remove("printing-visit-pack");
+      window.removeEventListener("afterprint", cleanup);
+    };
+
+    document.body.classList.add("printing-visit-pack");
+    document.body.appendChild(clone);
+    window.addEventListener("afterprint", cleanup);
+    window.setTimeout(() => {
+      if (document.body.contains(clone)) cleanup();
+    }, 60_000);
+
     window.print();
   }
+
+  const printedOn = new Date().toLocaleDateString("en-GB");
 
   return (
     <div className="visit-pack" data-tour="visit-pack">
@@ -190,65 +235,90 @@ export function VisitPack({
         </button>
       </div>
 
-      <div className="visit-pack-print-title print-only">
-        <p className="visit-pack-brand">
-          School<em>side</em> visit pack
-        </p>
-        <p>
-          {SEED_GEOGRAPHY_LABEL} shortlist · printed{" "}
-          {new Date().toLocaleDateString("en-GB")}
-        </p>
+      <div className="visit-pack-sheet visit-pack-contacts-sheet">
+        <div className="visit-pack-print-title print-only">
+          <p className="visit-pack-brand">
+            School<em>side</em> visit pack
+          </p>
+          <p>
+            {SEED_GEOGRAPHY_LABEL} shortlist · contacts · printed {printedOn}
+          </p>
+        </div>
+
+        {nurseryRows.length ? (
+          <section className="visit-pack-section">
+            <h3 className="compare-subhead">Nurseries on your shortlist</h3>
+            <div className="visit-contact-grid">
+              {nurseryRows.map((row) => (
+                <ContactCard
+                  key={row.urn}
+                  row={row}
+                  entry={entryFor(row.urn)}
+                  onStatus={(status) =>
+                    setLog((prev) =>
+                      upsertVisitLogEntry(prev, row.urn, { status }),
+                    )
+                  }
+                  onNote={(note) =>
+                    setLog((prev) =>
+                      upsertVisitLogEntry(prev, row.urn, { note }),
+                    )
+                  }
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {childminderRows.length ? (
+          <section className="visit-pack-section">
+            <h3 className="compare-subhead">Childminders on your shortlist</h3>
+            <div className="visit-contact-grid">
+              {childminderRows.map((row) => (
+                <ContactCard
+                  key={row.urn}
+                  row={row}
+                  entry={entryFor(row.urn)}
+                  onStatus={(status) =>
+                    setLog((prev) =>
+                      upsertVisitLogEntry(prev, row.urn, { status }),
+                    )
+                  }
+                  onNote={(note) =>
+                    setLog((prev) =>
+                      upsertVisitLogEntry(prev, row.urn, { note }),
+                    )
+                  }
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
 
-      {nurseryRows.length ? (
-        <section className="visit-pack-section">
-          <h3 className="compare-subhead">Nurseries on your shortlist</h3>
-          <div className="visit-contact-grid">
-            {nurseryRows.map((row) => (
-              <ContactCard
-                key={row.urn}
-                row={row}
-                entry={entryFor(row.urn)}
-                onStatus={(status) =>
-                  setLog((prev) => upsertVisitLogEntry(prev, row.urn, { status }))
-                }
-                onNote={(note) =>
-                  setLog((prev) => upsertVisitLogEntry(prev, row.urn, { note }))
-                }
-              />
-            ))}
-          </div>
+      <div className="visit-pack-sheet visit-pack-questions-sheet">
+        <div className="visit-pack-print-title print-only">
+          <p className="visit-pack-brand">
+            School<em>side</em> interview prompts
+          </p>
+          <p>
+            {SEED_GEOGRAPHY_LABEL} shortlist · questions · printed {printedOn}
+          </p>
+        </div>
+
+        {nurseryRows.length ? (
           <QuestionBlock
             kind="nursery"
             title="Suggested questions — nurseries &amp; school early years"
           />
-        </section>
-      ) : null}
-
-      {childminderRows.length ? (
-        <section className="visit-pack-section">
-          <h3 className="compare-subhead">Childminders on your shortlist</h3>
-          <div className="visit-contact-grid">
-            {childminderRows.map((row) => (
-              <ContactCard
-                key={row.urn}
-                row={row}
-                entry={entryFor(row.urn)}
-                onStatus={(status) =>
-                  setLog((prev) => upsertVisitLogEntry(prev, row.urn, { status }))
-                }
-                onNote={(note) =>
-                  setLog((prev) => upsertVisitLogEntry(prev, row.urn, { note }))
-                }
-              />
-            ))}
-          </div>
+        ) : null}
+        {childminderRows.length ? (
           <QuestionBlock
             kind="childminder"
             title="Suggested questions — childminders"
           />
-        </section>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 }

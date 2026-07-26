@@ -59,6 +59,28 @@ export const NURSERY_VISIT_QUESTIONS: ChecklistItem[] = [
 
 export type VisitPackKind = "nursery" | "childminder";
 
+/**
+ * Height for the printable notes block on each contact card.
+ * Uses remaining space on an A4-ish first sheet when contacts are few;
+ * stays compact when the shortlist needs multiple contact pages.
+ */
+export function computePrintNoteHeightPx(contactCount: number): number {
+  const n = Math.max(1, contactCount);
+  const pageContentPx = 980;
+  const headerPx = 100;
+  const cardChromePx = 128;
+  const noteMinPx = 64;
+  const noteMaxPx = 240;
+  const singlePageBudget = pageContentPx - headerPx - n * cardChromePx;
+  if (singlePageBudget >= n * noteMinPx) {
+    return Math.min(
+      noteMaxPx,
+      Math.max(noteMinPx, Math.floor(singlePageBudget / n)),
+    );
+  }
+  return noteMinPx + Math.max(0, 48 - n * 4);
+}
+
 export function visitPackKind(record: SchoolRecord): VisitPackKind | null {
   if (isChildminder(record)) return "childminder";
   if (isEyProvider(record)) return "nursery";
