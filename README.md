@@ -28,6 +28,8 @@ Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHO
 
 The current national KS2/KS4 harvest is a capability scaffold; the product path above is how we intend to grow coverage without assuming demand.
 
+**Deferred ideas:** see [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md) for chat-mined backlog, partial work, and explicitly parked ideas (so we don’t re-litigate closed paths without new data).
+
 ## Live site (GitHub Pages)
 
 After merge to `main` and Pages is enabled:
