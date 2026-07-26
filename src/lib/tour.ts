@@ -49,13 +49,13 @@ export const TOUR_STEPS: TourStep[] = [
     id: "stages",
     target: "stages",
     title: "Choose the stages you care about",
-    body: "Pick Early years, KS1, KS2, KS3 and/or KS4. Several stages use AND logic — a school must offer every selected stage. Tables follow your choice: Early years → Hampshire day care, consented childminders (directory + vetting checklist) and EYFSP area context, KS1 → LA phonics, KS2 → Year 6, KS3/KS4 → GCSE / 16–18.",
+    body: "Pick Early years, KS1, KS2, KS3 and/or KS4. Several stages use AND logic — a school must offer every selected stage. Tables follow your choice: Early years → Hampshire day care and school nurseries/infants (Ofsted), consented childminders (directory + vetting checklist), and EYFSP area context, KS1 → LA phonics, KS2 → Year 6, KS3/KS4 → GCSE / 16–18.",
   },
   {
     id: "ey-settings",
     target: "ey-settings",
     title: "Nurseries and childminders",
-    body: "When Early years is on, use the two sliders to include nurseries (day care), childminders, or both in the map and search. At least one stays on.",
+    body: "When Early years is on, use the two sliders to include nurseries (day care and school nursery/infant Ofsted), childminders, or both in the map and search. At least one stays on.",
     optional: true,
   },
   {

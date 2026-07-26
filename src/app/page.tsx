@@ -27,15 +27,18 @@ export default function HomePage() {
               Road distances use open routing data and are a guide to travel, not an
               admissions catchment. Stage filters use each school&apos;s published age
               range with <strong>AND</strong> logic when several stages are selected.
-              Childminders are listed only when they consented to publish an address —
-              use the vetting checklist and Ofsted report, not a grade league table.
-              Pure secondary schools come from GIAS for KS3/KS4 search; KS2 attainment
-              figures appear where published for state schools. Independents are
-              compared on published Key Stage 4 outcomes (nil/zero English &amp; maths
-              GCSE returns cleared; EBacc subject pillars used as fallbacks), Ofsted
-              grades for non-association schools, and ISI/website links from GIAS when
-              Ofsted grades are absent. Small cohorts bounce around more than large
-              ones. Admissions rules and ethos are still outside this dataset.
+              For early years, Ofsted grades judge the setting; EYFSP &quot;good level
+              of development&quot; figures are area averages only — useful context, not
+              a school-by-school scorecard. Childminders are listed only when they
+              consented to publish an address — use the vetting checklist and Ofsted
+              report, not a grade league table. Pure secondary schools come from GIAS
+              for KS3/KS4 search; KS2 attainment figures appear where published for
+              state schools. Independents are compared on published Key Stage 4
+              outcomes (nil/zero English &amp; maths GCSE returns cleared; EBacc
+              subject pillars used as fallbacks), Ofsted grades for non-association
+              schools, and ISI/website links from GIAS when Ofsted grades are absent.
+              Small cohorts bounce around more than large ones. Admissions rules and
+              ethos are still outside this dataset.
             </p>
           </div>
         </div>
@@ -55,13 +58,15 @@ export default function HomePage() {
           <div className="footnote">
             <p>
               Hampshire early years: Ofsted childcare day-care inspections;
-              consented childminder names/addresses (Ofsted quarterly file —
-              re-harvest regularly); plus EYFSP England/Hampshire area context
-              (provider-level EYFSP is not published). State schools:
-              institution-level Key Stage 2 attainment plus local-authority
-              phonics for KS1. Independents: Key Stage 4 tables plus Ofsted
-              non-association inspections. Progress measures are sparse for
-              2024/25 because of missing KS1 baselines.
+              Ofsted grades for state nursery / infant / primary settings with an
+              early-years intake; consented childminder names/addresses (Ofsted
+              quarterly file — re-harvest regularly); plus EYFSP
+              England/Hampshire area context (provider-level EYFSP is not
+              published — Ofsted grades and EYFSP area figures answer different
+              questions). State schools: institution-level Key Stage 2 attainment
+              plus local-authority phonics for KS1. Independents: Key Stage 4
+              tables plus Ofsted non-association inspections. Progress measures
+              are sparse for 2024/25 because of missing KS1 baselines.
             </p>
             <p>
               Refresh locally with <code>npm run harvest</code>. Official school pages:{" "}

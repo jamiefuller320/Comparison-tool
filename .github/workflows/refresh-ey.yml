@@ -18,10 +18,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Harvest day care + consented childminders
+      - name: Harvest day care, childminders, and school EY Ofsted
         run: |
           python3 scripts/harvest-ey-providers.py
           python3 scripts/harvest-childminders.py
+          python3 scripts/enrich-ey-schools.py
       - name: Commit refreshed EY data
         run: |
           git config user.name "github-actions[bot]"
@@ -29,11 +30,13 @@ jobs:
           git add \
             public/data/ey-providers-index.json \
             public/data/childminders-index.json \
+            public/data/schools-index.json \
+            public/data/schools-directory.json \
             public/data/harvest-summary.json \
             src/data/harvest-summary.json
           if git diff --staged --quiet; then
             echo "No EY data changes"
           else
-            git commit -m "Refresh Hampshire early years day care and childminders"
+            git commit -m "Refresh Hampshire early years day care, childminders, and school Ofsted"
             git push
           fi
