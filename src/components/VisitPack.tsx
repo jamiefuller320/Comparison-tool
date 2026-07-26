@@ -9,6 +9,7 @@ import {
   type VisitContactRow,
   type VisitPackKind,
 } from "@/lib/visitPack";
+import { printVisitPackElement } from "@/lib/printVisitPack";
 import {
   loadVisitLog,
   saveVisitLog,
@@ -176,43 +177,9 @@ export function VisitPack({
 
   function printPack() {
     const pack = document.querySelector<HTMLElement>(".visit-pack");
-    if (!pack) {
-      window.print();
-      return;
-    }
-
+    if (!pack) return;
     const contactCount = nurseryRows.length + childminderRows.length;
-    pack.style.setProperty(
-      "--visit-print-note-height",
-      `${computePrintNoteHeightPx(contactCount)}px`,
-    );
-
-    // Clone to <body> so print layout is only the pack — avoids trailing blank
-    // pages from the rest of the (visibility:hidden) document height.
-    const existing = document.querySelector(".visit-pack-print-clone");
-    existing?.remove();
-
-    const clone = pack.cloneNode(true) as HTMLElement;
-    clone.classList.add("visit-pack-print-clone");
-    clone.querySelectorAll(".no-print").forEach((el) => el.remove());
-    clone.querySelectorAll(".print-only").forEach((el) => {
-      el.classList.remove("print-only");
-    });
-
-    const cleanup = () => {
-      clone.remove();
-      document.body.classList.remove("printing-visit-pack");
-      window.removeEventListener("afterprint", cleanup);
-    };
-
-    document.body.classList.add("printing-visit-pack");
-    document.body.appendChild(clone);
-    window.addEventListener("afterprint", cleanup);
-    window.setTimeout(() => {
-      if (document.body.contains(clone)) cleanup();
-    }, 60_000);
-
-    window.print();
+    printVisitPackElement(pack, computePrintNoteHeightPx(contactCount));
   }
 
   const printedOn = new Date().toLocaleDateString("en-GB");
