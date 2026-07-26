@@ -177,6 +177,33 @@ function ks4Headline(
   return "Limited published outcomes for this school in the latest DfE tables — check the school website and inspection reports.";
 }
 
+function childcareHeadline(school: SchoolRecord): string | null {
+  if (isChildminder(school)) {
+    const ofsted = school.ofstedOverall;
+    const when = school.ofstedInspectionDate
+      ? ` (inspection ${school.ofstedInspectionDate})`
+      : "";
+    if (ofsted) {
+      return `Consented childminder · latest Ofsted judgement: ${ofsted}${when}. Use the visit pack and vetting checklist — not a school league table.`;
+    }
+    return "Consented childminder with a published address. Open the Ofsted report / registration link, then use the visit pack and vetting checklist.";
+  }
+
+  if (isEyProvider(school)) {
+    const ofsted =
+      school.ofstedOverall || school.ofstedEarlyYearsProvision || null;
+    const when = school.ofstedInspectionDate
+      ? ` (inspection ${school.ofstedInspectionDate})`
+      : "";
+    if (ofsted) {
+      return `Early years setting · latest Ofsted judgement: ${ofsted}${when}. Compare grades side by side, then visit before you decide.`;
+    }
+    return "Early years setting in the Hampshire directory. Open the Ofsted report when available, then visit before you decide.";
+  }
+
+  return null;
+}
+
 export function headlineForParents(
   school: SchoolRecord,
   englandRwm?: number | null,
@@ -186,6 +213,9 @@ export function headlineForParents(
     stateKs4Bench?: IndependentBenchmarkSet | null;
   },
 ): string {
+  const careLine = childcareHeadline(school);
+  if (careLine) return careLine;
+
   const preferKs4 = Boolean(opts?.preferKs4);
   const isIndie = resolveSchoolSector(school) === "independent";
   const ks4Bench = isIndie

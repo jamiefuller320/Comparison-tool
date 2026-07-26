@@ -449,20 +449,24 @@ export function CompareApp({
             </p>
           ) : null}
 
-          {focus ? (
-            <p className="footnote" style={{ marginTop: "1rem" }}>
-              <strong>{focus.name}:</strong>{" "}
-              {headlineForParents(
-                focus,
-                index.benchmarks.england.rwmExpected,
-                index.benchmarks.independent,
-                {
-                  preferKs4: showKs4 && !showKs2,
-                  stateKs4Bench: index.benchmarks.stateKs4,
-                },
-              )}
-              {pending ? " Updating…" : null}
-            </p>
+          {selectedSchools.length ? (
+            <div className="shortlist-summaries" aria-live="polite">
+              {selectedSchools.map((school, indexInShortlist) => (
+                <p className="footnote shortlist-summary" key={school.urn}>
+                  <strong>{school.name}:</strong>{" "}
+                  {headlineForParents(
+                    school,
+                    index.benchmarks.england.rwmExpected,
+                    index.benchmarks.independent,
+                    {
+                      preferKs4: showKs4 && !showKs2,
+                      stateKs4Bench: index.benchmarks.stateKs4,
+                    },
+                  )}
+                  {pending && indexInShortlist === 0 ? " Updating…" : null}
+                </p>
+              ))}
+            </div>
           ) : null}
         </div>
       </section>
