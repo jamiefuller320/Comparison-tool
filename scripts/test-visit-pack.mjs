@@ -6,6 +6,7 @@ async function main() {
     toVisitContactRow,
     visitPackKind,
   } = await import("../src/lib/visitPack.ts");
+  const { printVisitPackElement } = await import("../src/lib/printVisitPack.ts");
   const {
     VISIT_STATUS_OPTIONS,
     isVisitStatusId,
@@ -106,6 +107,11 @@ async function main() {
   }
   if (noteMany > noteOne || noteMany < 64) {
     console.error("FAIL many-contact notes should stay compact", noteMany, noteOne);
+    process.exit(1);
+  }
+
+  if (typeof printVisitPackElement !== "function") {
+    console.error("FAIL printVisitPackElement missing");
     process.exit(1);
   }
 
