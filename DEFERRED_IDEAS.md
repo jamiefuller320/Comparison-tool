@@ -70,5 +70,6 @@ For orientation only — not backlog:
 - Consented childminder directory + map + vetting checklist + weekly refresh  
 - Childminders as a **separate category** from Early years  
 - Stage/sector filters, postcode map, KS1 phonics area board, KS2 trends, independent KS4/Ofsted path  
+- UI declutter: filters only in hero; path-scoped Side by side tabs; visit pack + checklist on childcare paths  
 
 See `README.md` North Star and Initial scope for governing priorities.

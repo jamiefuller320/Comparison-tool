@@ -18,11 +18,16 @@ import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChec
 import { VisitPack } from "@/components/VisitPack";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
-import { PhaseSelector } from "@/components/PhaseSelector";
-import { SectorSelector } from "@/components/SectorSelector";
+import { ComparePathTabs } from "@/components/ComparePathTabs";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import { ProductTour } from "@/components/ProductTour";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
+import {
+  listAvailableComparePaths,
+  pathsWithShortlistItems,
+  pickDefaultComparePath,
+  type ComparePathId,
+} from "@/lib/comparePaths";
 import {
   isChildminder,
   isEyComparable,
@@ -67,6 +72,38 @@ function parseSectorsParam(raw: string | null): SectorId[] {
   return parsed.length ? parsed : DEFAULT_SECTORS;
 }
 
+function PathSummaries({
+  schools,
+  englandRwm,
+  indieBench,
+  stateKs4Bench,
+  preferKs4,
+  pending,
+}: {
+  schools: SchoolRecord[];
+  englandRwm?: number | null;
+  indieBench?: SchoolsIndex["benchmarks"]["independent"];
+  stateKs4Bench?: SchoolsIndex["benchmarks"]["stateKs4"];
+  preferKs4?: boolean;
+  pending?: boolean;
+}) {
+  if (!schools.length) return null;
+  return (
+    <div className="shortlist-summaries path-summaries" aria-live="polite">
+      {schools.map((school, i) => (
+        <p className="footnote shortlist-summary" key={school.urn}>
+          <strong>{school.name}:</strong>{" "}
+          {headlineForParents(school, englandRwm, indieBench, {
+            preferKs4,
+            stateKs4Bench,
+          })}
+          {pending && i === 0 ? " Updating…" : null}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 export function CompareApp({
   index,
   eyIndex = null,
@@ -95,6 +132,7 @@ export function CompareApp({
   const [pending, startTransition] = useTransition();
   const [hydrated, setHydrated] = useState(false);
   const [sectorNote, setSectorNote] = useState<string | null>(null);
+  const [activePath, setActivePath] = useState<ComparePathId | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -136,7 +174,6 @@ export function CompareApp({
     } else {
       url.searchParams.set("sectors", sectors.join(","));
     }
-    // Legacy nested EY toggles retired — Childminders is its own stage chip.
     url.searchParams.delete("eySettings");
     url.searchParams.delete("ey");
     window.history.replaceState({}, "", url.toString());
@@ -178,24 +215,56 @@ export function CompareApp({
   const showPhonicsBoard = showKs1 && Boolean(index.benchmarks.phonics);
   const hasChildminders = Boolean(childmindersIndex?.providers?.length);
   const hasStateEyOfsted = Boolean(index.stats.ofstedStateAsAt);
-  const showEyNurseryBoards =
-    showEy && (hasEyData || hasStateEyOfsted);
-  const showChildminderBoards =
-    showChildminderCategory && hasChildminders;
-  const hasAnyCompareBoard =
-    eySelected.length > 0 ||
-    childminderSelected.length > 0 ||
-    ks1Selected.length > 0 ||
-    ks2Selected.length > 0 ||
-    ks4Selected.length > 0 ||
-    (showEy && hasEyData && Boolean(eyIndex?.benchmarks.eyfsp)) ||
-    showChildminderBoards;
+  const showEyNurseryBoards = showEy && (hasEyData || hasStateEyOfsted);
+  const showChildminderBoards = showChildminderCategory && hasChildminders;
+
+  const availablePaths = useMemo(
+    () =>
+      listAvailableComparePaths({
+        showEyNurseryBoards,
+        showChildminderBoards,
+        showKs1,
+        showKs2,
+        showKs4,
+      }),
+    [showEyNurseryBoards, showChildminderBoards, showKs1, showKs2, showKs4],
+  );
+
+  const shortlistPaths = useMemo(
+    () =>
+      pathsWithShortlistItems({
+        hasEyShortlist: eySelected.length > 0,
+        hasChildminderShortlist: childminderSelected.length > 0,
+        hasKs1Shortlist: ks1Selected.length > 0,
+        hasKs2Shortlist: ks2Selected.length > 0,
+        hasKs4Shortlist: ks4Selected.length > 0,
+      }),
+    [
+      eySelected.length,
+      childminderSelected.length,
+      ks1Selected.length,
+      ks2Selected.length,
+      ks4Selected.length,
+    ],
+  );
+
+  useEffect(() => {
+    if (!availablePaths.length) {
+      setActivePath(null);
+      return;
+    }
+    setActivePath((prev) => {
+      if (prev && availablePaths.includes(prev)) return prev;
+      return pickDefaultComparePath(availablePaths, shortlistPaths);
+    });
+  }, [availablePaths, shortlistPaths]);
+
   const ks4AllIndie =
     ks4Selected.length > 0 &&
     ks4Selected.every((s) => resolveSchoolSector(s) === "independent");
   const ks4Bench = ks4AllIndie
     ? index.benchmarks.independent
-    : index.benchmarks.stateKs4 ?? index.benchmarks.independent;
+    : (index.benchmarks.stateKs4 ?? index.benchmarks.independent);
   const ks4BenchLabel = ks4AllIndie ? "Indie mean" : "State mean";
 
   const focus = selectedSchools[0];
@@ -273,7 +342,6 @@ export function CompareApp({
   }
 
   function changeSectors(next: SectorId[]) {
-    // Apply immediately so map / nearby / search refresh without deferred lag.
     setSectors(next);
 
     const stageDefault = defaultPhasesForSectors(next);
@@ -328,6 +396,190 @@ export function CompareApp({
     return [...extra, ...fromSchools];
   }, [index.schools, eyIndex, childmindersIndex, stages, sectors]);
 
+  const summaryOpts = {
+    englandRwm: index.benchmarks.england.rwmExpected,
+    indieBench: index.benchmarks.independent,
+    stateKs4Bench: index.benchmarks.stateKs4,
+    preferKs4: showKs4 && !showKs2,
+    pending,
+  };
+
+  function renderActivePath() {
+    if (!activePath) {
+      if (selectedSchools.length === 0) {
+        return (
+          <div className="empty-compare">
+            Add two to four settings from the map or search to compare.
+          </div>
+        );
+      }
+      return (
+        <div className="empty-compare" role="status">
+          Turn on a category above (Early years, Childminders, or a school
+          stage) to see the matching comparison.
+        </div>
+      );
+    }
+
+    if (activePath === "early-years") {
+      return (
+        <div data-tour="boards-early-years">
+          {showEarlyNotice ? (
+            <div className="empty-compare" role="status">
+              Early years pack missing from this build. Re-run{" "}
+              <code>npm run harvest:ey</code> and{" "}
+              <code>npm run enrich:ey-schools</code>, or pick another category.
+            </div>
+          ) : null}
+          <PathSummaries schools={eySelected} {...summaryOpts} />
+          {hasEyData ? (
+            <EyfspComparisonBoard eyfsp={eyIndex?.benchmarks.eyfsp} />
+          ) : null}
+          {eySelected.length > 0 ? (
+            <div style={{ marginTop: hasEyData ? "1.5rem" : 0 }}>
+              <h3 className="compare-subhead">Ofsted comparison</h3>
+              <EarlyYearsComparisonBoard
+                providers={eySelected}
+                childcareOfstedAsAt={eyIndex?.ofstedAsAt}
+                stateOfstedAsAt={index.stats.ofstedStateAsAt}
+                childcareSourcePage={eyIndex?.source.ofstedChildcareMiPage}
+                stateSourcePage={index.source.datasets.ofstedStateSchoolsMi}
+              />
+            </div>
+          ) : selectedSchools.length > 0 ? (
+            <div
+              className="empty-compare"
+              role="status"
+              style={{ marginTop: "1rem" }}
+            >
+              Shortlist a {SEED_GEOGRAPHY_LABEL} nursery or school early-years
+              setting to compare Ofsted grades here.
+            </div>
+          ) : (
+            <div className="empty-compare">
+              Add a nursery from the map or search to compare Ofsted grades.
+            </div>
+          )}
+          {eySelected.length > 0 ? (
+            <div style={{ marginTop: "1.75rem" }}>
+              <VisitPack nurseries={eySelected} childminders={[]} />
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    if (activePath === "childminders") {
+      return (
+        <div data-tour="childminders">
+          <PathSummaries schools={childminderSelected} {...summaryOpts} />
+          <p className="footnote" style={{ marginBottom: "1rem" }}>
+            Wrap-around and home-based care — directory and checklist, not the
+            nursery Ofsted table.
+          </p>
+          {childminderSelected.length > 0 ? (
+            <ChildminderDirectoryBoard
+              providers={childminderSelected}
+              consentedAsAt={childmindersIndex?.consentedAsAt}
+            />
+          ) : (
+            <div className="empty-compare" role="status">
+              Shortlist a consented {SEED_GEOGRAPHY_LABEL} childminder to pin
+              their address and Ofsted report here.
+            </div>
+          )}
+          {childminderSelected.length > 0 ? (
+            <>
+              <div style={{ marginTop: "1.5rem" }}>
+                <ChildminderVettingChecklist
+                  consentedAsAt={childmindersIndex?.consentedAsAt}
+                  sourcePage={
+                    childmindersIndex?.source.consentedAddressesPage
+                  }
+                  providerCount={childmindersIndex?.stats.providerCount}
+                />
+              </div>
+              <div style={{ marginTop: "1.75rem" }}>
+                <VisitPack nurseries={[]} childminders={childminderSelected} />
+              </div>
+            </>
+          ) : null}
+        </div>
+      );
+    }
+
+    if (activePath === "ks1") {
+      return (
+        <div>
+          <PathSummaries schools={ks1Selected} {...summaryOpts} />
+          {!showPhonicsBoard ? (
+            <div className="empty-compare" role="status">
+              Phonics benchmarks missing. Re-run{" "}
+              <code>npm run enrich:phonics</code>, or open another path.
+            </div>
+          ) : ks1Selected.length === 0 ? (
+            <div className="empty-compare" role="status">
+              Add a state infant or primary for local-authority phonics context.
+            </div>
+          ) : (
+            <PhonicsComparisonBoard
+              schools={ks1Selected}
+              phonics={index.benchmarks.phonics}
+            />
+          )}
+        </div>
+      );
+    }
+
+    if (activePath === "ks2") {
+      return (
+        <div>
+          {ks2Selected.length > 0 ? (
+            <aside className="year-trend-tip" data-tour="year-trend">
+              <strong>Year trends:</strong> click a measure name (or{" "}
+              <em>Year trend</em>) for a year-by-year graph — schools and
+              England, with a hatched band for COVID years when tables were
+              unpublished.
+            </aside>
+          ) : null}
+          <PathSummaries schools={ks2Selected} {...summaryOpts} />
+          {ks2Selected.length === 0 ? (
+            <div className="empty-compare" role="status">
+              Add a state primary or junior with Year 6 tables to compare KS2.
+            </div>
+          ) : (
+            <ComparisonBoard
+              schools={ks2Selected}
+              england={index.benchmarks.england}
+            />
+          )}
+        </div>
+      );
+    }
+
+    // ks4
+    return (
+      <div>
+        <PathSummaries
+          schools={ks4Selected}
+          {...summaryOpts}
+          preferKs4
+        />
+        {ks4Selected.length === 0 ? (
+          <div className="empty-compare" role="status">
+            Add a secondary or 16–18 setting for GCSE / A-level tables.
+          </div>
+        ) : (
+          <IndependentComparisonBoard
+            schools={ks4Selected}
+            benchmark={ks4Bench}
+            benchmarkLabel={ks4BenchLabel}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <ProductTour />
@@ -346,87 +598,14 @@ export function CompareApp({
           <div className="section-head">
             <h2>Build your shortlist</h2>
             <p>
-              Choose categories above: <strong>Early years</strong> for
-              nurseries and school reception settings,{" "}
-              <strong>Childminders</strong> for wrap-around and home-based care
-              (separate from the school path), then KS1–KS4 for school tables.
-              Search and map follow those chips.
+              Tick settings on the map, or search below. Stages and school type
+              stay in the hero above.
             </p>
-            <div className="stats-line">
-              {showEy && eyIndex?.stats.providerCount != null ? (
-                <span>
-                  <strong>
-                    {eyIndex.stats.providerCount.toLocaleString("en-GB")}
-                  </strong>{" "}
-                  {SEED_GEOGRAPHY_LABEL} EY day-care
-                </span>
-              ) : null}
-              {showChildminderCategory &&
-              childmindersIndex?.stats.providerCount != null ? (
-                <span>
-                  <strong>
-                    {childmindersIndex.stats.providerCount.toLocaleString(
-                      "en-GB",
-                    )}
-                  </strong>{" "}
-                  consented childminders
-                </span>
-              ) : null}
-              <span>
-                <strong>{index.stats.schoolCount.toLocaleString("en-GB")}</strong>{" "}
-                schools indexed
-              </span>
-              {index.stats.stateCount != null ? (
-                <span>
-                  <strong>
-                    {index.stats.stateCount.toLocaleString("en-GB")}
-                  </strong>{" "}
-                  state
-                </span>
-              ) : null}
-              {index.stats.independentCount != null ? (
-                <span>
-                  <strong>
-                    {index.stats.independentCount.toLocaleString("en-GB")}
-                  </strong>{" "}
-                  independent
-                </span>
-              ) : null}
-              {index.stats.independentWithKs4 != null ? (
-                <span>
-                  <strong>
-                    {index.stats.independentWithKs4.toLocaleString("en-GB")}
-                  </strong>{" "}
-                  independents with KS4
-                </span>
-              ) : null}
-              {index.stats.independentWithKs5 != null ? (
-                <span>
-                  <strong>
-                    {index.stats.independentWithKs5.toLocaleString("en-GB")}
-                  </strong>{" "}
-                  with 16–18
-                </span>
-              ) : null}
-              <span>
-                Latest year <strong>{index.period}</strong>
-              </span>
-              <span>
-                Refreshed <strong>{index.generatedAt}</strong>
-              </span>
-              {index.stats.withCoordinates != null ? (
-                <span>
-                  <strong>
-                    {index.stats.withCoordinates.toLocaleString("en-GB")}
-                  </strong>{" "}
-                  with map coordinates
-                </span>
-              ) : null}
-            </div>
+            <p className="footnote data-slim-line">
+              {SEED_GEOGRAPHY_LABEL} seed · {index.period} · refreshed{" "}
+              {index.generatedAt}
+            </p>
           </div>
-
-          <PhaseSelector selected={stages} onChange={changeStages} />
-          <SectorSelector selected={sectors} onChange={changeSectors} />
 
           <MissingSchoolButton
             schools={index.schools}
@@ -448,26 +627,6 @@ export function CompareApp({
               {sectorNote}
             </p>
           ) : null}
-
-          {selectedSchools.length ? (
-            <div className="shortlist-summaries" aria-live="polite">
-              {selectedSchools.map((school, indexInShortlist) => (
-                <p className="footnote shortlist-summary" key={school.urn}>
-                  <strong>{school.name}:</strong>{" "}
-                  {headlineForParents(
-                    school,
-                    index.benchmarks.england.rwmExpected,
-                    index.benchmarks.independent,
-                    {
-                      preferKs4: showKs4 && !showKs2,
-                      stateKs4Bench: index.benchmarks.stateKs4,
-                    },
-                  )}
-                  {pending && indexInShortlist === 0 ? " Updating…" : null}
-                </p>
-              ))}
-            </div>
-          ) : null}
         </div>
       </section>
 
@@ -481,251 +640,24 @@ export function CompareApp({
           <div className="section-head">
             <h2>Side by side</h2>
             <p>
-              Tables follow the categories you selected. Early years covers
-              nursery / school Ofsted and EYFSP area context. Childminders are a
-              separate wrap-around path (directory + checklist). KS1 uses
-              local-authority phonics; KS2 rows open a multi-year trend; KS3/KS4
-              use GCSE and 16–18 figures.
+              One path at a time
+              {availablePaths.length > 1
+                ? " — switch tabs when several categories are on"
+                : null}
+              . Patterns to visit on, not a final verdict.
             </p>
           </div>
 
-          {ks2Selected.length === 0 ? (
-            <aside className="year-trend-tip" data-tour="year-trend">
-              <strong>Year trends on KS2:</strong> when Year 6 tables are showing,
-              click a measure name (or <em>Year trend</em>) to expand a
-              year-by-year graph under that row — schools and England, with a
-              hatched band for the COVID years when tables were unpublished.
-            </aside>
+          {activePath ? (
+            <ComparePathTabs
+              available={availablePaths}
+              active={activePath}
+              onChange={setActivePath}
+              withShortlist={shortlistPaths}
+            />
           ) : null}
 
-          {selectedSchools.length === 0 ? (
-            <div className="empty-compare">
-              Add two to four schools, nurseries, or childminders to see a
-              side-by-side view for the categories you selected.
-            </div>
-          ) : null}
-
-          {selectedSchools.length > 0 && showEarlyNotice ? (
-            <div className="empty-compare" role="status">
-              Early years is selected, but the {SEED_GEOGRAPHY_LABEL} early years
-              pack is not in this data build. Re-run{" "}
-              <code>npm run harvest:ey</code> (and{" "}
-              <code>npm run enrich:ey-schools</code> for school nurseries /
-              infants), or add KS1 / KS2 / KS3/KS4 for school tables.
-            </div>
-          ) : null}
-
-          {showEyNurseryBoards ? (
-            <div
-              style={{
-                marginBottom:
-                  showChildminderBoards ||
-                  eySelected.length ||
-                  ks1Selected.length ||
-                  ks2Selected.length ||
-                  ks4Selected.length
-                    ? "2rem"
-                    : 0,
-              }}
-            >
-              {hasEyData ? (
-                <>
-                  {(ks1Selected.length > 0 ||
-                    ks2Selected.length > 0 ||
-                    ks4Selected.length > 0 ||
-                    eySelected.length > 0 ||
-                    showChildminderBoards) && (
-                    <h3 className="compare-subhead">
-                      Early years — {SEED_GEOGRAPHY_LABEL} nurseries
-                    </h3>
-                  )}
-                  <EyfspComparisonBoard eyfsp={eyIndex?.benchmarks.eyfsp} />
-                </>
-              ) : null}
-              {eySelected.length > 0 ? (
-                <div style={{ marginTop: hasEyData ? "1.5rem" : 0 }}>
-                  <h3 className="compare-subhead">
-                    Early years — Ofsted comparison
-                  </h3>
-                  <EarlyYearsComparisonBoard
-                    providers={eySelected}
-                    childcareOfstedAsAt={eyIndex?.ofstedAsAt}
-                    stateOfstedAsAt={index.stats.ofstedStateAsAt}
-                    childcareSourcePage={
-                      eyIndex?.source.ofstedChildcareMiPage
-                    }
-                    stateSourcePage={
-                      index.source.datasets.ofstedStateSchoolsMi
-                    }
-                  />
-                </div>
-              ) : selectedSchools.length > 0 &&
-                !childminderSelected.length ? (
-                <div
-                  className="empty-compare"
-                  role="status"
-                  style={{ marginTop: "1rem" }}
-                >
-                  Shortlist a {SEED_GEOGRAPHY_LABEL} day-care nursery or a school
-                  nursery / infant (search or map) to compare Ofsted inspection
-                  outcomes. EYFSP area figures are for context only — not the
-                  same as Ofsted grades. For wrap-around home-based care, turn
-                  on the Childminders category.
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-
-          {showChildminderBoards ? (
-            <div
-              style={{
-                marginBottom:
-                  ks1Selected.length ||
-                  ks2Selected.length ||
-                  ks4Selected.length
-                    ? "2rem"
-                    : 0,
-              }}
-              data-tour="childminders"
-            >
-              <h3 className="compare-subhead">
-                Childminders — wrap-around &amp; home-based care
-              </h3>
-              <p className="footnote" style={{ marginBottom: "1rem" }}>
-                Childminders sit outside the school Early years path. Many
-                families use them for wrap-around cover before or after school,
-                or as the main childcare place — use the directory and checklist,
-                not the nursery Ofsted compare table.
-              </p>
-              {childminderSelected.length > 0 ? (
-                <ChildminderDirectoryBoard
-                  providers={childminderSelected}
-                  consentedAsAt={childmindersIndex?.consentedAsAt}
-                />
-              ) : selectedSchools.length > 0 ? (
-                <div className="empty-compare" role="status">
-                  Shortlist a {SEED_GEOGRAPHY_LABEL} consented childminder from
-                  the map or search to pin their address and Ofsted report here.
-                </div>
-              ) : null}
-              <div
-                style={{
-                  marginTop:
-                    childminderSelected.length || selectedSchools.length
-                      ? "1.5rem"
-                      : 0,
-                }}
-              >
-                <ChildminderVettingChecklist
-                  consentedAsAt={childmindersIndex?.consentedAsAt}
-                  sourcePage={
-                    childmindersIndex?.source.consentedAddressesPage
-                  }
-                  providerCount={childmindersIndex?.stats.providerCount}
-                />
-              </div>
-            </div>
-          ) : null}
-
-          {eySelected.length > 0 || childminderSelected.length > 0 ? (
-            <div
-              style={{
-                marginBottom:
-                  ks1Selected.length ||
-                  ks2Selected.length ||
-                  ks4Selected.length
-                    ? "2rem"
-                    : 0,
-              }}
-            >
-              <VisitPack
-                nurseries={eySelected}
-                childminders={childminderSelected}
-              />
-            </div>
-          ) : null}
-
-          {selectedSchools.length > 0 &&
-          showKs1 &&
-          !showPhonicsBoard ? (
-            <div className="empty-compare" role="status">
-              KS1 is selected, but phonics area benchmarks are not in this data
-              build yet. Re-run <code>npm run enrich:phonics</code> (or a full
-              harvest), or add KS2 / KS3/KS4 for school-level tables.
-            </div>
-          ) : null}
-
-          {selectedSchools.length > 0 &&
-          showKs1 &&
-          showPhonicsBoard &&
-          ks1Selected.length === 0 ? (
-            <div className="empty-compare" role="status">
-              Phonics context is shown for state schools that offer KS1.
-              Independents are not included in the DfE phonics screening
-              tables — add a state infant or primary, or another stage.
-            </div>
-          ) : null}
-
-          {ks1Selected.length > 0 && showPhonicsBoard ? (
-            <div
-              style={{
-                marginBottom:
-                  ks2Selected.length || ks4Selected.length ? "2rem" : 0,
-              }}
-            >
-              {ks2Selected.length > 0 || ks4Selected.length > 0 ? (
-                <h3 className="compare-subhead">
-                  Key Stage 1 — phonics by local authority
-                </h3>
-              ) : null}
-              <PhonicsComparisonBoard
-                schools={ks1Selected}
-                phonics={index.benchmarks.phonics}
-              />
-            </div>
-          ) : null}
-
-          {ks2Selected.length > 0 ? (
-            <div style={{ marginBottom: ks4Selected.length ? "2rem" : 0 }}>
-              {ks1Selected.length > 0 ||
-              ks4Selected.length > 0 ||
-              showEarlyNotice ? (
-                <h3 className="compare-subhead">Key Stage 2 — Year 6 tables</h3>
-              ) : null}
-              <ComparisonBoard
-                schools={ks2Selected}
-                england={index.benchmarks.england}
-              />
-            </div>
-          ) : null}
-
-          {ks4Selected.length > 0 ? (
-            <div>
-              {ks1Selected.length > 0 || ks2Selected.length > 0 ? (
-                <h3 className="compare-subhead">
-                  Key Stage 4 &amp; 16–18 — GCSE / A-level tables
-                </h3>
-              ) : null}
-              <IndependentComparisonBoard
-                schools={ks4Selected}
-                benchmark={ks4Bench}
-                benchmarkLabel={ks4BenchLabel}
-              />
-            </div>
-          ) : null}
-
-          {selectedSchools.length > 0 &&
-          !showEarlyNotice &&
-          !hasAnyCompareBoard &&
-          !(showKs1 && showPhonicsBoard && ks1Selected.length === 0) &&
-          !(showKs1 && !showPhonicsBoard) ? (
-            <div className="empty-compare" role="status">
-              None of the shortlisted settings offer the categories needed for
-              the published tables that match your filter. Try Early years for
-              Hampshire nurseries, Childminders for wrap-around care, KS1 for
-              phonics context, KS2 for Year 6, or KS3/KS4 for GCSE measures.
-            </div>
-          ) : null}
+          {renderActivePath()}
         </div>
       </section>
 
@@ -735,9 +667,8 @@ export function CompareApp({
             <div className="section-head">
               <h2>Other schools you might weigh</h2>
               <p>
-                Suggested from the same local authority or postcode area, with
-                overlapping stages, matching sector and similar cohort size —
-                then ordered toward stronger published outcomes.
+                Same area or authority, overlapping stages, similar cohort —
+                ordered toward stronger published outcomes.
               </p>
             </div>
             <SuggestAlternatives suggestions={suggestions} onAdd={addSchool} />

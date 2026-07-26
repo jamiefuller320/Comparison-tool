@@ -424,8 +424,65 @@ a {
   gap: 0.45rem;
 }
 
+.path-summaries {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
 .shortlist-summary {
   margin: 0;
+}
+
+.data-slim-line {
+  margin: 0.35rem 0 0;
+}
+
+.compare-path-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0 0 1.25rem;
+}
+
+.compare-path-tab {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--sea-deep);
+  border-radius: 999px;
+  padding: 0.42rem 0.9rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.compare-path-tab:hover {
+  transform: translateY(-1px);
+  border-color: rgba(11, 79, 108, 0.35);
+}
+
+.compare-path-tab.active {
+  background: var(--sea);
+  border-color: var(--sea);
+  color: #fff7ef;
+}
+
+.compare-path-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--coral);
+  flex-shrink: 0;
+}
+
+.compare-path-tab.active .compare-path-dot {
+  background: #fff7ef;
 }
 
 .sector-prune-note {

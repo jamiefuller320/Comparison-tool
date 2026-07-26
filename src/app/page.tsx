@@ -19,26 +19,16 @@ export default function HomePage() {
           <div className="footnote">
             <p>
               <strong>Expected standard</strong> means pupils met the level expected
-              for the end of primary in that subject.{" "}
-              <strong>Higher standard</strong> is a tougher bar.{" "}
-              <strong>Scaled scores</strong> centre on 100 as the expected standard.
+              for the end of primary. <strong>Higher standard</strong> is a tougher
+              bar. <strong>Scaled scores</strong> centre on 100.
             </p>
             <p>
-              Road distances use open routing data and are a guide to travel, not an
-              admissions catchment. Stage filters use each school&apos;s published age
-              range with <strong>AND</strong> logic when several stages are selected.
-              Early years covers nurseries and school reception; Ofsted grades judge
-              the setting, while EYFSP &quot;good level of development&quot; figures are area
-              averages only. Childminders are a separate category — often wrap-around
-              care outside school hours — listed when they consented to publish an
-              address; use the vetting checklist, not a nursery league table. Pure
-              secondary schools come from GIAS for KS3/KS4 search; KS2 attainment
-              figures appear where published for state schools. Independents are
-              compared on published Key Stage 4 outcomes (nil/zero English &amp; maths
-              GCSE returns cleared; EBacc subject pillars used as fallbacks), Ofsted
-              grades for non-association schools, and ISI/website links from GIAS when
-              Ofsted grades are absent. Small cohorts bounce around more than large
-              ones. Admissions rules and ethos are still outside this dataset.
+              Side by side shows one path at a time. Early years uses Ofsted grades
+              plus EYFSP area context; childminders use a consented directory and
+              checklist; school stages use published tables. Road distances are a
+              travel guide, not catchment. Small cohorts bounce more than large ones.
+              Admissions and ethos stay outside this dataset — see the Data section
+              for sources.
             </p>
           </div>
         </div>
