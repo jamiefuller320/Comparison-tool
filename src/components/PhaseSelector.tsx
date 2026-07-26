@@ -29,18 +29,17 @@ export function PhaseSelector({
     <div
       className={tone === "hero" ? "phase-selector hero-phase" : "phase-selector"}
       role="group"
-      aria-label="School stages to include"
+      aria-label="School stages and care categories to include"
       data-tour={tourId}
     >
       <div className="phase-selector-heading">
-        <span className="phase-selector-label">Stages</span>
-        <SelectorHelp label="About stages">
-          When several stages are selected, only settings that offer{" "}
-          <strong>all</strong> of them are listed (for example KS3 + KS4 shows
-          secondary and all-through schools). With Early years on, Nurseries
-          and Childminders sliders appear. Comparison tables follow these
-          stages: Early years → day care / childminders + EYFSP area context;
-          KS1 → local-authority phonics; KS2 → Year 6; KS3/KS4 → GCSE / 16–18.
+        <span className="phase-selector-label">Stages &amp; care</span>
+        <SelectorHelp label="About stages and care">
+          <strong>Early years</strong> covers nurseries and school reception
+          settings. <strong>Childminders</strong> are a separate category —
+          often wrap-around care outside school hours — with a directory and
+          vetting checklist, not the nursery Ofsted table. School stages
+          (KS1–KS4) use <strong>AND</strong> logic when several are selected.
         </SelectorHelp>
       </div>
       <div className="phase-chips">

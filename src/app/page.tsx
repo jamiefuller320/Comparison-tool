@@ -27,18 +27,18 @@ export default function HomePage() {
               Road distances use open routing data and are a guide to travel, not an
               admissions catchment. Stage filters use each school&apos;s published age
               range with <strong>AND</strong> logic when several stages are selected.
-              For early years, Ofsted grades judge the setting; EYFSP &quot;good level
-              of development&quot; figures are area averages only — useful context, not
-              a school-by-school scorecard. Childminders are listed only when they
-              consented to publish an address — use the vetting checklist and Ofsted
-              report, not a grade league table. Pure secondary schools come from GIAS
-              for KS3/KS4 search; KS2 attainment figures appear where published for
-              state schools. Independents are compared on published Key Stage 4
-              outcomes (nil/zero English &amp; maths GCSE returns cleared; EBacc
-              subject pillars used as fallbacks), Ofsted grades for non-association
-              schools, and ISI/website links from GIAS when Ofsted grades are absent.
-              Small cohorts bounce around more than large ones. Admissions rules and
-              ethos are still outside this dataset.
+              Early years covers nurseries and school reception; Ofsted grades judge
+              the setting, while EYFSP &quot;good level of development&quot; figures are area
+              averages only. Childminders are a separate category — often wrap-around
+              care outside school hours — listed when they consented to publish an
+              address; use the vetting checklist, not a nursery league table. Pure
+              secondary schools come from GIAS for KS3/KS4 search; KS2 attainment
+              figures appear where published for state schools. Independents are
+              compared on published Key Stage 4 outcomes (nil/zero English &amp; maths
+              GCSE returns cleared; EBacc subject pillars used as fallbacks), Ofsted
+              grades for non-association schools, and ISI/website links from GIAS when
+              Ofsted grades are absent. Small cohorts bounce around more than large
+              ones. Admissions rules and ethos are still outside this dataset.
             </p>
           </div>
         </div>

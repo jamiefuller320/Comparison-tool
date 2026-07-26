@@ -7,6 +7,8 @@ import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
+  wantsChildminders,
+  wantsEyMetrics,
   type PhaseId,
 } from "@/lib/phases";
 import {
@@ -15,7 +17,7 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
-import { isEyDirectorySetting } from "@/lib/eyMetrics";
+import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 
 export function SchoolSearch({
   schools,
@@ -40,14 +42,10 @@ export function SchoolSearch({
   const pool = useMemo(
     () =>
       schools.filter((s) => {
+        // Directory categories bypass school-type chips and age-range AND.
+        if (isEyProvider(s) && wantsEyMetrics(stageFilter)) return true;
+        if (isChildminder(s) && wantsChildminders(stageFilter)) return true;
         if (!schoolMatchesPhases(s, stageFilter)) return false;
-        // Hampshire day care / childminders sit outside state/independent filters.
-        if (
-          isEyDirectorySetting(s) &&
-          stageFilter.includes("early-years")
-        ) {
-          return true;
-        }
         return schoolMatchesSectors(s, sectorFilter);
       }),
     [schools, stageFilter, sectorFilter],

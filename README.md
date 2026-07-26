@@ -24,7 +24,7 @@ Until uptake is clearer, prefer **depth in a bounded slice** over a full nationa
 
 Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHORITY = "Hampshire"`).
 
-**Hampshire EY MVP (live in product):** Ofsted childcare MI for named Early Years Register full/sessional day care in Hampshire (`public/data/ey-providers-index.json`); Ofsted state-school grades joined onto GIAS nursery/infant/primary settings with an early-years intake (`npm run enrich:ey-schools`); **consented childminders** directory + map (`public/data/childminders-index.json` from Ofsted’s quarterly consented-addresses file — incomplete by design; no phone/email); parent **vetting checklist**; plus England/Hampshire **EYFSP** area benchmarks (DfE does not publish provider-level EYFSP — use Ofsted for setting judgements and EYFSP only as area context). Refresh with `npm run harvest:ey` (always resolves the latest consented CSV). A weekly GitHub Action (`refresh-ey.yml`) re-harvests so the directory stays closely synced after Ofsted’s quarterly overwrite.
+**Hampshire EY MVP (live in product):** Ofsted childcare MI for named Early Years Register full/sessional day care in Hampshire (`public/data/ey-providers-index.json`); Ofsted state-school grades joined onto GIAS nursery/infant/primary settings with an early-years intake (`npm run enrich:ey-schools`); plus England/Hampshire **EYFSP** area benchmarks. **Childminders are a separate category** (not under Early years): consented directory + map (`public/data/childminders-index.json`) and parent **vetting checklist** for wrap-around / home-based care. Refresh with `npm run harvest:ey` (always resolves the latest consented CSV). A weekly GitHub Action (`refresh-ey.yml`) re-harvests so the directory stays closely synced after Ofsted’s quarterly overwrite.
 
 The current national KS2/KS4 harvest is a capability scaffold; the product path above is how we intend to grow coverage without assuming demand.
 
@@ -42,7 +42,7 @@ After merge to `main` and Pages is enabled:
 
 ## What it does
 
-- **Stage selector** for Early years / KS1 / KS2 / KS3 / KS4 — multiple selections use **AND** (a school must offer every selected stage); multi-phase settings still appear under each stage they cover individually
+- **Stage & care selector** for Early years / Childminders / KS1 / KS2 / KS3 / KS4 — school stages use **AND**; Childminders is a separate wrap-around category (directory + checklist), not mixed into Early years nursery tables
 - **Sector selector** for **state** vs **independent** (private / public) schools — defaults to state-funded
 - **Separate comparison tables** by stage: KS1 uses **local-authority phonics** context; state KS2 uses Year 6 attainment; KS3/KS4 use published **Key Stage 4** outcomes (Attainment 8, English & maths, EBacc) for state and independent secondaries, plus **Ofsted** grades for non-association independents and **ISI / website** links from GIAS when Ofsted grades are absent. Nil/zero English & maths GCSE returns are cleared (common with IGCSEs); EBacc subject pillars are used as fallbacks when both are published
 - Secondary / infant / nursery settings are enriched from GIAS Edubase (so EY–KS1-only and KS3–KS4 schools appear even without KS2 results)
@@ -53,7 +53,7 @@ After merge to `main` and Pages is enabled:
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables
 - Lets parents **search** by name, town, postcode or URN and compare **up to four schools** side by side
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
-- Matches comparison tables to selected stages: **Early years → day-care + school nursery/infant Ofsted + consented childminder directory/checklist + EYFSP area context**, **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent)
+- Matches comparison tables to selected categories: **Early years → day-care + school nursery/infant Ofsted + EYFSP area context**, **Childminders → consented directory + vetting checklist**, **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent)
 - Keeps the language parental: shortlists and fit, not board packs or SIP targets
 
 ## Run locally

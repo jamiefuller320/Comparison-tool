@@ -5,7 +5,13 @@ export const PHASE_OPTIONS = [
     id: "early-years",
     label: "Early years",
     short: "EY",
-    hint: "Nursery and reception (typically ages 0–5) — Hampshire day care, school nurseries/infants, consented childminders + checklist, EYFSP area context",
+    hint: "Nursery and reception (typically ages 0–5) — Hampshire day care, school nurseries/infants, and EYFSP area context",
+  },
+  {
+    id: "childminders",
+    label: "Childminders",
+    short: "CM",
+    hint: "Hampshire consented childminders — often wrap-around care outside school hours; directory + vetting checklist (not school Ofsted tables)",
   },
   {
     id: "ks1",
@@ -44,6 +50,9 @@ export const DEFAULT_PHASES_INDEPENDENT: PhaseId[] = ["ks3", "ks4"];
 /** State-funded school path when user explicitly picks state only. */
 export const DEFAULT_PHASES_STATE: PhaseId[] = ["ks2"];
 
+/** Categories that are not school age-range stages (directory / care). */
+export const DIRECTORY_PHASE_IDS: PhaseId[] = ["childminders"];
+
 const PHASE_IDS = new Set<string>(PHASE_OPTIONS.map((o) => o.id));
 
 /**
@@ -62,9 +71,19 @@ export function defaultPhasesForSectors(
   return null;
 }
 
-/** Selected stages ask for early-years provider / EYFSP context boards. */
+/** School age-range stages only (excludes childminders directory category). */
+export function schoolStageIds(stages: PhaseId[]): PhaseId[] {
+  return stages.filter((id) => !DIRECTORY_PHASE_IDS.includes(id));
+}
+
+/** Selected stages ask for early-years nursery / EYFSP context boards. */
 export function wantsEyMetrics(stages: PhaseId[]): boolean {
   return stages.includes("early-years");
+}
+
+/** Selected stages ask for the consented childminders directory + checklist. */
+export function wantsChildminders(stages: PhaseId[]): boolean {
+  return stages.includes("childminders");
 }
 
 /** Selected stages ask for Key Stage 2 (Year 6) attainment tables. */
@@ -139,6 +158,7 @@ export function parseAgeBounds(
 /**
  * Phases a setting offers. Multi-phase schools (primary, all-through, etc.)
  * return every stage they cover so they stay visible under each selector.
+ * Childminders are a separate directory category — never derived from age range.
  */
 export function phasesFromAgeRange(ageRange?: string | null): PhaseId[] {
   const bounds = parseAgeBounds(ageRange);
@@ -178,6 +198,10 @@ export function normalizePhaseIds(raw: string[]): PhaseId[] {
       if (!out.includes("early-years")) out.push("early-years");
       continue;
     }
+    if (id === "cm" || id === "childminder") {
+      if (!out.includes("childminders")) out.push("childminders");
+      continue;
+    }
     if (PHASE_IDS.has(id) && !out.includes(id as PhaseId)) {
       out.push(id as PhaseId);
     }
@@ -185,17 +209,55 @@ export function normalizePhaseIds(raw: string[]): PhaseId[] {
   return out;
 }
 
-/** School matches if it offers every selected phase (AND). */
+/**
+ * Migrate legacy `eySettings` URL param into stage chips.
+ * Old nested toggles under Early years → peer Childminders category.
+ */
+export function migrateStagesFromLegacyEySettings(
+  stages: PhaseId[],
+  eySettingsRaw: string | null | undefined,
+): PhaseId[] {
+  if (eySettingsRaw == null || !String(eySettingsRaw).trim()) {
+    return stages.length ? stages : [...DEFAULT_PHASES];
+  }
+  const tokens = String(eySettingsRaw)
+    .split(",")
+    .map((t) => t.trim().toLowerCase())
+    .filter(Boolean);
+  const wantsNursery = tokens.some((t) =>
+    ["nurseries", "nursery", "daycare", "day-care"].includes(t),
+  );
+  const wantsCm = tokens.some((t) =>
+    ["childminders", "childminder", "cm"].includes(t),
+  );
+  let next = [...stages];
+  if (wantsCm && !next.includes("childminders")) {
+    next.push("childminders");
+  }
+  // Childminders-only under the old EY toggle → drop Early years chip.
+  if (wantsCm && !wantsNursery) {
+    next = next.filter((id) => id !== "early-years");
+  }
+  if (!next.length) return [...DEFAULT_PHASES];
+  return next;
+}
+
+/**
+ * School matches if it offers every selected *school* stage (AND).
+ * The Childminders category is ignored here — directory rows are stitched
+ * in separately when that chip is on.
+ */
 export function schoolMatchesPhases(
   school: { ageRange?: string | null; phases?: string[] | null },
   selected: PhaseId[],
 ): boolean {
-  if (!selected.length) return true;
+  const schoolStages = schoolStageIds(selected);
+  if (!schoolStages.length) return false;
   // Always derive from age range so taxonomy changes (KS3/KS4) stay correct
   // even when the harvested JSON still carries a legacy "phases" array.
   const offered = phasesFromAgeRange(school.ageRange);
   if (!offered.length) return false;
-  return selected.every((phase) => offered.includes(phase));
+  return schoolStages.every((phase) => offered.includes(phase));
 }
 
 export function formatPhases(phases: PhaseId[]): string {
@@ -219,5 +281,6 @@ export function primaryPhaseLabel(phases: PhaseId[]): string {
   if (phases.includes("ks1") || phases.includes("early-years")) {
     return "Infant / EY–KS1";
   }
+  if (phases.includes("childminders")) return "Childminder";
   return "Other";
 }
