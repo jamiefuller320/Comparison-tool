@@ -15,6 +15,7 @@ import { EarlyYearsComparisonBoard } from "@/components/EarlyYearsComparisonBoar
 import { EyfspComparisonBoard } from "@/components/EyfspComparisonBoard";
 import { ChildminderDirectoryBoard } from "@/components/ChildminderDirectoryBoard";
 import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChecklist";
+import { VisitPack } from "@/components/VisitPack";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { PhaseSelector } from "@/components/PhaseSelector";
@@ -619,6 +620,24 @@ export function CompareApp({
                   providerCount={childmindersIndex?.stats.providerCount}
                 />
               </div>
+            </div>
+          ) : null}
+
+          {eySelected.length > 0 || childminderSelected.length > 0 ? (
+            <div
+              style={{
+                marginBottom:
+                  ks1Selected.length ||
+                  ks2Selected.length ||
+                  ks4Selected.length
+                    ? "2rem"
+                    : 0,
+              }}
+            >
+              <VisitPack
+                nurseries={eySelected}
+                childminders={childminderSelected}
+              />
             </div>
           ) : null}
 

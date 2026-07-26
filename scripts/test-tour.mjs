@@ -37,6 +37,10 @@ async function main() {
     console.error("FAIL nested ey-settings tour step should be removed");
     process.exit(1);
   }
+  if (!optional.includes("visit-pack")) {
+    console.error("FAIL visit-pack tour step should be optional");
+    process.exit(1);
+  }
   if (tourTargetSelector("stages") !== '[data-tour="stages"]') {
     console.error("FAIL selector");
     process.exit(1);
