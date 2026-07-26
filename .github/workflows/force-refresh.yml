@@ -49,14 +49,17 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Harvest and enrich school index
+      - name: Harvest and enrich Hampshire maintained index
         if: steps.gate.outputs.allowed == 'true'
         run: |
-          python3 scripts/harvest-schools.py
+          # Keep force-refresh on the seed-LA maintained path.
+          # Out-of-area on-demand packs are a separate backlog item.
+          python3 scripts/harvest-schools.py --seed-la
           python3 scripts/enrich-geocode.py
-          python3 scripts/enrich-secondaries.py
+          python3 scripts/enrich-secondaries.py --seed-la
           python3 scripts/enrich-independents.py
-          python3 scripts/extract-ks2-history.py
+          python3 scripts/enrich-phonics.py --seed-la
+          python3 scripts/extract-ks2-history.py --seed-la
 
       - name: Record force-refresh stamp
         if: steps.gate.outputs.allowed == 'true'

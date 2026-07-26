@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-26 (Hampshire EY / childminders / school Ofsted / separate categories thread).
+Last reviewed from agent chat: 2026-07-26 (age climb + Ofsted précis second-pass note).
 
 ## How to use
 
@@ -18,7 +18,7 @@ Last reviewed from agent chat: 2026-07-26 (Hampshire EY / childminders / school 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
 | **On-demand LA packs beyond Hampshire** | Keep Hampshire pre-built; for other LAs, fetch/cache EY (and later stage) packs on user request — evolve “school is missing” — instead of national pre-harvest. | Not started | User economic path + README |
-| **Hampshire age climb as maintained set** | After EY feels solid: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Deferred (national scaffold exists; Hampshire-trim path not done) | User + README |
+| **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (`harvest:hampshire`, trim script, scheduled refresh on seed LA; deepen secondary next) | User + README |
 | **Second geography** | Widen to another LA only when Hampshire usage justifies cost. Southampton/Portsmouth noted as possible childminder widen (separate unitaries). | Deferred | Agent pathway |
 
 ### Early years / childcare
@@ -27,6 +27,7 @@ Last reviewed from agent chat: 2026-07-26 (Hampshire EY / childminders / school 
 | --- | --- | --- | --- |
 | **Out-of-school / holiday day care** | Include EYR out-of-school and holiday day-care providers in Hampshire EY coverage. | Not started | Agent (“still to do” after EY MVP) |
 | **Richer qualitative evidence layer** | Deeper researched qualitative context with user-accessible evidence (beyond current Ofsted/EYFSP footnotes); optional key phrases from Ofsted reports. | Partial (basic explainers/footnotes/tour shipped) | North Star #2 |
+| **Ofsted report précis engine** | Second-pass item: generate a short, parent-facing précis of each setting’s latest Ofsted report (verifiable quotes / footnote back to the report). Not needed before Hampshire age-climb. | Not started (second pass) | User |
 | **Layperson empty-state polish** | Clearer empty states (e.g. schools-only shortlist under EY); fuller COVID/data caveats; prove full North Star loop on the EY vertical. | Partial | North Star #3 / agent |
 | **Hampshire FIS contact enrichment** | Optionally link Hampshire Family Information Service (or a public FIS feed) for contacts beyond address + Ofsted report. | Not started | Agent recommendation |
 | **Childminder “market overview”** | Area signal such as % Good by constituency — not side-by-side named compare. Floated when redacted MI looked weak; consented directory shipped instead; overview never built. | Deferred | Agent alternative |
@@ -71,5 +72,6 @@ For orientation only — not backlog:
 - Childminders as a **separate category** from Early years  
 - Stage/sector filters, postcode map, KS1 phonics area board, KS2 trends, independent KS4/Ofsted path  
 - UI declutter: filters only in hero; path-scoped Side by side tabs; visit pack + checklist on childcare paths  
+- Hampshire age-climb maintained harvest (`harvest:hampshire` / seed-LA trim); national `harvest` kept as scaffold  
 
 See `README.md` North Star and Initial scope for governing priorities.

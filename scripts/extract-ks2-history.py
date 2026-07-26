@@ -11,6 +11,7 @@ Years skip 2019/20–2021/22 (COVID cancellation / not in performance tables).
 
 Usage:
   python3 scripts/extract-ks2-history.py
+  python3 scripts/extract-ks2-history.py --seed-la
   python3 scripts/extract-ks2-history.py --years 2023-2024,2024-2025
 """
 
@@ -281,11 +282,27 @@ def write_archive(
 
 
 def main() -> None:
+    import sys
+    from pathlib import Path as _Path
+
+    scripts_dir = _Path(__file__).resolve().parent
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    from seed_scope import SEED_LOCAL_AUTHORITY
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--years",
         default=",".join(DEFAULT_YEARS),
         help="Comma-separated CSP year tokens (YYYY-YYYY)",
+    )
+    parser.add_argument(
+        "--seed-la",
+        action="store_true",
+        help=(
+            f"Keep history only for URNs in the {SEED_LOCAL_AUTHORITY} "
+            "schools-index.json maintained set"
+        ),
     )
     args = parser.parse_args()
     years = [y.strip() for y in args.years.split(",") if y.strip()]
@@ -294,6 +311,25 @@ def main() -> None:
 
     print(f"Extracting KS2 history for {len(years)} years…", flush=True)
     periods, england, schools = extract_years(years)
+
+    if args.seed_la:
+        index_path = ROOT / "public" / "data" / "schools-index.json"
+        if not index_path.exists():
+            raise SystemExit(f"Missing {index_path} for --seed-la filter")
+        index = json.loads(index_path.read_text(encoding="utf-8"))
+        keep = {
+            str(s.get("urn"))
+            for s in (index.get("schools") or [])
+            if s.get("urn")
+        }
+        before = len(schools)
+        schools = {urn: series for urn, series in schools.items() if urn in keep}
+        print(
+            f"Seed-LA history filter: {before:,} → {len(schools):,} URNs "
+            f"({SEED_LOCAL_AUTHORITY} index)",
+            flush=True,
+        )
+
     write_archive(periods, england, schools, years)
 
 

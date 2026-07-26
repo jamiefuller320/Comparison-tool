@@ -602,7 +602,7 @@ export function CompareApp({
               stay in the hero above.
             </p>
             <p className="footnote data-slim-line">
-              {SEED_GEOGRAPHY_LABEL} seed · {index.period} · refreshed{" "}
+              {SEED_GEOGRAPHY_LABEL} maintained set · {index.period} · refreshed{" "}
               {index.generatedAt}
             </p>
           </div>

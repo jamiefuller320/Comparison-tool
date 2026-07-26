@@ -231,6 +231,23 @@ def merge_la(target: dict[str, dict], incoming: dict[str, dict]) -> None:
 
 
 def main() -> None:
+    import argparse
+    import sys
+    from pathlib import Path as _Path
+
+    scripts_dir = _Path(__file__).resolve().parent
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    from seed_scope import SEED_LOCAL_AUTHORITY, trim_la_benchmarks
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--seed-la",
+        action="store_true",
+        help=f"Keep England + {SEED_LOCAL_AUTHORITY} phonics benches only",
+    )
+    args = parser.parse_args()
+
     if not INDEX.exists():
         raise SystemExit(f"Missing {INDEX} — run harvest first")
 
@@ -260,6 +277,14 @@ def main() -> None:
         _, la_slot = extract_benches(la_rows, year_group, la_map=la_map)
         merge_la(local_authorities, la_slot)
         print(f"  LAs with {label} totals so far: {len(local_authorities)}", flush=True)
+
+    if args.seed_la:
+        local_authorities = trim_la_benchmarks(local_authorities)
+        print(
+            f"  Seed-LA trim: kept {len(local_authorities)} LA phonics row(s) "
+            f"for {SEED_LOCAL_AUTHORITY}",
+            flush=True,
+        )
 
     if england.get("year1Expected") is None:
         raise SystemExit("Phonics harvest failed — no England Year 1 expected %")

@@ -8,13 +8,16 @@ geocodes new postcodes.
 
 Usage:
   python3 scripts/enrich-secondaries.py
+  python3 scripts/enrich-secondaries.py --seed-la
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
 import io
 import json
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -22,6 +25,16 @@ from datetime import date, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from seed_scope import (  # noqa: E402
+    SEED_LOCAL_AUTHORITY,
+    filter_schools_to_seed_la,
+    is_seed_local_authority,
+)
+
 INDEX = ROOT / "public" / "data" / "schools-index.json"
 DIRECTORY = ROOT / "public" / "data" / "schools-directory.json"
 SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
@@ -158,7 +171,17 @@ def build_address(row: dict[str, str]) -> str | None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--seed-la",
+        action="store_true",
+        help=f"Only add/keep open GIAS settings in {SEED_LOCAL_AUTHORITY}",
+    )
+    args = parser.parse_args()
+
     payload = json.loads(INDEX.read_text(encoding="utf-8"))
+    if args.seed_la:
+        payload["schools"] = filter_schools_to_seed_la(payload.get("schools") or [])
     by_urn = {s["urn"]: s for s in payload["schools"]}
     before = len(by_urn)
 
@@ -168,6 +191,7 @@ def main() -> int:
 
     added = 0
     updated_meta = 0
+    skipped_outside_seed = 0
     new_schools: list[dict] = []
 
     for row in reader:
@@ -196,6 +220,10 @@ def main() -> int:
         religion = (row.get("ReligiousCharacter (name)") or "").strip()
         if religion in {"", "None", "Does not apply", "Not applicable"}:
             religion = None
+
+        if args.seed_la and not is_seed_local_authority(la):
+            skipped_outside_seed += 1
+            continue
 
         if urn in by_urn:
             existing = by_urn[urn]
@@ -267,7 +295,12 @@ def main() -> int:
     for school in by_urn.values():
         school["sector"] = sector_from_type(school.get("schoolTypeLabel"))
 
-    schools = sorted(by_urn.values(), key=lambda s: (s.get("localAuthority") or "", s.get("name") or ""))
+    schools = sorted(
+        by_urn.values(),
+        key=lambda s: (s.get("localAuthority") or "", s.get("name") or ""),
+    )
+    if args.seed_la:
+        schools = filter_schools_to_seed_la(schools)
     payload["schools"] = schools
     payload["stats"]["schoolCount"] = len(schools)
     payload["stats"]["withRwm"] = sum(1 for s in schools if s.get("rwmExpected") is not None)
@@ -280,6 +313,10 @@ def main() -> int:
     payload["stats"]["independentCount"] = sum(
         1 for s in schools if s.get("sector") == "independent"
     )
+    if args.seed_la:
+        payload["stats"]["maintainedScope"] = SEED_LOCAL_AUTHORITY
+        payload["maintainedScope"] = SEED_LOCAL_AUTHORITY
+        payload.setdefault("source", {})["maintainedScope"] = SEED_LOCAL_AUTHORITY
     infant_only = sum(
         1
         for s in schools
@@ -332,6 +369,8 @@ def main() -> int:
         "localAuthorityCount": payload["stats"]["localAuthorityCount"],
         "secondaryAdded": added,
         "secondaryMetaUpdated": updated_meta,
+        "skippedOutsideSeedLa": skipped_outside_seed if args.seed_la else 0,
+        "maintainedScope": SEED_LOCAL_AUTHORITY if args.seed_la else None,
         "indexBytes": INDEX.stat().st_size,
         "files": [
             "public/data/schools-index.json",
