@@ -49,7 +49,14 @@ export const TOUR_STEPS: TourStep[] = [
     id: "stages",
     target: "stages",
     title: "Choose the stages you care about",
-    body: "Pick Early years, KS1, KS2, KS3 and/or KS4. Several stages use AND logic — a school must offer every selected stage. Tables follow your choice: Early years → Hampshire day care and school nurseries/infants (Ofsted) plus EYFSP area context, KS1 → LA phonics, KS2 → Year 6, KS3/KS4 → GCSE / 16–18.",
+    body: "Pick Early years, KS1, KS2, KS3 and/or KS4. Several stages use AND logic — a school must offer every selected stage. Tables follow your choice: Early years → Hampshire day care and school nurseries/infants (Ofsted), consented childminders (directory + vetting checklist), and EYFSP area context, KS1 → LA phonics, KS2 → Year 6, KS3/KS4 → GCSE / 16–18.",
+  },
+  {
+    id: "ey-settings",
+    target: "ey-settings",
+    title: "Nurseries and childminders",
+    body: "When Early years is on, use the two sliders to include nurseries (day care and school nursery/infant Ofsted), childminders, or both in the map and search. At least one stays on.",
+    optional: true,
   },
   {
     id: "sector",
@@ -88,6 +95,13 @@ export const TOUR_STEPS: TourStep[] = [
     target: "boards",
     title: "Side-by-side comparison",
     body: "Tables appear once schools are on the shortlist. Gaps versus England (or a sector mean) help you spot patterns — not a final verdict. The next step shows year-by-year trends on KS2 rows.",
+  },
+  {
+    id: "childminders",
+    target: "childminders",
+    title: "Childminders: map, then vet",
+    body: "With Early years selected, consented Hampshire childminders appear on the map and in search. They are not graded side by side like day care — use the vetting checklist and each Ofsted report. The consented list updates when we re-harvest (Ofsted overwrites it quarterly).",
+    optional: true,
   },
   {
     id: "year-trend",

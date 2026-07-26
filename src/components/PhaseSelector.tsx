@@ -37,9 +37,10 @@ export function PhaseSelector({
         <SelectorHelp label="About stages">
           When several stages are selected, only settings that offer{" "}
           <strong>all</strong> of them are listed (for example KS3 + KS4 shows
-          secondary and all-through schools). Comparison tables follow these
-        stages: Early years → Hampshire day care + EYFSP area context; KS1 →
-        local-authority phonics; KS2 → Year 6 results; KS3/KS4 → GCSE / 16–18.
+          secondary and all-through schools). With Early years on, Nurseries
+          and Childminders sliders appear. Comparison tables follow these
+          stages: Early years → day care / childminders + EYFSP area context;
+          KS1 → local-authority phonics; KS2 → Year 6; KS3/KS4 → GCSE / 16–18.
         </SelectorHelp>
       </div>
       <div className="phase-chips">

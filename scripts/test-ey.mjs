@@ -61,6 +61,17 @@ async function main() {
     console.error("FAIL junior-only should not be EY comparable");
     process.exit(1);
   }
+  if (
+    isEyComparable({
+      urn: "cm:EY999",
+      name: "Test Childminder",
+      source: "ofsted-consented-childminder",
+      ofstedOverall: "Good",
+    })
+  ) {
+    console.error("FAIL childminder should not be EY comparable");
+    process.exit(1);
+  }
   if (!EY_PROVIDER_METRICS.some((m) => m.key === "ofstedEarlyYearsProvision")) {
     console.error("FAIL missing early years provision metric");
     process.exit(1);

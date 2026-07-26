@@ -20,6 +20,7 @@ import {
 import { fmtPct } from "@/lib/format";
 import { PhaseSelector } from "@/components/PhaseSelector";
 import { SectorSelector } from "@/components/SectorSelector";
+import { EySettingSelector } from "@/components/EySettingSelector";
 import {
   formatPhases,
   phasesFromAgeRange,
@@ -32,6 +33,8 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import { isEyDirectorySetting } from "@/lib/eyMetrics";
+import type { EySettingId } from "@/lib/eySettings";
 import { requestTourStart } from "@/lib/tour";
 
 const NearbyMap = dynamic(
@@ -57,6 +60,8 @@ export function HomePostcodeExplorer({
   onStageFilterChange,
   sectorFilter,
   onSectorFilterChange,
+  eySettings,
+  onEySettingsChange,
   max = 4,
 }: {
   schools: SchoolRecord[];
@@ -66,6 +71,8 @@ export function HomePostcodeExplorer({
   onStageFilterChange: (next: PhaseId[]) => void;
   sectorFilter: SectorId[];
   onSectorFilterChange: (next: SectorId[]) => void;
+  eySettings: EySettingId[];
+  onEySettingsChange: (next: EySettingId[]) => void;
   max?: number;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
@@ -147,9 +154,17 @@ export function HomePostcodeExplorer({
       schools,
       radiusKm * 1000,
       listLimitForRadius(radiusKm),
-      (school) =>
-        schoolMatchesPhases(school, stageFilter) &&
-        schoolMatchesSectors(school, sectorFilter),
+      (school) => {
+        if (!schoolMatchesPhases(school, stageFilter)) return false;
+        // Day care + consented childminders bypass school-type chips in EY.
+        if (
+          isEyDirectorySetting(school) &&
+          stageFilter.includes("early-years")
+        ) {
+          return true;
+        }
+        return schoolMatchesSectors(school, sectorFilter);
+      },
     );
   }, [home, schools, radiusKm, stageFilter, sectorFilter]);
 
@@ -310,6 +325,14 @@ export function HomePostcodeExplorer({
             tone="hero"
             tourId="stages"
           />
+          {stageFilter.includes("early-years") ? (
+            <EySettingSelector
+              selected={eySettings}
+              onChange={onEySettingsChange}
+              tone="hero"
+              tourId="ey-settings"
+            />
+          ) : null}
           <SectorSelector
             selected={sectorFilter}
             onChange={onSectorFilterChange}

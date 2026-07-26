@@ -63,10 +63,15 @@ export interface IndependentMetrics {
   ofstedPublicationDate?: string | null;
   ofstedReportUrl?: string | null;
   ofstedPupilsOnRoll?: number | null;
-  /** e.g. ofsted-childcare, ofsted-state-schools, ofsted-independent */
+  /**
+   * e.g. ofsted-childcare, ofsted-state-schools, ofsted-independent,
+   * ofsted-consented-childminder
+   */
   ofstedSource?: string | null;
   /** Ofsted childcare provider URN (when source is ofsted-childcare). */
   ofstedUrn?: string | null;
+  /** True when listed from Ofsted’s consented-addresses publication. */
+  consentedAddress?: boolean | null;
   providerType?: string | null;
   providerSubtype?: string | null;
   places?: number | null;
@@ -199,6 +204,31 @@ export interface EyProvidersIndex {
     withCoordinates?: number;
     ofstedAsAt?: string;
     eyfspPeriod?: string;
+    localAuthority?: string;
+  };
+}
+
+/** Hampshire consented childminders / domestic childcare (directory + map). */
+export interface ChildmindersIndex {
+  generatedAt: string;
+  localAuthority: string;
+  consentedAsAt?: string;
+  ofstedAsAt?: string;
+  source: {
+    consentedAddressesPage?: string;
+    consentedAddressesCsv?: string;
+    ofstedChildcareMiPage?: string;
+    ofstedChildcareMiCsv?: string;
+    refreshNote?: string;
+    note?: string;
+  };
+  providers: SchoolRecord[];
+  stats: {
+    providerCount: number;
+    withInspectionGrade?: number;
+    withCoordinates?: number;
+    consentedAsAt?: string;
+    ofstedAsAt?: string;
     localAuthority?: string;
   };
 }

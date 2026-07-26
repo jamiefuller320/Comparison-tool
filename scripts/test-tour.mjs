@@ -29,6 +29,14 @@ async function main() {
     console.error("FAIL nearby/radius should be optional");
     process.exit(1);
   }
+  if (!optional.includes("childminders")) {
+    console.error("FAIL childminders tour step should be optional");
+    process.exit(1);
+  }
+  if (!optional.includes("ey-settings")) {
+    console.error("FAIL ey-settings tour step should be optional");
+    process.exit(1);
+  }
   if (tourTargetSelector("stages") !== '[data-tour="stages"]') {
     console.error("FAIL selector");
     process.exit(1);
