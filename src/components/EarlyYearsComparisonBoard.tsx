@@ -44,9 +44,11 @@ export function EarlyYearsComparisonBoard({
         Compared on published Ofsted inspection outcomes for Hampshire early
         years settings — Early Years Register day care (full and sessional) and
         state-funded schools with a nursery or reception intake. Grades describe
-        the setting at the last graded inspection. They are not the same as
-        reception EYFSP attainment (DfE only publishes EYFSP for areas, not
-        individual providers or schools).
+        the setting at the last graded inspection. Where Ofsted publishes domain
+        judgements or a report without a single overall grade, overall shows as
+        ungraded / report-led. They are not the same as reception EYFSP
+        attainment (DfE only publishes EYFSP for areas, not individual providers
+        or schools).
         {hasChildcare && childcareOfstedAsAt
           ? ` Childcare MI as at ${childcareOfstedAsAt}.`
           : null}

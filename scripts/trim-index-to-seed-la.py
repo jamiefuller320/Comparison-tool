@@ -27,6 +27,7 @@ from seed_scope import (  # noqa: E402
     is_seed_local_authority,
     trim_la_benchmarks,
 )
+from sector_benches import recompute_index_sector_benches  # noqa: E402
 
 OUT_DIR = ROOT / "public" / "data"
 INDEX = OUT_DIR / "schools-index.json"
@@ -145,6 +146,7 @@ def main() -> int:
 
     payload["maintainedScope"] = SEED_LOCAL_AUTHORITY
     payload["trimmedAt"] = time.strftime("%Y-%m-%d")
+    recompute_index_sector_benches(payload)
 
     INDEX.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
 

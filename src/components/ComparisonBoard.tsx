@@ -246,6 +246,15 @@ export function ComparisonBoard({
                         figures comparable with state schools.
                       </span>
                     ) : null}
+                    {resolveSchoolSector(school) === "state" &&
+                    school.rwmExpected == null ? (
+                      <span>
+                        No Year 6 reading, writing and maths table figure in
+                        this release — common for new schools, very small
+                        cohorts, or suppressed results. Check the official
+                        tables link.
+                      </span>
+                    ) : null}
                     {school.compareUrl ? (
                       <a href={school.compareUrl} target="_blank" rel="noreferrer">
                         Official tables ↗

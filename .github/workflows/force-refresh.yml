@@ -52,13 +52,16 @@ jobs:
       - name: Harvest and enrich Hampshire maintained index
         if: steps.gate.outputs.allowed == 'true'
         run: |
-          # Keep force-refresh on the seed-LA maintained path.
+          # Keep force-refresh on the seed-LA maintained path (incl. EY pack).
           # Out-of-area on-demand packs are a separate backlog item.
           python3 scripts/harvest-schools.py --seed-la
           python3 scripts/enrich-geocode.py
           python3 scripts/enrich-secondaries.py --seed-la
           python3 scripts/enrich-independents.py
           python3 scripts/enrich-phonics.py --seed-la
+          python3 scripts/harvest-ey-providers.py
+          python3 scripts/harvest-childminders.py
+          python3 scripts/enrich-ey-schools.py
           python3 scripts/extract-ks2-history.py --seed-la
 
       - name: Record force-refresh stamp
@@ -87,7 +90,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/schools-index.json public/data/schools-directory.json public/data/harvest-summary.json public/data/force-refresh-state.json src/data/harvest-summary.json public/data/ks2-history
+          git add public/data/schools-index.json public/data/schools-directory.json public/data/harvest-summary.json public/data/force-refresh-state.json src/data/harvest-summary.json public/data/ks2-history public/data/ey-providers-index.json public/data/childminders-index.json
           if git diff --staged --quiet; then
             # Still commit stamp if harvest produced no diff but stamp is new
             git add public/data/force-refresh-state.json

@@ -11,6 +11,7 @@ async function main() {
     PHONICS_METRICS,
     phonicsForSchool,
     phonicsEngland,
+    sharedPhonicsLaName,
   } = await import("../src/lib/phonicsMetrics.ts");
 
   if (PHONICS_METRICS.length < 3) {
@@ -43,6 +44,15 @@ async function main() {
     process.exit(1);
   }
 
+  if (sharedPhonicsLaName([{ localAuthority: "Hampshire" }, { localAuthority: "Hampshire" }]) !== "Hampshire") {
+    console.error("FAIL shared LA helper");
+    process.exit(1);
+  }
+  if (sharedPhonicsLaName([{ localAuthority: "Hampshire" }, { localAuthority: "Surrey" }]) != null) {
+    console.error("FAIL mixed LA should be null");
+    process.exit(1);
+  }
+
   const indexPath = resolve(root, "public/data/schools-index.json");
   const index = JSON.parse(readFileSync(indexPath, "utf8"));
   const phonics = index.benchmarks?.phonics;
@@ -50,11 +60,15 @@ async function main() {
     console.error("FAIL schools-index missing phonics.england.year1Expected");
     process.exit(1);
   }
-  if (!phonics.localAuthorities || Object.keys(phonics.localAuthorities).length < 100) {
-    console.error(
-      "FAIL expected many LA phonics rows",
-      Object.keys(phonics.localAuthorities || {}).length,
-    );
+  const laNames = Object.keys(phonics.localAuthorities || {});
+  const maintained = index.maintainedScope === "Hampshire";
+  if (maintained) {
+    if (laNames.length !== 1 || laNames[0] !== "Hampshire") {
+      console.error("FAIL Hampshire maintained set should keep only Hampshire phonics", laNames);
+      process.exit(1);
+    }
+  } else if (laNames.length < 100) {
+    console.error("FAIL expected many LA phonics rows", laNames.length);
     process.exit(1);
   }
   if (phonics.england.year1Expected < 50 || phonics.england.year1Expected > 95) {
@@ -64,7 +78,7 @@ async function main() {
 
   console.log(
     `phonics ok (England Y1 ${phonics.england.year1Expected}%, ` +
-      `${Object.keys(phonics.localAuthorities).length} LAs)`,
+      `${laNames.length} LA${laNames.length === 1 ? "" : "s"}${maintained ? ", Hampshire maintained" : ""})`,
   );
 }
 

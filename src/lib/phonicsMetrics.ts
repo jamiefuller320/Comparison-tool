@@ -63,3 +63,17 @@ export function phonicsEngland(
 ): PhonicsAreaBench | undefined {
   return pack?.england;
 }
+
+/** When every shortlisted school shares one LA (Hampshire maintained set), collapse duplicate columns. */
+export function sharedPhonicsLaName(
+  schools: { localAuthority?: string | null }[],
+): string | null {
+  const names = [
+    ...new Set(
+      schools
+        .map((s) => (s.localAuthority || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+  return names.length === 1 ? names[0] : null;
+}

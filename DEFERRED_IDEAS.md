@@ -18,7 +18,7 @@ Last reviewed from agent chat: 2026-07-26 (age climb + Ofsted précis second-pas
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
 | **On-demand LA packs beyond Hampshire** | Keep Hampshire pre-built; for other LAs, fetch/cache EY (and later stage) packs on user request — evolve “school is missing” — instead of national pre-harvest. | Not started | User economic path + README |
-| **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (`harvest:hampshire`, trim script, scheduled refresh on seed LA; deepen secondary next) | User + README |
+| **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
 | **Second geography** | Widen to another LA only when Hampshire usage justifies cost. Southampton/Portsmouth noted as possible childminder widen (separate unitaries). | Deferred | Agent pathway |
 
 ### Early years / childcare
