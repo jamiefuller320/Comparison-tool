@@ -24,6 +24,10 @@ import {
   type SchoolHistorySeries,
 } from "@/lib/ks2History";
 import { MetricHistoryChart } from "@/components/MetricHistoryChart";
+import { BoardProvenance } from "@/components/BoardProvenance";
+import type { SourceStamp } from "@/lib/sourceStamp";
+import { schoolDeepLink } from "@/lib/sourceStamp";
+import { ReportProblemButton } from "@/components/ReportProblemButton";
 
 const SUBJECT_KEYS = [
   "rwmExpected",
@@ -65,9 +69,11 @@ function bestUrn(
 export function ComparisonBoard({
   schools,
   england,
+  sourceStamp,
 }: {
   schools: SchoolRecord[];
   england: BenchmarkSet;
+  sourceStamp?: SourceStamp | null;
 }) {
   const [activeMetric, setActiveMetric] = useState<HistoryMetricKey | null>(
     null,
@@ -216,6 +222,9 @@ export function ComparisonBoard({
         Click a measure name to open its year-by-year trend directly under that
         row (state KS2 archive from Compare school performance).
       </p>
+      {sourceStamp ? (
+        <BoardProvenance stamp={sourceStamp} board="ks2" />
+      ) : null}
 
       <div className="compare-board">
         <table className="compare-table">
@@ -250,6 +259,19 @@ export function ComparisonBoard({
                       <a href={school.compareUrl} target="_blank" rel="noreferrer">
                         Official tables ↗
                       </a>
+                    ) : null}
+                    {sourceStamp ? (
+                      <ReportProblemButton
+                        compact
+                        board="ks2"
+                        stamp={{
+                          ...sourceStamp,
+                          deepLink:
+                            schoolDeepLink(school) || sourceStamp.deepLink,
+                        }}
+                        urn={school.urn}
+                        schoolName={school.name}
+                      />
                     ) : null}
                   </div>
                 </th>

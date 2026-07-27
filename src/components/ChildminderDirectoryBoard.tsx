@@ -2,14 +2,20 @@
 
 import type { SchoolRecord } from "@/lib/types";
 import { shortName } from "@/lib/format";
+import { BoardProvenance } from "@/components/BoardProvenance";
+import { ReportProblemButton } from "@/components/ReportProblemButton";
+import type { SourceStamp } from "@/lib/sourceStamp";
+import { schoolDeepLink } from "@/lib/sourceStamp";
 
 /** Directory-style panel for shortlisted childminders (not Ofsted grade compare). */
 export function ChildminderDirectoryBoard({
   providers,
   consentedAsAt,
+  sourceStamp,
 }: {
   providers: SchoolRecord[];
   consentedAsAt?: string | null;
+  sourceStamp?: SourceStamp | null;
 }) {
   if (providers.length === 0) return null;
 
@@ -22,6 +28,9 @@ export function ChildminderDirectoryBoard({
         Ofsted report, and visit before you decide.
         {consentedAsAt ? ` Register snapshot as at ${consentedAsAt}.` : null}
       </p>
+      {sourceStamp ? (
+        <BoardProvenance stamp={sourceStamp} board="childminders" />
+      ) : null}
       <ul className="childminder-directory">
         {providers.map((provider) => (
           <li key={provider.urn}>
@@ -55,6 +64,32 @@ export function ChildminderDirectoryBoard({
                   Ofsted report / registration ↗
                 </a>
               </p>
+            ) : null}
+            {sourceStamp ? (
+              <ReportProblemButton
+                compact
+                board="childminders"
+                stamp={{
+                  ...sourceStamp,
+                  deepLink: schoolDeepLink(provider) || sourceStamp.deepLink,
+                }}
+                urn={provider.urn}
+                schoolName={provider.name}
+                field="directory"
+                fieldLabel="Directory entry"
+                shownValue={
+                  [
+                    provider.address,
+                    provider.town,
+                    provider.postcode,
+                    provider.ofstedOverall
+                      ? `Ofsted ${provider.ofstedOverall}`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(", ") || "—"
+                }
+              />
             ) : null}
           </li>
         ))}

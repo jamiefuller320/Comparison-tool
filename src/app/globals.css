@@ -962,6 +962,154 @@ a {
   border: 0;
 }
 
+.source-stamp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.75rem;
+  border-left: 3px solid var(--sea);
+  background: rgba(11, 79, 108, 0.06);
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.source-stamp-label {
+  font-weight: 700;
+  color: var(--sea-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.72rem;
+}
+
+.source-stamp-note {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.board-provenance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin: 0 0 1rem;
+}
+
+.board-provenance .source-stamp {
+  flex: 1 1 16rem;
+  margin: 0;
+}
+
+.board-provenance-actions {
+  margin: 0 0 1rem;
+}
+
+.report-problem {
+  position: relative;
+}
+
+.report-problem-trigger-compact {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--sea-deep);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.report-problem-trigger-compact:hover {
+  border-color: var(--sea);
+}
+
+.report-problem-panel {
+  margin-top: 0.75rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(255, 252, 247, 0.95);
+  animation: riseIn 0.3s ease-out both;
+  max-width: 28rem;
+}
+
+.report-problem-panel > p {
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.report-problem-context {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0 0 0.85rem;
+  font-size: 0.86rem;
+}
+
+.report-problem-context dt {
+  margin: 0;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.report-problem-context dd {
+  margin: 0;
+}
+
+.report-problem-field {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+}
+
+.report-problem-field span {
+  font-weight: 600;
+  color: var(--sea-deep);
+}
+
+.report-problem-field textarea,
+.report-problem-field input {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  background: #fff;
+  font: inherit;
+  color: var(--ink);
+}
+
+.report-problem-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.school-meta .report-problem,
+.childminder-directory .report-problem {
+  position: relative;
+}
+
+.school-meta .report-problem-panel,
+.childminder-directory .report-problem-panel {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  top: calc(100% + 0.25rem);
+  width: min(28rem, 85vw);
+  box-shadow: 0 8px 24px rgba(20, 40, 60, 0.12);
+}
+
 .missing-school {
   margin: 0 0 1rem;
 }

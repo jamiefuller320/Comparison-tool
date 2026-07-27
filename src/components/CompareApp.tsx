@@ -59,6 +59,15 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import {
+  childminderConsentStamp,
+  eyfspStamp,
+  ks2TablesStamp,
+  ks4TablesStamp,
+  ofstedChildcareStamp,
+  ofstedStateStamp,
+  phonicsStamp,
+} from "@/lib/sourceStamp";
 
 function parseStagesParam(raw: string | null): PhaseId[] {
   if (!raw) return DEFAULT_PHASES;
@@ -404,6 +413,39 @@ export function CompareApp({
     pending,
   };
 
+  const ks2Stamp = ks2TablesStamp({
+    period: index.period,
+    primarySite: index.source.primarySite,
+    generatedAt: index.generatedAt,
+  });
+  const ks4Stamp = ks4TablesStamp({
+    period: index.stats.ks4Period || index.benchmarks.stateKs4?.period || index.period,
+    ks5Period: index.stats.ks5Period || index.benchmarks.stateKs4?.ks5Period,
+    datasetId: index.source.datasets.ks4SchoolPerformance,
+    generatedAt: index.generatedAt,
+  });
+  const phonicsSourceStamp = phonicsStamp({
+    period: index.benchmarks.phonics?.period || index.stats.phonicsPeriod,
+    datasetId: index.source.datasets.phonicsByRegionAndLa,
+  });
+  const eyfspSourceStamp = eyfspStamp({
+    period: eyIndex?.benchmarks.eyfsp?.period,
+    sourceUrl: eyIndex?.benchmarks.eyfsp?.sourceUrl,
+  });
+  const childcareOfstedStamp = ofstedChildcareStamp({
+    asAt: eyIndex?.ofstedAsAt,
+    sourcePage: eyIndex?.source.ofstedChildcareMiPage,
+  });
+  const stateOfstedStamp = ofstedStateStamp({
+    asAt: index.stats.ofstedStateAsAt,
+    sourcePage: index.source.datasets.ofstedStateSchoolsMi,
+  });
+  const childminderStamp = childminderConsentStamp({
+    consentedAsAt: childmindersIndex?.consentedAsAt,
+    ofstedAsAt: childmindersIndex?.ofstedAsAt,
+    sourcePage: childmindersIndex?.source.consentedAddressesPage,
+  });
+
   function renderActivePath() {
     if (!activePath) {
       if (selectedSchools.length === 0) {
@@ -433,7 +475,10 @@ export function CompareApp({
           ) : null}
           <PathSummaries schools={eySelected} {...summaryOpts} />
           {hasEyData ? (
-            <EyfspComparisonBoard eyfsp={eyIndex?.benchmarks.eyfsp} />
+            <EyfspComparisonBoard
+              eyfsp={eyIndex?.benchmarks.eyfsp}
+              sourceStamp={eyfspSourceStamp}
+            />
           ) : null}
           {eySelected.length > 0 ? (
             <div style={{ marginTop: hasEyData ? "1.5rem" : 0 }}>
@@ -444,6 +489,8 @@ export function CompareApp({
                 stateOfstedAsAt={index.stats.ofstedStateAsAt}
                 childcareSourcePage={eyIndex?.source.ofstedChildcareMiPage}
                 stateSourcePage={index.source.datasets.ofstedStateSchoolsMi}
+                childcareStamp={childcareOfstedStamp}
+                stateStamp={stateOfstedStamp}
               />
             </div>
           ) : selectedSchools.length > 0 ? (
@@ -481,6 +528,7 @@ export function CompareApp({
             <ChildminderDirectoryBoard
               providers={childminderSelected}
               consentedAsAt={childmindersIndex?.consentedAsAt}
+              sourceStamp={childminderStamp}
             />
           ) : (
             <div className="empty-compare" role="status">
@@ -525,6 +573,7 @@ export function CompareApp({
             <PhonicsComparisonBoard
               schools={ks1Selected}
               phonics={index.benchmarks.phonics}
+              sourceStamp={phonicsSourceStamp}
             />
           )}
         </div>
@@ -551,6 +600,7 @@ export function CompareApp({
             <ComparisonBoard
               schools={ks2Selected}
               england={index.benchmarks.england}
+              sourceStamp={ks2Stamp}
             />
           )}
         </div>
@@ -574,6 +624,7 @@ export function CompareApp({
             schools={ks4Selected}
             benchmark={ks4Bench}
             benchmarkLabel={ks4BenchLabel}
+            sourceStamp={ks4Stamp}
           />
         )}
       </div>
