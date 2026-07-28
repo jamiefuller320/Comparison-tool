@@ -21,6 +21,10 @@ import {
   formatSector,
   resolveSchoolSector,
 } from "@/lib/sectors";
+import { BoardProvenance } from "@/components/BoardProvenance";
+import type { SourceStamp } from "@/lib/sourceStamp";
+import { schoolDeepLink } from "@/lib/sourceStamp";
+import { ReportProblemButton } from "@/components/ReportProblemButton";
 
 const CHART_KEYS = [
   "engMath94Percent",
@@ -58,12 +62,14 @@ export function IndependentComparisonBoard({
   independentBench,
   benchmark,
   benchmarkLabel = "Sector mean",
+  sourceStamp,
 }: {
   schools: SchoolRecord[];
   /** @deprecated Prefer `benchmark` — kept for older call sites. */
   independentBench?: IndependentBenchmarkSet;
   benchmark?: IndependentBenchmarkSet;
   benchmarkLabel?: string;
+  sourceStamp?: SourceStamp | null;
 }) {
   const activeBench = benchmark ?? independentBench;
 
@@ -147,6 +153,9 @@ export function IndependentComparisonBoard({
           ? " ISI-inspected schools link to the ISI reports directory (postcode search when available) rather than Ofsted grades."
           : null}
       </p>
+      {sourceStamp ? (
+        <BoardProvenance stamp={sourceStamp} board="ks4" />
+      ) : null}
 
       <div className="compare-board">
         <table className="compare-table">
@@ -226,6 +235,19 @@ export function IndependentComparisonBoard({
                       >
                         Official tables ↗
                       </a>
+                    ) : null}
+                    {sourceStamp ? (
+                      <ReportProblemButton
+                        compact
+                        board="ks4"
+                        stamp={{
+                          ...sourceStamp,
+                          deepLink:
+                            schoolDeepLink(school) || sourceStamp.deepLink,
+                        }}
+                        urn={school.urn}
+                        schoolName={school.name}
+                      />
                     ) : null}
                   </div>
                 </th>

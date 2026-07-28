@@ -102,6 +102,18 @@ The site button **A school is missing** searches the live index first, then can 
 
 The `Force school data refresh` workflow still enforces **one successful refresh per UTC day** even if the token is reused.
 
+## Report a problem (data challenges)
+
+Comparison boards show a **source stamp** (period / as-at / dataset + official deep link) and a **Report a problem** control. Challenges queue a private review item via `repository_dispatch` event `data-challenge` (same baked `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN` as missing-school).
+
+Optional private intake (recommended so notes/emails stay off public issues):
+
+1. Create a **private** intake repository
+2. Add secrets on this repo: `CHALLENGE_INTAKE_REPO` (`owner/name`) and `CHALLENGE_INTAKE_TOKEN` (PAT that can open issues there)
+3. Ensure the intake repo has (or can create) a `data-challenge` label
+
+Without those secrets, the workflow opens an issue on this repository with label `data-challenge`. Optional reporter email is kept out of the public issue body and written only to the Actions job summary.
+
 ```bash
 python3 scripts/harvest-schools.py
 python3 scripts/harvest-schools.py --sample 60
