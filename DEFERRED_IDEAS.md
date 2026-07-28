@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-28 (Hampshire depth pass rebase onto provenance).
+Last reviewed from agent chat: 2026-07-28 (on-demand LA pack first slice + area-library learning loop notes).
 
 ## How to use
 
@@ -17,15 +17,28 @@ Last reviewed from agent chat: 2026-07-28 (Hampshire depth pass rebase onto prov
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Data-quality gap flags** | Surface known fetch/join gaps on boards (e.g. missing Ofsted as-at, nil KS4) beside provenance — not the same as user challenges. | Not started | Trust infra follow-on |
-| **On-demand LA packs beyond Hampshire** | Keep Hampshire pre-built; for other LAs, fetch/cache EY (and later stage) packs on user request — evolve “school is missing” — instead of national pre-harvest. | Not started | User economic path + README |
+| **Data-quality gap flags** | Surface known fetch/join gaps on boards (e.g. missing Ofsted as-at, nil KS4) beside provenance — not the same as user challenges. | Not started (open PR #39 may land separately) | Trust infra follow-on |
+
+### On-demand LA packs (roadmap)
+
+Hampshire stays the **maintained root**. Other LAs build into `public/data/packs/{slug}/` on request. **Do not** port Value_Investor’s agent research ingest wholesale — Schoolside stays deterministic official joins; borrow only ops patterns (gap → bounded fetch → health / completeness).
+
+| Step | Notes | Status | When |
+| --- | --- | --- | --- |
+| **1. Schools pack scaffold** | `--la` harvest with early EES LA filter, `build-la-pack.py`, manifest, `la-pack` workflow, UI “Request area pack” | **In progress (this PR)** | Now |
+| **2. Load / merge packs in UI** | App loads Hampshire by default; hydrate shortlist/map from a ready pack when user selects that LA (or postcode maps into it) | Not started | After #1 usable |
+| **3. Pack depth: GIAS + phonics + KS4** | Extend pack builder with `enrich-secondaries --la`, phonics LA benches, indie/KS4 enrich scoped to pack index | Not started | After UI load |
+| **4. Pack depth: EY + childminders** | Parameterise EY/childminder harvests with `--la` into the same pack folder | Not started | After schools UX works |
+| **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
+| **6. Pack prune / TTL** | Drop unused packs from repo/Pages when stale to bound size | Not started | When pack count grows |
+| **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. | Deferred (after packs are loadable) | When multiple packs exist + usage signals |
 
 ### Product path / scope
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
 | **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
-| **Second geography** | Widen to another LA only when Hampshire usage justifies cost. Southampton/Portsmouth noted as possible childminder widen (separate unitaries). | Deferred | Agent pathway |
+| **Second geography** | Widen to another LA only when Hampshire usage justifies cost. Southampton/Portsmouth noted as possible childminder widen (separate unitaries). Prefer on-demand packs before promoting a second maintained seed. | Deferred | Agent pathway |
 
 ### Early years / childcare
 
@@ -80,5 +93,6 @@ For orientation only — not backlog:
 - UI declutter: filters only in hero; path-scoped Side by side tabs; visit pack + checklist on childcare paths  
 - Hampshire age-climb maintained harvest (`harvest:hampshire` / seed-LA trim); national `harvest` kept as scaffold  
 - **Source provenance stamps** on compare boards + **Report a problem** challenge intake (`data-challenge` workflow; prefer private intake repo)  
+- **On-demand LA pack scaffold** (`build-la-pack.py`, `public/data/packs/`, `la-pack` dispatch) — UI load/merge and EY depth still follow-on  
 
 See `README.md` North Star and Initial scope for governing priorities.

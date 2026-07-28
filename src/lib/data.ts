@@ -199,3 +199,97 @@ export async function requestForceRefresh(school: string): Promise<{
     };
   }
 }
+
+const LA_PACK_LOCAL_KEY = "schoolside.laPackRequestDate";
+
+export function hasLocalLaPackRequestToday(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(LA_PACK_LOCAL_KEY) === utcToday();
+}
+
+export function markLocalLaPackRequestToday(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(LA_PACK_LOCAL_KEY, utcToday());
+}
+
+/**
+ * Queue an on-demand LA pack build (repository_dispatch `la-pack`).
+ * Reuses the missing-school dispatch token. Workflow enforces one pack/day.
+ */
+export async function requestLaPack(localAuthority: string): Promise<{
+  ok: boolean;
+  status: "queued" | "limited" | "unavailable" | "error";
+  detail: string;
+}> {
+  const la = localAuthority.trim().replace(/\s+/g, " ");
+  if (!la) {
+    return {
+      ok: false,
+      status: "error",
+      detail: "Enter a local authority name (exact DfE label, e.g. Surrey).",
+    };
+  }
+
+  if (hasLocalLaPackRequestToday()) {
+    return {
+      ok: false,
+      status: "limited",
+      detail: "This browser already requested an area pack today. Try again tomorrow.",
+    };
+  }
+
+  const token = process.env.NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN;
+  const repo =
+    process.env.NEXT_PUBLIC_GITHUB_REPO || "jamiefuller320/Comparison-tool";
+
+  if (!token) {
+    markLocalLaPackRequestToday();
+    return {
+      ok: true,
+      status: "unavailable",
+      detail:
+        "Pack requests are not configured for this deploy. Ask the maintainer to set MISSING_SCHOOL_DISPATCH_TOKEN.",
+    };
+  }
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
+      method: "POST",
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event_type: "la-pack",
+        client_payload: {
+          localAuthority: la.slice(0, 120),
+          requestedAt: new Date().toISOString(),
+        },
+      }),
+    });
+
+    if (res.status === 204 || res.ok) {
+      markLocalLaPackRequestToday();
+      return {
+        ok: true,
+        status: "queued",
+        detail: `Pack queued for ${la}. When the build finishes and deploys, it will appear under /data/packs/ — Hampshire remains the live default.`,
+      };
+    }
+
+    const body = await res.text();
+    return {
+      ok: false,
+      status: "error",
+      detail: `Could not queue pack (${res.status}). ${body.slice(0, 180)}`,
+    };
+  } catch {
+    return {
+      ok: false,
+      status: "error",
+      detail: "Network error while requesting an area pack. Try again later.",
+    };
+  }
+}

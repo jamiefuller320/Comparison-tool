@@ -21,6 +21,7 @@
     "harvest:ey": "python3 scripts/harvest-ey-providers.py && python3 scripts/harvest-childminders.py && python3 scripts/enrich-ey-schools.py",
     "harvest:childminders": "python3 scripts/harvest-childminders.py",
     "history:ks2": "python3 scripts/extract-ks2-history.py",
+    "pack:la": "python3 scripts/build-la-pack.py",
     "test:phonics": "npx --yes tsx scripts/test-phonics.mjs",
     "test:tour": "npx --yes tsx scripts/test-tour.mjs",
     "test:seed-scope": "npx --yes tsx scripts/test-seed-scope.mjs",
@@ -35,7 +36,8 @@
     "test:ks2-history": "npx --yes tsx scripts/test-ks2-history.mjs",
     "test:compare-paths": "npx --yes tsx scripts/test-compare-paths.mjs",
     "test:source-stamp": "npx --yes tsx scripts/test-source-stamp.mjs",
-    "test:sector-benches": "python3 scripts/test-sector-benches.py"
+    "test:sector-benches": "python3 scripts/test-sector-benches.py",
+    "test:la-packs": "npx --yes tsx scripts/test-la-packs.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

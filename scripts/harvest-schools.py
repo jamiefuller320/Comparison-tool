@@ -111,9 +111,12 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from seed_scope import (  # noqa: E402
     SEED_LOCAL_AUTHORITY,
-    filter_schools_to_seed_la,
+    filter_schools_to_la,
+    is_local_authority,
     is_seed_local_authority,
-    trim_la_benchmarks,
+    normalize_la_name,
+    resolve_la_from_ees_meta,
+    trim_la_benchmarks_for,
 )
 
 OUT_DIR = ROOT / "public" / "data"
@@ -242,7 +245,11 @@ def decode_info_meta(meta: dict) -> tuple[dict[str, str], dict[str, dict[str, st
     return fid_to_col, col_opts, iid_to_col
 
 
-def harvest_profiles(sample_urns: set[str] | None = None) -> dict[str, dict]:
+def harvest_profiles(
+    sample_urns: set[str] | None = None,
+    *,
+    la_location_id: str | None = None,
+) -> dict[str, dict]:
     print("Fetching school information meta…", flush=True)
     meta = get_json(f"{BASE}/data-sets/{DATASET_IDS['schoolInformation']}/meta")
     sch_map, la_map = build_location_maps(meta)
@@ -250,9 +257,13 @@ def harvest_profiles(sample_urns: set[str] | None = None) -> dict[str, dict]:
 
     indicators = ",".join(INFO_INDICATORS.values())
     print("Fetching school information rows…", flush=True)
+    params: dict[str, str] = {"indicators": indicators}
+    if la_location_id:
+        params["locations.eq"] = f"LA|id|{la_location_id}"
+        print(f"  early LA filter: locations.eq=LA|id|{la_location_id}", flush=True)
     rows = fetch_pages(
         DATASET_IDS["schoolInformation"],
-        {"indicators": indicators},
+        params,
     )
 
     profiles: dict[str, dict] = {}
@@ -677,22 +688,64 @@ def main() -> int:
             "and England + seed-LA benchmarks"
         ),
     )
+    parser.add_argument(
+        "--la",
+        default="",
+        help=(
+            "Harvest a single named local authority (DfE label, e.g. Surrey). "
+            "Writes under --out-dir when set; use for on-demand packs."
+        ),
+    )
+    parser.add_argument(
+        "--out-dir",
+        default="",
+        help=(
+            "Directory for schools-index.json / schools-directory.json "
+            "(default: public/data). On-demand packs use public/data/packs/{slug}."
+        ),
+    )
     args = parser.parse_args()
     years = [y.strip() for y in args.years.split(",") if y.strip()]
     latest = years[0]
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    scope_la = normalize_la_name(args.la) if args.la else (
+        SEED_LOCAL_AUTHORITY if args.seed_la else ""
+    )
+    if args.seed_la and args.la and not is_local_authority(args.la, SEED_LOCAL_AUTHORITY):
+        raise SystemExit("--seed-la and --la disagree; use one scope")
 
-    # Always pull full profiles first (needed for directory + sample selection)
-    profiles = harvest_profiles(sample_urns=None)
-    if args.seed_la:
+    out_dir = Path(args.out_dir) if args.out_dir else OUT_DIR
+    if not out_dir.is_absolute():
+        out_dir = ROOT / out_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    la_location_id: str | None = None
+    canonical_la = scope_la
+    if scope_la:
+        print(f"Resolving EES LA option for {scope_la!r}…", flush=True)
+        info_meta = get_json(f"{BASE}/data-sets/{DATASET_IDS['schoolInformation']}/meta")
+        resolved = resolve_la_from_ees_meta(info_meta, scope_la)
+        if not resolved or not resolved.get("id"):
+            raise SystemExit(
+                f"Unknown local authority {scope_la!r} in DfE schoolInformation meta. "
+                "Use the exact LA label (e.g. Hampshire, Surrey, Southampton)."
+            )
+        la_location_id = resolved["id"]
+        canonical_la = resolved["label"] or scope_la
+        print(
+            f"  matched LA id={la_location_id} label={canonical_la!r}",
+            flush=True,
+        )
+
+    profiles = harvest_profiles(sample_urns=None, la_location_id=la_location_id)
+    if canonical_la:
         profiles = {
             urn: profile
             for urn, profile in profiles.items()
-            if is_seed_local_authority(profile.get("localAuthority"))
+            if is_local_authority(profile.get("localAuthority"), canonical_la)
         }
         print(
-            f"Seed-LA mode: {len(profiles)} {SEED_LOCAL_AUTHORITY} profiles",
+            f"Scoped mode: {len(profiles)} {canonical_la} profiles",
             flush=True,
         )
     sample_urns: set[str] | None = None
@@ -702,14 +755,15 @@ def main() -> int:
         profiles = {u: profiles[u] for u in sample_urns if u in profiles}
         sample_locs = {p["locationId"] for p in profiles.values() if p.get("locationId")}
         print(f"Sample mode: {len(profiles)} schools", flush=True)
+    elif canonical_la:
+        sample_locs = {p["locationId"] for p in profiles.values() if p.get("locationId")}
 
     perf = harvest_performance(latest, sample_location_ids=sample_locs)
     benchmarks = harvest_benchmarks(latest)
     schools = merge_index(profiles, perf, latest)
-    if args.seed_la:
-        schools = filter_schools_to_seed_la(schools)
+    if canonical_la:
+        schools = filter_schools_to_la(schools, canonical_la)
 
-    # Directory (search index) — lean fields
     directory = []
     for s in schools:
         row = {
@@ -732,8 +786,8 @@ def main() -> int:
         name: {k: v for k, v in metrics.items() if v is not None}
         for name, metrics in (benchmarks["localAuthorities"] or {}).items()
     }
-    if args.seed_la:
-        local_authorities = trim_la_benchmarks(local_authorities)
+    if canonical_la:
+        local_authorities = trim_la_benchmarks_for(local_authorities, canonical_la)
 
     note = (
         "Institution-level Key Stage 2 attainment from the DfE Explore "
@@ -741,11 +795,18 @@ def main() -> int:
         "not school governance. Progress measures are sparse for 2024/25 "
         "because of missing KS1 baselines."
     )
-    if args.seed_la:
+    if canonical_la == SEED_LOCAL_AUTHORITY and (args.seed_la or not args.la):
         note += (
             f" Maintained dataset: {SEED_LOCAL_AUTHORITY} age-climb "
             "(national full harvest remains available via npm run harvest)."
         )
+    elif canonical_la:
+        note += (
+            f" On-demand local authority pack: {canonical_la} "
+            f"(seed maintained set remains {SEED_LOCAL_AUTHORITY})."
+        )
+
+    scope_fields = {"maintainedScope": canonical_la} if canonical_la else {}
 
     payload = {
         "generatedAt": time.strftime("%Y-%m-%d"),
@@ -755,11 +816,7 @@ def main() -> int:
             "datasets": DATASET_IDS,
             "primarySite": "https://www.compare-school-performance.service.gov.uk/",
             "note": note,
-            **(
-                {"maintainedScope": SEED_LOCAL_AUTHORITY}
-                if args.seed_la
-                else {}
-            ),
+            **scope_fields,
         },
         "benchmarks": {
             "england": england,
@@ -772,25 +829,21 @@ def main() -> int:
             "localAuthorityCount": len(
                 {s.get("localAuthority") for s in schools if s.get("localAuthority")}
             ),
-            **(
-                {"maintainedScope": SEED_LOCAL_AUTHORITY}
-                if args.seed_la
-                else {}
-            ),
+            **scope_fields,
         },
-        **({"maintainedScope": SEED_LOCAL_AUTHORITY} if args.seed_la else {}),
+        **scope_fields,
     }
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
     SRC_DATA.mkdir(parents=True, exist_ok=True)
-    schools_path = OUT_DIR / "schools-index.json"
-    directory_path = OUT_DIR / "schools-directory.json"
+    schools_path = out_dir / "schools-index.json"
+    directory_path = out_dir / "schools-directory.json"
     schools_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
     directory_path.write_text(
         json.dumps(
             {
                 "generatedAt": payload["generatedAt"],
                 "period": latest,
+                **scope_fields,
                 "schools": directory,
             },
             separators=(",", ":"),
@@ -798,25 +851,43 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    # Human-readable summary sidecar (also mirrored under src/data for docs)
+    try:
+        schools_rel = str(schools_path.relative_to(ROOT))
+        directory_rel = str(directory_path.relative_to(ROOT))
+        out_rel = str(out_dir.relative_to(ROOT))
+    except ValueError:
+        schools_rel = str(schools_path)
+        directory_rel = str(directory_path)
+        out_rel = str(out_dir)
+
     summary = {
         "generatedAt": payload["generatedAt"],
         "period": latest,
         "schoolCount": payload["stats"]["schoolCount"],
         "withRwm": payload["stats"]["withRwm"],
         "localAuthorityCount": payload["stats"]["localAuthorityCount"],
-        "files": [f"public/data/{schools_path.name}", f"public/data/{directory_path.name}"],
+        "files": [schools_rel, directory_rel],
         "sampleMode": bool(args.sample),
         "seedLaMode": bool(args.seed_la),
-        "maintainedScope": SEED_LOCAL_AUTHORITY if args.seed_la else None,
+        "onDemandLa": canonical_la if args.la else None,
+        "maintainedScope": canonical_la or None,
+        "outDir": out_rel,
         "indexBytes": schools_path.stat().st_size,
     }
-    for dest in (OUT_DIR / "harvest-summary.json", SRC_DATA / "harvest-summary.json"):
-        dest.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (out_dir / "harvest-summary.json").write_text(
+        json.dumps(summary, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    if out_dir.resolve() == OUT_DIR.resolve():
+        (SRC_DATA / "harvest-summary.json").write_text(
+            json.dumps(summary, indent=2) + "\n",
+            encoding="utf-8",
+        )
     print(json.dumps(summary, indent=2))
     print(f"Wrote {schools_path} ({schools_path.stat().st_size // 1024} KB)")
     print(f"Wrote {directory_path} ({directory_path.stat().st_size // 1024} KB)")
     return 0
+
 
 
 if __name__ == "__main__":
