@@ -277,7 +277,7 @@ export async function requestLaPack(localAuthority: string): Promise<{
     return {
       ok: false,
       status: "limited",
-      detail: "This browser already requested an area pack today. Try again tomorrow.",
+      detail: "This browser already requested area coverage today. Try again tomorrow.",
     };
   }
 
@@ -291,7 +291,7 @@ export async function requestLaPack(localAuthority: string): Promise<{
       ok: true,
       status: "unavailable",
       detail:
-        "Pack requests are not configured for this deploy. Ask the maintainer to set MISSING_SCHOOL_DISPATCH_TOKEN.",
+        "Area coverage requests are not configured for this deploy. Ask the maintainer to set MISSING_SCHOOL_DISPATCH_TOKEN.",
     };
   }
 
@@ -318,7 +318,7 @@ export async function requestLaPack(localAuthority: string): Promise<{
       return {
         ok: true,
         status: "queued",
-        detail: `Pack queued for ${la}. When the build finishes and deploys, it will appear under /data/packs/ — Hampshire remains the live default.`,
+        detail: `Queued coverage for ${la}. When the build finishes and deploys, those schools appear on the map and in search automatically — Hampshire stays the maintained root.`,
       };
     }
 
@@ -332,7 +332,7 @@ export async function requestLaPack(localAuthority: string): Promise<{
     return {
       ok: false,
       status: "error",
-      detail: "Network error while requesting an area pack. Try again later.",
+      detail: "Network error while requesting area coverage. Try again later.",
     };
   }
 }

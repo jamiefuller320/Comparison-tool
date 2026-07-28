@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-28 (LA pack UI load/merge).
+Last reviewed from agent chat: 2026-07-28 (silent pack merge — packs not user-visible).
 
 ## How to use
 
@@ -21,13 +21,13 @@ Last reviewed from agent chat: 2026-07-28 (LA pack UI load/merge).
 
 ### On-demand LA packs (roadmap)
 
-Hampshire stays the **maintained root**. Other LAs build into `public/data/packs/{slug}/` on request. **Do not** port Value_Investor’s agent research ingest wholesale — Schoolside stays deterministic official joins; borrow only ops patterns (gap → bounded fetch → health / completeness).
+Hampshire stays the **maintained root**. Other LAs build into `public/data/packs/{slug}/` on request. Packs are a **collation / harvest unit**, not a user-facing mode — ready packs merge silently into map and search. **Do not** port Value_Investor’s agent research ingest wholesale — Schoolside stays deterministic official joins; borrow only ops patterns (gap → bounded fetch → health / completeness).
 
 | Step | Notes | Status | When |
 | --- | --- | --- | --- |
-| **1. Schools pack scaffold** | `--la` harvest with early EES LA filter, `build-la-pack.py`, manifest, `la-pack` workflow, UI “Request area pack” | Shipped (#40) | Done |
-| **2. Load / merge packs in UI** | App loads Hampshire by default; hydrate shortlist/map from a ready pack when user selects that LA (`?pack=` + picker) | **In progress (this PR)** | Now |
-| **3. Pack depth: GIAS + phonics + KS4** | Extend pack builder with `enrich-secondaries --la`, phonics LA benches, indie/KS4 enrich scoped to pack index | Not started | After UI load |
+| **1. Schools pack scaffold** | `--la` harvest with early EES LA filter, `build-la-pack.py`, manifest, `la-pack` workflow, UI “Request area coverage” | Shipped (#40) | Done |
+| **2. Silent load / merge** | App loads Hampshire + all ready packs into one option set; no picker / `?pack=` | **In progress (this PR)** | Now |
+| **3. Pack depth: GIAS + phonics + KS4** | Extend pack builder with `enrich-secondaries --la`, phonics LA benches, indie/KS4 enrich scoped to pack index | Not started | After silent merge |
 | **4. Pack depth: EY + childminders** | Parameterise EY/childminder harvests with `--la` into the same pack folder | Not started | After schools UX works |
 | **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
 | **6. Pack prune / TTL** | Drop unused packs from repo/Pages when stale to bound size | Not started | When pack count grows |
@@ -81,6 +81,7 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 | Idea | What happened |
 | --- | --- |
 | **Nested Early years sliders (Nurseries / Childminders)** | Shipped, then removed when Childminders became a top-level **Stages & care** chip — wrap-around stays independently selectable without nesting under EY. |
+| **User-facing Area packs picker / `?pack=`** | Shipped in #41, superseded by silent merge of all ready packs into map/search. Packs remain the backend collation unit for which LAs to harvest. |
 
 ## Related shipped baseline (context)
 
@@ -93,6 +94,6 @@ For orientation only — not backlog:
 - UI declutter: filters only in hero; path-scoped Side by side tabs; visit pack + checklist on childcare paths  
 - Hampshire age-climb maintained harvest (`harvest:hampshire` / seed-LA trim); national `harvest` kept as scaffold  
 - **Source provenance stamps** on compare boards + **Report a problem** challenge intake (`data-challenge` workflow; prefer private intake repo)  
-- **On-demand LA pack scaffold** (`build-la-pack.py`, `public/data/packs/`, `la-pack` dispatch) + **UI load/merge** of ready packs onto the Hampshire seed  
+- **On-demand LA pack scaffold** (`build-la-pack.py`, `public/data/packs/`, `la-pack` dispatch) + **silent merge** of ready packs onto the Hampshire seed (no user-facing pack mode)  
 
 See `README.md` North Star and Initial scope for governing priorities.

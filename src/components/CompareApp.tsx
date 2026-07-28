@@ -20,17 +20,9 @@ import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { ComparePathTabs } from "@/components/ComparePathTabs";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
-import { LaPackPicker } from "@/components/LaPackPicker";
-import {
-  loadLaPackManifest,
-  loadLaPackSchoolsIndex,
-} from "@/lib/data";
 import {
   ACTIVE_PACK_STORAGE_KEY,
-  listReadyPacks,
-  mergeSchoolsIndexWithPack,
-  type LaPackManifest,
-  type LaPackManifestEntry,
+  type SchoolsIndexWithPack,
 } from "@/lib/laPacks";
 import { ProductTour } from "@/components/ProductTour";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
@@ -51,7 +43,6 @@ import {
   defaultPhasesForSectors,
   migrateStagesFromLegacyEySettings,
   normalizePhaseIds,
-  phasesFromAgeRange,
   schoolMatchesPhases,
   schoolOffersKs1,
   schoolOffersKs2,
@@ -127,28 +118,19 @@ function PathSummaries({
 }
 
 export function CompareApp({
-  index: seedIndex,
+  index,
   eyIndex = null,
   childmindersIndex = null,
   onIndexReload,
 }: {
-  index: SchoolsIndex;
+  /** Hampshire seed with any ready area packs already merged in. */
+  index: SchoolsIndex | SchoolsIndexWithPack;
   eyIndex?: EyProvidersIndex | null;
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
 }) {
-  const [packManifest, setPackManifest] = useState<LaPackManifest | null>(null);
-  const [activePack, setActivePack] = useState<LaPackManifestEntry | null>(null);
-  const [packIndex, setPackIndex] = useState<SchoolsIndex | null>(null);
-  const [packBusy, setPackBusy] = useState(false);
-  const [packError, setPackError] = useState<string | null>(null);
-  const [packHydrated, setPackHydrated] = useState(false);
-  const [packHint, setPackHint] = useState<string | null>(null);
-
-  const index = useMemo(() => {
-    if (!activePack || !packIndex) return seedIndex;
-    return mergeSchoolsIndexWithPack(seedIndex, packIndex, activePack);
-  }, [seedIndex, packIndex, activePack]);
+  const collatedPackLabels =
+    (index as SchoolsIndexWithPack).collatedPackLabels ?? [];
 
   const byUrn = useMemo(() => {
     const map = new Map(index.schools.map((s) => [s.urn, s]));
@@ -168,120 +150,6 @@ export function CompareApp({
   const [hydrated, setHydrated] = useState(false);
   const [sectorNote, setSectorNote] = useState<string | null>(null);
   const [activePath, setActivePath] = useState<ComparePathId | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    void loadLaPackManifest(fetch, false).then((manifest) => {
-      if (cancelled) return;
-      setPackManifest(manifest);
-      const params = new URLSearchParams(window.location.search);
-      const fromUrl = params.get("pack");
-      const fromStore =
-        typeof window !== "undefined"
-          ? window.localStorage.getItem(ACTIVE_PACK_STORAGE_KEY)
-          : null;
-      const wanted = fromUrl || fromStore;
-      const ready = listReadyPacks(manifest);
-      const match = wanted
-        ? ready.find((p) => p.slug === wanted)
-        : undefined;
-      if (match) {
-        setActivePack(match);
-      }
-      setPackHydrated(true);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!packHydrated) return;
-    if (!activePack) {
-      setPackIndex(null);
-      setPackError(null);
-      setPackBusy(false);
-      setPackHint(null);
-      return;
-    }
-    let cancelled = false;
-    setPackBusy(true);
-    setPackError(null);
-    void loadLaPackSchoolsIndex(activePack.slug, fetch, true)
-      .then((data) => {
-        if (cancelled) return;
-        if (!data) {
-          setPackError(
-            `Could not load the ${activePack.localAuthority} pack. It may still be building.`,
-          );
-          setPackIndex(null);
-          setPackHint(null);
-          return;
-        }
-        setPackIndex(data);
-
-        const packSchools = data.schools || [];
-        const neededStages = new Set<PhaseId>();
-        for (const school of packSchools) {
-          for (const phase of phasesFromAgeRange(school.ageRange)) {
-            neededStages.add(phase);
-          }
-        }
-        const visibleUnderCurrent = packSchools.some((school) =>
-          schoolMatchesPhases(school, stages),
-        );
-        if (!visibleUnderCurrent && neededStages.size) {
-          setStages((prev) => {
-            const next = new Set<PhaseId>(prev);
-            for (const phase of neededStages) next.add(phase);
-            return [...next];
-          });
-        }
-
-        const sample = packSchools.find((s) => s.postcode) || packSchools[0];
-        if (sample) {
-          const stageLabel = phasesFromAgeRange(sample.ageRange)
-            .map((id) => id.toUpperCase())
-            .join(" · ");
-          setPackHint(
-            sample.postcode
-              ? `${sample.name} is in this pack (${stageLabel || "school"}). Centre the map on ${sample.postcode}, or search the name below.`
-              : `${sample.name} is in this pack. Search for it below — turn on matching stages if needed.`,
-          );
-        } else {
-          setPackHint(
-            `${activePack.localAuthority} pack loaded. Search below once the matching stages are on.`,
-          );
-        }
-      })
-      .catch((err: Error) => {
-        if (cancelled) return;
-        setPackError(err.message || "Could not load area pack");
-        setPackIndex(null);
-        setPackHint(null);
-      })
-      .finally(() => {
-        if (!cancelled) setPackBusy(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [activePack, packHydrated]);
-  // Intentionally omit `stages` from deps: we only auto-expand stages once when the pack loads.
-
-  useEffect(() => {
-    if (!packHydrated || !hydrated) return;
-    // Re-apply shortlist once pack schools are available.
-    const params = new URLSearchParams(window.location.search);
-    const raw = params.get("schools") || params.get("urns");
-    if (!raw) return;
-    const urns = raw
-      .split(",")
-      .map((u) => u.trim())
-      .filter((u) => byUrn.has(u))
-      .slice(0, 4);
-    if (urns.length) setSelected(urns);
-  }, [byUrn, packHydrated, hydrated, packIndex]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -323,31 +191,15 @@ export function CompareApp({
     } else {
       url.searchParams.set("sectors", sectors.join(","));
     }
-    if (activePack?.slug) url.searchParams.set("pack", activePack.slug);
-    else url.searchParams.delete("pack");
+    // Legacy ?pack= from older builds — packs are no longer a user mode.
+    url.searchParams.delete("pack");
     url.searchParams.delete("eySettings");
     url.searchParams.delete("ey");
     window.history.replaceState({}, "", url.toString());
     if (typeof window !== "undefined") {
-      if (activePack?.slug) {
-        window.localStorage.setItem(ACTIVE_PACK_STORAGE_KEY, activePack.slug);
-      } else {
-        window.localStorage.removeItem(ACTIVE_PACK_STORAGE_KEY);
-      }
+      window.localStorage.removeItem(ACTIVE_PACK_STORAGE_KEY);
     }
-  }, [selected, stages, sectors, hydrated, activePack]);
-
-  function activatePack(pack: LaPackManifestEntry) {
-    setActivePack(pack);
-    setPackError(null);
-  }
-
-  function clearPack() {
-    setActivePack(null);
-    setPackIndex(null);
-    setPackError(null);
-    setPackHint(null);
-  }
+  }, [selected, stages, sectors, hydrated]);
 
   const selectedSchools: SchoolRecord[] = selected
     .map((urn) => byUrn.get(urn))
@@ -545,6 +397,7 @@ export function CompareApp({
     });
   }
 
+  /** Stage + sector filter for search / shortlist building. */
   const filteredSchools = useMemo(() => {
     const schoolStages = schoolStageIds(stages);
     const fromSchools =
@@ -555,6 +408,26 @@ export function CompareApp({
               schoolMatchesPhases(s, stages) &&
               schoolMatchesSectors(s, sectors),
           );
+    const seen = new Set(fromSchools.map((s) => s.urn));
+    const extra = [
+      ...(wantsEyMetrics(stages) ? (eyIndex?.providers ?? []) : []),
+      ...(wantsChildminders(stages)
+        ? (childmindersIndex?.providers ?? [])
+        : []),
+    ].filter((p) => !seen.has(p.urn));
+    if (!extra.length) return fromSchools;
+    return [...extra, ...fromSchools];
+  }, [index.schools, eyIndex, childmindersIndex, stages, sectors]);
+
+  /**
+   * Map shows the full collated school option set for the selected sector(s),
+   * across stages — packs are already merged into `index`. Directory categories
+   * (EY / childminders) still follow the stage chips.
+   */
+  const mapSchools = useMemo(() => {
+    const fromSchools = index.schools.filter((s) =>
+      schoolMatchesSectors(s, sectors),
+    );
     const seen = new Set(fromSchools.map((s) => s.urn));
     const extra = [
       ...(wantsEyMetrics(stages) ? (eyIndex?.providers ?? []) : []),
@@ -796,13 +669,14 @@ export function CompareApp({
     <>
       <ProductTour />
       <HomePostcodeExplorer
-        schools={filteredSchools}
+        schools={mapSchools}
         selectedUrns={selected}
         onToggle={toggleSchool}
         stageFilter={stages}
         onStageFilterChange={changeStages}
         sectorFilter={sectors}
         onSectorFilterChange={changeSectors}
+        mapIgnoresStageFilter
       />
 
       <section className="section" id="compare">
@@ -815,22 +689,12 @@ export function CompareApp({
             </p>
             <p className="footnote data-slim-line">
               {SEED_GEOGRAPHY_LABEL} maintained set
-              {activePack
-                ? ` + ${activePack.localAuthority} pack`
+              {collatedPackLabels.length
+                ? ` · also collated: ${collatedPackLabels.join(", ")}`
                 : ""}{" "}
-              · {index.period} · refreshed {seedIndex.generatedAt}
+              · {index.period} · refreshed {index.generatedAt}
             </p>
           </div>
-
-          <LaPackPicker
-            manifest={packManifest}
-            activeSlug={activePack?.slug ?? null}
-            busy={packBusy}
-            error={packError}
-            hint={packHint}
-            onActivate={activatePack}
-            onClear={clearPack}
-          />
 
           <MissingSchoolButton
             schools={index.schools}

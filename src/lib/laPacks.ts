@@ -11,7 +11,7 @@ export const SEED_LOCAL_AUTHORITY = "Hampshire";
 /** Human label for UI / docs. */
 export const SEED_GEOGRAPHY_LABEL = "Hampshire";
 
-/** localStorage key for the last activated on-demand pack slug. */
+/** @deprecated Packs are no longer a user-facing mode; kept for clearing legacy storage. */
 export const ACTIVE_PACK_STORAGE_KEY = "schoolside.activeLaPack";
 
 export function normalizeLaName(name?: string | null): string {
@@ -81,8 +81,11 @@ export interface LaPackManifest {
 
 export type SchoolsIndexWithPack = SchoolsIndex & {
   maintainedScope?: string;
+  /** @deprecated Prefer collatedPackLabels — packs are not a user-facing mode. */
   activePackSlug?: string;
+  /** @deprecated Prefer collatedPackLabels */
   activePackLabel?: string;
+  collatedPackLabels?: string[];
 };
 
 export function listReadyPacks(
@@ -115,38 +118,66 @@ function mergePhonics(
 }
 
 /**
- * Overlay an on-demand LA pack onto the Hampshire maintained seed index.
- * Pack schools win on URN collision; England benches stay from the seed;
- * LA / phonics benches are unioned.
+ * Overlay one or more on-demand LA packs onto the Hampshire maintained seed.
+ * Pack schools win on URN collision; England / sector benches stay from the seed;
+ * LA / phonics benches are unioned. Packs are a collation unit — not a user mode.
  */
 export function mergeSchoolsIndexWithPack(
   seed: SchoolsIndex,
   pack: SchoolsIndex,
   packMeta?: Pick<LaPackManifestEntry, "slug" | "localAuthority">,
 ): SchoolsIndexWithPack {
-  const byUrn = new Map(seed.schools.map((s) => [s.urn, s]));
-  for (const school of pack.schools) {
-    byUrn.set(school.urn, school);
+  return mergeSchoolsIndexWithPacks(seed, [
+    { index: pack, meta: packMeta },
+  ]);
+}
+
+export function mergeSchoolsIndexWithPacks(
+  seed: SchoolsIndex,
+  packs: Array<{
+    index: SchoolsIndex;
+    meta?: Pick<LaPackManifestEntry, "slug" | "localAuthority">;
+  }>,
+): SchoolsIndexWithPack {
+  if (!packs.length) {
+    return { ...seed };
   }
+
+  const byUrn = new Map(seed.schools.map((s) => [s.urn, s]));
+  let localAuthorities = { ...(seed.benchmarks.localAuthorities || {}) };
+  let phonics = seed.benchmarks.phonics;
+  const packLabels: string[] = [];
+
+  for (const { index: pack, meta } of packs) {
+    for (const school of pack.schools) {
+      byUrn.set(school.urn, school);
+    }
+    localAuthorities = {
+      ...localAuthorities,
+      ...(pack.benchmarks.localAuthorities || {}),
+    };
+    phonics = mergePhonics(phonics, pack.benchmarks.phonics);
+    const label =
+      meta?.localAuthority ||
+      (pack as SchoolsIndexWithPack).maintainedScope ||
+      meta?.slug;
+    if (label) packLabels.push(label);
+  }
+
   const schools = [...byUrn.values()];
-  const packLabel =
-    packMeta?.localAuthority ||
-    (pack as SchoolsIndexWithPack).maintainedScope ||
-    "area pack";
+  const noteExtra = packLabels.length
+    ? ` Collated area coverage also includes: ${packLabels.join(", ")}.`
+    : "";
 
   return {
     ...seed,
     schools,
     benchmarks: {
       ...seed.benchmarks,
-      localAuthorities: {
-        ...(seed.benchmarks.localAuthorities || {}),
-        ...(pack.benchmarks.localAuthorities || {}),
-      },
-      phonics: mergePhonics(seed.benchmarks.phonics, pack.benchmarks.phonics),
-      // Prefer seed sector benches (Hampshire-sized). Pack KS4 depth is a later step.
-      independent: seed.benchmarks.independent ?? pack.benchmarks.independent,
-      stateKs4: seed.benchmarks.stateKs4 ?? pack.benchmarks.stateKs4,
+      localAuthorities,
+      phonics,
+      independent: seed.benchmarks.independent,
+      stateKs4: seed.benchmarks.stateKs4,
     },
     stats: {
       ...seed.stats,
@@ -159,11 +190,8 @@ export function mergeSchoolsIndexWithPack(
     },
     source: {
       ...seed.source,
-      note: `${seed.source.note} Active on-demand pack: ${packLabel}${
-        packMeta?.slug ? ` (${packMeta.slug})` : ""
-      }.`,
+      note: `${seed.source.note}${noteExtra}`,
     },
-    activePackSlug: packMeta?.slug,
-    activePackLabel: packLabel,
+    collatedPackLabels: packLabels,
   };
 }
