@@ -22,9 +22,15 @@ import {
   resolveSchoolSector,
 } from "@/lib/sectors";
 import { BoardProvenance } from "@/components/BoardProvenance";
+import { DataGapFlags } from "@/components/DataGapFlags";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
+import {
+  gapsForKs4Board,
+  gapsForKs4OfstedAsAt,
+  schoolGaps,
+} from "@/lib/dataGaps";
 
 const CHART_KEYS = [
   "engMath94Percent",
@@ -63,6 +69,7 @@ export function IndependentComparisonBoard({
   benchmark,
   benchmarkLabel = "Sector mean",
   sourceStamp,
+  ofstedStateAsAt,
 }: {
   schools: SchoolRecord[];
   /** @deprecated Prefer `benchmark` — kept for older call sites. */
@@ -70,8 +77,13 @@ export function IndependentComparisonBoard({
   benchmark?: IndependentBenchmarkSet;
   benchmarkLabel?: string;
   sourceStamp?: SourceStamp | null;
+  ofstedStateAsAt?: string | null;
 }) {
   const activeBench = benchmark ?? independentBench;
+  const dataGaps = [
+    ...gapsForKs4Board(schools),
+    ...gapsForKs4OfstedAsAt(schools, ofstedStateAsAt),
+  ];
 
   if (schools.length === 0) {
     return (
@@ -154,7 +166,7 @@ export function IndependentComparisonBoard({
           : null}
       </p>
       {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="ks4" />
+        <BoardProvenance stamp={sourceStamp} board="ks4" gaps={dataGaps} />
       ) : null}
 
       <div className="compare-board">
@@ -236,6 +248,10 @@ export function IndependentComparisonBoard({
                         Official tables ↗
                       </a>
                     ) : null}
+                    <DataGapFlags
+                      compact
+                      gaps={schoolGaps(dataGaps, school.urn)}
+                    />
                     {sourceStamp ? (
                       <ReportProblemButton
                         compact

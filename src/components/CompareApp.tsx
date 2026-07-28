@@ -528,6 +528,7 @@ export function CompareApp({
             <ChildminderDirectoryBoard
               providers={childminderSelected}
               consentedAsAt={childmindersIndex?.consentedAsAt}
+              ofstedAsAt={childmindersIndex?.ofstedAsAt}
               sourceStamp={childminderStamp}
             />
           ) : (
@@ -625,6 +626,7 @@ export function CompareApp({
             benchmark={ks4Bench}
             benchmarkLabel={ks4BenchLabel}
             sourceStamp={ks4Stamp}
+            ofstedStateAsAt={index.stats.ofstedStateAsAt}
           />
         )}
       </div>

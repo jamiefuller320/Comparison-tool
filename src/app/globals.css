@@ -1000,9 +1000,54 @@ a {
   margin: 0 0 1rem;
 }
 
+.board-provenance-main {
+  flex: 1 1 16rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
 .board-provenance .source-stamp {
   flex: 1 1 16rem;
   margin: 0;
+}
+
+.board-provenance-main .source-stamp {
+  margin: 0;
+}
+
+.data-gap-flags {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.data-gap-flags-compact {
+  margin: 0.35rem 0 0;
+}
+
+.data-gap-chip {
+  display: inline-block;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.data-gap-chip-watch {
+  border-color: color-mix(in srgb, var(--watch) 45%, var(--line));
+  color: var(--sea-deep);
+  background: color-mix(in srgb, var(--watch) 12%, #fff);
+}
+
+.data-gap-chip-info {
+  border-color: color-mix(in srgb, var(--sea) 35%, var(--line));
+  color: var(--ink-soft);
 }
 
 .board-provenance-actions {

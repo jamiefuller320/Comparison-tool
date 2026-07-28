@@ -20,7 +20,9 @@ import {
 import { fmtNum, fmtPct, fmtPp, ppGap, shortName } from "@/lib/format";
 import { formatSector, resolveSchoolSector } from "@/lib/sectors";
 import { BoardProvenance } from "@/components/BoardProvenance";
+import { DataGapFlags } from "@/components/DataGapFlags";
 import type { SourceStamp } from "@/lib/sourceStamp";
+import { gapsForPhonics, schoolGaps } from "@/lib/dataGaps";
 
 const CHART_KEYS = [
   "year1Expected",
@@ -62,6 +64,7 @@ export function PhonicsComparisonBoard({
   }));
   const withArea = areas.filter((row) => row.area?.year1Expected != null);
   const period = phonics?.period ?? "latest";
+  const dataGaps = gapsForPhonics(schools, phonics);
 
   const chartData = CHART_KEYS.map((key) => {
     const label =
@@ -98,7 +101,11 @@ export function PhonicsComparisonBoard({
           : null}
       </p>
       {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="ks1-phonics" />
+        <BoardProvenance
+          stamp={sourceStamp}
+          board="ks1-phonics"
+          gaps={dataGaps}
+        />
       ) : null}
 
       <div className="compare-board">
@@ -123,6 +130,10 @@ export function PhonicsComparisonBoard({
                       {school.ageRange ? `Ages ${school.ageRange}` : null}
                       {" · LA phonics context"}
                     </span>
+                    <DataGapFlags
+                      compact
+                      gaps={schoolGaps(dataGaps, school.urn)}
+                    />
                   </div>
                 </th>
               ))}
