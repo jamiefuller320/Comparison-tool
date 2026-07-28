@@ -9,10 +9,12 @@ State schools already carry KS2 table metrics. This script adds:
 
 Usage:
   python3 scripts/enrich-independents.py
+  python3 scripts/enrich-independents.py --la Surrey --index public/data/packs/surrey/schools-index.json
 """
 
 from __future__ import annotations
 
+import argparse
 import csv
 import io
 import json
@@ -30,10 +32,13 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 from sector_benches import ks4_benchmark_block  # noqa: E402
+from seed_scope import (  # noqa: E402
+    filter_schools_to_la,
+    normalize_la_name,
+    resolve_index_bundle,
+)
 
-INDEX = ROOT / "public" / "data" / "schools-index.json"
-DIRECTORY = ROOT / "public" / "data" / "schools-directory.json"
-SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
+DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 SRC_SUMMARY = ROOT / "src" / "data" / "harvest-summary.json"
 
 BASE = "https://api.education.gov.uk/statistics/v1"
@@ -659,11 +664,32 @@ def offers_secondary(age_range: str | None) -> bool:
 
 
 def main() -> None:
-    if not INDEX.exists():
-        raise SystemExit(f"Missing {INDEX}; run harvest first")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--la",
+        default="",
+        help="Defensively keep only schools in this DfE local authority",
+    )
+    parser.add_argument(
+        "--index",
+        default=str(DEFAULT_INDEX.relative_to(ROOT)),
+        help="Path to schools-index.json (default: public/data/schools-index.json)",
+    )
+    args = parser.parse_args()
 
-    payload = json.loads(INDEX.read_text(encoding="utf-8"))
+    paths = resolve_index_bundle(args.index, ROOT)
+    index_path = paths["index"]
+    directory_path = paths["directory"]
+    summary_path = paths["summary"]
+    if not index_path.exists():
+        raise SystemExit(f"Missing {index_path}; run harvest first")
+
+    target_la = normalize_la_name(args.la) if args.la else ""
+    payload = json.loads(index_path.read_text(encoding="utf-8"))
     schools = payload.get("schools") or []
+    if target_la:
+        schools = filter_schools_to_la(schools, target_la)
+        payload["schools"] = schools
     indie_urns = {
         str(s.get("urn"))
         for s in schools
@@ -678,7 +704,8 @@ def main() -> None:
     print(
         f"Independent schools: {len(indie_urns)}; "
         f"secondary-age (any sector): {len(secondary_urns)}; "
-        f"KS4/KS5 harvest targets: {len(ks4_target_urns)}",
+        f"KS4/KS5 harvest targets: {len(ks4_target_urns)}"
+        + (f"; scope={target_la}" if target_la else ""),
         flush=True,
     )
 
@@ -825,10 +852,10 @@ def main() -> None:
     stats["ks5Period"] = ks5_year
     stats["ofstedAsAt"] = ofsted_as_at
 
-    INDEX.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    index_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
 
-    if DIRECTORY.exists():
-        directory = json.loads(DIRECTORY.read_text(encoding="utf-8"))
+    if directory_path.exists():
+        directory = json.loads(directory_path.read_text(encoding="utf-8"))
         by_full = {str(s.get("urn")): s for s in schools}
         for row in directory.get("schools") or []:
             full = by_full.get(str(row.get("urn") or ""))
@@ -844,7 +871,7 @@ def main() -> None:
                 row["ofstedOverall"] = full["ofstedOverall"]
             if full.get("inspectorateName"):
                 row["inspectorateName"] = full["inspectorateName"]
-        DIRECTORY.write_text(
+        directory_path.write_text(
             json.dumps(directory, separators=(",", ":")),
             encoding="utf-8",
         )
@@ -872,16 +899,17 @@ def main() -> None:
         "ks5Period": ks5_year,
         "ofstedAsAt": ofsted_as_at,
         "independentEnriched": True,
+        "maintainedScope": target_la or payload.get("maintainedScope"),
     }
-    if SUMMARY.exists():
+    if summary_path.exists():
         try:
-            existing = json.loads(SUMMARY.read_text(encoding="utf-8"))
+            existing = json.loads(summary_path.read_text(encoding="utf-8"))
             existing.update({k: v for k, v in summary.items() if v is not None})
             summary = existing
         except json.JSONDecodeError:
             pass
-    SUMMARY.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
-    if SRC_SUMMARY.parent.exists():
+    summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    if paths["is_root"] and SRC_SUMMARY.parent.exists():
         SRC_SUMMARY.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 
     print(

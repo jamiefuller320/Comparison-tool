@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Build an on-demand local-authority school pack under public/data/packs/{slug}/.
 
-Does not overwrite the Hampshire maintained root index. First slice:
-schools harvest (early EES LA filter) + geocode + manifest update.
+Does not overwrite the Hampshire maintained root index. Depth slice:
+schools harvest (early EES LA filter) + geocode + GIAS + KS4/KS5 + phonics.
 
 Usage:
   python3 scripts/build-la-pack.py --la Surrey
   python3 scripts/build-la-pack.py --la "Brighton and Hove" --sample 20
+  python3 scripts/build-la-pack.py --la Surrey --skip-depth
 """
 
 from __future__ import annotations
@@ -70,6 +71,11 @@ def main() -> int:
         action="store_true",
         help="Skip postcodes.io enrichment (offline tests)",
     )
+    parser.add_argument(
+        "--skip-depth",
+        action="store_true",
+        help="Skip GIAS / KS4 / phonics depth (harvest + geocode only)",
+    )
     args = parser.parse_args()
 
     la = normalize_la_name(args.la)
@@ -94,7 +100,12 @@ def main() -> int:
         "status": "building",
         "requestedAt": packs.get(slug, {}).get("requestedAt")
         or time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "note": "Schools index pack (EY / history depth are follow-on steps).",
+        "note": (
+            "Schools pack with GIAS + KS4/KS5 + phonics depth "
+            "(EY / history depth are follow-on steps)."
+            if not args.skip_depth
+            else "Schools index pack (depth skipped)."
+        ),
         "paths": {
             "schoolsIndex": f"/data/packs/{slug}/schools-index.json",
             "directory": f"/data/packs/{slug}/schools-directory.json",
@@ -119,16 +130,54 @@ def main() -> int:
         if not args.skip_geocode:
             run(["python3", "scripts/enrich-geocode.py", "--index", index_rel])
 
+        if not args.skip_depth:
+            run(
+                [
+                    "python3",
+                    "scripts/enrich-secondaries.py",
+                    "--la",
+                    la,
+                    "--index",
+                    index_rel,
+                ]
+            )
+            run(
+                [
+                    "python3",
+                    "scripts/enrich-independents.py",
+                    "--la",
+                    la,
+                    "--index",
+                    index_rel,
+                ]
+            )
+            run(
+                [
+                    "python3",
+                    "scripts/enrich-phonics.py",
+                    "--la",
+                    la,
+                    "--index",
+                    index_rel,
+                ]
+            )
+
         index = json.loads((ROOT / index_rel).read_text(encoding="utf-8"))
         canonical = index.get("maintainedScope") or la
+        stats = index.get("stats") or {}
         packs[slug] = {
             **packs[slug],
             "localAuthority": canonical,
             "slug": la_slug(canonical),
             "status": "ready",
-            "schoolCount": index.get("stats", {}).get("schoolCount"),
-            "withRwm": index.get("stats", {}).get("withRwm"),
+            "schoolCount": stats.get("schoolCount"),
+            "withRwm": stats.get("withRwm"),
+            "withKs4": stats.get("withKs4"),
+            "giasEnriched": bool(stats.get("giasEnriched")),
+            "phonicsEnriched": bool(stats.get("phonicsEnriched")),
+            "independentEnriched": bool(stats.get("independentEnriched")),
             "builtAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "note": packs[slug].get("note"),
             "paths": {
                 "schoolsIndex": f"/data/packs/{la_slug(canonical)}/schools-index.json",
                 "directory": f"/data/packs/{la_slug(canonical)}/schools-directory.json",

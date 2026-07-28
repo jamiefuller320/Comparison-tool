@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-28 (silent pack merge — packs not user-visible).
+Last reviewed from agent chat: 2026-07-28 (pack depth: GIAS + phonics + KS4).
 
 ## How to use
 
@@ -26,8 +26,8 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 | Step | Notes | Status | When |
 | --- | --- | --- | --- |
 | **1. Schools pack scaffold** | `--la` harvest with early EES LA filter, `build-la-pack.py`, manifest, `la-pack` workflow, UI “Request area coverage” | Shipped (#40) | Done |
-| **2. Silent load / merge** | App loads Hampshire + all ready packs into one option set; no picker / `?pack=` | **In progress (this PR)** | Now |
-| **3. Pack depth: GIAS + phonics + KS4** | Extend pack builder with `enrich-secondaries --la`, phonics LA benches, indie/KS4 enrich scoped to pack index | Not started | After silent merge |
+| **2. Silent load / merge** | App loads Hampshire + all ready packs into one option set; no picker / `?pack=` | Shipped (#43) | Done |
+| **3. Pack depth: GIAS + phonics + KS4** | Extend pack builder with `enrich-secondaries --la`, phonics LA benches, indie/KS4 enrich scoped to pack index | **In progress (this PR)** | Now |
 | **4. Pack depth: EY + childminders** | Parameterise EY/childminder harvests with `--la` into the same pack folder | Not started | After schools UX works |
 | **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
 | **6. Pack prune / TTL** | Drop unused packs from repo/Pages when stale to bound size | Not started | When pack count grows |
@@ -95,5 +95,6 @@ For orientation only — not backlog:
 - Hampshire age-climb maintained harvest (`harvest:hampshire` / seed-LA trim); national `harvest` kept as scaffold  
 - **Source provenance stamps** on compare boards + **Report a problem** challenge intake (`data-challenge` workflow; prefer private intake repo)  
 - **On-demand LA pack scaffold** (`build-la-pack.py`, `public/data/packs/`, `la-pack` dispatch) + **silent merge** of ready packs onto the Hampshire seed (no user-facing pack mode)  
+- Pack builder depth: GIAS + KS4/KS5 + phonics into `public/data/packs/{slug}/` without touching the Hampshire root  
 
 See `README.md` North Star and Initial scope for governing priorities.

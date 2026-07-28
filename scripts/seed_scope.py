@@ -8,6 +8,7 @@ Hampshire remains the maintained seed; other LAs build into
 from __future__ import annotations
 
 import re
+from pathlib import Path
 from typing import Any
 
 # Matches school localAuthority / DfE LA labels in the harvested index
@@ -78,6 +79,26 @@ def trim_la_benchmarks(
 
 def pack_rel_dir(local_authority: str) -> str:
     return f"{PACKS_ROOT_REL}/{la_slug(local_authority)}"
+
+
+def resolve_index_bundle(
+    index_arg: str | Path,
+    root: Path,
+) -> dict[str, Any]:
+    """Resolve schools-index.json and sibling pack/root artefact paths.
+
+    Returns keys: index, directory, summary, is_root.
+    """
+    index_path = Path(index_arg)
+    if not index_path.is_absolute():
+        index_path = root / index_path
+    root_index = (root / "public" / "data" / "schools-index.json").resolve()
+    return {
+        "index": index_path,
+        "directory": index_path.with_name("schools-directory.json"),
+        "summary": index_path.with_name("harvest-summary.json"),
+        "is_root": index_path.resolve() == root_index,
+    }
 
 
 def resolve_la_from_ees_meta(

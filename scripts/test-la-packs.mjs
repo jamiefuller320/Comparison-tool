@@ -13,6 +13,7 @@ async function main() {
     listReadyPacks,
     mergeSchoolsIndexWithPack,
     mergeSchoolsIndexWithPacks,
+    recomputeSectorKs4Benches,
   } = await import("../src/lib/laPacks.ts");
 
   if (SEED_LOCAL_AUTHORITY !== "Hampshire") {
@@ -64,6 +65,8 @@ async function main() {
     benchmarks: {
       england: { rwmExpected: 60 },
       localAuthorities: { Hampshire: { rwmExpected: 61 } },
+      independent: { att8Average: 50, schoolCount: 1 },
+      stateKs4: { att8Average: 40, schoolCount: 1 },
       phonics: {
         period: "2024/2025",
         england: { year1Expected: 80 },
@@ -75,7 +78,9 @@ async function main() {
         urn: "1",
         name: "Hants Primary",
         localAuthority: "Hampshire",
+        sector: "state",
         rwmExpected: 70,
+        att8Average: 40,
       },
     ],
     stats: { schoolCount: 1, withRwm: 1, localAuthorityCount: 1 },
@@ -97,11 +102,21 @@ async function main() {
     schools: [
       {
         urn: "2",
-        name: "Surrey Primary",
+        name: "Surrey Secondary",
         localAuthority: "Surrey",
+        sector: "state",
         rwmExpected: 65,
+        att8Average: 50,
+        ageRange: "11 to 16",
       },
-      { urn: "1", name: "Override", localAuthority: "Surrey", rwmExpected: 1 },
+      {
+        urn: "1",
+        name: "Override",
+        localAuthority: "Surrey",
+        sector: "state",
+        rwmExpected: 1,
+        att8Average: 44,
+      },
     ],
     stats: { schoolCount: 2, withRwm: 2, localAuthorityCount: 1 },
   };
@@ -137,6 +152,21 @@ async function main() {
     merged.collatedPackLabels[0] !== "Surrey"
   ) {
     console.error("FAIL collatedPackLabels", merged.collatedPackLabels);
+    process.exit(1);
+  }
+  // Override (44) + Surrey Secondary (50) → mean 47
+  if (merged.benchmarks.stateKs4?.att8Average !== 47) {
+    console.error(
+      "FAIL recomputed stateKs4",
+      merged.benchmarks.stateKs4?.att8Average,
+    );
+    process.exit(1);
+  }
+  const recomputed = recomputeSectorKs4Benches(merged.schools, {
+    stateKs4: seed.benchmarks.stateKs4,
+  });
+  if (recomputed.stateKs4.att8Average !== 47) {
+    console.error("FAIL recomputeSectorKs4Benches", recomputed.stateKs4);
     process.exit(1);
   }
 
@@ -186,6 +216,7 @@ async function main() {
     [
       "-c",
       `
+from pathlib import Path
 from seed_scope import (
   SEED_LOCAL_AUTHORITY,
   la_slug,
@@ -193,6 +224,7 @@ from seed_scope import (
   is_local_authority,
   filter_schools_to_la,
   pack_rel_dir,
+  resolve_index_bundle,
   resolve_la_from_ees_meta,
 )
 assert SEED_LOCAL_AUTHORITY == "Hampshire"
@@ -205,6 +237,13 @@ schools = [
 ]
 assert [s["urn"] for s in filter_schools_to_la(schools, "Surrey")] == ["1"]
 assert pack_rel_dir("Surrey") == "public/data/packs/surrey"
+# cwd is scripts/ when spawned from test-la-packs.mjs
+root = Path.cwd().parent
+bundle = resolve_index_bundle("public/data/packs/surrey/schools-index.json", root)
+assert bundle["is_root"] is False
+assert bundle["directory"].name == "schools-directory.json"
+root_bundle = resolve_index_bundle("public/data/schools-index.json", root)
+assert root_bundle["is_root"] is True
 meta = {
   "locations": [
     {
