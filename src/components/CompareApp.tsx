@@ -51,6 +51,7 @@ import {
   defaultPhasesForSectors,
   migrateStagesFromLegacyEySettings,
   normalizePhaseIds,
+  phasesFromAgeRange,
   schoolMatchesPhases,
   schoolOffersKs1,
   schoolOffersKs2,
@@ -142,6 +143,7 @@ export function CompareApp({
   const [packBusy, setPackBusy] = useState(false);
   const [packError, setPackError] = useState<string | null>(null);
   const [packHydrated, setPackHydrated] = useState(false);
+  const [packHint, setPackHint] = useState<string | null>(null);
 
   const index = useMemo(() => {
     if (!activePack || !packIndex) return seedIndex;
@@ -199,6 +201,7 @@ export function CompareApp({
       setPackIndex(null);
       setPackError(null);
       setPackBusy(false);
+      setPackHint(null);
       return;
     }
     let cancelled = false;
@@ -212,14 +215,50 @@ export function CompareApp({
             `Could not load the ${activePack.localAuthority} pack. It may still be building.`,
           );
           setPackIndex(null);
+          setPackHint(null);
           return;
         }
         setPackIndex(data);
+
+        const packSchools = data.schools || [];
+        const neededStages = new Set<PhaseId>();
+        for (const school of packSchools) {
+          for (const phase of phasesFromAgeRange(school.ageRange)) {
+            neededStages.add(phase);
+          }
+        }
+        const visibleUnderCurrent = packSchools.some((school) =>
+          schoolMatchesPhases(school, stages),
+        );
+        if (!visibleUnderCurrent && neededStages.size) {
+          setStages((prev) => {
+            const next = new Set<PhaseId>(prev);
+            for (const phase of neededStages) next.add(phase);
+            return [...next];
+          });
+        }
+
+        const sample = packSchools.find((s) => s.postcode) || packSchools[0];
+        if (sample) {
+          const stageLabel = phasesFromAgeRange(sample.ageRange)
+            .map((id) => id.toUpperCase())
+            .join(" · ");
+          setPackHint(
+            sample.postcode
+              ? `${sample.name} is in this pack (${stageLabel || "school"}). Centre the map on ${sample.postcode}, or search the name below.`
+              : `${sample.name} is in this pack. Search for it below — turn on matching stages if needed.`,
+          );
+        } else {
+          setPackHint(
+            `${activePack.localAuthority} pack loaded. Search below once the matching stages are on.`,
+          );
+        }
       })
       .catch((err: Error) => {
         if (cancelled) return;
         setPackError(err.message || "Could not load area pack");
         setPackIndex(null);
+        setPackHint(null);
       })
       .finally(() => {
         if (!cancelled) setPackBusy(false);
@@ -228,6 +267,7 @@ export function CompareApp({
       cancelled = true;
     };
   }, [activePack, packHydrated]);
+  // Intentionally omit `stages` from deps: we only auto-expand stages once when the pack loads.
 
   useEffect(() => {
     if (!packHydrated || !hydrated) return;
@@ -306,6 +346,7 @@ export function CompareApp({
     setActivePack(null);
     setPackIndex(null);
     setPackError(null);
+    setPackHint(null);
   }
 
   const selectedSchools: SchoolRecord[] = selected
@@ -786,6 +827,7 @@ export function CompareApp({
             activeSlug={activePack?.slug ?? null}
             busy={packBusy}
             error={packError}
+            hint={packHint}
             onActivate={activatePack}
             onClear={clearPack}
           />
