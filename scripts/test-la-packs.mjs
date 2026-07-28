@@ -1,3 +1,7 @@
+import { spawnSync } from "node:child_process";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
 async function main() {
   const {
     SEED_LOCAL_AUTHORITY,
@@ -6,6 +10,8 @@ async function main() {
     isLocalAuthority,
     isSeedLocalAuthority,
     packDataPath,
+    listReadyPacks,
+    mergeSchoolsIndexWithPack,
   } = await import("../src/lib/laPacks.ts");
 
   if (SEED_LOCAL_AUTHORITY !== "Hampshire") {
@@ -29,12 +35,112 @@ async function main() {
     process.exit(1);
   }
 
-  const py = await import("node:child_process").then((m) =>
-    m.spawnSync(
-      "python3",
-      [
-        "-c",
-        `
+  const ready = listReadyPacks({
+    seedLocalAuthority: "Hampshire",
+    packs: {
+      surrey: {
+        localAuthority: "Surrey",
+        slug: "surrey",
+        status: "ready",
+        schoolCount: 10,
+      },
+      building: {
+        localAuthority: "Kent",
+        slug: "kent",
+        status: "building",
+      },
+    },
+  });
+  if (ready.length !== 1 || ready[0].slug !== "surrey") {
+    console.error("FAIL listReadyPacks", ready);
+    process.exit(1);
+  }
+
+  const seed = {
+    generatedAt: "2026-07-28",
+    period: "2024/2025",
+    source: { api: "x", datasets: {}, primarySite: "y", note: "seed." },
+    benchmarks: {
+      england: { rwmExpected: 60 },
+      localAuthorities: { Hampshire: { rwmExpected: 61 } },
+      phonics: {
+        period: "2024/2025",
+        england: { year1Expected: 80 },
+        localAuthorities: { Hampshire: { year1Expected: 79 } },
+      },
+    },
+    schools: [
+      {
+        urn: "1",
+        name: "Hants Primary",
+        localAuthority: "Hampshire",
+        rwmExpected: 70,
+      },
+    ],
+    stats: { schoolCount: 1, withRwm: 1, localAuthorityCount: 1 },
+  };
+  const pack = {
+    generatedAt: "2026-07-28",
+    period: "2024/2025",
+    maintainedScope: "Surrey",
+    source: { api: "x", datasets: {}, primarySite: "y", note: "pack." },
+    benchmarks: {
+      england: { rwmExpected: 60 },
+      localAuthorities: { Surrey: { rwmExpected: 62 } },
+      phonics: {
+        period: "2024/2025",
+        england: { year1Expected: 80 },
+        localAuthorities: { Surrey: { year1Expected: 78 } },
+      },
+    },
+    schools: [
+      {
+        urn: "2",
+        name: "Surrey Primary",
+        localAuthority: "Surrey",
+        rwmExpected: 65,
+      },
+      { urn: "1", name: "Override", localAuthority: "Surrey", rwmExpected: 1 },
+    ],
+    stats: { schoolCount: 2, withRwm: 2, localAuthorityCount: 1 },
+  };
+  const merged = mergeSchoolsIndexWithPack(seed, pack, {
+    slug: "surrey",
+    localAuthority: "Surrey",
+  });
+  if (merged.schools.length !== 2) {
+    console.error("FAIL merge school count", merged.schools);
+    process.exit(1);
+  }
+  if (merged.schools.find((s) => s.urn === "1")?.name !== "Override") {
+    console.error("FAIL pack wins on URN", merged.schools);
+    process.exit(1);
+  }
+  if (
+    !merged.benchmarks.localAuthorities.Hampshire ||
+    !merged.benchmarks.localAuthorities.Surrey
+  ) {
+    console.error("FAIL LA benches union", merged.benchmarks.localAuthorities);
+    process.exit(1);
+  }
+  if (
+    merged.benchmarks.phonics?.localAuthorities?.Hampshire?.year1Expected !==
+      79 ||
+    merged.benchmarks.phonics?.localAuthorities?.Surrey?.year1Expected !== 78
+  ) {
+    console.error("FAIL phonics union", merged.benchmarks.phonics);
+    process.exit(1);
+  }
+  if (merged.activePackSlug !== "surrey") {
+    console.error("FAIL activePackSlug", merged.activePackSlug);
+    process.exit(1);
+  }
+
+  const py = spawnSync(
+    "python3",
+    [
+      "-c",
+      `
 from seed_scope import (
   SEED_LOCAL_AUTHORITY,
   la_slug,
@@ -69,19 +175,18 @@ assert resolved and resolved["id"] == "abc"
 assert resolve_la_from_ees_meta(meta, "NotARealLA") is None
 print("python la pack helpers ok")
 `,
-      ],
-      {
-        cwd: new URL(".", import.meta.url).pathname,
-        encoding: "utf-8",
-      },
-    ),
+    ],
+    {
+      cwd: dirname(fileURLToPath(import.meta.url)),
+      encoding: "utf-8",
+    },
   );
   if (py.status !== 0) {
     console.error("FAIL python helpers", py.stdout, py.stderr);
     process.exit(1);
   }
 
-  console.log("la packs helpers ok");
+  console.log("la packs helpers + merge ok");
 }
 
 main().catch((err) => {

@@ -20,6 +20,18 @@ import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { ComparePathTabs } from "@/components/ComparePathTabs";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
+import { LaPackPicker } from "@/components/LaPackPicker";
+import {
+  loadLaPackManifest,
+  loadLaPackSchoolsIndex,
+} from "@/lib/data";
+import {
+  ACTIVE_PACK_STORAGE_KEY,
+  listReadyPacks,
+  mergeSchoolsIndexWithPack,
+  type LaPackManifest,
+  type LaPackManifestEntry,
+} from "@/lib/laPacks";
 import { ProductTour } from "@/components/ProductTour";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
@@ -114,7 +126,7 @@ function PathSummaries({
 }
 
 export function CompareApp({
-  index,
+  index: seedIndex,
   eyIndex = null,
   childmindersIndex = null,
   onIndexReload,
@@ -124,6 +136,18 @@ export function CompareApp({
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
 }) {
+  const [packManifest, setPackManifest] = useState<LaPackManifest | null>(null);
+  const [activePack, setActivePack] = useState<LaPackManifestEntry | null>(null);
+  const [packIndex, setPackIndex] = useState<SchoolsIndex | null>(null);
+  const [packBusy, setPackBusy] = useState(false);
+  const [packError, setPackError] = useState<string | null>(null);
+  const [packHydrated, setPackHydrated] = useState(false);
+
+  const index = useMemo(() => {
+    if (!activePack || !packIndex) return seedIndex;
+    return mergeSchoolsIndexWithPack(seedIndex, packIndex, activePack);
+  }, [seedIndex, packIndex, activePack]);
+
   const byUrn = useMemo(() => {
     const map = new Map(index.schools.map((s) => [s.urn, s]));
     for (const provider of eyIndex?.providers ?? []) {
@@ -142,6 +166,82 @@ export function CompareApp({
   const [hydrated, setHydrated] = useState(false);
   const [sectorNote, setSectorNote] = useState<string | null>(null);
   const [activePath, setActivePath] = useState<ComparePathId | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void loadLaPackManifest(fetch, false).then((manifest) => {
+      if (cancelled) return;
+      setPackManifest(manifest);
+      const params = new URLSearchParams(window.location.search);
+      const fromUrl = params.get("pack");
+      const fromStore =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem(ACTIVE_PACK_STORAGE_KEY)
+          : null;
+      const wanted = fromUrl || fromStore;
+      const ready = listReadyPacks(manifest);
+      const match = wanted
+        ? ready.find((p) => p.slug === wanted)
+        : undefined;
+      if (match) {
+        setActivePack(match);
+      }
+      setPackHydrated(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!packHydrated) return;
+    if (!activePack) {
+      setPackIndex(null);
+      setPackError(null);
+      setPackBusy(false);
+      return;
+    }
+    let cancelled = false;
+    setPackBusy(true);
+    setPackError(null);
+    void loadLaPackSchoolsIndex(activePack.slug, fetch, true)
+      .then((data) => {
+        if (cancelled) return;
+        if (!data) {
+          setPackError(
+            `Could not load the ${activePack.localAuthority} pack. It may still be building.`,
+          );
+          setPackIndex(null);
+          return;
+        }
+        setPackIndex(data);
+      })
+      .catch((err: Error) => {
+        if (cancelled) return;
+        setPackError(err.message || "Could not load area pack");
+        setPackIndex(null);
+      })
+      .finally(() => {
+        if (!cancelled) setPackBusy(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [activePack, packHydrated]);
+
+  useEffect(() => {
+    if (!packHydrated || !hydrated) return;
+    // Re-apply shortlist once pack schools are available.
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get("schools") || params.get("urns");
+    if (!raw) return;
+    const urns = raw
+      .split(",")
+      .map((u) => u.trim())
+      .filter((u) => byUrn.has(u))
+      .slice(0, 4);
+    if (urns.length) setSelected(urns);
+  }, [byUrn, packHydrated, hydrated, packIndex]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -183,10 +283,30 @@ export function CompareApp({
     } else {
       url.searchParams.set("sectors", sectors.join(","));
     }
+    if (activePack?.slug) url.searchParams.set("pack", activePack.slug);
+    else url.searchParams.delete("pack");
     url.searchParams.delete("eySettings");
     url.searchParams.delete("ey");
     window.history.replaceState({}, "", url.toString());
-  }, [selected, stages, sectors, hydrated]);
+    if (typeof window !== "undefined") {
+      if (activePack?.slug) {
+        window.localStorage.setItem(ACTIVE_PACK_STORAGE_KEY, activePack.slug);
+      } else {
+        window.localStorage.removeItem(ACTIVE_PACK_STORAGE_KEY);
+      }
+    }
+  }, [selected, stages, sectors, hydrated, activePack]);
+
+  function activatePack(pack: LaPackManifestEntry) {
+    setActivePack(pack);
+    setPackError(null);
+  }
+
+  function clearPack() {
+    setActivePack(null);
+    setPackIndex(null);
+    setPackError(null);
+  }
 
   const selectedSchools: SchoolRecord[] = selected
     .map((urn) => byUrn.get(urn))
@@ -653,10 +773,22 @@ export function CompareApp({
               stay in the hero above.
             </p>
             <p className="footnote data-slim-line">
-              {SEED_GEOGRAPHY_LABEL} maintained set · {index.period} · refreshed{" "}
-              {index.generatedAt}
+              {SEED_GEOGRAPHY_LABEL} maintained set
+              {activePack
+                ? ` + ${activePack.localAuthority} pack`
+                : ""}{" "}
+              · {index.period} · refreshed {seedIndex.generatedAt}
             </p>
           </div>
+
+          <LaPackPicker
+            manifest={packManifest}
+            activeSlug={activePack?.slug ?? null}
+            busy={packBusy}
+            error={packError}
+            onActivate={activatePack}
+            onClear={clearPack}
+          />
 
           <MissingSchoolButton
             schools={index.schools}

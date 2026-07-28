@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-28 (on-demand LA pack first slice + area-library learning loop notes).
+Last reviewed from agent chat: 2026-07-28 (LA pack UI load/merge).
 
 ## How to use
 
@@ -25,8 +25,8 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 
 | Step | Notes | Status | When |
 | --- | --- | --- | --- |
-| **1. Schools pack scaffold** | `--la` harvest with early EES LA filter, `build-la-pack.py`, manifest, `la-pack` workflow, UI “Request area pack” | **In progress (this PR)** | Now |
-| **2. Load / merge packs in UI** | App loads Hampshire by default; hydrate shortlist/map from a ready pack when user selects that LA (or postcode maps into it) | Not started | After #1 usable |
+| **1. Schools pack scaffold** | `--la` harvest with early EES LA filter, `build-la-pack.py`, manifest, `la-pack` workflow, UI “Request area pack” | Shipped (#40) | Done |
+| **2. Load / merge packs in UI** | App loads Hampshire by default; hydrate shortlist/map from a ready pack when user selects that LA (`?pack=` + picker) | **In progress (this PR)** | Now |
 | **3. Pack depth: GIAS + phonics + KS4** | Extend pack builder with `enrich-secondaries --la`, phonics LA benches, indie/KS4 enrich scoped to pack index | Not started | After UI load |
 | **4. Pack depth: EY + childminders** | Parameterise EY/childminder harvests with `--la` into the same pack folder | Not started | After schools UX works |
 | **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
@@ -93,6 +93,6 @@ For orientation only — not backlog:
 - UI declutter: filters only in hero; path-scoped Side by side tabs; visit pack + checklist on childcare paths  
 - Hampshire age-climb maintained harvest (`harvest:hampshire` / seed-LA trim); national `harvest` kept as scaffold  
 - **Source provenance stamps** on compare boards + **Report a problem** challenge intake (`data-challenge` workflow; prefer private intake repo)  
-- **On-demand LA pack scaffold** (`build-la-pack.py`, `public/data/packs/`, `la-pack` dispatch) — UI load/merge and EY depth still follow-on  
+- **On-demand LA pack scaffold** (`build-la-pack.py`, `public/data/packs/`, `la-pack` dispatch) + **UI load/merge** of ready packs onto the Hampshire seed  
 
 See `README.md` North Star and Initial scope for governing priorities.
