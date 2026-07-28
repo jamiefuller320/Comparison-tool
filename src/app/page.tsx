@@ -59,7 +59,10 @@ export default function HomePage() {
               are sparse for 2024/25 because of missing KS1 baselines.
             </p>
             <p>
-              Refresh locally with <code>npm run harvest</code>. Official school pages:{" "}
+              Refresh locally with <code>npm run harvest:hampshire</code> (or{" "}
+              <code>npm run harvest:ey</code> for the early years pack). Full
+              England <code>npm run harvest</code> remains a scaffold. Official
+              school pages:{" "}
               <a
                 href="https://www.compare-school-performance.service.gov.uk/"
                 target="_blank"

@@ -241,10 +241,10 @@ export function HomePostcodeExplorer({
           <p className="hero-brand">
             School<em>side</em>
           </p>
-          <h1>Compare English schools side by side when you are choosing.</h1>
+          <h1>Compare Hampshire schools side by side when you are choosing.</h1>
           <p>
-            Start with your home postcode to map nearby schools and Hampshire
-            early years day care, then compare published outcomes — parental
+            Start with your home postcode to map nearby Hampshire schools and
+            early years settings, then compare published outcomes — parental
             shortlists, not a governance pack.
           </p>
           <p className="hero-tour-launch">

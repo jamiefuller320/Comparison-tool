@@ -22,8 +22,15 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from sector_benches import ks4_benchmark_block  # noqa: E402
+
 INDEX = ROOT / "public" / "data" / "schools-index.json"
 DIRECTORY = ROOT / "public" / "data" / "schools-directory.json"
 SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
@@ -627,12 +634,6 @@ def harvest_ofsted() -> tuple[dict[str, dict], str]:
     return by_urn, as_at
 
 
-def mean(values: list[float]) -> float | None:
-    if not values:
-        return None
-    return round(sum(values) / len(values), 1)
-
-
 def parse_age_bounds(age_range: str | None) -> tuple[int, int] | None:
     if not age_range:
         return None
@@ -655,43 +656,6 @@ def offers_secondary(age_range: str | None) -> bool:
     has_ks4 = lo <= 15 and hi >= 15
     return has_ks3 or has_ks4
 
-
-def ks4_benchmark_block(
-    schools: list[dict],
-    *,
-    sector: str,
-    ks4_year: str,
-    ks5_year: str,
-) -> dict:
-    def collect(key: str) -> list[float]:
-        return [
-            float(s[key])
-            for s in schools
-            if s.get("sector") == sector and s.get(key) is not None
-        ]
-
-    att8_vals = collect("att8Average")
-    ks5_aps_vals = collect("ks5ApsPerEntry")
-    label = "independents" if sector == "independent" else "state schools"
-    return {
-        "att8Average": mean(att8_vals),
-        "engMath94Percent": mean(collect("engMath94Percent")),
-        "engMath95Percent": mean(collect("engMath95Percent")),
-        "ebaccEnteringPercent": mean(collect("ebaccEnteringPercent")),
-        "anyPassPercent": mean(collect("anyPassPercent")),
-        "ebaccEng94Percent": mean(collect("ebaccEng94Percent")),
-        "ebaccMat94Percent": mean(collect("ebaccMat94Percent")),
-        "ks5ApsPerEntry": mean(ks5_aps_vals),
-        "ks5Best3Aps": mean(collect("ks5Best3Aps")),
-        "period": ks4_year,
-        "ks5Period": ks5_year,
-        "schoolCount": len(att8_vals),
-        "ks5SchoolCount": len(ks5_aps_vals),
-        "note": (
-            f"Mean of {label} in this index with usable KS4 figures "
-            "(nil/zero returns removed); KS5 means use A-level APS where published"
-        ),
-    }
 
 
 def main() -> None:

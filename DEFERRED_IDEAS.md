@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-27 (provenance stamps + report-a-problem).
+Last reviewed from agent chat: 2026-07-28 (Hampshire depth pass rebase onto provenance).
 
 ## How to use
 
@@ -24,7 +24,7 @@ Last reviewed from agent chat: 2026-07-27 (provenance stamps + report-a-problem)
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (`harvest:hampshire`, trim script, scheduled refresh on seed LA; deepen secondary next) | User + README |
+| **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
 | **Second geography** | Widen to another LA only when Hampshire usage justifies cost. Southampton/Portsmouth noted as possible childminder widen (separate unitaries). | Deferred | Agent pathway |
 
 ### Early years / childcare

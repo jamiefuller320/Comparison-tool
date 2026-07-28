@@ -72,9 +72,23 @@ export const EY_PROVIDER_METRICS: EyDisplayMetric[] = [
   {
     key: "ofstedOverall",
     label: "Ofsted overall effectiveness",
-    parentHint: "Most recent full inspection overall grade from Ofsted.",
+    parentHint:
+      "Most recent full inspection overall grade from Ofsted. Some newer framework visits publish domain judgements or a report without a single overall grade.",
     unit: "text",
-    get: (s) => s.ofstedOverall,
+    get: (s) => {
+      if (s.ofstedOverall) return s.ofstedOverall;
+      const hasDomains = Boolean(
+        s.ofstedEarlyYearsProvision ||
+          s.ofstedQualityOfEducation ||
+          s.ofstedBehaviourAndAttitudes ||
+          s.ofstedPersonalDevelopment ||
+          s.ofstedLeadership,
+      );
+      if (hasDomains || s.ofstedReportUrl) {
+        return "Ungraded / report-led";
+      }
+      return null;
+    },
   },
   {
     key: "ofstedEarlyYearsProvision",

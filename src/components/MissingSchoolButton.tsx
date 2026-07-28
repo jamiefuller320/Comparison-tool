@@ -77,9 +77,12 @@ export function MissingSchoolButton({
       {open ? (
         <div className="missing-school-panel" role="dialog" aria-label="Report a missing school">
           <p>
-            Search first — many infants and secondaries are listed once the right
-            stages and range are selected. If it is truly absent, this queues a
-            directory rebuild (limited to <strong>one per day</strong>).
+            This build maintains <strong>Hampshire</strong> schools and early
+            years settings. Search first — many infants and secondaries appear
+            once the right stages and range are selected. If a Hampshire setting
+            is truly absent, this queues a maintained-set rebuild (limited to{" "}
+            <strong>one per day</strong>). Out-of-area schools are not covered
+            yet.
           </p>
           <div className="postcode-row">
             <input
