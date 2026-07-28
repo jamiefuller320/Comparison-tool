@@ -9,6 +9,7 @@ export function LaPackPicker({
   activeSlug,
   busy,
   error,
+  hint,
   onActivate,
   onClear,
 }: {
@@ -16,6 +17,7 @@ export function LaPackPicker({
   activeSlug: string | null;
   busy?: boolean;
   error?: string | null;
+  hint?: string | null;
   onActivate: (pack: LaPackManifestEntry) => void;
   onClear: () => void;
 }) {
@@ -26,7 +28,8 @@ export function LaPackPicker({
       <p className="footnote" style={{ marginBottom: "0.55rem" }}>
         <strong>Area packs:</strong> {SEED_GEOGRAPHY_LABEL} stays the default.
         Activate a ready on-demand pack to add that local authority’s schools to
-        search and the map.
+        search and the map. Pack schools are often primary/secondary — Early
+        years alone will not show them.
       </p>
       {ready.length === 0 ? (
         <p className="footnote" style={{ margin: 0 }}>
@@ -76,6 +79,11 @@ export function LaPackPicker({
       {busy ? (
         <p className="footnote" style={{ margin: "0.45rem 0 0" }}>
           Loading area pack…
+        </p>
+      ) : null}
+      {hint && !error ? (
+        <p className="missing-school-ok" style={{ marginTop: "0.55rem" }}>
+          {hint}
         </p>
       ) : null}
       {error ? <p className="postcode-error">{error}</p> : null}
