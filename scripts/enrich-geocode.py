@@ -11,6 +11,7 @@ import json
 import time
 import urllib.error
 import urllib.request
+import argparse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -66,7 +67,20 @@ def bulk_lookup(postcodes: list[str]) -> dict[str, tuple[float, float]]:
 
 
 def main() -> int:
-    payload = json.loads(INDEX.read_text(encoding="utf-8"))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--index",
+        default=str(INDEX.relative_to(ROOT)),
+        help="Path to schools-index.json (default: public/data/schools-index.json)",
+    )
+    args = parser.parse_args()
+    index_path = Path(args.index)
+    if not index_path.is_absolute():
+        index_path = ROOT / index_path
+    if not index_path.exists():
+        raise SystemExit(f"Missing {index_path}")
+
+    payload = json.loads(index_path.read_text(encoding="utf-8"))
     schools = payload["schools"]
     unique = sorted(
         {
@@ -95,12 +109,10 @@ def main() -> int:
         hit += 1
 
     payload["stats"]["withCoordinates"] = hit
-    INDEX.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    index_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
 
-    # Directory stays lean; coords live only on full index
-    if DIRECTORY.exists():
-        directory = json.loads(DIRECTORY.read_text(encoding="utf-8"))
-        DIRECTORY.write_text(json.dumps(directory, separators=(",", ":")), encoding="utf-8")
+    directory_path = index_path.with_name("schools-directory.json")
+    summary_path = index_path.with_name("harvest-summary.json")
 
     summary = {
         "generatedAt": payload.get("generatedAt"),
@@ -109,17 +121,17 @@ def main() -> int:
         "withRwm": payload["stats"]["withRwm"],
         "withCoordinates": hit,
         "localAuthorityCount": payload["stats"]["localAuthorityCount"],
-        "files": [
-            "public/data/schools-index.json",
-            "public/data/schools-directory.json",
-        ],
-        "indexBytes": INDEX.stat().st_size,
+        "maintainedScope": payload.get("maintainedScope"),
+        "files": [str(index_path.relative_to(ROOT)), str(directory_path.relative_to(ROOT))],
+        "indexBytes": index_path.stat().st_size,
         "geocodedAt": time.strftime("%Y-%m-%d"),
     }
-    SUMMARY.write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    (ROOT / "src" / "data" / "harvest-summary.json").write_text(
-        json.dumps(summary, indent=2), encoding="utf-8"
-    )
+    summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    if index_path.resolve() == INDEX.resolve():
+        (ROOT / "src" / "data" / "harvest-summary.json").write_text(
+            json.dumps(summary, indent=2) + "\n",
+            encoding="utf-8",
+        )
     print(json.dumps(summary, indent=2))
     return 0
 

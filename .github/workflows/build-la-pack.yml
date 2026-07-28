@@ -1,0 +1,116 @@
+name: Build on-demand LA pack
+
+# Queued by "Request another area" (repository_dispatch la-pack) or manually.
+# Writes under public/data/packs/{slug}/ — does not overwrite Hampshire root.
+
+on:
+  workflow_dispatch:
+    inputs:
+      local_authority:
+        description: "DfE local authority label (e.g. Surrey)"
+        required: true
+        type: string
+      sample:
+        description: "Optional sample size for smoke builds (0 = full LA)"
+        required: false
+        default: "0"
+  repository_dispatch:
+    types: [la-pack]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: build-la-pack
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve LA input
+        id: la
+        env:
+          DISPATCH_LA: ${{ github.event.client_payload.localAuthority }}
+          INPUT_LA: ${{ inputs.local_authority }}
+          DISPATCH_SAMPLE: ${{ github.event.client_payload.sample }}
+          INPUT_SAMPLE: ${{ inputs.sample }}
+        run: |
+          set -euo pipefail
+          LA="${DISPATCH_LA:-$INPUT_LA}"
+          SAMPLE="${DISPATCH_SAMPLE:-${INPUT_SAMPLE:-0}}"
+          if [ -z "$LA" ]; then
+            echo "local_authority is required" >&2
+            exit 1
+          fi
+          echo "la=$LA" >> "$GITHUB_OUTPUT"
+          echo "sample=$SAMPLE" >> "$GITHUB_OUTPUT"
+
+      - name: Gate — one pack build per UTC day
+        id: gate
+        run: |
+          set -euo pipefail
+          STATE=public/data/packs/build-state.json
+          TODAY=$(date -u +%F)
+          mkdir -p public/data/packs
+          echo "today=$TODAY" >> "$GITHUB_OUTPUT"
+          if [ -f "$STATE" ]; then
+            LAST=$(python3 -c "import json; print(json.load(open('$STATE')).get('lastBuildDate',''))")
+            if [ "$LAST" = "$TODAY" ]; then
+              echo "Already built an on-demand LA pack on $TODAY UTC — skipping."
+              echo "allowed=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          echo "allowed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Build LA pack
+        if: steps.gate.outputs.allowed == 'true'
+        run: |
+          set -euo pipefail
+          ARGS=(python3 scripts/build-la-pack.py --la "${{ steps.la.outputs.la }}")
+          SAMPLE="${{ steps.la.outputs.sample }}"
+          if [ "$SAMPLE" != "0" ] && [ -n "$SAMPLE" ]; then
+            ARGS+=(--sample "$SAMPLE")
+          fi
+          "${ARGS[@]}"
+
+      - name: Record build stamp
+        if: steps.gate.outputs.allowed == 'true'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, time
+          from pathlib import Path
+          path = Path("public/data/packs/build-state.json")
+          path.parent.mkdir(parents=True, exist_ok=True)
+          path.write_text(
+              json.dumps(
+                  {
+                      "lastBuildAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                      "lastBuildDate": time.strftime("%Y-%m-%d", time.gmtime()),
+                      "localAuthority": """${{ steps.la.outputs.la }}""",
+                  },
+                  indent=2,
+              )
+              + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Commit pack
+        if: steps.gate.outputs.allowed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/packs
+          if git diff --staged --quiet; then
+            echo "No pack files to commit"
+            exit 0
+          fi
+          git commit -m "Build on-demand LA pack (${{ steps.la.outputs.la }})"
+          git push

@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import { searchSchools } from "@/lib/search";
 import { formatPhases, phasesFromAgeRange } from "@/lib/phases";
-import { requestForceRefresh } from "@/lib/data";
+import { requestForceRefresh, requestLaPack } from "@/lib/data";
+import { SEED_GEOGRAPHY_LABEL, isSeedLocalAuthority } from "@/lib/seedScope";
 
 export function MissingSchoolButton({
   schools,
@@ -15,6 +16,7 @@ export function MissingSchoolButton({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [laQuery, setLaQuery] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [tone, setTone] = useState<"ok" | "warn" | "err">("ok");
@@ -24,7 +26,7 @@ export function MissingSchoolButton({
     return searchSchools(schools, query, 5);
   }, [schools, query]);
 
-  async function submit() {
+  async function submitHampshire() {
     const q = query.trim();
     if (!q) {
       setTone("warn");
@@ -54,8 +56,32 @@ export function MissingSchoolButton({
       const result = await requestForceRefresh(q);
       setTone(result.ok ? "ok" : result.status === "limited" ? "warn" : "err");
       setMessage(result.detail);
-      // Always attempt to pull the latest published index after a request.
       await onIndexReload();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function submitLaPack() {
+    const la = laQuery.trim();
+    if (!la) {
+      setTone("warn");
+      setMessage("Enter a local authority name (exact DfE label, e.g. Surrey).");
+      return;
+    }
+    if (isSeedLocalAuthority(la)) {
+      setTone("warn");
+      setMessage(
+        `${SEED_GEOGRAPHY_LABEL} is already the maintained set — use “Update directory” above for a Hampshire refresh.`,
+      );
+      return;
+    }
+    setBusy(true);
+    setMessage(null);
+    try {
+      const result = await requestLaPack(la);
+      setTone(result.ok ? "ok" : result.status === "limited" ? "warn" : "err");
+      setMessage(result.detail);
     } finally {
       setBusy(false);
     }
@@ -75,14 +101,17 @@ export function MissingSchoolButton({
       </button>
 
       {open ? (
-        <div className="missing-school-panel" role="dialog" aria-label="Report a missing school">
+        <div
+          className="missing-school-panel"
+          role="dialog"
+          aria-label="Report a missing school"
+        >
           <p>
-            This build maintains <strong>Hampshire</strong> schools and early
-            years settings. Search first — many infants and secondaries appear
-            once the right stages and range are selected. If a Hampshire setting
-            is truly absent, this queues a maintained-set rebuild (limited to{" "}
-            <strong>one per day</strong>). Out-of-area schools are not covered
-            yet.
+            This build maintains <strong>{SEED_GEOGRAPHY_LABEL}</strong> schools
+            and early years settings. Search first — many infants and secondaries
+            appear once the right stages and range are selected. If a{" "}
+            {SEED_GEOGRAPHY_LABEL} setting is truly absent, this queues a
+            maintained-set rebuild (limited to <strong>one per day</strong>).
           </p>
           <div className="postcode-row">
             <input
@@ -93,7 +122,7 @@ export function MissingSchoolButton({
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
-                  void submit();
+                  void submitHampshire();
                 }
               }}
             />
@@ -101,7 +130,7 @@ export function MissingSchoolButton({
               type="button"
               className="btn btn-primary"
               disabled={busy}
-              onClick={() => void submit()}
+              onClick={() => void submitHampshire()}
             >
               {busy ? "Working…" : "Update directory"}
             </button>
@@ -125,6 +154,35 @@ export function MissingSchoolButton({
               ))}
             </ul>
           ) : null}
+
+          <p className="footnote" style={{ marginTop: "1rem" }}>
+            Outside {SEED_GEOGRAPHY_LABEL}? Request an <strong>on-demand area
+            pack</strong> (schools index first; EY depth follows). Use the exact
+            DfE local authority label. Limited to one pack build per day.
+          </p>
+          <div className="postcode-row">
+            <input
+              type="search"
+              placeholder="Local authority (e.g. Surrey)"
+              value={laQuery}
+              onChange={(e) => setLaQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  void submitLaPack();
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={busy}
+              onClick={() => void submitLaPack()}
+            >
+              Request area pack
+            </button>
+          </div>
+
           {message ? (
             <p
               className={

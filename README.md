@@ -29,7 +29,9 @@ Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHO
 - **Early years / childminders** — Ofsted day care + school nursery Ofsted join + EYFSP area benches; consented childminder directory + vetting checklist + visit pack (`npm run harvest:ey`)
 - **School stages** — Hampshire KS1 phonics context, KS2 tables + year trends, and KS4/16–18 where published, via `npm run harvest:hampshire` (seed-LA trim of the school index + history)
 
-Scheduled refresh uses the Hampshire maintained harvest. `npm run harvest` remains the **full England scaffold** for capability / escape hatch. Out-of-area on-demand packs are still backlog.
+Scheduled refresh uses the Hampshire maintained harvest. `npm run harvest` remains the **full England scaffold** for capability / escape hatch.
+
+**On-demand area packs (first slice):** outside Hampshire, parents can **Request area pack** (exact DfE LA label) from **A school is missing**. That queues `repository_dispatch` `la-pack` → `scripts/build-la-pack.py`, which writes a schools index under `public/data/packs/{slug}/` without overwriting the Hampshire root. Loading packs into the live map/compare UI, EY depth, and a later ingest→assess→improve loop over interest-weighted offline packs are tracked in `DEFERRED_IDEAS.md`.
 
 **Deferred ideas:** see [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md) for chat-mined backlog, partial work, and explicitly parked ideas (so we don’t re-litigate closed paths without new data).
 
@@ -76,6 +78,7 @@ npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 h
 # or: npm run enrich:independents   # refresh indie KS4/Ofsted only
 # or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
+# or: npm run pack:la -- --la Surrey   # on-demand LA schools pack under public/data/packs/
 npm run dev
 ```
 
