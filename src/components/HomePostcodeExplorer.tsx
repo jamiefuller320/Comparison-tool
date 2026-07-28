@@ -61,6 +61,8 @@ export function HomePostcodeExplorer({
   sectorFilter,
   onSectorFilterChange,
   max = 4,
+  /** When true, school pins ignore stage chips (sector only); EY/CM still follow stages. */
+  mapIgnoresStageFilter = false,
 }: {
   schools: SchoolRecord[];
   selectedUrns: string[];
@@ -70,6 +72,7 @@ export function HomePostcodeExplorer({
   sectorFilter: SectorId[];
   onSectorFilterChange: (next: SectorId[]) => void;
   max?: number;
+  mapIgnoresStageFilter?: boolean;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
   const [home, setHome] = useState<{
@@ -141,8 +144,9 @@ export function HomePostcodeExplorer({
     }
   }
 
-  // Schools are already sector/stage filtered by the parent; keep a defensive
-  // match here so the map and list always track the active School type chips.
+  // Schools are sector-filtered by the parent. When mapIgnoresStageFilter is on,
+  // school pins show the full collated option set for that sector; EY/childminders
+  // still follow the stage chips.
   const nearbyStraight = useMemo(() => {
     if (!home) return [] as NearbySchool[];
     return findNearbySchools(
@@ -156,11 +160,16 @@ export function HomePostcodeExplorer({
         if (isChildminder(school) && wantsChildminders(stageFilter)) {
           return true;
         }
-        if (!schoolMatchesPhases(school, stageFilter)) return false;
+        if (
+          !mapIgnoresStageFilter &&
+          !schoolMatchesPhases(school, stageFilter)
+        ) {
+          return false;
+        }
         return schoolMatchesSectors(school, sectorFilter);
       },
     );
-  }, [home, schools, radiusKm, stageFilter, sectorFilter]);
+  }, [home, schools, radiusKm, stageFilter, sectorFilter, mapIgnoresStageFilter]);
 
   useEffect(() => {
     // Drop stale road times as soon as the sector/stage filter changes so the

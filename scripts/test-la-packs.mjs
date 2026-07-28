@@ -12,6 +12,7 @@ async function main() {
     packDataPath,
     listReadyPacks,
     mergeSchoolsIndexWithPack,
+    mergeSchoolsIndexWithPacks,
   } = await import("../src/lib/laPacks.ts");
 
   if (SEED_LOCAL_AUTHORITY !== "Hampshire") {
@@ -131,8 +132,52 @@ async function main() {
     console.error("FAIL phonics union", merged.benchmarks.phonics);
     process.exit(1);
   }
-  if (merged.activePackSlug !== "surrey") {
-    console.error("FAIL activePackSlug", merged.activePackSlug);
+  if (
+    !Array.isArray(merged.collatedPackLabels) ||
+    merged.collatedPackLabels[0] !== "Surrey"
+  ) {
+    console.error("FAIL collatedPackLabels", merged.collatedPackLabels);
+    process.exit(1);
+  }
+
+  const pack2 = {
+    generatedAt: "2026-07-28",
+    period: "2024/2025",
+    source: { api: "x", datasets: {}, primarySite: "y", note: "iow." },
+    benchmarks: {
+      england: { rwmExpected: 60 },
+      localAuthorities: { "Isle of Wight": { rwmExpected: 58 } },
+    },
+    schools: [
+      {
+        urn: "3",
+        name: "IoW Primary",
+        localAuthority: "Isle of Wight",
+        rwmExpected: 55,
+      },
+    ],
+    stats: { schoolCount: 1, withRwm: 1, localAuthorityCount: 1 },
+  };
+  const multi = mergeSchoolsIndexWithPacks(seed, [
+    { index: pack, meta: { slug: "surrey", localAuthority: "Surrey" } },
+    {
+      index: pack2,
+      meta: { slug: "isle-of-wight", localAuthority: "Isle of Wight" },
+    },
+  ]);
+  if (multi.schools.length !== 3) {
+    console.error("FAIL multi-pack school count", multi.schools);
+    process.exit(1);
+  }
+  if (
+    !multi.collatedPackLabels?.includes("Surrey") ||
+    !multi.collatedPackLabels?.includes("Isle of Wight")
+  ) {
+    console.error("FAIL multi collated labels", multi.collatedPackLabels);
+    process.exit(1);
+  }
+  if (!multi.source.note.includes("Isle of Wight")) {
+    console.error("FAIL multi source note", multi.source.note);
     process.exit(1);
   }
 

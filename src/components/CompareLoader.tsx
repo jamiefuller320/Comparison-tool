@@ -9,9 +9,38 @@ import type {
 import {
   loadChildmindersIndex,
   loadEyProvidersIndex,
+  loadLaPackManifest,
+  loadLaPackSchoolsIndex,
   loadSchoolsIndex,
 } from "@/lib/data";
+import {
+  listReadyPacks,
+  mergeSchoolsIndexWithPacks,
+} from "@/lib/laPacks";
 import { CompareApp } from "@/components/CompareApp";
+
+async function loadMergedSchoolsIndex(
+  fetchImpl: typeof fetch,
+  cacheBust: boolean,
+): Promise<SchoolsIndex> {
+  const seed = await loadSchoolsIndex(fetchImpl, cacheBust);
+  const manifest = await loadLaPackManifest(fetchImpl, cacheBust);
+  const ready = listReadyPacks(manifest);
+  if (!ready.length) return seed;
+
+  const loaded = await Promise.all(
+    ready.map(async (entry) => {
+      const index = await loadLaPackSchoolsIndex(entry.slug, fetchImpl, cacheBust);
+      return index ? { index, meta: entry } : null;
+    }),
+  );
+  const packs = loaded.filter(
+    (row): row is { index: SchoolsIndex; meta: (typeof ready)[number] } =>
+      Boolean(row),
+  );
+  if (!packs.length) return seed;
+  return mergeSchoolsIndexWithPacks(seed, packs);
+}
 
 export function CompareLoader() {
   const [index, setIndex] = useState<SchoolsIndex | null>(null);
@@ -23,7 +52,7 @@ export function CompareLoader() {
 
   const reloadIndex = useCallback(async () => {
     const [data, ey, childminders] = await Promise.all([
-      loadSchoolsIndex(fetch, true),
+      loadMergedSchoolsIndex(fetch, true),
       loadEyProvidersIndex(fetch, true),
       loadChildmindersIndex(fetch, true),
     ]);
@@ -37,7 +66,7 @@ export function CompareLoader() {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      loadSchoolsIndex(fetch, reloadToken > 0),
+      loadMergedSchoolsIndex(fetch, reloadToken > 0),
       loadEyProvidersIndex(fetch, reloadToken > 0),
       loadChildmindersIndex(fetch, reloadToken > 0),
     ])

@@ -108,10 +108,12 @@ export function MissingSchoolButton({
         >
           <p>
             This build maintains <strong>{SEED_GEOGRAPHY_LABEL}</strong> schools
-            and early years settings. Search first — many infants and secondaries
-            appear once the right stages and range are selected. If a{" "}
-            {SEED_GEOGRAPHY_LABEL} setting is truly absent, this queues a
-            maintained-set rebuild (limited to <strong>one per day</strong>).
+            and early years settings, and silently includes any other local
+            authorities already collated into the directory. Search first — many
+            infants and secondaries appear once the right stages and range are
+            selected. If a {SEED_GEOGRAPHY_LABEL} setting is truly absent, this
+            queues a maintained-set rebuild (limited to{" "}
+            <strong>one per day</strong>).
           </p>
           <div className="postcode-row">
             <input
@@ -156,9 +158,10 @@ export function MissingSchoolButton({
           ) : null}
 
           <p className="footnote" style={{ marginTop: "1rem" }}>
-            Outside {SEED_GEOGRAPHY_LABEL}? Request an <strong>on-demand area
-            pack</strong> (schools index first; EY depth follows). Use the exact
-            DfE local authority label. Limited to one pack build per day.
+            Outside {SEED_GEOGRAPHY_LABEL}? Request coverage for another local
+            authority (exact DfE label). When the build deploys, those schools
+            appear on the map and in search automatically — no pack to activate.
+            Limited to one area build per day.
           </p>
           <div className="postcode-row">
             <input
@@ -179,7 +182,7 @@ export function MissingSchoolButton({
               disabled={busy}
               onClick={() => void submitLaPack()}
             >
-              Request area pack
+              Request area coverage
             </button>
           </div>
 
