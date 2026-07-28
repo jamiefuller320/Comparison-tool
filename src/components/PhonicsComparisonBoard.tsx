@@ -21,6 +21,8 @@ import {
 import { fmtNum, fmtPct, fmtPp, ppGap, shortName } from "@/lib/format";
 import { formatSector, resolveSchoolSector } from "@/lib/sectors";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
+import { BoardProvenance } from "@/components/BoardProvenance";
+import type { SourceStamp } from "@/lib/sourceStamp";
 
 const CHART_KEYS = [
   "year1Expected",
@@ -40,9 +42,11 @@ function formatValue(
 export function PhonicsComparisonBoard({
   schools,
   phonics,
+  sourceStamp,
 }: {
   schools: SchoolRecord[];
   phonics?: PhonicsBenchmarkSet;
+  sourceStamp?: SourceStamp | null;
 }) {
   if (schools.length === 0) {
     return (
@@ -107,6 +111,9 @@ export function PhonicsComparisonBoard({
           ? " None of these schools have a matching local-authority phonics row."
           : null}
       </p>
+      {sourceStamp ? (
+        <BoardProvenance stamp={sourceStamp} board="ks1-phonics" />
+      ) : null}
 
       <div className="compare-board">
         <table className="compare-table">

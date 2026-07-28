@@ -3,6 +3,10 @@
 import type { SchoolRecord } from "@/lib/types";
 import { EY_PROVIDER_METRICS, isEyProvider } from "@/lib/eyMetrics";
 import { fmtNum, shortName } from "@/lib/format";
+import { SourceStampLine } from "@/components/SourceStampLine";
+import { ReportProblemButton } from "@/components/ReportProblemButton";
+import type { SourceStamp } from "@/lib/sourceStamp";
+import { schoolDeepLink } from "@/lib/sourceStamp";
 
 function formatValue(
   value: string | number | null | undefined,
@@ -19,12 +23,16 @@ export function EarlyYearsComparisonBoard({
   stateOfstedAsAt,
   childcareSourcePage,
   stateSourcePage,
+  childcareStamp,
+  stateStamp,
 }: {
   providers: SchoolRecord[];
   childcareOfstedAsAt?: string | null;
   stateOfstedAsAt?: string | null;
   childcareSourcePage?: string | null;
   stateSourcePage?: string | null;
+  childcareStamp?: SourceStamp | null;
+  stateStamp?: SourceStamp | null;
 }) {
   if (providers.length === 0) {
     return (
@@ -69,6 +77,18 @@ export function EarlyYearsComparisonBoard({
           </a>
         ) : null}
       </p>
+      {hasChildcare && childcareStamp ? (
+        <SourceStampLine stamp={childcareStamp} />
+      ) : null}
+      {hasSchool && stateStamp ? <SourceStampLine stamp={stateStamp} /> : null}
+      {(childcareStamp || stateStamp) ? (
+        <div className="board-provenance-actions">
+          <ReportProblemButton
+            board="early-years-ofsted"
+            stamp={(stateStamp || childcareStamp)!}
+          />
+        </div>
+      ) : null}
 
       <div className="compare-board">
         <table className="compare-table">
@@ -106,6 +126,28 @@ export function EarlyYearsComparisonBoard({
                           Ofsted report ↗
                         </a>
                       </span>
+                    ) : null}
+                    {(isEyProvider(provider) ? childcareStamp : stateStamp) ? (
+                      <ReportProblemButton
+                        compact
+                        board="early-years-ofsted"
+                        stamp={{
+                          ...(isEyProvider(provider)
+                            ? childcareStamp!
+                            : stateStamp!),
+                          deepLink:
+                            schoolDeepLink(provider) ||
+                            (isEyProvider(provider)
+                              ? childcareStamp?.deepLink
+                              : stateStamp?.deepLink) ||
+                            null,
+                        }}
+                        urn={provider.urn}
+                        schoolName={provider.name}
+                        field="ofstedOverall"
+                        fieldLabel="Ofsted overall"
+                        shownValue={provider.ofstedOverall ?? "—"}
+                      />
                     ) : null}
                   </div>
                 </th>

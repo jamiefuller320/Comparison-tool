@@ -1,0 +1,119 @@
+name: Data challenge intake
+
+# Private review queue for "Report a problem" challenges from the live site.
+# Prefer CHALLENGE_INTAKE_REPO (private) so emails and notes stay off a public
+# issues list. Falls back to this repo with label data-challenge.
+
+on:
+  repository_dispatch:
+    types: [data-challenge]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print payload handling without creating an issue"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build challenge issue
+        id: challenge
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, re
+          raw = os.environ.get("PAYLOAD") or "{}"
+          try:
+              p = json.loads(raw)
+          except json.JSONDecodeError:
+              p = {}
+          if not isinstance(p, dict):
+              p = {}
+
+          def clean(key, limit=500):
+              val = str(p.get(key) or "").strip()
+              return val[:limit]
+
+          school = clean("schoolName", 120) or "Unknown setting"
+          urn = clean("urn", 40)
+          field = clean("fieldLabel", 120) or clean("field", 80) or "general"
+          title = f"[data-challenge] {school} — {field}"
+          title = re.sub(r"\s+", " ", title)[:180]
+
+          email = clean("email", 200)
+          has_email = clean("hasEmail", 8).lower() == "yes" and bool(email)
+
+          lines = [
+              "## Data challenge (Schoolside)",
+              "",
+              "| Field | Value |",
+              "| --- | --- |",
+              f"| Board | `{clean('board', 40)}` |",
+              f"| Setting | {school} |",
+              f"| URN | `{urn or '—'}` |",
+              f"| Field | {field} |",
+              f"| Shown value | {clean('shownValue', 300) or '—'} |",
+              f"| Source stamp | {clean('stampSummary', 400) or '—'} |",
+              f"| Stamp id | `{clean('stampId', 80)}` |",
+              f"| Period | {clean('stampPeriod', 40) or '—'} |",
+              f"| As at | {clean('stampAsAt', 40) or '—'} |",
+              f"| Dataset | {clean('stampDataset', 200) or '—'} |",
+              f"| Deep link | {clean('stampDeepLink', 300) or '—'} |",
+              f"| Page URL | {clean('pageUrl', 400) or '—'} |",
+              f"| Requested at | {clean('requestedAt', 40) or '—'} |",
+              "",
+              "### Reporter note",
+              clean("note", 2000) or "_(empty)_",
+              "",
+              "### Contact",
+          ]
+          if has_email:
+              # Keep email out of public issue bodies; surface in step summary only.
+              lines.append("Email provided — see Actions job summary (not copied into this issue).")
+          else:
+              lines.append("No email provided.")
+          lines += [
+              "",
+              "_Queued by Schoolside “Report a problem”. Review privately; do not treat as a public dispute thread._",
+          ]
+          body = "\n".join(lines)
+          pathlib.Path("challenge-title.txt").write_text(title, encoding="utf-8")
+          pathlib.Path("challenge-body.md").write_text(body, encoding="utf-8")
+          summary = pathlib.Path(os.environ["GITHUB_STEP_SUMMARY"])
+          with summary.open("a", encoding="utf-8") as fh:
+              fh.write("## Challenge intake\n\n")
+              fh.write(f"**Title:** {title}\n\n")
+              if has_email:
+                  fh.write(f"**Maintainer contact (private to Actions viewers):** `{email}`\n\n")
+              fh.write(body)
+              fh.write("\n")
+          print(title)
+          PY
+
+      - name: Create intake issue
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true') }}
+        env:
+          # Prefer a private intake repo + PAT. Fallback: this repo + GITHUB_TOKEN.
+          GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
+          INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO || github.repository }}
+        run: |
+          set -euo pipefail
+          TITLE=$(cat challenge-title.txt)
+          gh issue create \
+            --repo "$INTAKE_REPO" \
+            --title "$TITLE" \
+            --label "data-challenge" \
+            --body-file challenge-body.md \
+            || gh issue create \
+              --repo "$INTAKE_REPO" \
+              --title "$TITLE" \
+              --body-file challenge-body.md

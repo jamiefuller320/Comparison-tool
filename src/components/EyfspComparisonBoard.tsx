@@ -9,6 +9,8 @@ import {
 } from "@/lib/eyfspMetrics";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { fmtNum, fmtPct, fmtPp, ppGap } from "@/lib/format";
+import { BoardProvenance } from "@/components/BoardProvenance";
+import type { SourceStamp } from "@/lib/sourceStamp";
 
 function formatValue(
   value: number | null | undefined,
@@ -22,8 +24,10 @@ function formatValue(
 
 export function EyfspComparisonBoard({
   eyfsp,
+  sourceStamp,
 }: {
   eyfsp?: EyfspBenchmarkSet;
+  sourceStamp?: SourceStamp | null;
 }) {
   const england = eyfspEngland(eyfsp);
   const seed = eyfspForSeedLa(eyfsp);
@@ -55,6 +59,9 @@ export function EyfspComparisonBoard({
           </a>
         ) : null}
       </p>
+      {sourceStamp ? (
+        <BoardProvenance stamp={sourceStamp} board="eyfsp" />
+      ) : null}
 
       <div className="compare-board">
         <table className="compare-table">
