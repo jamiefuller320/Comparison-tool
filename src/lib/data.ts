@@ -27,6 +27,49 @@ export async function loadSchoolsIndex(
   return res.json() as Promise<SchoolsIndex>;
 }
 
+export async function loadLaPackManifest(
+  fetchImpl: typeof fetch = fetch,
+  cacheBust = false,
+): Promise<import("@/lib/laPacks").LaPackManifest | null> {
+  const url = cacheBust
+    ? `${dataUrl("/data/packs/manifest.json")}?t=${Date.now()}`
+    : dataUrl("/data/packs/manifest.json");
+  try {
+    const res = await fetchImpl(url, {
+      cache: cacheBust ? "no-store" : "default",
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) return null;
+    return (await res.json()) as import("@/lib/laPacks").LaPackManifest;
+  } catch {
+    return null;
+  }
+}
+
+export async function loadLaPackSchoolsIndex(
+  slug: string,
+  fetchImpl: typeof fetch = fetch,
+  cacheBust = false,
+): Promise<SchoolsIndex | null> {
+  const path = `/data/packs/${slug}/schools-index.json`;
+  const url = cacheBust ? `${dataUrl(path)}?t=${Date.now()}` : dataUrl(path);
+  try {
+    const res = await fetchImpl(url, {
+      cache: cacheBust ? "no-store" : "default",
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) {
+      throw new Error(`Failed to load LA pack ${slug} (${res.status})`);
+    }
+    return (await res.json()) as SchoolsIndex;
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith("Failed to load")) {
+      throw err;
+    }
+    return null;
+  }
+}
+
 export async function loadEyProvidersIndex(
   fetchImpl: typeof fetch = fetch,
   cacheBust = false,
