@@ -11,6 +11,7 @@ import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { fmtNum, fmtPct, fmtPp, ppGap } from "@/lib/format";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import type { SourceStamp } from "@/lib/sourceStamp";
+import { gapsForEyfsp } from "@/lib/dataGaps";
 
 function formatValue(
   value: number | null | undefined,
@@ -32,6 +33,7 @@ export function EyfspComparisonBoard({
   const england = eyfspEngland(eyfsp);
   const seed = eyfspForSeedLa(eyfsp);
   const period = eyfsp?.period ?? "latest";
+  const dataGaps = gapsForEyfsp(eyfsp);
 
   if (!england?.gldPercent && !seed?.gldPercent) {
     return (
@@ -60,7 +62,7 @@ export function EyfspComparisonBoard({
         ) : null}
       </p>
       {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="eyfsp" />
+        <BoardProvenance stamp={sourceStamp} board="eyfsp" gaps={dataGaps} />
       ) : null}
 
       <div className="compare-board">

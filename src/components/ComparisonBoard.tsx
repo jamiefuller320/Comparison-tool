@@ -25,9 +25,11 @@ import {
 } from "@/lib/ks2History";
 import { MetricHistoryChart } from "@/components/MetricHistoryChart";
 import { BoardProvenance } from "@/components/BoardProvenance";
+import { DataGapFlags } from "@/components/DataGapFlags";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
+import { gapsForKs2Board, schoolGaps } from "@/lib/dataGaps";
 
 const SUBJECT_KEYS = [
   "rwmExpected",
@@ -88,6 +90,7 @@ export function ComparisonBoard({
   const historyPanelRef = useRef<HTMLDivElement | null>(null);
 
   const urnKey = schools.map((s) => s.urn).join(",");
+  const dataGaps = gapsForKs2Board(schools);
 
   useEffect(() => {
     setActiveMetric(null);
@@ -223,7 +226,7 @@ export function ComparisonBoard({
         row (state KS2 archive from Compare school performance).
       </p>
       {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="ks2" />
+        <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
       ) : null}
 
       <div className="compare-board">
@@ -255,6 +258,10 @@ export function ComparisonBoard({
                         figures comparable with state schools.
                       </span>
                     ) : null}
+                    <DataGapFlags
+                      compact
+                      gaps={schoolGaps(dataGaps, school.urn)}
+                    />
                     {school.compareUrl ? (
                       <a href={school.compareUrl} target="_blank" rel="noreferrer">
                         Official tables ↗

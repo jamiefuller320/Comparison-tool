@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-27 (provenance stamps + report-a-problem).
+Last reviewed from agent chat: 2026-07-28 (data-quality gap flags).
 
 ## How to use
 
@@ -17,7 +17,6 @@ Last reviewed from agent chat: 2026-07-27 (provenance stamps + report-a-problem)
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Data-quality gap flags** | Surface known fetch/join gaps on boards (e.g. missing Ofsted as-at, nil KS4) beside provenance — not the same as user challenges. | Not started | Trust infra follow-on |
 | **On-demand LA packs beyond Hampshire** | Keep Hampshire pre-built; for other LAs, fetch/cache EY (and later stage) packs on user request — evolve “school is missing” — instead of national pre-harvest. | Not started | User economic path + README |
 
 ### Product path / scope
@@ -80,5 +79,6 @@ For orientation only — not backlog:
 - UI declutter: filters only in hero; path-scoped Side by side tabs; visit pack + checklist on childcare paths  
 - Hampshire age-climb maintained harvest (`harvest:hampshire` / seed-LA trim); national `harvest` kept as scaffold  
 - **Source provenance stamps** on compare boards + **Report a problem** challenge intake (`data-challenge` workflow; prefer private intake repo)  
+- **Data-quality gap flags** beside provenance (known nils / missing as-at / ungraded Ofsted — not user challenges)  
 
 See `README.md` North Star and Initial scope for governing priorities.
