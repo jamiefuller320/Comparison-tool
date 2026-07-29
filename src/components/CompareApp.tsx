@@ -419,26 +419,6 @@ export function CompareApp({
     return [...extra, ...fromSchools];
   }, [index.schools, eyIndex, childmindersIndex, stages, sectors]);
 
-  /**
-   * Map shows the full collated school option set for the selected sector(s),
-   * across stages — packs are already merged into `index`. Directory categories
-   * (EY / childminders) still follow the stage chips.
-   */
-  const mapSchools = useMemo(() => {
-    const fromSchools = index.schools.filter((s) =>
-      schoolMatchesSectors(s, sectors),
-    );
-    const seen = new Set(fromSchools.map((s) => s.urn));
-    const extra = [
-      ...(wantsEyMetrics(stages) ? (eyIndex?.providers ?? []) : []),
-      ...(wantsChildminders(stages)
-        ? (childmindersIndex?.providers ?? [])
-        : []),
-    ].filter((p) => !seen.has(p.urn));
-    if (!extra.length) return fromSchools;
-    return [...extra, ...fromSchools];
-  }, [index.schools, eyIndex, childmindersIndex, stages, sectors]);
-
   const summaryOpts = {
     englandRwm: index.benchmarks.england.rwmExpected,
     indieBench: index.benchmarks.independent,
@@ -669,14 +649,13 @@ export function CompareApp({
     <>
       <ProductTour />
       <HomePostcodeExplorer
-        schools={mapSchools}
+        schools={filteredSchools}
         selectedUrns={selected}
         onToggle={toggleSchool}
         stageFilter={stages}
         onStageFilterChange={changeStages}
         sectorFilter={sectors}
         onSectorFilterChange={changeSectors}
-        mapIgnoresStageFilter
       />
 
       <section className="section" id="compare">

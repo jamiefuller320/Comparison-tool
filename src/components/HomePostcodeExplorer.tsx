@@ -11,7 +11,6 @@ import dynamic from "next/dynamic";
 import type { SchoolRecord } from "@/lib/types";
 import { geocodePostcode, parseUkPostcode } from "@/lib/postcode";
 import {
-  compareNearbySchools,
   fetchRoadDistances,
   findNearbySchools,
   fmtDistance,
@@ -38,16 +37,6 @@ import {
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 import { requestTourStart } from "@/lib/tour";
 
-/** True when a setting belongs under the currently selected stage chips. */
-function schoolMatchesSelectedStages(
-  school: SchoolRecord,
-  stages: PhaseId[],
-): boolean {
-  if (isEyProvider(school)) return wantsEyMetrics(stages);
-  if (isChildminder(school)) return wantsChildminders(stages);
-  return schoolMatchesPhases(school, stages);
-}
-
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
   {
@@ -72,8 +61,6 @@ export function HomePostcodeExplorer({
   sectorFilter,
   onSectorFilterChange,
   max = 4,
-  /** When true, school pins ignore stage chips (sector only); EY/CM still follow stages. */
-  mapIgnoresStageFilter = false,
 }: {
   schools: SchoolRecord[];
   selectedUrns: string[];
@@ -83,7 +70,6 @@ export function HomePostcodeExplorer({
   sectorFilter: SectorId[];
   onSectorFilterChange: (next: SectorId[]) => void;
   max?: number;
-  mapIgnoresStageFilter?: boolean;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
   const [home, setHome] = useState<{
@@ -155,15 +141,8 @@ export function HomePostcodeExplorer({
     }
   }
 
-  // Schools are sector-filtered by the parent. When mapIgnoresStageFilter is on,
-  // school pins show the full collated option set for that sector; the list still
-  // prefers selected stages first, then other nearby schools by distance.
-  const preferSelectedStages = useMemo(
-    () => (school: SchoolRecord) =>
-      schoolMatchesSelectedStages(school, stageFilter),
-    [stageFilter],
-  );
-
+  // Parent passes stage + sector filtered schools; keep a defensive match so the
+  // map and list stay aligned with the active chips.
   const nearbyStraight = useMemo(() => {
     if (!home) return [] as NearbySchool[];
     return findNearbySchools(
@@ -177,27 +156,11 @@ export function HomePostcodeExplorer({
         if (isChildminder(school) && wantsChildminders(stageFilter)) {
           return true;
         }
-        if (
-          !mapIgnoresStageFilter &&
-          !schoolMatchesPhases(school, stageFilter)
-        ) {
-          return false;
-        }
+        if (!schoolMatchesPhases(school, stageFilter)) return false;
         return schoolMatchesSectors(school, sectorFilter);
       },
-      mapIgnoresStageFilter
-        ? { prefer: preferSelectedStages }
-        : undefined,
     );
-  }, [
-    home,
-    schools,
-    radiusKm,
-    stageFilter,
-    sectorFilter,
-    mapIgnoresStageFilter,
-    preferSelectedStages,
-  ]);
+  }, [home, schools, radiusKm, stageFilter, sectorFilter]);
 
   useEffect(() => {
     // Drop stale road times as soon as the sector/stage filter changes so the
@@ -205,26 +168,19 @@ export function HomePostcodeExplorer({
     setRoadByUrn({});
   }, [sectorFilter, stageFilter]);
 
-  const nearby = useMemo(() => {
-    const withRoads = nearbyStraight.map((school) => {
-      const road = roadByUrn[school.urn];
-      if (!road) return school;
-      return {
-        ...school,
-        roadMetres: road.metres,
-        roadMinutes: road.minutes,
-      };
-    });
-    if (!mapIgnoresStageFilter) return withRoads;
-    return [...withRoads].sort((a, b) =>
-      compareNearbySchools(a, b, preferSelectedStages),
-    );
-  }, [
-    nearbyStraight,
-    roadByUrn,
-    mapIgnoresStageFilter,
-    preferSelectedStages,
-  ]);
+  const nearby = useMemo(
+    () =>
+      nearbyStraight.map((school) => {
+        const road = roadByUrn[school.urn];
+        if (!road) return school;
+        return {
+          ...school,
+          roadMetres: road.metres,
+          roadMinutes: road.minutes,
+        };
+      }),
+    [nearbyStraight, roadByUrn],
+  );
 
   useEffect(() => {
     if (!home || nearbyStraight.length === 0) {
@@ -421,12 +377,12 @@ export function HomePostcodeExplorer({
 
             <div className="nearby-layout">
               <NearbyMap
-                key={`map-${home.postcode}-${radiusKm}-${stageFilter.join("-")}-${sectorFilter.join("-")}`}
+                key={`map-${home.postcode}`}
                 home={home}
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}
                 selectedUrns={selectedUrns}
-                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${nearby.map((s) => s.urn).join(",")}`}
+                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${[...nearby].map((s) => s.urn).sort().join(",")}`}
                 onSelect={(urn) => {
                   if (selectedUrns.includes(urn) || !atMax) onToggle(urn);
                 }}
@@ -439,9 +395,7 @@ export function HomePostcodeExplorer({
                     {radiusKm} km
                   </strong>
                   <span>
-                    {mapIgnoresStageFilter
-                      ? "Selected stages first, then other nearby · tick to compare"
-                      : "List updates with the range ring · tick to compare"}
+                    List updates with the range ring · tick to compare
                   </span>
                 </div>
                 {nearby.length === 0 ? (
@@ -457,23 +411,16 @@ export function HomePostcodeExplorer({
                       const checked = selectedUrns.includes(school.urn);
                       const disabled = !checked && atMax;
                       const sector = formatSector(resolveSchoolSector(school));
-                      const stageMatch = schoolMatchesSelectedStages(
-                        school,
-                        stageFilter,
-                      );
                       return (
                         <li key={school.urn}>
                           <label
-                            className={[
-                              "nearby-item",
-                              checked ? "selected" : "",
-                              disabled ? "disabled" : "",
-                              mapIgnoresStageFilter && !stageMatch
-                                ? "off-stage"
-                                : "",
-                            ]
-                              .filter(Boolean)
-                              .join(" ")}
+                            className={
+                              checked
+                                ? "nearby-item selected"
+                                : disabled
+                                  ? "nearby-item disabled"
+                                  : "nearby-item"
+                            }
                           >
                             <input
                               type="checkbox"
