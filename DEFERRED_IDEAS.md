@@ -52,7 +52,7 @@ Only after durable parent and (separately) board audiences exist. Not a near-ter
 | --- | --- | --- | --- |
 | **Out-of-school / holiday day care** | Include EYR out-of-school and holiday day-care providers in Hampshire EY coverage. | Not started | Agent (“still to do” after EY MVP) |
 | **Richer qualitative evidence layer** | Deeper researched qualitative context with user-accessible evidence (beyond current Ofsted/EYFSP footnotes); optional key phrases from Ofsted reports. | Partial (basic explainers/footnotes/tour shipped) | North Star #2 |
-| **Ofsted report précis engine** | Second-pass item: generate a short, parent-facing précis of each setting’s latest Ofsted report (verifiable quotes / footnote back to the report). Not needed before Hampshire age-climb. | Not started (second pass) | User |
+| **Ofsted report précis engine** | Second-pass item: generate a short, parent-facing précis of each setting’s latest Ofsted report (verifiable quotes / footnote back to the report). Not needed before Hampshire age-climb. | Not started (second pass); ISI latest-report citation MVP shipped separately | User |
 | **Layperson empty-state polish** | Clearer empty states (e.g. schools-only shortlist under EY); fuller COVID/data caveats; prove full North Star loop on the EY vertical. | Partial | North Star #3 / agent |
 | **Hampshire FIS contact enrichment** | Optionally link Hampshire Family Information Service (or a public FIS feed) for contacts beyond address + Ofsted report. | Not started | Agent recommendation |
 | **Childminder “market overview”** | Area signal such as % Good by constituency — not side-by-side named compare. Floated when redacted MI looked weak; consented directory shipped instead; overview never built. | Deferred | Agent alternative |
@@ -61,7 +61,7 @@ Only after durable parent and (separately) board audiences exist. Not a near-ter
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Stable ISI report URLs + grade depth** | Resolve stable ISI report URLs (not search links); bulk ISI grades not available cleanly. | Partial (name-search URLs + optional profile resolve; GIAS InspectorateReport usually blank) | Agent improvement |
+| **Stable ISI report URLs + grade depth** | Resolve stable ISI report URLs (not search links); bulk ISI grades not available cleanly. | Partial (profile + latest DownloadReport citation + date/title; grades still not harvested) | Agent improvement |
 | **History / trends beyond state KS2** | Year charts for independents or other stages. User indicated history is mainly worth it for solid state datasets; state KS2 trends shipped. | Deferred | User (scoped) |
 
 ### Product metrics

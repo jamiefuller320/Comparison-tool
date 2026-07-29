@@ -119,6 +119,19 @@ def main() -> None:
     assert mod.KS4_TOTAL_FILTERS["pPmSo"] == "5Kydi"
     assert mod.KS4_TOTAL_FILTERS["LZ6Wj"] == "9b64v"
 
+    fixture = """
+    <ul>
+      <li><a class="--docreader" href="https://reports.isi.net/DownloadReport.aspx?t=c&amp;r=EQI7250_20230321.pdf&amp;s=7250"></a></li>
+      <li><a class="--docreader" href="https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU7250_20260303.pdf&s=7250"></a></li>
+      <li><a class="--docreader" href="https://reports.isi.net/DownloadReport.aspx?t=c&r=NRIMC7250_20260618.pdf&s=7250"></a></li>
+    </ul>
+    """
+    latest = mod.parse_isi_latest_report(fixture)
+    assert latest is not None
+    assert latest["isiLatestReportDate"] == "2026-06-18"
+    assert "NRIMC7250_20260618" in latest["isiLatestReportUrl"]
+    assert latest["isiLatestReportTitle"] == "Interim monitoring visit"
+
     print("indie sanitize ok")
 
 

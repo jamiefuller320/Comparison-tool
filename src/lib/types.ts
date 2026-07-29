@@ -79,6 +79,14 @@ export interface IndependentMetrics {
   schoolWebsite?: string | null;
   inspectorateName?: string | null;
   isiReportsUrl?: string | null;
+  /** Stable ISI institution profile when resolved. */
+  isiProfileUrl?: string | null;
+  /** Direct PDF / DownloadReport link for the newest listed ISI report. */
+  isiLatestReportUrl?: string | null;
+  /** ISO date (YYYY-MM-DD) parsed from the ISI report filename. */
+  isiLatestReportDate?: string | null;
+  /** Short label such as "Routine inspection". */
+  isiLatestReportTitle?: string | null;
   inspectionReportsUrl?: string | null;
   giasUrl?: string | null;
 }

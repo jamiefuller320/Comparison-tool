@@ -3,6 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import type { NearbySchool } from "@/lib/nearby";
+import {
+  classifyKs4Missing,
+  hasPublishedKs4,
+  ks4MissingGapMeta,
+} from "@/lib/dataGaps";
+import { schoolOffersSecondary } from "@/lib/phases";
 import "leaflet/dist/leaflet.css";
 
 const RING_STYLE = {
@@ -13,13 +19,24 @@ const RING_STYLE = {
   fillOpacity: 0.06,
 };
 
-function schoolIcon(selected: boolean, focused: boolean) {
-  const fill = selected ? "#c45c26" : focused ? "#1f6b4a" : "#0b4f6c";
+function schoolIcon(
+  selected: boolean,
+  focused: boolean,
+  muted = false,
+) {
+  const fill = selected
+    ? "#c45c26"
+    : focused
+      ? "#1f6b4a"
+      : muted
+        ? "#8a9bb0"
+        : "#0b4f6c";
+  const opacity = muted && !selected ? "0.55" : "1";
   return L.divIcon({
     className: "school-marker",
     html: `<span style="
       display:block;width:14px;height:14px;border-radius:50%;
-      background:${fill};border:2px solid #fff;
+      background:${fill};border:2px solid #fff;opacity:${opacity};
       box-shadow:0 1px 4px rgba(20,35,58,.35);
     "></span>`,
     iconSize: [14, 14],
@@ -47,6 +64,8 @@ export function NearbyMap({
   selectedUrns,
   focusUrn,
   refreshToken,
+  emphasizeKs4 = false,
+  comparableKs4Only = true,
   onSelect,
 }: {
   home: { latitude: number; longitude: number; postcode: string };
@@ -56,6 +75,8 @@ export function NearbyMap({
   focusUrn?: string | null;
   /** Changes whenever range/stages/results change — forces a redraw + rescale. */
   refreshToken?: string;
+  emphasizeKs4?: boolean;
+  comparableKs4Only?: boolean;
   onSelect: (urn: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -128,13 +149,27 @@ export function NearbyMap({
 
     for (const school of schools) {
       if (school.latitude == null || school.longitude == null) continue;
+      const notComparable =
+        emphasizeKs4 &&
+        !comparableKs4Only &&
+        schoolOffersSecondary(school) &&
+        !hasPublishedKs4(school);
+      const gapLabel = notComparable
+        ? ks4MissingGapMeta(classifyKs4Missing(school)).label
+        : null;
       const marker = L.marker([school.latitude, school.longitude], {
-        icon: schoolIcon(selectedSet.has(school.urn), focusUrn === school.urn),
+        icon: schoolIcon(
+          selectedSet.has(school.urn),
+          focusUrn === school.urn,
+          Boolean(notComparable),
+        ),
         title: school.name,
       });
       marker.bindPopup(
         `<strong>${school.name}</strong><br/>` +
           `${school.rwmExpected != null ? `${school.rwmExpected}% RWM · ` : ""}` +
+          `${school.att8Average != null ? `Att8 ${school.att8Average} · ` : ""}` +
+          `${gapLabel ? `No comparable Att8 · ${gapLabel}<br/>` : ""}` +
           `tap list to compare`,
       );
       marker.on("click", () => onSelectRef.current(school.urn));
@@ -156,6 +191,8 @@ export function NearbyMap({
     selectedSet,
     focusUrn,
     refreshToken,
+    emphasizeKs4,
+    comparableKs4Only,
   ]);
 
   return (

@@ -468,26 +468,33 @@ def resolve_isi_profile_url(name: str, postcode: str | None = None) -> str | Non
         html = get_bytes(search).decode("utf-8", errors="replace")
     except Exception:  # noqa: BLE001
         return None
-    # Profile links look like /institutions/school/winchester-college-7250
+    # Hrefs may be absolute, root-relative, or site-relative without a leading /.
     matches = re.findall(
-        r'href="(https://www\.isi\.net/institutions/school/[^"#?\s]+)"',
+        r'href="((?:https://www\.isi\.net)?/?institutions/school/[^"#?\s]+)"',
         html,
         flags=re.I,
     )
-    if not matches:
-        matches = [
-            "https://www.isi.net" + path
-            for path in re.findall(
-                r'href="(/institutions/school/[^"#?\s]+)"',
-                html,
-                flags=re.I,
-            )
-        ]
+    normalized: list[str] = []
+    for raw in matches:
+        path = raw.split("?", 1)[0]
+        if path.startswith("http"):
+            normalized.append(path)
+        elif path.startswith("/"):
+            normalized.append("https://www.isi.net" + path)
+        else:
+            normalized.append("https://www.isi.net/" + path)
+    # De-dupe while preserving order.
+    seen: set[str] = set()
+    matches = []
+    for url in normalized:
+        if url in seen:
+            continue
+        seen.add(url)
+        matches.append(url)
     if not matches:
         return None
     if len(matches) == 1:
         return matches[0]
-    # Prefer a slug that contains distinctive name tokens.
     tokens = [
         t
         for t in re.findall(r"[a-z0-9]+", clean_name.lower())
@@ -502,6 +509,71 @@ def resolve_isi_profile_url(name: str, postcode: str | None = None) -> str | Non
     if scored and scored[0][0] > 0:
         return scored[0][1]
     return matches[0]
+
+
+_ISI_REPORT_KIND = {
+    "ROU": "Routine inspection",
+    "EQI": "Educational quality inspection",
+    "FLW": "Focused compliance / welfare",
+    "FLWMC": "Focused compliance / welfare",
+    "NRIMC": "Interim monitoring visit",
+    "ADD": "Additional inspection",
+    "GRT": "Progress monitoring",
+    "COMP": "Compliance inspection",
+}
+
+
+def parse_isi_latest_report(html: str) -> dict | None:
+    """Pick the newest DownloadReport PDF from an ISI institution profile page."""
+    reports: list[dict] = []
+    for href in re.findall(
+        r'href="(https://reports\.isi\.net/DownloadReport\.aspx[^"]+)"',
+        html,
+        flags=re.I,
+    ):
+        m = re.search(r"[?&]r=([A-Za-z0-9]+)_(\d{8})\.pdf", href, flags=re.I)
+        if not m:
+            continue
+        kind_code = m.group(1).upper()
+        # Strip trailing school-id digits from codes like ROU7250 / NRIMC7250.
+        kind_key = re.sub(r"\d+$", "", kind_code)
+        ymd = m.group(2)
+        date_iso = f"{ymd[0:4]}-{ymd[4:6]}-{ymd[6:8]}"
+        title = _ISI_REPORT_KIND.get(kind_key, "ISI inspection report")
+        reports.append(
+            {
+                "isiLatestReportUrl": href.replace("&amp;", "&"),
+                "isiLatestReportDate": date_iso,
+                "isiLatestReportTitle": title,
+                "_sort": ymd,
+            }
+        )
+    if not reports:
+        return None
+    reports.sort(key=lambda row: row["_sort"], reverse=True)
+    best = reports[0]
+    best.pop("_sort", None)
+    return best
+
+
+def enrich_isi_report_metadata(entry: dict, name: str, postcode: str | None) -> None:
+    """Attach profile + latest report citation fields when resolvable."""
+    profile = entry.get("isiProfileUrl")
+    if not profile:
+        profile = resolve_isi_profile_url(name, postcode)
+    if not profile:
+        return
+    entry["isiProfileUrl"] = profile
+    # Prefer the stable profile as the archive link when we have one.
+    entry["isiReportsUrl"] = profile
+    entry["inspectionReportsUrl"] = profile
+    try:
+        html = get_bytes(profile).decode("utf-8", errors="replace")
+    except Exception:  # noqa: BLE001
+        return
+    latest = parse_isi_latest_report(html)
+    if latest:
+        entry.update(latest)
 
 
 def harvest_gias_directory(indie_urns: set[str]) -> dict[str, dict]:
@@ -548,19 +620,22 @@ def harvest_gias_directory(indie_urns: set[str]) -> dict[str, dict]:
             if inspectorate.upper() == "ISI":
                 if report and report.lower().startswith("http"):
                     entry["isiReportsUrl"] = report
+                    entry["inspectionReportsUrl"] = report
                 else:
-                    profile = None
-                    if isi_profile_resolves_left > 0:
-                        profile = resolve_isi_profile_url(name, postcode)
-                        isi_profile_resolves_left -= 1
-                    entry["isiReportsUrl"] = profile or isi_reports_search_url(
+                    entry["isiReportsUrl"] = isi_reports_search_url(
                         postcode=postcode,
                         name=name,
                         urn=urn,
                     )
-                    if profile:
+                    entry["inspectionReportsUrl"] = entry["isiReportsUrl"]
+                if isi_profile_resolves_left > 0:
+                    before = entry.get("isiProfileUrl")
+                    enrich_isi_report_metadata(entry, name, postcode)
+                    isi_profile_resolves_left -= 1
+                    if entry.get("isiProfileUrl") and entry.get("isiProfileUrl") != before:
                         isi_profiles_resolved += 1
-                entry["inspectionReportsUrl"] = entry["isiReportsUrl"]
+                    elif entry.get("isiLatestReportUrl"):
+                        isi_profiles_resolved += 1
         if len(entry) > 1 or inspectorate or website:
             by_urn[urn] = entry
     print(
@@ -863,7 +938,17 @@ def main() -> None:
                 school["giasUrl"] = gias["giasUrl"]
             if gias.get("isiReportsUrl") and not school.get("ofstedReportUrl"):
                 school["isiReportsUrl"] = gias["isiReportsUrl"]
-                school["inspectionReportsUrl"] = gias["isiReportsUrl"]
+                school["inspectionReportsUrl"] = gias.get(
+                    "inspectionReportsUrl", gias["isiReportsUrl"]
+                )
+            for key in (
+                "isiProfileUrl",
+                "isiLatestReportUrl",
+                "isiLatestReportDate",
+                "isiLatestReportTitle",
+            ):
+                if gias.get(key):
+                    school[key] = gias[key]
 
     website_count = sum(
         1

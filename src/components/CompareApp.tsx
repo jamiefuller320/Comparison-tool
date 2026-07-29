@@ -38,6 +38,7 @@ import {
   isEyProvider,
 } from "@/lib/eyMetrics";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
+import { passesComparableKs4Filter } from "@/lib/dataGaps";
 import {
   DEFAULT_PHASES,
   defaultPhasesForSectors,
@@ -150,6 +151,8 @@ export function CompareApp({
   const [hydrated, setHydrated] = useState(false);
   const [sectorNote, setSectorNote] = useState<string | null>(null);
   const [activePath, setActivePath] = useState<ComparePathId | null>(null);
+  /** When KS3/KS4 selected: hide secondaries without published Att8 from discovery. */
+  const [comparableKs4Only, setComparableKs4Only] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -400,13 +403,18 @@ export function CompareApp({
   /** Stage + sector filter for search / shortlist building. */
   const filteredSchools = useMemo(() => {
     const schoolStages = schoolStageIds(stages);
+    const secondaryStagesActive = wantsKs4Metrics(stages);
     const fromSchools =
       schoolStages.length === 0
         ? []
         : index.schools.filter(
             (s) =>
               schoolMatchesPhases(s, stages) &&
-              schoolMatchesSectors(s, sectors),
+              schoolMatchesSectors(s, sectors) &&
+              passesComparableKs4Filter(s, {
+                comparableOnly: comparableKs4Only,
+                secondaryStagesActive,
+              }),
           );
     const seen = new Set(fromSchools.map((s) => s.urn));
     const extra = [
@@ -417,7 +425,14 @@ export function CompareApp({
     ].filter((p) => !seen.has(p.urn));
     if (!extra.length) return fromSchools;
     return [...extra, ...fromSchools];
-  }, [index.schools, eyIndex, childmindersIndex, stages, sectors]);
+  }, [
+    index.schools,
+    eyIndex,
+    childmindersIndex,
+    stages,
+    sectors,
+    comparableKs4Only,
+  ]);
 
   const summaryOpts = {
     englandRwm: index.benchmarks.england.rwmExpected,
@@ -660,6 +675,9 @@ export function CompareApp({
         onStageFilterChange={changeStages}
         sectorFilter={sectors}
         onSectorFilterChange={changeSectors}
+        showComparableKs4Toggle={showKs4}
+        comparableKs4Only={comparableKs4Only}
+        onComparableKs4OnlyChange={setComparableKs4Only}
       />
 
       <section className="section" id="compare">
