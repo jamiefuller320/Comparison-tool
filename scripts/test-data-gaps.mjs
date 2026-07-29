@@ -11,6 +11,8 @@ async function main() {
     classifyKs4Missing,
     isSpecialApOrPru,
     isKs3OnlySecondary,
+    isHospitalOrSecure,
+    isRecentlyOpenedForKs4,
     ks4OutcomeBlankHint,
     ofstedBlankHintForIsi,
     boardGaps,
@@ -82,6 +84,34 @@ async function main() {
   const specialGaps = gapsForKs4Board([special]);
   if (!schoolGaps(specialGaps, "s1").some((g) => g.label === "Special / AP / PRU")) {
     console.error("FAIL special gap label", specialGaps);
+    process.exit(1);
+  }
+
+  const hospital = {
+    urn: "h1",
+    name: "Leigh House Hospital",
+    ageRange: "12 to 19",
+    schoolTypeLabel: "Miscellaneous",
+    att8Average: null,
+    ks5ApsPerEntry: null,
+  };
+  if (!isHospitalOrSecure(hospital) || classifyKs4Missing(hospital) !== "hospital-secure") {
+    console.error("FAIL hospital classify", hospital, classifyKs4Missing(hospital));
+    process.exit(1);
+  }
+
+  const newAcademy = {
+    urn: "n1",
+    name: "Brand New Academy",
+    ageRange: "11 to 16",
+    schoolTypeLabel: "Academy sponsor led",
+    openDate: "2024-01-01",
+    reasonEstablishmentOpened: "New Provision",
+    att8Average: null,
+    ks5ApsPerEntry: null,
+  };
+  if (!isRecentlyOpenedForKs4(newAcademy) || classifyKs4Missing(newAcademy) !== "new-establishment") {
+    console.error("FAIL new establishment classify", newAcademy);
     process.exit(1);
   }
 

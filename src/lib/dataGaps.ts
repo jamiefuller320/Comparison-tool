@@ -28,6 +28,8 @@ export interface DataGap {
 export type Ks4MissingReason =
   | "special-ap-pru"
   | "ks3-only"
+  | "hospital-secure"
+  | "new-establishment"
   | "no-published";
 
 function hasOfstedDomainOrReport(school: SchoolRecord): boolean {
@@ -73,6 +75,7 @@ export function isSpecialApOrPru(school: SchoolRecord): boolean {
     .join(" ")
     .toLowerCase();
   if (!blob) return false;
+  if (isHospitalOrSecure(school)) return false;
   return (
     /\bpru\b/.test(blob) ||
     blob.includes("pupil referral") ||
@@ -81,6 +84,47 @@ export function isSpecialApOrPru(school: SchoolRecord): boolean {
     blob.includes("special academy") ||
     /\bspecial\b/.test(blob)
   );
+}
+
+/** Hospital school or secure unit — usually no comparable Att8. */
+export function isHospitalOrSecure(school: SchoolRecord): boolean {
+  const type = `${school.schoolType || ""} ${school.schoolTypeLabel || ""}`.toLowerCase();
+  const name = (school.name || "").toLowerCase();
+  if (type.includes("secure")) return true;
+  if (type.includes("hospital") && type.includes("school")) return true;
+  // Name-only "Hospital" is used carefully: require non-mainstream type.
+  if (name.includes("hospital") && /miscellaneous|special|secure|clinic/.test(type)) {
+    return true;
+  }
+  if (name.includes("clinic school") || name.includes("hospital school")) {
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Recently opened / new provision relative to the latest KS4 tables year.
+ * A school opened in the KS4 academic year often has no full Year 11 cohort yet.
+ */
+export function isRecentlyOpenedForKs4(
+  school: SchoolRecord,
+  ks4Year = "2024/2025",
+): boolean {
+  const reason = (school.reasonEstablishmentOpened || "").toLowerCase();
+  const open = school.openDate;
+  const endYearMatch = ks4Year.match(/(\d{4})\s*\/\s*(\d{2,4})/);
+  const endYear = endYearMatch
+    ? endYearMatch[2].length === 2
+      ? 2000 + Number(endYearMatch[2])
+      : Number(endYearMatch[2])
+    : 2025;
+  // Opened on/after 1 Sep of (endYear - 2) → unlikely to have sat a full KS4 series.
+  const cutoff = `${endYear - 2}-09-01`;
+  if (open && open >= cutoff) return true;
+  if (reason.includes("new provision") && open && open >= `${endYear - 4}-09-01`) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -92,14 +136,22 @@ export function isKs3OnlySecondary(school: SchoolRecord): boolean {
   return phases.includes("ks3") && !phases.includes("ks4");
 }
 
+export function hasPublishedKs4(school: SchoolRecord): boolean {
+  return school.att8Average != null;
+}
+
 export function hasPublishedKs4OrKs5(school: SchoolRecord): boolean {
-  return school.att8Average != null || school.ks5ApsPerEntry != null;
+  return hasPublishedKs4(school) || school.ks5ApsPerEntry != null;
 }
 
 /** Classify a secondary with no Att8 / 16–18 APS in the pack. */
 export function classifyKs4Missing(school: SchoolRecord): Ks4MissingReason {
-  if (isSpecialApOrPru(school)) return "special-ap-pru";
   if (isKs3OnlySecondary(school)) return "ks3-only";
+  if (isHospitalOrSecure(school)) return "hospital-secure";
+  if (isSpecialApOrPru(school)) return "special-ap-pru";
+  if (isRecentlyOpenedForKs4(school, school.ks4Period || "2024/2025")) {
+    return "new-establishment";
+  }
   return "no-published";
 }
 
@@ -123,11 +175,25 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
           "This setting’s age range covers KS3 but not Year 11 — DfE does not publish school-level KS3 attainment, so KS4 cells stay blank.",
         severity: "info",
       };
+    case "hospital-secure":
+      return {
+        label: "Hospital / secure setting",
+        detail:
+          "Hospital schools and secure units are not published like mainstream secondary Attainment 8 cohorts.",
+        severity: "info",
+      };
+    case "new-establishment":
+      return {
+        label: "New establishment",
+        detail:
+          "Opened recently according to GIAS — a full published KS4 cohort may not appear yet.",
+        severity: "info",
+      };
     default:
       return {
         label: "No published KS4 / 16–18",
         detail:
-          "No Attainment 8 or 16–18 APS in the latest published tables for this setting (new school, suppressed cohort, or not yet joined).",
+          "No Attainment 8 or 16–18 APS in the latest published tables for this setting (suppressed cohort, or not yet joined).",
         severity: "watch",
       };
   }
@@ -135,8 +201,10 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
 
 /** Per-cell blank hint for KS4 outcome metrics (not inspection rows). */
 export function ks4OutcomeBlankHint(school: SchoolRecord): string | null {
-  if (hasPublishedKs4OrKs5(school)) return null;
-  if (!schoolOffersSecondary(school) && !isSpecialApOrPru(school)) return null;
+  if (hasPublishedKs4(school)) return null;
+  if (!schoolOffersSecondary(school) && !isSpecialApOrPru(school) && !isHospitalOrSecure(school)) {
+    return null;
+  }
   return ks4MissingGapMeta(classifyKs4Missing(school)).detail;
 }
 
@@ -193,6 +261,8 @@ export function gapsForKs4Board(schools: SchoolRecord[]): DataGap[] {
   const reasonCounts: Record<Ks4MissingReason, number> = {
     "special-ap-pru": 0,
     "ks3-only": 0,
+    "hospital-secure": 0,
+    "new-establishment": 0,
     "no-published": 0,
   };
 
@@ -251,6 +321,12 @@ export function gapsForKs4Board(schools: SchoolRecord[]): DataGap[] {
       parts.push(
         `${reasonCounts["special-ap-pru"]} special/AP/PRU`,
       );
+    }
+    if (reasonCounts["hospital-secure"]) {
+      parts.push(`${reasonCounts["hospital-secure"]} hospital/secure`);
+    }
+    if (reasonCounts["new-establishment"]) {
+      parts.push(`${reasonCounts["new-establishment"]} newly opened`);
     }
     if (reasonCounts["ks3-only"]) {
       parts.push(`${reasonCounts["ks3-only"]} without a Year 11 cohort`);

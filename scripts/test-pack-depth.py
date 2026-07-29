@@ -51,6 +51,20 @@ def main() -> int:
     assert_help_has("harvest-childminders.py", "--la", "--out-dir")
     assert_help_has("build-la-pack.py", "--skip-depth", "--skip-ey", "--la")
 
+    # GIAS open-date helper (hyphenated module name).
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "enrich_secondaries",
+        ROOT / "scripts" / "enrich-secondaries.py",
+    )
+    mod = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(mod)
+    assert mod.parse_gias_open_date("01-01-2024") == "2024-01-01"
+    assert mod.parse_gias_open_date("2023-09-01") == "2023-09-01"
+    assert mod.parse_gias_open_date("") is None
+
     # Non-Hampshire must refuse to overwrite the maintained EY/CM root.
     for script in ("harvest-ey-providers.py", "harvest-childminders.py"):
         bad_root = subprocess.run(

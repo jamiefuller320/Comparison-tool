@@ -117,6 +117,10 @@ export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   latitude?: number | null;
   longitude?: number | null;
   source?: string | null;
+  /** GIAS OpenDate (YYYY-MM-DD) when known. */
+  openDate?: string | null;
+  /** GIAS ReasonEstablishmentOpened label when known. */
+  reasonEstablishmentOpened?: string | null;
 }
 
 export interface DirectorySchool {
