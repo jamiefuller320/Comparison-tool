@@ -1600,6 +1600,14 @@ a {
   cursor: not-allowed;
 }
 
+.nearby-item.off-stage {
+  opacity: 0.72;
+}
+
+.nearby-item.off-stage .nearby-item-body strong {
+  color: var(--ink-soft);
+}
+
 .nearby-item input {
   margin-top: 0.2rem;
   accent-color: var(--coral);

@@ -23,12 +23,37 @@ export interface NearbySchool extends SchoolRecord {
   roadMinutes?: number | null;
 }
 
+export type NearbySortOptions = {
+  /**
+   * Preferred schools (e.g. matching selected stages) sort before others.
+   * Within each group, sort by distance (road metres when present, else straight-line).
+   */
+  prefer?: (school: SchoolRecord) => boolean;
+};
+
+/** Sort key: preferred first, then shortest distance. */
+export function compareNearbySchools(
+  a: Pick<NearbySchool, "straightLineMetres" | "roadMetres"> & SchoolRecord,
+  b: Pick<NearbySchool, "straightLineMetres" | "roadMetres"> & SchoolRecord,
+  prefer?: (school: SchoolRecord) => boolean,
+): number {
+  if (prefer) {
+    const ap = prefer(a) ? 0 : 1;
+    const bp = prefer(b) ? 0 : 1;
+    if (ap !== bp) return ap - bp;
+  }
+  const ad = a.roadMetres ?? a.straightLineMetres;
+  const bd = b.roadMetres ?? b.straightLineMetres;
+  return ad - bd;
+}
+
 export function findNearbySchools(
   home: { latitude: number; longitude: number },
   schools: SchoolRecord[],
   radiusMetres: number,
   limit = 40,
   matches?: (school: SchoolRecord) => boolean,
+  sort?: NearbySortOptions,
 ): NearbySchool[] {
   const hits: NearbySchool[] = [];
   for (const school of schools) {
@@ -43,7 +68,7 @@ export function findNearbySchools(
     if (straightLineMetres > radiusMetres) continue;
     hits.push({ ...school, straightLineMetres });
   }
-  hits.sort((a, b) => a.straightLineMetres - b.straightLineMetres);
+  hits.sort((a, b) => compareNearbySchools(a, b, sort?.prefer));
   return hits.slice(0, limit);
 }
 
