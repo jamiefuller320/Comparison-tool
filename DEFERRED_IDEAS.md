@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-29 (governing-board interface as future scope).
+Last reviewed from agent chat: 2026-07-29 (board interface + far-future network effects).
 
 ## How to use
 
@@ -40,6 +40,15 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 | **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
 | **Second geography** | Widen to another LA only when Hampshire usage justifies cost. Southampton/Portsmouth noted as possible childminder widen (separate unitaries). Prefer on-demand packs before promoting a second maintained seed. | Deferred | Agent pathway |
 | **Governing-board interface (Bartley-for-all)** | Once the **parent-facing** product is mature, offer a **separate** board-oriented surface that reuses Schoolside’s generalised harvest (school records, LA/England benches, KS2 history shards, Ofsted/KS4 where present) to deliver what [Bartley Insight](https://github.com/jamiefuller320/Bartley) does for URN 116338 — peer overlays, evaluation findings, meeting-pack / strategic-question framing — **to any school**. Keep Schoolside’s North Star parental (shortlists and fit, not SIP targets); do **not** fold board language into the parent UI. Likely shapes: URN-deep-link board mode, sibling app/repo that consumes the same `public/data` packs, or generalising Bartley’s `/analysis` layer onto Schoolside’s index. Prerequisites: stable multi-school data quality + pack coverage; Bartley-specific logic (auto findings, progress emphasis, briefing copy) still to port or rebuild. Auth/privacy for governors can stay open-data first (same public DfE sources) unless schools later need private overlays. | Deferred (after parent path mature) | User |
+
+### Far-future platform / network effects
+
+Only after durable parent and (separately) board audiences exist. Not a near-term build; do not let these dilute the comparison North Star.
+
+| Idea | Notes | Status | Source |
+| --- | --- | --- | --- |
+| **Inter-school collaboration (board users)** | Grow a governing-board user base on the board interface, then offer collaboration functions across schools (e.g. peer benchmarking discussion, shared practice / meeting themes, cross-school questions on public metrics). Depends on board surface + identity/trust model; keep collaboration optional and off the parent shortlist path. | Far future | User |
+| **Parent value-add beyond compare** | Leverage a parental user base for post-choice support: curated learning resources, SEND information / support pathways, and similar layperson tools that sit *after* school choice. Must stay evidence-linked and distinct from the core compare boards so the product does not become a generic parenting portal. | Far future | User |
 
 ### Early years / childcare
 
