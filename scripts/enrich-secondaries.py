@@ -9,6 +9,7 @@ geocodes new postcodes.
 Usage:
   python3 scripts/enrich-secondaries.py
   python3 scripts/enrich-secondaries.py --seed-la
+  python3 scripts/enrich-secondaries.py --la Surrey --index public/data/packs/surrey/schools-index.json
 """
 
 from __future__ import annotations
@@ -31,13 +32,13 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from seed_scope import (  # noqa: E402
     SEED_LOCAL_AUTHORITY,
-    filter_schools_to_seed_la,
-    is_seed_local_authority,
+    filter_schools_to_la,
+    is_local_authority,
+    normalize_la_name,
+    resolve_index_bundle,
 )
 
-INDEX = ROOT / "public" / "data" / "schools-index.json"
-DIRECTORY = ROOT / "public" / "data" / "schools-directory.json"
-SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
+DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 CACHE = Path("/tmp/edubase-all.csv")
 UA = "Mozilla/5.0 (compatible; Schoolside/0.1; +https://github.com/jamiefuller320/Comparison-tool)"
 
@@ -118,9 +119,9 @@ def post_json(url: str, payload: dict) -> dict:
         url,
         data=json.dumps(payload).encode(),
         headers={
-            "Accept": "application/json",
             "Content-Type": "application/json",
             "User-Agent": UA,
+            "Accept": "application/json",
         },
         method="POST",
     )
@@ -135,7 +136,10 @@ def bulk_geocode(postcodes: list[str]) -> dict[str, tuple[float, float]]:
         chunk = postcodes[i : i + batch]
         for attempt in range(4):
             try:
-                data = post_json("https://api.postcodes.io/postcodes", {"postcodes": chunk})
+                data = post_json(
+                    "https://api.postcodes.io/postcodes",
+                    {"postcodes": chunk},
+                )
                 break
             except urllib.error.HTTPError as exc:
                 if attempt == 3 or exc.code not in {429, 500, 502, 503, 504}:
@@ -177,11 +181,34 @@ def main() -> int:
         action="store_true",
         help=f"Only add/keep open GIAS settings in {SEED_LOCAL_AUTHORITY}",
     )
+    parser.add_argument(
+        "--la",
+        default="",
+        help="Only add/keep open GIAS settings in this DfE local authority",
+    )
+    parser.add_argument(
+        "--index",
+        default=str(DEFAULT_INDEX.relative_to(ROOT)),
+        help="Path to schools-index.json (default: public/data/schools-index.json)",
+    )
     args = parser.parse_args()
 
-    payload = json.loads(INDEX.read_text(encoding="utf-8"))
-    if args.seed_la:
-        payload["schools"] = filter_schools_to_seed_la(payload.get("schools") or [])
+    target_la = normalize_la_name(args.la) if args.la else ""
+    if args.seed_la and target_la and not is_local_authority(target_la, SEED_LOCAL_AUTHORITY):
+        raise SystemExit("--seed-la and --la disagree")
+    if args.seed_la and not target_la:
+        target_la = SEED_LOCAL_AUTHORITY
+
+    paths = resolve_index_bundle(args.index, ROOT)
+    index_path = paths["index"]
+    directory_path = paths["directory"]
+    summary_path = paths["summary"]
+    if not index_path.exists():
+        raise SystemExit(f"Missing {index_path}")
+
+    payload = json.loads(index_path.read_text(encoding="utf-8"))
+    if target_la:
+        payload["schools"] = filter_schools_to_la(payload.get("schools") or [], target_la)
     by_urn = {s["urn"]: s for s in payload["schools"]}
     before = len(by_urn)
 
@@ -191,7 +218,7 @@ def main() -> int:
 
     added = 0
     updated_meta = 0
-    skipped_outside_seed = 0
+    skipped_outside_la = 0
     new_schools: list[dict] = []
 
     for row in reader:
@@ -221,8 +248,8 @@ def main() -> int:
         if religion in {"", "None", "Does not apply", "Not applicable"}:
             religion = None
 
-        if args.seed_la and not is_seed_local_authority(la):
-            skipped_outside_seed += 1
+        if target_la and not is_local_authority(la, target_la):
+            skipped_outside_la += 1
             continue
 
         if urn in by_urn:
@@ -299,8 +326,8 @@ def main() -> int:
         by_urn.values(),
         key=lambda s: (s.get("localAuthority") or "", s.get("name") or ""),
     )
-    if args.seed_la:
-        schools = filter_schools_to_seed_la(schools)
+    if target_la:
+        schools = filter_schools_to_la(schools, target_la)
     payload["schools"] = schools
     payload["stats"]["schoolCount"] = len(schools)
     payload["stats"]["withRwm"] = sum(1 for s in schools if s.get("rwmExpected") is not None)
@@ -313,10 +340,10 @@ def main() -> int:
     payload["stats"]["independentCount"] = sum(
         1 for s in schools if s.get("sector") == "independent"
     )
-    if args.seed_la:
-        payload["stats"]["maintainedScope"] = SEED_LOCAL_AUTHORITY
-        payload["maintainedScope"] = SEED_LOCAL_AUTHORITY
-        payload.setdefault("source", {})["maintainedScope"] = SEED_LOCAL_AUTHORITY
+    if target_la:
+        payload["stats"]["maintainedScope"] = target_la
+        payload["maintainedScope"] = target_la
+        payload.setdefault("source", {})["maintainedScope"] = target_la
     infant_only = sum(
         1
         for s in schools
@@ -326,7 +353,7 @@ def main() -> int:
     )
     payload["stats"]["infantOrNurseryCount"] = infant_only
 
-    INDEX.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    index_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
 
     directory = []
     for s in schools:
@@ -348,7 +375,7 @@ def main() -> int:
             if k in s and s[k] not in (None, "")
         }
         directory.append(row)
-    DIRECTORY.write_text(
+    directory_path.write_text(
         json.dumps(
             {
                 "generatedAt": payload.get("generatedAt"),
@@ -369,18 +396,20 @@ def main() -> int:
         "localAuthorityCount": payload["stats"]["localAuthorityCount"],
         "secondaryAdded": added,
         "secondaryMetaUpdated": updated_meta,
-        "skippedOutsideSeedLa": skipped_outside_seed if args.seed_la else 0,
-        "maintainedScope": SEED_LOCAL_AUTHORITY if args.seed_la else None,
-        "indexBytes": INDEX.stat().st_size,
+        "skippedOutsideLa": skipped_outside_la if target_la else 0,
+        "skippedOutsideSeedLa": skipped_outside_la if args.seed_la else 0,
+        "maintainedScope": target_la or None,
+        "indexBytes": index_path.stat().st_size,
         "files": [
-            "public/data/schools-index.json",
-            "public/data/schools-directory.json",
+            str(index_path.relative_to(ROOT)),
+            str(directory_path.relative_to(ROOT)),
         ],
     }
-    SUMMARY.write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    (ROOT / "src" / "data" / "harvest-summary.json").write_text(
-        json.dumps(summary, indent=2), encoding="utf-8"
-    )
+    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    if paths["is_root"]:
+        (ROOT / "src" / "data" / "harvest-summary.json").write_text(
+            json.dumps(summary, indent=2), encoding="utf-8"
+        )
 
     print(
         json.dumps(

@@ -4,7 +4,12 @@
  * `/data/packs/{slug}/`.
  */
 
-import type { PhonicsBenchmarkSet, SchoolsIndex } from "@/lib/types";
+import type {
+  IndependentBenchmarkSet,
+  PhonicsBenchmarkSet,
+  SchoolRecord,
+  SchoolsIndex,
+} from "@/lib/types";
 
 export const SEED_LOCAL_AUTHORITY = "Hampshire";
 
@@ -64,6 +69,10 @@ export interface LaPackManifestEntry {
   status: "ready" | "building" | "failed" | "queued";
   schoolCount?: number;
   withRwm?: number;
+  withKs4?: number;
+  giasEnriched?: boolean;
+  phonicsEnriched?: boolean;
+  independentEnriched?: boolean;
   requestedAt?: string;
   builtAt?: string;
   note?: string;
@@ -117,10 +126,84 @@ function mergePhonics(
   };
 }
 
+function mean(values: number[]): number | null {
+  if (!values.length) return null;
+  return Math.round((values.reduce((a, b) => a + b, 0) / values.length) * 10) / 10;
+}
+
+function collectMetric(
+  schools: SchoolRecord[],
+  sector: "state" | "independent",
+  key: keyof SchoolRecord,
+): number[] {
+  const out: number[] = [];
+  for (const school of schools) {
+    if (school.sector !== sector) continue;
+    const value = school[key];
+    if (typeof value === "number" && Number.isFinite(value)) out.push(value);
+  }
+  return out;
+}
+
+/** Recompute KS4 sector means from the schools currently in the working index. */
+export function recomputeSectorKs4Benches(
+  schools: SchoolRecord[],
+  prior?: {
+    independent?: IndependentBenchmarkSet | null;
+    stateKs4?: IndependentBenchmarkSet | null;
+  },
+): {
+  independent: IndependentBenchmarkSet;
+  stateKs4: IndependentBenchmarkSet;
+} {
+  function block(
+    sector: "state" | "independent",
+    fallback?: IndependentBenchmarkSet | null,
+  ): IndependentBenchmarkSet {
+    const att8 = collectMetric(schools, sector, "att8Average");
+    const ks5 = collectMetric(schools, sector, "ks5ApsPerEntry");
+    const label = sector === "independent" ? "independents" : "state schools";
+    let period = fallback?.period ?? null;
+    let ks5Period = fallback?.ks5Period ?? null;
+    if (!period) {
+      const hit = schools.find((s) => s.sector === sector && s.ks4Period);
+      period = hit?.ks4Period ?? null;
+    }
+    if (!ks5Period) {
+      const hit = schools.find((s) => s.sector === sector && s.ks5Period);
+      ks5Period = hit?.ks5Period ?? null;
+    }
+    return {
+      att8Average: mean(att8),
+      engMath94Percent: mean(collectMetric(schools, sector, "engMath94Percent")),
+      engMath95Percent: mean(collectMetric(schools, sector, "engMath95Percent")),
+      ebaccEnteringPercent: mean(
+        collectMetric(schools, sector, "ebaccEnteringPercent"),
+      ),
+      anyPassPercent: mean(collectMetric(schools, sector, "anyPassPercent")),
+      ebaccEng94Percent: mean(collectMetric(schools, sector, "ebaccEng94Percent")),
+      ebaccMat94Percent: mean(collectMetric(schools, sector, "ebaccMat94Percent")),
+      ks5ApsPerEntry: mean(ks5),
+      ks5Best3Aps: mean(collectMetric(schools, sector, "ks5Best3Aps")),
+      period,
+      ks5Period,
+      schoolCount: att8.length,
+      ks5SchoolCount: ks5.length,
+      note: `Mean of ${label} in this collated index with usable KS4 figures`,
+    };
+  }
+
+  return {
+    independent: block("independent", prior?.independent),
+    stateKs4: block("state", prior?.stateKs4),
+  };
+}
+
 /**
  * Overlay one or more on-demand LA packs onto the Hampshire maintained seed.
- * Pack schools win on URN collision; England / sector benches stay from the seed;
- * LA / phonics benches are unioned. Packs are a collation unit — not a user mode.
+ * Pack schools win on URN collision; England benches stay from the seed;
+ * LA / phonics benches are unioned; KS4 sector means are recomputed across the
+ * collated school set. Packs are a collation unit — not a user mode.
  */
 export function mergeSchoolsIndexWithPack(
   seed: SchoolsIndex,
@@ -165,6 +248,10 @@ export function mergeSchoolsIndexWithPacks(
   }
 
   const schools = [...byUrn.values()];
+  const sectorBenches = recomputeSectorKs4Benches(schools, {
+    independent: seed.benchmarks.independent,
+    stateKs4: seed.benchmarks.stateKs4,
+  });
   const noteExtra = packLabels.length
     ? ` Collated area coverage also includes: ${packLabels.join(", ")}.`
     : "";
@@ -176,8 +263,8 @@ export function mergeSchoolsIndexWithPacks(
       ...seed.benchmarks,
       localAuthorities,
       phonics,
-      independent: seed.benchmarks.independent,
-      stateKs4: seed.benchmarks.stateKs4,
+      independent: sectorBenches.independent,
+      stateKs4: sectorBenches.stateKs4,
     },
     stats: {
       ...seed.stats,
@@ -187,6 +274,13 @@ export function mergeSchoolsIndexWithPacks(
         schools.map((s) => s.localAuthority).filter(Boolean),
       ).size,
       withCoordinates: schools.filter((s) => s.latitude != null).length,
+      stateWithKs4: schools.filter(
+        (s) => s.sector === "state" && s.att8Average != null,
+      ).length,
+      independentWithKs4: schools.filter(
+        (s) => s.sector === "independent" && s.att8Average != null,
+      ).length,
+      withKs4: schools.filter((s) => s.att8Average != null).length,
     },
     source: {
       ...seed.source,

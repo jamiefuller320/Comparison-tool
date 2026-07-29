@@ -22,8 +22,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-INDEX = ROOT / "public" / "data" / "schools-index.json"
-SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
+DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 SRC_SUMMARY = ROOT / "src" / "data" / "harvest-summary.json"
 
 BASE = "https://api.education.gov.uk/statistics/v1"
@@ -116,11 +115,13 @@ def pull_level(
     year_group: str,
     *,
     early_stop_las: int | None = None,
+    la_location_id: str | None = None,
 ) -> list[dict]:
     """Page through one geographic level × year group; return raw result rows.
 
     For LA pulls, stop once we have total + disadvantaged rows for enough
     authorities (DfE publishes ~153 usable LAs; the cross-tab is huge).
+    When la_location_id is set, filter early to that authority only.
     """
     rows: list[dict] = []
     page = 1
@@ -133,6 +134,8 @@ def pull_level(
             f"&indicators={INDICATOR_EXPECTED_PCT},{INDICATOR_ELIGIBLE}"
             f"&page={page}&pageSize=5000"
         )
+        if la_location_id and level == "LA":
+            qs += f"&locations.eq=LA|id|{urllib.parse.quote(la_location_id, safe='')}"
         data = get_json(f"{BASE}/data-sets/{PHONICS_DATASET}/query?{qs}")
         batch = data.get("results") or []
         rows.extend(batch)
@@ -238,7 +241,15 @@ def main() -> None:
     scripts_dir = _Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
-    from seed_scope import SEED_LOCAL_AUTHORITY, trim_la_benchmarks
+    from seed_scope import (
+        SEED_LOCAL_AUTHORITY,
+        is_local_authority,
+        normalize_la_name,
+        resolve_index_bundle,
+        resolve_la_from_ees_meta,
+        trim_la_benchmarks,
+        trim_la_benchmarks_for,
+    )
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -246,18 +257,52 @@ def main() -> None:
         action="store_true",
         help=f"Keep England + {SEED_LOCAL_AUTHORITY} phonics benches only",
     )
+    parser.add_argument(
+        "--la",
+        default="",
+        help="Keep England + this DfE local authority phonics benches only",
+    )
+    parser.add_argument(
+        "--index",
+        default=str(DEFAULT_INDEX.relative_to(ROOT)),
+        help="Path to schools-index.json (default: public/data/schools-index.json)",
+    )
     args = parser.parse_args()
 
-    if not INDEX.exists():
-        raise SystemExit(f"Missing {INDEX} — run harvest first")
+    target_la = normalize_la_name(args.la) if args.la else ""
+    if args.seed_la and target_la and not is_local_authority(target_la, SEED_LOCAL_AUTHORITY):
+        raise SystemExit("--seed-la and --la disagree")
+    if args.seed_la and not target_la:
+        target_la = SEED_LOCAL_AUTHORITY
+
+    paths = resolve_index_bundle(args.index, ROOT)
+    index_path = paths["index"]
+    summary_path = paths["summary"]
+    if not index_path.exists():
+        raise SystemExit(f"Missing {index_path} — run harvest first")
 
     print("Loading schools index…", flush=True)
-    payload = json.loads(INDEX.read_text(encoding="utf-8"))
+    payload = json.loads(index_path.read_text(encoding="utf-8"))
 
     print("Fetching phonics dataset meta…", flush=True)
     meta = get_json(f"{BASE}/data-sets/{PHONICS_DATASET}/meta")
     la_map = build_la_map(meta)
     print(f"  LA locations in meta: {len(la_map)}", flush=True)
+
+    la_location_id: str | None = None
+    if target_la:
+        resolved = resolve_la_from_ees_meta(meta, target_la)
+        if not resolved or not resolved.get("id"):
+            raise SystemExit(
+                f"Could not resolve phonics LA location for {target_la!r}"
+            )
+        la_location_id = resolved["id"]
+        # Prefer the canonical DfE label from meta.
+        target_la = normalize_la_name(resolved.get("label") or target_la)
+        print(
+            f"  early LA filter: locations.eq=LA|id|{la_location_id} ({target_la})",
+            flush=True,
+        )
 
     england: dict = {"period": PHONICS_YEAR.replace("/", "-")}
     local_authorities: dict[str, dict] = {}
@@ -273,12 +318,24 @@ def main() -> None:
 
         print(f"Fetching LA phonics ({label})…", flush=True)
         # Meta lists ~161 LAs; usable English totals settle around 153.
-        la_rows = pull_level("LA", year_group, early_stop_las=150)
+        # Pack / seed modes filter to one LA early.
+        la_rows = pull_level(
+            "LA",
+            year_group,
+            early_stop_las=None if la_location_id else 150,
+            la_location_id=la_location_id,
+        )
         _, la_slot = extract_benches(la_rows, year_group, la_map=la_map)
         merge_la(local_authorities, la_slot)
         print(f"  LAs with {label} totals so far: {len(local_authorities)}", flush=True)
 
-    if args.seed_la:
+    if target_la:
+        local_authorities = trim_la_benchmarks_for(local_authorities, target_la)
+        print(
+            f"  LA trim: kept {len(local_authorities)} phonics row(s) for {target_la}",
+            flush=True,
+        )
+    elif args.seed_la:
         local_authorities = trim_la_benchmarks(local_authorities)
         print(
             f"  Seed-LA trim: kept {len(local_authorities)} LA phonics row(s) "
@@ -316,7 +373,7 @@ def main() -> None:
     payload["phonicsEnrichedAt"] = time.strftime("%Y-%m-%d")
 
     print("Writing schools-index.json…", flush=True)
-    INDEX.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    index_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
 
     summary = {
         "phonicsPeriod": PHONICS_YEAR,
@@ -328,20 +385,21 @@ def main() -> None:
         ),
         "dataset": PHONICS_DATASET,
         "note": phonics["note"],
+        "maintainedScope": target_la or None,
     }
-    if SUMMARY.exists():
+    if summary_path.exists():
         try:
-            existing = json.loads(SUMMARY.read_text(encoding="utf-8"))
+            existing = json.loads(summary_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             existing = {}
         existing["phonics"] = summary
-        SUMMARY.write_text(json.dumps(existing, indent=2) + "\n", encoding="utf-8")
+        summary_path.write_text(json.dumps(existing, indent=2) + "\n", encoding="utf-8")
     else:
-        SUMMARY.write_text(
+        summary_path.write_text(
             json.dumps({"phonics": summary}, indent=2) + "\n", encoding="utf-8"
         )
 
-    if SRC_SUMMARY.exists() or SRC_SUMMARY.parent.exists():
+    if paths["is_root"] and (SRC_SUMMARY.exists() or SRC_SUMMARY.parent.exists()):
         try:
             existing = (
                 json.loads(SRC_SUMMARY.read_text(encoding="utf-8"))
