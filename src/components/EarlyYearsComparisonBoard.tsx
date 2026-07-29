@@ -44,8 +44,9 @@ export function EarlyYearsComparisonBoard({
   if (providers.length === 0) {
     return (
       <div className="empty-compare">
-        Add early years day-care providers or school nursery / infant settings
-        to compare Ofsted inspection outcomes side by side.
+        Add a nursery, preschool, or school with nursery / reception to compare
+        published Ofsted grades side by side. This is inspection history, not
+        each setting’s EYFSP scores (those exist only for areas).
       </div>
     );
   }

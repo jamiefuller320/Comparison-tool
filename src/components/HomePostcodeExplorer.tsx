@@ -392,7 +392,7 @@ export function HomePostcodeExplorer({
                       : "radius-chip"
                   }
                   aria-pressed={comparableKs4Only}
-                  title="When on, secondaries without published Attainment 8 are hidden from the map and search (special/AP and similar). Turn off to see every matching secondary with a reason chip."
+                  title="When on, secondaries without published Attainment 8 are hidden from the map and search (for example special or alternative provision). Turn off to see every matching secondary with a short reason chip."
                   onClick={() => onComparableKs4OnlyChange(!comparableKs4Only)}
                 >
                   Comparable KS4 only
@@ -433,10 +433,10 @@ export function HomePostcodeExplorer({
                 </div>
                 {nearby.length === 0 ? (
                   <p className="footnote" style={{ padding: "1rem" }}>
-                    No indexed schools in this ring. Try a wider range, another
-                    stage
+                    No indexed schools in this ring for the filters you chose.
+                    Try a wider range, another stage
                     {showComparableKs4Toggle && comparableKs4Only
-                      ? ", turn off “Comparable KS4 only”"
+                      ? ", turn off “Comparable KS4 only” (special / alternative provision is hidden when it is on)"
                       : ""}
                     , or include independent schools.
                   </p>

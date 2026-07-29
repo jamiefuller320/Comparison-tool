@@ -10,6 +10,8 @@ State schools already carry KS2 table metrics. This script adds:
 Usage:
   python3 scripts/enrich-independents.py
   python3 scripts/enrich-independents.py --la Surrey --index public/data/packs/surrey/schools-index.json
+  python3 scripts/enrich-independents.py --isi-only --la "Isle of Wight" \\
+    --index public/data/packs/isle-of-wight/schools-index.json
 """
 
 from __future__ import annotations
@@ -455,57 +457,128 @@ def isi_reports_search_url(
     )
 
 
-def resolve_isi_profile_url(name: str, postcode: str | None = None) -> str | None:
-    """Best-effort resolve of an ISI institution profile from the reports search.
+def _normalize_isi_profile_urls(raw_hrefs: list[str]) -> list[str]:
+    """Absolute, de-duplicated ISI institution profile URLs."""
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for raw in raw_hrefs:
+        path = raw.split("?", 1)[0]
+        if path.startswith("http"):
+            url = path
+        elif path.startswith("/"):
+            url = "https://www.isi.net" + path
+        else:
+            url = "https://www.isi.net/" + path
+        if url in seen:
+            continue
+        seen.add(url)
+        normalized.append(url)
+    return normalized
 
-    Returns None on network/parse failure so callers can keep the search URL.
-    """
-    clean_name = (name or "").strip()
-    if not clean_name:
-        return None
-    search = isi_reports_search_url(postcode=postcode, name=clean_name, urn="")
-    try:
-        html = get_bytes(search).decode("utf-8", errors="replace")
-    except Exception:  # noqa: BLE001
-        return None
-    # Hrefs may be absolute, root-relative, or site-relative without a leading /.
-    matches = re.findall(
+
+def _isi_profile_hrefs_from_html(html: str) -> list[str]:
+    return re.findall(
         r'href="((?:https://www\.isi\.net)?/?institutions/school/[^"#?\s]+)"',
         html,
         flags=re.I,
     )
-    normalized: list[str] = []
-    for raw in matches:
-        path = raw.split("?", 1)[0]
-        if path.startswith("http"):
-            normalized.append(path)
-        elif path.startswith("/"):
-            normalized.append("https://www.isi.net" + path)
-        else:
-            normalized.append("https://www.isi.net/" + path)
-    # De-dupe while preserving order.
-    seen: set[str] = set()
-    matches = []
-    for url in normalized:
-        if url in seen:
-            continue
-        seen.add(url)
-        matches.append(url)
-    if not matches:
-        return None
-    if len(matches) == 1:
-        return matches[0]
+
+
+def _score_isi_profile_url(url: str, clean_name: str) -> int:
+    """Higher is better. Prefer exact name slugs over partial substring hits."""
+    slug = url.rsplit("/", 1)[-1].lower()
+    base = re.sub(r"-\d+$", "", slug)
     tokens = [
         t
         for t in re.findall(r"[a-z0-9]+", clean_name.lower())
-        if t not in {"school", "college", "the", "and", "of"}
+        if t not in {"the", "and", "of"}
     ]
-    scored: list[tuple[int, str]] = []
-    for url in matches:
-        slug = url.rsplit("/", 1)[-1].lower()
-        score = sum(1 for t in tokens if t in slug)
-        scored.append((score, url))
-    scored.sort(key=lambda row: (-row[0], row[1]))
+    if not tokens:
+        return 0
+    expected = "-".join(tokens)
+    score = 0
+    if base == expected:
+        score += 100
+    elif base.startswith(expected + "-") or base.startswith(expected):
+        score += 60
+    elif expected in base:
+        # e.g. brooke-priory-school for query "Priory School" — weak.
+        score += 10
+    soft = [t for t in tokens if t not in {"school", "college"}]
+    score += sum(3 for t in soft if t in base)
+    # Penalise extra leading tokens (Brooke Priory vs Priory).
+    if soft and soft[0] in base and not base.startswith(soft[0]):
+        score -= 25
+    return score
+
+
+def _isi_profile_mentions_postcode(url: str, postcode: str) -> bool | None:
+    """True/False when profile HTML fetched; None on network failure."""
+    pc = re.sub(r"\s+", "", (postcode or "").upper())
+    if len(pc) < 5:
+        return None
+    try:
+        html = get_bytes(url).decode("utf-8", errors="replace")
+    except Exception:  # noqa: BLE001
+        return None
+    compact = re.sub(r"\s+", "", html.upper())
+    return pc in compact
+
+
+def resolve_isi_profile_url(name: str, postcode: str | None = None) -> str | None:
+    """Best-effort resolve of an ISI institution profile from the reports search.
+
+    Returns None on network/parse failure so callers can keep the search URL.
+    When several name matches exist, prefer an exact slug and confirm postcode
+    on the profile page when a postcode is available.
+    """
+    clean_name = (name or "").strip()
+    pc = (postcode or "").strip()
+    if not clean_name and not pc:
+        return None
+
+    matches: list[str] = []
+    # Name search first (broader), then postcode search to add/confirm candidates.
+    queries: list[str] = []
+    if clean_name:
+        queries.append(clean_name)
+    if pc:
+        queries.append(pc.upper().replace("  ", " "))
+    for query in queries:
+        search = (
+            "https://www.isi.net/reports/?i=school&name="
+            + urllib.parse.quote(query)
+        )
+        try:
+            html = get_bytes(search).decode("utf-8", errors="replace")
+        except Exception:  # noqa: BLE001
+            continue
+        matches.extend(
+            _normalize_isi_profile_urls(_isi_profile_hrefs_from_html(html))
+        )
+    # De-dupe preserving order.
+    matches = _normalize_isi_profile_urls(matches)
+    if not matches:
+        return None
+    if len(matches) == 1:
+        if pc:
+            mentioned = _isi_profile_mentions_postcode(matches[0], pc)
+            if mentioned is False:
+                return None
+        return matches[0]
+
+    scored = sorted(
+        ((_score_isi_profile_url(url, clean_name or pc), url) for url in matches),
+        key=lambda row: (-row[0], row[1]),
+    )
+    # When postcode is known, verify the best few candidates against the profile.
+    if pc:
+        for _score, url in scored[:6]:
+            mentioned = _isi_profile_mentions_postcode(url, pc)
+            if mentioned is True:
+                return url
+        # No profile mentioned the postcode — refuse a weak name-only guess.
+        return None
     if scored and scored[0][0] > 0:
         return scored[0][1]
     return matches[0]
@@ -830,6 +903,131 @@ def offers_secondary(age_range: str | None) -> bool:
 
 
 
+def apply_isi_only_enrichment(
+    *,
+    payload: dict,
+    schools: list,
+    indie_urns: set[str],
+    index_path: Path,
+    directory_path: Path,
+    summary_path: Path,
+    paths: dict,
+    target_la: str,
+) -> None:
+    """Refresh ISI/GIAS citation fields without re-harvesting KS4/KS5/Ofsted."""
+    gias_by_urn = harvest_gias_directory(indie_urns)
+    isi_latest = 0
+    isi_profiles = 0
+    website_count = 0
+    for school in schools:
+        if school.get("sector") != "independent":
+            continue
+        urn = str(school.get("urn") or "")
+        gias = gias_by_urn.get(urn)
+        if not gias:
+            continue
+        if gias.get("schoolWebsite"):
+            school["schoolWebsite"] = gias["schoolWebsite"]
+        if gias.get("inspectorateName"):
+            school["inspectorateName"] = gias["inspectorateName"]
+        if gias.get("giasUrl"):
+            school["giasUrl"] = gias["giasUrl"]
+        if gias.get("isiReportsUrl") and not school.get("ofstedReportUrl"):
+            school["isiReportsUrl"] = gias["isiReportsUrl"]
+            school["inspectionReportsUrl"] = gias.get(
+                "inspectionReportsUrl", gias["isiReportsUrl"]
+            )
+        for key in (
+            "isiProfileUrl",
+            "isiLatestReportUrl",
+            "isiLatestReportDate",
+            "isiLatestReportTitle",
+        ):
+            if gias.get(key):
+                school[key] = gias[key]
+        if school.get("isiProfileUrl"):
+            isi_profiles += 1
+        if school.get("isiLatestReportUrl"):
+            isi_latest += 1
+        if school.get("schoolWebsite"):
+            website_count += 1
+
+    isi_count = sum(
+        1
+        for s in schools
+        if s.get("sector") == "independent"
+        and (s.get("inspectorateName") or "").upper() == "ISI"
+    )
+    stats = payload.setdefault("stats", {})
+    stats["independentWithIsi"] = isi_count
+    stats["independentWithWebsite"] = website_count
+    stats["independentWithIsiProfile"] = isi_profiles
+    stats["independentWithIsiLatestReport"] = isi_latest
+    stats["independentIsiEnrichedAt"] = time.strftime("%Y-%m-%d")
+
+    source = payload.setdefault("source", {})
+    datasets = source.setdefault("datasets", {})
+    datasets["giasEdubase"] = EDUBASE_BASE
+    note = source.get("note") or ""
+    isi_note = (
+        " Independents carry GIAS inspectorate/website links for ISI schools, "
+        "with profile + latest DownloadReport citation when resolvable."
+    )
+    if "latest DownloadReport citation" not in note:
+        source["note"] = (note.rstrip() + isi_note).strip()
+
+    index_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+
+    if directory_path.exists():
+        directory = json.loads(directory_path.read_text(encoding="utf-8"))
+        by_full = {str(s.get("urn")): s for s in schools}
+        for row in directory.get("schools") or []:
+            full = by_full.get(str(row.get("urn") or ""))
+            if not full:
+                continue
+            if full.get("inspectorateName"):
+                row["inspectorateName"] = full["inspectorateName"]
+            if full.get("isiProfileUrl"):
+                row["isiProfileUrl"] = full["isiProfileUrl"]
+            if full.get("isiLatestReportUrl"):
+                row["isiLatestReportUrl"] = full["isiLatestReportUrl"]
+            if full.get("isiLatestReportDate"):
+                row["isiLatestReportDate"] = full["isiLatestReportDate"]
+            if full.get("isiLatestReportTitle"):
+                row["isiLatestReportTitle"] = full["isiLatestReportTitle"]
+            if full.get("isiReportsUrl"):
+                row["isiReportsUrl"] = full["isiReportsUrl"]
+        directory_path.write_text(
+            json.dumps(directory, separators=(",", ":")),
+            encoding="utf-8",
+        )
+
+    summary = {
+        "independentWithIsi": isi_count,
+        "independentWithWebsite": website_count,
+        "independentWithIsiProfile": isi_profiles,
+        "independentWithIsiLatestReport": isi_latest,
+        "independentIsiEnrichedAt": stats["independentIsiEnrichedAt"],
+        "maintainedScope": target_la or payload.get("maintainedScope"),
+    }
+    if summary_path.exists():
+        try:
+            existing = json.loads(summary_path.read_text(encoding="utf-8"))
+            existing.update({k: v for k, v in summary.items() if v is not None})
+            summary = existing
+        except json.JSONDecodeError:
+            pass
+    summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    if paths["is_root"] and SRC_SUMMARY.parent.exists():
+        SRC_SUMMARY.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+
+    print(
+        f"Done (isi-only). ISI tagged {isi_count}; profiles {isi_profiles}; "
+        f"latest reports {isi_latest}; websites {website_count}.",
+        flush=True,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -841,6 +1039,14 @@ def main() -> None:
         "--index",
         default=str(DEFAULT_INDEX.relative_to(ROOT)),
         help="Path to schools-index.json (default: public/data/schools-index.json)",
+    )
+    parser.add_argument(
+        "--isi-only",
+        action="store_true",
+        help=(
+            "Only refresh GIAS website/inspectorate + ISI profile/latest-report "
+            "citations for independents (skip KS4/KS5/Ofsted harvests)"
+        ),
     )
     args = parser.parse_args()
 
@@ -872,9 +1078,23 @@ def main() -> None:
         f"Independent schools: {len(indie_urns)}; "
         f"secondary-age (any sector): {len(secondary_urns)}; "
         f"KS4/KS5 harvest targets: {len(ks4_target_urns)}"
-        + (f"; scope={target_la}" if target_la else ""),
+        + (f"; scope={target_la}" if target_la else "")
+        + ("; isi-only" if args.isi_only else ""),
         flush=True,
     )
+
+    if args.isi_only:
+        apply_isi_only_enrichment(
+            payload=payload,
+            schools=schools,
+            indie_urns=indie_urns,
+            index_path=index_path,
+            directory_path=directory_path,
+            summary_path=summary_path,
+            paths=paths,
+            target_la=target_la,
+        )
+        return
 
     ks4_by_urn, ks4_year, cleared_total = harvest_ks4(ks4_target_urns)
     ks5_by_urn, ks5_year, ks5_cleared_total = harvest_ks5(ks4_target_urns)

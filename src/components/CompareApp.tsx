@@ -480,14 +480,15 @@ export function CompareApp({
       if (selectedSchools.length === 0) {
         return (
           <div className="empty-compare">
-            Add two to four settings from the map or search to compare.
+            Shortlist two to four nearby settings from the map or search, then
+            turn on a category to compare published figures side by side.
           </div>
         );
       }
       return (
         <div className="empty-compare" role="status">
-          Turn on a category above (Early years, Childminders, or a school
-          stage) to see the matching comparison.
+          You have a shortlist — turn on Early years, Childminders, or a school
+          stage above to open the matching comparison board.
         </div>
       );
     }
@@ -528,12 +529,16 @@ export function CompareApp({
               role="status"
               style={{ marginTop: "1rem" }}
             >
-              Shortlist a nursery or school early-years setting to compare
-              Ofsted grades here.
+              Your shortlist is schools without an early-years Ofsted row here
+              (for example junior or secondary only). Add a nursery, or a school
+              with nursery / reception, to compare inspection grades — the EYFSP
+              area table above still gives local context.
             </div>
           ) : (
             <div className="empty-compare">
-              Add a nursery from the map or search to compare Ofsted grades.
+              Add a nursery or school nursery / reception setting from the map
+              or search to compare Ofsted grades. Childminders use their own
+              category.
             </div>
           )}
           {eySelected.length > 0 ? (
@@ -562,8 +567,9 @@ export function CompareApp({
             />
           ) : (
             <div className="empty-compare" role="status">
-              Shortlist a consented childminder to pin their address and Ofsted
-              report here.
+              Shortlist a consented childminder from the map or search to pin
+              their published address and Ofsted report here. Coverage is not
+              every registered childminder — only those who agreed to publish.
             </div>
           )}
           {childminderSelected.length > 0 ? (
@@ -597,7 +603,9 @@ export function CompareApp({
             </div>
           ) : ks1Selected.length === 0 ? (
             <div className="empty-compare" role="status">
-              Add a state infant or primary for local-authority phonics context.
+              Add a state infant or primary to see local-authority phonics
+              context. School-level phonics scores are not published — this board
+              is area background for Year 1 choice, not a school league table.
             </div>
           ) : (
             <PhonicsComparisonBoard
@@ -624,7 +632,9 @@ export function CompareApp({
           <PathSummaries schools={ks2Selected} {...summaryOpts} />
           {ks2Selected.length === 0 ? (
             <div className="empty-compare" role="status">
-              Add a state primary or junior with Year 6 tables to compare KS2.
+              Add a state primary or junior with Year 6 tables to compare reading,
+              writing and maths. Independent prep schools usually have no
+              comparable KS2 table figures here.
             </div>
           ) : (
             <ComparisonBoard
@@ -647,9 +657,11 @@ export function CompareApp({
         />
         {ks4Selected.length === 0 ? (
           <div className="empty-compare" role="status">
-            Add a secondary or 16–18 setting for GCSE / A-level tables. KS3
-            selects schools offering Years 7–9; comparable school-level
-            attainment is published at KS4.
+            Add a secondary or 16–18 setting for GCSE / A-level tables. Selecting
+            KS3 shortlists schools that offer Years 7–9; published school-level
+            attainment still appears at KS4. If the map looks empty, try turning
+            off “Comparable KS4 only” to see special / alternative provision with
+            a reason chip.
           </div>
         ) : (
           <IndependentComparisonBoard

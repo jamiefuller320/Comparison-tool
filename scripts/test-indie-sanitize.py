@@ -132,6 +132,13 @@ def main() -> None:
     assert "NRIMC7250_20260618" in latest["isiLatestReportUrl"]
     assert latest["isiLatestReportTitle"] == "Interim monitoring visit"
 
+    # Exact "Priory School" slug must beat "Brooke Priory School".
+    brooke = "https://www.isi.net/institutions/school/brooke-priory-school-6292"
+    exact = "https://www.isi.net/institutions/school/priory-school-9479"
+    assert mod._score_isi_profile_url(exact, "Priory School") > mod._score_isi_profile_url(
+        brooke, "Priory School"
+    )
+
     print("indie sanitize ok")
 
 
