@@ -61,7 +61,7 @@ Only after durable parent and (separately) board audiences exist. Not a near-ter
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Stable ISI report URLs + grade depth** | Resolve stable ISI report URLs (not search links); bulk ISI grades not available cleanly. | Partial (GIAS / search links shipped) | Agent improvement |
+| **Stable ISI report URLs + grade depth** | Resolve stable ISI report URLs (not search links); bulk ISI grades not available cleanly. | Partial (name-search URLs + optional profile resolve; GIAS InspectorateReport usually blank) | Agent improvement |
 | **History / trends beyond state KS2** | Year charts for independents or other stages. User indicated history is mainly worth it for solid state datasets; state KS2 trends shipped. | Deferred | User (scoped) |
 
 ### Product metrics
