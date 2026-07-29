@@ -56,6 +56,14 @@ KS4_FILTER_TOTALS = [
     "9b64v",  # sex Total
 ]
 
+# EES ORs repeated filters.eq — keep only the all-Total cross-tab client-side.
+KS4_TOTAL_FILTERS = {
+    "pPmSo": "5Kydi",  # Disadvantaged status
+    "IzpBz": "mws9K",  # First language
+    "ibG6X": "WCb2b",  # Mobility status
+    "LZ6Wj": "9b64v",  # Sex
+}
+
 KS4_INDICATORS = {
     "att8Average": "kgVhs",
     "engMath94Percent": "hCRyW",
@@ -287,6 +295,7 @@ def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
 
     by_urn: dict[str, dict] = {}
     cleared_total = 0
+    skipped_subgroups = 0
     page = 1
     total_pages = 1
     while page <= total_pages:
@@ -297,6 +306,10 @@ def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
         batch = data.get("results") or []
         print(f"  KS4 page {page}/{total_pages} ({len(batch)} rows)", flush=True)
         for row in batch:
+            # Repeated filters.eq is OR'd by EES — reject non all-Total cross-tabs.
+            if (row.get("filters") or {}) != KS4_TOTAL_FILTERS:
+                skipped_subgroups += 1
+                continue
             sch_id = (row.get("locations") or {}).get("SCH")
             urn = sch_map.get(sch_id or "", "")
             if not urn or urn not in indie_urns:
@@ -308,6 +321,11 @@ def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
             }
             if all(v is None for v in metrics.values()):
                 continue
+            if urn in by_urn:
+                raise RuntimeError(
+                    f"Duplicate all-Total KS4 row for URN {urn} — "
+                    "check filter cross-tab selection"
+                )
             metrics, cleared = sanitize_ks4_metrics(metrics)
             cleared_total += len(cleared)
             metrics["ks4Period"] = KS4_YEAR
@@ -318,7 +336,8 @@ def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
 
     print(
         f"  KS4 matched schools: {len(by_urn)} "
-        f"(cleared {cleared_total} nil/zero field values)",
+        f"(cleared {cleared_total} nil/zero field values; "
+        f"skipped {skipped_subgroups} subgroup rows)",
         flush=True,
     )
     return by_urn, KS4_YEAR, cleared_total
@@ -417,13 +436,72 @@ def isi_reports_search_url(
     name: str | None,
     urn: str,
 ) -> str:
-    """Prefer postcode search (more stable than long school names)."""
+    """ISI reports directory search — name query is the working entry point."""
+    clean_name = (name or "").strip()
+    if clean_name:
+        return (
+            "https://www.isi.net/reports/?i=school&name="
+            + urllib.parse.quote(clean_name)
+        )
     pc = (postcode or "").strip().upper().replace("  ", " ")
     if pc:
-        return f"https://www.isi.net/reports/?search={urllib.parse.quote(pc)}"
-    if name:
-        return f"https://www.isi.net/reports/?search={urllib.parse.quote(name)}"
-    return f"https://www.isi.net/reports/?search={urllib.parse.quote(urn)}"
+        return (
+            "https://www.isi.net/reports/?i=school&name="
+            + urllib.parse.quote(pc)
+        )
+    return (
+        "https://www.isi.net/reports/?i=school&name="
+        + urllib.parse.quote(urn)
+    )
+
+
+def resolve_isi_profile_url(name: str, postcode: str | None = None) -> str | None:
+    """Best-effort resolve of an ISI institution profile from the reports search.
+
+    Returns None on network/parse failure so callers can keep the search URL.
+    """
+    clean_name = (name or "").strip()
+    if not clean_name:
+        return None
+    search = isi_reports_search_url(postcode=postcode, name=clean_name, urn="")
+    try:
+        html = get_bytes(search).decode("utf-8", errors="replace")
+    except Exception:  # noqa: BLE001
+        return None
+    # Profile links look like /institutions/school/winchester-college-7250
+    matches = re.findall(
+        r'href="(https://www\.isi\.net/institutions/school/[^"#?\s]+)"',
+        html,
+        flags=re.I,
+    )
+    if not matches:
+        matches = [
+            "https://www.isi.net" + path
+            for path in re.findall(
+                r'href="(/institutions/school/[^"#?\s]+)"',
+                html,
+                flags=re.I,
+            )
+        ]
+    if not matches:
+        return None
+    if len(matches) == 1:
+        return matches[0]
+    # Prefer a slug that contains distinctive name tokens.
+    tokens = [
+        t
+        for t in re.findall(r"[a-z0-9]+", clean_name.lower())
+        if t not in {"school", "college", "the", "and", "of"}
+    ]
+    scored: list[tuple[int, str]] = []
+    for url in matches:
+        slug = url.rsplit("/", 1)[-1].lower()
+        score = sum(1 for t in tokens if t in slug)
+        scored.append((score, url))
+    scored.sort(key=lambda row: (-row[0], row[1]))
+    if scored and scored[0][0] > 0:
+        return scored[0][1]
+    return matches[0]
 
 
 def harvest_gias_directory(indie_urns: set[str]) -> dict[str, dict]:
@@ -443,6 +521,9 @@ def harvest_gias_directory(indie_urns: set[str]) -> dict[str, dict]:
 
     reader = csv.DictReader(io.StringIO(text))
     by_urn: dict[str, dict] = {}
+    # Cap live ISI HTML lookups so a national enrich does not hammer isi.net.
+    isi_profile_resolves_left = 120
+    isi_profiles_resolved = 0
     for row in reader:
         urn = str(row.get("URN") or "").strip()
         if urn not in indie_urns:
@@ -468,15 +549,25 @@ def harvest_gias_directory(indie_urns: set[str]) -> dict[str, dict]:
                 if report and report.lower().startswith("http"):
                     entry["isiReportsUrl"] = report
                 else:
-                    entry["isiReportsUrl"] = isi_reports_search_url(
+                    profile = None
+                    if isi_profile_resolves_left > 0:
+                        profile = resolve_isi_profile_url(name, postcode)
+                        isi_profile_resolves_left -= 1
+                    entry["isiReportsUrl"] = profile or isi_reports_search_url(
                         postcode=postcode,
                         name=name,
                         urn=urn,
                     )
+                    if profile:
+                        isi_profiles_resolved += 1
                 entry["inspectionReportsUrl"] = entry["isiReportsUrl"]
         if len(entry) > 1 or inspectorate or website:
             by_urn[urn] = entry
-    print(f"  GIAS directory rows: {len(by_urn)}", flush=True)
+    print(
+        f"  GIAS directory rows: {len(by_urn)} "
+        f"(ISI profiles resolved {isi_profiles_resolved})",
+        flush=True,
+    )
     return by_urn
 
 

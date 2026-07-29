@@ -18,6 +18,7 @@ import argparse
 import csv
 import io
 import json
+import re
 import sys
 import time
 import urllib.error
@@ -90,6 +91,29 @@ def sector_from_type(school_type: str | None) -> str:
     if any(frag in text for frag in INDEPENDENT_TYPE_FRAGMENTS):
         return "independent"
     return "state"
+
+
+def parse_gias_open_date(raw: str | None) -> str | None:
+    """Normalize GIAS OpenDate (DD-MM-YYYY or YYYY-MM-DD) to YYYY-MM-DD."""
+    text = (raw or "").strip()
+    if not text:
+        return None
+    m = re.match(r"^(\d{2})-(\d{2})-(\d{4})$", text)
+    if m:
+        return f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
+    m = re.match(r"^(\d{4})-(\d{2})-(\d{2})$", text)
+    if m:
+        return text
+    return None
+
+
+def apply_gias_opening_fields(school: dict, row: dict) -> None:
+    open_date = parse_gias_open_date(row.get("OpenDate"))
+    reason = (row.get("ReasonEstablishmentOpened (name)") or "").strip() or None
+    if open_date:
+        school["openDate"] = open_date
+    if reason:
+        school["reasonEstablishmentOpened"] = reason
 
 
 def download_edubase() -> Path:
@@ -263,6 +287,7 @@ def main() -> int:
                 existing.get("schoolTypeLabel") or school_type
             )
             existing["giasPhase"] = (row.get("PhaseOfEducation (name)") or "").strip() or existing.get("giasPhase")
+            apply_gias_opening_fields(existing, row)
             if postcode and not existing.get("postcode"):
                 existing["postcode"] = postcode
             if town and not existing.get("town"):
@@ -289,6 +314,7 @@ def main() -> int:
             "source": "gias",
             "giasPhase": (row.get("PhaseOfEducation (name)") or "").strip() or None,
         }
+        apply_gias_opening_fields(school, row)
         new_schools.append(school)
         by_urn[urn] = school
         added += 1

@@ -111,8 +111,13 @@ def main() -> None:
         name="City of London School",
         urn="100003",
     )
-    assert "EC2Y" in isi_url or "EC2Y%208BB" in isi_url or "EC2Y+8BB" in isi_url
-    assert isi_url.startswith("https://www.isi.net/reports/?search=")
+    assert "i=school" in isi_url
+    assert "City" in isi_url or "City%20" in isi_url or "City+of" in isi_url
+    assert isi_url.startswith("https://www.isi.net/reports/?")
+
+    # KS4 total-filter map must match the EES field ids used in harvest_ks4.
+    assert mod.KS4_TOTAL_FILTERS["pPmSo"] == "5Kydi"
+    assert mod.KS4_TOTAL_FILTERS["LZ6Wj"] == "9b64v"
 
     print("indie sanitize ok")
 
