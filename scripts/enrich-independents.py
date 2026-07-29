@@ -517,6 +517,7 @@ _ISI_REPORT_KIND = {
     "FLW": "Focused compliance / welfare",
     "FLWMC": "Focused compliance / welfare",
     "NRIMC": "Interim monitoring visit",
+    "NRIMV": "Interim monitoring visit",
     "ADD": "Additional inspection",
     "GRT": "Progress monitoring",
     "COMP": "Compliance inspection",
