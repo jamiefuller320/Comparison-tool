@@ -137,3 +137,5 @@ Next.js (static export) · TypeScript · Tailwind CSS · Recharts · GitHub Page
 ## Relationship to Bartley
 
 Bartley Insight is a single-school governor monitor (URN 116338) with peer overlays and meeting-pack framing. Schoolside reuses the same public KS2 sources and metric vocabulary, generalises harvesting to **any English school set**, and reframes presentation around **parental choice**. Multi-year subject trends use the same CSP KS2 CSV archive pattern as Bartley, sharded nationally so shortlisted state schools can open a history chart from each comparison-table row label.
+
+**Future scope (not current product):** once the parent-facing tool is mature, the same collated data could power a **separate** governing-board interface — effectively Bartley’s dashboard for any school — without mixing board/SIP framing into Schoolside’s parental UX. Tracked in [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md).
