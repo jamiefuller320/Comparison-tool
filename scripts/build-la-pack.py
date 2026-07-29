@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Build an on-demand local-authority school pack under public/data/packs/{slug}/.
+"""Build an on-demand local-authority pack under public/data/packs/{slug}/.
 
 Does not overwrite the Hampshire maintained root index. Depth slice:
-schools harvest (early EES LA filter) + geocode + GIAS + KS4/KS5 + phonics.
+schools harvest (early EES LA filter) + geocode + GIAS + KS4/KS5 + phonics,
+then EY school Ofsted enrich + day-care providers + consented childminders.
 
 Usage:
   python3 scripts/build-la-pack.py --la Surrey
   python3 scripts/build-la-pack.py --la "Brighton and Hove" --sample 20
   python3 scripts/build-la-pack.py --la Surrey --skip-depth
+  python3 scripts/build-la-pack.py --la Surrey --skip-ey
 """
 
 from __future__ import annotations
@@ -76,6 +78,11 @@ def main() -> int:
         action="store_true",
         help="Skip GIAS / KS4 / phonics depth (harvest + geocode only)",
     )
+    parser.add_argument(
+        "--skip-ey",
+        action="store_true",
+        help="Skip EY providers / childminders / school Ofsted EY enrich",
+    )
     args = parser.parse_args()
 
     la = normalize_la_name(args.la)
@@ -101,9 +108,11 @@ def main() -> int:
         "requestedAt": packs.get(slug, {}).get("requestedAt")
         or time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "note": (
-            "Schools pack with GIAS + KS4/KS5 + phonics depth "
-            "(EY / history depth are follow-on steps)."
-            if not args.skip_depth
+            "Schools pack with GIAS + KS4/KS5 + phonics"
+            + (" + EY/childminders" if not args.skip_ey else "")
+            + " depth"
+            + (" (schools depth skipped)." if args.skip_depth else ".")
+            if not args.skip_depth or not args.skip_ey
             else "Schools index pack (depth skipped)."
         ),
         "paths": {
@@ -162,32 +171,83 @@ def main() -> int:
                 ]
             )
 
+        if not args.skip_ey:
+            run(
+                [
+                    "python3",
+                    "scripts/enrich-ey-schools.py",
+                    "--la",
+                    la,
+                    "--index",
+                    index_rel,
+                ]
+            )
+            run(
+                [
+                    "python3",
+                    "scripts/harvest-ey-providers.py",
+                    "--la",
+                    la,
+                    "--out-dir",
+                    out_rel,
+                ]
+            )
+            run(
+                [
+                    "python3",
+                    "scripts/harvest-childminders.py",
+                    "--la",
+                    la,
+                    "--out-dir",
+                    out_rel,
+                ]
+            )
+
         index = json.loads((ROOT / index_rel).read_text(encoding="utf-8"))
         canonical = index.get("maintainedScope") or la
         stats = index.get("stats") or {}
+        canon_slug = la_slug(canonical)
+        ey_path = out_dir / "ey-providers-index.json"
+        cm_path = out_dir / "childminders-index.json"
+        ey_count = None
+        cm_count = None
+        if ey_path.exists():
+            ey_payload = json.loads(ey_path.read_text(encoding="utf-8"))
+            ey_count = ey_payload.get("stats", {}).get("providerCount")
+        if cm_path.exists():
+            cm_payload = json.loads(cm_path.read_text(encoding="utf-8"))
+            cm_count = cm_payload.get("stats", {}).get("providerCount")
+        paths = {
+            "schoolsIndex": f"/data/packs/{canon_slug}/schools-index.json",
+            "directory": f"/data/packs/{canon_slug}/schools-directory.json",
+        }
+        if ey_path.exists():
+            paths["eyProviders"] = f"/data/packs/{canon_slug}/ey-providers-index.json"
+        if cm_path.exists():
+            paths["childminders"] = f"/data/packs/{canon_slug}/childminders-index.json"
         packs[slug] = {
             **packs[slug],
             "localAuthority": canonical,
-            "slug": la_slug(canonical),
+            "slug": canon_slug,
             "status": "ready",
             "schoolCount": stats.get("schoolCount"),
             "withRwm": stats.get("withRwm"),
             "withKs4": stats.get("withKs4"),
+            "eyProviderCount": ey_count,
+            "childminderCount": cm_count,
             "giasEnriched": bool(stats.get("giasEnriched")),
             "phonicsEnriched": bool(stats.get("phonicsEnriched")),
             "independentEnriched": bool(stats.get("independentEnriched")),
+            "eyEnriched": bool(ey_path.exists() or stats.get("ofstedStateAsAt")),
             "builtAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "note": packs[slug].get("note"),
-            "paths": {
-                "schoolsIndex": f"/data/packs/{la_slug(canonical)}/schools-index.json",
-                "directory": f"/data/packs/{la_slug(canonical)}/schools-directory.json",
-            },
+            "paths": paths,
         }
         # If label canonicalisation changed the slug, move entry.
-        if la_slug(canonical) != slug:
-            packs[la_slug(canonical)] = packs.pop(slug)
+        if canon_slug != slug:
+            packs[canon_slug] = packs.pop(slug)
         save_manifest(manifest)
-        print(json.dumps(packs.get(la_slug(canonical), packs.get(slug)), indent=2))
+        print(json.dumps(packs.get(canon_slug, packs.get(slug)), indent=2))
         return 0
     except Exception as exc:  # noqa: BLE001
         packs[slug]["status"] = "failed"

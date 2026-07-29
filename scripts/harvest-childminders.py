@@ -30,10 +30,14 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from seed_scope import SEED_LOCAL_AUTHORITY  # noqa: E402
+from seed_scope import (  # noqa: E402
+    SEED_LOCAL_AUTHORITY,
+    is_local_authority,
+    normalize_la_name,
+)
 
-OUT = ROOT / "public" / "data" / "childminders-index.json"
-SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
+DEFAULT_OUT = ROOT / "public" / "data" / "childminders-index.json"
+DEFAULT_SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
 SRC_SUMMARY = ROOT / "src" / "data" / "harvest-summary.json"
 
 UA = "Mozilla/5.0 (compatible; Schoolside/0.1; +https://github.com/jamiefuller320/Comparison-tool)"
@@ -225,8 +229,8 @@ def load_mi_by_urn() -> tuple[dict[str, dict[str, str]], str, str]:
     return by_urn, url, as_at
 
 
-def harvest_childminders() -> tuple[list[dict], dict]:
-    print("Fetching latest consented childminder addresses…", flush=True)
+def harvest_childminders(target_la: str) -> tuple[list[dict], dict]:
+    print(f"Fetching latest consented childminder addresses ({target_la})…", flush=True)
     consented_url, consented_as_at = latest_consented_csv_url()
     consented_rows = read_csv_with_header(
         get_bytes(consented_url), ("Provider URN", "Local Authority")
@@ -239,7 +243,7 @@ def harvest_childminders() -> tuple[list[dict], dict]:
     skipped_inactive = 0
     for row in consented_rows:
         la = first_value(row, "Local Authority")
-        if la != SEED_LOCAL_AUTHORITY:
+        if not is_local_authority(la, target_la):
             continue
         ptype = first_value(row, "Provider Type") or ""
         if ptype not in ALLOWED_TYPES:
@@ -335,7 +339,7 @@ def harvest_childminders() -> tuple[list[dict], dict]:
 
     providers.sort(key=lambda p: (p.get("town") or "", p.get("name") or ""))
     print(
-        f"  Hampshire consented childminders/domestic: {len(providers)} "
+        f"  {target_la} consented childminders/domestic: {len(providers)} "
         f"(skipped inactive from MI: {skipped_inactive})",
         flush=True,
     )
@@ -403,13 +407,41 @@ def bulk_geocode(providers: list[dict]) -> int:
 
 
 def main() -> None:
-    providers, meta = harvest_childminders()
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--la",
+        default=SEED_LOCAL_AUTHORITY,
+        help=f"DfE local authority (default: {SEED_LOCAL_AUTHORITY})",
+    )
+    parser.add_argument(
+        "--out-dir",
+        default="public/data",
+        help="Output directory for childminders-index.json",
+    )
+    args = parser.parse_args()
+
+    target_la = normalize_la_name(args.la) or SEED_LOCAL_AUTHORITY
+    out_dir = Path(args.out_dir)
+    if not out_dir.is_absolute():
+        out_dir = ROOT / out_dir
+    out_path = out_dir / "childminders-index.json"
+    summary_path = out_dir / "harvest-summary.json"
+    is_root = out_path.resolve() == DEFAULT_OUT.resolve()
+    if is_root and not is_local_authority(target_la, SEED_LOCAL_AUTHORITY):
+        raise SystemExit(
+            f"Refusing to write non-{SEED_LOCAL_AUTHORITY} childminders into "
+            "the maintained root — pass --out-dir public/data/packs/<slug>."
+        )
+
+    providers, meta = harvest_childminders(target_la)
     with_coords = bulk_geocode(providers)
     with_grade = sum(1 for p in providers if p.get("ofstedOverall"))
 
     payload = {
         "generatedAt": time.strftime("%Y-%m-%d"),
-        "localAuthority": SEED_LOCAL_AUTHORITY,
+        "localAuthority": target_la,
         "consentedAsAt": meta["consentedAsAt"],
         "ofstedAsAt": meta["miAsAt"],
         "source": {
@@ -420,15 +452,13 @@ def main() -> None:
             "refreshNote": (
                 "Ofsted overwrites the consented-addresses file each quarter. "
                 "Schoolside always resolves the latest CSV URL on harvest — "
-                "re-run npm run harvest:childminders (or harvest:ey) regularly "
-                "so the directory stays synced."
+                "re-run regularly so withdrawn consent drops out."
             ),
             "note": (
-                f"{SEED_LOCAL_AUTHORITY} seed: childminders and domestic childcare "
-                "who consented to publish name and address. Incomplete by design — "
-                "providers may withdraw consent. No phone/email in Ofsted’s file; "
-                "use the Ofsted report link. Not shown on the Ofsted day-care "
-                "compare board — use the parent vetting checklist."
+                f"{target_la}: childminders and domestic childcare who consented "
+                "to publish name and address. Incomplete by design — providers "
+                "may withdraw consent. No phone/email in Ofsted’s file; use the "
+                "Ofsted report link."
             ),
         },
         "providers": providers,
@@ -438,16 +468,16 @@ def main() -> None:
             "withCoordinates": with_coords,
             "consentedAsAt": meta["consentedAsAt"],
             "ofstedAsAt": meta["miAsAt"],
-            "localAuthority": SEED_LOCAL_AUTHORITY,
+            "localAuthority": target_la,
         },
     }
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
-    print(f"Wrote {OUT} ({len(providers)} providers)", flush=True)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    print(f"Wrote {out_path} ({len(providers)} providers)", flush=True)
 
     summary_bits = {
-        "localAuthority": SEED_LOCAL_AUTHORITY,
+        "localAuthority": target_la,
         "providerCount": len(providers),
         "withInspectionGrade": with_grade,
         "withCoordinates": with_coords,
@@ -455,7 +485,10 @@ def main() -> None:
         "ofstedAsAt": meta["miAsAt"],
         "consentedCsv": meta["consentedUrl"],
     }
-    for path in (SUMMARY, SRC_SUMMARY):
+    summary_targets = [summary_path]
+    if is_root:
+        summary_targets.append(SRC_SUMMARY)
+    for path in summary_targets:
         existing: dict = {}
         if path.exists():
             try:

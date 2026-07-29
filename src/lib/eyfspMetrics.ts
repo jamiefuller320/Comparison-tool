@@ -71,3 +71,18 @@ export function eyfspForSeedLa(
 ): EyfspAreaBench | undefined {
   return pack?.localAuthorities?.[la];
 }
+
+/** LA columns for the EYFSP board — seed first, then remaining LAs A–Z. */
+export function eyfspLaColumns(
+  pack: EyfspBenchmarkSet | undefined,
+  seedLa: string = SEED_LOCAL_AUTHORITY,
+): string[] {
+  const names = Object.keys(pack?.localAuthorities || {});
+  const rest = names
+    .filter((name) => name.toLowerCase() !== seedLa.toLowerCase())
+    .sort((a, b) => a.localeCompare(b, "en-GB"));
+  const seedHit = names.find(
+    (name) => name.toLowerCase() === seedLa.toLowerCase(),
+  );
+  return seedHit ? [seedHit, ...rest] : rest;
+}

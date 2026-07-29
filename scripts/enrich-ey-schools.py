@@ -27,11 +27,15 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from seed_scope import SEED_LOCAL_AUTHORITY, is_seed_local_authority  # noqa: E402
+from seed_scope import (  # noqa: E402
+    SEED_LOCAL_AUTHORITY,
+    is_local_authority,
+    is_seed_local_authority,
+    normalize_la_name,
+    resolve_index_bundle,
+)
 
-INDEX = ROOT / "public" / "data" / "schools-index.json"
-DIRECTORY = ROOT / "public" / "data" / "schools-directory.json"
-SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
+DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 SRC_SUMMARY = ROOT / "src" / "data" / "harvest-summary.json"
 
 UA = "Mozilla/5.0 (compatible; Schoolside/0.1; +https://github.com/jamiefuller320/Comparison-tool)"
@@ -271,15 +275,40 @@ def offers_early_years(school: dict) -> bool:
 
 
 def main() -> None:
-    if not INDEX.exists():
-        raise SystemExit(f"Missing {INDEX} — run harvest first")
+    import argparse
 
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--la",
+        default="",
+        help="Optional LA label for EY Ofsted counter / defensive scope",
+    )
+    parser.add_argument(
+        "--index",
+        default=str(DEFAULT_INDEX.relative_to(ROOT)),
+        help="Path to schools-index.json",
+    )
+    args = parser.parse_args()
+
+    paths = resolve_index_bundle(args.index, ROOT)
+    index_path = paths["index"]
+    directory_path = paths["directory"]
+    summary_path = paths["summary"]
+    if not index_path.exists():
+        raise SystemExit(f"Missing {index_path} — run harvest first")
+
+    target_la = normalize_la_name(args.la) if args.la else ""
     ofsted_by_urn, csv_url, as_at = harvest_state_ofsted()
-    payload = json.loads(INDEX.read_text(encoding="utf-8"))
+    payload = json.loads(index_path.read_text(encoding="utf-8"))
     schools = payload.get("schools") or []
+    if target_la:
+        schools = [
+            s for s in schools if is_local_authority(s.get("localAuthority"), target_la)
+        ]
+        payload["schools"] = schools
 
     matched = 0
-    hants_ey_matched = 0
+    ey_matched = 0
     for school in schools:
         if school.get("sector") == "independent":
             continue
@@ -289,10 +318,13 @@ def main() -> None:
             continue
         school.update(ofsted)
         matched += 1
-        if is_seed_local_authority(school.get("localAuthority")) and offers_early_years(
-            school
-        ):
-            hants_ey_matched += 1
+        in_scope = (
+            is_local_authority(school.get("localAuthority"), target_la)
+            if target_la
+            else is_seed_local_authority(school.get("localAuthority"))
+        )
+        if in_scope and offers_early_years(school):
+            ey_matched += 1
 
     source = payload.setdefault("source", {})
     datasets = source.setdefault("datasets", {})
@@ -301,18 +333,22 @@ def main() -> None:
 
     stats = payload.setdefault("stats", {})
     stats["stateWithOfsted"] = matched
-    stats["hampshireEyStateWithOfsted"] = hants_ey_matched
+    stats["hampshireEyStateWithOfsted"] = ey_matched
+    stats["eyStateWithOfsted"] = ey_matched
     stats["ofstedStateAsAt"] = as_at
+    if target_la:
+        stats["maintainedScope"] = target_la
+        payload["maintainedScope"] = target_la
 
-    INDEX.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    index_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
     print(
-        f"Wrote {INDEX}: stateWithOfsted={matched}, "
-        f"hampshireEyStateWithOfsted={hants_ey_matched}",
+        f"Wrote {index_path}: stateWithOfsted={matched}, "
+        f"eyStateWithOfsted={ey_matched}",
         flush=True,
     )
 
-    if DIRECTORY.exists():
-        directory = json.loads(DIRECTORY.read_text(encoding="utf-8"))
+    if directory_path.exists():
+        directory = json.loads(directory_path.read_text(encoding="utf-8"))
         by_full = {str(s.get("urn")): s for s in schools}
         for row in directory.get("schools") or []:
             full = by_full.get(str(row.get("urn") or ""))
@@ -320,19 +356,23 @@ def main() -> None:
                 continue
             if full.get("ofstedOverall"):
                 row["ofstedOverall"] = full["ofstedOverall"]
-        DIRECTORY.write_text(
+        directory_path.write_text(
             json.dumps(directory, separators=(",", ":")), encoding="utf-8"
         )
 
     summary = {
         "ofstedAsAt": as_at,
         "stateWithOfsted": matched,
-        "hampshireEyStateWithOfsted": hants_ey_matched,
-        "localAuthority": SEED_LOCAL_AUTHORITY,
+        "hampshireEyStateWithOfsted": ey_matched,
+        "eyStateWithOfsted": ey_matched,
+        "localAuthority": target_la or SEED_LOCAL_AUTHORITY,
         "datasetPage": OFSTED_PAGE,
         "csv": csv_url,
     }
-    for path in (SUMMARY, SRC_SUMMARY):
+    summary_targets = [summary_path]
+    if paths["is_root"]:
+        summary_targets.append(SRC_SUMMARY)
+    for path in summary_targets:
         existing: dict = {}
         if path.exists():
             try:

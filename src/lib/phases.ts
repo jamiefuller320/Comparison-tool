@@ -5,13 +5,13 @@ export const PHASE_OPTIONS = [
     id: "early-years",
     label: "Early years",
     short: "EY",
-    hint: "Nursery and reception (typically ages 0–5) — Hampshire day care, school nurseries/infants, and EYFSP area context",
+    hint: "Nursery and reception (typically ages 0–5) — day care, school nurseries/infants, and EYFSP area context",
   },
   {
     id: "childminders",
     label: "Childminders",
     short: "CM",
-    hint: "Hampshire consented childminders — often wrap-around care outside school hours; directory + vetting checklist (not school Ofsted tables)",
+    hint: "Consented childminders — often wrap-around care outside school hours; directory + vetting checklist (not school Ofsted tables)",
   },
   {
     id: "ks1",
