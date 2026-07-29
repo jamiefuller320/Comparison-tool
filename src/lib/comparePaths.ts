@@ -18,7 +18,7 @@ export const COMPARE_PATH_OPTIONS: ComparePathOption[] = [
   { id: "childminders", label: "Childminders", shortLabel: "Childminders" },
   { id: "ks1", label: "KS1 phonics", shortLabel: "KS1" },
   { id: "ks2", label: "Key Stage 2", shortLabel: "KS2" },
-  { id: "ks4", label: "KS4 / 16–18", shortLabel: "KS4" },
+  { id: "ks4", label: "KS3–4 / 16–18", shortLabel: "KS4" },
 ];
 
 export function comparePathLabel(id: ComparePathId): string {

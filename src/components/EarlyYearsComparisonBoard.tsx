@@ -6,8 +6,14 @@ import { fmtNum, shortName } from "@/lib/format";
 import { SourceStampLine } from "@/components/SourceStampLine";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
+import { DataGapFlags } from "@/components/DataGapFlags";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
+import {
+  boardGaps,
+  gapsForEyOfstedBoard,
+  schoolGaps,
+} from "@/lib/dataGaps";
 
 function formatValue(
   value: string | number | null | undefined,
@@ -46,6 +52,10 @@ export function EarlyYearsComparisonBoard({
 
   const hasChildcare = providers.some(isEyProvider);
   const hasSchool = providers.some((p) => !isEyProvider(p));
+  const dataGaps = gapsForEyOfstedBoard(providers, {
+    childcareOfstedAsAt,
+    stateOfstedAsAt,
+  });
 
   return (
     <div>
@@ -82,6 +92,7 @@ export function EarlyYearsComparisonBoard({
         <SourceStampLine stamp={childcareStamp} />
       ) : null}
       {hasSchool && stateStamp ? <SourceStampLine stamp={stateStamp} /> : null}
+      <DataGapFlags gaps={boardGaps(dataGaps)} />
       {(childcareStamp || stateStamp) ? (
         <div className="board-provenance-actions">
           <ReportProblemButton
@@ -150,6 +161,10 @@ export function EarlyYearsComparisonBoard({
                         shownValue={provider.ofstedOverall ?? "—"}
                       />
                     ) : null}
+                    <DataGapFlags
+                      compact
+                      gaps={schoolGaps(dataGaps, provider.urn)}
+                    />
                   </div>
                 </th>
               ))}

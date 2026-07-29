@@ -13,12 +13,6 @@ Last reviewed from agent chat: 2026-07-29 (board interface, network effects, ran
 
 ## Active backlog
 
-### Trust / data quality
-
-| Idea | Notes | Status | Source |
-| --- | --- | --- | --- |
-| **Data-quality gap flags** | Surface known fetch/join gaps on boards (e.g. missing Ofsted as-at, nil KS4) beside provenance — not the same as user challenges. | Not started (open PR #39 may land separately) | Trust infra follow-on |
-
 ### On-demand LA packs (roadmap)
 
 Hampshire stays the **maintained root**. Other LAs build into `public/data/packs/{slug}/` on request. Packs are a **collation / harvest unit**, not a user-facing mode — ready packs merge silently into map and search. **Do not** port Value_Investor’s agent research ingest wholesale — Schoolside stays deterministic official joins; borrow only ops patterns (gap → bounded fetch → health / completeness).
@@ -106,6 +100,7 @@ For orientation only — not backlog:
 - UI declutter: filters only in hero; path-scoped Side by side tabs; visit pack + checklist on childcare paths  
 - Hampshire age-climb maintained harvest (`harvest:hampshire` / seed-LA trim); national `harvest` kept as scaffold  
 - **Source provenance stamps** on compare boards + **Report a problem** challenge intake (`data-challenge` workflow; prefer private intake repo)  
+- **Data-quality gap flags** beside provenance (known nils / missing as-at / ungraded Ofsted / KS4 reason chips — not user challenges)  
 - **On-demand LA pack scaffold** (`build-la-pack.py`, `public/data/packs/`, `la-pack` dispatch) + **silent merge** of ready packs onto the Hampshire seed (no user-facing pack mode)  
 - Pack builder depth: GIAS + KS4/KS5 + phonics into `public/data/packs/{slug}/` without touching the Hampshire root  
 - Pack builder EY depth: Ofsted day care + consented childminders + school EY Ofsted enrich + LA EYFSP benches into the same pack folder; silent merge with Hampshire EY/CM indexes  
