@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import type { NearbySchool } from "@/lib/nearby";
 import "leaflet/dist/leaflet.css";
@@ -63,12 +63,22 @@ export function NearbyMap({
   const layersRef = useRef<L.LayerGroup | null>(null);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  /** Bumps after Leaflet map + layer group exist so marker redraw cannot race init. */
+  const [mapReady, setMapReady] = useState(0);
 
   const selectedSet = useMemo(() => new Set(selectedUrns), [selectedUrns]);
-  const schoolKey = schools.map((s) => s.urn).join(",");
+  // Order-independent so a stage-prefer reorder alone does not force a full fitBounds.
+  const schoolKey = useMemo(
+    () =>
+      [...schools]
+        .map((s) => s.urn)
+        .sort()
+        .join(","),
+    [schools],
+  );
 
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
+    if (!containerRef.current) return;
     const map = L.map(containerRef.current, {
       scrollWheelZoom: false,
       zoomControl: true,
@@ -82,6 +92,7 @@ export function NearbyMap({
 
     layersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
+    setMapReady((n) => n + 1);
 
     requestAnimationFrame(() => map.invalidateSize());
 
@@ -90,10 +101,12 @@ export function NearbyMap({
       mapRef.current = null;
       layersRef.current = null;
     };
+    // Recreate only when the home postcode/location changes (parent key also covers this).
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [home.postcode, home.latitude, home.longitude]);
 
   useEffect(() => {
+    if (!mapReady) return;
     const map = mapRef.current;
     const layers = layersRef.current;
     if (!map || !layers) return;
@@ -135,6 +148,7 @@ export function NearbyMap({
       maxZoom: 15,
     });
   }, [
+    mapReady,
     home,
     schools,
     schoolKey,
