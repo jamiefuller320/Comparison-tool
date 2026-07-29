@@ -24,8 +24,10 @@ import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
+  schoolOffersSecondary,
   wantsChildminders,
   wantsEyMetrics,
+  wantsKs4Metrics,
   type PhaseId,
 } from "@/lib/phases";
 import {
@@ -36,6 +38,11 @@ import {
 } from "@/lib/sectors";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 import { requestTourStart } from "@/lib/tour";
+import {
+  classifyKs4Missing,
+  hasPublishedKs4,
+  ks4MissingGapMeta,
+} from "@/lib/dataGaps";
 
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
@@ -60,6 +67,9 @@ export function HomePostcodeExplorer({
   onStageFilterChange,
   sectorFilter,
   onSectorFilterChange,
+  showComparableKs4Toggle = false,
+  comparableKs4Only = true,
+  onComparableKs4OnlyChange,
   max = 4,
 }: {
   schools: SchoolRecord[];
@@ -69,6 +79,9 @@ export function HomePostcodeExplorer({
   onStageFilterChange: (next: PhaseId[]) => void;
   sectorFilter: SectorId[];
   onSectorFilterChange: (next: SectorId[]) => void;
+  showComparableKs4Toggle?: boolean;
+  comparableKs4Only?: boolean;
+  onComparableKs4OnlyChange?: (next: boolean) => void;
   max?: number;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
@@ -166,7 +179,7 @@ export function HomePostcodeExplorer({
     // Drop stale road times as soon as the sector/stage filter changes so the
     // nearby pane does not briefly show distances for the previous set.
     setRoadByUrn({});
-  }, [sectorFilter, stageFilter]);
+  }, [sectorFilter, stageFilter, comparableKs4Only]);
 
   const nearby = useMemo(
     () =>
@@ -370,6 +383,21 @@ export function HomePostcodeExplorer({
                   {km} km
                 </button>
               ))}
+              {showComparableKs4Toggle && onComparableKs4OnlyChange ? (
+                <button
+                  type="button"
+                  className={
+                    comparableKs4Only
+                      ? "radius-chip active"
+                      : "radius-chip"
+                  }
+                  aria-pressed={comparableKs4Only}
+                  title="When on, secondaries without published Attainment 8 are hidden from the map and search (special/AP and similar). Turn off to see every matching secondary with a reason chip."
+                  onClick={() => onComparableKs4OnlyChange(!comparableKs4Only)}
+                >
+                  Comparable KS4 only
+                </button>
+              ) : null}
               {roadsPending ? (
                 <span className="postcode-meta">Updating road times…</span>
               ) : null}
@@ -382,7 +410,9 @@ export function HomePostcodeExplorer({
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}
                 selectedUrns={selectedUrns}
-                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${[...nearby].map((s) => s.urn).sort().join(",")}`}
+                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${comparableKs4Only}:${[...nearby].map((s) => s.urn).sort().join(",")}`}
+                emphasizeKs4={wantsKs4Metrics(stageFilter)}
+                comparableKs4Only={comparableKs4Only}
                 onSelect={(urn) => {
                   if (selectedUrns.includes(urn) || !atMax) onToggle(urn);
                 }}
@@ -396,21 +426,36 @@ export function HomePostcodeExplorer({
                   </strong>
                   <span>
                     List updates with the range ring · tick to compare
+                    {showComparableKs4Toggle && comparableKs4Only
+                      ? " · comparable KS4 only"
+                      : null}
                   </span>
                 </div>
                 {nearby.length === 0 ? (
                   <p className="footnote" style={{ padding: "1rem" }}>
                     No indexed schools in this ring. Try a wider range, another
-                    stage, or include independent schools.
+                    stage
+                    {showComparableKs4Toggle && comparableKs4Only
+                      ? ", turn off “Comparable KS4 only”"
+                      : ""}
+                    , or include independent schools.
                   </p>
                 ) : (
                   <ul
-                    key={`nearby-${radiusKm}-${stageFilter.join("-")}-${sectorFilter.join("-")}`}
+                    key={`nearby-${radiusKm}-${stageFilter.join("-")}-${sectorFilter.join("-")}-${comparableKs4Only}`}
                   >
                     {nearby.map((school) => {
                       const checked = selectedUrns.includes(school.urn);
                       const disabled = !checked && atMax;
                       const sector = formatSector(resolveSchoolSector(school));
+                      const showKs4Gap =
+                        wantsKs4Metrics(stageFilter) &&
+                        !comparableKs4Only &&
+                        schoolOffersSecondary(school) &&
+                        !hasPublishedKs4(school);
+                      const ks4Gap = showKs4Gap
+                        ? ks4MissingGapMeta(classifyKs4Missing(school))
+                        : null;
                       return (
                         <li key={school.urn}>
                           <label
@@ -456,6 +501,9 @@ export function HomePostcodeExplorer({
                                         : sector === "Independent"
                                           ? "No published KS2 figures"
                                           : null,
+                                  ks4Gap
+                                    ? `No comparable Att8 · ${ks4Gap.label}`
+                                    : null,
                                 ]
                                   .filter(Boolean)
                                   .join(" · ")}

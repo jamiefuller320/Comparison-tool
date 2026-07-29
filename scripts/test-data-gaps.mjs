@@ -15,6 +15,8 @@ async function main() {
     isRecentlyOpenedForKs4,
     ks4OutcomeBlankHint,
     ofstedBlankHintForIsi,
+    passesComparableKs4Filter,
+    hasPublishedKs4,
     boardGaps,
     schoolGaps,
   } = await import("../src/lib/dataGaps.ts");
@@ -228,6 +230,46 @@ async function main() {
   });
   if (eyfspOk.length) {
     console.error("FAIL eyfsp should be empty", eyfspOk);
+    process.exit(1);
+  }
+
+  const mainstream = {
+    urn: "m2",
+    name: "Att8 High",
+    ageRange: "11 to 16",
+    att8Average: 50,
+  };
+  const specialNoAtt8 = {
+    urn: "s2",
+    name: "Special High",
+    ageRange: "11 to 16",
+    schoolTypeLabel: "Community special school",
+    att8Average: null,
+  };
+  if (
+    !passesComparableKs4Filter(mainstream, {
+      comparableOnly: true,
+      secondaryStagesActive: true,
+    }) ||
+    passesComparableKs4Filter(specialNoAtt8, {
+      comparableOnly: true,
+      secondaryStagesActive: true,
+    })
+  ) {
+    console.error("FAIL passesComparableKs4Filter");
+    process.exit(1);
+  }
+  if (
+    !passesComparableKs4Filter(specialNoAtt8, {
+      comparableOnly: false,
+      secondaryStagesActive: true,
+    })
+  ) {
+    console.error("FAIL comparable off should pass");
+    process.exit(1);
+  }
+  if (!hasPublishedKs4(mainstream) || hasPublishedKs4(specialNoAtt8)) {
+    console.error("FAIL hasPublishedKs4");
     process.exit(1);
   }
 

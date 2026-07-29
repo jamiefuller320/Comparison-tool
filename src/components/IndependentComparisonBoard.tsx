@@ -220,13 +220,29 @@ export function IndependentComparisonBoard({
                       >
                         Ofsted reports ↗
                       </a>
-                    ) : school.isiReportsUrl ? (
+                    ) : null}
+                    {school.isiLatestReportUrl ? (
                       <a
-                        href={school.isiReportsUrl}
+                        href={school.isiLatestReportUrl}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        ISI reports ↗
+                        {school.isiLatestReportTitle || "Latest ISI report"}
+                        {school.isiLatestReportDate
+                          ? ` (${school.isiLatestReportDate})`
+                          : ""}{" "}
+                        ↗
+                      </a>
+                    ) : null}
+                    {school.isiProfileUrl || school.isiReportsUrl ? (
+                      <a
+                        href={school.isiProfileUrl || school.isiReportsUrl!}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {school.isiLatestReportUrl
+                          ? "All ISI reports ↗"
+                          : "ISI reports ↗"}
                       </a>
                     ) : null}
                     {school.schoolWebsite ? (

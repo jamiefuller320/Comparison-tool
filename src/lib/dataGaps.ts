@@ -144,6 +144,19 @@ export function hasPublishedKs4OrKs5(school: SchoolRecord): boolean {
   return hasPublishedKs4(school) || school.ks5ApsPerEntry != null;
 }
 
+/**
+ * Discovery filter for KS3/KS4 stages: keep non-secondaries, and secondaries
+ * that publish Attainment 8. When `comparableOnly` is false, everything passes.
+ */
+export function passesComparableKs4Filter(
+  school: SchoolRecord,
+  opts: { comparableOnly: boolean; secondaryStagesActive: boolean },
+): boolean {
+  if (!opts.comparableOnly || !opts.secondaryStagesActive) return true;
+  if (!schoolOffersSecondary(school)) return true;
+  return hasPublishedKs4(school);
+}
+
 /** Classify a secondary with no Att8 / 16–18 APS in the pack. */
 export function classifyKs4Missing(school: SchoolRecord): Ks4MissingReason {
   if (isKs3OnlySecondary(school)) return "ks3-only";
