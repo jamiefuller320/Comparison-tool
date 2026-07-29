@@ -5,6 +5,9 @@
  */
 
 import type {
+  ChildmindersIndex,
+  EyfspBenchmarkSet,
+  EyProvidersIndex,
   IndependentBenchmarkSet,
   PhonicsBenchmarkSet,
   SchoolRecord,
@@ -70,15 +73,20 @@ export interface LaPackManifestEntry {
   schoolCount?: number;
   withRwm?: number;
   withKs4?: number;
+  eyProviderCount?: number | null;
+  childminderCount?: number | null;
   giasEnriched?: boolean;
   phonicsEnriched?: boolean;
   independentEnriched?: boolean;
+  eyEnriched?: boolean;
   requestedAt?: string;
   builtAt?: string;
   note?: string;
   paths?: {
     schoolsIndex?: string;
     directory?: string;
+    eyProviders?: string;
+    childminders?: string;
   };
 }
 
@@ -125,6 +133,35 @@ function mergePhonics(
     },
   };
 }
+
+function mergeEyfsp(
+  seed?: EyfspBenchmarkSet,
+  pack?: EyfspBenchmarkSet,
+): EyfspBenchmarkSet | undefined {
+  if (!seed && !pack) return undefined;
+  if (!pack) return seed;
+  if (!seed) return pack;
+  return {
+    ...seed,
+    ...pack,
+    england: seed.england ?? pack.england,
+    localAuthorities: {
+      ...(seed.localAuthorities || {}),
+      ...(pack.localAuthorities || {}),
+    },
+    note: seed.note || pack.note,
+    sourceUrl: seed.sourceUrl || pack.sourceUrl,
+    period: seed.period || pack.period,
+  };
+}
+
+export type EyProvidersIndexWithPack = EyProvidersIndex & {
+  collatedPackLabels?: string[];
+};
+
+export type ChildmindersIndexWithPack = ChildmindersIndex & {
+  collatedPackLabels?: string[];
+};
 
 function mean(values: number[]): number | null {
   if (!values.length) return null;
@@ -285,6 +322,110 @@ export function mergeSchoolsIndexWithPacks(
     source: {
       ...seed.source,
       note: `${seed.source.note}${noteExtra}`,
+    },
+    collatedPackLabels: packLabels,
+  };
+}
+
+/**
+ * Overlay ready LA EY provider packs onto the Hampshire maintained seed.
+ * Pack providers win on URN collision; England EYFSP stays from the seed;
+ * LA EYFSP benches are unioned.
+ */
+export function mergeEyProvidersWithPacks(
+  seed: EyProvidersIndex,
+  packs: Array<{
+    index: EyProvidersIndex;
+    meta?: Pick<LaPackManifestEntry, "slug" | "localAuthority">;
+  }>,
+): EyProvidersIndexWithPack {
+  if (!packs.length) {
+    return { ...seed };
+  }
+
+  const byUrn = new Map(seed.providers.map((p) => [p.urn, p]));
+  let eyfsp = seed.benchmarks.eyfsp;
+  const packLabels: string[] = [];
+
+  for (const { index: pack, meta } of packs) {
+    for (const provider of pack.providers || []) {
+      byUrn.set(provider.urn, provider);
+    }
+    eyfsp = mergeEyfsp(eyfsp, pack.benchmarks?.eyfsp);
+    const label = meta?.localAuthority || pack.localAuthority || meta?.slug;
+    if (label) packLabels.push(label);
+  }
+
+  const providers = [...byUrn.values()];
+  const noteExtra = packLabels.length
+    ? ` Collated area coverage also includes: ${packLabels.join(", ")}.`
+    : "";
+
+  return {
+    ...seed,
+    providers,
+    benchmarks: {
+      ...seed.benchmarks,
+      eyfsp,
+    },
+    stats: {
+      ...seed.stats,
+      providerCount: providers.length,
+      withInspectionGrade: providers.filter((p) => p.ofstedOverall).length,
+      withCoordinates: providers.filter((p) => p.latitude != null).length,
+    },
+    source: {
+      ...seed.source,
+      note: `${seed.source.note || ""}${noteExtra}`.trim(),
+    },
+    collatedPackLabels: packLabels,
+  };
+}
+
+/**
+ * Overlay ready LA consented-childminder packs onto the Hampshire seed.
+ * Pack providers win on URN collision. Empty pack files are valid
+ * (consent lists can be empty for an LA).
+ */
+export function mergeChildmindersWithPacks(
+  seed: ChildmindersIndex,
+  packs: Array<{
+    index: ChildmindersIndex;
+    meta?: Pick<LaPackManifestEntry, "slug" | "localAuthority">;
+  }>,
+): ChildmindersIndexWithPack {
+  if (!packs.length) {
+    return { ...seed };
+  }
+
+  const byUrn = new Map(seed.providers.map((p) => [p.urn, p]));
+  const packLabels: string[] = [];
+
+  for (const { index: pack, meta } of packs) {
+    for (const provider of pack.providers || []) {
+      byUrn.set(provider.urn, provider);
+    }
+    const label = meta?.localAuthority || pack.localAuthority || meta?.slug;
+    if (label) packLabels.push(label);
+  }
+
+  const providers = [...byUrn.values()];
+  const noteExtra = packLabels.length
+    ? ` Collated area coverage also includes: ${packLabels.join(", ")}.`
+    : "";
+
+  return {
+    ...seed,
+    providers,
+    stats: {
+      ...seed.stats,
+      providerCount: providers.length,
+      withInspectionGrade: providers.filter((p) => p.ofstedOverall).length,
+      withCoordinates: providers.filter((p) => p.latitude != null).length,
+    },
+    source: {
+      ...seed.source,
+      note: `${seed.source.note || ""}${noteExtra}`.trim(),
     },
     collatedPackLabels: packLabels,
   };

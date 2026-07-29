@@ -70,6 +70,60 @@ export async function loadLaPackSchoolsIndex(
   }
 }
 
+async function loadLaPackJson<T>(
+  slug: string,
+  file: string,
+  fetchImpl: typeof fetch,
+  cacheBust: boolean,
+  label: string,
+): Promise<T | null> {
+  const path = `/data/packs/${slug}/${file}`;
+  const url = cacheBust ? `${dataUrl(path)}?t=${Date.now()}` : dataUrl(path);
+  try {
+    const res = await fetchImpl(url, {
+      cache: cacheBust ? "no-store" : "default",
+    });
+    if (res.status === 404) return null;
+    if (!res.ok) {
+      throw new Error(`Failed to load LA pack ${label} ${slug} (${res.status})`);
+    }
+    return (await res.json()) as T;
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith("Failed to load")) {
+      throw err;
+    }
+    return null;
+  }
+}
+
+export async function loadLaPackEyProvidersIndex(
+  slug: string,
+  fetchImpl: typeof fetch = fetch,
+  cacheBust = false,
+): Promise<EyProvidersIndex | null> {
+  return loadLaPackJson<EyProvidersIndex>(
+    slug,
+    "ey-providers-index.json",
+    fetchImpl,
+    cacheBust,
+    "EY",
+  );
+}
+
+export async function loadLaPackChildmindersIndex(
+  slug: string,
+  fetchImpl: typeof fetch = fetch,
+  cacheBust = false,
+): Promise<ChildmindersIndex | null> {
+  return loadLaPackJson<ChildmindersIndex>(
+    slug,
+    "childminders-index.json",
+    fetchImpl,
+    cacheBust,
+    "childminders",
+  );
+}
+
 export async function loadEyProvidersIndex(
   fetchImpl: typeof fetch = fetch,
   cacheBust = false,

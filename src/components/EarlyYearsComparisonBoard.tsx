@@ -38,8 +38,8 @@ export function EarlyYearsComparisonBoard({
   if (providers.length === 0) {
     return (
       <div className="empty-compare">
-        Add Hampshire early years day-care providers or school nursery / infant
-        settings to compare Ofsted inspection outcomes side by side.
+        Add early years day-care providers or school nursery / infant settings
+        to compare Ofsted inspection outcomes side by side.
       </div>
     );
   }
@@ -50,14 +50,14 @@ export function EarlyYearsComparisonBoard({
   return (
     <div>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
-        Compared on published Ofsted inspection outcomes for Hampshire early
-        years settings — Early Years Register day care (full and sessional) and
-        state-funded schools with a nursery or reception intake. Grades describe
-        the setting at the last graded inspection. Where Ofsted publishes domain
-        judgements or a report without a single overall grade, overall shows as
-        ungraded / report-led. They are not the same as reception EYFSP
-        attainment (DfE only publishes EYFSP for areas, not individual providers
-        or schools).
+        Compared on published Ofsted inspection outcomes for early years
+        settings in this collated set — Early Years Register day care (full and
+        sessional) and state-funded schools with a nursery or reception intake.
+        Grades describe the setting at the last graded inspection. Where Ofsted
+        publishes domain judgements or a report without a single overall grade,
+        overall shows as ungraded / report-led. They are not the same as
+        reception EYFSP attainment (DfE only publishes EYFSP for areas, not
+        individual providers or schools).
         {hasChildcare && childcareOfstedAsAt
           ? ` Childcare MI as at ${childcareOfstedAsAt}.`
           : null}

@@ -4,10 +4,9 @@ import type { EyfspBenchmarkSet } from "@/lib/types";
 import {
   EYFSP_METRICS,
   eyfspEngland,
-  eyfspForSeedLa,
+  eyfspLaColumns,
   type EyfspMetric,
 } from "@/lib/eyfspMetrics";
-import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { fmtNum, fmtPct, fmtPp, ppGap } from "@/lib/format";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
@@ -31,10 +30,13 @@ export function EyfspComparisonBoard({
   sourceStamp?: SourceStamp | null;
 }) {
   const england = eyfspEngland(eyfsp);
-  const seed = eyfspForSeedLa(eyfsp);
+  const laColumns = eyfspLaColumns(eyfsp);
   const period = eyfsp?.period ?? "latest";
+  const hasAnyLa = laColumns.some(
+    (la) => eyfsp?.localAuthorities?.[la]?.gldPercent != null,
+  );
 
-  if (!england?.gldPercent && !seed?.gldPercent) {
+  if (!england?.gldPercent && !hasAnyLa) {
     return (
       <div className="empty-compare" role="status">
         EYFSP area benchmarks are not in this data build yet. Re-run{" "}
@@ -43,14 +45,20 @@ export function EyfspComparisonBoard({
     );
   }
 
+  const areaLabel =
+    laColumns.length === 0
+      ? "local authorities in this build"
+      : laColumns.length === 1
+        ? laColumns[0]
+        : `${laColumns.slice(0, -1).join(", ")} and ${laColumns[laColumns.length - 1]}`;
+
   return (
     <div>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
         Early Years Foundation Stage Profile figures are for{" "}
-        <strong>{SEED_GEOGRAPHY_LABEL}</strong> and <strong>England</strong>{" "}
-        only — the DfE does not publish each provider or school&apos;s EYFSP
-        results. Use this as area context while you shortlist nurseries and
-        reception settings.
+        <strong>{areaLabel}</strong> and <strong>England</strong> only — the DfE
+        does not publish each provider or school&apos;s EYFSP results. Use this
+        as area context while you shortlist nurseries and reception settings.
         {england?.gldPercent != null
           ? ` England good level of development is ${fmtPct(england.gldPercent)} (${period}).`
           : null}{" "}
@@ -69,43 +77,52 @@ export function EyfspComparisonBoard({
           <thead>
             <tr>
               <th scope="col">Measure</th>
-              <th scope="col">{SEED_GEOGRAPHY_LABEL}</th>
+              {laColumns.map((la) => (
+                <th scope="col" key={la}>
+                  {la}
+                </th>
+              ))}
               <th scope="col">England</th>
             </tr>
           </thead>
           <tbody>
             {EYFSP_METRICS.map((metric) => {
-              const seedValue = metric.get(seed);
               const engValue = metric.get(england);
-              const gap =
-                metric.unit === "pct"
-                  ? ppGap(
-                      typeof seedValue === "number" ? seedValue : null,
-                      typeof engValue === "number" ? engValue : null,
-                    )
-                  : null;
               return (
                 <tr key={metric.key}>
                   <th scope="row">
                     {metric.label}
                     <span className="hint">{metric.parentHint}</span>
                   </th>
-                  <td className="metric-cell">
-                    {formatValue(seedValue, metric.unit)}
-                    {gap != null ? (
-                      <span
-                        className={
-                          gap > 1
-                            ? "vs vs-up"
-                            : gap < -1
-                              ? "vs vs-down"
-                              : "vs vs-flat"
-                        }
-                      >
-                        {fmtPp(gap)} vs England
-                      </span>
-                    ) : null}
-                  </td>
+                  {laColumns.map((la) => {
+                    const area = eyfsp?.localAuthorities?.[la];
+                    const laValue = metric.get(area);
+                    const gap =
+                      metric.unit === "pct"
+                        ? ppGap(
+                            typeof laValue === "number" ? laValue : null,
+                            typeof engValue === "number" ? engValue : null,
+                          )
+                        : null;
+                    return (
+                      <td className="metric-cell" key={la}>
+                        {formatValue(laValue, metric.unit)}
+                        {gap != null ? (
+                          <span
+                            className={
+                              gap > 1
+                                ? "vs vs-up"
+                                : gap < -1
+                                  ? "vs vs-down"
+                                  : "vs vs-flat"
+                            }
+                          >
+                            {fmtPp(gap)} vs England
+                          </span>
+                        ) : null}
+                      </td>
+                    );
+                  })}
                   <td className="metric-cell">
                     {formatValue(engValue, metric.unit)}
                   </td>

@@ -29,10 +29,14 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from seed_scope import SEED_LOCAL_AUTHORITY  # noqa: E402
+from seed_scope import (  # noqa: E402
+    SEED_LOCAL_AUTHORITY,
+    is_local_authority,
+    normalize_la_name,
+)
 
-OUT = ROOT / "public" / "data" / "ey-providers-index.json"
-SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
+DEFAULT_OUT = ROOT / "public" / "data" / "ey-providers-index.json"
+DEFAULT_SUMMARY = ROOT / "public" / "data" / "harvest-summary.json"
 SRC_SUMMARY = ROOT / "src" / "data" / "harvest-summary.json"
 
 UA = "Mozilla/5.0 (compatible; Schoolside/0.1; +https://github.com/jamiefuller320/Comparison-tool)"
@@ -231,8 +235,8 @@ def read_childcare_csv(raw: bytes) -> list[dict[str, str]]:
     return list(csv.DictReader(io.StringIO(clipped)))
 
 
-def harvest_providers() -> tuple[list[dict], str, str]:
-    print("Fetching Ofsted childcare MI…", flush=True)
+def harvest_providers(target_la: str) -> tuple[list[dict], str, str]:
+    print(f"Fetching Ofsted childcare MI ({target_la})…", flush=True)
     url, as_at = latest_childcare_csv_url()
     rows = read_childcare_csv(get_bytes(url))
     print(f"  CSV rows: {len(rows)}", flush=True)
@@ -240,7 +244,7 @@ def harvest_providers() -> tuple[list[dict], str, str]:
     providers: list[dict] = []
     for row in rows:
         la = first_value(row, "Local Authority")
-        if la != SEED_LOCAL_AUTHORITY:
+        if not is_local_authority(la, target_la):
             continue
         status = (first_value(row, "Provider Status") or "").lower()
         if status != "active":
@@ -346,7 +350,7 @@ def harvest_providers() -> tuple[list[dict], str, str]:
         )
 
     providers.sort(key=lambda p: (p.get("town") or "", p.get("name") or ""))
-    print(f"  Hampshire named day-care providers: {len(providers)}", flush=True)
+    print(f"  {target_la} named day-care providers: {len(providers)}", flush=True)
     return providers, url, as_at
 
 
@@ -405,8 +409,8 @@ def bulk_geocode(providers: list[dict]) -> int:
     return n
 
 
-def harvest_eyfsp() -> dict:
-    print("Fetching EYFSP England / Hampshire benchmarks…", flush=True)
+def harvest_eyfsp(target_la: str) -> dict:
+    print(f"Fetching EYFSP England / {target_la} benchmarks…", flush=True)
     meta = get_json(f"{BASE}/data-sets/{EYFSP_DATASET}/meta")
     la_map: dict[str, str] = {}
     for block in meta.get("locations") or []:
@@ -478,15 +482,27 @@ def harvest_eyfsp() -> dict:
     nat = extract(pull("NAT"), "NAT")
     las = extract(pull("LA"), "LA")
     england = nat.get("england") or {}
-    hampshire = las.get(SEED_LOCAL_AUTHORITY)
+    # Prefer exact then case-insensitive match against EES labels.
+    area = las.get(target_la)
+    if not area:
+        for name, metrics in las.items():
+            if is_local_authority(name, target_la):
+                area = metrics
+                target_label = name
+                break
+        else:
+            target_label = target_la
+            area = None
+    else:
+        target_label = target_la
     if england.get("gldPercent") is None:
         raise SystemExit("EYFSP harvest failed — no England GLD %")
-    if not hampshire or hampshire.get("gldPercent") is None:
-        raise SystemExit("EYFSP harvest failed — no Hampshire GLD %")
+    if not area or area.get("gldPercent") is None:
+        raise SystemExit(f"EYFSP harvest failed — no {target_la} GLD %")
 
     print(
         f"  England GLD={england.get('gldPercent')}%; "
-        f"Hampshire GLD={hampshire.get('gldPercent')}%",
+        f"{target_label} GLD={area.get('gldPercent')}%",
         flush=True,
     )
     return {
@@ -501,19 +517,48 @@ def harvest_eyfsp() -> dict:
             "early-years-foundation-stage-profile-results/2024-25"
         ),
         "england": england,
-        "localAuthorities": {SEED_LOCAL_AUTHORITY: hampshire},
+        "localAuthorities": {target_label: area},
     }
 
 
 def main() -> None:
-    providers, csv_url, as_at = harvest_providers()
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--la",
+        default=SEED_LOCAL_AUTHORITY,
+        help=f"DfE local authority (default: {SEED_LOCAL_AUTHORITY})",
+    )
+    parser.add_argument(
+        "--out-dir",
+        default="public/data",
+        help="Output directory for ey-providers-index.json",
+    )
+    args = parser.parse_args()
+
+    target_la = normalize_la_name(args.la) or SEED_LOCAL_AUTHORITY
+    out_dir = Path(args.out_dir)
+    if not out_dir.is_absolute():
+        out_dir = ROOT / out_dir
+    out_path = out_dir / "ey-providers-index.json"
+    summary_path = out_dir / "harvest-summary.json"
+    is_root = out_path.resolve() == DEFAULT_OUT.resolve()
+    if is_root and not is_local_authority(target_la, SEED_LOCAL_AUTHORITY):
+        raise SystemExit(
+            f"Refusing to write non-{SEED_LOCAL_AUTHORITY} EY providers into "
+            "the maintained root — pass --out-dir public/data/packs/<slug>."
+        )
+
+    providers, csv_url, as_at = harvest_providers(target_la)
     with_coords = bulk_geocode(providers)
-    eyfsp = harvest_eyfsp()
+    eyfsp = harvest_eyfsp(target_la)
+    eyfsp_la_name = next(iter(eyfsp["localAuthorities"]))
 
     with_grade = sum(1 for p in providers if p.get("ofstedOverall"))
     payload = {
         "generatedAt": time.strftime("%Y-%m-%d"),
-        "localAuthority": SEED_LOCAL_AUTHORITY,
+        "localAuthority": eyfsp_la_name,
         "ofstedAsAt": as_at,
         "source": {
             "ofstedChildcareMiPage": OFSTED_PAGE,
@@ -523,10 +568,9 @@ def main() -> None:
             "eyfspPeriod": EYFSP_YEAR,
             "eyfspPublication": eyfsp["sourceUrl"],
             "note": (
-                "Hampshire seed scope: named non-domestic Full/Sessional day care "
-                "on the Early Years Register, plus EYFSP England/Hampshire "
-                "benchmarks. Consented childminders are harvested separately "
-                "(npm run harvest:childminders)."
+                f"{eyfsp_la_name} scope: named non-domestic Full/Sessional day care "
+                "on the Early Years Register, plus EYFSP England/LA benchmarks. "
+                "Consented childminders are harvested separately."
             ),
         },
         "benchmarks": {"eyfsp": eyfsp},
@@ -537,27 +581,28 @@ def main() -> None:
             "withCoordinates": with_coords,
             "ofstedAsAt": as_at,
             "eyfspPeriod": EYFSP_YEAR,
-            "localAuthority": SEED_LOCAL_AUTHORITY,
+            "localAuthority": eyfsp_la_name,
         },
     }
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
-    print(f"Wrote {OUT} ({len(providers)} providers)", flush=True)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
+    print(f"Wrote {out_path} ({len(providers)} providers)", flush=True)
 
     summary_bits = {
-        "localAuthority": SEED_LOCAL_AUTHORITY,
+        "localAuthority": eyfsp_la_name,
         "providerCount": len(providers),
         "withInspectionGrade": with_grade,
         "withCoordinates": with_coords,
         "ofstedAsAt": as_at,
         "englandGldPercent": eyfsp["england"].get("gldPercent"),
-        "hampshireGldPercent": eyfsp["localAuthorities"][SEED_LOCAL_AUTHORITY].get(
-            "gldPercent"
-        ),
+        "laGldPercent": eyfsp["localAuthorities"][eyfsp_la_name].get("gldPercent"),
         "eyfspPeriod": EYFSP_YEAR,
     }
-    for path in (SUMMARY, SRC_SUMMARY):
+    summary_targets = [summary_path]
+    if is_root:
+        summary_targets.append(SRC_SUMMARY)
+    for path in summary_targets:
         existing: dict = {}
         if path.exists():
             try:

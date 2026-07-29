@@ -513,8 +513,8 @@ export function CompareApp({
               role="status"
               style={{ marginTop: "1rem" }}
             >
-              Shortlist a {SEED_GEOGRAPHY_LABEL} nursery or school early-years
-              setting to compare Ofsted grades here.
+              Shortlist a nursery or school early-years setting to compare
+              Ofsted grades here.
             </div>
           ) : (
             <div className="empty-compare">
@@ -546,8 +546,8 @@ export function CompareApp({
             />
           ) : (
             <div className="empty-compare" role="status">
-              Shortlist a consented {SEED_GEOGRAPHY_LABEL} childminder to pin
-              their address and Ofsted report here.
+              Shortlist a consented childminder to pin their address and Ofsted
+              report here.
             </div>
           )}
           {childminderSelected.length > 0 ? (

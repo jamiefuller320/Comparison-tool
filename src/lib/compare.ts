@@ -198,7 +198,7 @@ function childcareHeadline(school: SchoolRecord): string | null {
     if (ofsted) {
       return `Early years setting · latest Ofsted judgement: ${ofsted}${when}. Compare grades side by side, then visit before you decide.`;
     }
-    return "Early years setting in the Hampshire directory. Open the Ofsted report when available, then visit before you decide.";
+    return "Early years setting in the directory. Open the Ofsted report when available, then visit before you decide.";
   }
 
   return null;

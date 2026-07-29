@@ -13,8 +13,12 @@ async function main() {
     listReadyPacks,
     mergeSchoolsIndexWithPack,
     mergeSchoolsIndexWithPacks,
+    mergeEyProvidersWithPacks,
+    mergeChildmindersWithPacks,
     recomputeSectorKs4Benches,
   } = await import("../src/lib/laPacks.ts");
+
+  const { eyfspLaColumns } = await import("../src/lib/eyfspMetrics.ts");
 
   if (SEED_LOCAL_AUTHORITY !== "Hampshire") {
     console.error("FAIL seed LA", SEED_LOCAL_AUTHORITY);
@@ -208,6 +212,105 @@ async function main() {
   }
   if (!multi.source.note.includes("Isle of Wight")) {
     console.error("FAIL multi source note", multi.source.note);
+    process.exit(1);
+  }
+
+  const eySeed = {
+    generatedAt: "2026-07-29",
+    localAuthority: "Hampshire",
+    source: { note: "seed ey." },
+    benchmarks: {
+      eyfsp: {
+        period: "2024/2025",
+        england: { gldPercent: 67 },
+        localAuthorities: { Hampshire: { gldPercent: 70 } },
+      },
+    },
+    providers: [{ urn: "ey1", name: "Hants Nursery", localAuthority: "Hampshire" }],
+    stats: { providerCount: 1 },
+  };
+  const eyPack = {
+    generatedAt: "2026-07-29",
+    localAuthority: "Surrey",
+    source: { note: "pack ey." },
+    benchmarks: {
+      eyfsp: {
+        period: "2024/2025",
+        england: { gldPercent: 67 },
+        localAuthorities: { Surrey: { gldPercent: 68 } },
+      },
+    },
+    providers: [
+      { urn: "ey2", name: "Surrey Nursery", localAuthority: "Surrey" },
+      { urn: "ey1", name: "Override Nursery", localAuthority: "Surrey" },
+    ],
+    stats: { providerCount: 2 },
+  };
+  const eyMerged = mergeEyProvidersWithPacks(eySeed, [
+    { index: eyPack, meta: { slug: "surrey", localAuthority: "Surrey" } },
+  ]);
+  if (eyMerged.providers.length !== 2) {
+    console.error("FAIL EY merge count", eyMerged.providers);
+    process.exit(1);
+  }
+  if (eyMerged.providers.find((p) => p.urn === "ey1")?.name !== "Override Nursery") {
+    console.error("FAIL EY pack wins on URN", eyMerged.providers);
+    process.exit(1);
+  }
+  if (
+    eyMerged.benchmarks.eyfsp?.localAuthorities?.Hampshire?.gldPercent !== 70 ||
+    eyMerged.benchmarks.eyfsp?.localAuthorities?.Surrey?.gldPercent !== 68
+  ) {
+    console.error("FAIL EYFSP LA union", eyMerged.benchmarks.eyfsp);
+    process.exit(1);
+  }
+  if (eyMerged.benchmarks.eyfsp?.england?.gldPercent !== 67) {
+    console.error("FAIL EYFSP england seed retained", eyMerged.benchmarks.eyfsp);
+    process.exit(1);
+  }
+  const cols = eyfspLaColumns(eyMerged.benchmarks.eyfsp);
+  if (cols[0] !== "Hampshire" || !cols.includes("Surrey")) {
+    console.error("FAIL eyfspLaColumns order", cols);
+    process.exit(1);
+  }
+
+  const cmSeed = {
+    generatedAt: "2026-07-29",
+    localAuthority: "Hampshire",
+    source: { note: "seed cm." },
+    providers: [{ urn: "cm1", name: "Hants CM", localAuthority: "Hampshire" }],
+    stats: { providerCount: 1 },
+  };
+  const cmEmpty = {
+    generatedAt: "2026-07-29",
+    localAuthority: "Surrey",
+    source: { note: "empty cm." },
+    providers: [],
+    stats: { providerCount: 0 },
+  };
+  const cmPack = {
+    generatedAt: "2026-07-29",
+    localAuthority: "Isle of Wight",
+    source: { note: "iow cm." },
+    providers: [{ urn: "cm2", name: "IoW CM", localAuthority: "Isle of Wight" }],
+    stats: { providerCount: 1 },
+  };
+  const cmMerged = mergeChildmindersWithPacks(cmSeed, [
+    { index: cmEmpty, meta: { slug: "surrey", localAuthority: "Surrey" } },
+    {
+      index: cmPack,
+      meta: { slug: "isle-of-wight", localAuthority: "Isle of Wight" },
+    },
+  ]);
+  if (cmMerged.providers.length !== 2) {
+    console.error("FAIL CM merge with empty pack", cmMerged.providers);
+    process.exit(1);
+  }
+  if (
+    !cmMerged.collatedPackLabels?.includes("Surrey") ||
+    !cmMerged.collatedPackLabels?.includes("Isle of Wight")
+  ) {
+    console.error("FAIL CM collated labels", cmMerged.collatedPackLabels);
     process.exit(1);
   }
 

@@ -46,7 +46,24 @@ def main() -> int:
     assert_help_has("enrich-secondaries.py", "--la", "--index", "--seed-la")
     assert_help_has("enrich-independents.py", "--la", "--index")
     assert_help_has("enrich-phonics.py", "--la", "--index", "--seed-la")
-    assert_help_has("build-la-pack.py", "--skip-depth", "--la")
+    assert_help_has("enrich-ey-schools.py", "--la", "--index")
+    assert_help_has("harvest-ey-providers.py", "--la", "--out-dir")
+    assert_help_has("harvest-childminders.py", "--la", "--out-dir")
+    assert_help_has("build-la-pack.py", "--skip-depth", "--skip-ey", "--la")
+
+    # Non-Hampshire must refuse to overwrite the maintained EY/CM root.
+    for script in ("harvest-ey-providers.py", "harvest-childminders.py"):
+        bad_root = subprocess.run(
+            ["python3", f"scripts/{script}", "--la", "Surrey", "--out-dir", "public/data"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        combined = bad_root.stderr + bad_root.stdout
+        if bad_root.returncode == 0 or "maintained root" not in combined:
+            raise SystemExit(
+                f"FAIL: {script} should refuse non-Hampshire root write\n{combined[:800]}"
+            )
 
     # Hampshire must be rejected for on-demand packs.
     bad = subprocess.run(
