@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
+import { UiPreferencesProvider } from "@/components/UiPreferencesProvider";
 
 export const metadata: Metadata = {
   title: "Schoolside — compare English schools for parental choice",
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en-GB">
       <body>
-        <SiteHeader />
-        {children}
+        <UiPreferencesProvider>
+          <SiteHeader />
+          {children}
+        </UiPreferencesProvider>
       </body>
     </html>
   );

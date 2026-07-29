@@ -25,6 +25,7 @@ import {
 } from "@/lib/ks2History";
 import { MetricHistoryChart } from "@/components/MetricHistoryChart";
 import { BoardProvenance } from "@/components/BoardProvenance";
+import { CompareTableFrame } from "@/components/CompareTableFrame";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
@@ -226,7 +227,7 @@ export function ComparisonBoard({
         <BoardProvenance stamp={sourceStamp} board="ks2" />
       ) : null}
 
-      <div className="compare-board">
+      <CompareTableFrame tableId="ks2">
         <table className="compare-table">
           <thead>
             <tr>
@@ -312,7 +313,7 @@ export function ComparisonBoard({
             })}
           </tbody>
         </table>
-      </div>
+      </CompareTableFrame>
 
       <div className="chart-wrap" aria-label="Expected standard comparison chart">
         <ResponsiveContainer width="100%" height={320} minWidth={0}>
