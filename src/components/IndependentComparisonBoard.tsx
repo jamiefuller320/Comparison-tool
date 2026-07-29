@@ -23,9 +23,15 @@ import {
 } from "@/lib/sectors";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
+import { DataGapFlags } from "@/components/DataGapFlags";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
+import {
+  gapsForKs4Board,
+  gapsForKs4OfstedAsAt,
+  schoolGaps,
+} from "@/lib/dataGaps";
 
 const CHART_KEYS = [
   "engMath94Percent",
@@ -64,6 +70,7 @@ export function IndependentComparisonBoard({
   benchmark,
   benchmarkLabel = "Sector mean",
   sourceStamp,
+  ofstedStateAsAt,
 }: {
   schools: SchoolRecord[];
   /** @deprecated Prefer `benchmark` — kept for older call sites. */
@@ -71,14 +78,21 @@ export function IndependentComparisonBoard({
   benchmark?: IndependentBenchmarkSet;
   benchmarkLabel?: string;
   sourceStamp?: SourceStamp | null;
+  ofstedStateAsAt?: string | null;
 }) {
   const activeBench = benchmark ?? independentBench;
+  const dataGaps = [
+    ...gapsForKs4Board(schools),
+    ...gapsForKs4OfstedAsAt(schools, ofstedStateAsAt),
+  ];
 
   if (schools.length === 0) {
     return (
       <div className="empty-compare">
-        Add schools to see Key Stage 4 and 16–18 comparison for the stages you
-        selected.
+        Add a secondary or 16–18 setting to compare published Key Stage 4
+        outcomes. Selecting KS3 includes schools that offer Years 7–9; school-level
+        attainment is published at KS4, so this board shows later GCSE / 16–18
+        figures rather than KS3 scores.
       </div>
     );
   }
@@ -136,13 +150,16 @@ export function IndependentComparisonBoard({
           : hasState
             ? " for secondary stages (not the Key Stage 2 tables used for primaries)."
             : " — not the Key Stage 2 tables used for state primaries."}{" "}
-        Zero percent English &amp; maths GCSE returns are treated as missing when
-        other attainment shows the school is active (common with IGCSEs).
+        The DfE does not publish school-level KS3 attainment: selecting{" "}
+        <strong>KS3</strong> shortlists schools that offer Years 7–9, while this
+        board shows later GCSE / 16–18 outcomes when published. Zero percent
+        English &amp; maths GCSE returns are treated as missing when other
+        attainment shows the school is active (common with IGCSEs).
         {activeBench?.att8Average != null
           ? ` ${benchmarkLabel} Attainment 8 is ${activeBench.att8Average} across ${activeBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} schools with usable figures (${activeBench.period}).`
           : null}
         {!hasAnyKs4
-          ? " None of these schools have published KS4 figures in the latest tables."
+          ? " None of these schools have published KS4 figures in the latest tables — chips below explain common reasons (special/AP, no Year 11 cohort, or unpublished)."
           : null}
         {hasAnyKs5
           ? " Sixth-form rows use A-level APS where the school appears in the 16–18 tables."
@@ -151,12 +168,14 @@ export function IndependentComparisonBoard({
           ? " Some combined English & maths cells were cleared as nil returns; check EBacc English/maths pillars instead."
           : null}
         {hasIsi && !hasAnyOfsted
-          ? " ISI-inspected schools link to the ISI reports directory (postcode search when available) rather than Ofsted grades."
+          ? " ISI-inspected schools link to ISI reports rather than Ofsted grades — that does not explain missing KS4 attainment."
           : null}
       </p>
       {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="ks4" />
-      ) : null}
+        <BoardProvenance stamp={sourceStamp} board="ks4" gaps={dataGaps} />
+      ) : (
+        <DataGapFlags gaps={dataGaps.filter((g) => g.level === "board")} />
+      )}
 
       <CompareTableFrame tableId="ks4">
         <table className="compare-table">
@@ -237,6 +256,10 @@ export function IndependentComparisonBoard({
                         Official tables ↗
                       </a>
                     ) : null}
+                    <DataGapFlags
+                      compact
+                      gaps={schoolGaps(dataGaps, school.urn)}
+                    />
                     {sourceStamp ? (
                       <ReportProblemButton
                         compact
@@ -244,7 +267,9 @@ export function IndependentComparisonBoard({
                         stamp={{
                           ...sourceStamp,
                           deepLink:
-                            schoolDeepLink(school) || sourceStamp.deepLink,
+                            school.isiReportsUrl ||
+                            schoolDeepLink(school) ||
+                            sourceStamp.deepLink,
                         }}
                         urn={school.urn}
                         schoolName={school.name}

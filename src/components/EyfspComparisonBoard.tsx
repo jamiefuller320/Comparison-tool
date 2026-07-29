@@ -11,6 +11,7 @@ import { fmtNum, fmtPct, fmtPp, ppGap } from "@/lib/format";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import type { SourceStamp } from "@/lib/sourceStamp";
+import { gapsForEyfsp } from "@/lib/dataGaps";
 
 function formatValue(
   value: number | null | undefined,
@@ -32,6 +33,7 @@ export function EyfspComparisonBoard({
   const england = eyfspEngland(eyfsp);
   const laColumns = eyfspLaColumns(eyfsp);
   const period = eyfsp?.period ?? "latest";
+  const dataGaps = gapsForEyfsp(eyfsp);
   const hasAnyLa = laColumns.some(
     (la) => eyfsp?.localAuthorities?.[la]?.gldPercent != null,
   );
@@ -69,7 +71,7 @@ export function EyfspComparisonBoard({
         ) : null}
       </p>
       {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="eyfsp" />
+        <BoardProvenance stamp={sourceStamp} board="eyfsp" gaps={dataGaps} />
       ) : null}
 
       <CompareTableFrame tableId="eyfsp">

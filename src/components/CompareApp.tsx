@@ -542,6 +542,7 @@ export function CompareApp({
             <ChildminderDirectoryBoard
               providers={childminderSelected}
               consentedAsAt={childmindersIndex?.consentedAsAt}
+              ofstedAsAt={childmindersIndex?.ofstedAsAt}
               sourceStamp={childminderStamp}
             />
           ) : (
@@ -631,7 +632,9 @@ export function CompareApp({
         />
         {ks4Selected.length === 0 ? (
           <div className="empty-compare" role="status">
-            Add a secondary or 16–18 setting for GCSE / A-level tables.
+            Add a secondary or 16–18 setting for GCSE / A-level tables. KS3
+            selects schools offering Years 7–9; comparable school-level
+            attainment is published at KS4.
           </div>
         ) : (
           <IndependentComparisonBoard
@@ -639,6 +642,7 @@ export function CompareApp({
             benchmark={ks4Bench}
             benchmarkLabel={ks4BenchLabel}
             sourceStamp={ks4Stamp}
+            ofstedStateAsAt={index.stats.ofstedStateAsAt}
           />
         )}
       </div>

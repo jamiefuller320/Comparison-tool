@@ -109,6 +109,8 @@ The `Force school data refresh` workflow still enforces **one successful refresh
 
 Comparison boards show a **source stamp** (period / as-at / dataset + official deep link) and a **Report a problem** control. Challenges queue a private review item via `repository_dispatch` event `data-challenge` (same baked `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN` as missing-school).
 
+Boards also surface **known data-quality gaps** as small chips beside the stamp (missing Ofsted as-at, unpublished KS2/KS4 figures with reasons such as special/AP or no Year 11 cohort, nil-cleared English & maths, ISI without Ofsted grades, ungraded Ofsted, missing phonics LA rows). Those flags are automated honesty about the pack — not the same as a user challenge.
+
 Optional private intake (recommended so notes/emails stay off public issues):
 
 1. Create a **private** intake repository

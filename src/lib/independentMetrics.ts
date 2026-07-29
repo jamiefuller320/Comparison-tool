@@ -1,4 +1,8 @@
 import type { IndependentBenchmarkSet, SchoolRecord } from "@/lib/types";
+import {
+  ks4OutcomeBlankHint,
+  ofstedBlankHintForIsi,
+} from "@/lib/dataGaps";
 
 export type IndependentMetricKey =
   | "att8Average"
@@ -56,6 +60,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "score",
     parentHint: "Average point score across eight qualifications in the KS4 tables.",
     get: (s) => s.att8Average,
+    blankHint: ks4OutcomeBlankHint,
   },
   {
     key: "engMath94Percent",
@@ -65,7 +70,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     parentHint:
       "Combined GCSE English & maths 4+. Nil/IGCSE returns are shown as —; where needed this uses the lower of the EBacc English and maths pillars.",
     get: (s) => s.engMath94Percent,
-    blankHint: engMathBlankHint,
+    blankHint: (s) => engMathBlankHint(s) || ks4OutcomeBlankHint(s),
   },
   {
     key: "engMath95Percent",
@@ -74,7 +79,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "pct",
     parentHint: "Combined GCSE English & maths 5+, when the DfE measure is published.",
     get: (s) => s.engMath95Percent,
-    blankHint: engMathBlankHint,
+    blankHint: (s) => engMathBlankHint(s) || ks4OutcomeBlankHint(s),
   },
   {
     key: "anyPassPercent",
@@ -83,6 +88,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "pct",
     parentHint: "Share achieving any pass at GCSE or equivalent.",
     get: (s) => s.anyPassPercent,
+    blankHint: ks4OutcomeBlankHint,
   },
   {
     key: "ebaccEng94Percent",
@@ -176,6 +182,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     parentHint:
       "Latest Ofsted grade for non-association independents. ISI schools link out to ISI reports instead.",
     get: (s) => s.ofstedOverall,
+    blankHint: ofstedBlankHintForIsi,
   },
   {
     key: "ofstedQualityOfEducation",
@@ -184,6 +191,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "text",
     parentHint: "Ofsted quality of education judgement where published.",
     get: (s) => s.ofstedQualityOfEducation,
+    blankHint: ofstedBlankHintForIsi,
   },
   {
     key: "ofstedLeadership",
@@ -192,6 +200,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "text",
     parentHint: "Ofsted leadership judgement where published.",
     get: (s) => s.ofstedLeadership,
+    blankHint: ofstedBlankHintForIsi,
   },
   {
     key: "ofstedIssCompliance",
@@ -200,6 +209,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "text",
     parentHint: "Whether Independent School Standards were met at the latest standard inspection.",
     get: (s) => s.ofstedIssCompliance,
+    blankHint: ofstedBlankHintForIsi,
   },
   {
     key: "ks4Pupils",
@@ -208,6 +218,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     unit: "count",
     parentHint: "Number of pupils at the end of Key Stage 4 in the published results.",
     get: (s) => s.ks4Pupils,
+    blankHint: ks4OutcomeBlankHint,
   },
 ];
 

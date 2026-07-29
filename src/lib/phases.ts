@@ -29,13 +29,13 @@ export const PHASE_OPTIONS = [
     id: "ks3",
     label: "KS3",
     short: "KS3",
-    hint: "Years 7–9 (typically ages 11–14)",
+    hint: "Years 7–9 (typically ages 11–14) — shortlists secondaries; school-level attainment is published at KS4",
   },
   {
     id: "ks4",
     label: "KS4",
     short: "KS4",
-    hint: "Years 10–11 (typically ages 14–16)",
+    hint: "Years 10–11 (typically ages 14–16) — published GCSE / 16–18 outcomes",
   },
 ] as const;
 
