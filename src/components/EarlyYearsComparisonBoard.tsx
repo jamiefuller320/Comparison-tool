@@ -4,6 +4,7 @@ import type { SchoolRecord } from "@/lib/types";
 import { EY_PROVIDER_METRICS, isEyProvider } from "@/lib/eyMetrics";
 import { fmtNum, shortName } from "@/lib/format";
 import { SourceStampLine } from "@/components/SourceStampLine";
+import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
@@ -90,7 +91,7 @@ export function EarlyYearsComparisonBoard({
         </div>
       ) : null}
 
-      <div className="compare-board">
+      <CompareTableFrame tableId="early-years-ofsted">
         <table className="compare-table">
           <thead>
             <tr>
@@ -170,7 +171,7 @@ export function EarlyYearsComparisonBoard({
             ))}
           </tbody>
         </table>
-      </div>
+      </CompareTableFrame>
     </div>
   );
 }

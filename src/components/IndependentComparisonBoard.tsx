@@ -22,6 +22,7 @@ import {
   resolveSchoolSector,
 } from "@/lib/sectors";
 import { BoardProvenance } from "@/components/BoardProvenance";
+import { CompareTableFrame } from "@/components/CompareTableFrame";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
@@ -157,7 +158,7 @@ export function IndependentComparisonBoard({
         <BoardProvenance stamp={sourceStamp} board="ks4" />
       ) : null}
 
-      <div className="compare-board">
+      <CompareTableFrame tableId="ks4">
         <table className="compare-table">
           <thead>
             <tr>
@@ -270,7 +271,7 @@ export function IndependentComparisonBoard({
             })}
           </tbody>
         </table>
-      </div>
+      </CompareTableFrame>
 
       {hasAnyKs4 ? (
         <div

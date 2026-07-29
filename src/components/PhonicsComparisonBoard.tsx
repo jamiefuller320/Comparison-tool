@@ -22,6 +22,7 @@ import { fmtNum, fmtPct, fmtPp, ppGap, shortName } from "@/lib/format";
 import { formatSector, resolveSchoolSector } from "@/lib/sectors";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { BoardProvenance } from "@/components/BoardProvenance";
+import { CompareTableFrame } from "@/components/CompareTableFrame";
 import type { SourceStamp } from "@/lib/sourceStamp";
 
 const CHART_KEYS = [
@@ -115,7 +116,7 @@ export function PhonicsComparisonBoard({
         <BoardProvenance stamp={sourceStamp} board="ks1-phonics" />
       ) : null}
 
-      <div className="compare-board">
+      <CompareTableFrame tableId="phonics">
         <table className="compare-table">
           <thead>
             <tr>
@@ -233,7 +234,7 @@ export function PhonicsComparisonBoard({
             })}
           </tbody>
         </table>
-      </div>
+      </CompareTableFrame>
 
       {(singleLaMode || withArea.length > 0) ? (
         <div className="chart-panel" style={{ marginTop: "1.5rem" }}>

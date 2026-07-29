@@ -10,6 +10,7 @@ import {
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { fmtNum, fmtPct, fmtPp, ppGap } from "@/lib/format";
 import { BoardProvenance } from "@/components/BoardProvenance";
+import { CompareTableFrame } from "@/components/CompareTableFrame";
 import type { SourceStamp } from "@/lib/sourceStamp";
 
 function formatValue(
@@ -63,7 +64,7 @@ export function EyfspComparisonBoard({
         <BoardProvenance stamp={sourceStamp} board="eyfsp" />
       ) : null}
 
-      <div className="compare-board">
+      <CompareTableFrame tableId="eyfsp">
         <table className="compare-table">
           <thead>
             <tr>
@@ -113,7 +114,7 @@ export function EyfspComparisonBoard({
             })}
           </tbody>
         </table>
-      </div>
+      </CompareTableFrame>
 
       {eyfsp?.note ? (
         <p className="footnote" style={{ marginTop: "1rem" }}>
