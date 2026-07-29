@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28",
+  "generatedAt": "2026-07-29",
   "seedLocalAuthority": "Hampshire",
   "packs": {
     "isle-of-wight": {
@@ -7,14 +7,18 @@
       "slug": "isle-of-wight",
       "status": "ready",
       "requestedAt": "2026-07-28T19:37:57Z",
-      "note": "Schools index pack (EY / history depth are follow-on steps).",
+      "note": "Schools pack with GIAS + KS4/KS5 + phonics depth (EY / history depth are follow-on steps).",
       "paths": {
         "schoolsIndex": "/data/packs/isle-of-wight/schools-index.json",
         "directory": "/data/packs/isle-of-wight/schools-directory.json"
       },
-      "schoolCount": 1,
-      "withRwm": 1,
-      "builtAt": "2026-07-28T19:39:46Z"
+      "schoolCount": 51,
+      "withRwm": 38,
+      "withKs4": 11,
+      "giasEnriched": true,
+      "phonicsEnriched": true,
+      "independentEnriched": true,
+      "builtAt": "2026-07-29T04:21:16Z"
     }
   }
 }
