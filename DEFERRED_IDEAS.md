@@ -52,6 +52,8 @@ Only after durable parent and (separately) board audiences exist. Not a near-ter
 | **Rapid-improver / star-leader insight network** | On a mature **national** multi-year dataset, run trend analysis to surface schools with **rapid improvement** in published results (KS2 history shards and later stage series where solid). Treat those trajectories as signals to identify **star leaders** who could be approached — with consent — for qualitative insights on how they effected improvement, feeding board collaboration / school-improvement content. Caveats: cohort size, intake change, and COVID gaps must be controlled so “rapid rise” is not noise; outreach and published insights need clear consent and attribution rules. Depends on national history coverage + board audience; not a parent-shortlist feature. | Far future | User |
 | **School ranking engine** | When the national dataset and spin-off apps justify it, build a reusable **ranking / scoring engine** over published metrics (levels, peers, improvement trajectories, equity gaps) as shared infrastructure. Powers rapid-improver detection, board peer overlays, and other spin-offs. Prefer transparent, tunable composite scores with clear caveats — **not** a default public league table on the parent shortlist UX (Schoolside stays fit/compare, not rank-to-shame). Optional parent-facing ranks only if they clearly serve choice and are carefully framed. | Far future | User |
 
+### Early years / childcare
+
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
 | **Out-of-school / holiday day care** | Include EYR out-of-school and holiday day-care providers in Hampshire EY coverage. | Not started | Agent (“still to do” after EY MVP) |
