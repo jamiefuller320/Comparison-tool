@@ -89,6 +89,27 @@ export interface IndependentMetrics {
   isiLatestReportTitle?: string | null;
   inspectionReportsUrl?: string | null;
   giasUrl?: string | null;
+  /**
+   * Verbatim excerpt from the latest Ofsted/ISI report PDF (not paraphrased).
+   * Always accompanied by inspectionReportFileUrl for footnote verification.
+   */
+  inspectionPrecis?: string | null;
+  /** Short verbatim quotes with footnote URLs back to the source PDF. */
+  inspectionQuotes?: InspectionQuote[] | null;
+  /** Direct PDF (or DownloadReport) URL used for the précis / quotes. */
+  inspectionReportFileUrl?: string | null;
+  /** Parent-facing label, e.g. "School inspection · 7 June 2023". */
+  inspectionReportLabel?: string | null;
+  inspectionPrecisSource?: "ofsted" | "isi" | null;
+  /** ISO date the précis fields were last enriched. */
+  inspectionPrecisEnrichedAt?: string | null;
+}
+
+/** Footnoted quote excerpted from an inspection report PDF. */
+export interface InspectionQuote {
+  text: string;
+  section?: string | null;
+  sourceUrl: string;
 }
 
 export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {

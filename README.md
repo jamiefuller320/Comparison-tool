@@ -9,7 +9,7 @@ Side-by-side Key Stage 2 attainment for any shortlist you choose — expanding t
 Provide the most comprehensive comparison and decision-making tool possible for school choice, built on:
 
 1. **Solid, verifiable quantitative datasets** for like-for-like comparison between schools
-2. **Researched qualitative context** that rests on a verifiable, user-accessible evidence base (footnote links or equivalent)
+2. **Researched qualitative context** that rests on a verifiable, user-accessible evidence base (footnote links or equivalent) — including short **Ofsted/ISI report précis** with verbatim quotes footnoted to the source PDF (`npm run enrich:precis`)
 3. **A layperson toolset** that helps parents understand and effectively use the data presented
 
 Everything else — harvests, stages, maps, tours, charts — should serve that objective.
@@ -76,6 +76,7 @@ npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 h
 # or: npm run harvest:childminders  # latest Ofsted consented addresses only
 # or: npm run enrich:ey-schools     # state-school Ofsted MI (nursery/infant join)
 # or: npm run enrich:independents   # refresh indie KS4/Ofsted only
+# or: npm run enrich:precis         # Ofsted/ISI report précis + footnoted quotes (needs pypdf)
 # or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
 # or: npm run pack:la -- --la Surrey   # on-demand LA schools pack under public/data/packs/

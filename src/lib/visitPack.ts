@@ -121,6 +121,12 @@ export interface VisitContactRow {
   ofstedUrn?: string | null;
   places?: number | null;
   providerSubtype?: string | null;
+  /** Optional inspection précis fields for visit-pack qualitative context. */
+  inspectionPrecis?: string | null;
+  inspectionQuotes?: SchoolRecord["inspectionQuotes"];
+  inspectionReportFileUrl?: string | null;
+  inspectionReportLabel?: string | null;
+  inspectionPrecisSource?: SchoolRecord["inspectionPrecisSource"];
 }
 
 export function toVisitContactRow(record: SchoolRecord): VisitContactRow | null {
@@ -151,5 +157,10 @@ export function toVisitContactRow(record: SchoolRecord): VisitContactRow | null 
     ofstedUrn: record.ofstedUrn || undefined,
     places: record.places ?? record.placesIncludingEstimates,
     providerSubtype: record.providerSubtype || record.schoolTypeLabel,
+    inspectionPrecis: record.inspectionPrecis,
+    inspectionQuotes: record.inspectionQuotes,
+    inspectionReportFileUrl: record.inspectionReportFileUrl,
+    inspectionReportLabel: record.inspectionReportLabel,
+    inspectionPrecisSource: record.inspectionPrecisSource,
   };
 }

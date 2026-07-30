@@ -20,6 +20,20 @@ import {
   type VisitStatusId,
 } from "@/lib/visitLog";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
+import { InspectionPrecis } from "@/components/InspectionPrecis";
+
+function contactAsSchool(row: VisitContactRow): SchoolRecord {
+  return {
+    urn: row.urn,
+    name: row.name,
+    ofstedReportUrl: row.ofstedReportUrl,
+    inspectionPrecis: row.inspectionPrecis,
+    inspectionQuotes: row.inspectionQuotes,
+    inspectionReportFileUrl: row.inspectionReportFileUrl,
+    inspectionReportLabel: row.inspectionReportLabel,
+    inspectionPrecisSource: row.inspectionPrecisSource,
+  };
+}
 
 function ContactCard({
   row,
@@ -86,6 +100,7 @@ function ContactCard({
           ) : null}
         </p>
       ) : null}
+      <InspectionPrecis school={contactAsSchool(row)} compact />
 
       <label className="visit-note">
         <span>Notes</span>

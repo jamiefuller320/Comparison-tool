@@ -8,6 +8,7 @@ import { ReportProblemButton } from "@/components/ReportProblemButton";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { gapsForChildminders, schoolGaps } from "@/lib/dataGaps";
+import { InspectionPrecis } from "@/components/InspectionPrecis";
 
 /** Directory-style panel for shortlisted childminders (not Ofsted grade compare). */
 export function ChildminderDirectoryBoard({
@@ -79,6 +80,7 @@ export function ChildminderDirectoryBoard({
                 </a>
               </p>
             ) : null}
+            <InspectionPrecis school={provider} compact />
             {sourceStamp ? (
               <ReportProblemButton
                 compact

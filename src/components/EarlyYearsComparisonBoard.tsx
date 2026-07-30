@@ -14,6 +14,7 @@ import {
   gapsForEyOfstedBoard,
   schoolGaps,
 } from "@/lib/dataGaps";
+import { InspectionPrecis } from "@/components/InspectionPrecis";
 
 function formatValue(
   value: string | number | null | undefined,
@@ -140,6 +141,7 @@ export function EarlyYearsComparisonBoard({
                         </a>
                       </span>
                     ) : null}
+                    <InspectionPrecis school={provider} compact />
                     {(isEyProvider(provider) ? childcareStamp : stateStamp) ? (
                       <ReportProblemButton
                         compact
