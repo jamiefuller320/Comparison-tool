@@ -89,10 +89,10 @@ export function IndependentComparisonBoard({
   if (schools.length === 0) {
     return (
       <div className="empty-compare">
-        Add a secondary or 16–18 setting to compare published Key Stage 4
-        outcomes. Selecting KS3 includes schools that offer Years 7–9; school-level
-        attainment is published at KS4, so this board shows later GCSE / 16–18
-        figures rather than KS3 scores.
+        Add a secondary or 16–18 setting to compare published GCSE and A-level
+        figures. Selecting KS3 shortlists schools that offer Years 7–9; school-level
+        attainment is still published at KS4, so this board shows later outcomes
+        rather than KS3 scores.
       </div>
     );
   }

@@ -84,7 +84,11 @@ async function main() {
     process.exit(1);
   }
   const specialGaps = gapsForKs4Board([special]);
-  if (!schoolGaps(specialGaps, "s1").some((g) => g.label === "Special / AP / PRU")) {
+  if (
+    !schoolGaps(specialGaps, "s1").some(
+      (g) => g.label === "Special or alternative provision",
+    )
+  ) {
     console.error("FAIL special gap label", specialGaps);
     process.exit(1);
   }

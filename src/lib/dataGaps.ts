@@ -176,37 +176,37 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
   switch (reason) {
     case "special-ap-pru":
       return {
-        label: "Special / AP / PRU",
+        label: "Special or alternative provision",
         detail:
-          "Special schools, alternative provision and PRUs often have no comparable Attainment 8 in the open tables.",
+          "Special schools, alternative provision and pupil referral units often have no comparable Attainment 8 in the open tables — that is expected, not a join error.",
         severity: "info",
       };
     case "ks3-only":
       return {
-        label: "No Year 11 cohort",
+        label: "No Year 11 cohort yet",
         detail:
-          "This setting’s age range covers KS3 but not Year 11 — DfE does not publish school-level KS3 attainment, so KS4 cells stay blank.",
+          "This setting’s ages cover KS3 but not Year 11. The DfE does not publish school-level KS3 scores, so GCSE cells stay blank until a Year 11 cohort appears.",
         severity: "info",
       };
     case "hospital-secure":
       return {
-        label: "Hospital / secure setting",
+        label: "Hospital or secure setting",
         detail:
           "Hospital schools and secure units are not published like mainstream secondary Attainment 8 cohorts.",
         severity: "info",
       };
     case "new-establishment":
       return {
-        label: "New establishment",
+        label: "Recently opened",
         detail:
-          "Opened recently according to GIAS — a full published KS4 cohort may not appear yet.",
+          "Opened recently according to GIAS — a full published KS4 cohort may not appear in the latest tables yet.",
         severity: "info",
       };
     default:
       return {
-        label: "No published KS4 / 16–18",
+        label: "No published GCSE / 16–18 figures",
         detail:
-          "No Attainment 8 or 16–18 APS in the latest published tables for this setting (suppressed cohort, or not yet joined).",
+          "No Attainment 8 or 16–18 average points in the latest published tables (small/suppressed cohort, or not yet in the release).",
         severity: "watch",
       };
   }
@@ -225,7 +225,7 @@ export function ks4OutcomeBlankHint(school: SchoolRecord): string | null {
 export function ofstedBlankHintForIsi(school: SchoolRecord): string | null {
   if (school.ofstedOverall || school.ofstedIssCompliance) return null;
   if (!inspectorateIsIsi(school)) return null;
-  return "ISI inspected — see ISI report link (not Ofsted grades)";
+  return "ISI inspected — open the ISI report link above (not graded by Ofsted)";
 }
 
 export function gapsForKs2Board(schools: SchoolRecord[]): DataGap[] {

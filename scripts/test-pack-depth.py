@@ -44,7 +44,7 @@ def main() -> int:
     assert root_bundle["is_root"] is True
 
     assert_help_has("enrich-secondaries.py", "--la", "--index", "--seed-la")
-    assert_help_has("enrich-independents.py", "--la", "--index")
+    assert_help_has("enrich-independents.py", "--la", "--index", "--isi-only")
     assert_help_has("enrich-phonics.py", "--la", "--index", "--seed-la")
     assert_help_has("enrich-ey-schools.py", "--la", "--index")
     assert_help_has("harvest-ey-providers.py", "--la", "--out-dir")
