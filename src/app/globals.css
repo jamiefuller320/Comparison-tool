@@ -576,6 +576,77 @@ body:has(.floating-controls) {
   max-width: 12rem;
 }
 
+.inspection-precis {
+  margin-top: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-left: 3px solid var(--sea);
+  background: rgba(11, 79, 108, 0.05);
+  max-width: 18rem;
+  color: var(--ink-soft);
+}
+
+.inspection-precis.compact {
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.inspection-precis-kicker {
+  margin: 0 0 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--sea);
+}
+
+.inspection-precis-body {
+  margin: 0 0 0.4rem;
+  color: var(--ink);
+}
+
+.inspection-precis-quotes {
+  margin: 0 0 0.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.inspection-precis-quotes li {
+  margin: 0 0 0.35rem;
+}
+
+.inspection-precis-quotes blockquote {
+  margin: 0;
+  font-style: italic;
+  color: var(--ink);
+}
+
+.inspection-quote-mark {
+  font-style: normal;
+  color: var(--ink-soft);
+}
+
+.inspection-footnote {
+  margin-left: 0.15rem;
+  font-style: normal;
+  font-weight: 700;
+  color: var(--sea);
+  text-decoration: none;
+}
+
+.inspection-footnote:hover,
+.inspection-footnote:focus-visible {
+  text-decoration: underline;
+}
+
+.inspection-precis-source {
+  margin: 0;
+  font-size: 0.72rem;
+}
+
+.inspection-precis-note {
+  color: var(--ink-soft);
+}
+
 .metric-history-trigger {
   appearance: none;
   display: flex;

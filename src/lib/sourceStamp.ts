@@ -160,6 +160,7 @@ export function childminderConsentStamp(opts: {
 export function schoolDeepLink(school: {
   compareUrl?: string | null;
   ofstedReportUrl?: string | null;
+  inspectionReportFileUrl?: string | null;
   isiLatestReportUrl?: string | null;
   isiProfileUrl?: string | null;
   isiReportsUrl?: string | null;
@@ -168,6 +169,7 @@ export function schoolDeepLink(school: {
 }): string | null {
   return (
     school.compareUrl ||
+    school.inspectionReportFileUrl ||
     school.ofstedReportUrl ||
     school.isiLatestReportUrl ||
     school.isiProfileUrl ||

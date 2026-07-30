@@ -49,7 +49,8 @@ CHILDCARE_MI_PAGE = (
     "https://www.gov.uk/government/statistical-data-sets/"
     "childcare-providers-and-inspections-management-information"
 )
-OFSTED_REPORT_BASE = "https://reports.ofsted.gov.uk/provider/16/"
+# Childminders use Ofsted provider type 17 (day-care nurseries use 16).
+OFSTED_REPORT_BASE = "https://reports.ofsted.gov.uk/provider/17/"
 
 OFSTED_GRADE_LABELS = {
     "1": "Outstanding",

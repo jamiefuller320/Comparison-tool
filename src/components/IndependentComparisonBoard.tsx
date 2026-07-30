@@ -27,6 +27,7 @@ import { DataGapFlags } from "@/components/DataGapFlags";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
+import { InspectionPrecis } from "@/components/InspectionPrecis";
 import {
   gapsForKs4Board,
   gapsForKs4OfstedAsAt,
@@ -272,6 +273,7 @@ export function IndependentComparisonBoard({
                         Official tables ↗
                       </a>
                     ) : null}
+                    <InspectionPrecis school={school} compact />
                     <DataGapFlags
                       compact
                       gaps={schoolGaps(dataGaps, school.urn)}

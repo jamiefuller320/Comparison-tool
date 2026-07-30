@@ -27,6 +27,7 @@ import { MetricHistoryChart } from "@/components/MetricHistoryChart";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
+import { InspectionPrecis } from "@/components/InspectionPrecis";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
@@ -277,6 +278,16 @@ export function ComparisonBoard({
                         Official tables ↗
                       </a>
                     ) : null}
+                    {school.ofstedReportUrl ? (
+                      <a
+                        href={school.ofstedReportUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Ofsted reports ↗
+                      </a>
+                    ) : null}
+                    <InspectionPrecis school={school} compact />
                     {sourceStamp ? (
                       <ReportProblemButton
                         compact
