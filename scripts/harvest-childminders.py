@@ -474,6 +474,22 @@ def main() -> None:
     }
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        from inspection_precis_lib import merge_precis_fields_from_previous
+
+        restored = merge_precis_fields_from_previous(
+            providers, out_path, list_key="providers"
+        )
+        if restored:
+            payload["stats"]["withInspectionPrecis"] = sum(
+                1 for p in providers if p.get("inspectionPrecis")
+            )
+            print(
+                f"Restored inspection precis on {restored} childminders",
+                flush=True,
+            )
+    except Exception as exc:  # noqa: BLE001
+        print(f"Precis merge skipped: {exc}", flush=True)
     out_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
     print(f"Wrote {out_path} ({len(providers)} providers)", flush=True)
 

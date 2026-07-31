@@ -35,7 +35,7 @@ from inspection_precis_lib import (  # noqa: E402
     clear_precis_fields,
     extract_isi_precis,
     extract_ofsted_precis,
-    normalize_ofsted_provider_url,
+    ofsted_provider_url_candidates,
     parse_ofsted_provider_latest_report,
 )
 from seed_scope import (  # noqa: E402
@@ -71,15 +71,21 @@ def pdf_text_from_bytes(data: bytes) -> str:
 
 def enrich_ofsted_record(record: dict, *, today: str) -> bool:
     """Attach précis fields from the latest Ofsted PDF. Returns True on success."""
-    provider_url = normalize_ofsted_provider_url(record)
-    if not provider_url:
+    candidates = ofsted_provider_url_candidates(record)
+    if not candidates:
         return False
-    try:
-        html = get_bytes(provider_url).decode("utf-8", errors="replace")
-    except Exception:  # noqa: BLE001
-        return False
-    latest = parse_ofsted_provider_latest_report(html)
-    if not latest:
+    html = ""
+    provider_url = ""
+    latest = None
+    for provider_url in candidates:
+        try:
+            html = get_bytes(provider_url).decode("utf-8", errors="replace")
+        except Exception:  # noqa: BLE001
+            continue
+        latest = parse_ofsted_provider_latest_report(html)
+        if latest:
+            break
+    if not latest or not provider_url:
         return False
     file_url = latest["inspectionReportFileUrl"]
     try:
@@ -95,9 +101,8 @@ def enrich_ofsted_record(record: dict, *, today: str) -> bool:
     record["inspectionReportFileUrl"] = file_url
     record["inspectionReportLabel"] = latest["inspectionReportLabel"]
     record["inspectionPrecisEnrichedAt"] = today
-    # Prefer the stable provider page as the clickable report home.
-    if not record.get("ofstedReportUrl"):
-        record["ofstedReportUrl"] = provider_url
+    # Prefer the working stable provider page as the clickable report home.
+    record["ofstedReportUrl"] = provider_url
     return True
 
 
@@ -179,21 +184,72 @@ def enrich_records(
     return attempted, ofsted_ok, isi_ok
 
 
+def _blob(record: dict) -> str:
+    return " ".join(
+        str(record.get(k) or "")
+        for k in ("schoolType", "schoolTypeLabel", "phase", "name", "providerType")
+    ).lower()
+
+
+def _is_special_ap(record: dict) -> bool:
+    blob = _blob(record)
+    return any(
+        token in blob
+        for token in (
+            "special school",
+            "special academy",
+            "pupil referral",
+            "alternative provision",
+            " pru",
+            "hospital school",
+            "secure",
+        )
+    )
+
+
+def _is_mainstream_secondary(record: dict) -> bool:
+    if record.get("sector") == "independent" or _is_special_ap(record):
+        return False
+    phase = (record.get("phase") or "").lower()
+    phases = record.get("phases") or []
+    return phase in {"secondary", "all-through", "ks3"} or any(
+        p in phases for p in ("ks3", "ks4")
+    )
+
+
+def _is_mainstream_primary(record: dict) -> bool:
+    if record.get("sector") == "independent" or _is_special_ap(record):
+        return False
+    phase = (record.get("phase") or "").lower()
+    phases = record.get("phases") or []
+    return phase in {"primary", "middle deemed primary", "all-through"} or "ks2" in phases
+
+
 def prioritize_records(records: list[dict]) -> list[dict]:
-    """Prefer ISI (scarce) then schools missing précis that have report URLs."""
-    isi = []
-    ofsted = []
-    other = []
+    """Soft-launch order: ISI, mainstream secondaries, primaries, then other Ofsted."""
+    isi: list[dict] = []
+    mainstream_sec: list[dict] = []
+    mainstream_pri: list[dict] = []
+    ofsted: list[dict] = []
+    other: list[dict] = []
     for r in records:
         if r.get("inspectionPrecis"):
             continue
         if should_try_isi(r) and r.get("isiLatestReportUrl"):
             isi.append(r)
+        elif _is_mainstream_secondary(r) and (
+            r.get("ofstedReportUrl") or r.get("urn")
+        ):
+            mainstream_sec.append(r)
+        elif _is_mainstream_primary(r) and (
+            r.get("ofstedReportUrl") or r.get("urn")
+        ):
+            mainstream_pri.append(r)
         elif r.get("ofstedReportUrl") or r.get("ofstedUrn"):
             ofsted.append(r)
         else:
             other.append(r)
-    return isi + ofsted + other
+    return isi + mainstream_sec + mainstream_pri + ofsted + other
 
 
 def load_json(path: Path) -> dict:

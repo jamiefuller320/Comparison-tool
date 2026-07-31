@@ -43,8 +43,16 @@ async function main() {
     console.error("FAIL ks2 board gap", ks2);
     process.exit(1);
   }
+  if (!boardGaps(ks2).some((g) => g.id === "nil-ks2-ofsted-board")) {
+    console.error("FAIL ks2 ofsted board gap", ks2);
+    process.exit(1);
+  }
   if (!schoolGaps(ks2, "1").length || schoolGaps(ks2, "2").length) {
     console.error("FAIL ks2 school gaps should be state-only", ks2);
+    process.exit(1);
+  }
+  if (!schoolGaps(ks2, "1").some((g) => g.id === "nil-ks2-ofsted:1")) {
+    console.error("FAIL ks2 ofsted school gap", schoolGaps(ks2, "1"));
     process.exit(1);
   }
 

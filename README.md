@@ -1,8 +1,8 @@
 # Schoolside
 
-Parental-choice **school performance comparison** for English schools.
+**Hampshire parental school compare** — shortlist nearby schools and early-years settings, then compare published outcomes with Ofsted/ISI evidence.
 
-Side-by-side Key Stage 2 attainment for any shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), but framed for parents choosing a school rather than governors monitoring one.
+Side-by-side boards for the shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), framed for parents choosing a school rather than governors monitoring one. Soft-launch bar: [`SOFT_LAUNCH.md`](./SOFT_LAUNCH.md).
 
 ## North Star
 
@@ -77,6 +77,7 @@ npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 h
 # or: npm run enrich:ey-schools     # state-school Ofsted MI (nursery/infant join)
 # or: npm run enrich:independents   # refresh indie KS4/Ofsted only
 # or: npm run enrich:precis         # Ofsted/ISI report précis + footnoted quotes (needs pypdf)
+# harvest:hampshire ends with enrich:precis:hampshire (bounded widen)
 # or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
 # or: npm run pack:la -- --la Surrey   # on-demand LA schools pack under public/data/packs/

@@ -232,6 +232,7 @@ export function gapsForKs2Board(schools: SchoolRecord[]): DataGap[] {
   const board: ChallengeBoardId = "ks2";
   const gaps: DataGap[] = [];
   let nilState = 0;
+  let nilOfsted = 0;
   for (const school of schools) {
     if (!schoolOffersKs2(school)) continue;
     const sector = resolveSchoolSector(school);
@@ -248,6 +249,24 @@ export function gapsForKs2Board(schools: SchoolRecord[]): DataGap[] {
         urn: school.urn,
       });
     }
+    if (
+      sector === "state" &&
+      !school.ofstedOverall &&
+      !inspectorateIsIsi(school) &&
+      !isUngradedOfsted(school)
+    ) {
+      nilOfsted += 1;
+      gaps.push({
+        id: `nil-ks2-ofsted:${school.urn}`,
+        level: "school",
+        board,
+        severity: "info",
+        label: "No Ofsted grade in pack",
+        detail:
+          "No overall Ofsted grade joined for this school yet — open the Ofsted report link when present, or check the official Ofsted page.",
+        urn: school.urn,
+      });
+    }
   }
   if (nilState > 0) {
     gaps.unshift({
@@ -261,6 +280,20 @@ export function gapsForKs2Board(schools: SchoolRecord[]): DataGap[] {
           : `${nilState} shortlisted schools have no published KS2 tables`,
       detail:
         "Missing state Key Stage 2 figures are usually unpublished tables (new school, small cohort, or suppression) — not a Schoolside join error.",
+    });
+  }
+  if (nilOfsted > 0) {
+    gaps.unshift({
+      id: "nil-ks2-ofsted-board",
+      level: "board",
+      board,
+      severity: "info",
+      label:
+        nilOfsted === 1
+          ? "1 shortlisted school has no Ofsted grade in this pack"
+          : `${nilOfsted} shortlisted schools have no Ofsted grade in this pack`,
+      detail:
+        "KS2 compare centres on Year 6 tables; Ofsted grades are joined when present in the school MI. Missing grades are not the same as missing KS2 outcomes.",
     });
   }
   return gaps;

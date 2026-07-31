@@ -14,11 +14,15 @@ if str(SCRIPTS) not in sys.path:
 from inspection_precis_lib import (  # noqa: E402
     extract_isi_precis,
     extract_ofsted_precis,
+    merge_precis_fields_from_previous,
     normalize_ofsted_provider_url,
     parse_ofsted_provider_latest_report,
     pick_quotes,
     truncate_at_sentence,
 )
+import json
+import tempfile
+from pathlib import Path
 
 OFSTED_FIXTURE = """
 Inspection of a good school: Abbotswood Junior School
@@ -154,10 +158,21 @@ def main() -> None:
 
     school = {
         "urn": "116482",
+        "phase": "primary",
+        "phases": ["ks1", "ks2"],
         "ofstedReportUrl": "http://www.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/116482",
         "ofstedSource": "ofsted-state-schools",
     }
     assert normalize_ofsted_provider_url(school).endswith("/provider/21/116482")
+
+    secondary = {
+        "urn": "137535",
+        "phase": "secondary",
+        "phases": ["ks3", "ks4"],
+        "ofstedReportUrl": "http://www.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/137535",
+        "ofstedSource": "ofsted-state-schools",
+    }
+    assert normalize_ofsted_provider_url(secondary).endswith("/provider/23/137535")
 
     ey_rec = {
         "urn": "ey-1",
@@ -173,6 +188,35 @@ def main() -> None:
         "ofstedReportUrl": "https://reports.ofsted.gov.uk/provider/16/EY368731",
     }
     assert normalize_ofsted_provider_url(cm_rec).endswith("/provider/17/EY368731")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        prev_path = Path(tmp) / "schools-index.json"
+        prev_path.write_text(
+            json.dumps(
+                {
+                    "schools": [
+                        {
+                            "urn": "1",
+                            "inspectionPrecis": "Kept excerpt.",
+                            "inspectionQuotes": [
+                                {
+                                    "text": "Pupils feel safe.",
+                                    "sourceUrl": "https://example.test/a.pdf",
+                                }
+                            ],
+                            "inspectionReportFileUrl": "https://example.test/a.pdf",
+                            "inspectionPrecisSource": "ofsted",
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        fresh = [{"urn": "1", "name": "New harvest row"}]
+        n = merge_precis_fields_from_previous(fresh, prev_path)
+        assert n == 1
+        assert fresh[0]["inspectionPrecis"] == "Kept excerpt."
+        assert fresh[0]["inspectionQuotes"][0]["text"] == "Pupils feel safe."
 
     print("inspection precis ok")
 

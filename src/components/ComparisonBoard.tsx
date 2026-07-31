@@ -278,6 +278,9 @@ export function ComparisonBoard({
                         Official tables ↗
                       </a>
                     ) : null}
+                    {school.ofstedOverall ? (
+                      <span>Ofsted overall: {school.ofstedOverall}</span>
+                    ) : null}
                     {school.ofstedReportUrl ? (
                       <a
                         href={school.ofstedReportUrl}
