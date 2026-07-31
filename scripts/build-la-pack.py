@@ -158,6 +158,8 @@ def main() -> int:
                     la,
                     "--index",
                     index_rel,
+                    # Pack builds must not hang on isi.net HTML; search URLs remain.
+                    "--skip-isi-html",
                 ]
             )
             run(
