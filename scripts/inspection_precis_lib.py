@@ -6,7 +6,9 @@ the source PDF text, with a footnote URL back to that file.
 
 from __future__ import annotations
 
+import json
 import re
+from pathlib import Path
 from typing import Any
 
 UA = (
@@ -366,8 +368,34 @@ def parse_ofsted_provider_latest_report(html: str) -> dict[str, str] | None:
     }
 
 
-def normalize_ofsted_provider_url(school: dict[str, Any]) -> str | None:
-    """Build a stable reports.ofsted.gov.uk provider URL when possible."""
+def _school_ofsted_provider_codes(school: dict[str, Any]) -> list[int]:
+    """Ofsted reports site provider-type codes to try for a school URN.
+
+    Empirically: primary/junior often 21, secondary 23, all-through either.
+    """
+    phase = (school.get("phase") or "").lower()
+    phases = [str(p).lower() for p in (school.get("phases") or [])]
+    age = (school.get("ageRange") or "").lower()
+    secondary_ish = (
+        phase in {"secondary", "ks3"}
+        or "ks4" in phases
+        or "ks3" in phases
+        or bool(re.search(r"\b1[1-9]\b.*\b1[6-9]\b", age))
+    )
+    primary_ish = (
+        phase in {"primary", "middle deemed primary"}
+        or "ks2" in phases
+        or "ks1" in phases
+    )
+    if phase == "all-through" or (secondary_ish and primary_ish):
+        return [21, 23]
+    if secondary_ish and not primary_ish:
+        return [23, 21]
+    return [21, 23]
+
+
+def ofsted_provider_url_candidates(school: dict[str, Any]) -> list[str]:
+    """Ordered candidate provider pages for Ofsted report discovery."""
     existing = (school.get("ofstedReportUrl") or "").strip()
     urn = str(school.get("urn") or "").strip()
     ofsted_urn = str(school.get("ofstedUrn") or "").strip()
@@ -386,43 +414,95 @@ def normalize_ofsted_provider_url(school: dict[str, Any]) -> str | None:
             return None
         return key.split(":")[-1]
 
-    # Childminders are /provider/17/ (day care is /16/). Rewrite mistaken /16/ links.
+    out: list[str] = []
+
+    def add(url: str | None) -> None:
+        if not url:
+            return
+        clean = url.split("?")[0].rstrip("/")
+        if clean and clean not in out:
+            out.append(clean)
+
     if is_childminder:
         key = _provider_key()
         if key:
-            return f"https://reports.ofsted.gov.uk/provider/17/{key}"
+            add(f"https://reports.ofsted.gov.uk/provider/17/{key}")
+        return out
 
     if "reports.ofsted.gov.uk/provider/" in existing:
-        return existing.split("?")[0].rstrip("/")
+        add(existing)
 
-    if source == "ofsted-childcare" or ofsted_urn:
+    if source == "ofsted-childcare":
         key = _provider_key()
         if key:
-            return f"https://reports.ofsted.gov.uk/provider/16/{key}"
-
-    # Legacy ELS / school links → /provider/21/{urn}
-    m = re.search(
-        r"provider/(?:ELS|CARE|EY)/(\d+)",
-        existing,
-        flags=re.I,
-    )
-    if m:
-        return f"https://reports.ofsted.gov.uk/provider/21/{m.group(1)}"
+            add(f"https://reports.ofsted.gov.uk/provider/16/{key}")
+        return out
 
     if urn.isdigit():
-        # State / independent school pages commonly use 21.
-        return f"https://reports.ofsted.gov.uk/provider/21/{urn}"
+        for code in _school_ofsted_provider_codes(school):
+            add(f"https://reports.ofsted.gov.uk/provider/{code}/{urn}")
 
-    return existing or None
+    # Legacy ELS links — keep as a final attempt (redirects when reachable).
+    if existing and "ofsted.gov.uk" in existing:
+        add(existing)
+
+    return out
+
+
+def normalize_ofsted_provider_url(school: dict[str, Any]) -> str | None:
+    """Best single provider URL guess (first candidate)."""
+    candidates = ofsted_provider_url_candidates(school)
+    return candidates[0] if candidates else None
+
+
+PRECIS_FIELD_KEYS = (
+    "inspectionPrecis",
+    "inspectionQuotes",
+    "inspectionReportFileUrl",
+    "inspectionReportLabel",
+    "inspectionPrecisSource",
+    "inspectionPrecisEnrichedAt",
+)
 
 
 def clear_precis_fields(school: dict[str, Any]) -> None:
-    for key in (
-        "inspectionPrecis",
-        "inspectionQuotes",
-        "inspectionReportFileUrl",
-        "inspectionReportLabel",
-        "inspectionPrecisSource",
-        "inspectionPrecisEnrichedAt",
-    ):
+    for key in PRECIS_FIELD_KEYS:
         school.pop(key, None)
+
+
+def merge_precis_fields_from_previous(
+    records: list[dict[str, Any]],
+    previous_path: Path,
+    *,
+    list_key: str = "schools",
+) -> int:
+    """Copy qualitative precis fields from a previous index by URN.
+
+    Harvest rewrites wipe the index; call this before write so a refresh does
+    not discard soft-launch qualitative coverage.
+    """
+    path = Path(previous_path)
+    if not path.exists():
+        return 0
+    try:
+        prev = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return 0
+    prev_rows = prev.get(list_key) or prev.get("providers") or []
+    by_urn = {str(row.get("urn") or ""): row for row in prev_rows if row.get("urn")}
+    restored = 0
+    for row in records:
+        urn = str(row.get("urn") or "")
+        old = by_urn.get(urn)
+        if not old or not old.get("inspectionPrecis"):
+            continue
+        for key in PRECIS_FIELD_KEYS:
+            if old.get(key) is not None and row.get(key) is None:
+                row[key] = old[key]
+        # Prefer a known-good /17/ childminder link over a stale /16/ rewrite.
+        old_url = old.get("ofstedReportUrl") or ""
+        new_url = row.get("ofstedReportUrl") or ""
+        if "/provider/17/" in old_url and "/provider/16/" in new_url:
+            row["ofstedReportUrl"] = old_url
+        restored += 1
+    return restored

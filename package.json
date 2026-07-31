@@ -2,7 +2,7 @@
   "name": "schoolside",
   "version": "0.1.0",
   "private": true,
-  "description": "Parental-choice school performance comparison for English schools",
+  "description": "Parental-choice school comparison for Hampshire (and on-demand LA packs)",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +10,8 @@
     "start": "npx --yes serve out",
     "lint": "tsc --noEmit",
     "harvest": "python3 scripts/harvest-schools.py && python3 scripts/enrich-geocode.py && python3 scripts/enrich-secondaries.py && python3 scripts/enrich-independents.py && python3 scripts/enrich-phonics.py && python3 scripts/harvest-ey-providers.py && python3 scripts/harvest-childminders.py && python3 scripts/enrich-ey-schools.py && python3 scripts/extract-ks2-history.py",
-    "harvest:hampshire": "python3 scripts/harvest-schools.py --seed-la && python3 scripts/enrich-geocode.py && python3 scripts/enrich-secondaries.py --seed-la && python3 scripts/enrich-independents.py && python3 scripts/enrich-phonics.py --seed-la && python3 scripts/harvest-ey-providers.py && python3 scripts/harvest-childminders.py && python3 scripts/enrich-ey-schools.py && python3 scripts/extract-ks2-history.py --seed-la",
+    "harvest:hampshire": "python3 scripts/harvest-schools.py --seed-la && python3 scripts/enrich-geocode.py && python3 scripts/enrich-secondaries.py --seed-la && python3 scripts/enrich-independents.py && python3 scripts/enrich-phonics.py --seed-la && python3 scripts/harvest-ey-providers.py && python3 scripts/harvest-childminders.py && python3 scripts/enrich-ey-schools.py && python3 scripts/extract-ks2-history.py --seed-la && npm run enrich:precis:hampshire",
+    "enrich:precis:hampshire": "python3 scripts/enrich-inspection-precis.py --limit 250 && python3 scripts/enrich-inspection-precis.py --ey --limit 120 && python3 scripts/enrich-inspection-precis.py --childminders --limit 80",
     "harvest:sample": "python3 scripts/harvest-schools.py --sample 40 && python3 scripts/enrich-geocode.py && python3 scripts/enrich-secondaries.py && python3 scripts/enrich-independents.py && python3 scripts/enrich-phonics.py && python3 scripts/harvest-ey-providers.py && python3 scripts/harvest-childminders.py && python3 scripts/enrich-ey-schools.py",
     "trim:hampshire": "python3 scripts/trim-index-to-seed-la.py",
     "geocode": "python3 scripts/enrich-geocode.py",

@@ -837,6 +837,18 @@ def main() -> int:
     SRC_DATA.mkdir(parents=True, exist_ok=True)
     schools_path = out_dir / "schools-index.json"
     directory_path = out_dir / "schools-directory.json"
+    # Preserve soft-launch qualitative fields across harvest rewrites.
+    try:
+        from inspection_precis_lib import merge_precis_fields_from_previous
+
+        restored = merge_precis_fields_from_previous(schools, schools_path)
+        if restored:
+            payload["stats"]["withInspectionPrecis"] = sum(
+                1 for s in schools if s.get("inspectionPrecis")
+            )
+            print(f"Restored inspection precis on {restored} schools", flush=True)
+    except Exception as exc:  # noqa: BLE001
+        print(f"Precis merge skipped: {exc}", flush=True)
     schools_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
     directory_path.write_text(
         json.dumps(
