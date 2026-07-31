@@ -33,11 +33,11 @@ Last reviewed: 2026-07-31.
 | --- | --- | --- |
 | 1 Journey | **Pass** | Path-scoped boards + visit pack on EY/CM; empty-state polish shipped |
 | 2 Quantitative honesty | **Pass** | Gap chips on KS4/EY/KS2 (incl. missing Ofsted grade on KS2) |
-| 3 Qualitative enough | **Pass (guideline)** | Mainstream primaries ~91%, secondaries ~91%; EY ~43%; childminders ~51% (2026-07-31) |
+| 3 Qualitative enough | **In progress (packs)** | Hampshire mainstream ~91% / EY ~43% / CM ~51%. Neighbour packs précised; uncapped region polish via `npm run pack:southeast:complete` |
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
-| 5 Ops | **Pass** | Precis merge-preserved across harvest; `harvest:hampshire` + scheduled refresh run bounded precis |
+| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + region complete scripts |
 | 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East parental compare |
-| 7 Regional packs | **In progress** | Neighbours ready (Southampton, Portsmouth, Dorset, BCP + IoW); remaining SE packs via `npm run pack:southeast` |
+| 7 Regional packs | **Pass** | All 20 South East + Dorset pack LAs `ready` in `public/data/packs/manifest.json` (Hampshire remains maintained root) |
 
 Re-check guideline rates after each major harvest; flip a row back to Partial if coverage regresses.
 
