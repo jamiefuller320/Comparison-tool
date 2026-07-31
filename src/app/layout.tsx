@@ -4,9 +4,9 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { UiPreferencesProvider } from "@/components/UiPreferencesProvider";
 
 export const metadata: Metadata = {
-  title: "Schoolside — Hampshire school compare for parents",
+  title: "Schoolside — South East school compare for parents",
   description:
-    "Side-by-side school and early-years comparison for Hampshire parents — published outcomes, Ofsted/ISI excerpts, and a shortlist visit pack.",
+    "Side-by-side school and early-years comparison across Hampshire and the wider South East (including Dorset) — published outcomes, Ofsted/ISI excerpts, and a shortlist visit pack.",
 };
 
 export default function RootLayout({

@@ -254,11 +254,15 @@ export function HomePostcodeExplorer({
           <p className="hero-brand">
             School<em>side</em>
           </p>
-          <h1>Compare Hampshire schools side by side when you are choosing.</h1>
+          <h1>
+            Compare schools across Hampshire and the South East when you are
+            choosing.
+          </h1>
           <p>
-            Start with your home postcode to map nearby Hampshire schools and
-            early years settings, then compare published outcomes — parental
-            shortlists, not a governance pack.
+            Start with your home postcode to map nearby schools and early years
+            settings — deep Hampshire coverage, plus ready South East and Dorset
+            areas — then compare published outcomes. Parental shortlists, not a
+            governance pack.
           </p>
           <p className="hero-tour-launch">
             <button

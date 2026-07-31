@@ -16,8 +16,39 @@ import type {
 
 export const SEED_LOCAL_AUTHORITY = "Hampshire";
 
-/** Human label for UI / docs. */
+/** Human label for UI / docs (maintained root). */
 export const SEED_GEOGRAPHY_LABEL = "Hampshire";
+
+/**
+ * Coverage region: ONS South East LAs + Dorset / BCP (contiguous ask).
+ * Hampshire is the maintained root; other members ship as silent-merge packs.
+ */
+export const SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES = [
+  "Bracknell Forest",
+  "Brighton and Hove",
+  "Buckinghamshire",
+  "East Sussex",
+  "Hampshire",
+  "Isle of Wight",
+  "Kent",
+  "Medway",
+  "Milton Keynes",
+  "Oxfordshire",
+  "Portsmouth",
+  "Reading",
+  "Slough",
+  "Southampton",
+  "Surrey",
+  "West Berkshire",
+  "West Sussex",
+  "Windsor and Maidenhead",
+  "Wokingham",
+  "Dorset",
+  "Bournemouth, Christchurch and Poole",
+] as const;
+
+/** Human label for the wider coverage region. */
+export const COVERAGE_REGION_LABEL = "South East England (including Dorset)";
 
 /** @deprecated Packs are no longer a user-facing mode; kept for clearing legacy storage. */
 export const ACTIVE_PACK_STORAGE_KEY = "schoolside.activeLaPack";
@@ -39,6 +70,16 @@ export function isSeedLocalAuthority(
   localAuthority?: string | null,
 ): boolean {
   return isLocalAuthority(localAuthority, SEED_LOCAL_AUTHORITY);
+}
+
+export function isSoutheastPlusDorsetLocalAuthority(
+  localAuthority?: string | null,
+): boolean {
+  if (!localAuthority) return false;
+  const target = normalizeLaName(localAuthority).toLowerCase();
+  return SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES.some(
+    (la) => normalizeLaName(la).toLowerCase() === target,
+  );
 }
 
 export function isLocalAuthority(

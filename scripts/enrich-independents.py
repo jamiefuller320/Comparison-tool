@@ -140,18 +140,23 @@ def get_json(url: str, retries: int = 4) -> dict:
     raise RuntimeError(f"GET failed {url}: {last}")
 
 
-def get_bytes(url: str, retries: int = 4) -> bytes:
+def get_bytes(url: str, retries: int = 4, timeout: int = 180) -> bytes:
     last: Exception | None = None
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
-            with urllib.request.urlopen(req, timeout=180) as resp:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return resp.read()
         except Exception as exc:  # noqa: BLE001
             last = exc
             if attempt < retries - 1:
                 time.sleep(1.5 * (attempt + 1))
     raise RuntimeError(f"Download failed {url}: {last}")
+
+
+def get_bytes_isi(url: str) -> bytes:
+    """Short-timeout fetch for isi.net — never block pack builds for hours."""
+    return get_bytes(url, retries=1, timeout=25)
 
 
 def parse_metric(raw: str | None) -> float | None:
@@ -518,7 +523,7 @@ def _isi_profile_mentions_postcode(url: str, postcode: str) -> bool | None:
     if len(pc) < 5:
         return None
     try:
-        html = get_bytes(url).decode("utf-8", errors="replace")
+        html = get_bytes_isi(url).decode("utf-8", errors="replace")
     except Exception:  # noqa: BLE001
         return None
     compact = re.sub(r"\s+", "", html.upper())
@@ -550,7 +555,7 @@ def resolve_isi_profile_url(name: str, postcode: str | None = None) -> str | Non
             + urllib.parse.quote(query)
         )
         try:
-            html = get_bytes(search).decode("utf-8", errors="replace")
+            html = get_bytes_isi(search).decode("utf-8", errors="replace")
         except Exception:  # noqa: BLE001
             continue
         matches.extend(
@@ -573,7 +578,7 @@ def resolve_isi_profile_url(name: str, postcode: str | None = None) -> str | Non
     )
     # When postcode is known, verify the best few candidates against the profile.
     if pc:
-        for _score, url in scored[:6]:
+        for _score, url in scored[:3]:
             mentioned = _isi_profile_mentions_postcode(url, pc)
             if mentioned is True:
                 return url
@@ -642,7 +647,7 @@ def enrich_isi_report_metadata(entry: dict, name: str, postcode: str | None) -> 
     entry["isiReportsUrl"] = profile
     entry["inspectionReportsUrl"] = profile
     try:
-        html = get_bytes(profile).decode("utf-8", errors="replace")
+        html = get_bytes_isi(profile).decode("utf-8", errors="replace")
     except Exception:  # noqa: BLE001
         return
     latest = parse_isi_latest_report(html)
@@ -650,7 +655,12 @@ def enrich_isi_report_metadata(entry: dict, name: str, postcode: str | None) -> 
         entry.update(latest)
 
 
-def harvest_gias_directory(indie_urns: set[str]) -> dict[str, dict]:
+def harvest_gias_directory(
+    indie_urns: set[str],
+    *,
+    skip_isi_html: bool = False,
+    isi_resolve_cap: int = 120,
+) -> dict[str, dict]:
     """Website + inspectorate from GIAS when Ofsted MI has no row (ISI schools)."""
     print("Fetching GIAS website / inspectorate for independents…", flush=True)
     path = ensure_edubase()
@@ -668,8 +678,10 @@ def harvest_gias_directory(indie_urns: set[str]) -> dict[str, dict]:
     reader = csv.DictReader(io.StringIO(text))
     by_urn: dict[str, dict] = {}
     # Cap live ISI HTML lookups so a national enrich does not hammer isi.net.
-    isi_profile_resolves_left = 120
+    isi_profile_resolves_left = 0 if skip_isi_html else max(0, isi_resolve_cap)
     isi_profiles_resolved = 0
+    if skip_isi_html:
+        print("  Skipping live ISI HTML resolves (search URLs only)", flush=True)
     for row in reader:
         urn = str(row.get("URN") or "").strip()
         if urn not in indie_urns:
@@ -913,9 +925,15 @@ def apply_isi_only_enrichment(
     summary_path: Path,
     paths: dict,
     target_la: str,
+    skip_isi_html: bool = False,
+    isi_resolve_cap: int = 120,
 ) -> None:
     """Refresh ISI/GIAS citation fields without re-harvesting KS4/KS5/Ofsted."""
-    gias_by_urn = harvest_gias_directory(indie_urns)
+    gias_by_urn = harvest_gias_directory(
+        indie_urns,
+        skip_isi_html=skip_isi_html,
+        isi_resolve_cap=isi_resolve_cap,
+    )
     isi_latest = 0
     isi_profiles = 0
     website_count = 0
@@ -1048,6 +1066,20 @@ def main() -> None:
             "citations for independents (skip KS4/KS5/Ofsted harvests)"
         ),
     )
+    parser.add_argument(
+        "--skip-isi-html",
+        action="store_true",
+        help=(
+            "Do not live-fetch isi.net profile/report pages (keep search URLs only). "
+            "Use for pack builds so GIAS enrich cannot hang."
+        ),
+    )
+    parser.add_argument(
+        "--isi-resolve-cap",
+        type=int,
+        default=120,
+        help="Max live ISI HTML profile resolves this run (default 120)",
+    )
     args = parser.parse_args()
 
     paths = resolve_index_bundle(args.index, ROOT)
@@ -1079,7 +1111,8 @@ def main() -> None:
         f"secondary-age (any sector): {len(secondary_urns)}; "
         f"KS4/KS5 harvest targets: {len(ks4_target_urns)}"
         + (f"; scope={target_la}" if target_la else "")
-        + ("; isi-only" if args.isi_only else ""),
+        + ("; isi-only" if args.isi_only else "")
+        + ("; skip-isi-html" if args.skip_isi_html else ""),
         flush=True,
     )
 
@@ -1093,13 +1126,19 @@ def main() -> None:
             summary_path=summary_path,
             paths=paths,
             target_la=target_la,
+            skip_isi_html=args.skip_isi_html,
+            isi_resolve_cap=args.isi_resolve_cap,
         )
         return
 
     ks4_by_urn, ks4_year, cleared_total = harvest_ks4(ks4_target_urns)
     ks5_by_urn, ks5_year, ks5_cleared_total = harvest_ks5(ks4_target_urns)
     ofsted_by_urn, ofsted_as_at = harvest_ofsted()
-    gias_by_urn = harvest_gias_directory(indie_urns)
+    gias_by_urn = harvest_gias_directory(
+        indie_urns,
+        skip_isi_html=args.skip_isi_html,
+        isi_resolve_cap=args.isi_resolve_cap,
+    )
 
     ks4_count = 0
     ks5_count = 0
