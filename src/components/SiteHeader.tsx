@@ -1,6 +1,7 @@
 "use client";
 
 import { FloatingControls } from "@/components/FloatingControls";
+import { AccountMenu } from "@/components/AccountMenu";
 import { useUiPreferences } from "@/components/UiPreferencesProvider";
 import { requestTourStart } from "@/lib/tour";
 
@@ -16,6 +17,7 @@ export function SiteHeader() {
             School<span>side</span>
           </a>
           <div className="header-actions">
+            <AccountMenu />
             <button
               type="button"
               className={
