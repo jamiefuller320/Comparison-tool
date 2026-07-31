@@ -121,6 +121,13 @@ from seed_scope import (  # noqa: E402
 
 OUT_DIR = ROOT / "public" / "data"
 SRC_DATA = ROOT / "src" / "data"
+# National KS2 pulls are identical across LA pack builds; cache once per year.
+KS2_PERF_CACHE_DIR = ROOT / ".cache" / "ees"
+
+
+def _ks2_perf_cache_path(year: str) -> Path:
+    safe = year.replace("/", "-")
+    return KS2_PERF_CACHE_DIR / f"ks2-performance-{safe}.json"
 
 
 def get_json(url: str, retries: int = 4) -> dict:
@@ -320,103 +327,150 @@ def harvest_profiles(
 
 
 def harvest_performance(year: str, sample_location_ids: set[str] | None = None) -> dict[str, dict]:
-    """Return locationId -> subject metrics for Total / All pupils."""
-    print(f"Fetching KS2 performance for {year}…", flush=True)
-    indicators = ",".join([INDICATOR["expected"], INDICATOR["higher"], INDICATOR["scaled"]])
-    params = {
-        "filters.eq": FILTER["total"],
-        "timePeriods.eq": f"{year}|AY",
-        "indicators": indicators,
-    }
-    # urllib urlencode collapses duplicate keys — build manually for filters if needed
-    qs = (
-        f"filters.eq={FILTER['total']}"
-        f"&timePeriods.eq={urllib.parse.quote(f'{year}|AY', safe='|/')}"
-        f"&indicators={indicators}"
-    )
-    results: list[dict] = []
-    page = 1
-    total_pages = 1
-    while page <= total_pages:
-        data = get_json(
-            f"{BASE}/data-sets/{DATASET_IDS['schoolPerformance']}/query?{qs}&page={page}&pageSize=5000"
-        )
-        batch = data.get("results") or []
-        results.extend(batch)
-        paging = data.get("paging") or {}
-        total_pages = int(paging.get("totalPages") or 1)
-        print(
-            f"  page {page}/{total_pages} (+{len(batch)}, {len(results)}/{paging.get('totalResults')})",
-            flush=True,
-        )
-        page += 1
+    """Return locationId -> subject metrics for Total / All pupils.
 
-    by_loc: dict[str, dict] = {}
-    for row in results:
-        sch_id = (row.get("locations") or {}).get("SCH")
-        if not sch_id:
-            continue
-        if sample_location_ids is not None and sch_id not in sample_location_ids:
-            continue
-        filters = row.get("filters") or {}
-        # subject filter id is jfhAM
-        subject_id = filters.get("jfhAM")
-        key = SUBJECT_KEYS.get(subject_id or "")
-        if not key:
-            continue
-        values = row.get("values") or {}
-        slot = by_loc.setdefault(sch_id, {})
-        slot[f"{key}Expected"] = parse_metric(values.get(INDICATOR["expected"]))
-        slot[f"{key}Higher"] = parse_metric(values.get(INDICATOR["higher"]))
-        if key != "rwm" and key != "science" and key != "writing":
-            slot[f"{key}Scaled"] = parse_metric(values.get(INDICATOR["scaled"]))
-        elif key in {"reading", "maths", "gps"}:
-            slot[f"{key}Scaled"] = parse_metric(values.get(INDICATOR["scaled"]))
-        else:
-            # writing/science/rwm may still carry scaled for some
-            scaled = parse_metric(values.get(INDICATOR["scaled"]))
-            if scaled is not None:
-                slot[f"{key}Scaled"] = scaled
+    The DfE school-performance dataset cannot be filtered by LA at query time
+    (locations are NAT+SCH only). Cache the national parse under `.cache/ees/`
+    so sequential region-pack builds do not re-download ~180k rows each time.
+    """
+    cache_path = _ks2_perf_cache_path(year)
+    by_loc: dict[str, dict] | None = None
+    if cache_path.exists():
+        try:
+            payload = json.loads(cache_path.read_text(encoding="utf-8"))
+            cached = payload.get("byLocation") if isinstance(payload, dict) else None
+            if isinstance(cached, dict) and cached:
+                by_loc = cached
+                print(
+                    f"Loaded KS2 performance cache for {year} "
+                    f"({len(by_loc)} schools) from {cache_path.relative_to(ROOT)}",
+                    flush=True,
+                )
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"  KS2 cache unreadable ({exc}); re-fetching…", flush=True)
+            by_loc = None
 
-    # Equity for RWM only (boys/girls/disadvantaged)
-    print(f"Fetching equity breakdowns for {year}…", flush=True)
-    for breakdown_key, filter_id in [
-        ("boysRwmExpected", FILTER["boys"]),
-        ("girlsRwmExpected", FILTER["girls"]),
-        ("disadvantagedRwmExpected", FILTER["disadvantaged"]),
-        ("notDisadvantagedRwmExpected", FILTER["not_disadvantaged"]),
-    ]:
+    if by_loc is None:
+        print(f"Fetching KS2 performance for {year}…", flush=True)
+        indicators = ",".join(
+            [INDICATOR["expected"], INDICATOR["higher"], INDICATOR["scaled"]]
+        )
+        # urllib urlencode collapses duplicate keys — build manually for filters if needed
+        qs = (
+            f"filters.eq={FILTER['total']}"
+            f"&timePeriods.eq={urllib.parse.quote(f'{year}|AY', safe='|/')}"
+            f"&indicators={indicators}"
+        )
+        results: list[dict] = []
         page = 1
         total_pages = 1
         while page <= total_pages:
-            q = (
-                f"filters.eq={filter_id}"
-                f"&filters.eq={FILTER['rwm']}"
-                f"&timePeriods.eq={urllib.parse.quote(f'{year}|AY', safe='|/')}"
-                f"&indicators={INDICATOR['expected']}"
-                f"&page={page}&pageSize=5000"
+            data = get_json(
+                f"{BASE}/data-sets/{DATASET_IDS['schoolPerformance']}/query?{qs}&page={page}&pageSize=5000"
             )
-            data = get_json(f"{BASE}/data-sets/{DATASET_IDS['schoolPerformance']}/query?{q}")
-            for row in data.get("results") or []:
-                # Ensure this is RWM rows — multi filters.eq may not AND; check filter payload
-                filters = row.get("filters") or {}
-                if filters.get("jfhAM") != FILTER["rwm"]:
-                    continue
-                if filters.get("fV8YF") != filter_id:
-                    continue
-                sch_id = (row.get("locations") or {}).get("SCH")
-                if not sch_id:
-                    continue
-                if sample_location_ids is not None and sch_id not in sample_location_ids:
-                    continue
-                by_loc.setdefault(sch_id, {})[breakdown_key] = parse_metric(
-                    (row.get("values") or {}).get(INDICATOR["expected"])
-                )
+            batch = data.get("results") or []
+            results.extend(batch)
             paging = data.get("paging") or {}
             total_pages = int(paging.get("totalPages") or 1)
-            if page == 1:
-                print(f"  {breakdown_key}: {paging.get('totalResults')} rows", flush=True)
+            print(
+                f"  page {page}/{total_pages} (+{len(batch)}, {len(results)}/{paging.get('totalResults')})",
+                flush=True,
+            )
             page += 1
+
+        by_loc = {}
+        for row in results:
+            sch_id = (row.get("locations") or {}).get("SCH")
+            if not sch_id:
+                continue
+            filters = row.get("filters") or {}
+            # subject filter id is jfhAM
+            subject_id = filters.get("jfhAM")
+            key = SUBJECT_KEYS.get(subject_id or "")
+            if not key:
+                continue
+            values = row.get("values") or {}
+            slot = by_loc.setdefault(sch_id, {})
+            slot[f"{key}Expected"] = parse_metric(values.get(INDICATOR["expected"]))
+            slot[f"{key}Higher"] = parse_metric(values.get(INDICATOR["higher"]))
+            if key != "rwm" and key != "science" and key != "writing":
+                slot[f"{key}Scaled"] = parse_metric(values.get(INDICATOR["scaled"]))
+            elif key in {"reading", "maths", "gps"}:
+                slot[f"{key}Scaled"] = parse_metric(values.get(INDICATOR["scaled"]))
+            else:
+                # writing/science/rwm may still carry scaled for some
+                scaled = parse_metric(values.get(INDICATOR["scaled"]))
+                if scaled is not None:
+                    slot[f"{key}Scaled"] = scaled
+
+        # Equity for RWM only (boys/girls/disadvantaged)
+        print(f"Fetching equity breakdowns for {year}…", flush=True)
+        for breakdown_key, filter_id in [
+            ("boysRwmExpected", FILTER["boys"]),
+            ("girlsRwmExpected", FILTER["girls"]),
+            ("disadvantagedRwmExpected", FILTER["disadvantaged"]),
+            ("notDisadvantagedRwmExpected", FILTER["not_disadvantaged"]),
+        ]:
+            page = 1
+            total_pages = 1
+            while page <= total_pages:
+                q = (
+                    f"filters.eq={filter_id}"
+                    f"&filters.eq={FILTER['rwm']}"
+                    f"&timePeriods.eq={urllib.parse.quote(f'{year}|AY', safe='|/')}"
+                    f"&indicators={INDICATOR['expected']}"
+                    f"&page={page}&pageSize=5000"
+                )
+                data = get_json(
+                    f"{BASE}/data-sets/{DATASET_IDS['schoolPerformance']}/query?{q}"
+                )
+                for row in data.get("results") or []:
+                    # Ensure this is RWM rows — multi filters.eq may not AND; check filter payload
+                    filters = row.get("filters") or {}
+                    if filters.get("jfhAM") != FILTER["rwm"]:
+                        continue
+                    if filters.get("fV8YF") != filter_id:
+                        continue
+                    sch_id = (row.get("locations") or {}).get("SCH")
+                    if not sch_id:
+                        continue
+                    by_loc.setdefault(sch_id, {})[breakdown_key] = parse_metric(
+                        (row.get("values") or {}).get(INDICATOR["expected"])
+                    )
+                paging = data.get("paging") or {}
+                total_pages = int(paging.get("totalPages") or 1)
+                if page == 1:
+                    print(f"  {breakdown_key}: {paging.get('totalResults')} rows", flush=True)
+                page += 1
+
+        try:
+            KS2_PERF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            cache_path.write_text(
+                json.dumps(
+                    {
+                        "year": year,
+                        "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                        "schoolCount": len(by_loc),
+                        "byLocation": by_loc,
+                    },
+                    separators=(",", ":"),
+                ),
+                encoding="utf-8",
+            )
+            print(
+                f"  wrote KS2 performance cache ({len(by_loc)} schools) → "
+                f"{cache_path.relative_to(ROOT)}",
+                flush=True,
+            )
+        except OSError as exc:
+            print(f"  warning: could not write KS2 cache ({exc})", flush=True)
+
+    if sample_location_ids is not None:
+        by_loc = {
+            sch_id: metrics
+            for sch_id, metrics in by_loc.items()
+            if sch_id in sample_location_ids
+        }
 
     print(f"  performance locations: {len(by_loc)}", flush=True)
     return by_loc

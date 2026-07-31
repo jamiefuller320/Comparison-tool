@@ -65,6 +65,10 @@ def precis_pack(la: str, slug: str, *, limit: int) -> None:
     index = f"public/data/packs/{slug}/schools-index.json"
     ey = ROOT / f"public/data/packs/{slug}/ey-providers-index.json"
     cm = ROOT / f"public/data/packs/{slug}/childminders-index.json"
+    # limit 0 = no cap (soft-launch completeness). Otherwise keep EY/CM
+    # slices proportional but never tiny.
+    ey_limit = 0 if limit == 0 else max(40, limit // 2)
+    cm_limit = 0 if limit == 0 else max(30, limit // 3)
     if (ROOT / index).exists():
         run(
             [
@@ -91,7 +95,7 @@ def precis_pack(la: str, slug: str, *, limit: int) -> None:
                 "--la",
                 la,
                 "--limit",
-                str(max(40, limit // 2)),
+                str(ey_limit),
                 "--sleep",
                 "0.08",
             ]
@@ -107,7 +111,7 @@ def precis_pack(la: str, slug: str, *, limit: int) -> None:
                 "--la",
                 la,
                 "--limit",
-                str(max(30, limit // 3)),
+                str(cm_limit),
                 "--sleep",
                 "0.08",
             ]
@@ -139,8 +143,13 @@ def main() -> int:
     parser.add_argument("--skip-geocode", action="store_true")
     parser.add_argument("--skip-precis", action="store_true")
     parser.add_argument("--skip-isi", action="store_true")
-    parser.add_argument("--precis-limit", type=int, default=120)
-    parser.add_argument("--isi-resolve-cap", type=int, default=40)
+    parser.add_argument(
+        "--precis-limit",
+        type=int,
+        default=0,
+        help="Max schools to précis per pack (0 = no cap; soft-launch default)",
+    )
+    parser.add_argument("--isi-resolve-cap", type=int, default=60)
     parser.add_argument(
         "--continue-on-error",
         action="store_true",
