@@ -114,18 +114,34 @@ def main() -> int:
     directory_path = index_path.with_name("schools-directory.json")
     summary_path = index_path.with_name("harvest-summary.json")
 
-    summary = {
-        "generatedAt": payload.get("generatedAt"),
-        "period": payload.get("period"),
-        "schoolCount": payload["stats"]["schoolCount"],
-        "withRwm": payload["stats"]["withRwm"],
-        "withCoordinates": hit,
-        "localAuthorityCount": payload["stats"]["localAuthorityCount"],
-        "maintainedScope": payload.get("maintainedScope"),
-        "files": [str(index_path.relative_to(ROOT)), str(directory_path.relative_to(ROOT))],
-        "indexBytes": index_path.stat().st_size,
-        "geocodedAt": time.strftime("%Y-%m-%d"),
-    }
+    # Merge into any existing depth-enrichment summary (KS4/phonics/EY/etc.).
+    # A full replace wiped pack harvest-summary.json during re-geocode polish.
+    summary: dict = {}
+    if summary_path.exists():
+        try:
+            existing = json.loads(summary_path.read_text(encoding="utf-8"))
+            if isinstance(existing, dict):
+                summary.update(existing)
+        except (OSError, json.JSONDecodeError):
+            summary = {}
+    summary.update(
+        {
+            "generatedAt": payload.get("generatedAt") or summary.get("generatedAt"),
+            "period": payload.get("period") or summary.get("period"),
+            "schoolCount": payload["stats"]["schoolCount"],
+            "withRwm": payload["stats"]["withRwm"],
+            "withCoordinates": hit,
+            "localAuthorityCount": payload["stats"]["localAuthorityCount"],
+            "maintainedScope": payload.get("maintainedScope")
+            or summary.get("maintainedScope"),
+            "files": [
+                str(index_path.relative_to(ROOT)),
+                str(directory_path.relative_to(ROOT)),
+            ],
+            "indexBytes": index_path.stat().st_size,
+            "geocodedAt": time.strftime("%Y-%m-%d"),
+        }
+    )
     summary_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     if index_path.resolve() == INDEX.resolve():
         (ROOT / "src" / "data" / "harvest-summary.json").write_text(
