@@ -106,10 +106,33 @@ def southeast_plus_dorset_pack_targets(*, include_ready: bool = False) -> list[s
     ]
 
 
+# Ofsted childcare MI sometimes uses "&" where DfE/EES uses "and".
+_LA_NAME_ALIASES: dict[str, tuple[str, ...]] = {
+    "bournemouth, christchurch and poole": (
+        "Bournemouth, Christchurch and Poole",
+        "Bournemouth, Christchurch & Poole",
+    ),
+}
+
+
+def la_name_match_keys(name: str | None) -> set[str]:
+    """Normalized keys that should count as the same local authority."""
+    base = normalize_la_name(name)
+    if not base:
+        return set()
+    keys = {base.lower(), base.lower().replace(" & ", " and ")}
+    for canonical, aliases in _LA_NAME_ALIASES.items():
+        alias_keys = {normalize_la_name(a).lower() for a in aliases}
+        alias_keys.add(canonical)
+        if keys & alias_keys:
+            keys |= alias_keys
+    return keys
+
+
 def is_local_authority(name: str | None, target: str | None) -> bool:
     if not name or not target:
         return False
-    return normalize_la_name(name).lower() == normalize_la_name(target).lower()
+    return bool(la_name_match_keys(name) & la_name_match_keys(target))
 
 
 def filter_schools_to_la(

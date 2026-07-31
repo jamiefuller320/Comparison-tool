@@ -43,6 +43,7 @@ async function main() {
 from seed_scope import (
   SEED_LOCAL_AUTHORITY,
   filter_schools_to_seed_la,
+  is_local_authority,
   is_seed_local_authority,
   is_southeast_plus_dorset_local_authority,
   southeast_plus_dorset_pack_targets,
@@ -66,6 +67,10 @@ assert not is_seed_local_authority("Southampton")
 assert is_southeast_plus_dorset_local_authority("Dorset")
 assert "Hampshire" not in southeast_plus_dorset_pack_targets()
 assert "Southampton" in southeast_plus_dorset_pack_targets()
+assert is_local_authority(
+  "Bournemouth, Christchurch & Poole",
+  "Bournemouth, Christchurch and Poole",
+)
 print("python seed_scope ok")
 `,
     ],
