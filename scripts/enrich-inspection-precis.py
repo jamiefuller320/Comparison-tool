@@ -140,6 +140,7 @@ def enrich_records(
     limit: int,
     sleep_s: float,
     prefer_isi: bool,
+    upgrade_highlights: bool = False,
 ) -> tuple[int, int, int]:
     """Returns (attempted, ofsted_ok, isi_ok)."""
     today = time.strftime("%Y-%m-%d")
@@ -151,7 +152,13 @@ def enrich_records(
             break
         # Skip records that already have a fresh précis for the same source file
         # unless fields are empty — always try when missing.
-        if record.get("inspectionPrecis") and record.get("inspectionQuotes"):
+        has_core = record.get("inspectionPrecis") and record.get("inspectionQuotes")
+        has_highlights = record.get("inspectionStrengths") and record.get(
+            "inspectionImprovements"
+        )
+        # Default: skip complete core précis. With upgrade_highlights, also
+        # re-fetch rows missing strength/improvement buckets.
+        if has_core and (has_highlights or not upgrade_highlights):
             continue
         attempted += 1
         ok = False
@@ -284,6 +291,14 @@ def main() -> None:
         default=0.15,
         help="Pause between providers (seconds)",
     )
+    parser.add_argument(
+        "--upgrade-highlights",
+        action="store_true",
+        help=(
+            "Re-fetch reports that already have a core précis but lack "
+            "inspectionStrengths / inspectionImprovements buckets"
+        ),
+    )
     args = parser.parse_args()
 
     today = time.strftime("%Y-%m-%d")
@@ -303,7 +318,11 @@ def main() -> None:
             ordered = prioritize_records(providers)
             print(f"EY providers to consider: {len(ordered)}; limit={args.limit}", flush=True)
             attempted, ofsted_ok, isi_ok = enrich_records(
-                ordered, limit=args.limit, sleep_s=args.sleep, prefer_isi=False
+                ordered,
+                limit=args.limit,
+                sleep_s=args.sleep,
+                prefer_isi=False,
+                upgrade_highlights=args.upgrade_highlights,
             )
             # Write back onto original list by URN
             by_urn = {str(p.get("urn")): p for p in ordered}
@@ -314,6 +333,8 @@ def main() -> None:
                 for key in (
                     "inspectionPrecis",
                     "inspectionQuotes",
+                    "inspectionStrengths",
+                    "inspectionImprovements",
                     "inspectionReportFileUrl",
                     "inspectionReportLabel",
                     "inspectionPrecisSource",
@@ -350,7 +371,11 @@ def main() -> None:
                 flush=True,
             )
             attempted, ofsted_ok, isi_ok = enrich_records(
-                ordered, limit=args.limit, sleep_s=args.sleep, prefer_isi=False
+                ordered,
+                limit=args.limit,
+                sleep_s=args.sleep,
+                prefer_isi=False,
+                upgrade_highlights=args.upgrade_highlights,
             )
             by_urn = {str(p.get("urn")): p for p in ordered}
             for p in payload.get("providers") or []:
@@ -360,6 +385,8 @@ def main() -> None:
                 for key in (
                     "inspectionPrecis",
                     "inspectionQuotes",
+                    "inspectionStrengths",
+                    "inspectionImprovements",
                     "inspectionReportFileUrl",
                     "inspectionReportLabel",
                     "inspectionPrecisSource",
@@ -398,7 +425,11 @@ def main() -> None:
         flush=True,
     )
     attempted, ofsted_ok, isi_ok = enrich_records(
-        ordered, limit=args.limit, sleep_s=args.sleep, prefer_isi=True
+        ordered,
+        limit=args.limit,
+        sleep_s=args.sleep,
+        prefer_isi=True,
+        upgrade_highlights=args.upgrade_highlights,
     )
     by_urn = {str(s.get("urn")): s for s in ordered}
     for school in payload.get("schools") or []:
@@ -408,6 +439,8 @@ def main() -> None:
         for key in (
             "inspectionPrecis",
             "inspectionQuotes",
+            "inspectionStrengths",
+            "inspectionImprovements",
             "inspectionReportFileUrl",
             "inspectionReportLabel",
             "inspectionPrecisSource",

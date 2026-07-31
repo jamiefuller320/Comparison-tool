@@ -33,11 +33,58 @@ OFSTED_SECTION_ENDINGS = (
     "Inspection activities",
 )
 
+OFSTED_DO_WELL_HEADINGS = (
+    "What does the school do well and what does it need to do better?",
+    "What does the early years setting do well and what does it need to do better?",
+    "What does the school do well and what does it need to do better",
+    "What does the early years setting do well and what does it need to do better",
+)
+
+OFSTED_IMPROVE_HEADINGS = (
+    "What does the school need to do to improve?",
+    "What does the school need to do to improve further?",
+    "What does the early years setting need to do to improve?",
+    "What does the early years setting need to do to improve further?",
+    "Areas for improvement",
+    "Next steps",
+)
+
+OFSTED_DO_WELL_ENDINGS = (
+    "Safeguarding",
+    "Information about this school",
+    "Inspection activities",
+    "What does the school need to do to improve?",
+    "What does the school need to do to improve further?",
+    "What does the early years setting need to do to improve?",
+    "Areas for improvement",
+)
+
 ISI_SUMMARY_HEADING = "Summary of inspection findings"
 ISI_SUMMARY_ENDINGS = (
     "The extent to which the school meets the Standards",
     "Recommended next steps",
     "Section 1:",
+)
+
+ISI_NEXT_STEPS_HEADINGS = (
+    "Recommended next steps",
+    "What the school should do to improve",
+)
+
+_IMPROVE_HINT = re.compile(
+    r"\b("
+    r"need to|needs to|should|must|ought to|improve|improving|"
+    r"not yet|inconsistent|less well|further work|develop further|"
+    r"address|tackle|weakness|gap"
+    r")\b",
+    re.I,
+)
+_STRENGTH_HINT = re.compile(
+    r"\b("
+    r"strong|well|effective|high|positive|thrive|enjoy|safe|happy|"
+    r"ambitious|inclusive|nurtur|excellent|outstanding|good"
+    r")\b",
+    re.I,
 )
 
 
@@ -197,15 +244,34 @@ def pick_quotes(
     section_label: str,
     max_quotes: int = 2,
     max_chars: int = 240,
+    prefer: str | None = None,
 ) -> list[dict[str, str]]:
+    """prefer: 'strength' | 'improve' | None — bias sentence ranking."""
     sentences = split_sentences(section)
+
+    def _score(sentence: str) -> int:
+        score = sentence_priority(sentence)
+        if prefer == "improve":
+            if _IMPROVE_HINT.search(sentence):
+                score += 8
+            elif _STRENGTH_HINT.search(sentence):
+                score -= 2
+        elif prefer == "strength":
+            if _IMPROVE_HINT.search(sentence) and not _STRENGTH_HINT.search(sentence):
+                score -= 6
+            if _STRENGTH_HINT.search(sentence):
+                score += 4
+        return score
+
     ranked = sorted(
-        ((sentence_priority(s), -len(s), s) for s in sentences if 24 <= len(s) <= 400),
+        ((_score(s), -len(s), s) for s in sentences if 24 <= len(s) <= 400),
         reverse=True,
     )
     out: list[dict[str, str]] = []
     seen: set[str] = set()
-    for _score, _neg_len, sentence in ranked:
+    for _score_v, _neg_len, sentence in ranked:
+        if prefer == "improve" and not _IMPROVE_HINT.search(sentence):
+            continue
         quote = truncate_at_sentence(sentence, max_chars)
         key = quote.lower()
         if key in seen:
@@ -226,6 +292,61 @@ def pick_quotes(
         if len(out) >= max_quotes:
             break
     return out
+
+
+def _extract_highlight_buckets(
+    cleaned: str,
+    *,
+    source_url: str,
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    """Return (strengths, improvements) as footnoted quote dicts."""
+    strengths: list[dict[str, str]] = []
+    improvements: list[dict[str, str]] = []
+
+    improve_heading, improve_body = find_section(
+        cleaned, OFSTED_IMPROVE_HEADINGS, OFSTED_DO_WELL_ENDINGS + ("Safeguarding",)
+    )
+    if improve_body:
+        improvements = pick_quotes(
+            improve_body,
+            source_url=source_url,
+            section_label=improve_heading or "Areas for improvement",
+            max_quotes=3,
+            max_chars=260,
+            prefer="improve",
+        )
+        if not improvements:
+            improvements = pick_quotes(
+                improve_body,
+                source_url=source_url,
+                section_label=improve_heading or "Areas for improvement",
+                max_quotes=2,
+                max_chars=260,
+            )
+
+    do_heading, do_body = find_section(
+        cleaned, OFSTED_DO_WELL_HEADINGS, OFSTED_DO_WELL_ENDINGS
+    )
+    if do_body:
+        strengths = pick_quotes(
+            do_body,
+            source_url=source_url,
+            section_label=do_heading or "What the school does well",
+            max_quotes=3,
+            max_chars=260,
+            prefer="strength",
+        )
+        if not improvements:
+            improvements = pick_quotes(
+                do_body,
+                source_url=source_url,
+                section_label=do_heading or "What the school needs to do better",
+                max_quotes=2,
+                max_chars=260,
+                prefer="improve",
+            )
+
+    return strengths, improvements
 
 
 def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | None:
@@ -278,11 +399,23 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
                 max_quotes=1,
             )
 
-    if not precis and not quotes:
+    strengths, improvements = _extract_highlight_buckets(
+        cleaned, source_url=source_url
+    )
+    # If the do-well extract was empty, fall back to what-it-is-like quotes as strengths.
+    if not strengths and quotes:
+        strengths = [
+            {**q, "section": q.get("section") or "What it is like to attend"}
+            for q in quotes[:2]
+        ]
+
+    if not precis and not quotes and not strengths and not improvements:
         return None
     return {
         "inspectionPrecis": precis,
         "inspectionQuotes": quotes,
+        "inspectionStrengths": strengths or None,
+        "inspectionImprovements": improvements or None,
         "inspectionPrecisSource": "ofsted",
     }
 
@@ -320,11 +453,43 @@ def extract_isi_precis(pdf_text: str, source_url: str) -> dict[str, Any] | None:
         section_label=heading or ISI_SUMMARY_HEADING,
         max_quotes=2,
     )
-    if not precis and not quotes:
+    strengths = pick_quotes(
+        "\n\n".join(clean_paras[:3]),
+        source_url=source_url,
+        section_label=heading or ISI_SUMMARY_HEADING,
+        max_quotes=3,
+        max_chars=260,
+        prefer="strength",
+    )
+    next_heading, next_body = find_section(
+        cleaned, ISI_NEXT_STEPS_HEADINGS, ("Section 1:", "The extent to which")
+    )
+    improvements: list[dict[str, str]] = []
+    if next_body:
+        improvements = pick_quotes(
+            next_body,
+            source_url=source_url,
+            section_label=next_heading or "Recommended next steps",
+            max_quotes=3,
+            max_chars=260,
+            prefer="improve",
+        )
+    if not improvements:
+        improvements = pick_quotes(
+            "\n\n".join(clean_paras),
+            source_url=source_url,
+            section_label=heading or ISI_SUMMARY_HEADING,
+            max_quotes=2,
+            max_chars=260,
+            prefer="improve",
+        )
+    if not precis and not quotes and not strengths and not improvements:
         return None
     return {
         "inspectionPrecis": precis,
         "inspectionQuotes": quotes,
+        "inspectionStrengths": strengths or None,
+        "inspectionImprovements": improvements or None,
         "inspectionPrecisSource": "isi",
     }
 
@@ -458,6 +623,8 @@ def normalize_ofsted_provider_url(school: dict[str, Any]) -> str | None:
 PRECIS_FIELD_KEYS = (
     "inspectionPrecis",
     "inspectionQuotes",
+    "inspectionStrengths",
+    "inspectionImprovements",
     "inspectionReportFileUrl",
     "inspectionReportLabel",
     "inspectionPrecisSource",

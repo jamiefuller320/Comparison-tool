@@ -96,6 +96,10 @@ export interface IndependentMetrics {
   inspectionPrecis?: string | null;
   /** Short verbatim quotes with footnote URLs back to the source PDF. */
   inspectionQuotes?: InspectionQuote[] | null;
+  /** Verbatim positives / what the setting does well. */
+  inspectionStrengths?: InspectionQuote[] | null;
+  /** Verbatim areas for improvement / next steps. */
+  inspectionImprovements?: InspectionQuote[] | null;
   /** Direct PDF (or DownloadReport) URL used for the précis / quotes. */
   inspectionReportFileUrl?: string | null;
   /** Parent-facing label, e.g. "School inspection · 7 June 2023". */
