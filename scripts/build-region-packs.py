@@ -6,7 +6,7 @@ LA in the region is an on-demand pack under `public/data/packs/{slug}/`.
 
 Usage:
   python3 scripts/build-region-packs.py
-  python3 scripts/build-region-packs.py --only Southampton,Portsmouth,Dorset
+  python3 scripts/build-region-packs.py --only "Southampton|Portsmouth|Dorset"
   python3 scripts/build-region-packs.py --skip-ready --limit 3
   python3 scripts/build-region-packs.py --skip-ey   # schools depth only
 """
@@ -54,7 +54,11 @@ def main() -> int:
     parser.add_argument(
         "--only",
         default="",
-        help="Comma-separated LA labels to build (default: full SE+Dorset order)",
+        help=(
+            "Pipe-separated LA labels to build (default: full SE+Dorset order). "
+            "Use | not commas — some LA names contain commas "
+            "(e.g. Bournemouth, Christchurch and Poole)."
+        ),
     )
     parser.add_argument(
         "--skip-ready",
@@ -78,9 +82,11 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.only.strip():
+        # Prefer | so names like "Bournemouth, Christchurch and Poole" survive.
+        sep = "|" if "|" in args.only else ","
         targets = [
             normalize_la_name(part)
-            for part in args.only.split(",")
+            for part in args.only.split(sep)
             if normalize_la_name(part)
         ]
     else:
