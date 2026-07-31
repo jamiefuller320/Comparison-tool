@@ -37,7 +37,7 @@ Last reviewed: 2026-07-31.
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
 | 5 Ops | **Pass** | Precis merge-preserved across harvest; `harvest:hampshire` + scheduled refresh run bounded precis |
 | 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East parental compare |
-| 7 Regional packs | **In progress** | Region list + batch builder shipped; build remaining SE+Dorset packs with `npm run pack:southeast` |
+| 7 Regional packs | **In progress** | Neighbours ready (Southampton, Portsmouth, Dorset, BCP + IoW); remaining SE packs via `npm run pack:southeast` |
 
 Re-check guideline rates after each major harvest; flip a row back to Partial if coverage regresses.
 
