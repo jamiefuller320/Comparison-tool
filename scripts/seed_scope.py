@@ -17,6 +17,58 @@ SEED_LOCAL_AUTHORITY = "Hampshire"
 
 PACKS_ROOT_REL = "public/data/packs"
 
+# Product coverage region: ONS South East LAs (packs) + Dorset / BCP by request.
+# Hampshire remains the maintained root — it is listed for membership checks only
+# and must not be built as an on-demand pack.
+SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES: tuple[str, ...] = (
+    "Bracknell Forest",
+    "Brighton and Hove",
+    "Buckinghamshire",
+    "East Sussex",
+    "Hampshire",
+    "Isle of Wight",
+    "Kent",
+    "Medway",
+    "Milton Keynes",
+    "Oxfordshire",
+    "Portsmouth",
+    "Reading",
+    "Slough",
+    "Southampton",
+    "Surrey",
+    "West Berkshire",
+    "West Sussex",
+    "Windsor and Maidenhead",
+    "Wokingham",
+    # ONS South West — included for contiguous coastal coverage with Hampshire.
+    "Dorset",
+    "Bournemouth, Christchurch and Poole",
+)
+
+# Build order for batch pack harvest (Hampshire omitted — maintained root).
+SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER: tuple[str, ...] = (
+    "Southampton",
+    "Portsmouth",
+    "Dorset",
+    "Bournemouth, Christchurch and Poole",
+    "Surrey",
+    "West Sussex",
+    "East Sussex",
+    "Brighton and Hove",
+    "Kent",
+    "Medway",
+    "Isle of Wight",
+    "West Berkshire",
+    "Reading",
+    "Wokingham",
+    "Bracknell Forest",
+    "Windsor and Maidenhead",
+    "Slough",
+    "Buckinghamshire",
+    "Milton Keynes",
+    "Oxfordshire",
+)
+
 
 def normalize_la_name(name: str | None) -> str:
     if not name:
@@ -33,6 +85,25 @@ def la_slug(name: str | None) -> str:
 
 def is_seed_local_authority(name: str | None) -> bool:
     return is_local_authority(name, SEED_LOCAL_AUTHORITY)
+
+
+def is_southeast_plus_dorset_local_authority(name: str | None) -> bool:
+    if not name:
+        return False
+    target = normalize_la_name(name).lower()
+    return any(
+        normalize_la_name(la).lower() == target
+        for la in SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES
+    )
+
+
+def southeast_plus_dorset_pack_targets(*, include_ready: bool = False) -> list[str]:
+    """LA labels to build as packs (excludes Hampshire maintained root)."""
+    return [
+        la
+        for la in SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER
+        if not is_seed_local_authority(la)
+    ]
 
 
 def is_local_authority(name: str | None, target: str | None) -> bool:

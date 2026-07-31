@@ -11,7 +11,10 @@
 export {
   SEED_LOCAL_AUTHORITY,
   SEED_GEOGRAPHY_LABEL,
+  COVERAGE_REGION_LABEL,
+  SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES,
   isSeedLocalAuthority,
+  isSoutheastPlusDorsetLocalAuthority,
   isLocalAuthority,
   laSlug,
   normalizeLaName,

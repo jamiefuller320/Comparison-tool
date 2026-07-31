@@ -1,8 +1,8 @@
 # Schoolside
 
-**Hampshire parental school compare** — shortlist nearby schools and early-years settings, then compare published outcomes with Ofsted/ISI evidence.
+**South East parental school compare** (Hampshire maintained depth, plus silent-merge packs for the wider South East **including Dorset**) — shortlist nearby schools and early-years settings, then compare published outcomes with Ofsted/ISI evidence.
 
-Side-by-side boards for the shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), framed for parents choosing a school rather than governors monitoring one. Soft-launch bar: [`SOFT_LAUNCH.md`](./SOFT_LAUNCH.md).
+Side-by-side boards for the shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), framed for parents choosing a school rather than governors monitoring one. Soft-launch bar: [`SOFT_LAUNCH.md`](./SOFT_LAUNCH.md). Coverage region constants: `SOUTHEAST_PLUS_DORSET_*` in `src/lib/laPacks.ts` / `scripts/seed_scope.py`.
 
 ## North Star
 
@@ -19,8 +19,8 @@ Everything else — harvests, stages, maps, tours, charts — should serve that 
 Until uptake is clearer, prefer **depth in a bounded slice** over a full national, all-age build:
 
 1. **Age progression** — **early years is live**; the maintained climb is now **Hampshire KS1 → KS2 → secondary** on the same geography.
-2. **One geography first** — seed local authority is **Hampshire** (county council LA in DfE data; not the Southampton or Portsmouth unitaries). Maintain a full dataset for that area rather than pre-harvesting every English setting.
-3. **On-demand beyond that** — for schools or areas outside Hampshire, **process and cache on user request** (same spirit as today’s “school is missing” refresh), instead of paying for continuous national coverage up front.
+2. **One maintained geography** — seed local authority is **Hampshire** (county council LA in DfE data; not the Southampton or Portsmouth unitaries). Keep deepest refresh cadence there.
+3. **South East (+ Dorset) via packs** — other LAs in the coverage region build into `public/data/packs/{slug}/` and **merge silently** into map/search. Batch with `npm run pack:southeast`. Areas outside the region stay on-demand via “Request area coverage”.
 
 Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHORITY = "Hampshire"`).
 
@@ -80,7 +80,8 @@ npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 h
 # harvest:hampshire ends with enrich:precis:hampshire (bounded widen)
 # or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
-# or: npm run pack:la -- --la Surrey   # on-demand LA schools pack under public/data/packs/
+# or: npm run pack:la -- --la Surrey   # one on-demand LA pack under public/data/packs/
+# or: npm run pack:southeast           # batch SE + Dorset packs (skips ready)
 npm run dev
 ```
 

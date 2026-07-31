@@ -24,6 +24,7 @@
     "harvest:childminders": "python3 scripts/harvest-childminders.py",
     "history:ks2": "python3 scripts/extract-ks2-history.py",
     "pack:la": "python3 scripts/build-la-pack.py",
+    "pack:southeast": "python3 scripts/build-region-packs.py --skip-ready --continue-on-error",
     "test:pack-depth": "python3 scripts/test-pack-depth.py",
     "test:phonics": "npx --yes tsx scripts/test-phonics.mjs",
     "test:tour": "npx --yes tsx scripts/test-tour.mjs",

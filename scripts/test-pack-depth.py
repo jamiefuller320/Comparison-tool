@@ -50,6 +50,13 @@ def main() -> int:
     assert_help_has("harvest-ey-providers.py", "--la", "--out-dir")
     assert_help_has("harvest-childminders.py", "--la", "--out-dir")
     assert_help_has("build-la-pack.py", "--skip-depth", "--skip-ey", "--la")
+    assert_help_has(
+        "build-region-packs.py",
+        "--skip-ready",
+        "--continue-on-error",
+        "--only",
+        "--limit",
+    )
 
     # GIAS open-date helper (hyphenated module name).
     import importlib.util

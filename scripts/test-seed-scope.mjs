@@ -5,7 +5,9 @@ import { fileURLToPath } from "node:url";
 async function main() {
   const {
     SEED_LOCAL_AUTHORITY,
+    SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES,
     isSeedLocalAuthority,
+    isSoutheastPlusDorsetLocalAuthority,
   } = await import("../src/lib/seedScope.ts");
 
   if (SEED_LOCAL_AUTHORITY !== "Hampshire") {
@@ -20,6 +22,18 @@ async function main() {
     console.error("FAIL unitaries must not count as seed Hampshire");
     process.exit(1);
   }
+  if (
+    !isSoutheastPlusDorsetLocalAuthority("Dorset") ||
+    !isSoutheastPlusDorsetLocalAuthority("Southampton") ||
+    !isSoutheastPlusDorsetLocalAuthority("Bournemouth, Christchurch and Poole")
+  ) {
+    console.error("FAIL SE+Dorset membership", SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES);
+    process.exit(1);
+  }
+  if (isSoutheastPlusDorsetLocalAuthority("Devon")) {
+    console.error("FAIL Devon must not be in SE+Dorset region");
+    process.exit(1);
+  }
 
   const py = spawnSync(
     "python3",
@@ -30,6 +44,8 @@ from seed_scope import (
   SEED_LOCAL_AUTHORITY,
   filter_schools_to_seed_la,
   is_seed_local_authority,
+  is_southeast_plus_dorset_local_authority,
+  southeast_plus_dorset_pack_targets,
   trim_la_benchmarks,
 )
 assert SEED_LOCAL_AUTHORITY == "Hampshire"
@@ -47,6 +63,9 @@ benches = trim_la_benchmarks({
 assert list(benches) == ["Hampshire"], benches
 assert is_seed_local_authority("Hampshire")
 assert not is_seed_local_authority("Southampton")
+assert is_southeast_plus_dorset_local_authority("Dorset")
+assert "Hampshire" not in southeast_plus_dorset_pack_targets()
+assert "Southampton" in southeast_plus_dorset_pack_targets()
 print("python seed_scope ok")
 `,
     ],
