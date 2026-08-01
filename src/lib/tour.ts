@@ -36,7 +36,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "welcome",
     target: "hero",
-    title: "Welcome to Schoolside",
+    title: "Welcome to School Compass",
     body: "This walkthrough points out the main controls. You can leave anytime with Skip, or restart later from How to use in the header.",
   },
   {

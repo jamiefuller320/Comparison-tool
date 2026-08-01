@@ -24,6 +24,7 @@ import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
+import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { gapsForPhonics, schoolGaps } from "@/lib/dataGaps";
 
@@ -157,6 +158,7 @@ export function PhonicsComparisonBoard({
                         {school.ageRange ? `Ages ${school.ageRange}` : null}
                         {" · LA phonics context"}
                       </span>
+                      <SchoolOutboundLinks school={school} />
                       <DataGapFlags
                         compact
                         gaps={schoolGaps(dataGaps, school.urn)}

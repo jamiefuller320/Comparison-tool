@@ -25,6 +25,7 @@ import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import { CoverageStrip } from "@/components/CoverageStrip";
+import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import { SecondaryContextPane } from "@/components/SecondaryContextPane";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
@@ -255,33 +256,7 @@ export function IndependentComparisonBoard({
                           : "ISI reports ↗"}
                       </a>
                     ) : null}
-                    {school.schoolWebsite ? (
-                      <a
-                        href={school.schoolWebsite}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        School website ↗
-                      </a>
-                    ) : null}
-                    {school.giasUrl ? (
-                      <a
-                        href={school.giasUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        GIAS record ↗
-                      </a>
-                    ) : null}
-                    {school.compareUrl ? (
-                      <a
-                        href={school.compareUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Official tables ↗
-                      </a>
-                    ) : null}
+                    <SchoolOutboundLinks school={school} />
                     <DataGapFlags
                       compact
                       gaps={schoolGaps(dataGaps, school.urn)}

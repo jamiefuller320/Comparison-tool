@@ -31,6 +31,16 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
+#top,
+#nearby,
+#compare,
+#side-by-side,
+#how,
+#data {
+  scroll-margin-top: 4.5rem;
 }
 
 body {
@@ -1160,6 +1170,31 @@ body:has(.floating-controls) {
 
 .school-meta a:hover {
   text-decoration: underline;
+}
+
+.school-outbound-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+}
+
+.school-outbound-link {
+  color: var(--sea);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.school-outbound-link:hover {
+  text-decoration: underline;
+}
+
+.school-outbound-website {
+  color: var(--coral);
+}
+
+.visit-pack-half-head .school-outbound-links {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
 }
 
 .best-cell {
@@ -2774,11 +2809,6 @@ html.tour-running .hero-inner > * {
   font-weight: 700;
   margin: 0 0 0.2rem !important;
   color: var(--sea-deep);
-}
-
-.visit-pack-brand em {
-  font-style: normal;
-  color: var(--coral);
 }
 
 .visit-status-list {

@@ -743,10 +743,10 @@ export function CompareApp({
       <section className="section" id="compare">
         <div className="shell">
           <div className="section-head">
-            <h2>Build your shortlist</h2>
+            <h2>Shortlist</h2>
             <p>
-              Tick settings on the map, or search below. Stages and school type
-              stay in the hero above.
+              Tick settings on the map or search below — two to four is plenty.
+              Stages and school type stay in the hero above.
             </p>
             <p className="footnote data-slim-line">
               {SEED_GEOGRAPHY_LABEL} maintained set

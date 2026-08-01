@@ -28,6 +28,7 @@ import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import { CoverageStrip } from "@/components/CoverageStrip";
+import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import { SecondaryContextPane } from "@/components/SecondaryContextPane";
 import { InspectionPrecisRows } from "@/components/InspectionPrecis";
 import type { SourceStamp } from "@/lib/sourceStamp";
@@ -282,11 +283,7 @@ export function ComparisonBoard({
                       compact
                       gaps={schoolGaps(dataGaps, school.urn)}
                     />
-                    {school.compareUrl ? (
-                      <a href={school.compareUrl} target="_blank" rel="noreferrer">
-                        Official tables ↗
-                      </a>
-                    ) : null}
+                    <SchoolOutboundLinks school={school} />
                     {school.ofstedOverall ? (
                       <span>Ofsted overall: {school.ofstedOverall}</span>
                     ) : null}

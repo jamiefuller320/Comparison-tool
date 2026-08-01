@@ -108,7 +108,7 @@ export function createSupabaseAccountBackend(env: SupabaseEnv): AccountBackend {
   return {
     kind: "supabase",
     capabilityNote:
-      "Magic-link sign-in. We’ll email a link — no password. Your shortlist syncs to your Schoolside account.",
+      "Magic-link sign-in. We’ll email a link — no password. Your shortlist syncs to your School Compass account.",
     async getSession() {
       const tokens = readTokens();
       if (!tokens) return null;
@@ -142,7 +142,7 @@ export function createSupabaseAccountBackend(env: SupabaseEnv): AccountBackend {
         ok: true,
         mode: "magic_link",
         detail:
-          "Check your email for a Schoolside sign-in link. Compare keeps working while you wait — nothing is locked.",
+          "Check your email for a School Compass sign-in link. Compare keeps working while you wait — nothing is locked.",
       };
     },
     async completeRedirectSignIn() {

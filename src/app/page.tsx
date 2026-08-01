@@ -48,12 +48,13 @@ export default function HomePage() {
       <section className="section" id="data" style={{ paddingTop: 0, paddingBottom: "4rem" }}>
         <div className="shell">
           <div className="section-head">
-            <h2>Where the numbers come from</h2>
+            <h2>Data</h2>
             <p>
-              Algorithmic harvest from the DfE Explore Education Statistics API
-              (KS2 and KS4), Ofsted independent-school management information, school
-              coordinates from postcodes.io, and road distances from OSRM — expanded
-              from the collation approach used for Bartley Insight.
+              School Compass harvests published figures from the DfE Explore
+              Education Statistics API (KS2 and KS4), Ofsted independent-school
+              management information, school coordinates from postcodes.io, and
+              road distances from OSRM — expanded from the collation approach
+              used for Bartley Insight.
             </p>
           </div>
           <div className="footnote">

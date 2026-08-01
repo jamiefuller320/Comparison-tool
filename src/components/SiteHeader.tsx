@@ -13,8 +13,8 @@ export function SiteHeader() {
     <>
       <header className="site-header">
         <div className="shell header-inner">
-          <a className="brand" href="#top">
-            School<span>side</span>
+          <a className="brand" href="#top" aria-label="School Compass home">
+            School<span>Compass</span>
           </a>
           <div className="header-actions">
             <AccountMenu />
@@ -29,7 +29,7 @@ export function SiteHeader() {
               title="Keep quick page links visible while you scroll"
               onClick={() => setFloatingControls(!prefs.floatingControls)}
             >
-              Float controls
+              Float jump links
             </button>
             <button
               type="button"
@@ -40,8 +40,9 @@ export function SiteHeader() {
             </button>
             <nav className="nav-links" aria-label="Primary">
               <a href="#nearby">Near home</a>
-              <a href="#compare">Compare</a>
-              <a href="#how">How to read this</a>
+              <a href="#compare">Shortlist</a>
+              <a href="#side-by-side">Side by side</a>
+              <a href="#how">How to read</a>
               <a href="#data">Data</a>
             </nav>
           </div>

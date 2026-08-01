@@ -82,7 +82,7 @@ export const SCHOOL_VISIT_QUESTIONS: ChecklistItem[] = [
     id: "inspection",
     title: "Since the last inspection",
     detail:
-      "Open the latest Ofsted/ISI report (or Schoolside précis). Ask what changed on the strengths and the areas for improvement — especially if the report is a few years old.",
+      "Open the latest Ofsted/ISI report (or School Compass précis). Ask what changed on the strengths and the areas for improvement — especially if the report is a few years old.",
   },
   {
     id: "outcomes",

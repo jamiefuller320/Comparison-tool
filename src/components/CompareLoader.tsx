@@ -157,12 +157,9 @@ export function CompareLoader() {
       <section className="hero">
         <div className="shell hero-inner">
           <p className="hero-brand">
-            School<em>side</em>
+            School <em>Compass</em>
           </p>
-          <h1>
-            Compare schools across Hampshire and the South East when you are
-            choosing.
-          </h1>
+          <h1>Find your bearings when choosing a school.</h1>
           <p className="postcode-error">{error}</p>
         </div>
       </section>
@@ -174,12 +171,9 @@ export function CompareLoader() {
       <section className="hero">
         <div className="shell hero-inner">
           <p className="hero-brand">
-            School<em>side</em>
+            School <em>Compass</em>
           </p>
-          <h1>
-            Compare schools across Hampshire and the South East when you are
-            choosing.
-          </h1>
+          <h1>Find your bearings when choosing a school.</h1>
           <p>Loading school and early-years data…</p>
         </div>
       </section>
