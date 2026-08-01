@@ -1,7 +1,6 @@
 "use client";
 
 import { CHILDMINDER_VETTING_CHECKLIST } from "@/lib/childminderChecklist";
-import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 
 export function ChildminderVettingChecklist({
   consentedAsAt,
@@ -18,8 +17,7 @@ export function ChildminderVettingChecklist({
       <p className="footnote" style={{ marginBottom: "1rem" }}>
         Use this when assessing a childminder — including wrap-around cover
         around school. Ofsted redacts most childminder contact details in its
-        main dataset; School Compass lists {SEED_GEOGRAPHY_LABEL} providers who
-        have{" "}
+        main dataset; School Compass lists providers who have{" "}
         <strong>consented to publish</strong> their name and address
         {providerCount != null
           ? ` (${providerCount.toLocaleString("en-GB")} in this build)`

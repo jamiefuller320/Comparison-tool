@@ -7,7 +7,7 @@ import { BRAND_DOMAIN, BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: `${BRAND_NAME} — shortlist and compare schools before you visit`,
-  description: `${BRAND_TAGLINE} Hampshire and the South East. ${BRAND_DOMAIN}`,
+  description: `${BRAND_TAGLINE} ${BRAND_DOMAIN}`,
 };
 
 export default function RootLayout({

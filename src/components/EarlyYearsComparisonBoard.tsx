@@ -64,7 +64,7 @@ export function EarlyYearsComparisonBoard({
     <div>
       <p className="footnote" style={{ marginBottom: "1rem" }}>
         Compared on published Ofsted inspection outcomes for early years
-        settings in this collated set — Early Years Register day care (full and
+        settings in the directory — Early Years Register day care (full and
         sessional) and state-funded schools with a nursery or reception intake.
         Grades describe the setting at the last graded inspection. Where Ofsted
         publishes domain judgements or a report without a single overall grade,

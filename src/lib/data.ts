@@ -372,7 +372,7 @@ export async function requestLaPack(localAuthority: string): Promise<{
       return {
         ok: true,
         status: "queued",
-        detail: `Queued coverage for ${la}. When the build finishes and deploys, those schools appear on the map and in search automatically — Hampshire stays the maintained root.`,
+        detail: `Queued coverage for ${la}. When the refresh finishes and deploys, those schools appear on the map and in search automatically.`,
       };
     }
 
@@ -380,7 +380,7 @@ export async function requestLaPack(localAuthority: string): Promise<{
     return {
       ok: false,
       status: "error",
-      detail: `Could not queue pack (${res.status}). ${body.slice(0, 180)}`,
+      detail: `Could not queue area coverage (${res.status}). ${body.slice(0, 180)}`,
     };
   } catch {
     return {

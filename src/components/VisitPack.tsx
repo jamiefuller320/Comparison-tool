@@ -20,7 +20,6 @@ import {
   type VisitLogEntry,
   type VisitStatusId,
 } from "@/lib/visitLog";
-import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { DecisionGuidancePrintBlock } from "@/components/DecisionGuidance";
 import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
@@ -220,8 +219,8 @@ function SchoolNotesPage({
           </>
         ) : (
           <p className="visit-pack-school-empty">
-            No usable inspection précis in this pack yet — open the report link
-            on the compare board before you visit.
+            No usable inspection précis for this setting yet — open the report
+            link on the compare board before you visit.
           </p>
         )}
       </section>
@@ -250,7 +249,7 @@ function PackSheetTitle({
         {BRAND_NAME} shortlist pack
       </p>
       <p>
-        {SEED_GEOGRAPHY_LABEL} · {subtitle} · printed {printedOn}
+        {subtitle} · printed {printedOn}
       </p>
     </div>
   );

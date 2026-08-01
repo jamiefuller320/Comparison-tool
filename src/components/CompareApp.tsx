@@ -40,7 +40,6 @@ import {
   isEyComparable,
   isEyProvider,
 } from "@/lib/eyMetrics";
-import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { passesComparableKs4Filter } from "@/lib/dataGaps";
 import {
   DEFAULT_PHASES,
@@ -133,9 +132,6 @@ export function CompareApp({
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
 }) {
-  const collatedPackLabels =
-    (index as SchoolsIndexWithPack).collatedPackLabels ?? [];
-
   const byUrn = useMemo(() => {
     const map = new Map(index.schools.map((s) => [s.urn, s]));
     for (const provider of eyIndex?.providers ?? []) {
@@ -501,9 +497,8 @@ export function CompareApp({
         <div data-tour="boards-early-years">
           {showEarlyNotice ? (
             <div className="empty-compare" role="status">
-              Early years pack missing from this build. Re-run{" "}
-              <code>npm run harvest:ey</code> and{" "}
-              <code>npm run enrich:ey-schools</code>, or pick another category.
+              Early years data isn’t available in this build yet. Try another
+              category, or check back after the next data refresh.
             </div>
           ) : null}
           <DecisionGuidancePanel path="early-years" />
@@ -749,11 +744,7 @@ export function CompareApp({
               Stages and school type stay in the hero above.
             </p>
             <p className="footnote data-slim-line">
-              {SEED_GEOGRAPHY_LABEL} maintained set
-              {collatedPackLabels.length
-                ? ` · also collated: ${collatedPackLabels.join(", ")}`
-                : ""}{" "}
-              · {index.period} · refreshed {index.generatedAt}
+              {index.period} · refreshed {index.generatedAt}
             </p>
           </div>
 

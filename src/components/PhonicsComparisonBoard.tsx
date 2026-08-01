@@ -20,7 +20,6 @@ import {
 } from "@/lib/phonicsMetrics";
 import { fmtNum, fmtPct, fmtPp, ppGap, shortName } from "@/lib/format";
 import { formatSector, resolveSchoolSector } from "@/lib/sectors";
-import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
@@ -55,8 +54,8 @@ export function PhonicsComparisonBoard({
   if (schools.length === 0) {
     return (
       <div className="empty-compare">
-        Add state schools that offer KS1 to see {SEED_GEOGRAPHY_LABEL} phonics
-        context alongside England.
+        Add state schools that offer KS1 to see local-authority phonics context
+        alongside England.
       </div>
     );
   }
