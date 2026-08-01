@@ -2752,38 +2752,60 @@ html.tour-running .hero-inner > * {
   margin-bottom: 1.75rem;
 }
 
-.visit-contact-grid {
+.visit-pack-sheet {
+  margin: 1.25rem 0 1.75rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.visit-pack-sheet-title {
+  margin-bottom: 0.85rem;
+}
+
+.visit-pack-sheet-title p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.visit-pack-brand {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 0.2rem !important;
+  color: var(--sea-deep);
+}
+
+.visit-pack-brand em {
+  font-style: normal;
+  color: var(--coral);
+}
+
+.visit-status-list {
   display: grid;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  gap: 0.85rem;
 }
 
-@media (min-width: 720px) {
-  .visit-contact-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.visit-contact-card {
-  padding: 0.95rem 1rem;
+.visit-status-row {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem;
   border: 1px solid var(--line);
   border-radius: 0.85rem;
   background: rgba(255, 255, 255, 0.55);
 }
 
-.visit-contact-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.65rem;
-  margin-bottom: 0.45rem;
+@media (min-width: 720px) {
+  .visit-status-row {
+    grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1.2fr);
+    align-items: start;
+  }
 }
 
-.visit-contact-head h4 {
+.visit-status-row h4 {
   margin: 0 0 0.2rem;
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 650;
   color: var(--sea-deep);
 }
@@ -2797,17 +2819,8 @@ html.tour-running .hero-inner > * {
 .visit-address {
   margin: 0.35rem 0;
   color: var(--ink);
-  font-size: 0.98rem;
-  line-height: 1.4;
-}
-
-.visit-report-link {
-  margin: 0.35rem 0 0.55rem;
-  font-size: 0.92rem;
-}
-
-.visit-report-link a {
-  color: var(--sea);
+  font-size: 0.95rem;
+  line-height: 1.35;
 }
 
 .visit-status select {
@@ -2824,7 +2837,6 @@ html.tour-running .hero-inner > * {
 .visit-note {
   display: grid;
   gap: 0.3rem;
-  margin-top: 0.35rem;
 }
 
 .visit-note > span {
@@ -2846,16 +2858,146 @@ html.tour-running .hero-inner > * {
   color: var(--ink);
 }
 
-.visit-note-lines,
+.visit-pack-figures-caption {
+  margin: 0 0 0.65rem;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.visit-pack-figures-scroll {
+  overflow-x: auto;
+}
+
+.visit-pack-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: #fff;
+}
+
+.visit-pack-compare-table th,
+.visit-pack-compare-table td {
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.visit-pack-compare-table thead th {
+  background: rgba(232, 243, 247, 0.75);
+  font-family: var(--font-display);
+  font-weight: 650;
+  color: var(--sea-deep);
+}
+
+.visit-pack-compare-table tbody th {
+  font-weight: 550;
+  color: var(--ink);
+  min-width: 9rem;
+}
+
+.visit-pack-compare-table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.visit-pack-notes-page {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.visit-pack-half {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-height: 14rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.visit-pack-half-head h4 {
+  margin: 0 0 0.2rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+}
+
+.visit-pack-half-precis,
+.visit-pack-half-notes {
+  flex: 1 1 auto;
+}
+
+.visit-pack-half-precis h5,
+.visit-pack-half-notes h5 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.2rem;
+}
+
+.visit-pack-half-summary {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.visit-pack-half-body {
+  margin: 0 0 0.35rem;
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.visit-pack-half-bullets {
+  margin: 0 0 0.3rem;
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.visit-pack-half-empty {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.visit-note-lines {
+  display: block;
+  width: 100%;
+  min-height: 5.5rem;
+  flex: 1 1 auto;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(1.35rem - 1px),
+    rgba(20, 35, 58, 0.18) calc(1.35rem - 1px),
+    rgba(20, 35, 58, 0.18) 1.35rem
+  );
+  background-size: 100% 1.35rem;
+  background-repeat: repeat-y;
+}
+
 .visit-note-print-text {
-  display: none;
+  display: block;
+  margin: 0 0 0.35rem;
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--ink);
 }
 
-.visit-pack-questions-sheet {
-  margin-top: 0.25rem;
-}
-
-.visit-pack-questions-sheet .visit-questions + .visit-questions {
+.visit-pack-guide-sheet .visit-questions + .visit-questions {
   margin-top: 1.5rem;
 }
 
@@ -2989,75 +3131,77 @@ html.tour-running .hero-inner > * {
     display: block !important;
   }
 
-  .visit-pack-print-title {
-    margin-bottom: 0.85rem;
-  }
-
-  .visit-pack-print-title p {
+  .visit-pack-sheet {
+    border-top: 0;
     margin: 0;
-    color: var(--ink-soft);
-    font-size: 0.92rem;
+    padding: 0;
   }
 
-  .visit-pack-brand {
-    font-family: var(--font-display);
-    font-size: 1.55rem;
-    font-weight: 700;
-    margin: 0 0 0.25rem !important;
-    color: var(--sea-deep);
+  .visit-pack-guide-sheet {
+    break-after: page;
+    page-break-after: always;
   }
 
-  .visit-pack-brand em {
-    font-style: normal;
-    color: var(--coral);
-  }
-
-  .visit-pack-contacts-sheet {
-    break-after: auto;
-    page-break-after: auto;
-  }
-
-  .visit-pack-questions-sheet {
+  .visit-pack-figures-sheet {
     break-before: page;
     page-break-before: always;
-    margin-top: 0;
-    break-after: avoid;
-    page-break-after: avoid;
+    break-after: page;
+    page-break-after: always;
   }
 
-  .visit-pack-section:last-child {
-    margin-bottom: 0;
+  .visit-pack-notes-sheet {
+    break-before: page;
+    page-break-before: always;
   }
 
-  .visit-contact-card {
+  .visit-pack-sheet-title .visit-pack-brand {
+    font-size: 1.45rem;
+  }
+
+  .visit-pack-compare-table {
+    font-size: 0.8rem;
+  }
+
+  .visit-pack-compare-table th,
+  .visit-pack-compare-table td {
+    padding: 0.28rem 0.35rem;
+  }
+
+  .visit-pack-notes-page {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 5mm;
+    min-height: 250mm;
+    align-content: stretch;
+  }
+
+  .visit-pack-notes-page-break {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .visit-pack-half {
     break-inside: avoid;
     page-break-inside: avoid;
+    min-height: 118mm;
+    max-height: 122mm;
+    overflow: hidden;
     background: white;
     box-shadow: none;
+    border-radius: 0;
   }
 
-  .visit-contact-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .visit-note textarea {
-    display: none !important;
-  }
-
-  .visit-note-print-text {
-    display: block !important;
-    margin: 0 0 0.35rem;
-    white-space: pre-wrap;
-    font-size: 0.92rem;
-    line-height: 1.4;
-    color: var(--ink);
+  .visit-pack-half-notes {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
   }
 
   .visit-note-lines {
-    display: block !important;
-    width: 100%;
-    height: var(--visit-print-note-height, 5.5rem);
-    min-height: 4rem;
+    flex: 1 1 auto;
+    min-height: 42mm;
+    height: auto;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0,
@@ -3065,8 +3209,6 @@ html.tour-running .hero-inner > * {
       rgba(20, 35, 58, 0.22) calc(1.35rem - 1px),
       rgba(20, 35, 58, 0.22) 1.35rem
     );
-    background-size: 100% 1.35rem;
-    background-repeat: repeat-y;
   }
 
   .visit-questions {
@@ -3074,7 +3216,7 @@ html.tour-running .hero-inner > * {
   }
 
   .visit-questions + .visit-questions {
-    margin-top: 1.25rem;
+    margin-top: 1.1rem;
   }
 
   .visit-questions li {
@@ -3083,19 +3225,13 @@ html.tour-running .hero-inner > * {
   }
 
   .visit-answer-line {
-    height: 1.35rem;
-  }
-
-  .visit-pack-sheet:last-child,
-  .visit-pack-questions-sheet:last-child,
-  .visit-questions:last-child {
-    break-after: avoid;
-    page-break-after: avoid;
+    height: 1.2rem;
   }
 
   .decision-guidance-print {
     break-inside: avoid;
     page-break-inside: avoid;
+    margin-bottom: 0.85rem;
   }
 
   .decision-guidance-print-columns {
