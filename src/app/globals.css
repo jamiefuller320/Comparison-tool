@@ -576,18 +576,19 @@ body:has(.floating-controls) {
   max-width: 12rem;
 }
 
-.inspection-precis {
-  margin-top: 0.55rem;
-  padding: 0.55rem 0.65rem;
-  border-left: 3px solid var(--sea);
-  background: rgba(11, 79, 108, 0.05);
-  max-width: 18rem;
-  color: var(--ink-soft);
+/* Keep sticky school headers slim so performance rows stay visible. */
+.compare-board[data-sticky-header="true"] thead .school-meta {
+  max-height: 7.5rem;
+  overflow: auto;
 }
 
-.inspection-precis.compact {
-  font-size: 0.78rem;
-  line-height: 1.35;
+.inspection-precis-card {
+  margin-top: 0.55rem;
+  max-width: 22rem;
+}
+
+.inspection-precis-card.compact {
+  font-size: 0.84rem;
 }
 
 .inspection-precis-kicker {
@@ -599,9 +600,63 @@ body:has(.floating-controls) {
   color: var(--sea);
 }
 
-.inspection-precis-body {
-  margin: 0 0 0.4rem;
+.inspection-precis-summary {
+  max-width: 16rem;
+}
+
+.inspection-precis-summary-body {
+  margin: 0;
   color: var(--ink);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.inspection-precis-empty {
+  color: var(--ink-soft);
+}
+
+.inspection-precis-detail {
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
+  border-left: 3px solid var(--sea);
+  background: rgba(11, 79, 108, 0.04);
+  border-radius: 0 0.65rem 0.65rem 0;
+}
+
+.inspection-precis-detail.empty {
+  border-left-color: var(--line);
+  background: transparent;
+}
+
+.inspection-precis-detail-name {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  color: var(--sea-deep);
+  font-size: 0.95rem;
+}
+
+.inspection-precis-body {
+  margin: 0 0 0.55rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.inspection-highlight-block {
+  margin: 0 0 0.65rem;
+}
+
+.inspection-highlight-block h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--sea);
+}
+
+.inspection-highlight-block.improve h4 {
+  color: #8a3b12;
 }
 
 .inspection-precis-quotes {
@@ -618,6 +673,8 @@ body:has(.floating-controls) {
   margin: 0;
   font-style: italic;
   color: var(--ink);
+  font-size: 0.86rem;
+  line-height: 1.4;
 }
 
 .inspection-quote-mark {
@@ -645,6 +702,20 @@ body:has(.floating-controls) {
 
 .inspection-precis-note {
   color: var(--ink-soft);
+}
+
+.precis-detail-panel {
+  padding-top: 0.85rem;
+}
+
+.precis-detail-grid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.precis-summary-cell {
+  vertical-align: top;
 }
 
 .metric-history-trigger {

@@ -140,6 +140,7 @@ def enrich_records(
     limit: int,
     sleep_s: float,
     prefer_isi: bool,
+    upgrade_highlights: bool = False,
 ) -> tuple[int, int, int]:
     """Returns (attempted, ofsted_ok, isi_ok)."""
     today = time.strftime("%Y-%m-%d")
@@ -151,7 +152,13 @@ def enrich_records(
             break
         # Skip records that already have a fresh précis for the same source file
         # unless fields are empty — always try when missing.
-        if record.get("inspectionPrecis") and record.get("inspectionQuotes"):
+        has_core = record.get("inspectionPrecis") and record.get("inspectionQuotes")
+        has_highlights = record.get("inspectionStrengths") and record.get(
+            "inspectionImprovements"
+        )
+        # Default: skip complete core précis. With upgrade_highlights, also
+        # re-fetch rows missing strength/improvement buckets.
+        if has_core and (has_highlights or not upgrade_highlights):
             continue
         attempted += 1
         ok = False
@@ -225,15 +232,30 @@ def _is_mainstream_primary(record: dict) -> bool:
     return phase in {"primary", "middle deemed primary", "all-through"} or "ks2" in phases
 
 
-def prioritize_records(records: list[dict]) -> list[dict]:
-    """Soft-launch order: ISI, mainstream secondaries, primaries, then other Ofsted."""
+def prioritize_records(
+    records: list[dict],
+    *,
+    upgrade_highlights: bool = False,
+) -> list[dict]:
+    """Soft-launch order: ISI, mainstream secondaries, primaries, then other Ofsted.
+
+    By default skip rows that already have a core précis. When upgrading
+    highlights, also include rows that have a précis but still lack
+    strength/improvement buckets.
+    """
     isi: list[dict] = []
     mainstream_sec: list[dict] = []
     mainstream_pri: list[dict] = []
     ofsted: list[dict] = []
     other: list[dict] = []
     for r in records:
-        if r.get("inspectionPrecis"):
+        has_precis = bool(r.get("inspectionPrecis"))
+        has_highlights = bool(
+            r.get("inspectionStrengths") and r.get("inspectionImprovements")
+        )
+        if has_precis and not upgrade_highlights:
+            continue
+        if has_precis and has_highlights:
             continue
         if should_try_isi(r) and r.get("isiLatestReportUrl"):
             isi.append(r)
@@ -284,6 +306,14 @@ def main() -> None:
         default=0.15,
         help="Pause between providers (seconds)",
     )
+    parser.add_argument(
+        "--upgrade-highlights",
+        action="store_true",
+        help=(
+            "Re-fetch reports that already have a core précis but lack "
+            "inspectionStrengths / inspectionImprovements buckets"
+        ),
+    )
     args = parser.parse_args()
 
     today = time.strftime("%Y-%m-%d")
@@ -300,10 +330,16 @@ def main() -> None:
             providers = payload.get("providers") or []
             if target_la:
                 providers = filter_schools_to_la(providers, target_la)
-            ordered = prioritize_records(providers)
+            ordered = prioritize_records(
+                providers, upgrade_highlights=args.upgrade_highlights
+            )
             print(f"EY providers to consider: {len(ordered)}; limit={args.limit}", flush=True)
             attempted, ofsted_ok, isi_ok = enrich_records(
-                ordered, limit=args.limit, sleep_s=args.sleep, prefer_isi=False
+                ordered,
+                limit=args.limit,
+                sleep_s=args.sleep,
+                prefer_isi=False,
+                upgrade_highlights=args.upgrade_highlights,
             )
             # Write back onto original list by URN
             by_urn = {str(p.get("urn")): p for p in ordered}
@@ -314,6 +350,8 @@ def main() -> None:
                 for key in (
                     "inspectionPrecis",
                     "inspectionQuotes",
+                    "inspectionStrengths",
+                    "inspectionImprovements",
                     "inspectionReportFileUrl",
                     "inspectionReportLabel",
                     "inspectionPrecisSource",
@@ -344,13 +382,19 @@ def main() -> None:
             providers = payload.get("providers") or []
             if target_la:
                 providers = filter_schools_to_la(providers, target_la)
-            ordered = prioritize_records(providers)
+            ordered = prioritize_records(
+                providers, upgrade_highlights=args.upgrade_highlights
+            )
             print(
                 f"Childminders to consider: {len(ordered)}; limit={args.limit}",
                 flush=True,
             )
             attempted, ofsted_ok, isi_ok = enrich_records(
-                ordered, limit=args.limit, sleep_s=args.sleep, prefer_isi=False
+                ordered,
+                limit=args.limit,
+                sleep_s=args.sleep,
+                prefer_isi=False,
+                upgrade_highlights=args.upgrade_highlights,
             )
             by_urn = {str(p.get("urn")): p for p in ordered}
             for p in payload.get("providers") or []:
@@ -360,6 +404,8 @@ def main() -> None:
                 for key in (
                     "inspectionPrecis",
                     "inspectionQuotes",
+                    "inspectionStrengths",
+                    "inspectionImprovements",
                     "inspectionReportFileUrl",
                     "inspectionReportLabel",
                     "inspectionPrecisSource",
@@ -390,15 +436,27 @@ def main() -> None:
     if target_la:
         schools = filter_schools_to_la(schools, target_la)
         # Keep full payload schools; enrich matching URNs in place.
-    ordered = prioritize_records(schools if target_la else payload.get("schools") or [])
+    ordered = prioritize_records(
+        schools if target_la else payload.get("schools") or [],
+        upgrade_highlights=args.upgrade_highlights,
+    )
     # When LA filtered, ordered is the filtered list but we must mutate payload schools.
+    label = (
+        "Schools needing highlight upgrade"
+        if args.upgrade_highlights
+        else "Schools missing précis"
+    )
     print(
-        f"Schools missing précis: {len(ordered)}; limit={args.limit}"
+        f"{label}: {len(ordered)}; limit={args.limit}"
         + (f"; scope={target_la}" if target_la else ""),
         flush=True,
     )
     attempted, ofsted_ok, isi_ok = enrich_records(
-        ordered, limit=args.limit, sleep_s=args.sleep, prefer_isi=True
+        ordered,
+        limit=args.limit,
+        sleep_s=args.sleep,
+        prefer_isi=True,
+        upgrade_highlights=args.upgrade_highlights,
     )
     by_urn = {str(s.get("urn")): s for s in ordered}
     for school in payload.get("schools") or []:
@@ -408,6 +466,8 @@ def main() -> None:
         for key in (
             "inspectionPrecis",
             "inspectionQuotes",
+            "inspectionStrengths",
+            "inspectionImprovements",
             "inspectionReportFileUrl",
             "inspectionReportLabel",
             "inspectionPrecisSource",

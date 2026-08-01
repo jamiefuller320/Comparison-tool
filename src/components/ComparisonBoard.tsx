@@ -27,7 +27,7 @@ import { MetricHistoryChart } from "@/components/MetricHistoryChart";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
-import { InspectionPrecis } from "@/components/InspectionPrecis";
+import { InspectionPrecisRows } from "@/components/InspectionPrecis";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
@@ -290,7 +290,6 @@ export function ComparisonBoard({
                         Ofsted reports ↗
                       </a>
                     ) : null}
-                    <InspectionPrecis school={school} compact />
                     {sourceStamp ? (
                       <ReportProblemButton
                         compact
@@ -310,6 +309,7 @@ export function ComparisonBoard({
             </tr>
           </thead>
           <tbody>
+            <InspectionPrecisRows schools={schools} />
             {groups.map((group) => {
               const metrics = PARENT_METRICS.filter((m) => m.group === group);
               return (

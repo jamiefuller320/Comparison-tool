@@ -51,7 +51,15 @@ pupils feel safe.
 
 What does the school do well and what does it need to do better?
 
-Staff and governors alike share the headteacher's vision.
+Staff and governors alike share the headteacher's vision. The curriculum is
+ambitious and pupils achieve well across a broad range of subjects. Teachers
+check carefully what pupils know and remember.
+
+What does the school need to do to improve?
+
+Leaders should ensure that pupils in the early stages of reading practise
+sounds more frequently. Subject leaders need to check that the most able
+pupils are challenged consistently in foundation subjects.
 """
 
 EY_FIXTURE = """
@@ -69,7 +77,12 @@ Staff plan a curriculum that places a strong focus on children's personal, socia
 emotional development.
 
 What does the early years setting do well and what does it need to do better?
-Leaders have worked hard to make improvements.
+Leaders have worked hard to make improvements. Staff support children's
+communication and language development well through carefully planned play.
+
+What does the early years setting need to do to improve?
+Staff should give children more opportunities to develop their early writing
+skills outdoors.
 """
 
 ISI_FIXTURE = """
@@ -135,11 +148,18 @@ def main() -> None:
             token in low
             for token in ("pupil", "child", "parent", "happy", "safe")
         )
+    assert ofsted.get("inspectionStrengths")
+    assert ofsted.get("inspectionImprovements")
+    assert any(
+        "should" in q["text"].lower() or "need" in q["text"].lower()
+        for q in ofsted["inspectionImprovements"]
+    )
 
     ey = extract_ofsted_precis(EY_FIXTURE, url)
     assert ey is not None
     assert ey["inspectionQuotes"]
     assert all("provision is good" not in q["text"].lower() for q in ey["inspectionQuotes"])
+    assert ey.get("inspectionImprovements")
 
     isi = extract_isi_precis(ISI_FIXTURE, "https://reports.isi.net/example.pdf")
     assert isi is not None
