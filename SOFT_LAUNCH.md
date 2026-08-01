@@ -1,6 +1,6 @@
 # Hampshire soft-launch bar
 
-Finite deployable standard before showing Schoolside to the world.
+Finite deployable standard before showing School Compass to the world.
 Not a commitment to finish the whole roadmap — a **parental product** bar with
 **Hampshire maintained depth** and **South East (+ Dorset) pack coverage**.
 

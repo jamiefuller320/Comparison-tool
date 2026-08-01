@@ -3,11 +3,11 @@ import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { UiPreferencesProvider } from "@/components/UiPreferencesProvider";
 import { AccountProvider } from "@/components/AccountProvider";
+import { BRAND_DOMAIN, BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Schoolside — South East school compare for parents",
-  description:
-    "Side-by-side school and early-years comparison across Hampshire and the wider South East (including Dorset) — published outcomes, Ofsted/ISI excerpts, and a shortlist visit pack.",
+  title: `${BRAND_NAME} — shortlist and compare schools before you visit`,
+  description: `${BRAND_TAGLINE} Hampshire and the South East. ${BRAND_DOMAIN}`,
 };
 
 export default function RootLayout({

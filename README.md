@@ -1,6 +1,6 @@
-# Schoolside
+# School Compass
 
-**South East parental school compare** (Hampshire maintained depth, plus silent-merge packs for the wider South East **including Dorset**) — shortlist nearby schools and early-years settings, then compare published outcomes with Ofsted/ISI evidence.
+**Parental school compare** for Hampshire and the wider South East (**including Dorset**) — shortlist nearby schools and early-years settings, then compare published outcomes with Ofsted/ISI evidence. Spoken brand: **School Compass**; home domain: [schoolcompass.uk](https://schoolcompass.uk).
 
 Side-by-side boards for the shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), framed for parents choosing a school rather than governors monitoring one. Soft-launch bar: [`SOFT_LAUNCH.md`](./SOFT_LAUNCH.md). Coverage region constants: `SOUTHEAST_PLUS_DORSET_*` in `src/lib/laPacks.ts` / `scripts/seed_scope.py`.
 
@@ -167,6 +167,6 @@ Next.js (static export) · TypeScript · Tailwind CSS · Recharts · GitHub Page
 
 ## Relationship to Bartley
 
-Bartley Insight is a single-school governor monitor (URN 116338) with peer overlays and meeting-pack framing. Schoolside reuses the same public KS2 sources and metric vocabulary, generalises harvesting to **any English school set**, and reframes presentation around **parental choice**. Multi-year subject trends use the same CSP KS2 CSV archive pattern as Bartley, sharded nationally so shortlisted state schools can open a history chart from each comparison-table row label.
+Bartley Insight is a single-school governor monitor (URN 116338) with peer overlays and meeting-pack framing. School Compass reuses the same public KS2 sources and metric vocabulary, generalises harvesting to **any English school set**, and reframes presentation around **parental choice**. Multi-year subject trends use the same CSP KS2 CSV archive pattern as Bartley, sharded nationally so shortlisted state schools can open a history chart from each comparison-table row label.
 
-**Future scope (not current product):** once the parent-facing tool is mature, the same collated data could power a **separate** governing-board interface — effectively Bartley’s dashboard for any school — without mixing board/SIP framing into Schoolside’s parental UX. Farther out: board users → inter-school collaboration; a reusable school ranking / scoring engine over national trends (for rapid improvers, peer overlays, and other spin-offs — not a default parent league table); parent users → value-add (learning resources, SEND support, etc.). Tracked in [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md).
+**Future scope (not current product):** once the parent-facing tool is mature, the same collated data could power a **separate** governing-board interface — effectively Bartley’s dashboard for any school — without mixing board/SIP framing into School Compass’s parental UX. Farther out: board users → inter-school collaboration; a reusable school ranking / scoring engine over national trends (for rapid improvers, peer overlays, and other spin-offs — not a default parent league table); parent users → value-add (learning resources, SEND support, etc.). Tracked in [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md).

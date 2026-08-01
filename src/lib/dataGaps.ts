@@ -352,7 +352,7 @@ export function gapsForKs2Board(schools: SchoolRecord[]): DataGap[] {
           ? "1 shortlisted school has no published KS2 tables"
           : `${nilState} shortlisted schools have no published KS2 tables`,
       detail:
-        "Missing state Key Stage 2 figures are usually unpublished tables (new school, small cohort, or suppression) — not a Schoolside join error.",
+        "Missing state Key Stage 2 figures are usually unpublished tables (new school, small cohort, or suppression) — not a School Compass join error.",
     });
   }
   if (nilOfsted > 0) {

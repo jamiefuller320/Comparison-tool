@@ -252,17 +252,15 @@ export function HomePostcodeExplorer({
       <section className="hero" id="top" data-tour="hero">
         <div className="shell hero-inner">
           <p className="hero-brand">
-            School<em>side</em>
+            School <em>Compass</em>
           </p>
           <h1>
-            Compare schools across Hampshire and the South East when you are
-            choosing.
+            Find your bearings when choosing a school.
           </h1>
           <p>
-            Start with your home postcode to map nearby schools and early years
-            settings — deep Hampshire coverage, plus ready South East and Dorset
-            areas — then compare published outcomes. Parental shortlists, not a
-            governance pack.
+            Start with your home postcode to map nearby schools and early years,
+            shortlist a few, then compare published figures and inspection
+            excerpts before you visit. A parental compass — not a league table.
           </p>
           <p className="hero-tour-launch">
             <button
@@ -353,7 +351,7 @@ export function HomePostcodeExplorer({
         >
           <div className="shell">
             <div className="section-head">
-              <h2>Schools near {home.postcode}</h2>
+              <h2>Near home · {home.postcode}</h2>
               <p>
                 Showing{" "}
                 {sectorFilter.includes("state") &&
@@ -363,7 +361,7 @@ export function HomePostcodeExplorer({
                     ? "independent"
                     : "state"}{" "}
                 schools for the stages you selected. Range ring on the map,
-                door-to-door road distance in the list — tick to compare.
+                door-to-door road distance in the list — tick to shortlist.
               </p>
             </div>
 

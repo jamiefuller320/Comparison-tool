@@ -85,7 +85,7 @@ export function SaveShortlistPrompt({
       setMessage(
         account.backendKind === "local"
           ? "Shortlist saved in this browser under your email."
-          : "Shortlist saved to your Schoolside account.",
+          : "Shortlist saved to your School Compass account.",
       );
     } catch (err) {
       setTone("err");

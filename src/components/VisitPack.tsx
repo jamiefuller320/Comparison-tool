@@ -22,6 +22,8 @@ import {
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { DecisionGuidancePrintBlock } from "@/components/DecisionGuidance";
 import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
+import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
+import { BRAND_NAME } from "@/lib/brand";
 import type { GuidancePathId } from "@/lib/decisionGuidance";
 import type { PhaseId } from "@/lib/phases";
 import type { SectorId } from "@/lib/sectors";
@@ -183,6 +185,7 @@ function HalfPageSchoolBlock({
               ? ` · Status: ${visitStatusLabel(entry.status)}`
               : null}
           </p>
+          <SchoolOutboundLinks school={school} includeInspection />
         </div>
       </header>
 
@@ -244,7 +247,7 @@ function PackSheetTitle({
   return (
     <div className="visit-pack-sheet-title">
       <p className="visit-pack-brand">
-        School<em>side</em> shortlist pack
+        {BRAND_NAME} shortlist pack
       </p>
       <p>
         {SEED_GEOGRAPHY_LABEL} · {subtitle} · printed {printedOn}
