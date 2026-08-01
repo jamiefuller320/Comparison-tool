@@ -49,7 +49,7 @@ export function DecisionGuidancePrintBlock({ path }: { path: GuidancePathId }) {
   const full = guidanceForPath(path);
   const compact = guidancePrintLines(path);
   return (
-    <section className="decision-guidance-print print-only">
+    <section className="decision-guidance-print">
       <h4>{compact.title}</h4>
       <p className="decision-guidance-lead">{full.lead}</p>
       <div className="decision-guidance-print-columns">

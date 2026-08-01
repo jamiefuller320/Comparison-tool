@@ -1,15 +1,8 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import {
-  computePrintNoteHeightPx,
   guidancePathForPack,
   questionsForKind,
   toVisitContactRow,
@@ -27,115 +20,22 @@ import {
   type VisitStatusId,
 } from "@/lib/visitLog";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
-import { InspectionPrecis } from "@/components/InspectionPrecis";
 import { DecisionGuidancePrintBlock } from "@/components/DecisionGuidance";
 import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import type { GuidancePathId } from "@/lib/decisionGuidance";
 import type { PhaseId } from "@/lib/phases";
 import type { SectorId } from "@/lib/sectors";
-
-function contactAsSchool(row: VisitContactRow): SchoolRecord {
-  return {
-    urn: row.urn,
-    name: row.name,
-    ofstedReportUrl: row.ofstedReportUrl,
-    inspectionPrecis: row.inspectionPrecis,
-    inspectionQuotes: row.inspectionQuotes,
-    inspectionStrengths: row.inspectionStrengths,
-    inspectionImprovements: row.inspectionImprovements,
-    inspectionReportFileUrl: row.inspectionReportFileUrl,
-    inspectionReportLabel: row.inspectionReportLabel,
-    inspectionPrecisSource: row.inspectionPrecisSource,
-  };
-}
-
-function ContactCard({
-  row,
-  entry,
-  onStatus,
-  onNote,
-}: {
-  row: VisitContactRow;
-  entry: VisitLogEntry;
-  onStatus: (status: VisitStatusId) => void;
-  onNote: (note: string) => void;
-}) {
-  return (
-    <article className="visit-contact-card">
-      <header className="visit-contact-head">
-        <div>
-          <h4>{row.name}</h4>
-          <p className="visit-contact-meta">
-            {row.kindLabel}
-            {row.ageRange ? ` · Ages ${row.ageRange}` : null}
-            {row.places != null ? ` · ${row.places} places` : null}
-            {row.ofstedOverall ? ` · Ofsted ${row.ofstedOverall}` : null}
-            {row.ofstedEarlyYearsProvision
-              ? ` · EY provision ${row.ofstedEarlyYearsProvision}`
-              : null}
-          </p>
-        </div>
-        <label className="visit-status no-print">
-          <span className="visually-hidden">Contact status</span>
-          <select
-            value={entry.status}
-            onChange={(e) => onStatus(e.target.value as VisitStatusId)}
-          >
-            {VISIT_STATUS_OPTIONS.map((opt) => (
-              <option key={opt.id} value={opt.id}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <p className="visit-status-print print-only">
-          Status: {visitStatusLabel(entry.status)}
-        </p>
-      </header>
-
-      <p className="visit-address">{row.addressLine}</p>
-      {[row.localAuthority, row.ofstedInspectionDate].filter(Boolean).length ? (
-        <p className="visit-contact-meta">
-          {[row.localAuthority, row.ofstedInspectionDate]
-            .filter(Boolean)
-            .join(" · ")}
-          {row.ofstedInspectionDate ? " (last inspection)" : null}
-        </p>
-      ) : null}
-
-      {row.ofstedReportUrl ? (
-        <p className="visit-report-link">
-          <a href={row.ofstedReportUrl} target="_blank" rel="noreferrer">
-            Ofsted / inspection report ↗
-          </a>
-          {row.ofstedUrn ? (
-            <span className="visit-contact-meta"> · URN {row.ofstedUrn}</span>
-          ) : null}
-        </p>
-      ) : null}
-      <InspectionPrecis school={contactAsSchool(row)} compact />
-
-      <label className="visit-note">
-        <span>Notes</span>
-        <textarea
-          className="no-print"
-          rows={2}
-          value={entry.note ?? ""}
-          placeholder={
-            row.kind === "school"
-              ? "Open day impressions, questions, gut feel…"
-              : "Waiting list, fees heard, gut feel…"
-          }
-          onChange={(e) => onNote(e.target.value)}
-        />
-        {entry.note ? (
-          <p className="visit-note-print-text print-only">{entry.note}</p>
-        ) : null}
-        <div className="visit-note-lines print-only" aria-hidden />
-      </label>
-    </article>
-  );
-}
+import {
+  buildPrintCompareTable,
+  chunkPairs,
+  type PrintCompareTable,
+} from "@/lib/printPackMetrics";
+import {
+  inspectionHighlights,
+  inspectionSourceLabel,
+  schoolHasInspectionPrecis,
+  shortInspectionSummary,
+} from "@/lib/inspectionHighlights";
 
 function QuestionBlock({
   kind,
@@ -166,37 +66,190 @@ function QuestionBlock({
   );
 }
 
-function ContactSection({
-  title,
-  rows,
-  entryFor,
-  setLog,
-}: {
-  title: string;
-  rows: VisitContactRow[];
-  entryFor: (urn: string) => VisitLogEntry;
-  setLog: Dispatch<SetStateAction<Record<string, VisitLogEntry>>>;
-}) {
-  if (!rows.length) return null;
+function PrintFiguresTable({ table }: { table: PrintCompareTable }) {
   return (
-    <section className="visit-pack-section">
-      <h3 className="compare-subhead">{title}</h3>
-      <div className="visit-contact-grid">
-        {rows.map((row) => (
-          <ContactCard
-            key={row.urn}
-            row={row}
-            entry={entryFor(row.urn)}
-            onStatus={(status) =>
-              setLog((prev) => upsertVisitLogEntry(prev, row.urn, { status }))
-            }
-            onNote={(note) =>
-              setLog((prev) => upsertVisitLogEntry(prev, row.urn, { note }))
-            }
-          />
-        ))}
+    <section className="visit-pack-figures">
+      <h3 className="compare-subhead">{table.title}</h3>
+      <p className="visit-pack-figures-caption">{table.caption}</p>
+      <div className="visit-pack-figures-scroll">
+        <table className="visit-pack-compare-table">
+          <thead>
+            <tr>
+              <th scope="col">Measure</th>
+              {table.columns.map((col) => (
+                <th key={col} scope="col">
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row) => (
+              <tr key={row.id}>
+                <th scope="row">{row.label}</th>
+                {row.values.map((value, i) => (
+                  <td key={`${row.id}-${i}`}>{value}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
+  );
+}
+
+function ScreenStatusRow({
+  row,
+  entry,
+  onStatus,
+  onNote,
+}: {
+  row: VisitContactRow;
+  entry: VisitLogEntry;
+  onStatus: (status: VisitStatusId) => void;
+  onNote: (note: string) => void;
+}) {
+  return (
+    <article className="visit-status-row no-print">
+      <div>
+        <h4>{row.name}</h4>
+        <p className="visit-contact-meta">
+          {row.kindLabel}
+          {row.addressLine ? ` · ${row.addressLine}` : null}
+        </p>
+      </div>
+      <label className="visit-status">
+        <span className="visually-hidden">Contact status</span>
+        <select
+          value={entry.status}
+          onChange={(e) => onStatus(e.target.value as VisitStatusId)}
+        >
+          {VISIT_STATUS_OPTIONS.map((opt) => (
+            <option key={opt.id} value={opt.id}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="visit-note">
+        <span>Notes (also print)</span>
+        <textarea
+          rows={2}
+          value={entry.note ?? ""}
+          placeholder="Impressions, questions, gut feel…"
+          onChange={(e) => onNote(e.target.value)}
+        />
+      </label>
+    </article>
+  );
+}
+
+function HalfPageSchoolBlock({
+  school,
+  row,
+  entry,
+}: {
+  school: SchoolRecord;
+  row: VisitContactRow;
+  entry: VisitLogEntry;
+}) {
+  const hasPrecis = schoolHasInspectionPrecis(school);
+  const summary = shortInspectionSummary(school);
+  const { strengths, improvements } = inspectionHighlights(school);
+  const inspectorate = inspectionSourceLabel(school.inspectionPrecisSource);
+  const precis = school.inspectionPrecis?.trim();
+
+  return (
+    <article className="visit-pack-half">
+      <header className="visit-pack-half-head">
+        <div>
+          <h4>{row.name}</h4>
+          <p className="visit-contact-meta">
+            {[row.kindLabel, row.ageRange ? `Ages ${row.ageRange}` : null]
+              .filter(Boolean)
+              .join(" · ")}
+            {row.ofstedOverall ? ` · Ofsted ${row.ofstedOverall}` : null}
+            {row.ofstedEarlyYearsProvision
+              ? ` · EY ${row.ofstedEarlyYearsProvision}`
+              : null}
+          </p>
+          <p className="visit-address">{row.addressLine}</p>
+          <p className="visit-contact-meta">
+            {[row.localAuthority, row.ofstedInspectionDate]
+              .filter(Boolean)
+              .join(" · ")}
+            {entry.status !== "none"
+              ? ` · Status: ${visitStatusLabel(entry.status)}`
+              : null}
+          </p>
+        </div>
+      </header>
+
+      <section className="visit-pack-half-precis">
+        <h5>{hasPrecis ? `${inspectorate} précis` : "Inspection précis"}</h5>
+        {hasPrecis ? (
+          <>
+            {summary ? (
+              <p className="visit-pack-half-summary">{summary}</p>
+            ) : null}
+            {precis && precis !== summary ? (
+              <p className="visit-pack-half-body">{precis}</p>
+            ) : null}
+            {strengths.length ? (
+              <p className="visit-pack-half-bullets">
+                <strong>Positives:</strong>{" "}
+                {strengths
+                  .slice(0, 2)
+                  .map((q) => q.text)
+                  .join(" · ")}
+              </p>
+            ) : null}
+            {improvements.length ? (
+              <p className="visit-pack-half-bullets">
+                <strong>Improve:</strong>{" "}
+                {improvements
+                  .slice(0, 2)
+                  .map((q) => q.text)
+                  .join(" · ")}
+              </p>
+            ) : null}
+          </>
+        ) : (
+          <p className="visit-pack-half-empty">
+            No usable inspection précis in this pack yet — open the report link
+            on the compare board before you visit.
+          </p>
+        )}
+      </section>
+
+      <section className="visit-pack-half-notes">
+        <h5>Notes</h5>
+        {entry.note ? (
+          <p className="visit-note-print-text">{entry.note}</p>
+        ) : null}
+        <div className="visit-note-lines" aria-hidden />
+      </section>
+    </article>
+  );
+}
+
+function PackSheetTitle({
+  subtitle,
+  printedOn,
+}: {
+  subtitle: string;
+  printedOn: string;
+}) {
+  return (
+    <div className="visit-pack-sheet-title">
+      <p className="visit-pack-brand">
+        School<em>side</em> shortlist pack
+      </p>
+      <p>
+        {SEED_GEOGRAPHY_LABEL} · {subtitle} · printed {printedOn}
+      </p>
+    </div>
   );
 }
 
@@ -238,10 +291,22 @@ export function VisitPack({
         .filter((r): r is VisitContactRow => Boolean(r)),
     [schools],
   );
+
+  const allRecords = useMemo(() => {
+    if (schools.length) return schools;
+    if (childminders.length) return childminders;
+    return nurseries;
+  }, [schools, childminders, nurseries]);
+
+  const allRows = useMemo(() => {
+    if (schoolRows.length) return schoolRows;
+    if (childminderRows.length) return childminderRows;
+    return nurseryRows;
+  }, [schoolRows, childminderRows, nurseryRows]);
+
   const shortlistUrns = useMemo(
-    () =>
-      [...nurseries, ...childminders, ...schools].map((s) => s.urn),
-    [nurseries, childminders, schools],
+    () => allRecords.map((s) => s.urn),
+    [allRecords],
   );
 
   const guidancePath = guidancePathForPack({
@@ -251,7 +316,26 @@ export function VisitPack({
     preferPath,
   });
 
-  const isSchoolPack = schoolRows.length > 0 && !nurseryRows.length && !childminderRows.length;
+  const figures = useMemo(
+    () => buildPrintCompareTable(allRecords, guidancePath),
+    [allRecords, guidancePath],
+  );
+
+  const notePages = useMemo(
+    () =>
+      chunkPairs(
+        allRows.map((row) => ({
+          row,
+          school: allRecords.find((s) => s.urn === row.urn) || {
+            urn: row.urn,
+            name: row.name,
+          },
+        })),
+      ),
+    [allRows, allRecords],
+  );
+
+  const isSchoolPack = schoolRows.length > 0;
 
   const [log, setLog] = useState<Record<string, VisitLogEntry>>({});
   const [hydrated, setHydrated] = useState(false);
@@ -266,9 +350,7 @@ export function VisitPack({
     saveVisitLog(log);
   }, [log, hydrated]);
 
-  if (!nurseryRows.length && !childminderRows.length && !schoolRows.length) {
-    return null;
-  }
+  if (!allRows.length) return null;
 
   function entryFor(urn: string): VisitLogEntry {
     return log[urn] ?? { status: "none" };
@@ -277,27 +359,24 @@ export function VisitPack({
   function printPack() {
     const pack = document.querySelector<HTMLElement>(".visit-pack");
     if (!pack) return;
-    const contactCount =
-      nurseryRows.length + childminderRows.length + schoolRows.length;
-    printVisitPackElement(pack, computePrintNoteHeightPx(contactCount));
+    printVisitPackElement(pack, 120);
   }
 
   const printedOn = new Date().toLocaleDateString("en-GB");
-  const packTitle = isSchoolPack
-    ? "Shortlist pack — how to read, contacts & visit prompts"
-    : "Visit pack — contacts & interview prompts";
 
   return (
     <div className="visit-pack" data-tour="visit-pack">
       <div className="visit-pack-toolbar no-print">
         <div>
           <h3 className="compare-subhead" style={{ marginBottom: "0.35rem" }}>
-            {packTitle}
+            {isSchoolPack
+              ? "Shortlist pack — print for visits"
+              : "Visit pack — print for visits"}
           </h3>
           <p className="footnote" style={{ margin: 0 }}>
-            {isSchoolPack
-              ? "Print before open days. Includes how to read the tables and précis, contact cards, and visit questions. Status and notes stay in this browser."
-              : "Print this pack before you phone or visit. Status and notes stay in this browser. Phone numbers are not in Ofsted’s public files — use the address, Ofsted report, and routes the setting publishes."}
+            Print order: how to read &amp; questions → published figures →
+            half-page précis and notes for each setting. Status and notes stay
+            in this browser.
           </p>
         </div>
         <div className="visit-pack-toolbar-actions">
@@ -314,79 +393,76 @@ export function VisitPack({
         </div>
       </div>
 
-      <div className="visit-pack-sheet visit-pack-contacts-sheet">
-        <div className="visit-pack-print-title print-only">
-          <p className="visit-pack-brand">
-            School<em>side</em> {isSchoolPack ? "shortlist pack" : "visit pack"}
-          </p>
-          <p>
-            {SEED_GEOGRAPHY_LABEL} shortlist ·{" "}
-            {isSchoolPack ? "schools" : "contacts"} · printed {printedOn}
-          </p>
+      <section className="visit-pack-section no-print">
+        <h3 className="compare-subhead">Shortlist status &amp; notes</h3>
+        <div className="visit-status-list">
+          {allRows.map((row) => (
+            <ScreenStatusRow
+              key={row.urn}
+              row={row}
+              entry={entryFor(row.urn)}
+              onStatus={(status) =>
+                setLog((prev) => upsertVisitLogEntry(prev, row.urn, { status }))
+              }
+              onNote={(note) =>
+                setLog((prev) => upsertVisitLogEntry(prev, row.urn, { note }))
+              }
+            />
+          ))}
         </div>
+      </section>
 
+      <div className="visit-pack-sheet visit-pack-guide-sheet">
+        <PackSheetTitle subtitle="advice & questions" printedOn={printedOn} />
         <DecisionGuidancePrintBlock path={guidancePath} />
-
-        <ContactSection
-          title={
-            isSchoolPack
-              ? "Schools on your shortlist"
-              : "Nurseries on your shortlist"
-          }
-          rows={isSchoolPack ? schoolRows : nurseryRows}
-          entryFor={entryFor}
-          setLog={setLog}
-        />
-
-        {!isSchoolPack ? (
-          <ContactSection
-            title="Childminders on your shortlist"
-            rows={childminderRows}
-            entryFor={entryFor}
-            setLog={setLog}
-          />
-        ) : null}
-
-        {/* School pack may also be shown alone; nursery+school mixed is rare */}
-        {!isSchoolPack && schoolRows.length ? (
-          <ContactSection
-            title="Schools on your shortlist"
-            rows={schoolRows}
-            entryFor={entryFor}
-            setLog={setLog}
-          />
-        ) : null}
-      </div>
-
-      <div className="visit-pack-sheet visit-pack-questions-sheet">
-        <div className="visit-pack-print-title print-only">
-          <p className="visit-pack-brand">
-            School<em>side</em>{" "}
-            {isSchoolPack ? "visit prompts" : "interview prompts"}
-          </p>
-          <p>
-            {SEED_GEOGRAPHY_LABEL} shortlist · questions · printed {printedOn}
-          </p>
-        </div>
-
         {schoolRows.length ? (
           <QuestionBlock
             kind="school"
-            title="Suggested questions — school visits &amp; open days"
+            title="Questions to ask — school visits &amp; open days"
           />
         ) : null}
         {nurseryRows.length ? (
           <QuestionBlock
             kind="nursery"
-            title="Suggested questions — nurseries &amp; school early years"
+            title="Questions to ask — nurseries &amp; school early years"
           />
         ) : null}
         {childminderRows.length ? (
           <QuestionBlock
             kind="childminder"
-            title="Suggested questions — childminders"
+            title="Questions to ask — childminders"
           />
         ) : null}
+      </div>
+
+      {figures ? (
+        <div className="visit-pack-sheet visit-pack-figures-sheet">
+          <PackSheetTitle subtitle="published figures" printedOn={printedOn} />
+          <PrintFiguresTable table={figures} />
+        </div>
+      ) : null}
+
+      <div className="visit-pack-sheet visit-pack-notes-sheet">
+        <PackSheetTitle subtitle="précis & notes" printedOn={printedOn} />
+        {notePages.map((page, pageIndex) => (
+          <div
+            key={`notes-page-${pageIndex}`}
+            className={
+              pageIndex === 0
+                ? "visit-pack-notes-page"
+                : "visit-pack-notes-page visit-pack-notes-page-break"
+            }
+          >
+            {page.map(({ row, school }) => (
+              <HalfPageSchoolBlock
+                key={row.urn}
+                school={school}
+                row={row}
+                entry={entryFor(row.urn)}
+              />
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
