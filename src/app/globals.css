@@ -3111,7 +3111,6 @@ html.tour-running .hero-inner > * {
 @media print {
   @page {
     margin: 12mm;
-    size: A4;
   }
 
   html,
@@ -3125,16 +3124,15 @@ html.tour-running .hero-inner > * {
   }
 
   /*
-   * Main-window print path (required on iPhone/iPad — iframe print CSS /
-   * page-breaks are unreliable in WebKit). Activated by printVisitPack.ts.
-   * Avoid position:absolute on the pack — it breaks WebKit pagination.
+   * Main-window print path (iPhone/iPad): a clean clone is appended as
+   * .visit-pack-print-root. Hide everything else — including the on-screen pack.
+   * Avoid position:absolute and page-break-after (WebKit pads blank sheets).
    */
-  /* Pack is moved to a direct body child while printing (see printVisitPack.ts). */
-  html.visit-pack-printing body > *:not(.visit-pack) {
+  html.visit-pack-printing body > *:not(.visit-pack-print-root) {
     display: none !important;
   }
 
-  html.visit-pack-printing body > .visit-pack {
+  html.visit-pack-printing body > .visit-pack-print-root {
     display: block !important;
     position: static !important;
     float: none !important;
@@ -3144,10 +3142,8 @@ html.tour-running .hero-inner > * {
     padding: 0 !important;
     overflow: visible !important;
     background: white !important;
-  }
-
-  html.visit-pack-printing .no-print {
-    display: none !important;
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   /* Fallback for browser print while a pack is on screen (non-iOS Ctrl/Cmd+P). */
@@ -3194,6 +3190,7 @@ html.tour-running .hero-inner > * {
   }
 
   .visit-pack,
+  .visit-pack-print-root,
   .visit-pack-sheet {
     display: block !important;
     float: none !important;
@@ -3202,23 +3199,26 @@ html.tour-running .hero-inner > * {
     border-top: 0;
     margin: 0;
     padding: 0;
+    min-height: 0 !important;
+    height: auto !important;
   }
 
   /*
-   * Explicit break nodes only (not also on sheets). WebKit is more reliable
-   * with page-break-after on block siblings than break-before on flex children;
-   * stacking both creates blank pages.
+   * Inert break markers (kept in screen markup for readability). Pagination
+   * uses break-before on later sheets — break-after makes iOS insert blanks.
    */
   .visit-pack-page-break {
-    display: block !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    line-height: 0 !important;
-    font-size: 0 !important;
-    break-after: page !important;
-    page-break-after: always !important;
+    display: none !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
+    page-break-before: auto !important;
+    break-before: auto !important;
+  }
+
+  .visit-pack > .visit-pack-sheet ~ .visit-pack-sheet,
+  .visit-pack-print-root > .visit-pack-sheet ~ .visit-pack-sheet {
+    break-before: page !important;
+    page-break-before: always !important;
   }
 
   .visit-pack-sheet-title .visit-pack-brand {
@@ -3256,8 +3256,8 @@ html.tour-running .hero-inner > * {
   .visit-note-lines {
     display: block !important;
     flex: none !important;
-    min-height: 140mm !important;
-    height: 140mm !important;
+    min-height: 120mm !important;
+    height: 120mm !important;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0,
