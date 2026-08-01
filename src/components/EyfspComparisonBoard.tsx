@@ -41,8 +41,8 @@ export function EyfspComparisonBoard({
   if (!england?.gldPercent && !hasAnyLa) {
     return (
       <div className="empty-compare" role="status">
-        EYFSP area benchmarks are not in this data build yet. Re-run{" "}
-        <code>npm run harvest:ey</code>.
+        EYFSP area benchmarks are not in this data build yet. Check back after
+        the next refresh.
       </div>
     );
   }

@@ -74,8 +74,8 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "search",
     target: "search",
-    title: "Search the Hampshire maintained set",
-    body: "Below the map you can search by name, town, postcode or URN. Results respect your stage and school-type filters within Hampshire — the maintained geography for this build.",
+    title: "Search by name or place",
+    body: "Below the map you can search by name, town, postcode or URN. Results respect your stage and school-type filters.",
   },
   {
     id: "shortlist",

@@ -59,22 +59,19 @@ export default function HomePage() {
           </div>
           <div className="footnote">
             <p>
-              Hampshire early years: Ofsted childcare day-care inspections;
-              Ofsted grades for state nursery / infant / primary settings with an
-              early-years intake; consented childminder names/addresses (Ofsted
-              quarterly file — re-harvest regularly); plus EYFSP
-              England/Hampshire area context (provider-level EYFSP is not
-              published — Ofsted grades and EYFSP area figures answer different
-              questions). State schools: institution-level Key Stage 2 attainment
-              plus local-authority phonics for KS1. Independents: Key Stage 4
-              tables plus Ofsted non-association inspections. Progress measures
-              are sparse for 2024/25 because of missing KS1 baselines.
+              Early years: Ofsted childcare day-care inspections; Ofsted grades
+              for state nursery / infant / primary settings with an early-years
+              intake; consented childminder names/addresses (Ofsted quarterly
+              file); plus EYFSP England and local-authority area context
+              (provider-level EYFSP is not published — Ofsted grades and EYFSP
+              area figures answer different questions). State schools:
+              institution-level Key Stage 2 attainment plus local-authority
+              phonics for KS1. Independents: Key Stage 4 tables plus Ofsted
+              non-association inspections. Progress measures are sparse for
+              2024/25 because of missing KS1 baselines.
             </p>
             <p>
-              Refresh locally with <code>npm run harvest:hampshire</code> (or{" "}
-              <code>npm run harvest:ey</code> for the early years pack). Full
-              England <code>npm run harvest</code> remains a scaffold. Official
-              school pages:{" "}
+              Official school pages:{" "}
               <a
                 href="https://www.compare-school-performance.service.gov.uk/"
                 target="_blank"

@@ -5,7 +5,8 @@ import type { SchoolRecord } from "@/lib/types";
 import { searchSchools } from "@/lib/search";
 import { formatPhases, phasesFromAgeRange } from "@/lib/phases";
 import { requestForceRefresh, requestLaPack } from "@/lib/data";
-import { SEED_GEOGRAPHY_LABEL, isSeedLocalAuthority } from "@/lib/seedScope";
+import { isSeedLocalAuthority } from "@/lib/seedScope";
+import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 
 export function MissingSchoolButton({
   schools,
@@ -72,7 +73,7 @@ export function MissingSchoolButton({
     if (isSeedLocalAuthority(la)) {
       setTone("warn");
       setMessage(
-        `${SEED_GEOGRAPHY_LABEL} is already the maintained set — use “Update directory” above for a Hampshire refresh.`,
+        "That area is already in the directory — use “Update directory” above if a setting looks missing.",
       );
       return;
     }
@@ -107,12 +108,9 @@ export function MissingSchoolButton({
           aria-label="Report a missing school"
         >
           <p>
-            This build maintains <strong>{SEED_GEOGRAPHY_LABEL}</strong> schools
-            and early years settings, and silently includes any other local
-            authorities already collated into the directory. Search first — many
-            infants and secondaries appear once the right stages and range are
-            selected. If a {SEED_GEOGRAPHY_LABEL} setting is truly absent, this
-            queues a maintained-set rebuild (limited to{" "}
+            Search first — many infants and secondaries appear once the right
+            stages and range are selected. If a setting in the covered area is
+            truly absent, “Update directory” queues a refresh (limited to{" "}
             <strong>one per day</strong>).
           </p>
           <div className="postcode-row">
@@ -158,10 +156,10 @@ export function MissingSchoolButton({
           ) : null}
 
           <p className="footnote" style={{ marginTop: "1rem" }}>
-            Outside {SEED_GEOGRAPHY_LABEL}? Request coverage for another local
-            authority (exact DfE label). When the build deploys, those schools
-            appear on the map and in search automatically — no pack to activate.
-            Limited to one area build per day.
+            Need somewhere outside {COVERAGE_REGION_LABEL}? Request coverage for
+            another local authority (exact DfE label). When the refresh finishes,
+            those schools appear on the map and in search automatically. Limited
+            to one area request per day.
           </p>
           <div className="postcode-row">
             <input

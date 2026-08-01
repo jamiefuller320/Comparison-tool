@@ -81,7 +81,7 @@ export function SecondaryContextPane({
                     </p>
                   </header>
                   {!items.length ? (
-                    <p className="footnote">No directory links in this pack.</p>
+                    <p className="footnote">No directory links for this setting.</p>
                   ) : (
                     <ul>
                       {items.map((item) => (

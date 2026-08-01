@@ -145,7 +145,7 @@ export function CoverageStrip({
           {!schoolRows.length ? (
             <p className="footnote" style={{ margin: 0 }}>
               No school-level gap chips on this shortlist. Board notes above still
-              apply when a pack stamp is missing.
+              apply when a source stamp is missing.
             </p>
           ) : (
             <ul className="gap-detail-list">
