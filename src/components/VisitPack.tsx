@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import {
+  computePrintNoteHeightPx,
   guidancePathForPack,
   questionsForKind,
   toVisitContactRow,
@@ -29,7 +30,6 @@ import type { PhaseId } from "@/lib/phases";
 import type { SectorId } from "@/lib/sectors";
 import {
   buildPrintCompareTable,
-  chunkPairs,
   type PrintCompareTable,
 } from "@/lib/printPackMetrics";
 import {
@@ -147,7 +147,7 @@ function ScreenStatusRow({
   );
 }
 
-function HalfPageSchoolBlock({
+function SchoolNotesPage({
   school,
   row,
   entry,
@@ -163,8 +163,8 @@ function HalfPageSchoolBlock({
   const precis = school.inspectionPrecis?.trim();
 
   return (
-    <article className="visit-pack-half">
-      <header className="visit-pack-half-head">
+    <article className="visit-pack-school">
+      <header className="visit-pack-school-head">
         <div>
           <h4>{row.name}</h4>
           <p className="visit-contact-meta">
@@ -189,18 +189,18 @@ function HalfPageSchoolBlock({
         </div>
       </header>
 
-      <section className="visit-pack-half-precis">
+      <section className="visit-pack-school-precis">
         <h5>{hasPrecis ? `${inspectorate} précis` : "Inspection précis"}</h5>
         {hasPrecis ? (
           <>
             {summary ? (
-              <p className="visit-pack-half-summary">{summary}</p>
+              <p className="visit-pack-school-summary">{summary}</p>
             ) : null}
             {precis && precis !== summary ? (
-              <p className="visit-pack-half-body">{precis}</p>
+              <p className="visit-pack-school-body">{precis}</p>
             ) : null}
             {strengths.length ? (
-              <p className="visit-pack-half-bullets">
+              <p className="visit-pack-school-bullets">
                 <strong>Positives:</strong>{" "}
                 {strengths
                   .slice(0, 2)
@@ -209,7 +209,7 @@ function HalfPageSchoolBlock({
               </p>
             ) : null}
             {improvements.length ? (
-              <p className="visit-pack-half-bullets">
+              <p className="visit-pack-school-bullets">
                 <strong>Improve:</strong>{" "}
                 {improvements
                   .slice(0, 2)
@@ -219,14 +219,14 @@ function HalfPageSchoolBlock({
             ) : null}
           </>
         ) : (
-          <p className="visit-pack-half-empty">
+          <p className="visit-pack-school-empty">
             No usable inspection précis in this pack yet — open the report link
             on the compare board before you visit.
           </p>
         )}
       </section>
 
-      <section className="visit-pack-half-notes">
+      <section className="visit-pack-school-notes">
         <h5>Notes</h5>
         {entry.note ? (
           <p className="visit-note-print-text">{entry.note}</p>
@@ -324,17 +324,15 @@ export function VisitPack({
     [allRecords, guidancePath],
   );
 
-  const notePages = useMemo(
+  const schoolNotePages = useMemo(
     () =>
-      chunkPairs(
-        allRows.map((row) => ({
-          row,
-          school: allRecords.find((s) => s.urn === row.urn) || {
-            urn: row.urn,
-            name: row.name,
-          },
-        })),
-      ),
+      allRows.map((row) => ({
+        row,
+        school: allRecords.find((s) => s.urn === row.urn) || {
+          urn: row.urn,
+          name: row.name,
+        },
+      })),
     [allRows, allRecords],
   );
 
@@ -362,7 +360,7 @@ export function VisitPack({
   function printPack() {
     const pack = document.querySelector<HTMLElement>(".visit-pack");
     if (!pack) return;
-    printVisitPackElement(pack, 120);
+    printVisitPackElement(pack, computePrintNoteHeightPx(1));
   }
 
   const printedOn = new Date().toLocaleDateString("en-GB");
@@ -377,9 +375,9 @@ export function VisitPack({
               : "Visit pack — print for visits"}
           </h3>
           <p className="footnote" style={{ margin: 0 }}>
-            Print order: how to read &amp; questions → published figures →
-            half-page précis and notes for each setting. Status and notes stay
-            in this browser.
+            Print order: each section on its own page — advice &amp; questions,
+            published figures, then one setting per page with room for notes.
+            Status and notes stay in this browser.
           </p>
         </div>
         <div className="visit-pack-toolbar-actions">
@@ -445,28 +443,22 @@ export function VisitPack({
         </div>
       ) : null}
 
-      <div className="visit-pack-sheet visit-pack-notes-sheet">
-        <PackSheetTitle subtitle="précis & notes" printedOn={printedOn} />
-        {notePages.map((page, pageIndex) => (
-          <div
-            key={`notes-page-${pageIndex}`}
-            className={
-              pageIndex === 0
-                ? "visit-pack-notes-page"
-                : "visit-pack-notes-page visit-pack-notes-page-break"
-            }
-          >
-            {page.map(({ row, school }) => (
-              <HalfPageSchoolBlock
-                key={row.urn}
-                school={school}
-                row={row}
-                entry={entryFor(row.urn)}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      {schoolNotePages.map(({ row, school }) => (
+        <div
+          key={row.urn}
+          className="visit-pack-sheet visit-pack-school-sheet"
+        >
+          <PackSheetTitle
+            subtitle={`précis & notes · ${row.name}`}
+            printedOn={printedOn}
+          />
+          <SchoolNotesPage
+            school={school}
+            row={row}
+            entry={entryFor(row.urn)}
+          />
+        </div>
+      ))}
     </div>
   );
 }

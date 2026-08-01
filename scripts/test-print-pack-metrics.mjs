@@ -1,7 +1,7 @@
 /** Unit checks for printable shortlist figure tables. */
 
 async function main() {
-  const { buildPrintCompareTable, chunkPairs } = await import(
+  const { buildPrintCompareTable } = await import(
     "../src/lib/printPackMetrics.ts"
   );
 
@@ -56,12 +56,6 @@ async function main() {
   const ey = buildPrintCompareTable([nursery], "early-years");
   if (!ey?.rows.some((r) => r.id === "ofstedOverall" && r.values[0] === "Good")) {
     console.error("FAIL ey print table", ey);
-    process.exit(1);
-  }
-
-  const pairs = chunkPairs([1, 2, 3]);
-  if (pairs.length !== 2 || pairs[0].length !== 2 || pairs[1].length !== 1) {
-    console.error("FAIL chunkPairs", pairs);
     process.exit(1);
   }
 
