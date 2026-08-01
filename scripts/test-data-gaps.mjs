@@ -94,7 +94,9 @@ async function main() {
   const specialGaps = gapsForKs4Board([special]);
   if (
     !schoolGaps(specialGaps, "s1").some(
-      (g) => g.label === "Special or alternative provision",
+      (g) =>
+        g.label === "Special or alternative provision" &&
+        g.reasonCode === "not-comparable",
     )
   ) {
     console.error("FAIL special gap label", specialGaps);
