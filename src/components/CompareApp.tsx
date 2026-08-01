@@ -18,6 +18,8 @@ import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChec
 import { VisitPack } from "@/components/VisitPack";
 import { DecisionGuidancePanel } from "@/components/DecisionGuidance";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
+import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
+import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { ComparePathTabs } from "@/components/ComparePathTabs";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
@@ -545,7 +547,12 @@ export function CompareApp({
           )}
           {eySelected.length > 0 ? (
             <div style={{ marginTop: "1.75rem" }}>
-              <VisitPack nurseries={eySelected} childminders={[]} />
+              <VisitPack
+                nurseries={eySelected}
+                childminders={[]}
+                stages={stages}
+                sectors={sectors}
+              />
             </div>
           ) : null}
         </div>
@@ -587,7 +594,12 @@ export function CompareApp({
                 />
               </div>
               <div style={{ marginTop: "1.75rem" }}>
-                <VisitPack nurseries={[]} childminders={childminderSelected} />
+                <VisitPack
+                  nurseries={[]}
+                  childminders={childminderSelected}
+                  stages={stages}
+                  sectors={sectors}
+                />
               </div>
             </>
           ) : null}
@@ -620,7 +632,12 @@ export function CompareApp({
           )}
           {ks1Selected.length > 0 ? (
             <div style={{ marginTop: "1.75rem" }}>
-              <VisitPack schools={ks1Selected} preferPath="ks1" />
+              <VisitPack
+                schools={ks1Selected}
+                preferPath="ks1"
+                stages={stages}
+                sectors={sectors}
+              />
             </div>
           ) : null}
         </div>
@@ -655,7 +672,12 @@ export function CompareApp({
           )}
           {ks2Selected.length > 0 ? (
             <div style={{ marginTop: "1.75rem" }}>
-              <VisitPack schools={ks2Selected} preferPath="ks2" />
+              <VisitPack
+                schools={ks2Selected}
+                preferPath="ks2"
+                stages={stages}
+                sectors={sectors}
+              />
             </div>
           ) : null}
         </div>
@@ -690,7 +712,12 @@ export function CompareApp({
         )}
         {ks4Selected.length > 0 ? (
           <div style={{ marginTop: "1.75rem" }}>
-            <VisitPack schools={ks4Selected} preferPath="ks4" />
+            <VisitPack
+              schools={ks4Selected}
+              preferPath="ks4"
+              stages={stages}
+              sectors={sectors}
+            />
           </div>
         ) : null}
       </div>
@@ -744,6 +771,24 @@ export function CompareApp({
             sectorFilter={sectors}
           />
           <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
+          <SaveShortlistPrompt
+            schools={selected}
+            stages={stages}
+            sectors={sectors}
+            variant="shortlist"
+          />
+          <RestoreShortlistBanner
+            ready={hydrated}
+            currentCount={selected.length}
+            onRestore={(schools, nextStages, nextSectors) => {
+              const urns = schools.filter((u) => byUrn.has(u)).slice(0, 4);
+              setSelected(urns);
+              const restoredStages = normalizePhaseIds(nextStages);
+              if (restoredStages.length) setStages(restoredStages);
+              const restoredSectors = normalizeSectorIds(nextSectors);
+              if (restoredSectors.length) setSectors(restoredSectors);
+            }}
+          />
 
           {sectorNote ? (
             <p className="footnote sector-prune-note" role="status">

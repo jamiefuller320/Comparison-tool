@@ -29,7 +29,10 @@ import {
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { InspectionPrecis } from "@/components/InspectionPrecis";
 import { DecisionGuidancePrintBlock } from "@/components/DecisionGuidance";
+import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import type { GuidancePathId } from "@/lib/decisionGuidance";
+import type { PhaseId } from "@/lib/phases";
+import type { SectorId } from "@/lib/sectors";
 
 function contactAsSchool(row: VisitContactRow): SchoolRecord {
   return {
@@ -202,11 +205,15 @@ export function VisitPack({
   childminders = [],
   schools = [],
   preferPath,
+  stages = [],
+  sectors = [],
 }: {
   nurseries?: SchoolRecord[];
   childminders?: SchoolRecord[];
   schools?: SchoolRecord[];
   preferPath?: GuidancePathId;
+  stages?: PhaseId[];
+  sectors?: SectorId[];
 }) {
   const nurseryRows = useMemo(
     () =>
@@ -230,6 +237,11 @@ export function VisitPack({
         .map((r) => toVisitContactRow(r, "school"))
         .filter((r): r is VisitContactRow => Boolean(r)),
     [schools],
+  );
+  const shortlistUrns = useMemo(
+    () =>
+      [...nurseries, ...childminders, ...schools].map((s) => s.urn),
+    [nurseries, childminders, schools],
   );
 
   const guidancePath = guidancePathForPack({
@@ -288,9 +300,18 @@ export function VisitPack({
               : "Print this pack before you phone or visit. Status and notes stay in this browser. Phone numbers are not in Ofsted’s public files — use the address, Ofsted report, and routes the setting publishes."}
           </p>
         </div>
-        <button type="button" className="btn btn-pack" onClick={printPack}>
-          Print / save as PDF
-        </button>
+        <div className="visit-pack-toolbar-actions">
+          <SaveShortlistPrompt
+            schools={shortlistUrns}
+            stages={stages}
+            sectors={sectors}
+            variant="visit-pack"
+            includeVisitLog
+          />
+          <button type="button" className="btn btn-pack" onClick={printPack}>
+            Print / save as PDF
+          </button>
+        </div>
       </div>
 
       <div className="visit-pack-sheet visit-pack-contacts-sheet">

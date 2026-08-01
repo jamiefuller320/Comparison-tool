@@ -62,6 +62,7 @@ After merge to `main` and Pages is enabled:
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
 - Matches comparison tables to selected categories: **Early years → day-care + school nursery/infant Ofsted + EYFSP area context**, **Childminders → consented directory + vetting checklist**, **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent)
 - **Visit pack** for shortlisted nurseries and childminders — printable contacts, Ofsted links, suggested interview questions, and a light per-setting contact status/notes log (browser localStorage)
+- **Optional save shortlist** — after two or more settings are shortlisted (or from the visit pack), parents can save under an email. Compare never requires an account. Without Supabase secrets this is a browser-local save; with `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` it becomes magic-link sign-in across devices
 - Keeps the language parental: shortlists and fit, not board packs or SIP targets
 
 ## Run locally
@@ -97,6 +98,31 @@ npm start              # serves the out/ folder
 ```
 
 Shareable comparison links use `?schools=URN,URN,URN`, `?postcode=SO40+2HR`, `?stages=ks2,ks3,ks4` and `?sectors=state,independent`.
+
+### Optional accounts (Save shortlist)
+
+No login wall. Soft prompt after engagement only.
+
+| Mode | When | Behaviour |
+| --- | --- | --- |
+| Browser-local | Default (no Supabase env) | Email keys a shortlist saved in `localStorage` on this device |
+| Magic link | `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` set at build | Supabase OTP email; shortlists in a `shortlists` table (RLS: own rows only) |
+
+Supabase SQL sketch (run once in the project SQL editor):
+
+```sql
+create table public.shortlists (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  payload jsonb not null,
+  updated_at timestamptz not null default now()
+);
+alter table public.shortlists enable row level security;
+create policy "own rows" on public.shortlists
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+```
+
+Add the two `NEXT_PUBLIC_SUPABASE_*` values as GitHub Actions secrets so Pages builds pick them up. In Supabase Auth URL config, allow redirect to `https://jamiefuller320.github.io/Comparison-tool/`.
 
 ## Force refresh (missing school)
 
