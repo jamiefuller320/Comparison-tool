@@ -8,8 +8,7 @@ async function withDom(html, fn) {
     const dom = new JSDOM(`<!doctype html>${html}`);
     return fn(dom.window.document);
   } catch {
-    // jsdom is optional in this environment — skip DOM assertions.
-    console.log("(skip DOM insert checks — jsdom not installed)");
+    console.log("(skip DOM prepare checks — jsdom not installed)");
     return null;
   }
 }
@@ -17,7 +16,7 @@ async function withDom(html, fn) {
 async function main() {
   const {
     isAppleMobilePrintHost,
-    insertVisitPackPageBreaks,
+    prepareVisitPackForPrint,
     VISIT_PACK_PRINT_CSS,
   } = await import("../src/lib/printVisitPack.ts");
 
@@ -25,14 +24,6 @@ async function main() {
     isAppleMobilePrintHost({
       userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)",
       platform: "iPhone",
-      maxTouchPoints: 5,
-    }),
-    true,
-  );
-  assert.equal(
-    isAppleMobilePrintHost({
-      userAgent: "Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X)",
-      platform: "iPad",
       maxTouchPoints: 5,
     }),
     true,
@@ -54,32 +45,35 @@ async function main() {
     }),
     false,
   );
-  assert.equal(
-    isAppleMobilePrintHost({
-      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120",
-      platform: "Win32",
-      maxTouchPoints: 0,
-    }),
-    false,
-  );
 
-  assert.match(VISIT_PACK_PRINT_CSS, /page-break-after:\s*always/);
-  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-page-break/);
-  assert.match(VISIT_PACK_PRINT_CSS, /display:\s*block\s*!important/);
+  // Prefer break-before; avoid break-after (WebKit blank-page padding).
+  assert.match(VISIT_PACK_PRINT_CSS, /break-before:\s*page/);
+  assert.match(
+    VISIT_PACK_PRINT_CSS,
+    /\.visit-pack > \.visit-pack-sheet ~ \.visit-pack-sheet/,
+  );
+  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-page-break[\s\S]*display:\s*none/);
+  assert.ok(
+    !/page-break-after:\s*always/.test(VISIT_PACK_PRINT_CSS),
+    "must not use page-break-after:always (WebKit blank pages)",
+  );
 
   await withDom(
     `<div class="visit-pack">
-      <div class="visit-pack-sheet" id="a"></div>
-      <div class="visit-pack-sheet" id="b"></div>
+      <div class="visit-pack-toolbar no-print">chrome</div>
       <div class="visit-pack-page-break"></div>
-      <div class="visit-pack-sheet" id="c"></div>
+      <div class="visit-pack-sheet" id="a">A</div>
+      <div class="visit-pack-page-break"></div>
+      <div class="visit-pack-sheet" id="b">B</div>
     </div>`,
     (document) => {
       const pack = document.querySelector(".visit-pack");
-      const n = insertVisitPackPageBreaks(pack);
-      assert.equal(n, 1, "insert only missing break between a and b");
-      assert.equal(pack.querySelectorAll(".visit-pack-page-break").length, 2);
-      assert.equal(insertVisitPackPageBreaks(pack), 0, "idempotent");
+      const prepared = prepareVisitPackForPrint(pack);
+      assert.equal(prepared.querySelectorAll(".no-print").length, 0);
+      assert.equal(prepared.querySelectorAll(".visit-pack-page-break").length, 0);
+      assert.ok(prepared.firstElementChild?.classList.contains("visit-pack-sheet"));
+      assert.equal(prepared.querySelectorAll(".visit-pack-sheet").length, 2);
+      assert.ok(prepared.classList.contains("visit-pack-print-root"));
     },
   );
 

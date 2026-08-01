@@ -1,12 +1,11 @@
 /**
  * Print only the visit pack.
  *
- * iPhone / iPad (WebKit): print the main document. Zero-size iframes and
- * @media print rules inside iframes are unreliable on iOS (page breaks are
- * often ignored entirely).
+ * iPhone / iPad (WebKit): print a clean clone from the main document.
+ * Zero-size iframes ignore print CSS; WebKit also inserts blank sheets for
+ * `page-break-after: always`, so we use `break-before` on sheets after the first.
  *
- * Desktop: keep an isolated iframe so the rest of the app UI does not print,
- * with critical page-break CSS inlined so we do not wait on stylesheet loads.
+ * Desktop: isolated iframe with the same break-before rules inlined.
  */
 
 export function isAppleMobilePrintHost(
@@ -21,9 +20,12 @@ export function isAppleMobilePrintHost(
   return false;
 }
 
-/** Critical rules inlined into the print iframe (desktop path). */
+/**
+ * Critical print rules. Prefer break-before on later sheets — WebKit pads a
+ * blank page when it sees trailing break-after on the previous sheet.
+ */
 export const VISIT_PACK_PRINT_CSS = `
-@page { margin: 12mm; size: A4; }
+@page { margin: 12mm; }
 html, body {
   margin: 0 !important;
   padding: 0 !important;
@@ -37,7 +39,18 @@ html, body {
   line-height: 1.4;
 }
 .no-print { display: none !important; }
-.visit-pack, .visit-pack-print-clone {
+.visit-pack-page-break {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
+  page-break-before: auto !important;
+  break-before: auto !important;
+}
+.visit-pack, .visit-pack-print-clone, .visit-pack-print-root {
   display: block !important;
   border: 0 !important;
   margin: 0 !important;
@@ -46,6 +59,8 @@ html, body {
   position: static !important;
   width: 100% !important;
   overflow: visible !important;
+  min-height: 0 !important;
+  height: auto !important;
 }
 .visit-pack-sheet {
   display: block !important;
@@ -57,18 +72,15 @@ html, body {
   padding: 0 0 2mm !important;
   border: 0 !important;
   page-break-inside: auto !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
 }
-/* Prefer dedicated break nodes — stacking break-after on sheets + breaks causes blank pages. */
-.visit-pack-page-break {
-  display: block !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  line-height: 0 !important;
-  font-size: 0 !important;
-  page-break-after: always !important;
-  break-after: page !important;
+/* New page starts at each sheet after the first — avoids WebKit blank padding. */
+.visit-pack > .visit-pack-sheet ~ .visit-pack-sheet,
+.visit-pack-print-clone > .visit-pack-sheet ~ .visit-pack-sheet,
+.visit-pack-print-root > .visit-pack-sheet ~ .visit-pack-sheet {
+  break-before: page !important;
+  page-break-before: always !important;
 }
 .visit-pack-school-sheet,
 .visit-pack-school,
@@ -98,8 +110,8 @@ html, body {
 .visit-note-lines {
   display: block !important;
   width: 100% !important;
-  min-height: 140mm !important;
-  height: 140mm !important;
+  min-height: 120mm !important;
+  height: 120mm !important;
   flex: none !important;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -131,53 +143,40 @@ html, body {
 }
 `;
 
-export function insertVisitPackPageBreaks(root: ParentNode): number {
-  const pack =
-    root instanceof Element && root.classList.contains("visit-pack")
-      ? root
-      : root.querySelector(".visit-pack");
-  if (!pack) return 0;
-
-  const sheets = Array.from(pack.children).filter((el) =>
-    el.classList.contains("visit-pack-sheet"),
-  );
-  let inserted = 0;
-  for (let i = 0; i < sheets.length - 1; i += 1) {
-    const sheet = sheets[i];
-    const nextSheet = sheets[i + 1];
-    let probe: Element | null = sheet.nextElementSibling;
-    let hasBreakBeforeNext = false;
-    while (probe && probe !== nextSheet) {
-      if (probe.classList.contains("visit-pack-page-break")) {
-        hasBreakBeforeNext = true;
-        break;
-      }
-      probe = probe.nextElementSibling;
-    }
-    if (hasBreakBeforeNext) continue;
-    const br = sheet.ownerDocument.createElement("div");
-    br.className = "visit-pack-page-break";
-    br.setAttribute("aria-hidden", "true");
-    sheet.insertAdjacentElement("afterend", br);
-    inserted += 1;
+/** Build a print-only pack node with chrome stripped and no leading break nodes. */
+export function prepareVisitPackForPrint(pack: HTMLElement): HTMLElement {
+  const clone = pack.cloneNode(true) as HTMLElement;
+  clone.classList.add("visit-pack-print-root");
+  clone.classList.remove("visit-pack-print-clone");
+  clone.querySelectorAll(".no-print").forEach((el) => el.remove());
+  clone.querySelectorAll(".print-only").forEach((el) => {
+    el.classList.remove("print-only");
+  });
+  // Drop inert break markers — pagination uses sheet ~ sheet break-before.
+  clone.querySelectorAll(".visit-pack-page-break").forEach((el) => el.remove());
+  // Guard against accidental leading empty nodes.
+  while (
+    clone.firstChild &&
+    (!(clone.firstChild instanceof Element) ||
+      !(clone.firstChild as Element).classList.contains("visit-pack-sheet"))
+  ) {
+    clone.removeChild(clone.firstChild);
   }
-  return inserted;
+  return clone;
 }
 
 function printViaMainWindow(pack: HTMLElement, noteHeightPx: number): void {
-  pack.style.setProperty("--visit-print-note-height", `${noteHeightPx}px`);
-  insertVisitPackPageBreaks(pack);
+  const printRoot = prepareVisitPackForPrint(pack);
+  printRoot.style.setProperty("--visit-print-note-height", `${noteHeightPx}px`);
+  printRoot.setAttribute("data-visit-pack-print-root", "1");
 
-  const parent = pack.parentNode;
-  if (!parent) return;
-
-  // Park the pack as a direct body child so we can hide every other body
-  // sibling during print without collapsing nested ancestors (iOS WebKit).
-  const placeholder = document.createComment("visit-pack-print-anchor");
-  parent.insertBefore(placeholder, pack);
-  document.body.appendChild(pack);
+  const style = document.createElement("style");
+  style.setAttribute("data-visit-pack-print-style", "1");
+  style.textContent = VISIT_PACK_PRINT_CSS;
 
   const scrollY = window.scrollY;
+  document.head.appendChild(style);
+  document.body.appendChild(printRoot);
   document.documentElement.classList.add("visit-pack-printing");
   document.body.classList.add("visit-pack-printing");
 
@@ -187,19 +186,14 @@ function printViaMainWindow(pack: HTMLElement, noteHeightPx: number): void {
     done = true;
     document.documentElement.classList.remove("visit-pack-printing");
     document.body.classList.remove("visit-pack-printing");
-    if (placeholder.parentNode) {
-      placeholder.parentNode.insertBefore(pack, placeholder);
-      placeholder.parentNode.removeChild(placeholder);
-    } else if (!pack.isConnected) {
-      document.body.appendChild(pack);
-    }
+    printRoot.remove();
+    style.remove();
     window.removeEventListener("afterprint", finish);
     window.scrollTo(0, scrollY);
   };
 
   window.addEventListener("afterprint", finish);
 
-  // Let WebKit apply the printing class before opening the sheet.
   window.requestAnimationFrame(() => {
     window.setTimeout(() => {
       try {
@@ -214,16 +208,9 @@ function printViaMainWindow(pack: HTMLElement, noteHeightPx: number): void {
 }
 
 function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
-  pack.style.setProperty("--visit-print-note-height", `${noteHeightPx}px`);
-
-  const clone = pack.cloneNode(true) as HTMLElement;
+  const clone = prepareVisitPackForPrint(pack);
   clone.classList.add("visit-pack-print-clone");
   clone.style.setProperty("--visit-print-note-height", `${noteHeightPx}px`);
-  clone.querySelectorAll(".no-print").forEach((el) => el.remove());
-  clone.querySelectorAll(".print-only").forEach((el) => {
-    el.classList.remove("print-only");
-  });
-  insertVisitPackPageBreaks(clone);
 
   const iframe = document.createElement("iframe");
   iframe.setAttribute("title", "Print visit pack");
@@ -270,7 +257,6 @@ function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
     }
   };
 
-  // Wait a tick for the iframe document to lay out.
   window.setTimeout(triggerPrint, 200);
 }
 
