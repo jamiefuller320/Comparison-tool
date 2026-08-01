@@ -38,6 +38,7 @@ import {
 } from "@/lib/sectors";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 import { requestTourStart } from "@/lib/tour";
+import { recordFeedbackUsage } from "@/lib/productFeedback";
 import {
   classifyKs4Missing,
   hasPublishedKs4,
@@ -122,6 +123,10 @@ export function HomePostcodeExplorer({
     else url.searchParams.delete("postcode");
     window.history.replaceState({}, "", url.toString());
   }, [home]);
+
+  useEffect(() => {
+    if (home?.postcode) recordFeedbackUsage({ hadPostcode: true });
+  }, [home?.postcode]);
 
   async function lookup(explicit?: string) {
     const candidate = explicit ?? rawPostcode;

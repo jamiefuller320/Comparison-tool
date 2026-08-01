@@ -53,7 +53,9 @@
     "test:sector-benches": "python3 scripts/test-sector-benches.py",
     "test:la-packs": "npx --yes tsx scripts/test-la-packs.mjs",
     "test:ui-preferences": "npx --yes tsx scripts/test-ui-preferences.mjs",
-    "test:account": "npx --yes tsx scripts/test-account.mjs"
+    "test:account": "npx --yes tsx scripts/test-account.mjs",
+    "test:product-feedback": "npx --yes tsx scripts/test-product-feedback.mjs",
+    "digest:feedback": "python3 scripts/digest-product-feedback.py"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

@@ -1,0 +1,147 @@
+name: Product feedback intake
+
+# Soft-launch / usage-aware feedback from the live site.
+# Prefer CHALLENGE_INTAKE_REPO (private) so notes/emails stay off public issues.
+# Falls back to this repo with label product-feedback.
+
+on:
+  repository_dispatch:
+    types: [product-feedback]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print payload handling without creating an issue"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build feedback issue
+        id: feedback
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, re
+          raw = os.environ.get("PAYLOAD") or "{}"
+          try:
+              p = json.loads(raw)
+          except json.JSONDecodeError:
+              p = {}
+          if not isinstance(p, dict):
+              p = {}
+
+          def clean(key, limit=500):
+              val = str(p.get(key) or "").strip()
+              return val[:limit]
+
+          sentiment = clean("sentiment", 40) or "unspecified"
+          trigger = clean("trigger", 40) or "manual"
+          topics = clean("topics", 200) or "—"
+          campaign = clean("campaignId", 80) or "unknown"
+          title = f"[product-feedback] {sentiment} · {trigger} · {campaign}"
+          title = re.sub(r"\s+", " ", title)[:180]
+
+          email = clean("email", 200)
+          has_email = clean("hasEmail", 8).lower() == "yes" and bool(email)
+          machine = clean("machineJson", 4000)
+
+          lines = [
+              "## Product feedback (School Compass)",
+              "",
+              "| Field | Value |",
+              "| --- | --- |",
+              f"| Campaign | `{campaign}` |",
+              f"| App version | `{clean('appVersion', 40) or '—'}` |",
+              f"| Trigger | `{trigger}` |",
+              f"| Sentiment | `{sentiment}` |",
+              f"| Topics | {topics} |",
+              f"| Adaptive question | {clean('adaptiveQuestion', 400) or '—'} |",
+              f"| Page URL | {clean('pageUrl', 400) or '—'} |",
+              f"| Requested at | {clean('requestedAt', 40) or '—'} |",
+              "",
+              "### Usage signals",
+              "",
+              "| Signal | Value |",
+              "| --- | --- |",
+              f"| Had postcode | {clean('usageHadPostcode', 8) or '—'} |",
+              f"| Shortlist max | {clean('usageShortlistMax', 8) or '0'} |",
+              f"| Opened side by side | {clean('usageOpenedSideBySide', 8) or '—'} |",
+              f"| Saw visit pack | {clean('usageSawVisitPack', 8) or '—'} |",
+              f"| Printed visit pack | {clean('usagePrintedVisitPack', 8) or '—'} |",
+              f"| Stages | {clean('usageStages', 120) or '—'} |",
+              f"| Sectors | {clean('usageSectors', 80) or '—'} |",
+              f"| Engaged seconds | {clean('usageEngagedSeconds', 12) or '0'} |",
+              f"| Session started | {clean('usageSessionStartedAt', 40) or '—'} |",
+              "",
+              "### Reporter note",
+              clean("note", 2000) or "_(empty)_",
+              "",
+              "### Contact",
+          ]
+          if has_email:
+              lines.append(
+                  "Email provided — see Actions job summary (not copied into this issue)."
+              )
+          else:
+              lines.append("No email provided.")
+          lines += [
+              "",
+              "### Machine payload",
+              "",
+              "```json",
+              machine or "{}",
+              "```",
+              "",
+              "_Queued by School Compass soft-launch feedback. Collate with "
+              "`python3 scripts/digest-product-feedback.py` for the improvement cycle._",
+          ]
+          body = "\n".join(lines)
+          pathlib.Path("feedback-title.txt").write_text(title, encoding="utf-8")
+          pathlib.Path("feedback-body.md").write_text(body, encoding="utf-8")
+          labels = ["product-feedback", f"feedback-{re.sub(r'[^a-z0-9-]+', '', sentiment.lower()) or 'other'}"]
+          pathlib.Path("feedback-labels.txt").write_text("\n".join(labels), encoding="utf-8")
+          summary = pathlib.Path(os.environ["GITHUB_STEP_SUMMARY"])
+          with summary.open("a", encoding="utf-8") as fh:
+              fh.write("## Product feedback intake\n\n")
+              fh.write(f"**Title:** {title}\n\n")
+              if has_email:
+                  fh.write(
+                      f"**Maintainer contact (private to Actions viewers):** `{email}`\n\n"
+                  )
+              fh.write(body)
+              fh.write("\n")
+          print(title)
+          PY
+
+      - name: Create intake issue
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.dry_run == 'true') }}
+        env:
+          GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
+          INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO || github.repository }}
+        run: |
+          set -euo pipefail
+          TITLE=$(cat feedback-title.txt)
+          LABELS=()
+          while IFS= read -r label; do
+            [ -n "$label" ] || continue
+            LABELS+=(--label "$label")
+          done < feedback-labels.txt
+          gh issue create \
+            --repo "$INTAKE_REPO" \
+            --title "$TITLE" \
+            "${LABELS[@]}" \
+            --body-file feedback-body.md \
+            || gh issue create \
+              --repo "$INTAKE_REPO" \
+              --title "$TITLE" \
+              --label "product-feedback" \
+              --body-file feedback-body.md
