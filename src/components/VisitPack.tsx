@@ -21,6 +21,9 @@ import {
 } from "@/lib/visitLog";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { InspectionPrecis } from "@/components/InspectionPrecis";
+import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
+import type { PhaseId } from "@/lib/phases";
+import type { SectorId } from "@/lib/sectors";
 
 function contactAsSchool(row: VisitContactRow): SchoolRecord {
   return {
@@ -152,9 +155,13 @@ function QuestionBlock({
 export function VisitPack({
   nurseries,
   childminders,
+  stages = [],
+  sectors = [],
 }: {
   nurseries: SchoolRecord[];
   childminders: SchoolRecord[];
+  stages?: PhaseId[];
+  sectors?: SectorId[];
 }) {
   const nurseryRows = useMemo(
     () =>
@@ -169,6 +176,10 @@ export function VisitPack({
         .map(toVisitContactRow)
         .filter((r): r is VisitContactRow => Boolean(r)),
     [childminders],
+  );
+  const shortlistUrns = useMemo(
+    () => [...nurseries, ...childminders].map((s) => s.urn),
+    [nurseries, childminders],
   );
 
   const [log, setLog] = useState<Record<string, VisitLogEntry>>({});
@@ -212,9 +223,18 @@ export function VisitPack({
             the address, Ofsted report, and routes the setting publishes.
           </p>
         </div>
-        <button type="button" className="btn btn-pack" onClick={printPack}>
-          Print / save as PDF
-        </button>
+        <div className="visit-pack-toolbar-actions">
+          <SaveShortlistPrompt
+            schools={shortlistUrns}
+            stages={stages}
+            sectors={sectors}
+            includeVisitLog
+            variant="visit-pack"
+          />
+          <button type="button" className="btn btn-pack" onClick={printPack}>
+            Print / save as PDF
+          </button>
+        </div>
       </div>
 
       <div className="visit-pack-sheet visit-pack-contacts-sheet">
