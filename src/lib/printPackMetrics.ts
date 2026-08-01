@@ -143,12 +143,3 @@ export function buildPrintCompareTable(
 
   return null;
 }
-
-/** Split shortlist into pages of two half-page note blocks. */
-export function chunkPairs<T>(items: T[]): T[][] {
-  const pages: T[][] = [];
-  for (let i = 0; i < items.length; i += 2) {
-    pages.push(items.slice(i, i + 2));
-  }
-  return pages;
-}

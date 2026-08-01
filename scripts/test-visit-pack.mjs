@@ -148,12 +148,16 @@ async function main() {
 
   const noteOne = computePrintNoteHeightPx(1);
   const noteMany = computePrintNoteHeightPx(8);
-  if (noteOne < 120 || noteOne > 240) {
-    console.error("FAIL single-contact notes should use spare page space", noteOne);
+  if (noteOne < 300) {
+    console.error("FAIL one-school-per-page notes should be tall", noteOne);
     process.exit(1);
   }
-  if (noteMany > noteOne || noteMany < 64) {
-    console.error("FAIL many-contact notes should stay compact", noteMany, noteOne);
+  if (noteMany !== noteOne) {
+    console.error(
+      "FAIL note height is per page now, independent of shortlist size",
+      noteMany,
+      noteOne,
+    );
     process.exit(1);
   }
 
