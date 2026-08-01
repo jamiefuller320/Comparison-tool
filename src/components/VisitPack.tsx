@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import {
   computePrintNoteHeightPx,
@@ -436,6 +436,10 @@ export function VisitPack({
         ) : null}
       </div>
 
+      {figures || schoolNotePages.length ? (
+        <div className="visit-pack-page-break" aria-hidden="true" />
+      ) : null}
+
       {figures ? (
         <div className="visit-pack-sheet visit-pack-figures-sheet">
           <PackSheetTitle subtitle="published figures" printedOn={printedOn} />
@@ -443,21 +447,23 @@ export function VisitPack({
         </div>
       ) : null}
 
-      {schoolNotePages.map(({ row, school }) => (
-        <div
-          key={row.urn}
-          className="visit-pack-sheet visit-pack-school-sheet"
-        >
-          <PackSheetTitle
-            subtitle={`précis & notes · ${row.name}`}
-            printedOn={printedOn}
-          />
-          <SchoolNotesPage
-            school={school}
-            row={row}
-            entry={entryFor(row.urn)}
-          />
-        </div>
+      {schoolNotePages.map(({ row, school }, index) => (
+        <Fragment key={row.urn}>
+          {figures || index > 0 ? (
+            <div className="visit-pack-page-break" aria-hidden="true" />
+          ) : null}
+          <div className="visit-pack-sheet visit-pack-school-sheet">
+            <PackSheetTitle
+              subtitle={`précis & notes · ${row.name}`}
+              printedOn={printedOn}
+            />
+            <SchoolNotesPage
+              school={school}
+              row={row}
+              entry={entryFor(row.urn)}
+            />
+          </div>
+        </Fragment>
       ))}
     </div>
   );
