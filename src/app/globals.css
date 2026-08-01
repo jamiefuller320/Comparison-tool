@@ -236,6 +236,140 @@ body:has(.floating-controls) {
   color: var(--sea-deep);
 }
 
+.decision-guidance {
+  margin: 0 0 1.15rem;
+  padding: 0.15rem 0 0.15rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 240, 0.9),
+    rgba(232, 243, 247, 0.55)
+  );
+  max-width: 52rem;
+}
+
+.decision-guidance > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-display);
+  color: var(--sea-deep);
+}
+
+.decision-guidance > summary::-webkit-details-marker {
+  display: none;
+}
+
+.decision-guidance-summary-title {
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.decision-guidance-summary-hint {
+  font-family: var(--font-body, inherit);
+  font-size: 0.88rem;
+  font-weight: 450;
+  color: var(--ink-soft);
+}
+
+.decision-guidance[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.decision-guidance-lead {
+  margin: 0.85rem 1rem 0.65rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  max-width: 42rem;
+}
+
+.decision-guidance-grid {
+  display: grid;
+  gap: 0.85rem 1.25rem;
+  padding: 0 1rem 1rem;
+}
+
+@media (min-width: 720px) {
+  .decision-guidance-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.page-how-grid {
+  padding: 0;
+  max-width: 52rem;
+}
+
+.decision-guidance-block h3,
+.decision-guidance-block h4 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+}
+
+.decision-guidance-block ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.decision-guidance-block li + li {
+  margin-top: 0.28rem;
+}
+
+.precis-reading-note {
+  margin: 0 0 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid var(--sea);
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  max-width: 48rem;
+}
+
+.decision-guidance-print {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #c5d0d6;
+  border-radius: 0.5rem;
+}
+
+.decision-guidance-print h4 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--sea-deep);
+}
+
+.decision-guidance-print-columns {
+  display: grid;
+  gap: 0.65rem 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.decision-guidance-print-columns ul {
+  margin: 0.25rem 0 0;
+  padding-left: 1rem;
+}
+
+.decision-guidance-print-foot {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
 .hero {
   position: relative;
   overflow: hidden;
@@ -2479,5 +2613,14 @@ html.tour-running .hero-inner > * {
   .visit-questions:last-child {
     break-after: avoid;
     page-break-after: avoid;
+  }
+
+  .decision-guidance-print {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .decision-guidance-print-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

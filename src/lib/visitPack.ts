@@ -4,6 +4,7 @@ import {
   type ChecklistItem,
 } from "@/lib/childminderChecklist";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
+import type { GuidancePathId } from "@/lib/decisionGuidance";
 
 /** Interview / visit prompts for day-care and school nurseries. */
 export const NURSERY_VISIT_QUESTIONS: ChecklistItem[] = [
@@ -57,7 +58,59 @@ export const NURSERY_VISIT_QUESTIONS: ChecklistItem[] = [
   },
 ];
 
-export type VisitPackKind = "nursery" | "childminder";
+/** Open-day / visit prompts for primary and secondary shortlists. */
+export const SCHOOL_VISIT_QUESTIONS: ChecklistItem[] = [
+  {
+    id: "feel",
+    title: "What a day feels like for a child like mine",
+    detail:
+      "Ask how a typical day runs, how new pupils settle, and how staff respond when a child is anxious, bored, or stuck. Watch corridors and lunch if you can.",
+  },
+  {
+    id: "learning",
+    title: "Teaching, reading and support",
+    detail:
+      "For primary: early reading, writing, and maths support. For secondary: curriculum breadth, homework, and how they stretch or scaffold. Ask about SEND and disadvantaged pupils.",
+  },
+  {
+    id: "behaviour",
+    title: "Behaviour, pastoral care and belonging",
+    detail:
+      "Ask how behaviour is handled, how bullying is followed up, and who a child goes to with a worry. Look for calm, purposeful interactions — not just polished open-day moments.",
+  },
+  {
+    id: "inspection",
+    title: "Since the last inspection",
+    detail:
+      "Open the latest Ofsted/ISI report (or Schoolside précis). Ask what changed on the strengths and the areas for improvement — especially if the report is a few years old.",
+  },
+  {
+    id: "outcomes",
+    title: "Published outcomes in context",
+    detail:
+      "If tables look strong or weak, ask how leaders explain recent years, cohort size, and what they are working on now. Treat one year’s spike as a question, not a verdict.",
+  },
+  {
+    id: "admissions",
+    title: "Admissions practicalities",
+    detail:
+      "Confirm deadlines, criteria, sibling rules, and transport. Published performance does not tell you your chance of a place.",
+  },
+  {
+    id: "visit-observe",
+    title: "See ordinary school life",
+    detail:
+      "Prefer a working visit or tour that includes lessons in progress. Note whether pupils seem engaged and whether staff know pupils’ names and needs.",
+  },
+  {
+    id: "decide",
+    title: "Your decision notes",
+    detail:
+      "Write what felt right or wrong for your child, open questions, and application dates. Compare notes across the shortlist after visits — not only on the numbers.",
+  },
+];
+
+export type VisitPackKind = "nursery" | "childminder" | "school";
 
 /**
  * Height for the printable notes block on each contact card.
@@ -96,13 +149,40 @@ export function visitPackKind(record: SchoolRecord): VisitPackKind | null {
   ) {
     return "nursery";
   }
+  // Primary / secondary / all-through for school shortlist packs.
+  if (record.urn && record.name) {
+    return "school";
+  }
   return null;
 }
 
 export function questionsForKind(kind: VisitPackKind): ChecklistItem[] {
-  return kind === "childminder"
-    ? CHILDMINDER_VETTING_CHECKLIST
-    : NURSERY_VISIT_QUESTIONS;
+  if (kind === "childminder") return CHILDMINDER_VETTING_CHECKLIST;
+  if (kind === "school") return SCHOOL_VISIT_QUESTIONS;
+  return NURSERY_VISIT_QUESTIONS;
+}
+
+/** Map a compare path to decision-guidance + pack labelling. */
+export function guidancePathForPack(args: {
+  schools?: SchoolRecord[];
+  nurseries?: SchoolRecord[];
+  childminders?: SchoolRecord[];
+  preferPath?: GuidancePathId;
+}): GuidancePathId {
+  if (args.preferPath) return args.preferPath;
+  if (args.childminders?.length) return "childminders";
+  if (args.nurseries?.length) return "early-years";
+  const schools = args.schools || [];
+  if (schools.some((s) => s.phases?.includes("ks4") || s.phase === "secondary")) {
+    return "ks4";
+  }
+  if (schools.some((s) => s.phases?.includes("ks2") || s.phase === "primary")) {
+    return "ks2";
+  }
+  if (schools.some((s) => s.phases?.includes("ks1"))) {
+    return "ks1";
+  }
+  return schools.length ? "ks2" : "general";
 }
 
 export interface VisitContactRow {
@@ -121,20 +201,32 @@ export interface VisitContactRow {
   ofstedUrn?: string | null;
   places?: number | null;
   providerSubtype?: string | null;
+  ageRange?: string | null;
   /** Optional inspection précis fields for visit-pack qualitative context. */
   inspectionPrecis?: string | null;
   inspectionQuotes?: SchoolRecord["inspectionQuotes"];
+  inspectionStrengths?: SchoolRecord["inspectionStrengths"];
+  inspectionImprovements?: SchoolRecord["inspectionImprovements"];
   inspectionReportFileUrl?: string | null;
   inspectionReportLabel?: string | null;
   inspectionPrecisSource?: SchoolRecord["inspectionPrecisSource"];
 }
 
-export function toVisitContactRow(record: SchoolRecord): VisitContactRow | null {
-  const kind = visitPackKind(record);
+export function toVisitContactRow(
+  record: SchoolRecord,
+  forceKind?: VisitPackKind,
+): VisitContactRow | null {
+  const kind = forceKind ?? visitPackKind(record);
   if (!kind) return null;
   const addressLine = [record.address, record.town, record.postcode]
     .filter(Boolean)
     .join(", ");
+  const schoolLabel =
+    record.schoolTypeLabel ||
+    record.phase ||
+    (record.phases?.includes("ks4") ? "Secondary" : null) ||
+    (record.phases?.includes("ks2") ? "Primary" : null) ||
+    "School";
   return {
     urn: record.urn,
     name: record.name,
@@ -142,10 +234,12 @@ export function toVisitContactRow(record: SchoolRecord): VisitContactRow | null 
     kindLabel:
       kind === "childminder"
         ? record.providerSubtype || "Childminder"
-        : record.providerSubtype ||
-          record.schoolTypeLabel ||
-          record.phase ||
-          "Nursery",
+        : kind === "school"
+          ? schoolLabel
+          : record.providerSubtype ||
+            record.schoolTypeLabel ||
+            record.phase ||
+            "Nursery",
     addressLine: addressLine || "Address not published",
     town: record.town,
     postcode: record.postcode,
@@ -157,8 +251,11 @@ export function toVisitContactRow(record: SchoolRecord): VisitContactRow | null 
     ofstedUrn: record.ofstedUrn || undefined,
     places: record.places ?? record.placesIncludingEstimates,
     providerSubtype: record.providerSubtype || record.schoolTypeLabel,
+    ageRange: record.ageRange,
     inspectionPrecis: record.inspectionPrecis,
     inspectionQuotes: record.inspectionQuotes,
+    inspectionStrengths: record.inspectionStrengths,
+    inspectionImprovements: record.inspectionImprovements,
     inspectionReportFileUrl: record.inspectionReportFileUrl,
     inspectionReportLabel: record.inspectionReportLabel,
     inspectionPrecisSource: record.inspectionPrecisSource,
