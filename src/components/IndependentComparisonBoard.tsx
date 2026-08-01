@@ -24,6 +24,8 @@ import {
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
+import { CoverageStrip } from "@/components/CoverageStrip";
+import { SecondaryContextPane } from "@/components/SecondaryContextPane";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
@@ -177,6 +179,13 @@ export function IndependentComparisonBoard({
       ) : (
         <DataGapFlags gaps={dataGaps.filter((g) => g.level === "board")} />
       )}
+
+      <CoverageStrip
+        schools={schools}
+        board="ks4"
+        gaps={dataGaps}
+        secondarySlot={<SecondaryContextPane schools={schools} board="ks4" />}
+      />
 
       <CompareTableFrame tableId="ks4">
         <table className="compare-table">
