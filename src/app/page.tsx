@@ -1,6 +1,9 @@
 import { CompareLoader } from "@/components/CompareLoader";
+import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
 
 export default function HomePage() {
+  const how = DECISION_GUIDANCE.general;
+
   return (
     <main>
       <CompareLoader />
@@ -8,27 +11,35 @@ export default function HomePage() {
       <section className="section" id="how" data-tour="how">
         <div className="shell">
           <div className="section-head">
-            <h2>How to read this as a parent</h2>
+            <h2>{how.heading}</h2>
             <p>
-              Performance tables are one lens on a school. Use them to spot patterns
-              across a shortlist, then visit, talk to staff, and weigh fit for your child.
-              New here? Use <strong>How to use</strong> in the header for a short
-              walkthrough of the page.
+              {how.lead} New here? Use <strong>How to use</strong> in the header
+              for a short walkthrough. On each Side by side path, open{" "}
+              <strong>What this tells you</strong> for path-specific guidance, and
+              print a shortlist / visit pack when you are ready to go.
             </p>
           </div>
-          <div className="footnote">
+          <div className="decision-guidance-grid page-how-grid">
+            {how.sections
+              .filter((s) => s.id !== "precis")
+              .map((section) => (
+                <section key={section.id} className="decision-guidance-block">
+                  <h3>{section.title}</h3>
+                  <ul>
+                    {section.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+          </div>
+          <div className="footnote" style={{ marginTop: "1.25rem" }}>
             <p>
-              <strong>Expected standard</strong> means pupils met the level expected
-              for the end of primary. <strong>Higher standard</strong> is a tougher
-              bar. <strong>Scaled scores</strong> centre on 100.
-            </p>
-            <p>
-              Side by side shows one path at a time. Early years uses Ofsted grades
-              plus EYFSP area context; childminders use a consented directory and
-              checklist; school stages use published tables. Road distances are a
-              travel guide, not catchment. Small cohorts bounce more than large ones.
-              Admissions and ethos stay outside this dataset — see the Data section
-              for sources.
+              <strong>Expected standard</strong> means pupils met the level
+              expected for the end of primary. <strong>Higher standard</strong>{" "}
+              is a tougher bar. <strong>Scaled scores</strong> centre on 100.
+              Inspection précis excerpts are verbatim from Ofsted/ISI PDFs —
+              open the full report for context.
             </p>
           </div>
         </div>

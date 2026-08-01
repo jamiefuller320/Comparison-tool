@@ -36,6 +36,8 @@ from inspection_precis_lib import (  # noqa: E402
     extract_isi_precis,
     extract_ofsted_precis,
     ofsted_provider_url_candidates,
+    is_non_inspection_report_label,
+    looks_like_letterhead_junk,
     parse_ofsted_provider_latest_report,
 )
 from seed_scope import (  # noqa: E402
@@ -156,9 +158,17 @@ def enrich_records(
         has_highlights = record.get("inspectionStrengths") and record.get(
             "inspectionImprovements"
         )
+        bad_source = is_non_inspection_report_label(
+            record.get("inspectionReportLabel")
+        ) or looks_like_letterhead_junk(record.get("inspectionPrecis"))
         # Default: skip complete core précis. With upgrade_highlights, also
-        # re-fetch rows missing strength/improvement buckets.
-        if has_core and (has_highlights or not upgrade_highlights):
+        # re-fetch rows missing strength/improvement buckets. Always re-fetch
+        # conversion letters / letterhead junk so a real inspection can replace them.
+        if (
+            has_core
+            and not bad_source
+            and (has_highlights or not upgrade_highlights)
+        ):
             continue
         attempted += 1
         ok = False
@@ -253,9 +263,12 @@ def prioritize_records(
         has_highlights = bool(
             r.get("inspectionStrengths") and r.get("inspectionImprovements")
         )
-        if has_precis and not upgrade_highlights:
+        bad_source = is_non_inspection_report_label(
+            r.get("inspectionReportLabel")
+        ) or looks_like_letterhead_junk(r.get("inspectionPrecis"))
+        if has_precis and not upgrade_highlights and not bad_source:
             continue
-        if has_precis and has_highlights:
+        if has_precis and has_highlights and not bad_source:
             continue
         if should_try_isi(r) and r.get("isiLatestReportUrl"):
             isi.append(r)
@@ -506,6 +519,14 @@ def main() -> None:
                 row["inspectionReportFileUrl"] = full["inspectionReportFileUrl"]
             if full.get("inspectionPrecisSource"):
                 row["inspectionPrecisSource"] = full["inspectionPrecisSource"]
+            for key in (
+                "inspectionQuotes",
+                "inspectionStrengths",
+                "inspectionImprovements",
+                "inspectionReportLabel",
+            ):
+                if full.get(key):
+                    row[key] = full[key]
         save_json(directory_path, directory)
 
     summary_path = paths["summary"]

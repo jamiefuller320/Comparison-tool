@@ -41,6 +41,10 @@ async function main() {
     console.error("FAIL visit-pack tour step should be optional");
     process.exit(1);
   }
+  if (!optional.includes("decision-guidance")) {
+    console.error("FAIL decision-guidance tour step should be optional");
+    process.exit(1);
+  }
   if (tourTargetSelector("stages") !== '[data-tour="stages"]') {
     console.error("FAIL selector");
     process.exit(1);

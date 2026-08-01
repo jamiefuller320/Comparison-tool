@@ -14,6 +14,8 @@ if str(SCRIPTS) not in sys.path:
 from inspection_precis_lib import (  # noqa: E402
     extract_isi_precis,
     extract_ofsted_precis,
+    is_non_inspection_report_label,
+    looks_like_letterhead_junk,
     merge_precis_fields_from_previous,
     normalize_ofsted_provider_url,
     parse_ofsted_provider_latest_report,
@@ -124,6 +126,31 @@ PROVIDER_HTML = """
 </body></html>
 """
 
+PROVIDER_HTML_CONVERSION_FIRST = """
+<html><body>
+<ol class="timeline">
+<li class="timeline__day">
+  <div class="event">
+    <p class="timeline__date"><time>04 December 2024</time></p>
+    <span class="event__title heading--sub"><a class="publication-link" target="_blank"
+      href="https://files.ofsted.gov.uk/v1/file/99900001">
+      Academy conversion letter <span class="nonvisual">Academy conversion letter, PDF</span></a>
+    </span>
+  </div>
+</li>
+<li class="timeline__day">
+  <div class="event">
+    <p class="timeline__date"><time>12 March 2022</time></p>
+    <span class="event__title heading--sub"><a class="publication-link" target="_blank"
+      href="https://files.ofsted.gov.uk/v1/file/50224032">
+      School inspection <span class="nonvisual">School inspection, PDF</span></a>
+    </span>
+  </div>
+</li>
+</ol>
+</body></html>
+"""
+
 
 def main() -> None:
     assert truncate_at_sentence("Short.", 100) == "Short."
@@ -134,6 +161,18 @@ def main() -> None:
     assert latest is not None
     assert latest["inspectionReportFileUrl"].endswith("/50224032")
     assert "June 2023" in latest["inspectionReportLabel"]
+
+    skipped = parse_ofsted_provider_latest_report(PROVIDER_HTML_CONVERSION_FIRST)
+    assert skipped is not None
+    assert skipped["inspectionReportFileUrl"].endswith("/50224032")
+    assert "conversion" not in skipped["inspectionReportLabel"].lower()
+    assert is_non_inspection_report_label(
+        "Academy conversion letter · 04 December 2024"
+    )
+    assert looks_like_letterhead_junk(
+        "Ofsted Piccadilly Gate Store Street Manchester M1 2WD"
+    )
+    assert not looks_like_letterhead_junk("Pupils feel safe and happy at school.")
 
     url = "https://files.ofsted.gov.uk/v1/file/50224032"
     ofsted = extract_ofsted_precis(OFSTED_FIXTURE, url)

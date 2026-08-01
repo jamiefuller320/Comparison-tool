@@ -9,6 +9,7 @@ import {
   schoolHasInspectionPrecis,
   shortInspectionSummary,
 } from "@/lib/inspectionHighlights";
+import { PrecisReadingNote } from "@/components/DecisionGuidance";
 
 function footnoteHref(school: SchoolRecord, quote?: InspectionQuote): string {
   return quote?.sourceUrl || inspectionReportHref(school);
@@ -183,7 +184,8 @@ export function InspectionPrecisRows({
           </button>
           <span className="hint">
             Short summary from the latest Ofsted/ISI report — expand for
-            strengths and areas to improve
+            strengths and areas to improve. Use it to prepare visit questions,
+            not as a final verdict.
           </span>
         </th>
         {schools.map((school) => (
@@ -199,6 +201,7 @@ export function InspectionPrecisRows({
               className="history-panel history-panel-inline precis-detail-panel"
               id="inspection-precis-detail"
             >
+              <PrecisReadingNote />
               <div className="precis-detail-grid">
                 {schools.map((school) => (
                   <InspectionPrecisDetail key={school.urn} school={school} />

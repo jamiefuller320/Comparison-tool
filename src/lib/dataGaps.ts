@@ -13,6 +13,69 @@ import { resolveSchoolSector } from "@/lib/sectors";
 
 export type DataGapSeverity = "info" | "watch";
 
+/**
+ * Stable reason grammar for gap chips / coverage legend.
+ * Kept coarse so parents learn a small set of meanings.
+ */
+export type GapReasonCode =
+  | "not-published"
+  | "not-comparable"
+  | "too-new"
+  | "isi-inspectorate"
+  | "ungraded-report"
+  | "nil-cleared"
+  | "missing-as-at"
+  | "missing-grade"
+  | "other";
+
+export const GAP_REASON_LEGEND: Record<
+  GapReasonCode,
+  { short: string; meaning: string }
+> = {
+  "not-published": {
+    short: "Not published",
+    meaning:
+      "No figure in the latest open DfE / Ofsted tables for this measure — often a small or suppressed cohort.",
+  },
+  "not-comparable": {
+    short: "Not comparable",
+    meaning:
+      "This setting is not published like a mainstream cohort (for example special/AP, hospital/secure, or no Year 11).",
+  },
+  "too-new": {
+    short: "Too new",
+    meaning:
+      "Opened recently — a full published cohort may not appear in the latest tables yet.",
+  },
+  "isi-inspectorate": {
+    short: "ISI, not Ofsted grades",
+    meaning:
+      "Inspected by ISI rather than Ofsted grade cells. Open the ISI report — this does not explain missing attainment.",
+  },
+  "ungraded-report": {
+    short: "Report only",
+    meaning:
+      "Ungraded / report-led inspection — domains or a report link may exist without an overall grade.",
+  },
+  "nil-cleared": {
+    short: "Nil / IGCSE-style",
+    meaning:
+      "Combined English & maths was cleared as a nil return; check EBacc pillars where published.",
+  },
+  "missing-as-at": {
+    short: "Pack date missing",
+    meaning: "This build is missing the Ofsted/consented register as-at stamp for provenance.",
+  },
+  "missing-grade": {
+    short: "Grade missing in pack",
+    meaning: "No overall grade joined into this pack yet — not the same as a failed inspection.",
+  },
+  other: {
+    short: "Known gap",
+    meaning: "A known fetch/join hole — see the detail text for this school.",
+  },
+};
+
 export interface DataGap {
   id: string;
   level: "board" | "school";
@@ -22,6 +85,8 @@ export interface DataGap {
   label: string;
   detail?: string;
   urn?: string;
+  /** Optional legend code for graphical coverage / detail cards. */
+  reasonCode?: GapReasonCode;
 }
 
 /** Why a secondary school may lack published KS4 outcome cells. */
@@ -172,6 +237,7 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
   label: string;
   detail: string;
   severity: DataGapSeverity;
+  reasonCode: GapReasonCode;
 } {
   switch (reason) {
     case "special-ap-pru":
@@ -180,6 +246,7 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
         detail:
           "Special schools, alternative provision and pupil referral units often have no comparable Attainment 8 in the open tables — that is expected, not a join error.",
         severity: "info",
+        reasonCode: "not-comparable",
       };
     case "ks3-only":
       return {
@@ -187,6 +254,7 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
         detail:
           "This setting’s ages cover KS3 but not Year 11. The DfE does not publish school-level KS3 scores, so GCSE cells stay blank until a Year 11 cohort appears.",
         severity: "info",
+        reasonCode: "not-comparable",
       };
     case "hospital-secure":
       return {
@@ -194,6 +262,7 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
         detail:
           "Hospital schools and secure units are not published like mainstream secondary Attainment 8 cohorts.",
         severity: "info",
+        reasonCode: "not-comparable",
       };
     case "new-establishment":
       return {
@@ -201,6 +270,7 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
         detail:
           "Opened recently according to GIAS — a full published KS4 cohort may not appear in the latest tables yet.",
         severity: "info",
+        reasonCode: "too-new",
       };
     default:
       return {
@@ -208,6 +278,7 @@ export function ks4MissingGapMeta(reason: Ks4MissingReason): {
         detail:
           "No Attainment 8 or 16–18 average points in the latest published tables (small/suppressed cohort, or not yet in the release).",
         severity: "watch",
+        reasonCode: "not-published",
       };
   }
 }
@@ -247,6 +318,7 @@ export function gapsForKs2Board(schools: SchoolRecord[]): DataGap[] {
         detail:
           "State RWM figures are missing — often a new school, suppressed small cohort, or not yet in the published tables.",
         urn: school.urn,
+        reasonCode: "not-published",
       });
     }
     if (
@@ -265,6 +337,7 @@ export function gapsForKs2Board(schools: SchoolRecord[]): DataGap[] {
         detail:
           "No overall Ofsted grade joined for this school yet — open the Ofsted report link when present, or check the official Ofsted page.",
         urn: school.urn,
+        reasonCode: "missing-grade",
       });
     }
   }
@@ -326,6 +399,7 @@ export function gapsForKs4Board(schools: SchoolRecord[]): DataGap[] {
         label: meta.label,
         detail: meta.detail,
         urn: school.urn,
+        reasonCode: meta.reasonCode,
       });
     }
     if (hasKs4NilCleared(school)) {
@@ -341,6 +415,7 @@ export function gapsForKs4Board(schools: SchoolRecord[]): DataGap[] {
         detail:
           "Combined English & maths GCSE returned as nil / IGCSE-style; check EBacc pillars where published.",
         urn: school.urn,
+        reasonCode: "nil-cleared",
       });
     }
     if (
@@ -357,6 +432,7 @@ export function gapsForKs4Board(schools: SchoolRecord[]): DataGap[] {
         detail:
           "ISI-inspected schools use the ISI reports directory rather than Ofsted grades. This does not explain missing KS4 attainment.",
         urn: school.urn,
+        reasonCode: "isi-inspectorate",
       });
     }
   }
@@ -451,6 +527,7 @@ export function gapsForEyOfstedBoard(
         detail:
           "No overall grade in the MI, but domain grades or a report link are available.",
         urn: provider.urn,
+        reasonCode: "ungraded-report",
       });
     } else if (
       !provider.ofstedOverall &&
@@ -465,6 +542,7 @@ export function gapsForEyOfstedBoard(
         detail:
           "This setting has no overall or domain grade and no report link in the join.",
         urn: provider.urn,
+        reasonCode: "missing-grade",
       });
     }
 

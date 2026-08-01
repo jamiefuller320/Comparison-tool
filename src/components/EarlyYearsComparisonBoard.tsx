@@ -14,6 +14,7 @@ import {
   gapsForEyOfstedBoard,
   schoolGaps,
 } from "@/lib/dataGaps";
+import { CoverageStrip } from "@/components/CoverageStrip";
 import { InspectionPrecisRows } from "@/components/InspectionPrecis";
 
 function formatValue(
@@ -103,6 +104,12 @@ export function EarlyYearsComparisonBoard({
           />
         </div>
       ) : null}
+
+      <CoverageStrip
+        schools={providers}
+        board="early-years-ofsted"
+        gaps={dataGaps}
+      />
 
       <CompareTableFrame tableId="early-years-ofsted">
         <table className="compare-table">

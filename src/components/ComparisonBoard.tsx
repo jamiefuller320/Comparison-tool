@@ -27,6 +27,8 @@ import { MetricHistoryChart } from "@/components/MetricHistoryChart";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
 import { DataGapFlags } from "@/components/DataGapFlags";
+import { CoverageStrip } from "@/components/CoverageStrip";
+import { SecondaryContextPane } from "@/components/SecondaryContextPane";
 import { InspectionPrecisRows } from "@/components/InspectionPrecis";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
@@ -230,6 +232,13 @@ export function ComparisonBoard({
       {sourceStamp ? (
         <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
       ) : null}
+
+      <CoverageStrip
+        schools={schools}
+        board="ks2"
+        gaps={dataGaps}
+        secondarySlot={<SecondaryContextPane schools={schools} board="ks2" />}
+      />
 
       <CompareTableFrame tableId="ks2">
         <table className="compare-table">

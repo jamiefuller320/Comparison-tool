@@ -16,6 +16,7 @@ import { EyfspComparisonBoard } from "@/components/EyfspComparisonBoard";
 import { ChildminderDirectoryBoard } from "@/components/ChildminderDirectoryBoard";
 import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChecklist";
 import { VisitPack } from "@/components/VisitPack";
+import { DecisionGuidancePanel } from "@/components/DecisionGuidance";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
@@ -505,6 +506,7 @@ export function CompareApp({
               <code>npm run enrich:ey-schools</code>, or pick another category.
             </div>
           ) : null}
+          <DecisionGuidancePanel path="early-years" />
           <PathSummaries schools={eySelected} {...summaryOpts} />
           {hasEyData ? (
             <EyfspComparisonBoard
@@ -560,6 +562,7 @@ export function CompareApp({
     if (activePath === "childminders") {
       return (
         <div data-tour="childminders">
+          <DecisionGuidancePanel path="childminders" />
           <PathSummaries schools={childminderSelected} {...summaryOpts} />
           <p className="footnote" style={{ marginBottom: "1rem" }}>
             Wrap-around and home-based care — directory and checklist, not the
@@ -607,6 +610,7 @@ export function CompareApp({
     if (activePath === "ks1") {
       return (
         <div>
+          <DecisionGuidancePanel path="ks1" />
           <PathSummaries schools={ks1Selected} {...summaryOpts} />
           {!showPhonicsBoard ? (
             <div className="empty-compare" role="status">
@@ -626,6 +630,16 @@ export function CompareApp({
               sourceStamp={phonicsSourceStamp}
             />
           )}
+          {ks1Selected.length > 0 ? (
+            <div style={{ marginTop: "1.75rem" }}>
+              <VisitPack
+                schools={ks1Selected}
+                preferPath="ks1"
+                stages={stages}
+                sectors={sectors}
+              />
+            </div>
+          ) : null}
         </div>
       );
     }
@@ -633,6 +647,7 @@ export function CompareApp({
     if (activePath === "ks2") {
       return (
         <div>
+          <DecisionGuidancePanel path="ks2" />
           {ks2Selected.length > 0 ? (
             <aside className="year-trend-tip" data-tour="year-trend">
               <strong>Year trends:</strong> click a measure name (or{" "}
@@ -655,6 +670,16 @@ export function CompareApp({
               sourceStamp={ks2Stamp}
             />
           )}
+          {ks2Selected.length > 0 ? (
+            <div style={{ marginTop: "1.75rem" }}>
+              <VisitPack
+                schools={ks2Selected}
+                preferPath="ks2"
+                stages={stages}
+                sectors={sectors}
+              />
+            </div>
+          ) : null}
         </div>
       );
     }
@@ -662,6 +687,7 @@ export function CompareApp({
     // ks4
     return (
       <div>
+        <DecisionGuidancePanel path="ks4" />
         <PathSummaries
           schools={ks4Selected}
           {...summaryOpts}
@@ -684,6 +710,16 @@ export function CompareApp({
             ofstedStateAsAt={index.stats.ofstedStateAsAt}
           />
         )}
+        {ks4Selected.length > 0 ? (
+          <div style={{ marginTop: "1.75rem" }}>
+            <VisitPack
+              schools={ks4Selected}
+              preferPath="ks4"
+              stages={stages}
+              sectors={sectors}
+            />
+          </div>
+        ) : null}
       </div>
     );
   }
