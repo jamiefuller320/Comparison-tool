@@ -1,11 +1,16 @@
 async function main() {
   const {
     NURSERY_VISIT_QUESTIONS,
+    SCHOOL_VISIT_QUESTIONS,
     computePrintNoteHeightPx,
+    guidancePathForPack,
     questionsForKind,
     toVisitContactRow,
     visitPackKind,
   } = await import("../src/lib/visitPack.ts");
+  const { guidanceForPath, guidancePrintLines } = await import(
+    "../src/lib/decisionGuidance.ts"
+  );
   const { printVisitPackElement } = await import("../src/lib/printVisitPack.ts");
   const {
     VISIT_STATUS_OPTIONS,
@@ -78,6 +83,48 @@ async function main() {
     process.exit(1);
   }
 
+  const primary = {
+    urn: "116000",
+    name: "Test Junior",
+    sector: "state",
+    phase: "primary",
+    phases: ["ks2"],
+    ageRange: "7 to 11",
+    address: "3 Road",
+    town: "Eastleigh",
+    postcode: "SO50 1AA",
+  };
+  if (visitPackKind(primary) !== "school") {
+    console.error("FAIL primary should be school pack kind");
+    process.exit(1);
+  }
+  const schoolRow = toVisitContactRow(primary, "school");
+  if (!schoolRow?.addressLine.includes("Eastleigh") || schoolRow.kind !== "school") {
+    console.error("FAIL school contact row", schoolRow);
+    process.exit(1);
+  }
+  if (questionsForKind("school").length < 6) {
+    console.error("FAIL school visit questions too short");
+    process.exit(1);
+  }
+  if (guidancePathForPack({ schools: [primary], preferPath: "ks2" }) !== "ks2") {
+    console.error("FAIL guidance path prefer");
+    process.exit(1);
+  }
+  const ks2Guide = guidanceForPath("ks2");
+  if (!ks2Guide.sections.some((s) => s.id === "telling" && s.items.length >= 2)) {
+    console.error("FAIL ks2 guidance telling section");
+    process.exit(1);
+  }
+  if (!guidancePrintLines("ks2").lines.length) {
+    console.error("FAIL print guidance lines");
+    process.exit(1);
+  }
+  if (SCHOOL_VISIT_QUESTIONS[0].id !== "feel") {
+    console.error("FAIL school questions shape");
+    process.exit(1);
+  }
+
   if (!isVisitStatusId("visited") || isVisitStatusId("maybe")) {
     console.error("FAIL visit status ids");
     process.exit(1);
@@ -118,6 +165,7 @@ async function main() {
   console.log(
     `visit pack ok (${NURSERY_VISIT_QUESTIONS.length} nursery Qs; ` +
       `${CHILDMINDER_VETTING_CHECKLIST.length} childminder Qs; ` +
+      `${SCHOOL_VISIT_QUESTIONS.length} school Qs; ` +
       `note heights ${noteOne}/${noteMany}px)`,
   );
 }

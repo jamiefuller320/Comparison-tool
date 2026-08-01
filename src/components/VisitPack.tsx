@@ -1,9 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import type { SchoolRecord } from "@/lib/types";
 import {
   computePrintNoteHeightPx,
+  guidancePathForPack,
   questionsForKind,
   toVisitContactRow,
   type VisitContactRow,
@@ -21,6 +28,8 @@ import {
 } from "@/lib/visitLog";
 import { SEED_GEOGRAPHY_LABEL } from "@/lib/seedScope";
 import { InspectionPrecis } from "@/components/InspectionPrecis";
+import { DecisionGuidancePrintBlock } from "@/components/DecisionGuidance";
+import type { GuidancePathId } from "@/lib/decisionGuidance";
 
 function contactAsSchool(row: VisitContactRow): SchoolRecord {
   return {
@@ -29,6 +38,8 @@ function contactAsSchool(row: VisitContactRow): SchoolRecord {
     ofstedReportUrl: row.ofstedReportUrl,
     inspectionPrecis: row.inspectionPrecis,
     inspectionQuotes: row.inspectionQuotes,
+    inspectionStrengths: row.inspectionStrengths,
+    inspectionImprovements: row.inspectionImprovements,
     inspectionReportFileUrl: row.inspectionReportFileUrl,
     inspectionReportLabel: row.inspectionReportLabel,
     inspectionPrecisSource: row.inspectionPrecisSource,
@@ -53,6 +64,7 @@ function ContactCard({
           <h4>{row.name}</h4>
           <p className="visit-contact-meta">
             {row.kindLabel}
+            {row.ageRange ? ` · Ages ${row.ageRange}` : null}
             {row.places != null ? ` · ${row.places} places` : null}
             {row.ofstedOverall ? ` · Ofsted ${row.ofstedOverall}` : null}
             {row.ofstedEarlyYearsProvision
@@ -79,9 +91,7 @@ function ContactCard({
       </header>
 
       <p className="visit-address">{row.addressLine}</p>
-      {[row.localAuthority, row.ofstedInspectionDate]
-        .filter(Boolean)
-        .length ? (
+      {[row.localAuthority, row.ofstedInspectionDate].filter(Boolean).length ? (
         <p className="visit-contact-meta">
           {[row.localAuthority, row.ofstedInspectionDate]
             .filter(Boolean)
@@ -93,7 +103,7 @@ function ContactCard({
       {row.ofstedReportUrl ? (
         <p className="visit-report-link">
           <a href={row.ofstedReportUrl} target="_blank" rel="noreferrer">
-            Ofsted report / registration ↗
+            Ofsted / inspection report ↗
           </a>
           {row.ofstedUrn ? (
             <span className="visit-contact-meta"> · URN {row.ofstedUrn}</span>
@@ -108,7 +118,11 @@ function ContactCard({
           className="no-print"
           rows={2}
           value={entry.note ?? ""}
-          placeholder="Waiting list, fees heard, gut feel…"
+          placeholder={
+            row.kind === "school"
+              ? "Open day impressions, questions, gut feel…"
+              : "Waiting list, fees heard, gut feel…"
+          }
           onChange={(e) => onNote(e.target.value)}
         />
         {entry.note ? (
@@ -149,27 +163,83 @@ function QuestionBlock({
   );
 }
 
-export function VisitPack({
-  nurseries,
-  childminders,
+function ContactSection({
+  title,
+  rows,
+  entryFor,
+  setLog,
 }: {
-  nurseries: SchoolRecord[];
-  childminders: SchoolRecord[];
+  title: string;
+  rows: VisitContactRow[];
+  entryFor: (urn: string) => VisitLogEntry;
+  setLog: Dispatch<SetStateAction<Record<string, VisitLogEntry>>>;
+}) {
+  if (!rows.length) return null;
+  return (
+    <section className="visit-pack-section">
+      <h3 className="compare-subhead">{title}</h3>
+      <div className="visit-contact-grid">
+        {rows.map((row) => (
+          <ContactCard
+            key={row.urn}
+            row={row}
+            entry={entryFor(row.urn)}
+            onStatus={(status) =>
+              setLog((prev) => upsertVisitLogEntry(prev, row.urn, { status }))
+            }
+            onNote={(note) =>
+              setLog((prev) => upsertVisitLogEntry(prev, row.urn, { note }))
+            }
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function VisitPack({
+  nurseries = [],
+  childminders = [],
+  schools = [],
+  preferPath,
+}: {
+  nurseries?: SchoolRecord[];
+  childminders?: SchoolRecord[];
+  schools?: SchoolRecord[];
+  preferPath?: GuidancePathId;
 }) {
   const nurseryRows = useMemo(
     () =>
       nurseries
-        .map(toVisitContactRow)
-        .filter((r): r is VisitContactRow => Boolean(r)),
+        .map((r) => toVisitContactRow(r))
+        .filter((r): r is VisitContactRow => Boolean(r && r.kind === "nursery")),
     [nurseries],
   );
   const childminderRows = useMemo(
     () =>
       childminders
-        .map(toVisitContactRow)
-        .filter((r): r is VisitContactRow => Boolean(r)),
+        .map((r) => toVisitContactRow(r))
+        .filter(
+          (r): r is VisitContactRow => Boolean(r && r.kind === "childminder"),
+        ),
     [childminders],
   );
+  const schoolRows = useMemo(
+    () =>
+      schools
+        .map((r) => toVisitContactRow(r, "school"))
+        .filter((r): r is VisitContactRow => Boolean(r)),
+    [schools],
+  );
+
+  const guidancePath = guidancePathForPack({
+    schools,
+    nurseries,
+    childminders,
+    preferPath,
+  });
+
+  const isSchoolPack = schoolRows.length > 0 && !nurseryRows.length && !childminderRows.length;
 
   const [log, setLog] = useState<Record<string, VisitLogEntry>>({});
   const [hydrated, setHydrated] = useState(false);
@@ -184,7 +254,9 @@ export function VisitPack({
     saveVisitLog(log);
   }, [log, hydrated]);
 
-  if (!nurseryRows.length && !childminderRows.length) return null;
+  if (!nurseryRows.length && !childminderRows.length && !schoolRows.length) {
+    return null;
+  }
 
   function entryFor(urn: string): VisitLogEntry {
     return log[urn] ?? { status: "none" };
@@ -193,23 +265,27 @@ export function VisitPack({
   function printPack() {
     const pack = document.querySelector<HTMLElement>(".visit-pack");
     if (!pack) return;
-    const contactCount = nurseryRows.length + childminderRows.length;
+    const contactCount =
+      nurseryRows.length + childminderRows.length + schoolRows.length;
     printVisitPackElement(pack, computePrintNoteHeightPx(contactCount));
   }
 
   const printedOn = new Date().toLocaleDateString("en-GB");
+  const packTitle = isSchoolPack
+    ? "Shortlist pack — how to read, contacts & visit prompts"
+    : "Visit pack — contacts & interview prompts";
 
   return (
     <div className="visit-pack" data-tour="visit-pack">
       <div className="visit-pack-toolbar no-print">
         <div>
           <h3 className="compare-subhead" style={{ marginBottom: "0.35rem" }}>
-            Visit pack — contacts &amp; interview prompts
+            {packTitle}
           </h3>
           <p className="footnote" style={{ margin: 0 }}>
-            Print this pack before you phone or visit. Status and notes stay in
-            this browser. Phone numbers are not in Ofsted’s public files — use
-            the address, Ofsted report, and routes the setting publishes.
+            {isSchoolPack
+              ? "Print before open days. Includes how to read the tables and précis, contact cards, and visit questions. Status and notes stay in this browser."
+              : "Print this pack before you phone or visit. Status and notes stay in this browser. Phone numbers are not in Ofsted’s public files — use the address, Ofsted report, and routes the setting publishes."}
           </p>
         </div>
         <button type="button" className="btn btn-pack" onClick={printPack}>
@@ -220,74 +296,64 @@ export function VisitPack({
       <div className="visit-pack-sheet visit-pack-contacts-sheet">
         <div className="visit-pack-print-title print-only">
           <p className="visit-pack-brand">
-            School<em>side</em> visit pack
+            School<em>side</em> {isSchoolPack ? "shortlist pack" : "visit pack"}
           </p>
           <p>
-            {SEED_GEOGRAPHY_LABEL} shortlist · contacts · printed {printedOn}
+            {SEED_GEOGRAPHY_LABEL} shortlist ·{" "}
+            {isSchoolPack ? "schools" : "contacts"} · printed {printedOn}
           </p>
         </div>
 
-        {nurseryRows.length ? (
-          <section className="visit-pack-section">
-            <h3 className="compare-subhead">Nurseries on your shortlist</h3>
-            <div className="visit-contact-grid">
-              {nurseryRows.map((row) => (
-                <ContactCard
-                  key={row.urn}
-                  row={row}
-                  entry={entryFor(row.urn)}
-                  onStatus={(status) =>
-                    setLog((prev) =>
-                      upsertVisitLogEntry(prev, row.urn, { status }),
-                    )
-                  }
-                  onNote={(note) =>
-                    setLog((prev) =>
-                      upsertVisitLogEntry(prev, row.urn, { note }),
-                    )
-                  }
-                />
-              ))}
-            </div>
-          </section>
+        <DecisionGuidancePrintBlock path={guidancePath} />
+
+        <ContactSection
+          title={
+            isSchoolPack
+              ? "Schools on your shortlist"
+              : "Nurseries on your shortlist"
+          }
+          rows={isSchoolPack ? schoolRows : nurseryRows}
+          entryFor={entryFor}
+          setLog={setLog}
+        />
+
+        {!isSchoolPack ? (
+          <ContactSection
+            title="Childminders on your shortlist"
+            rows={childminderRows}
+            entryFor={entryFor}
+            setLog={setLog}
+          />
         ) : null}
 
-        {childminderRows.length ? (
-          <section className="visit-pack-section">
-            <h3 className="compare-subhead">Childminders on your shortlist</h3>
-            <div className="visit-contact-grid">
-              {childminderRows.map((row) => (
-                <ContactCard
-                  key={row.urn}
-                  row={row}
-                  entry={entryFor(row.urn)}
-                  onStatus={(status) =>
-                    setLog((prev) =>
-                      upsertVisitLogEntry(prev, row.urn, { status }),
-                    )
-                  }
-                  onNote={(note) =>
-                    setLog((prev) =>
-                      upsertVisitLogEntry(prev, row.urn, { note }),
-                    )
-                  }
-                />
-              ))}
-            </div>
-          </section>
+        {/* School pack may also be shown alone; nursery+school mixed is rare */}
+        {!isSchoolPack && schoolRows.length ? (
+          <ContactSection
+            title="Schools on your shortlist"
+            rows={schoolRows}
+            entryFor={entryFor}
+            setLog={setLog}
+          />
         ) : null}
       </div>
 
       <div className="visit-pack-sheet visit-pack-questions-sheet">
         <div className="visit-pack-print-title print-only">
           <p className="visit-pack-brand">
-            School<em>side</em> interview prompts
+            School<em>side</em>{" "}
+            {isSchoolPack ? "visit prompts" : "interview prompts"}
           </p>
           <p>
             {SEED_GEOGRAPHY_LABEL} shortlist · questions · printed {printedOn}
           </p>
         </div>
 
+        {schoolRows.length ? (
+          <QuestionBlock
+            kind="school"
+            title="Suggested questions — school visits &amp; open days"
+          />
+        ) : null}
         {nurseryRows.length ? (
           <QuestionBlock
             kind="nursery"

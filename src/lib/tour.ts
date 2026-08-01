@@ -97,10 +97,17 @@ export const TOUR_STEPS: TourStep[] = [
     optional: true,
   },
   {
+    id: "decision-guidance",
+    target: "decision-guidance",
+    title: "What the data tells you",
+    body: "On each Side by side path, open “What this tells you / doesn’t / how to decide”. Use it before you treat a table or précis as a verdict.",
+    optional: true,
+  },
+  {
     id: "visit-pack",
     target: "visit-pack",
-    title: "Print a visit pack",
-    body: "On the Early years or Childminders path, the visit pack has addresses, Ofsted links, contact status, and interview prompts. Use Print / save as PDF before you go.",
+    title: "Print a shortlist or visit pack",
+    body: "Every path with a shortlist can print a pack: how to read the data, contact cards, inspection précis, and visit or interview prompts. Use Print / save as PDF before open days or calls.",
     optional: true,
   },
   {
@@ -113,7 +120,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "how",
     target: "how",
     title: "How to read the numbers",
-    body: "This section explains expected and higher standards, scaled scores, and what sits outside the data (admissions, ethos, visits). Take a look whenever you need a refresher.",
+    body: "This section explains what published figures and précis can and cannot support, fair conclusions, and how to use a shortlist for decisions. Take a look whenever you need a refresher.",
   },
 ];
 

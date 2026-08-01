@@ -494,42 +494,86 @@ def extract_isi_precis(pdf_text: str, source_url: str) -> dict[str, Any] | None:
     }
 
 
-def parse_ofsted_provider_latest_report(html: str) -> dict[str, str] | None:
-    """Parse reports.ofsted.gov.uk provider page for the newest PDF."""
-    # Prefer the first timeline event with a files.ofsted.gov.uk link.
-    m = re.search(
+# Timeline titles that are not usable parent-facing inspection reports.
+_NON_INSPECTION_TITLE_RE = re.compile(
+    r"(academy\s+conversion\s+letter|material\s+change|"
+    r"pre-?registration\s+inspection|registration\s+visit)",
+    re.I,
+)
+
+
+def is_non_inspection_report_label(label: str | None) -> bool:
+    """True when a harvested report label is a conversion/admin letter, not an inspection."""
+    return bool(_NON_INSPECTION_TITLE_RE.search(label or ""))
+
+
+def looks_like_letterhead_junk(text: str | None) -> bool:
+    """True when extracted précis is PDF chrome (address block) rather than prose."""
+    low = (text or "").lower()
+    return "piccadilly gate" in low or (
+        "store street" in low and "manchester" in low
+    )
+
+
+def _timeline_pdf_candidates(html: str) -> list[dict[str, str]]:
+    """Ordered newest-first timeline PDF entries from an Ofsted provider page."""
+    found: list[dict[str, str]] = []
+    for m in re.finditer(
         r'timeline__date"><time>([^<]+)</time>[\s\S]*?'
         r'href="(https://files\.ofsted\.gov\.uk/v1/file/\d+)"[^>]*>'
         r"([\s\S]*?)</a>",
         html,
         flags=re.I,
-    )
-    if not m:
-        m2 = re.search(
-            r'href="(https://files\.ofsted\.gov\.uk/v1/file/\d+)"',
-            html,
-            flags=re.I,
+    ):
+        date_label = m.group(1).strip()
+        file_url = m.group(2).strip()
+        title_html = m.group(3)
+        title = re.sub(r"<[^>]+>", " ", title_html)
+        title = re.sub(r"\s+", " ", title).strip()
+        title = re.sub(r",?\s*PDF\s*-.*$", "", title, flags=re.I).strip()
+        if not title:
+            title = "Ofsted inspection report"
+        label = f"{title} · {date_label}" if date_label else title
+        found.append(
+            {
+                "inspectionReportFileUrl": file_url,
+                "inspectionReportLabel": label,
+                "inspectionReportDateLabel": date_label,
+                "title": title,
+            }
         )
-        if not m2:
-            return None
+    return found
+
+
+def parse_ofsted_provider_latest_report(html: str) -> dict[str, str] | None:
+    """Parse reports.ofsted.gov.uk provider page for the newest usable inspection PDF.
+
+    Skips academy conversion letters, material-change notices, and
+    pre-registration paperwork so précis extraction reads a real inspection.
+    """
+    for candidate in _timeline_pdf_candidates(html):
+        if is_non_inspection_report_label(candidate["title"]) or is_non_inspection_report_label(
+            candidate["inspectionReportLabel"]
+        ):
+            continue
         return {
-            "inspectionReportFileUrl": m2.group(1),
-            "inspectionReportLabel": "Ofsted inspection report",
-            "inspectionReportDateLabel": "",
+            "inspectionReportFileUrl": candidate["inspectionReportFileUrl"],
+            "inspectionReportLabel": candidate["inspectionReportLabel"],
+            "inspectionReportDateLabel": candidate["inspectionReportDateLabel"],
         }
-    date_label = m.group(1).strip()
-    file_url = m.group(2).strip()
-    title_html = m.group(3)
-    title = re.sub(r"<[^>]+>", " ", title_html)
-    title = re.sub(r"\s+", " ", title).strip()
-    title = re.sub(r",?\s*PDF\s*-.*$", "", title, flags=re.I).strip()
-    if not title:
-        title = "Ofsted inspection report"
-    label = f"{title} · {date_label}" if date_label else title
+
+    # Fallback: bare file link with no timeline chrome (keep prior behaviour).
+    m2 = re.search(
+        r'href="(https://files\.ofsted\.gov\.uk/v1/file/\d+)"',
+        html,
+        flags=re.I,
+    )
+    if not m2:
+        return None
     return {
-        "inspectionReportFileUrl": file_url,
-        "inspectionReportLabel": label,
-        "inspectionReportDateLabel": date_label,
+        "inspectionReportFileUrl": m2.group(1),
+        "inspectionReportLabel": "Ofsted inspection report",
+        "inspectionReportDateLabel": "",
     }
 
 
