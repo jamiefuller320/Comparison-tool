@@ -3103,6 +3103,11 @@ html.tour-running .hero-inner > * {
   display: none;
 }
 
+/* Screen: page-break markers are inert. */
+.visit-pack-page-break {
+  display: none;
+}
+
 @media print {
   @page {
     margin: 12mm;
@@ -3120,22 +3125,45 @@ html.tour-running .hero-inner > * {
   }
 
   /*
-   * Fallback when printing the main document (e.g. browser Ctrl+P while a
-   * visit pack is on screen). The Print button uses an iframe instead.
+   * Main-window print path (required on iPhone/iPad — iframe print CSS /
+   * page-breaks are unreliable in WebKit). Activated by printVisitPack.ts.
+   * Avoid position:absolute on the pack — it breaks WebKit pagination.
    */
-  body:has(.visit-pack) * {
+  /* Pack is moved to a direct body child while printing (see printVisitPack.ts). */
+  html.visit-pack-printing body > *:not(.visit-pack) {
+    display: none !important;
+  }
+
+  html.visit-pack-printing body > .visit-pack {
+    display: block !important;
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    border: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  html.visit-pack-printing .no-print {
+    display: none !important;
+  }
+
+  /* Fallback for browser print while a pack is on screen (non-iOS Ctrl/Cmd+P). */
+  body:has(.visit-pack):not(.visit-pack-printing) * {
     visibility: hidden !important;
   }
 
-  body:has(.visit-pack) .visit-pack,
-  body:has(.visit-pack) .visit-pack * {
+  body:has(.visit-pack):not(.visit-pack-printing) .visit-pack,
+  body:has(.visit-pack):not(.visit-pack-printing) .visit-pack * {
     visibility: visible !important;
   }
 
-  body:has(.visit-pack) .visit-pack {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+  body:has(.visit-pack):not(.visit-pack-printing) .visit-pack {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
     width: 100% !important;
     border-top: 0;
     padding: 0;
@@ -3165,16 +3193,32 @@ html.tour-running .hero-inner > * {
     display: block !important;
   }
 
+  .visit-pack,
   .visit-pack-sheet {
+    display: block !important;
+    float: none !important;
+    position: static !important;
+    overflow: visible !important;
     border-top: 0;
     margin: 0;
     padding: 0;
   }
 
-  /* One printed page per pack section — avoid stacked break-before + break-after blanks. */
-  .visit-pack-sheet + .visit-pack-sheet {
-    break-before: page;
-    page-break-before: always;
+  /*
+   * Explicit break nodes only (not also on sheets). WebKit is more reliable
+   * with page-break-after on block siblings than break-before on flex children;
+   * stacking both creates blank pages.
+   */
+  .visit-pack-page-break {
+    display: block !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+    break-after: page !important;
+    page-break-after: always !important;
   }
 
   .visit-pack-sheet-title .visit-pack-brand {
@@ -3190,41 +3234,30 @@ html.tour-running .hero-inner > * {
     padding: 0.28rem 0.35rem;
   }
 
-  .visit-pack-school-sheet {
-    /* A4 content height with @page 12mm margins ≈ 273mm; leave a little slack. */
-    min-height: 265mm;
-    display: flex;
-    flex-direction: column;
+  /* No flex page shells on print — flex containers suppress WebKit breaks. */
+  .visit-pack-school-sheet,
+  .visit-pack-school,
+  .visit-pack-school-precis,
+  .visit-pack-school-notes {
+    display: block !important;
+    float: none !important;
+    position: static !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+    flex: none !important;
   }
 
   .visit-pack-school {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    min-height: 0;
     background: white;
     box-shadow: none;
     border-radius: 0;
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  .visit-pack-school-precis {
-    flex: 0 1 auto;
-  }
-
-  .visit-pack-school-notes {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
   }
 
   .visit-note-lines {
-    flex: 1 1 auto;
-    min-height: 120mm;
-    height: auto;
+    display: block !important;
+    flex: none !important;
+    min-height: 140mm !important;
+    height: 140mm !important;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0,
@@ -3252,12 +3285,10 @@ html.tour-running .hero-inner > * {
   }
 
   .decision-guidance-print {
-    break-inside: avoid;
-    page-break-inside: avoid;
     margin-bottom: 0.85rem;
   }
 
   .decision-guidance-print-columns {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: block !important;
   }
 }
