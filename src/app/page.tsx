@@ -1,5 +1,5 @@
 import { CompareLoader } from "@/components/CompareLoader";
-import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
+import { BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
 import { SEO_DESCRIPTION } from "@/lib/seo";
@@ -24,8 +24,8 @@ export default function HomePage() {
           <p>
             Start with your home postcode to map nearby schools and early years
             across {COVERAGE_REGION_LABEL}, shortlist a few, then compare
-            published figures and inspection excerpts before you visit.{" "}
-            {BRAND_TAGLINE}
+            published figures and inspection excerpts before you visit. A
+            parental compass — not a league table.
           </p>
           <p className="seo-intro-meta">{SEO_DESCRIPTION}</p>
         </div>
