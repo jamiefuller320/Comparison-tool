@@ -154,29 +154,23 @@ export function CompareLoader() {
 
   if (error && !index) {
     return (
-      <section className="hero">
+      <div className="hero-controls">
         <div className="shell hero-inner">
-          <p className="hero-brand">
-            School <em>Compass</em>
+          <p className="postcode-error" role="alert">
+            {error}
           </p>
-          <h1>Find your bearings when choosing a school.</h1>
-          <p className="postcode-error">{error}</p>
         </div>
-      </section>
+      </div>
     );
   }
 
   if (!index) {
     return (
-      <section className="hero">
+      <div className="hero-controls">
         <div className="shell hero-inner">
-          <p className="hero-brand">
-            School <em>Compass</em>
-          </p>
-          <h1>Find your bearings when choosing a school.</h1>
           <p>Loading school and early-years data…</p>
         </div>
-      </section>
+      </div>
     );
   }
 

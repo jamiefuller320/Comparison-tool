@@ -12,7 +12,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="site-header">
+      <header className="site-header" role="banner">
         <div className="shell header-inner">
           <a className="brand" href="#top" aria-label="School Compass home">
             School<span>Compass</span>
