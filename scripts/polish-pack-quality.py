@@ -24,13 +24,14 @@ if str(SCRIPTS) not in sys.path:
 
 from seed_scope import la_slug  # noqa: E402
 
-# Weakest independent-précis packs from report-pack-quality baseline.
+# Next weakest independent-précis packs after wave 2 (run report:pack-quality).
+# Kent is large (≈99 independents) — prefer a dedicated capped run.
 DEFAULT_TARGETS = [
-    "Windsor and Maidenhead",
-    "Oxfordshire",
-    "Wokingham",
-    "Buckinghamshire",
-    "Surrey",
+    "Milton Keynes",
+    "Medway",
+    "West Berkshire",
+    "Slough",
+    "Kent",
 ]
 
 MANIFEST = ROOT / "public" / "data" / "packs" / "manifest.json"
