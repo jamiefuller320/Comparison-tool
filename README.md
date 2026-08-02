@@ -35,17 +35,38 @@ Scheduled refresh uses the Hampshire maintained harvest. `npm run harvest` remai
 
 **Deferred ideas:** see [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md) for chat-mined backlog, partial work, and explicitly parked ideas (so we don’t re-litigate closed paths without new data).
 
-## Live site (GitHub Pages)
+## Live site
 
-After merge to `main` and Pages is enabled:
+**https://schoolcompass.uk** (GitHub Pages + custom domain)
 
-**https://jamiefuller320.github.io/Comparison-tool/**
+The static export is rooted at `/` (see `public/CNAME`). The old project URL
+`https://jamiefuller320.github.io/Comparison-tool/` is not used once the custom
+domain is active.
 
-### Enable GitHub Pages (one-time)
+### Enable GitHub Pages + schoolcompass.uk (one-time)
 
 1. Repo → **Settings** → **Pages**
 2. **Build and deployment** → **Source** → **GitHub Actions**
-3. Merge to `main` (or run **Deploy GitHub Pages** manually)
+3. Under **Custom domain**, set `schoolcompass.uk` (the deploy also publishes
+   `public/CNAME`). Wait for DNS check to go green, then enable **Enforce HTTPS**.
+4. At your DNS host for `schoolcompass.uk`, point the apex at GitHub Pages:
+
+   | Type | Name | Value |
+   | --- | --- | --- |
+   | `A` | `@` | `185.199.108.153` |
+   | `A` | `@` | `185.199.109.153` |
+   | `A` | `@` | `185.199.110.153` |
+   | `A` | `@` | `185.199.111.153` |
+   | `AAAA` | `@` | `2606:50c0:8000::153` |
+   | `AAAA` | `@` | `2606:50c0:8001::153` |
+   | `AAAA` | `@` | `2606:50c0:8002::153` |
+   | `AAAA` | `@` | `2606:50c0:8003::153` |
+   | `CNAME` | `www` | `jamiefuller320.github.io` (optional) |
+
+5. Merge to `main` (or run **Deploy GitHub Pages** manually) after DNS is in place.
+
+To rebuild the legacy `/Comparison-tool/` project path instead, set
+`GITHUB_PAGES_PROJECT_PATH=true` on the Pages build (not the default).
 
 ## What it does
 
@@ -122,7 +143,7 @@ create policy "own rows" on public.shortlists
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 ```
 
-Add the two `NEXT_PUBLIC_SUPABASE_*` values as GitHub Actions secrets so Pages builds pick them up. In Supabase Auth URL config, allow redirect to `https://jamiefuller320.github.io/Comparison-tool/`.
+Add the two `NEXT_PUBLIC_SUPABASE_*` values as GitHub Actions secrets so Pages builds pick them up. In Supabase Auth URL config, allow redirect to `https://schoolcompass.uk/` (and keep the old GitHub Pages URL only if you still need it during cutover).
 
 ## Force refresh (missing school)
 

@@ -40,6 +40,10 @@ jobs:
       - run: npm ci
       - name: Build static site
         env:
+          # Apex custom domain (public/CNAME → schoolcompass.uk). Leave
+          # GITHUB_PAGES_PROJECT_PATH unset so assets are rooted at /, not
+          # /Comparison-tool/.
+          GITHUB_PAGES: "true"
           # Optional fine-grained PAT (Actions: write) so "A school is missing"
           # can queue repository_dispatch. Workflow still enforces 1 refresh/day.
           NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN: ${{ secrets.MISSING_SCHOOL_DISPATCH_TOKEN }}

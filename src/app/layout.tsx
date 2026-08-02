@@ -3,11 +3,20 @@ import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { UiPreferencesProvider } from "@/components/UiPreferencesProvider";
 import { AccountProvider } from "@/components/AccountProvider";
-import { BRAND_DOMAIN, BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
+import {
+  BRAND_DOMAIN,
+  BRAND_HOME_URL,
+  BRAND_NAME,
+  BRAND_TAGLINE,
+} from "@/lib/brand";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BRAND_HOME_URL),
   title: `${BRAND_NAME} — shortlist and compare schools before you visit`,
   description: `${BRAND_TAGLINE} ${BRAND_DOMAIN}`,
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
