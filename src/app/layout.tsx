@@ -27,9 +27,6 @@ export const metadata: Metadata = {
   creator: BRAND_NAME,
   publisher: BRAND_NAME,
   category: "education",
-  alternates: {
-    canonical: "/",
-  },
   robots: {
     index: true,
     follow: true,

@@ -1,13 +1,25 @@
+import Link from "next/link";
+import { areasIndexPath } from "@/lib/areas";
 import { BRAND_DOMAIN, BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 
-const FOOTER_LINKS = [
-  { href: "#top", label: "Home" },
-  { href: "#nearby", label: "Near home" },
-  { href: "#compare", label: "Shortlist" },
-  { href: "#side-by-side", label: "Side by side" },
-  { href: "#how", label: "How to read" },
-  { href: "#data", label: "Data" },
+const TOOL_LINKS = [
+  { href: "/#top", label: "Compare" },
+  { href: "/#nearby", label: "Near home" },
+  { href: "/#compare", label: "Shortlist" },
+  { href: "/#side-by-side", label: "Side by side" },
+  { href: "/#areas", label: "Areas" },
+  { href: "/#how", label: "How to read" },
+  { href: "/#data", label: "Data" },
+] as const;
+
+const AREA_HIGHLIGHTS = [
+  { href: "/areas/hampshire/", label: "Hampshire" },
+  { href: "/areas/kent/", label: "Kent" },
+  { href: "/areas/surrey/", label: "Surrey" },
+  { href: "/areas/oxfordshire/", label: "Oxfordshire" },
+  { href: "/areas/west-sussex/", label: "West Sussex" },
+  { href: "/areas/southampton/", label: "Southampton" },
 ] as const;
 
 export function SiteFooter() {
@@ -15,23 +27,36 @@ export function SiteFooter() {
     <footer className="site-footer" role="contentinfo">
       <div className="shell site-footer-inner">
         <div className="site-footer-brand">
-          <a href="#top" className="site-footer-name">
+          <Link href="/" className="site-footer-name">
             {BRAND_NAME}
-          </a>
+          </Link>
           <p>
             Parental school compare for {COVERAGE_REGION_LABEL} — shortlist
             nearby schools and early years, compare published figures and
             Ofsted/ISI excerpts, then print a visit pack.
           </p>
         </div>
-        <nav className="site-footer-nav" aria-label="Footer">
-          <p className="site-footer-nav-label">On this page</p>
+        <nav className="site-footer-nav" aria-label="Compare tool">
+          <p className="site-footer-nav-label">Compare tool</p>
           <ul>
-            {FOOTER_LINKS.map((link) => (
+            {TOOL_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href}>{link.label}</a>
+                <Link href={link.href}>{link.label}</Link>
               </li>
             ))}
+          </ul>
+        </nav>
+        <nav className="site-footer-nav site-footer-areas" aria-label="Areas">
+          <p className="site-footer-nav-label">Areas</p>
+          <ul>
+            {AREA_HIGHLIGHTS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href}>{link.label}</Link>
+              </li>
+            ))}
+            <li>
+              <Link href={areasIndexPath()}>All covered areas</Link>
+            </li>
           </ul>
         </nav>
         <p className="site-footer-meta">
