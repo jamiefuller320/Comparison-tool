@@ -16,6 +16,7 @@ export function FloatingControls() {
         <span className="floating-controls-label">Jump</span>
         <a href="/#top">Home</a>
         <a href="/areas/">Areas</a>
+        <a href="/guides/">Guides</a>
         <a href="/#nearby">Near home</a>
         <a href="/#compare">Shortlist</a>
         <a href="/#side-by-side">Side by side</a>

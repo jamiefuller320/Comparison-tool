@@ -10,6 +10,7 @@ import {
 import { BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
+import { guidePath, guidesIndexPath } from "@/lib/guides";
 import { SEO_DESCRIPTION } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -68,6 +69,36 @@ export default function HomePage() {
           <AreaCoverageList areas={featured} />
           <p className="area-home-more">
             <Link href={areasIndexPath()}>See every covered area</Link>
+            {" · "}
+            <Link href="/areas/hampshire/primary/">Hampshire primary</Link>
+            {" · "}
+            <Link href="/areas/surrey/secondary/">Surrey secondary</Link>
+          </p>
+        </div>
+      </section>
+
+      <section
+        className="section"
+        id="guides"
+        aria-labelledby="home-guides-heading"
+      >
+        <div className="shell">
+          <div className="section-head">
+            <h2 id="home-guides-heading">Guides before you shortlist</h2>
+            <p>
+              Plain-language help for reading published figures and inspection
+              excerpts — also available as a{" "}
+              <Link href={guidePath("faq")}>FAQ</Link>.
+            </p>
+          </div>
+          <p className="area-home-more">
+            <Link href={guidesIndexPath()}>Browse all guides</Link>
+            {" · "}
+            <Link href={guidePath("how-to-read")}>How to read figures</Link>
+            {" · "}
+            <Link href={guidePath("primary-ks2")}>Primary KS2</Link>
+            {" · "}
+            <Link href={guidePath("secondary-ks4")}>Secondary KS4</Link>
           </p>
         </div>
       </section>
@@ -78,9 +109,11 @@ export default function HomePage() {
             <h2 id="how-heading">{how.heading}</h2>
             <p>
               {how.lead} New here? Use <strong>How to use</strong> in the header
-              for a short walkthrough. On each Side by side path, open{" "}
-              <strong>What this tells you</strong> for path-specific guidance, and
-              print a shortlist / visit pack when you are ready to go.
+              for a short walkthrough, or open the{" "}
+              <Link href={guidesIndexPath()}>parent guides</Link>. On each Side
+              by side path, open <strong>What this tells you</strong> for
+              path-specific guidance, and print a shortlist / visit pack when
+              you are ready to go.
             </p>
           </div>
           <div className="decision-guidance-grid page-how-grid">

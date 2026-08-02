@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { Figtree, Fraunces } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@/components/Analytics";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
@@ -14,6 +16,21 @@ import {
   websiteJsonLd,
 } from "@/lib/seo";
 
+const figtree = Figtree({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const googleVerification =
+  process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
+
 export const metadata: Metadata = {
   metadataBase: new URL(BRAND_HOME_URL),
   title: {
@@ -27,6 +44,14 @@ export const metadata: Metadata = {
   creator: BRAND_NAME,
   publisher: BRAND_NAME,
   category: "education",
+  manifest: "/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   robots: {
     index: true,
     follow: true,
@@ -63,6 +88,9 @@ export const metadata: Metadata = {
   other: {
     "geo.region": "GB",
   },
+  ...(googleVerification
+    ? { verification: { google: googleVerification } }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -80,7 +108,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB">
+    <html lang="en-GB" className={`${figtree.variable} ${fraunces.variable}`}>
       <body>
         <JsonLd data={websiteJsonLd()} />
         <a className="skip-link" href="#main">
@@ -93,6 +121,7 @@ export default function RootLayout({
             <SiteFooter />
           </AccountProvider>
         </UiPreferencesProvider>
+        <Analytics />
       </body>
     </html>
   );
