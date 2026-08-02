@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { areasIndexPath } from "@/lib/areas";
 import { BRAND_DOMAIN, BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
+import { guidePath, guidesIndexPath } from "@/lib/guides";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 
 const TOOL_LINKS = [
@@ -20,6 +21,15 @@ const AREA_HIGHLIGHTS = [
   { href: "/areas/oxfordshire/", label: "Oxfordshire" },
   { href: "/areas/west-sussex/", label: "West Sussex" },
   { href: "/areas/southampton/", label: "Southampton" },
+] as const;
+
+const GUIDE_LINKS = [
+  { href: guidePath("how-to-read"), label: "How to read figures" },
+  { href: guidePath("primary-ks2"), label: "Primary KS2" },
+  { href: guidePath("secondary-ks4"), label: "Secondary KS4" },
+  { href: guidePath("early-years"), label: "Early years" },
+  { href: guidePath("faq"), label: "FAQ" },
+  { href: guidesIndexPath(), label: "All guides" },
 ] as const;
 
 export function SiteFooter() {
@@ -57,6 +67,16 @@ export function SiteFooter() {
             <li>
               <Link href={areasIndexPath()}>All covered areas</Link>
             </li>
+          </ul>
+        </nav>
+        <nav className="site-footer-nav" aria-label="Guides">
+          <p className="site-footer-nav-label">Guides</p>
+          <ul>
+            {GUIDE_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href}>{link.label}</Link>
+              </li>
+            ))}
           </ul>
         </nav>
         <p className="site-footer-meta">

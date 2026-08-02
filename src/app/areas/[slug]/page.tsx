@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AreaCoverageList } from "@/components/AreaCoverageList";
+import { AreaStageList } from "@/components/AreaStageList";
 import { JsonLd } from "@/components/JsonLd";
 import {
   areaPageDescription,
@@ -13,6 +14,7 @@ import {
   listCoverageAreas,
 } from "@/lib/areas";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
+import { guidesIndexPath } from "@/lib/guides";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { areaLandingJsonLd } from "@/lib/seo";
 
@@ -91,12 +93,25 @@ export default async function AreaLandingPage({ params }: PageProps) {
             <Link href="/#top" className="btn btn-primary">
               Start with a postcode
             </Link>
-            <Link href="/#how" className="btn btn-ghost area-btn-ghost">
-              How to read the figures
+            <Link href={guidesIndexPath()} className="btn btn-ghost area-btn-ghost">
+              Parent guides
             </Link>
           </p>
         </div>
       </header>
+
+      <section className="section" aria-labelledby="area-stages-heading">
+        <div className="shell">
+          <div className="section-head">
+            <h2 id="area-stages-heading">Browse by stage in {area.localAuthority}</h2>
+            <p>
+              Open a stage page for path-specific guidance, then jump into the
+              compare tool with the matching filters.
+            </p>
+          </div>
+          <AreaStageList area={area} />
+        </div>
+      </section>
 
       <section className="section" aria-labelledby="area-counts-heading">
         <div className="shell">

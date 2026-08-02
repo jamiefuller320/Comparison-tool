@@ -49,6 +49,7 @@ export function SiteHeader() {
             </button>
             <nav className="nav-links" aria-label="Primary">
               <a href="/areas/">Areas</a>
+              <a href="/guides/">Guides</a>
               <a href="/#nearby">Near home</a>
               <a href="/#compare">Shortlist</a>
               <a href="/#side-by-side">Side by side</a>
