@@ -60,6 +60,7 @@ html {
 #nearby,
 #compare,
 #side-by-side,
+#areas,
 #how,
 #data {
   scroll-margin-top: 4.5rem;
@@ -3639,6 +3640,214 @@ html.tour-running .hero-inner > * {
 }
 
 .site-footer-meta a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+@media (min-width: 900px) {
+  .site-footer-inner {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr) minmax(0, 1fr);
+  }
+}
+
+.area-page {
+  padding-bottom: 1rem;
+}
+
+.area-hero {
+  position: relative;
+  padding: 3.25rem 0 2.25rem;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.area-hero::before {
+  content: "";
+  position: absolute;
+  inset: -8% -4% auto;
+  height: 120%;
+  z-index: -1;
+  border-radius: 0 0 2rem 2rem;
+  background:
+    linear-gradient(135deg, rgba(11, 79, 108, 0.94) 0%, rgba(7, 58, 80, 0.9) 52%, rgba(196, 92, 38, 0.5) 100%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.area-hero .shell {
+  color: #f7fbff;
+  max-width: 44rem;
+}
+
+.area-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.55rem;
+  align-items: center;
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: rgba(247, 251, 255, 0.72);
+}
+
+.area-breadcrumb a {
+  color: #ffd7bf;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.area-breadcrumb a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.area-kicker {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #ffd7bf;
+}
+
+.area-hero h1 {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 3.6vw, 2.2rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.area-lead {
+  margin: 0 0 1.35rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: rgba(247, 251, 255, 0.86);
+  max-width: 38rem;
+}
+
+.area-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.area-page .btn-primary {
+  background: #fff7ef;
+  color: var(--sea-deep);
+}
+
+.area-page .btn-ghost,
+.area-btn-ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.area-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.85rem 1rem;
+  margin: 0;
+}
+
+.area-stats > div {
+  padding: 0.85rem 0 0.35rem;
+  border-top: 1px solid var(--line);
+}
+
+.area-stats dt {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+
+.area-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--sea-deep);
+}
+
+.area-steps {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.75rem;
+  max-width: 40rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.area-steps a {
+  color: var(--sea);
+  font-weight: 650;
+}
+
+.area-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.area-list li {
+  border-bottom: 1px solid var(--line);
+}
+
+.area-list-link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  padding: 0.85rem 0.1rem;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+a.area-list-link:hover {
+  color: var(--sea);
+}
+
+a.area-list-link:hover .area-list-meta {
+  color: var(--sea);
+}
+
+.area-list-link strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.area-list-link.current {
+  color: var(--sea-deep);
+}
+
+.area-list-meta {
+  font-size: 0.9rem;
+  color: var(--soft);
+}
+
+.area-home-more {
+  margin: 1rem 0 0;
+}
+
+.area-home-more a {
+  color: var(--sea);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.area-home-more a:hover {
+  color: var(--coral);
   text-decoration: underline;
   text-underline-offset: 0.16em;
 }

@@ -1,11 +1,29 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import { CompareLoader } from "@/components/CompareLoader";
+import { AreaCoverageList } from "@/components/AreaCoverageList";
+import {
+  areasIndexPath,
+  formatCount,
+  listCoverageAreas,
+} from "@/lib/areas";
 import { BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
 import { SEO_DESCRIPTION } from "@/lib/seo";
 
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
+
 export default function HomePage() {
   const how = DECISION_GUIDANCE.general;
+  const areas = listCoverageAreas();
+  const featured = areas.filter((area) => area.isSeed).concat(
+    areas.filter((area) => !area.isSeed).slice(0, 8),
+  );
 
   return (
     <main id="main">
@@ -32,6 +50,27 @@ export default function HomePage() {
       </header>
 
       <CompareLoader />
+
+      <section
+        className="section"
+        id="areas"
+        aria-labelledby="home-areas-heading"
+      >
+        <div className="shell">
+          <div className="section-head">
+            <h2 id="home-areas-heading">Browse by local authority</h2>
+            <p>
+              {formatCount(areas.length)} covered areas across{" "}
+              {COVERAGE_REGION_LABEL}. Open an area page for school and early
+              years counts, then jump into the postcode explorer.
+            </p>
+          </div>
+          <AreaCoverageList areas={featured} />
+          <p className="area-home-more">
+            <Link href={areasIndexPath()}>See every covered area</Link>
+          </p>
+        </div>
+      </section>
 
       <section className="section" id="how" data-tour="how" aria-labelledby="how-heading">
         <div className="shell">

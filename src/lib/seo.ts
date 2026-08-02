@@ -1,6 +1,13 @@
 /** Shared SEO copy and structured-data helpers for School Compass. */
 
 import {
+  areaPageDescription,
+  areaPageTitle,
+  areaPath,
+  areasIndexPath,
+  type CoverageArea,
+} from "@/lib/areas";
+import {
   BRAND_DOMAIN,
   BRAND_HOME_URL,
   BRAND_NAME,
@@ -74,6 +81,100 @@ export function websiteJsonLd(): Record<string, unknown> {
           name: COVERAGE_REGION_LABEL,
         },
         inLanguage: "en-GB",
+      },
+    ],
+  };
+}
+
+export function areasHubJsonLd(areas: CoverageArea[]): Record<string, unknown> {
+  const url = `${BRAND_HOME_URL}${areasIndexPath()}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${url}#page`,
+        url,
+        name: `School areas across ${COVERAGE_REGION_LABEL}`,
+        description: `Browse local-authority school compare pages across ${COVERAGE_REGION_LABEL}.`,
+        isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
+        inLanguage: "en-GB",
+        breadcrumb: { "@id": `${url}#breadcrumb` },
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: areas.length,
+          itemListElement: areas.map((area, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: area.localAuthority,
+            url: `${BRAND_HOME_URL}${areaPath(area.slug)}`,
+          })),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: `${BRAND_HOME_URL}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Areas",
+            item: url,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export function areaLandingJsonLd(area: CoverageArea): Record<string, unknown> {
+  const url = `${BRAND_HOME_URL}${areaPath(area.slug)}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${url}#page`,
+        url,
+        name: areaPageTitle(area),
+        description: areaPageDescription(area),
+        isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
+        about: {
+          "@type": "AdministrativeArea",
+          name: area.localAuthority,
+        },
+        inLanguage: "en-GB",
+        breadcrumb: { "@id": `${url}#breadcrumb` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: `${BRAND_HOME_URL}/`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Areas",
+            item: `${BRAND_HOME_URL}${areasIndexPath()}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: area.localAuthority,
+            item: url,
+          },
+        ],
       },
     ],
   };

@@ -14,12 +14,13 @@ export function FloatingControls() {
     >
       <div className="floating-controls-inner">
         <span className="floating-controls-label">Jump</span>
-        <a href="#top">Home</a>
-        <a href="#nearby">Near home</a>
-        <a href="#compare">Shortlist</a>
-        <a href="#side-by-side">Side by side</a>
-        <a href="#how">How to read</a>
-        <a href="#data">Data</a>
+        <a href="/#top">Home</a>
+        <a href="/areas/">Areas</a>
+        <a href="/#nearby">Near home</a>
+        <a href="/#compare">Shortlist</a>
+        <a href="/#side-by-side">Side by side</a>
+        <a href="/#how">How to read</a>
+        <a href="/#data">Data</a>
       </div>
     </div>
   );
