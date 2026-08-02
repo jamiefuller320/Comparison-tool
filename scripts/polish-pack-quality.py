@@ -24,13 +24,13 @@ if str(SCRIPTS) not in sys.path:
 
 from seed_scope import la_slug  # noqa: E402
 
-# Weakest independent-précis packs from report-pack-quality baseline.
+# Next weakest independent-précis packs after wave 1 (run report:pack-quality).
 DEFAULT_TARGETS = [
-    "Windsor and Maidenhead",
-    "Oxfordshire",
-    "Wokingham",
-    "Buckinghamshire",
-    "Surrey",
+    "Reading",
+    "Brighton and Hove",
+    "East Sussex",
+    "Bracknell Forest",
+    "West Sussex",
 ]
 
 MANIFEST = ROOT / "public" / "data" / "packs" / "manifest.json"
