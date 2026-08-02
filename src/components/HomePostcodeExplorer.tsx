@@ -254,19 +254,12 @@ export function HomePostcodeExplorer({
 
   return (
     <>
-      <section className="hero" id="top" data-tour="hero">
+      {/*
+        Brand + H1 live in the server-rendered .seo-intro (page.tsx) so crawlers
+        see them without JS. This block is the interactive hero controls only.
+      */}
+      <div className="hero-controls">
         <div className="shell hero-inner">
-          <p className="hero-brand">
-            School <em>Compass</em>
-          </p>
-          <h1>
-            Find your bearings when choosing a school.
-          </h1>
-          <p>
-            Start with your home postcode to map nearby schools and early years,
-            shortlist a few, then compare published figures and inspection
-            excerpts before you visit. A parental compass — not a league table.
-          </p>
           <p className="hero-tour-launch">
             <button
               type="button"
@@ -346,7 +339,7 @@ export function HomePostcodeExplorer({
             tourId="sector"
           />
         </div>
-      </section>
+      </div>
 
       {home ? (
         <section

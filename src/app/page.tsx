@@ -1,17 +1,42 @@
 import { CompareLoader } from "@/components/CompareLoader";
+import { BRAND_NAME, BRAND_TAGLINE } from "@/lib/brand";
+import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
+import { SEO_DESCRIPTION } from "@/lib/seo";
 
 export default function HomePage() {
   const how = DECISION_GUIDANCE.general;
 
   return (
-    <main>
+    <main id="main">
+      {/*
+        Server-rendered hero chrome (brand + H1 + lead) so crawlers and no-JS
+        clients see the value proposition. CompareLoader mounts interactive
+        controls in a matching .hero-controls band, then nearby / shortlist
+        as normal page sections below.
+      */}
+      <header className="hero-stack seo-intro" id="top" data-tour="hero">
+        <div className="shell hero-inner">
+          <p className="hero-brand">
+            School <em>Compass</em>
+          </p>
+          <h1>Find your bearings when choosing a school.</h1>
+          <p>
+            Start with your home postcode to map nearby schools and early years
+            across {COVERAGE_REGION_LABEL}, shortlist a few, then compare
+            published figures and inspection excerpts before you visit.{" "}
+            {BRAND_TAGLINE}
+          </p>
+          <p className="seo-intro-meta">{SEO_DESCRIPTION}</p>
+        </div>
+      </header>
+
       <CompareLoader />
 
-      <section className="section" id="how" data-tour="how">
+      <section className="section" id="how" data-tour="how" aria-labelledby="how-heading">
         <div className="shell">
           <div className="section-head">
-            <h2>{how.heading}</h2>
+            <h2 id="how-heading">{how.heading}</h2>
             <p>
               {how.lead} New here? Use <strong>How to use</strong> in the header
               for a short walkthrough. On each Side by side path, open{" "}
@@ -45,16 +70,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="data" style={{ paddingTop: 0, paddingBottom: "4rem" }}>
+      <section
+        className="section"
+        id="data"
+        aria-labelledby="data-heading"
+        style={{ paddingTop: 0, paddingBottom: "4rem" }}
+      >
         <div className="shell">
           <div className="section-head">
-            <h2>Data</h2>
+            <h2 id="data-heading">Where the numbers come from</h2>
             <p>
-              School Compass harvests published figures from the DfE Explore
+              {BRAND_NAME} harvests published figures from the DfE Explore
               Education Statistics API (KS2 and KS4), Ofsted independent-school
               management information, school coordinates from postcodes.io, and
-              road distances from OSRM — expanded from the collation approach
-              used for Bartley Insight.
+              road distances from OSRM — so parents can compare like with like
+              before they visit.
             </p>
           </div>
           <div className="footnote">
