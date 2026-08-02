@@ -11,6 +11,7 @@ import {
   type VisitPackKind,
 } from "@/lib/visitPack";
 import { printVisitPackElement } from "@/lib/printVisitPack";
+import { FEEDBACK_PRINTED_EVENT } from "@/lib/productFeedback";
 import {
   loadVisitLog,
   saveVisitLog,
@@ -360,6 +361,9 @@ export function VisitPack({
     const pack = document.querySelector<HTMLElement>(".visit-pack");
     if (!pack) return;
     printVisitPackElement(pack, computePrintNoteHeightPx(1));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event(FEEDBACK_PRINTED_EVENT));
+    }
   }
 
   const printedOn = new Date().toLocaleDateString("en-GB");

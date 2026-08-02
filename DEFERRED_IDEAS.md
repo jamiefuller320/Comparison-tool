@@ -1,6 +1,6 @@
 # Deferred ideas
 
-A living record of product ideas discussed in Schoolside work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
+A living record of product ideas discussed in School Compass work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
 Last reviewed from agent chat: 2026-07-29 (board interface, network effects, ranking engine).
 
@@ -69,7 +69,7 @@ Only after durable parent and (separately) board audiences exist. Not a near-ter
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Quantified North Star / success metrics** | Formal OKRs (e.g. parents comparing ≥2 nearby schools before applying). Only qualitative North Star exists today. | Not started | Agent gap note |
+| **Quantified North Star / success metrics** | Formal OKRs (e.g. parents comparing ≥2 nearby schools before applying). Soft-launch **product-feedback** intake + `digest-product-feedback.py` now give structured usage/sentiment signals; formal OKRs still not defined. | Partial (feedback intake shipped) | Agent gap note / user |
 
 ## Parked / rejected (do not reopen without new data)
 

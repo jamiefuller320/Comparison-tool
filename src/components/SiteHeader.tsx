@@ -4,6 +4,7 @@ import { FloatingControls } from "@/components/FloatingControls";
 import { AccountMenu } from "@/components/AccountMenu";
 import { useUiPreferences } from "@/components/UiPreferencesProvider";
 import { requestTourStart } from "@/lib/tour";
+import { requestOpenFeedback } from "@/lib/productFeedback";
 
 export function SiteHeader() {
   const { prefs, hydrated, setFloatingControls } = useUiPreferences();
@@ -37,6 +38,14 @@ export function SiteHeader() {
               onClick={() => requestTourStart()}
             >
               How to use
+            </button>
+            <button
+              type="button"
+              className="tour-launch"
+              title="School Compass is under development — share structured feedback"
+              onClick={() => requestOpenFeedback("manual")}
+            >
+              Feedback
             </button>
             <nav className="nav-links" aria-label="Primary">
               <a href="#nearby">Near home</a>

@@ -28,6 +28,7 @@ import {
   type SchoolsIndexWithPack,
 } from "@/lib/laPacks";
 import { ProductTour } from "@/components/ProductTour";
+import { ProductFeedbackPrompt } from "@/components/ProductFeedbackPrompt";
 import { headlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   listAvailableComparePaths,
@@ -719,9 +720,21 @@ export function CompareApp({
     );
   }
 
+  const sawVisitPack =
+    selectedSchools.length > 0 ||
+    /* path boards mount VisitPack when the shortlist has items */
+    Boolean(activePath && selected.length > 0);
+
   return (
     <>
       <ProductTour />
+      <ProductFeedbackPrompt
+        shortlistCount={selected.length}
+        openedSideBySide={Boolean(activePath && selected.length > 0)}
+        sawVisitPack={sawVisitPack}
+        stages={stages}
+        sectors={sectors}
+      />
       <HomePostcodeExplorer
         schools={filteredSchools}
         selectedUrns={selected}

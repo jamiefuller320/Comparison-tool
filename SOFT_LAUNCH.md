@@ -36,7 +36,7 @@ Last reviewed: 2026-07-31.
 | 3 Qualitative enough | **Pass (guideline)** | Hampshire mainstream ~91% / EY ~43% / CM ~51%. Region packs (2026-07-31): schools ~88% précis, EY ~87%, CM ~74%; mainstream primary/secondary ≫70% |
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
 | 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete` |
-| 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East parental compare |
+| 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East parental compare; soft-launch feedback prompt + structured intake for improvement cycle |
 | 7 Regional packs | **Pass** | All 20 South East + Dorset pack LAs `ready` in `public/data/packs/manifest.json` (Hampshire remains maintained root) |
 
 Re-check guideline rates after each major harvest; flip a row back to Partial if coverage regresses.

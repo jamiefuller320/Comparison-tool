@@ -169,6 +169,21 @@ Optional private intake (recommended so notes/emails stay off public issues):
 
 Without those secrets, the workflow opens an issue on this repository with label `data-challenge`. Optional reporter email is kept out of the public issue body and written only to the Actions job summary.
 
+## Soft-launch product feedback
+
+A usage-aware **Feedback** prompt (header always; auto after deep engagement, visit-pack print, or return from an exit) explains that School Compass is under development and asks a question tailored to what the visitor did (or didn’t do). Submissions queue `repository_dispatch` event `product-feedback` (same dispatch token as data challenges) into issues with:
+
+- human-readable usage table
+- labels `product-feedback` + `feedback-{sentiment}`
+- a fenced **machine JSON** payload for collation
+
+Bump `FEEDBACK_CAMPAIGN_ID` in `src/lib/buildMeta.ts` when a significant build should re-prompt returning visitors. Collate intake with:
+
+```bash
+npm run digest:feedback
+# or: python3 scripts/digest-product-feedback.py --repo owner/private-intake --jsonl /tmp/feedback.jsonl
+```
+
 ```bash
 python3 scripts/harvest-schools.py
 python3 scripts/harvest-schools.py --sample 60
