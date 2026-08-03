@@ -2,7 +2,8 @@
 """Polish qualitative depth on existing ready packs (no rebuild).
 
 Focus: ISI citation resolve → school précis (ISI-first) → highlight buckets.
-Default targets are packs with the weakest independent précis.
+Default targets are a static wave list; prefer `run-pack-quality-loop.py` (or
+`npm run loop:pack-quality`) to select the current weakest ready packs.
 
 Usage:
   python3 scripts/polish-pack-quality.py

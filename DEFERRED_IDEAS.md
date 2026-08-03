@@ -25,7 +25,7 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 | **4. Pack depth: EY + childminders** | Parameterise EY/childminder harvests with `--la` into the same pack folder; silent merge into EY/CM indexes + multi-LA EYFSP board | Shipped (#50; IoW EY/CM rebuild this PR) | Done |
 | **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
 | **6. Pack prune / TTL** | Drop unused packs from repo/Pages when stale to bound size | Not started | When pack count grows |
-| **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. | Deferred (after packs are loadable) | When multiple packs exist + usage signals |
+| **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. **Phase 1 shipped:** weekly `pack-quality-loop` workflow + `npm run loop:pack-quality` (assess → polish weakest packs → digest). Still deferred: interest weighting from feedback / missing-school / pack-request signals. | Partial (phase 1 automated polish) | Phase 2 when usage signals are reliable |
 
 ### Product path / scope
 

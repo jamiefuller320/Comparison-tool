@@ -24,6 +24,8 @@
     "enrich:precis": "python3 scripts/enrich-inspection-precis.py",
     "report:pack-quality": "python3 scripts/report-pack-quality.py",
     "polish:pack-quality": "python3 scripts/polish-pack-quality.py",
+    "loop:pack-quality": "python3 scripts/run-pack-quality-loop.py",
+    "test:pack-quality-loop": "python3 scripts/test-pack-quality-loop.py",
     "harvest:ey": "python3 scripts/harvest-ey-providers.py && python3 scripts/harvest-childminders.py && python3 scripts/enrich-ey-schools.py",
     "harvest:childminders": "python3 scripts/harvest-childminders.py",
     "history:ks2": "python3 scripts/extract-ks2-history.py",

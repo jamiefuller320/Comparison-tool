@@ -29,7 +29,7 @@ Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHO
 - **Early years / childminders** — Ofsted day care + school nursery Ofsted join + EYFSP area benches; consented childminder directory + vetting checklist + visit pack (`npm run harvest:ey`)
 - **School stages** — Hampshire KS1 phonics context, KS2 tables + year trends, and KS4/16–18 where published, via `npm run harvest:hampshire` (seed-LA trim of the school index + history)
 
-Scheduled refresh uses the Hampshire maintained harvest. `npm run harvest` remains the **full England scaffold** for capability / escape hatch.
+Scheduled refresh uses the Hampshire maintained harvest. A weekly **pack quality loop** (`npm run loop:pack-quality`, workflow `pack-quality-loop.yml`) assesses ready packs, polishes the weakest indie/ISI gaps under caps, and commits a digest. `npm run harvest` remains the **full England scaffold** for capability / escape hatch.
 
 **On-demand area packs (backend collation):** outside Hampshire, parents can **Request area coverage** (exact DfE LA label) from **A school is missing**. That queues `repository_dispatch` `la-pack` → `scripts/build-la-pack.py`, which writes under `public/data/packs/{slug}/` without overwriting the Hampshire root. Pack builds include **GIAS coverage, KS4/KS5 outcomes, LA phonics benches, Ofsted day care / school EY enrich, consented childminders, and LA EYFSP benches**. Ready packs in `public/data/packs/manifest.json` are **merged silently** into the map and search (schools, nurseries, and childminders) — there is no pack picker or `?pack=` mode. Packs remain the unit for deciding which LAs to harvest. Further depth and an interest-weighted ingest→assess→improve loop are tracked in `DEFERRED_IDEAS.md`.
 
@@ -104,6 +104,8 @@ npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 h
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
 # or: npm run pack:la -- --la Surrey   # one on-demand LA pack under public/data/packs/
 # or: npm run pack:southeast           # batch SE + Dorset packs (skips ready)
+# or: npm run report:pack-quality      # précis / ISI coverage table
+# or: npm run loop:pack-quality -- --dry-run   # assess weakest packs (no polish)
 npm run dev
 ```
 

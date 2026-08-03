@@ -1,0 +1,92 @@
+name: Pack quality loop
+
+# Weekly assess → capped polish on weakest ready packs → commit digest.
+# Complements monthly Hampshire refresh and weekly EY refresh.
+on:
+  workflow_dispatch:
+    inputs:
+      max_packs:
+        description: Max weakest packs to polish
+        required: false
+        default: "3"
+      isi_resolve_cap:
+        description: ISI HTML resolve cap per pack
+        required: false
+        default: "50"
+      precis_limit:
+        description: Precis fetch limit per pack
+        required: false
+        default: "40"
+      dry_run:
+        description: Assess + digest only (no polish)
+        required: false
+        type: boolean
+        default: false
+      upgrade_highlights:
+        description: Also upgrade strength/improvement buckets
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Wednesdays 06:00 UTC — after Monday EY refresh
+    - cron: "0 6 * * 3"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pack-quality-loop
+  cancel-in-progress: false
+
+jobs:
+  pack-quality-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install data enrichment deps
+        run: pip install -r requirements-data.txt
+
+      - name: Run pack quality loop
+        env:
+          MAX_PACKS: ${{ github.event.inputs.max_packs || '3' }}
+          ISI_CAP: ${{ github.event.inputs.isi_resolve_cap || '50' }}
+          PRECIS_LIMIT: ${{ github.event.inputs.precis_limit || '40' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          UPGRADE_HL: ${{ github.event.inputs.upgrade_highlights || 'false' }}
+        run: |
+          set -euo pipefail
+          ARGS=(
+            --max-packs "$MAX_PACKS"
+            --isi-resolve-cap "$ISI_CAP"
+            --precis-limit "$PRECIS_LIMIT"
+          )
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          if [ "$UPGRADE_HL" = "true" ]; then
+            ARGS+=(--upgrade-highlights)
+          fi
+          python3 scripts/run-pack-quality-loop.py "${ARGS[@]}"
+
+      - name: Commit pack polish + digest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/packs
+          if git diff --staged --quiet; then
+            echo "No pack quality changes"
+          else
+            if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
+              MSG="Pack quality loop dry-run digest"
+            else
+              MSG="Pack quality loop: polish weakest ready packs"
+            fi
+            git commit -m "$MSG"
+            git push
+          fi
