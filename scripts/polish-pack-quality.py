@@ -24,7 +24,7 @@ if str(SCRIPTS) not in sys.path:
 
 from seed_scope import la_slug  # noqa: E402
 
-# Wave-3 targets (and next defaults after this pass). Kent is large — cap runs.
+# Wave-3 targets (next weakest after wave 2). Kent is large — prefer capped runs.
 DEFAULT_TARGETS = [
     "Milton Keynes",
     "Medway",
