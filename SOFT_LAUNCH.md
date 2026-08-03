@@ -4,7 +4,7 @@ Finite deployable standard before showing School Compass to the world.
 Not a commitment to finish the whole roadmap — a **parental product** bar with
 **Hampshire maintained depth** and **South East (+ Dorset) pack coverage**.
 
-Last reviewed: 2026-07-31.
+Last reviewed: 2026-08-03.
 
 ## Ship bar
 
@@ -33,9 +33,9 @@ Last reviewed: 2026-07-31.
 | --- | --- | --- |
 | 1 Journey | **Pass** | Path-scoped boards + visit pack on EY/CM; empty-state polish shipped |
 | 2 Quantitative honesty | **Pass** | Gap chips on KS4/EY/KS2 (incl. missing Ofsted grade on KS2) |
-| 3 Qualitative enough | **Pass (guideline)** | Hampshire mainstream ~91% / EY ~43% / CM ~51%. Region packs: schools ~88%+ précis, EY ~87%, CM ~74%; mainstream primary/secondary ≫70%. Independent ISI/précis polish (2026-08-02) lifted weakest packs via `npm run polish:pack-quality` — measure with `npm run report:pack-quality` |
+| 3 Qualitative enough | **Pass (guideline)** | Hampshire mainstream ~91% / EY ~43% / CM ~51%. Region packs: schools ~88%+ précis, EY ~87%, CM ~74%; mainstream primary/secondary ≫70%. Independent ISI/précis polish waves + weekly automated loop — measure with `npm run report:pack-quality` |
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
-| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete` |
+| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; weekly `pack-quality-loop` workflow (`npm run loop:pack-quality`) |
 | 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East parental compare; soft-launch feedback prompt + structured intake for improvement cycle |
 | 7 Regional packs | **Pass** | All 20 South East + Dorset pack LAs `ready` in `public/data/packs/manifest.json` (Hampshire remains maintained root) |
 
@@ -54,6 +54,21 @@ pip install -r requirements-data.txt
 npm run enrich:precis -- --limit 0          # schools (no cap)
 npm run enrich:precis -- --ey --limit 200
 npm run enrich:precis -- --childminders --limit 100
+npm run report:pack-quality
+```
+
+### Automated pack quality loop (phase 1)
+
+Weekly GitHub Action (Wed 06:00 UTC) + `workflow_dispatch`:
+
+1. **Assess** — `report:pack-quality` JSON metrics  
+2. **Select** — up to N weakest ready packs with indie/ISI headroom  
+3. **Polish** — capped `polish:pack-quality` (ISI resolve + missing précis)  
+4. **Digest** — writes `public/data/packs/quality-loop-latest.{json,md}` and commits pack deltas  
+
+```bash
+npm run loop:pack-quality -- --dry-run
+npm run loop:pack-quality -- --max-packs 3 --isi-resolve-cap 50 --precis-limit 40
 ```
 
 Soft-launch qualitative target (guideline, not a hard CI gate):
