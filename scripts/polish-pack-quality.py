@@ -24,13 +24,13 @@ if str(SCRIPTS) not in sys.path:
 
 from seed_scope import la_slug  # noqa: E402
 
-# Wave-3 targets (next weakest after wave 2). Kent is large — prefer capped runs.
+# Wave-4 targets (weakest indie précis after waves 1–3). Surrey is large — cap runs.
 DEFAULT_TARGETS = [
-    "Milton Keynes",
-    "Medway",
-    "West Berkshire",
-    "Slough",
-    "Kent",
+    "Bournemouth, Christchurch and Poole",
+    "Surrey",
+    "Southampton",
+    "Wokingham",
+    "Brighton and Hove",
 ]
 
 MANIFEST = ROOT / "public" / "data" / "packs" / "manifest.json"
