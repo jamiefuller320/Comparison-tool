@@ -71,6 +71,8 @@ npm run loop:pack-quality -- --dry-run
 npm run loop:pack-quality -- --max-packs 3 --isi-resolve-cap 50 --precis-limit 40
 ```
 
+Future phases (interest weighting, pack TTL, SCH-batched KS2) are logged under **Continuous data-quality automation** in `DEFERRED_IDEAS.md` — return there rather than re-deriving from chat.
+
 Soft-launch qualitative target (guideline, not a hard CI gate):
 
 - Mainstream state primaries with precis ≳ 70%

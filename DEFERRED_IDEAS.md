@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in School Compass work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-07-29 (board interface, network effects, ranking engine).
+Last reviewed from agent chat: 2026-08-04 (pack quality automation phases 2–4 logged).
 
 ## How to use
 
@@ -25,7 +25,20 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 | **4. Pack depth: EY + childminders** | Parameterise EY/childminder harvests with `--la` into the same pack folder; silent merge into EY/CM indexes + multi-LA EYFSP board | Shipped (#50; IoW EY/CM rebuild this PR) | Done |
 | **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
 | **6. Pack prune / TTL** | Drop unused packs from repo/Pages when stale to bound size | Not started | When pack count grows |
-| **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. **Phase 1 shipped:** weekly `pack-quality-loop` workflow + `npm run loop:pack-quality` (assess → polish weakest packs → digest). Still deferred: interest weighting from feedback / missing-school / pack-request signals. | Partial (phase 1 automated polish) | Phase 2 when usage signals are reliable |
+| **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. See **Continuous data-quality automation** phases below. | Partial (phase 1 shipped #80) | Phases 2–4 when signals / cost justify |
+
+#### Continuous data-quality automation (return-to log)
+
+Goal: close the loop from **assess → prioritise → bounded re-fetch → digest** without manual polish waves. Soft-launch ops bar already passes; these phases are improvement, not a ship gate.
+
+| Phase | Scope | Status | Notes / entry points |
+| --- | --- | --- | --- |
+| **1. Scheduled polish loop** | Weekly assess → select weakest ready packs with indie/ISI headroom → capped `polish:pack-quality` → commit `quality-loop-latest.{json,md}` | **Shipped (#80)** | `npm run loop:pack-quality`; `.github/workflows/pack-quality-loop.yml` (Wed 06:00 UTC + dispatch); see `SOFT_LAUNCH.md` |
+| **2. Interest weighting** | Score LAs from product-feedback issues, missing-school force-refresh, and LA-pack request signals; bias target selection toward areas parents actually touch | Not started | Inputs already exist (`product-feedback` / `missing-school` / `la-pack` dispatches + `digest:feedback`). Extend `select_targets` in `scripts/run-pack-quality-loop.py` — do **not** scrape private shortlists |
+| **3. Pack hygiene (TTL / stale)** | Flag or drop unused / stale packs from repo/Pages to bound size; surface `builtAt` freshness in digest | Not started | Same intent as roadmap step **6. Pack prune / TTL**; trigger when pack count or Pages payload grows |
+| **4. Harvest cost path** | SCH-batched KS2 (`locations.in=SCH\|id\|…`) so scoped / pack harvests stop pulling full England performance pages | Not started | Same as roadmap step **5**; separate from qualitative polish — do when harvest cost or runtime hurts |
+
+**Explicitly out of this automation track** (different problems): interim/material-change ISI précis extraction; ISI grade harvest; second maintained seed LA; formal OKRs; full national précis.
 
 ### Product path / scope
 
