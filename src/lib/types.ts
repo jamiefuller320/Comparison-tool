@@ -116,6 +116,45 @@ export interface InspectionQuote {
   sourceUrl: string;
 }
 
+export type ContactRole =
+  | "headteacher"
+  | "senco"
+  | "office"
+  | "admissions"
+  | "safeguarding"
+  | "governor"
+  | "other";
+
+export type ContactSourceType =
+  | "gias"
+  | "dfe-index"
+  | "school-website"
+  | "school-document"
+  | "other";
+
+export interface ContactEntry {
+  role: ContactRole;
+  sourceType: ContactSourceType;
+  sourceUrl: string;
+  capturedAt: string;
+  name?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+  town?: string | null;
+  postcode?: string | null;
+  label?: string | null;
+}
+
+export interface ContactCaptureRecord {
+  urn: string;
+  name: string;
+  assessedAt: string;
+  engineVersion: string;
+  contacts: ContactEntry[];
+  captureNotes?: string[];
+}
+
 export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   urn: string;
   name: string;
@@ -154,6 +193,9 @@ export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   openDate?: string | null;
   /** GIAS ReasonEstablishmentOpened label when known. */
   reasonEstablishmentOpened?: string | null;
+  /** Merged from contact-capture sidecar when enriched. */
+  contactCapture?: ContactCaptureRecord | null;
+  contactCaptureEnrichedAt?: string | null;
 }
 
 export interface DirectorySchool {

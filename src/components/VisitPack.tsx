@@ -120,6 +120,23 @@ function ScreenStatusRow({
           {row.kindLabel}
           {row.addressLine ? ` · ${row.addressLine}` : null}
         </p>
+        {row.contactRows?.length ? (
+          <ul className="visit-contact-lines no-print">
+            {row.contactRows.map((line) => (
+              <li key={`${line.role}-${line.label}-${line.value}`}>
+                <strong>{line.label}:</strong> {line.value}
+                {line.sourceUrl ? (
+                  <>
+                    {" "}
+                    <a href={line.sourceUrl} target="_blank" rel="noopener noreferrer">
+                      source
+                    </a>
+                  </>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
       <label className="visit-status">
         <span className="visually-hidden">Contact status</span>
@@ -177,6 +194,31 @@ function SchoolNotesPage({
               : null}
           </p>
           <p className="visit-address">{row.addressLine}</p>
+          {row.contactRows?.length ? (
+            <ul className="visit-contact-lines">
+              {row.contactRows.map((line) => (
+                <li key={`${line.role}-${line.label}-${line.value}`}>
+                  <strong>{line.label}:</strong> {line.value}
+                  {line.sourceUrl ? (
+                    <>
+                      {" "}
+                      <span className="visit-contact-source">
+                        (
+                        <a
+                          href={line.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {line.sourceType?.replaceAll("-", " ") || "source"}
+                        </a>
+                        )
+                      </span>
+                    </>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : null}
           <p className="visit-contact-meta">
             {[row.localAuthority, row.ofstedInspectionDate]
               .filter(Boolean)
