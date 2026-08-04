@@ -103,6 +103,41 @@ async function main() {
     console.error("FAIL school contact row", schoolRow);
     process.exit(1);
   }
+
+  const withContacts = toVisitContactRow(
+    {
+      ...primary,
+      telephone: "01962 000000",
+      contactCapture: {
+        urn: "116000",
+        name: "Test Junior",
+        assessedAt: "2026-08-04",
+        engineVersion: "0.1.0",
+        contacts: [
+          {
+            role: "headteacher",
+            name: "Alex Example",
+            sourceType: "gias",
+            sourceUrl: "https://example.test/gias/116000",
+            capturedAt: "2026-08-04",
+          },
+          {
+            role: "senco",
+            name: "Sam Senco",
+            email: "senco@example.test",
+            sourceType: "school-website",
+            sourceUrl: "https://example.test/contact",
+            capturedAt: "2026-08-04",
+          },
+        ],
+      },
+    },
+    "school",
+  );
+  if (!withContacts?.headteacher?.includes("Alex") || !withContacts.senco) {
+    console.error("FAIL contact capture merge on visit row", withContacts);
+    process.exit(1);
+  }
   if (questionsForKind("school").length < 6) {
     console.error("FAIL school visit questions too short");
     process.exit(1);

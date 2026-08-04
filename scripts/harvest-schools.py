@@ -612,6 +612,7 @@ LEAN_KEYS = [
     "town",
     "postcode",
     "address",
+    "telephone",
     "ageRange",
     "phase",
     "phases",

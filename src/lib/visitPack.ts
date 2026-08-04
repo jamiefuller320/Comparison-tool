@@ -1,4 +1,4 @@
-import type { SchoolRecord } from "@/lib/types";
+import type { ContactEntry, SchoolRecord } from "@/lib/types";
 import {
   CHILDMINDER_VETTING_CHECKLIST,
   type ChecklistItem,
@@ -197,6 +197,94 @@ export interface VisitContactRow {
   inspectionReportFileUrl?: string | null;
   inspectionReportLabel?: string | null;
   inspectionPrecisSource?: SchoolRecord["inspectionPrecisSource"];
+  /** Directory contacts from contactCapture sidecar (when enriched). */
+  telephone?: string | null;
+  officeEmail?: string | null;
+  headteacher?: string | null;
+  senco?: string | null;
+  contactRows?: VisitPackContactLine[];
+}
+
+export interface VisitPackContactLine {
+  role: string;
+  label: string;
+  value: string;
+  sourceUrl?: string | null;
+  sourceType?: string | null;
+}
+
+function pickContact(
+  contacts: ContactEntry[] | undefined,
+  role: ContactEntry["role"],
+  field: "name" | "email" | "phone",
+): ContactEntry | undefined {
+  return (contacts || []).find((c) => c.role === role && c[field]);
+}
+
+function firstContactField(
+  contacts: ContactEntry[] | undefined,
+  field: "email" | "phone",
+): ContactEntry | undefined {
+  return (contacts || []).find((c) => c[field]);
+}
+
+export function contactLinesForRecord(record: SchoolRecord): VisitPackContactLine[] {
+  const contacts = record.contactCapture?.contacts || [];
+  const lines: VisitPackContactLine[] = [];
+  const seen = new Set<string>();
+
+  const add = (
+    role: string,
+    label: string,
+    value: string | null | undefined,
+    source?: ContactEntry,
+  ) => {
+    const v = (value || "").trim();
+    if (!v) return;
+    const key = `${role}:${v.toLowerCase()}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    lines.push({
+      role,
+      label,
+      value: v,
+      sourceUrl: source?.sourceUrl,
+      sourceType: source?.sourceType,
+    });
+  };
+
+  const phone =
+    record.telephone ||
+    pickContact(contacts, "office", "phone")?.phone ||
+    firstContactField(contacts, "phone")?.phone;
+  const email =
+    pickContact(contacts, "office", "email")?.email ||
+    firstContactField(contacts, "email")?.email;
+  const head =
+    pickContact(contacts, "headteacher", "name")?.name ||
+    pickContact(contacts, "headteacher", "email")?.name;
+  const senco =
+    pickContact(contacts, "senco", "name")?.name ||
+    pickContact(contacts, "senco", "email")?.name;
+
+  add("office", "Telephone", phone, pickContact(contacts, "office", "phone"));
+  add("office", "Email", email, pickContact(contacts, "office", "email"));
+  add(
+    "headteacher",
+    "Headteacher",
+    head,
+    pickContact(contacts, "headteacher", "name"),
+  );
+  add("senco", "SENCO", senco, pickContact(contacts, "senco", "name"));
+
+  for (const entry of contacts) {
+    if (entry.role === "office" && entry.address) {
+      add("office", "Address", entry.address, entry);
+      break;
+    }
+  }
+
+  return lines;
 }
 
 export function toVisitContactRow(
@@ -208,6 +296,7 @@ export function toVisitContactRow(
   const addressLine = [record.address, record.town, record.postcode]
     .filter(Boolean)
     .join(", ");
+  const contactLines = contactLinesForRecord(record);
   const schoolLabel =
     record.schoolTypeLabel ||
     record.phase ||
@@ -246,5 +335,13 @@ export function toVisitContactRow(
     inspectionReportFileUrl: record.inspectionReportFileUrl,
     inspectionReportLabel: record.inspectionReportLabel,
     inspectionPrecisSource: record.inspectionPrecisSource,
+    telephone:
+      record.telephone ||
+      contactLines.find((l) => l.label === "Telephone")?.value ||
+      null,
+    officeEmail: contactLines.find((l) => l.label === "Email")?.value || null,
+    headteacher: contactLines.find((l) => l.label === "Headteacher")?.value || null,
+    senco: contactLines.find((l) => l.label === "SENCO")?.value || null,
+    contactRows: contactLines,
   };
 }
