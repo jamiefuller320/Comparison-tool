@@ -43,6 +43,17 @@ class QualitativeSignal:
         out = asdict(self)
         return {k: v for k, v in out.items() if v is not None}
 
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> QualitativeSignal:
+        return cls(
+            text=str(data.get("text") or ""),
+            sourceUrl=str(data.get("sourceUrl") or ""),
+            sourceType=str(data.get("sourceType") or "other"),
+            capturedAt=str(data.get("capturedAt") or ""),
+            pageTitle=(data.get("pageTitle") or None),
+            section=(data.get("section") or None),
+        )
+
 
 @dataclass
 class SubjectAreaAssessment:
@@ -73,6 +84,25 @@ class SubjectAreaAssessment:
         if self.synthesisMethod:
             out["synthesisMethod"] = self.synthesisMethod
         return out
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> SubjectAreaAssessment:
+        signals = [
+            QualitativeSignal.from_dict(s)
+            for s in (data.get("signals") or [])
+            if isinstance(s, dict)
+        ]
+        return cls(
+            area=str(data.get("area") or ""),
+            score=int(data.get("score") or 0),
+            confidence=float(data.get("confidence") or 0.0),
+            summary=str(data.get("summary") or ""),
+            themes=[str(t) for t in (data.get("themes") or [])],
+            offerings=[str(o) for o in (data.get("offerings") or [])],
+            signals=signals,
+            narrativeSummary=(data.get("narrativeSummary") or None),
+            synthesisMethod=(data.get("synthesisMethod") or None),
+        )
 
 
 @dataclass
@@ -106,6 +136,32 @@ class QualitativeCaptureRecord:
             "documentInventory": self.documentInventory,
         }
 
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> QualitativeCaptureRecord:
+        areas = [
+            SubjectAreaAssessment.from_dict(a)
+            for a in (data.get("areas") or [])
+            if isinstance(a, dict)
+        ]
+        inventory = [
+            dict(item)
+            for item in (data.get("documentInventory") or [])
+            if isinstance(item, dict)
+        ]
+        return cls(
+            urn=str(data.get("urn") or "").strip(),
+            name=str(data.get("name") or "").strip(),
+            assessedAt=str(data.get("assessedAt") or today_iso()),
+            engineVersion=str(data.get("engineVersion") or ENGINE_VERSION),
+            sourcesScanned=int(data.get("sourcesScanned") or 0),
+            sourceTypes=[str(t) for t in (data.get("sourceTypes") or [])],
+            areas=areas,
+            captureNotes=[str(n) for n in (data.get("captureNotes") or [])],
+            documentsDiscovered=int(data.get("documentsDiscovered") or 0),
+            documentsExtracted=int(data.get("documentsExtracted") or 0),
+            documentInventory=inventory,
+        )
+
 
 @dataclass
 class QualitativeCaptureIndex:
@@ -125,6 +181,21 @@ class QualitativeCaptureIndex:
             "records": [r.to_dict() for r in self.records],
             "stats": self.stats,
         }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> QualitativeCaptureIndex:
+        records = [
+            QualitativeCaptureRecord.from_dict(r)
+            for r in (data.get("records") or [])
+            if isinstance(r, dict)
+        ]
+        return cls(
+            generatedAt=str(data.get("generatedAt") or today_iso()),
+            engineVersion=str(data.get("engineVersion") or ENGINE_VERSION),
+            schoolCount=int(data.get("schoolCount") or len(records)),
+            records=records,
+            stats=dict(data.get("stats") or {}),
+        )
 
 
 @dataclass

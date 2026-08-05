@@ -73,7 +73,13 @@ export function parentParagraph(area: SubjectAreaAssessment): string {
   }
 
   if (offerings.length >= 2) {
-    const shown = offerings.slice(0, 6).join(", ");
+    // Prefer shorter labels in the compare cell; long club/curriculum names
+    // previously produced one unbroken line that overflowed the table.
+    const shown = offerings
+      .slice(0, 6)
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .join(", ");
     const extra = offerings.length > 6 ? ` and ${offerings.length - 6} more` : "";
     const distinct = countDistinctUrls(signals);
     const corroboration =

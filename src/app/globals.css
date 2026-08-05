@@ -938,11 +938,17 @@ body:has(.floating-controls) {
 
 .qual-evidence-summary-cell {
   vertical-align: top;
+  min-width: 0;
+  max-width: 18rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .qual-evidence-summary {
   display: grid;
   gap: 0.2rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .qual-evidence-kicker {
@@ -956,7 +962,11 @@ body:has(.floating-controls) {
 .qual-evidence-summary-body {
   margin: 0;
   font-size: 0.82rem;
+  font-weight: 500;
   line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .qual-evidence-empty {
@@ -968,6 +978,10 @@ body:has(.floating-controls) {
   border-radius: 0.55rem;
   padding: 0.75rem;
   background: var(--surface);
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .qual-evidence-detail.empty {
@@ -1032,6 +1046,8 @@ body:has(.floating-controls) {
   margin: 0.35rem 0 0;
   font-size: 0.84rem;
   line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .qual-evidence-footnote {
@@ -1054,11 +1070,20 @@ body:has(.floating-controls) {
   font-size: 0.72rem;
   cursor: pointer;
   text-decoration: underline;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: right;
+  flex: 0 1 auto;
+  max-width: 9rem;
 }
 
 .qual-evidence-sources {
   margin-top: 0.45rem;
+  min-width: 0;
+}
+
+.qual-evidence-source-group a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .qual-evidence-source-group h5 {
@@ -1092,7 +1117,13 @@ body:has(.floating-controls) {
 .qual-evidence-detail-grid {
   display: grid;
   gap: 0.85rem;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  min-width: 0;
+}
+
+.qual-evidence-summary-row .metric-cell,
+.qual-evidence-summary-row td {
+  font-weight: inherit;
 }
 
 .metric-history-trigger {

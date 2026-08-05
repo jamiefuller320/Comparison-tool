@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""Attach Cursor/OpenAI/deterministic narratives to an existing capture sidecar.
+
+Reuses scanned evidence in output/qualitative-capture.json — no website re-crawl.
+
+Usage:
+  pip install -r requirements-data.txt
+  CURSOR_API_KEY=crsr_... python3 scripts/synthesize-qualitative.py --limit 2
+  CURSOR_API_KEY=crsr_... python3 scripts/synthesize-qualitative.py --limit 12
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+CAPTURE_ROOT = ROOT / "tools" / "school-capture"
+DEFAULT_CAPTURE = ROOT / "output" / "qualitative-capture.json"
+DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Synthesize parent narratives onto an existing qualitative capture sidecar."
+    )
+    parser.add_argument("--capture", type=Path, default=DEFAULT_CAPTURE)
+    parser.add_argument("--index", type=Path, default=DEFAULT_INDEX)
+    parser.add_argument("--limit", type=int, default=0, help="0 = all records in sidecar")
+    parser.add_argument("--urn", action="append", default=[], help="Only these URNs (repeatable)")
+    parser.add_argument(
+        "--provider",
+        choices=("auto", "cursor", "openai", "none"),
+        default="auto",
+    )
+    parser.add_argument("--model", default="")
+    parser.add_argument("--no-merge", action="store_true")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+
+    sys.path.insert(0, str(CAPTURE_ROOT))
+    from school_capture.analysis.synthesis import synthesize_record
+    from school_capture.models import QualitativeCaptureIndex
+
+    if not args.capture.is_file():
+        print(f"Missing capture sidecar: {args.capture}", file=sys.stderr)
+        return 1
+
+    payload = json.loads(args.capture.read_text(encoding="utf-8"))
+    index = QualitativeCaptureIndex.from_dict(payload)
+    records = list(index.records)
+
+    if args.urn:
+        wanted = {str(u).strip() for u in args.urn}
+        records = [r for r in records if r.urn in wanted]
+    if args.limit and args.limit > 0:
+        records = records[: args.limit]
+
+    if not records:
+        print("No capture records selected.", file=sys.stderr)
+        return 1
+
+    use_llm = args.provider != "none"
+    model = args.model or None
+    print(
+        f"Synthesizing {len(records)} school(s) with provider={args.provider}",
+        file=sys.stderr,
+    )
+
+    updated: dict[str, object] = {}
+    method_counts: dict[str, int] = {}
+    for i, record in enumerate(records, 1):
+        print(f"[{i}/{len(records)}] {record.urn} {record.name}", file=sys.stderr)
+        out = synthesize_record(
+            record,
+            use_llm=use_llm,
+            provider=args.provider,  # type: ignore[arg-type]
+            model=model,
+            cwd=str(ROOT),
+        )
+        updated[out.urn] = out
+        for area in out.areas:
+            key = area.synthesisMethod or "none"
+            method_counts[key] = method_counts.get(key, 0) + 1
+
+    # Write back into full sidecar (preserve unselected schools).
+    new_records = []
+    for record in index.records:
+        replacement = updated.get(record.urn)
+        new_records.append(replacement if replacement is not None else record)
+    index.records = new_records
+    index.schoolCount = len(new_records)
+    index.stats = {
+        **(index.stats or {}),
+        "synthesizedSchools": len(updated),
+        "synthesisMethods": method_counts,
+        "synthesisProvider": args.provider,
+        "cursorKeyPresent": bool(os.environ.get("CURSOR_API_KEY")),
+        "openaiKeyPresent": bool(os.environ.get("OPENAI_API_KEY")),
+    }
+
+    if args.dry_run:
+        print(json.dumps(index.stats, indent=2))
+        return 0
+
+    args.capture.parent.mkdir(parents=True, exist_ok=True)
+    args.capture.write_text(
+        json.dumps(index.to_dict(), indent=2),
+        encoding="utf-8",
+    )
+    print(f"Wrote {args.capture}", file=sys.stderr)
+    print(json.dumps(index.stats, indent=2))
+
+    if args.no_merge:
+        return 0
+
+    merge_cmd = [
+        sys.executable,
+        str(CAPTURE_ROOT / "scripts" / "merge-qualitative.py"),
+        "--index",
+        str(args.index),
+        "--capture",
+        str(args.capture),
+    ]
+    print("Merging:", " ".join(merge_cmd), file=sys.stderr)
+    import subprocess
+
+    subprocess.run(merge_cmd, check=True)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
