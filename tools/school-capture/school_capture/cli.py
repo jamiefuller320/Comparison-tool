@@ -94,12 +94,24 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--synthesize",
         action="store_true",
-        help="Generate parent-facing narrative summaries (LLM when OPENAI_API_KEY is set)",
+        help=(
+            "Generate parent-facing narrative summaries "
+            "(Cursor SDK when CURSOR_API_KEY is set; else OpenAI; else deterministic)"
+        ),
+    )
+    p.add_argument(
+        "--synthesize-provider",
+        choices=("auto", "cursor", "openai", "none"),
+        default="auto",
+        help="LLM provider for --synthesize (default: auto = Cursor, then OpenAI)",
     )
     p.add_argument(
         "--synthesize-model",
-        default="gpt-4o-mini",
-        help="OpenAI model for --synthesize (default: gpt-4o-mini)",
+        default="",
+        help=(
+            "Model id for --synthesize "
+            "(default: composer-2.5 for Cursor, gpt-4o-mini for OpenAI)"
+        ),
     )
     return p
 
@@ -165,10 +177,12 @@ def main(argv: list[str] | None = None) -> int:
         if args.synthesize:
             from school_capture.analysis.synthesis import synthesize_record
 
+            model = args.synthesize_model or None
             record = synthesize_record(
                 record,
                 use_llm=True,
-                model=args.synthesize_model,
+                provider=args.synthesize_provider,
+                model=model,
             )
         records.append(record)
 

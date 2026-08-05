@@ -14,6 +14,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+llm = ["cursor-sdk>=0.1.0"]
 
 [project.scripts]
 school-capture = "school_capture.cli:main"

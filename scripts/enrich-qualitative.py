@@ -2,9 +2,12 @@
 """Run qualitative website capture and merge into schools-index.json.
 
 Usage:
-  pip install -e tools/school-capture
+  pip install -e 'tools/school-capture[llm]'
   python3 scripts/enrich-qualitative.py --la Hampshire --limit 12
-  python3 scripts/enrich-qualitative.py --la Hampshire --limit 12 --synthesize
+  # Cursor SDK narratives (same arrangement as value_investor):
+  CURSOR_API_KEY=crsr_... python3 scripts/enrich-qualitative.py --la Hampshire --limit 12 --synthesize
+  # Or OpenAI:
+  OPENAI_API_KEY=... python3 scripts/enrich-qualitative.py --la Hampshire --limit 12 --synthesize --synthesize-provider openai
 """
 
 from __future__ import annotations
@@ -29,6 +32,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=12)
     parser.add_argument("--require-website", action="store_true")
     parser.add_argument("--synthesize", action="store_true")
+    parser.add_argument(
+        "--synthesize-provider",
+        choices=("auto", "cursor", "openai", "none"),
+        default="auto",
+    )
+    parser.add_argument("--synthesize-model", default="")
     parser.add_argument("--no-merge", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args, extra = parser.parse_known_args(argv)
@@ -55,6 +64,9 @@ def main(argv: list[str] | None = None) -> int:
         capture_cmd.append("--require-website")
     if args.synthesize:
         capture_cmd.append("--synthesize")
+        capture_cmd.extend(["--synthesize-provider", args.synthesize_provider])
+        if args.synthesize_model:
+            capture_cmd.extend(["--synthesize-model", args.synthesize_model])
 
     env = dict(**{k: v for k, v in __import__("os").environ.items()})
     pkg = str(CAPTURE_ROOT)
