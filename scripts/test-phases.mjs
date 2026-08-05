@@ -208,7 +208,57 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`phase coverage ok (${cases.length} age ranges + AND inclusion checks)`);
+  const {
+    stagesFromChildAgeWindow,
+    ageWindowFromStages,
+    applyChildAgeWindowToStages,
+    samePhaseSet,
+  } = await import("../src/lib/phases.ts");
+
+  const childAgeCases = [
+    [0, 4, ["early-years"]],
+    [5, 5, ["ks1"]],
+    [7, 7, ["ks1", "ks2"]], // transition year
+    [8, 10, ["ks2"]],
+    [12, 13, ["ks3"]],
+    [11, 13, ["ks2", "ks3"]], // age 11 sits on KS2/KS3 boundary
+    [15, 16, ["ks4"]],
+    [14, 16, ["ks3", "ks4"]], // age 14 sits on KS3/KS4 boundary
+    [4, 10, ["early-years", "ks1", "ks2"]],
+    [4, 11, ["early-years", "ks1", "ks2", "ks3"]],
+    [11, 16, ["ks2", "ks3", "ks4"]],
+    [0, 16, ["early-years", "ks1", "ks2", "ks3", "ks4"]],
+  ];
+  for (const [lo, hi, expected] of childAgeCases) {
+    const got = stagesFromChildAgeWindow(lo, hi);
+    if (JSON.stringify(got) !== JSON.stringify(expected)) {
+      console.error("FAIL child age window", lo, hi, got, expected);
+      process.exit(1);
+    }
+  }
+  // Childminders must stay when the age slider updates school stages.
+  const withCm = applyChildAgeWindowToStages(
+    ["early-years", "childminders"],
+    12,
+    16,
+  );
+  if (JSON.stringify(withCm) !== JSON.stringify(["ks3", "ks4", "childminders"])) {
+    console.error("FAIL applyChildAgeWindowToStages preserve CM", withCm);
+    process.exit(1);
+  }
+  if (!samePhaseSet(["ks2", "ks1"], ["ks1", "ks2"]) || samePhaseSet(["ks1"], ["ks2"])) {
+    console.error("FAIL samePhaseSet");
+    process.exit(1);
+  }
+  const win = ageWindowFromStages(["ks2"]);
+  if (win.lo !== 7 || win.hi !== 11) {
+    console.error("FAIL ageWindowFromStages ks2", win);
+    process.exit(1);
+  }
+
+  console.log(
+    `phase coverage ok (${cases.length} age ranges + AND inclusion + ${childAgeCases.length} child-age windows)`,
+  );
 }
 
 main();

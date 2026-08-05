@@ -2295,6 +2295,137 @@ body:has(.floating-controls) {
   color: #fff7ef;
 }
 
+.phase-chip-main,
+.phase-chip-ages {
+  display: inline;
+}
+
+.phase-chip-ages {
+  margin-left: 0.35rem;
+  font-weight: 500;
+  font-size: 0.78rem;
+  opacity: 0.78;
+}
+
+.phase-chip.active .phase-chip-ages {
+  opacity: 0.9;
+}
+
+.phase-selector-stages-heading {
+  margin-top: 0.85rem;
+}
+
+.age-range-control {
+  margin: 0.15rem 0 0.25rem;
+}
+
+.age-range-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.age-range-summary strong {
+  color: var(--sea-deep);
+  font-weight: 700;
+}
+
+.age-range-control.is-manual .age-range-summary span {
+  font-style: italic;
+}
+
+.age-range-slider {
+  position: relative;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.age-range-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(11, 79, 108, 0.12);
+  pointer-events: none;
+}
+
+.age-range-track::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--age-lo, 0%);
+  right: calc(100% - var(--age-hi, 100%));
+  border-radius: inherit;
+  background: var(--sea);
+}
+
+.age-range-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.age-range-input::-webkit-slider-runnable-track {
+  height: 0.35rem;
+  background: transparent;
+}
+
+.age-range-input::-moz-range-track {
+  height: 0.35rem;
+  background: transparent;
+  border: none;
+}
+
+.age-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: -0.4rem;
+  border-radius: 50%;
+  border: 2px solid var(--sea-deep);
+  background: #fff7ef;
+  box-shadow: 0 1px 2px rgba(20, 35, 58, 0.18);
+  cursor: pointer;
+}
+
+.age-range-input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  border: 2px solid var(--sea-deep);
+  background: #fff7ef;
+  box-shadow: 0 1px 2px rgba(20, 35, 58, 0.18);
+  cursor: pointer;
+}
+
+.age-range-input-hi {
+  z-index: 2;
+}
+
+.age-range-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
 .phase-selector-hint {
   margin: 0.55rem 0 0;
   color: var(--ink-soft);
@@ -2330,6 +2461,36 @@ body:has(.floating-controls) {
   background: #fff7ef;
   border-color: #fff7ef;
   color: var(--sea-deep);
+}
+
+.hero-phase .age-range-summary {
+  color: rgba(247, 251, 255, 0.72);
+}
+
+.hero-phase .age-range-summary strong {
+  color: #fff7ef;
+}
+
+.hero-phase .age-range-track {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.hero-phase .age-range-track::before {
+  background: #fff7ef;
+}
+
+.hero-phase .age-range-input::-webkit-slider-thumb {
+  border-color: #fff7ef;
+  background: var(--sea-deep);
+}
+
+.hero-phase .age-range-input::-moz-range-thumb {
+  border-color: #fff7ef;
+  background: var(--sea-deep);
+}
+
+.hero-phase .age-range-scale {
+  color: rgba(247, 251, 255, 0.62);
 }
 
 .hero-phase .phase-selector-hint {

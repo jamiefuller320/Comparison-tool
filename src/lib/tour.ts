@@ -48,8 +48,8 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "stages",
     target: "stages",
-    title: "Choose stages and care categories",
-    body: "Early years covers nurseries and school reception. Childminders are a separate chip for wrap-around / home-based care (directory + checklist). KS1–KS4 are school stages with AND logic when several are selected.",
+    title: "Choose by age or key stage",
+    body: "Drag the child’s age range if key stages are unfamiliar — matching stages turn on automatically. Or press the stage chips (ages shown on each) to override. Childminders stay a separate care category. School stages use AND logic when several are selected.",
   },
   {
     id: "sector",

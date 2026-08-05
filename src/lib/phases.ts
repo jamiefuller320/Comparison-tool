@@ -5,41 +5,68 @@ export const PHASE_OPTIONS = [
     id: "early-years",
     label: "Early years",
     short: "EY",
+    ages: "0–4",
     hint: "Nursery and reception (typically ages 0–5) — day care, school nurseries/infants, and EYFSP area context",
   },
   {
     id: "childminders",
     label: "Childminders",
     short: "CM",
+    ages: null,
     hint: "Consented childminders — often wrap-around care outside school hours; directory + vetting checklist (not school Ofsted tables)",
   },
   {
     id: "ks1",
     label: "KS1",
     short: "KS1",
+    ages: "5–7",
     hint: "Years 1–2 (typically ages 5–7) — LA phonics context",
   },
   {
     id: "ks2",
     label: "KS2",
     short: "KS2",
+    ages: "7–11",
     hint: "Years 3–6 (typically ages 7–11)",
   },
   {
     id: "ks3",
     label: "KS3",
     short: "KS3",
+    ages: "11–14",
     hint: "Years 7–9 (typically ages 11–14) — shortlists secondaries; school-level attainment is published at KS4",
   },
   {
     id: "ks4",
     label: "KS4",
     short: "KS4",
+    ages: "14–16",
     hint: "Years 10–11 (typically ages 14–16) — published GCSE / 16–18 outcomes",
   },
 ] as const;
 
 export type PhaseId = (typeof PHASE_OPTIONS)[number]["id"];
+
+/** Inclusive child ages the age-range slider can express. */
+export const CHILD_AGE_MIN = 0;
+export const CHILD_AGE_MAX = 16;
+
+/**
+ * Typical child-age bands for each school stage.
+ * Boundary ages intentionally overlap (e.g. 7 → KS1 and KS2) for transition years.
+ * Childminders are a directory category — not driven by age.
+ */
+export const CHILD_STAGE_AGE_BANDS: ReadonlyArray<{
+  id: Exclude<PhaseId, "childminders">;
+  lo: number;
+  hi: number;
+}> = [
+  { id: "early-years", lo: 0, hi: 4 },
+  { id: "ks1", lo: 5, hi: 7 },
+  { id: "ks2", lo: 7, hi: 11 },
+  { id: "ks3", lo: 11, hi: 14 },
+  { id: "ks4", lo: 14, hi: 16 },
+];
 
 /** Seed-path default: early years first (Hampshire EY MVP). */
 export const DEFAULT_PHASES: PhaseId[] = ["early-years"];
@@ -153,6 +180,66 @@ export function parseAgeBounds(
   const hi = nums[1];
   if (!Number.isFinite(lo) || !Number.isFinite(hi) || lo > hi) return null;
   return { lo, hi };
+}
+
+function clampChildAge(n: number): number {
+  if (!Number.isFinite(n)) return CHILD_AGE_MIN;
+  return Math.min(CHILD_AGE_MAX, Math.max(CHILD_AGE_MIN, Math.round(n)));
+}
+
+/** True when two stage lists contain the same ids (order-independent). */
+export function samePhaseSet(a: PhaseId[], b: PhaseId[]): boolean {
+  if (a.length !== b.length) return false;
+  const set = new Set(a);
+  return b.every((id) => set.has(id));
+}
+
+/**
+ * School stages implied by a parent's child-age window (inclusive).
+ * Does not include Childminders — keep that chip as a manual directory toggle.
+ */
+export function stagesFromChildAgeWindow(lo: number, hi: number): PhaseId[] {
+  const a = clampChildAge(Math.min(lo, hi));
+  const b = clampChildAge(Math.max(lo, hi));
+  return CHILD_STAGE_AGE_BANDS.filter(
+    (band) => a <= band.hi && b >= band.lo,
+  ).map((band) => band.id);
+}
+
+/**
+ * Approximate age window covering the selected school stages (for slider sync).
+ * Ignores Childminders. Falls back to early-years ages when none selected.
+ */
+export function ageWindowFromStages(stages: PhaseId[]): {
+  lo: number;
+  hi: number;
+} {
+  const school = schoolStageIds(stages);
+  if (!school.length) {
+    return { lo: CHILD_AGE_MIN, hi: 4 };
+  }
+  let lo = CHILD_AGE_MAX;
+  let hi = CHILD_AGE_MIN;
+  for (const band of CHILD_STAGE_AGE_BANDS) {
+    if (!school.includes(band.id)) continue;
+    lo = Math.min(lo, band.lo);
+    hi = Math.max(hi, band.hi);
+  }
+  return { lo, hi };
+}
+
+/**
+ * Apply age-driven school stages while preserving directory chips (Childminders).
+ */
+export function applyChildAgeWindowToStages(
+  current: PhaseId[],
+  lo: number,
+  hi: number,
+): PhaseId[] {
+  const school = stagesFromChildAgeWindow(lo, hi);
+  const directory = current.filter((id) => DIRECTORY_PHASE_IDS.includes(id));
+  const next = [...school, ...directory];
+  return next.length ? next : [...DEFAULT_PHASES];
 }
 
 /**
