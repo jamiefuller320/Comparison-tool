@@ -31,6 +31,7 @@ import { CoverageStrip } from "@/components/CoverageStrip";
 import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import { SecondaryContextPane } from "@/components/SecondaryContextPane";
 import { InspectionPrecisRows } from "@/components/InspectionPrecis";
+import { QualitativeEvidenceRows } from "@/components/QualitativeEvidence";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
@@ -316,6 +317,7 @@ export function ComparisonBoard({
           </thead>
           <tbody>
             <InspectionPrecisRows schools={schools} />
+            <QualitativeEvidenceRows schools={schools} />
             {groups.map((group) => {
               const metrics = PARENT_METRICS.filter((m) => m.group === group);
               return (

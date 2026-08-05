@@ -155,6 +155,75 @@ export interface ContactCaptureRecord {
   captureNotes?: string[];
 }
 
+export type QualitativeSourceType =
+  | "school-website"
+  | "school-document"
+  | "local-news"
+  | "social-media"
+  | "other";
+
+export type QualitativeSubjectArea =
+  | "curriculum"
+  | "enrichment"
+  | "ethos"
+  | "behaviour"
+  | "send"
+  | "community";
+
+export interface QualitativeSignal {
+  text: string;
+  sourceUrl: string;
+  sourceType: QualitativeSourceType;
+  capturedAt: string;
+  pageTitle?: string | null;
+  section?: string | null;
+}
+
+export interface SubjectAreaAssessment {
+  area: QualitativeSubjectArea;
+  score: number;
+  confidence: number;
+  summary: string;
+  themes: string[];
+  offerings?: string[];
+  narrativeSummary?: string | null;
+  synthesisMethod?: "deterministic" | "llm" | null;
+  signals: QualitativeSignal[];
+}
+
+export type DocumentInventoryStatus =
+  | "discovered"
+  | "extracted"
+  | "unsupported_format"
+  | "failed"
+  | "extract_failed"
+  | "empty";
+
+export interface DocumentInventoryItem {
+  url: string;
+  label: string;
+  format: string;
+  status: DocumentInventoryStatus;
+  foundOn?: string;
+  pageCount?: string;
+  charCount?: string;
+  listItems?: string;
+}
+
+export interface QualitativeCaptureRecord {
+  urn: string;
+  name: string;
+  assessedAt: string;
+  engineVersion: string;
+  sourcesScanned: number;
+  sourceTypes?: QualitativeSourceType[];
+  areas: SubjectAreaAssessment[];
+  captureNotes?: string[];
+  documentsDiscovered?: number;
+  documentsExtracted?: number;
+  documentInventory?: DocumentInventoryItem[];
+}
+
 export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   urn: string;
   name: string;
@@ -196,6 +265,9 @@ export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   /** Merged from contact-capture sidecar when enriched. */
   contactCapture?: ContactCaptureRecord | null;
   contactCaptureEnrichedAt?: string | null;
+  /** Merged from qualitative-capture sidecar when enriched. */
+  qualitativeCapture?: QualitativeCaptureRecord | null;
+  qualitativeCaptureEnrichedAt?: string | null;
 }
 
 export interface DirectorySchool {

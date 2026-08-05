@@ -936,6 +936,165 @@ body:has(.floating-controls) {
   vertical-align: top;
 }
 
+.qual-evidence-summary-cell {
+  vertical-align: top;
+}
+
+.qual-evidence-summary {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.qual-evidence-kicker {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.qual-evidence-summary-body {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.qual-evidence-empty {
+  color: var(--ink-soft);
+}
+
+.qual-evidence-detail {
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  padding: 0.75rem;
+  background: var(--surface);
+}
+
+.qual-evidence-detail.empty {
+  color: var(--ink-soft);
+}
+
+.qual-evidence-detail-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.qual-evidence-area {
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+}
+
+.qual-evidence-area:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 0.35rem;
+}
+
+.qual-evidence-area-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.qual-evidence-area-header h4 {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.qual-evidence-coverage {
+  display: inline-block;
+  margin-top: 0.15rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+}
+
+.qual-evidence-coverage.cov-rich {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.qual-evidence-coverage.cov-some {
+  background: #fff8e1;
+  color: #6d4c00;
+}
+
+.qual-evidence-coverage.cov-thin,
+.qual-evidence-coverage.cov-none {
+  background: #f5f5f5;
+  color: #616161;
+}
+
+.qual-evidence-paragraph {
+  margin: 0.35rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.qual-evidence-footnote {
+  margin-left: 0.1rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.qual-evidence-method {
+  margin: 0.2rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.68rem;
+}
+
+.qual-evidence-sources-toggle {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.72rem;
+  cursor: pointer;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.qual-evidence-sources {
+  margin-top: 0.45rem;
+}
+
+.qual-evidence-source-group h5 {
+  margin: 0.35rem 0 0.15rem;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.qual-evidence-source-group ul {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: 0.78rem;
+}
+
+.qual-evidence-source-meta {
+  color: var(--ink-soft);
+}
+
+.qual-evidence-note {
+  margin: 0.65rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+}
+
+.qual-evidence-detail-panel {
+  padding-top: 0.85rem;
+}
+
+.qual-evidence-detail-grid {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
 .metric-history-trigger {
   appearance: none;
   display: flex;

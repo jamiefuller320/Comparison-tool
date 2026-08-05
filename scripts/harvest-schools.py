@@ -904,6 +904,40 @@ def main() -> int:
             print(f"Restored inspection precis on {restored} schools", flush=True)
     except Exception as exc:  # noqa: BLE001
         print(f"Precis merge skipped: {exc}", flush=True)
+    # Preserve school-capture sidecars (qualitative + contacts) across harvest.
+    try:
+        if schools_path.exists():
+            prev = json.loads(schools_path.read_text(encoding="utf-8"))
+            prev_by_urn = {
+                str(row.get("urn") or ""): row
+                for row in prev.get("schools") or []
+                if row.get("urn")
+            }
+            sidecar_keys = (
+                "qualitativeCapture",
+                "qualitativeCaptureEnrichedAt",
+                "contactCapture",
+                "contactCaptureEnrichedAt",
+            )
+            restored_sidecars = 0
+            for row in schools:
+                old = prev_by_urn.get(str(row.get("urn") or ""))
+                if not old:
+                    continue
+                touched = False
+                for key in sidecar_keys:
+                    if old.get(key) is not None and row.get(key) is None:
+                        row[key] = old[key]
+                        touched = True
+                if touched:
+                    restored_sidecars += 1
+            if restored_sidecars:
+                print(
+                    f"Restored capture sidecars on {restored_sidecars} schools",
+                    flush=True,
+                )
+    except Exception as exc:  # noqa: BLE001
+        print(f"Capture sidecar merge skipped: {exc}", flush=True)
     schools_path.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
     directory_path.write_text(
         json.dumps(
