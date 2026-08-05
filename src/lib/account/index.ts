@@ -49,3 +49,11 @@ export function dismissAccountPrompt(): void {
 
 /** Soft CTA threshold: only after real shortlist engagement. */
 export const ACCOUNT_PROMPT_MIN_SCHOOLS = 2;
+
+/** CompareApp listens and applies the cloud/browser-saved shortlist. */
+export const RESTORE_SHORTLIST_EVENT = "schoolcompass:restore-shortlist";
+
+export function requestRestoreShortlist(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(RESTORE_SHORTLIST_EVENT));
+}

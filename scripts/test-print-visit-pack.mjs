@@ -77,6 +77,27 @@ async function main() {
     },
   );
 
+  // Collapsed screen preview wraps sheets; print prep must hoist them out.
+  await withDom(
+    `<div class="visit-pack">
+      <div class="visit-pack-toolbar no-print">chrome</div>
+      <section class="visit-pack-section no-print">status</section>
+      <div class="visit-pack-body" hidden>
+        <div class="visit-pack-sheet" id="a">A</div>
+        <div class="visit-pack-page-break"></div>
+        <div class="visit-pack-sheet" id="b">B</div>
+      </div>
+    </div>`,
+    (document) => {
+      const pack = document.querySelector(".visit-pack");
+      const prepared = prepareVisitPackForPrint(pack);
+      assert.equal(prepared.querySelectorAll(".visit-pack-body").length, 0);
+      assert.equal(prepared.querySelectorAll(".no-print").length, 0);
+      assert.ok(prepared.firstElementChild?.classList.contains("visit-pack-sheet"));
+      assert.equal(prepared.querySelectorAll(".visit-pack-sheet").length, 2);
+    },
+  );
+
   console.log("OK print-visit-pack");
 }
 

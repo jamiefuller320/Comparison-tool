@@ -20,7 +20,9 @@ import { DecisionGuidancePanel } from "@/components/DecisionGuidance";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
+import { useAccount } from "@/components/AccountProvider";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
+import { RESTORE_SHORTLIST_EVENT } from "@/lib/account";
 import { ComparePathTabs } from "@/components/ComparePathTabs";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import {
@@ -144,6 +146,7 @@ export function CompareApp({
     return map;
   }, [index.schools, eyIndex, childmindersIndex]);
 
+  const account = useAccount();
   const [selected, setSelected] = useState<string[]>([]);
   const [stages, setStages] = useState<PhaseId[]>(DEFAULT_PHASES);
   const [sectors, setSectors] = useState<SectorId[]>(DEFAULT_SECTORS);
@@ -153,6 +156,35 @@ export function CompareApp({
   const [activePath, setActivePath] = useState<ComparePathId | null>(null);
   /** When KS3/KS4 selected: hide secondaries without published Att8 from discovery. */
   const [comparableKs4Only, setComparableKs4Only] = useState(true);
+
+  function applyRestoredShortlist(
+    schools: string[],
+    nextStages: string[],
+    nextSectors: string[],
+  ) {
+    const urns = schools.filter((u) => byUrn.has(u)).slice(0, 4);
+    setSelected(urns);
+    const restoredStages = normalizePhaseIds(nextStages);
+    if (restoredStages.length) setStages(restoredStages);
+    const restoredSectors = normalizeSectorIds(nextSectors);
+    if (restoredSectors.length) setSectors(restoredSectors);
+  }
+
+  useEffect(() => {
+    function onRestoreRequest() {
+      const pending = account.saved[0];
+      if (!pending?.schools?.length) return;
+      applyRestoredShortlist(
+        pending.schools,
+        pending.stages?.length ? pending.stages : [],
+        pending.sectors?.length ? pending.sectors : [],
+      );
+    }
+    window.addEventListener(RESTORE_SHORTLIST_EVENT, onRestoreRequest);
+    return () => {
+      window.removeEventListener(RESTORE_SHORTLIST_EVENT, onRestoreRequest);
+    };
+  }, [account.saved, byUrn]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -784,14 +816,7 @@ export function CompareApp({
           <RestoreShortlistBanner
             ready={hydrated}
             currentCount={selected.length}
-            onRestore={(schools, nextStages, nextSectors) => {
-              const urns = schools.filter((u) => byUrn.has(u)).slice(0, 4);
-              setSelected(urns);
-              const restoredStages = normalizePhaseIds(nextStages);
-              if (restoredStages.length) setStages(restoredStages);
-              const restoredSectors = normalizeSectorIds(nextSectors);
-              if (restoredSectors.length) setSectors(restoredSectors);
-            }}
+            onRestore={applyRestoredShortlist}
           />
 
           {sectorNote ? (

@@ -152,6 +152,15 @@ export function prepareVisitPackForPrint(pack: HTMLElement): HTMLElement {
   clone.querySelectorAll(".print-only").forEach((el) => {
     el.classList.remove("print-only");
   });
+  // Screen UI collapses sheets inside .visit-pack-body — hoist for print root.
+  clone.querySelectorAll(".visit-pack-body").forEach((body) => {
+    const parent = body.parentNode;
+    if (!parent) return;
+    while (body.firstChild) {
+      parent.insertBefore(body.firstChild, body);
+    }
+    body.remove();
+  });
   // Drop inert break markers — pagination uses sheet ~ sheet break-before.
   clone.querySelectorAll(".visit-pack-page-break").forEach((el) => el.remove());
   // Guard against accidental leading empty nodes.
