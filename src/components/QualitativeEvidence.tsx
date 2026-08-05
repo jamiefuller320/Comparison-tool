@@ -107,7 +107,12 @@ function AreaBlock({
       </p>
       {area.synthesisMethod ? (
         <p className="qual-evidence-method">
-          Summary: {area.synthesisMethod === "llm" ? "AI-assisted from scanned sources" : "Built from scanned sources"}
+          Summary:{" "}
+          {area.synthesisMethod === "cursor" ||
+          area.synthesisMethod === "openai" ||
+          area.synthesisMethod === "llm"
+            ? "AI-assisted from scanned sources"
+            : "Built from scanned sources"}
         </p>
       ) : null}
       {open ? (

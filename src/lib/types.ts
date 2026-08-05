@@ -187,7 +187,7 @@ export interface SubjectAreaAssessment {
   themes: string[];
   offerings?: string[];
   narrativeSummary?: string | null;
-  synthesisMethod?: "deterministic" | "llm" | null;
+  synthesisMethod?: "deterministic" | "llm" | "cursor" | "openai" | null;
   signals: QualitativeSignal[];
 }
 
