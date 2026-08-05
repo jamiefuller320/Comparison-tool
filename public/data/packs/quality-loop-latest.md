@@ -1,6 +1,6 @@
-# Pack quality loop — 2026-08-03T08:52:47Z
+# Pack quality loop — 2026-08-05T12:32:57Z
 
-- Mode: `dry-run`
+- Mode: `polish`
 - Max packs: 3
 - ISI resolve cap: 50
 - Precis limit: 40
@@ -21,3 +21,9 @@
 - Wokingham: indie 8/13 (61.5%) · ISI 9/13
 - Brighton and Hove: indie 8/13 (61.5%) · ISI 7/13
 - East Sussex: indie 18/29 (62.1%) · ISI 18/29
+
+## No indie/ISI movement
+
+- Bournemouth, Christchurch and Poole
+- Southampton
+- Brighton and Hove
