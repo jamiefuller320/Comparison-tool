@@ -70,7 +70,7 @@ To rebuild the legacy `/Comparison-tool/` project path instead, set
 
 ## What it does
 
-- **Stage & care selector** for Early years / Childminders / KS1 / KS2 / KS3 / KS4 — school stages use **AND**; Childminders is a separate wrap-around category (directory + checklist), not mixed into Early years nursery tables
+- **Stage & care selector** for Early years / Childminders / KS1 / KS2 / KS3 / KS4 — a **child age-range slider** turns on matching school stages (chips still override); school stages use **AND**; Childminders is a separate wrap-around category (directory + checklist), not mixed into Early years nursery tables
 - **Sector selector** for **state** vs **independent** (private / public) schools — defaults to state-funded
 - **Separate comparison tables** by stage: KS1 uses **local-authority phonics** context; state KS2 uses Year 6 attainment; KS3/KS4 use published **Key Stage 4** outcomes (Attainment 8, English & maths, EBacc) for state and independent secondaries, plus **Ofsted** grades for non-association independents and **ISI / website** links from GIAS when Ofsted grades are absent. Nil/zero English & maths GCSE returns are cleared (common with IGCSEs); EBacc subject pillars are used as fallbacks when both are published
 - Secondary / infant / nursery settings are enriched from GIAS Edubase (so EY–KS1-only and KS3–KS4 schools appear even without KS2 results)
