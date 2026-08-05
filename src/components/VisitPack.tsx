@@ -399,9 +399,12 @@ export function VisitPack({
     return log[urn] ?? { status: "none" };
   }
 
+  const [previewOpen, setPreviewOpen] = useState(false);
+
   function printPack() {
     const pack = document.querySelector<HTMLElement>(".visit-pack");
     if (!pack) return;
+    // Print clones the pack sheets; preview open state does not matter.
     printVisitPackElement(pack, computePrintNoteHeightPx(1));
     if (typeof window !== "undefined") {
       window.dispatchEvent(new Event(FEEDBACK_PRINTED_EVENT));
@@ -409,20 +412,26 @@ export function VisitPack({
   }
 
   const printedOn = new Date().toLocaleDateString("en-GB");
+  const settingCount = allRows.length;
+  const packTitle = isSchoolPack
+    ? "Shortlist pack"
+    : "Visit pack";
 
   return (
-    <div className="visit-pack" data-tour="visit-pack">
+    <div
+      className={`visit-pack${previewOpen ? " is-expanded" : ""}`}
+      data-tour="visit-pack"
+    >
       <div className="visit-pack-toolbar no-print">
         <div>
           <h3 className="compare-subhead" style={{ marginBottom: "0.35rem" }}>
-            {isSchoolPack
-              ? "Shortlist pack — print for visits"
-              : "Visit pack — print for visits"}
+            {packTitle}
           </h3>
           <p className="footnote" style={{ margin: 0 }}>
-            Print order: each section on its own page — advice &amp; questions,
-            published figures, then one setting per page with room for notes.
-            Status and notes stay in this browser.
+            Print a visit pack for {settingCount}{" "}
+            {settingCount === 1 ? "setting" : "settings"} — advice, figures, and
+            note pages. Preview stays collapsed until you open it; status notes
+            stay in this browser.
           </p>
         </div>
         <div className="visit-pack-toolbar-actions">
@@ -433,6 +442,15 @@ export function VisitPack({
             variant="visit-pack"
             includeVisitLog
           />
+          <button
+            type="button"
+            className="btn btn-ghost visit-pack-toggle"
+            aria-expanded={previewOpen}
+            aria-controls="visit-pack-body"
+            onClick={() => setPreviewOpen((v) => !v)}
+          >
+            {previewOpen ? "Hide pack preview" : "Preview pack"}
+          </button>
           <button type="button" className="btn btn-pack" onClick={printPack}>
             Print / save as PDF
           </button>
@@ -458,58 +476,64 @@ export function VisitPack({
         </div>
       </section>
 
-      <div className="visit-pack-sheet visit-pack-guide-sheet">
-        <PackSheetTitle subtitle="advice & questions" printedOn={printedOn} />
-        <DecisionGuidancePrintBlock path={guidancePath} />
-        {schoolRows.length ? (
-          <QuestionBlock
-            kind="school"
-            title="Questions to ask — school visits &amp; open days"
-          />
-        ) : null}
-        {nurseryRows.length ? (
-          <QuestionBlock
-            kind="nursery"
-            title="Questions to ask — nurseries &amp; school early years"
-          />
-        ) : null}
-        {childminderRows.length ? (
-          <QuestionBlock
-            kind="childminder"
-            title="Questions to ask — childminders"
-          />
-        ) : null}
-      </div>
-
-      {figures || schoolNotePages.length ? (
-        <div className="visit-pack-page-break" aria-hidden="true" />
-      ) : null}
-
-      {figures ? (
-        <div className="visit-pack-sheet visit-pack-figures-sheet">
-          <PackSheetTitle subtitle="published figures" printedOn={printedOn} />
-          <PrintFiguresTable table={figures} />
-        </div>
-      ) : null}
-
-      {schoolNotePages.map(({ row, school }, index) => (
-        <Fragment key={row.urn}>
-          {figures || index > 0 ? (
-            <div className="visit-pack-page-break" aria-hidden="true" />
+      <div
+        id="visit-pack-body"
+        className="visit-pack-body"
+        hidden={!previewOpen}
+      >
+        <div className="visit-pack-sheet visit-pack-guide-sheet">
+          <PackSheetTitle subtitle="advice & questions" printedOn={printedOn} />
+          <DecisionGuidancePrintBlock path={guidancePath} />
+          {schoolRows.length ? (
+            <QuestionBlock
+              kind="school"
+              title="Questions to ask — school visits &amp; open days"
+            />
           ) : null}
-          <div className="visit-pack-sheet visit-pack-school-sheet">
-            <PackSheetTitle
-              subtitle={`précis & notes · ${row.name}`}
-              printedOn={printedOn}
+          {nurseryRows.length ? (
+            <QuestionBlock
+              kind="nursery"
+              title="Questions to ask — nurseries &amp; school early years"
             />
-            <SchoolNotesPage
-              school={school}
-              row={row}
-              entry={entryFor(row.urn)}
+          ) : null}
+          {childminderRows.length ? (
+            <QuestionBlock
+              kind="childminder"
+              title="Questions to ask — childminders"
             />
+          ) : null}
+        </div>
+
+        {figures || schoolNotePages.length ? (
+          <div className="visit-pack-page-break" aria-hidden="true" />
+        ) : null}
+
+        {figures ? (
+          <div className="visit-pack-sheet visit-pack-figures-sheet">
+            <PackSheetTitle subtitle="published figures" printedOn={printedOn} />
+            <PrintFiguresTable table={figures} />
           </div>
-        </Fragment>
-      ))}
+        ) : null}
+
+        {schoolNotePages.map(({ row, school }, index) => (
+          <Fragment key={row.urn}>
+            {figures || index > 0 ? (
+              <div className="visit-pack-page-break" aria-hidden="true" />
+            ) : null}
+            <div className="visit-pack-sheet visit-pack-school-sheet">
+              <PackSheetTitle
+                subtitle={`précis & notes · ${row.name}`}
+                printedOn={printedOn}
+              />
+              <SchoolNotesPage
+                school={school}
+                row={row}
+                entry={entryFor(row.urn)}
+              />
+            </div>
+          </Fragment>
+        ))}
+      </div>
     </div>
   );
 }

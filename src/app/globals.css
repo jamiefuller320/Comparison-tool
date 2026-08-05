@@ -2836,7 +2836,7 @@ html.tour-running .hero-inner > * {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .visit-pack-toolbar-actions {
@@ -2844,6 +2844,15 @@ html.tour-running .hero-inner > * {
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 0.65rem;
+}
+
+/* Print sheets stay in the DOM for cloning; collapsed on screen by default. */
+.visit-pack.is-expanded .visit-pack-body {
+  margin-top: 1.1rem;
+}
+
+.visit-pack-toggle {
+  min-width: 9.5rem;
 }
 
 /* Optional account / save shortlist — never a login wall */
@@ -3595,6 +3604,13 @@ html.tour-running .hero-inner > * {
     border-top: 0;
     padding: 0;
     margin: 0;
+  }
+
+  /* Collapsed preview still prints when using browser Print without our button. */
+  body:has(.visit-pack):not(.visit-pack-printing) .visit-pack-body,
+  body:has(.visit-pack):not(.visit-pack-printing) .visit-pack-body[hidden] {
+    display: contents !important;
+    visibility: visible !important;
   }
 
   .no-print {

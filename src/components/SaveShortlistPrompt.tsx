@@ -141,14 +141,15 @@ export function SaveShortlistPrompt({
               <>
                 Save these {schools.length} settings
                 {account.session ? ` for ${account.session.email}` : ""}. Compare
-                stays open either way — this is optional.
+                stays open either way — this is optional. Use{" "}
+                <strong>Saved</strong> in the header to restore later.
               </>
             ) : (
               <>
                 Optional: keep this shortlist under your email
                 {account.backendKind === "supabase"
-                  ? " with a magic sign-in link"
-                  : " on this device"}
+                  ? " with a magic sign-in link. On another device, open Recall shortlist in the header and use the same email"
+                  : " on this device. Use Recall shortlist in the header to open it again"}
                 . You can keep comparing without registering.
               </>
             )}

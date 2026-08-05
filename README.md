@@ -83,7 +83,7 @@ To rebuild the legacy `/Comparison-tool/` project path instead, set
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
 - Matches comparison tables to selected categories: **Early years → day-care + school nursery/infant Ofsted + EYFSP area context**, **Childminders → consented directory + vetting checklist**, **KS1 → LA / England phonics context** (DfE does not publish school-level phonics; KS1 TA is no longer collected), **KS2 → Year 6 tables**, **KS3/KS4 → GCSE / 16–18** (state and independent)
 - **Visit pack** for shortlisted nurseries and childminders — printable contacts, Ofsted links, suggested interview questions, and a light per-setting contact status/notes log (browser localStorage)
-- **Optional save shortlist** — after two or more settings are shortlisted (or from the visit pack), parents can save under an email. Compare never requires an account. Without Supabase secrets this is a browser-local save; with `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` it becomes magic-link sign-in across devices
+- **Optional save shortlist** — after two or more settings are shortlisted (or from the visit pack), parents can save under an email. Compare never requires an account. Without Supabase secrets this is a browser-local save; with `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` it becomes magic-link sign-in across devices. To recall later: header **Recall shortlist** (same email → magic link) or **Saved → Restore shortlist** when signed in; a welcome banner also offers restore when the shortlist URL is empty
 - Keeps the language parental: shortlists and fit, not board packs or SIP targets
 
 ## Run locally
@@ -129,7 +129,7 @@ No login wall. Soft prompt after engagement only.
 | Mode | When | Behaviour |
 | --- | --- | --- |
 | Browser-local | Default (no Supabase env) | Email keys a shortlist saved in `localStorage` on this device |
-| Magic link | `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` set at build | Supabase OTP email; shortlists in a `shortlists` table (RLS: own rows only) |
+| Magic link | `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` set at build | Supabase OTP email; shortlists in a `shortlists` table (RLS: own rows only). Recall via header **Recall shortlist** / **Saved → Restore** |
 
 Supabase SQL sketch (run once in the project SQL editor):
 
