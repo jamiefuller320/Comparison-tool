@@ -1,2 +1,4 @@
 # Optional Python deps for data enrichment scripts (not needed for Next.js runtime).
 pypdf>=5.0.0,<7
+# School capture package (tools/school-capture) + Cursor SDK for --synthesize
+-e ./tools/school-capture[llm]
