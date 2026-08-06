@@ -33,5 +33,7 @@ def test_build_learned_terms_from_capture_fixture(tmp_path: Path):
         ),
         encoding="utf-8",
     )
-    terms = build_from_capture_file(capture)
+    terms, df, n_schools = build_from_capture_file(capture)
+    assert n_schools == 1
     assert "maths" in terms or any("math" in k for k in terms)
+    assert all(v >= 1 for v in df.values())
