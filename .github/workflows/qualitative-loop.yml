@@ -1,0 +1,83 @@
+name: Qualitative capture loop
+
+# Weekly batch website capture for Hampshire (skip already-captured URNs),
+# prune learned URL terms, attach selective deterministic narratives, merge.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Max new schools to capture this run
+        required: false
+        default: "25"
+      synthesize_provider:
+        description: Narrative provider (none|auto|openai|cursor)
+        required: false
+        default: "none"
+      dry_run:
+        description: Digest only (no capture)
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Thursdays 07:00 UTC — day after pack-quality loop
+    - cron: "0 7 * * 4"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qualitative-loop
+  cancel-in-progress: false
+
+jobs:
+  qualitative-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install data enrichment deps
+        run: pip install -r requirements-data.txt
+
+      - name: Run qualitative loop
+        env:
+          LIMIT: ${{ github.event.inputs.limit || '25' }}
+          SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          ARGS=(
+            --la Hampshire
+            --limit "$LIMIT"
+            --skip-existing
+            --synthesize-provider "$SYNTH"
+          )
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          python3 scripts/run-qualitative-loop.py "${ARGS[@]}"
+
+      - name: Commit qualitative data + digest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A output public/data/schools-index.json \
+            public/data/packs/qualitative-loop-latest.json \
+            public/data/packs/qualitative-loop-latest.md
+          if git diff --staged --quiet; then
+            echo "No qualitative loop changes"
+          else
+            if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
+              MSG="Qualitative loop dry-run digest"
+            else
+              MSG="Qualitative loop: batch capture and selective narratives"
+            fi
+            git commit -m "$MSG"
+            git push
+          fi

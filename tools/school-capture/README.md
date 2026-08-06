@@ -73,15 +73,25 @@ npm run test:qualitative-evidence
 
 Recommended scale-up (technical order, not a schedule):
 
-1. **Deterministic capture in batches** — `enrich-qualitative.py --la … --limit N` without `--synthesize`. Keep `output/learned-url-terms.json` across runs so URL discovery improves.
-2. **Synthesize selectively** — `synthesize-qualitative.py` on URNs that already have rich signals (or shortlist candidates). Cursor = one agent turn per school; OpenAI is cheaper per area; skip synth where scan coverage is thin.
-3. **Other LAs** — point `--index` at `public/data/packs/{slug}/schools-index.json` (and matching `--la`), merge into that pack index, then deploy.
+1. **Deterministic capture in batches** — resume-safe upserts:
+   ```bash
+   python3 scripts/enrich-qualitative.py --la Hampshire --require-website \
+     --limit 25 --skip-existing
+   ```
+   Sidecar upserts by URN (does not wipe prior schools). Progress → `output/qualitative-progress.json`.
+2. **Synthesize selectively** — evidence gates + only-missing:
+   ```bash
+   python3 scripts/synthesize-qualitative.py --only-missing --min-documented-areas 2 \
+     --provider auto --limit 25
+   ```
+3. **Weekly loop** — `npm run loop:qualitative` / workflow `qualitative-loop.yml` (default provider `none` = deterministic narratives; set `CURSOR_API_KEY` / `OPENAI_API_KEY` secrets to spend LLM budget).
+4. **Other LAs** — point `--index` at `public/data/packs/{slug}/schools-index.json` (and matching `--la`), merge into that pack index, then deploy.
 
 ### Learning mechanism (what it can / cannot do)
 
-`output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. That is mild, automatic improvement of *which pages get fetched* — not of extraction quality, scoring, or narratives.
+`output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. Weekly loop applies **decay + stopword prune** so early CMS noise (`and`/`the`/`our`) fades.
 
-It is **not** a self-improving LLM loop. True continuous improvement would still need: batch resume, noise/decay on learned terms, human/ops feedback into discovery or synthesis gates, selective synth policy, and a scheduled qualitative job (similar to `loop:pack-quality`).
+It is **not** a self-improving LLM loop. Narratives improve only when you re-run synthesis with better evidence or a stronger provider. Still out of scope: human feedback into gates, per-CMS models, IDF downweight of school-specific tokens.
 
 ## Engine version
 

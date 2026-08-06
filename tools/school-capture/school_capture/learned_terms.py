@@ -11,7 +11,10 @@ from school_capture.url_discovery import path_terms
 DEFAULT_PATH = Path("output/learned-url-terms.json")
 MIN_TERM_LEN = 3
 MAX_TERMS = 500
+DEFAULT_DECAY = 0.92
+DEFAULT_MIN_COUNT = 2
 
+# Structural / CMS noise + common English stopwords that leaked into early pilots.
 BLOCKED_TERMS = frozenset(
     {
         "page",
@@ -38,6 +41,74 @@ BLOCKED_TERMS = frozenset(
         "wp",
         "content",
         "uploads",
+        # English stopwords / weak tokens
+        "and",
+        "the",
+        "our",
+        "for",
+        "with",
+        "from",
+        "this",
+        "that",
+        "your",
+        "you",
+        "are",
+        "was",
+        "were",
+        "been",
+        "have",
+        "has",
+        "had",
+        "will",
+        "can",
+        "all",
+        "any",
+        "not",
+        "but",
+        "about",
+        "into",
+        "over",
+        "under",
+        "more",
+        "also",
+        "than",
+        "then",
+        "them",
+        "they",
+        "their",
+        "what",
+        "when",
+        "where",
+        "which",
+        "who",
+        "how",
+        "why",
+        "key",
+        "six",
+        "new",
+        "year",
+        "years",
+        "info",
+        "information",
+        "click",
+        "here",
+        "read",
+        "more",
+        "view",
+        "download",
+        "file",
+        "files",
+        "doc",
+        "docs",
+        "default",
+        "aspx",
+        "php",
+        "htm",
+        "web",
+        "website",
+        "websitecontent",
+        "hants",
+        "hampshire",
     }
 )
 
@@ -54,6 +125,9 @@ def is_useful_term(term: str) -> bool:
         return False
     if re.fullmatch(r"pid\d+", t):
         return False
+    # Drop very short alphanumeric CMS crumbs
+    if re.fullmatch(r"[a-z]{1,2}\d+", t):
+        return False
     return True
 
 
@@ -69,15 +143,58 @@ def load_learned_terms(path: Path | None = None) -> dict[str, int]:
     return {str(k): int(v) for k, v in terms.items() if is_useful_term(str(k))}
 
 
-def save_learned_terms(terms: dict[str, int], path: Path | None = None) -> None:
+def prune_learned_terms(
+    terms: dict[str, int],
+    *,
+    min_count: int = DEFAULT_MIN_COUNT,
+    max_terms: int = MAX_TERMS,
+) -> dict[str, int]:
+    cleaned = {
+        term: count
+        for term, count in terms.items()
+        if is_useful_term(term) and count >= min_count
+    }
+    ranked = sorted(cleaned.items(), key=lambda x: (-x[1], x[0]))[:max_terms]
+    return dict(ranked)
+
+
+def decay_learned_terms(
+    terms: dict[str, int],
+    *,
+    factor: float = DEFAULT_DECAY,
+) -> dict[str, int]:
+    """Multiply counts by factor (kept as ints). Used between capture waves."""
+    if factor >= 1:
+        return dict(terms)
+    out: dict[str, int] = {}
+    for term, count in terms.items():
+        if not is_useful_term(term):
+            continue
+        next_count = int(count * factor)
+        if next_count > 0:
+            out[term] = next_count
+    return out
+
+
+def save_learned_terms(
+    terms: dict[str, int],
+    path: Path | None = None,
+    *,
+    min_count: int = 1,
+    decay: float | None = None,
+) -> dict[str, int]:
     p = path or DEFAULT_PATH
     p.parent.mkdir(parents=True, exist_ok=True)
-    ranked = sorted(terms.items(), key=lambda x: (-x[1], x[0]))[:MAX_TERMS]
+    cleaned = dict(terms)
+    if decay is not None:
+        cleaned = decay_learned_terms(cleaned, factor=decay)
+    cleaned = prune_learned_terms(cleaned, min_count=min_count)
     payload = {
-        "terms": dict(ranked),
-        "termCount": len(ranked),
+        "terms": cleaned,
+        "termCount": len(cleaned),
     }
     p.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return cleaned
 
 
 def terms_from_anchor(anchor: str) -> list[str]:
@@ -119,8 +236,6 @@ def merge_learned_terms(base: dict[str, int], incoming: dict[str, int]) -> dict[
 
 def build_from_capture_file(capture_path: Path) -> dict[str, int]:
     """Rebuild learned terms from an existing qualitative-capture index."""
-    import json
-
     payload = json.loads(capture_path.read_text(encoding="utf-8"))
     store: dict[str, int] = {}
     for record in payload.get("records") or []:
@@ -136,4 +251,4 @@ def build_from_capture_file(capture_path: Path) -> dict[str, int]:
                     area=area.get("area") or "general",
                     signal_count=signal_count,
                 )
-    return store
+    return prune_learned_terms(store, min_count=DEFAULT_MIN_COUNT)
