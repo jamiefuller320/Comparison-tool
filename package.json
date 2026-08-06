@@ -55,6 +55,8 @@
     "test:inspection-precis": "python3 scripts/test-inspection-precis.py",
     "test:qualitative-evidence": "npx --yes tsx scripts/test-qualitative-evidence.mjs && cd tools/school-capture && python3 -m pytest -q",
     "test:inspection-highlights": "npx --yes tsx scripts/test-inspection-highlights.mjs",
+    "test:resilient-fetch": "npx --yes tsx scripts/test-resilient-fetch.mjs",
+    "test:collate-indexes": "npx --yes tsx scripts/test-collate-indexes.mjs",
     "test:headlines": "npx --yes tsx scripts/test-headlines.mjs",
     "test:ks2-history": "npx --yes tsx scripts/test-ks2-history.mjs",
     "test:compare-paths": "npx --yes tsx scripts/test-compare-paths.mjs",

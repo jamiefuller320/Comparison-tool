@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in School Compass work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-08-04 (pack quality automation phases 2–4 logged).
+Last reviewed from agent chat: 2026-08-06 (client data-load resilience; dynamic hosting still deferred).
 
 ## How to use
 
@@ -26,6 +26,8 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 | **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
 | **6. Pack prune / TTL** | Drop unused packs from repo/Pages when stale to bound size | Not started | When pack count grows |
 | **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. See **Continuous data-quality automation** phases below. | Partial (phase 1 shipped #80) | Phases 2–4 when signals / cost justify |
+| **8. Client load: geo-lazy packs** | After seed-first progressive load + retries (hardening pass), only fetch packs for the postcode’s LA / neighbours instead of all ready SE packs (~20 MB). Keep static Pages hosting. | Not started | When low-bandwidth failures persist after seed-first |
+| **9. Dynamic data API / CDN** | Move off “download every pack JSON in the browser” to an edge/API that returns a postcode-scoped slice (or versioned regional bundles on a real CDN). Only justify if geo-lazy static packs are still too heavy or pack count grows nationally. | Deferred | After step 8; do **not** jump here for flaky first loads alone |
 
 #### Continuous data-quality automation (return-to log)
 
