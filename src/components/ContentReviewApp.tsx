@@ -8,6 +8,7 @@ import {
   documentedWebsiteAreas,
   filterAndSortReviewSchools,
   formatIngestLabel,
+  looksLikeMidSentenceFragment,
   looksLikePrecisJunk,
   type ContentReviewFilter,
   type ContentReviewSort,
@@ -55,14 +56,19 @@ function PrecisPanel({ school }: { school: SchoolRecord }) {
             ? ` · enriched ${formatIngestLabel(school.inspectionPrecisEnrichedAt)}`
             : ""}
           {junk ? (
-            <span className="content-review-flag"> Parent View / chrome?</span>
+            <span className="content-review-flag">
+              {looksLikeMidSentenceFragment(precis)
+                ? " Mid-sentence ingest defect"
+                : " Parent View / chrome?"}
+            </span>
           ) : null}
         </p>
       </header>
       {junk ? (
         <p className="content-review-warn">
-          This précis looks like report end-matter rather than school narrative.
-          Prefer a strength line or re-run the précis enricher.
+          {looksLikeMidSentenceFragment(precis)
+            ? "This précis looks like a global heading-match bug (e.g. Outcome sliced out of Outcomes). Re-run the précis enricher — do not hand-edit one school."
+            : "This précis looks like report end-matter rather than school narrative. Prefer a strength line or re-run the précis enricher."}
         </p>
       ) : null}
       {precis ? (

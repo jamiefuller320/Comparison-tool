@@ -15,10 +15,21 @@ export type ContentReviewSort =
   | "name"
   | "website-coverage";
 
+/** Mid-word heading slice — treat as a global ingest defect, not a one-off. */
+export function looksLikeMidSentenceFragment(
+  text: string | null | undefined,
+): boolean {
+  const clean = (text || "").trim();
+  if (!clean) return false;
+  if (/^[a-z]/.test(clean)) return true;
+  return /^(s|ing|ed|ly|tion|ments?|ness|ies)\b/i.test(clean);
+}
+
 /** Parent View / letterhead chrome — same family of checks as the précis engine. */
 export function looksLikePrecisJunk(text: string | null | undefined): boolean {
   const clean = (text || "").trim();
   if (!clean) return false;
+  if (looksLikeMidSentenceFragment(clean)) return true;
   const low = clean.toLowerCase();
   if (low.includes("piccadilly gate")) return true;
   if (low.includes("store street") && low.includes("manchester")) return true;
@@ -29,6 +40,9 @@ export function looksLikePrecisJunk(text: string | null | undefined): boolean {
       low.includes("other parents and carers think") ||
       low.includes("when deciding which schools to inspect"))
   ) {
+    return true;
+  }
+  if (low.includes("school and pupil context") || low.includes("this data is from")) {
     return true;
   }
   return false;

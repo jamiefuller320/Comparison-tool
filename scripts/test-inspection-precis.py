@@ -16,6 +16,7 @@ from inspection_precis_lib import (  # noqa: E402
     extract_ofsted_precis,
     is_non_inspection_report_label,
     looks_like_letterhead_junk,
+    looks_like_mid_sentence_fragment,
     merge_precis_fields_from_previous,
     normalize_ofsted_provider_url,
     parse_ofsted_provider_latest_report,
@@ -177,6 +178,31 @@ def main() -> None:
         "Ofsted your opinion on your child’s school."
     )
     assert not looks_like_letterhead_junk("Pupils feel safe and happy at school.")
+    assert looks_like_mid_sentence_fragment(
+        "s in reading, writing and mathematics are consistently high."
+    )
+    assert looks_like_letterhead_junk(
+        "s in reading, writing and mathematics are consistently high."
+    )
+
+    # "Outcome" must not match inside "Outcomes…" (new-style report wording).
+    outcomes_fixture = """
+What it's like to be a pupil at this school
+Pupils enjoy school. They attend school regularly and punctually. Behaviour around
+the school is calm and orderly. Many pupils say they feel safe at school.
+Outcomes in reading, writing and mathematics are consistently high. Pupils build
+secure knowledge across the curriculum and express themselves with confidence.
+Next steps
+In the early years, leaders should further strengthen the sequences of key knowledge.
+"""
+    outcomes = extract_ofsted_precis(
+        outcomes_fixture, "https://files.ofsted.gov.uk/v1/file/50305013"
+    )
+    assert outcomes is not None
+    precis = outcomes["inspectionPrecis"] or ""
+    assert precis.lower().startswith("pupils enjoy school")
+    assert not precis.lower().startswith("s in reading")
+    assert "next steps" not in precis.lower()
 
     url = "https://files.ofsted.gov.uk/v1/file/50224032"
     ofsted = extract_ofsted_precis(OFSTED_FIXTURE, url)
