@@ -30,6 +30,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--la", default="Hampshire")
     parser.add_argument("--urn")
     parser.add_argument("--limit", type=int, default=12)
+    parser.add_argument("--offset", type=int, default=0)
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip URNs already in the qualitative capture sidecar",
+    )
     parser.add_argument("--require-website", action="store_true")
     parser.add_argument("--synthesize", action="store_true")
     parser.add_argument(
@@ -52,14 +58,20 @@ def main(argv: list[str] | None = None) -> int:
         args.la,
         "--limit",
         str(args.limit),
+        "--offset",
+        str(args.offset),
         "--output",
         str(args.output),
         "--learned-terms",
         str(ROOT / "output" / "learned-url-terms.json"),
+        "--progress",
+        str(ROOT / "output" / "qualitative-progress.json"),
         *extra,
     ]
     if args.urn:
         capture_cmd.extend(["--urn", args.urn])
+    if args.skip_existing:
+        capture_cmd.append("--skip-existing")
     if args.require_website:
         capture_cmd.append("--require-website")
     if args.synthesize:

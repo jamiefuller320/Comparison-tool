@@ -20,7 +20,12 @@ from school_capture.index_loader import (  # noqa: E402
     resolve_comparison_tool_index,
 )
 from school_capture.learned_terms import load_learned_terms, save_learned_terms  # noqa: E402
-from school_capture.models import QualitativeCaptureIndex, SchoolInput, today_iso  # noqa: E402
+from school_capture.models import SchoolInput, today_iso  # noqa: E402
+from school_capture.sidecar import (  # noqa: E402
+    existing_urns,
+    save_progress,
+    upsert_records,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -44,6 +49,23 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--la", default=SEED_LOCAL_AUTHORITY, help="Filter to local authority")
     p.add_argument("--urn", help="Capture a single school by URN")
     p.add_argument("--limit", type=int, default=5, help="Max schools to process")
+    p.add_argument(
+        "--offset",
+        type=int,
+        default=0,
+        help="Skip the first N schools after filtering (batch resume)",
+    )
+    p.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip URNs already present in the output sidecar",
+    )
+    p.add_argument(
+        "--progress",
+        type=Path,
+        default=Path("output/qualitative-progress.json"),
+        help="Write batch progress metadata (URN cursor) after each run",
+    )
     p.add_argument(
         "--require-website",
         action="store_true",
@@ -120,23 +142,40 @@ def load_schools(args: argparse.Namespace) -> list[SchoolInput]:
     if args.fixture:
         payload = json.loads(args.fixture.read_text(encoding="utf-8"))
         rows = payload if isinstance(payload, list) else payload.get("schools") or []
-        return [SchoolInput.from_dict(r) for r in rows][: args.limit]
-
-    if args.index:
-        index_path = args.index
-    elif args.comparison_tool:
-        index_path = resolve_comparison_tool_index(args.comparison_tool)
+        filtered = [SchoolInput.from_dict(r) for r in rows]
     else:
-        raise SystemExit("Provide --comparison-tool, --index, or --fixture")
+        if args.index:
+            index_path = args.index
+        elif args.comparison_tool:
+            index_path = resolve_comparison_tool_index(args.comparison_tool)
+        else:
+            raise SystemExit("Provide --comparison-tool, --index, or --fixture")
 
-    schools = load_schools_index(index_path)
-    filtered = filter_schools(
-        schools,
-        la=args.la if not args.urn else None,
-        urn=args.urn,
-        require_website=args.require_website,
-    )
-    return filtered[: args.limit]
+        schools = load_schools_index(index_path)
+        filtered = filter_schools(
+            schools,
+            la=args.la if not args.urn else None,
+            urn=args.urn,
+            require_website=args.require_website,
+        )
+
+    if args.skip_existing:
+        known = existing_urns(args.output)
+        if known:
+            before = len(filtered)
+            filtered = [s for s in filtered if s.urn not in known]
+            print(
+                f"Skip-existing: dropped {before - len(filtered)} already-captured URN(s)",
+                file=sys.stderr,
+            )
+
+    offset = max(0, int(args.offset or 0))
+    if offset:
+        filtered = filtered[offset:]
+    limit = max(0, int(args.limit or 0))
+    if limit:
+        filtered = filtered[:limit]
+    return filtered
 
 
 def build_engine(args: argparse.Namespace) -> CaptureEngine:
@@ -187,26 +226,46 @@ def main(argv: list[str] | None = None) -> int:
         records.append(record)
 
     if engine.learned_terms is not None and not args.no_learned_terms:
-        save_learned_terms(engine.learned_terms, args.learned_terms)
-        print(f"Updated learned URL terms ({len(engine.learned_terms)})", file=sys.stderr)
+        cleaned = save_learned_terms(
+            engine.learned_terms,
+            args.learned_terms,
+            min_count=1,
+        )
+        print(f"Updated learned URL terms ({len(cleaned)})", file=sys.stderr)
 
-    index = QualitativeCaptureIndex(
-        generatedAt=today_iso(),
-        schoolCount=len(records),
-        records=records,
+    index = upsert_records(
+        args.output,
+        records,
         stats={
             "la": args.la,
+            "batchSize": len(records),
             "withWebsite": sum(1 for s in schools if s.schoolWebsite),
             "adapters": [a.source_type for a in engine.adapters],
+            "offset": int(args.offset or 0),
+            "skipExisting": bool(args.skip_existing),
+            "updatedAt": today_iso(),
         },
     )
-
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
-        json.dumps(index.to_dict(), indent=2),
-        encoding="utf-8",
+    print(
+        f"Upserted {len(records)} record(s); sidecar now has {index.schoolCount} → {args.output}",
+        file=sys.stderr,
     )
-    print(f"Wrote {len(records)} record(s) to {args.output}")
+
+    if args.progress:
+        processed = sorted({r.urn for r in index.records})
+        save_progress(
+            args.progress,
+            {
+                "la": args.la,
+                "updatedAt": today_iso(),
+                "sidecarRecords": index.schoolCount,
+                "lastBatchUrns": [r.urn for r in records],
+                "lastBatchSize": len(records),
+                "processedUrns": processed,
+                "processedCount": len(processed),
+            },
+        )
+        print(f"Wrote progress → {args.progress}", file=sys.stderr)
     return 0
 
 

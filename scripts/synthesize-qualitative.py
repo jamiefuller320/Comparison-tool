@@ -6,7 +6,8 @@ Reuses scanned evidence in output/qualitative-capture.json — no website re-cra
 Usage:
   pip install -r requirements-data.txt
   CURSOR_API_KEY=crsr_... python3 scripts/synthesize-qualitative.py --limit 2
-  CURSOR_API_KEY=crsr_... python3 scripts/synthesize-qualitative.py --limit 12
+  # Selective: only schools with enough evidence, only areas missing narratives
+  python3 scripts/synthesize-qualitative.py --provider none --only-missing --min-documented-areas 2
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -29,7 +31,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--capture", type=Path, default=DEFAULT_CAPTURE)
     parser.add_argument("--index", type=Path, default=DEFAULT_INDEX)
-    parser.add_argument("--limit", type=int, default=0, help="0 = all records in sidecar")
+    parser.add_argument("--limit", type=int, default=0, help="0 = all eligible records")
     parser.add_argument("--urn", action="append", default=[], help="Only these URNs (repeatable)")
     parser.add_argument(
         "--provider",
@@ -37,6 +39,28 @@ def main(argv: list[str] | None = None) -> int:
         default="auto",
     )
     parser.add_argument("--model", default="")
+    parser.add_argument(
+        "--only-missing",
+        action="store_true",
+        help="Skip schools/areas that already have narrativeSummary",
+    )
+    parser.add_argument(
+        "--min-documented-areas",
+        type=int,
+        default=2,
+        help="Require this many evidenced areas before synthesizing a school",
+    )
+    parser.add_argument(
+        "--min-signals",
+        type=int,
+        default=1,
+        help="Min signals (or any offerings) for an area to count as documented",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Ignore selective gates (still respects --urn/--limit)",
+    )
     parser.add_argument("--no-merge", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
@@ -44,6 +68,10 @@ def main(argv: list[str] | None = None) -> int:
     sys.path.insert(0, str(CAPTURE_ROOT))
     from school_capture.analysis.synthesis import synthesize_record
     from school_capture.models import QualitativeCaptureIndex
+    from school_capture.synth_policy import (
+        documented_area_count,
+        record_needs_synthesis,
+    )
 
     if not args.capture.is_file():
         print(f"Missing capture sidecar: {args.capture}", file=sys.stderr)
@@ -56,24 +84,54 @@ def main(argv: list[str] | None = None) -> int:
     if args.urn:
         wanted = {str(u).strip() for u in args.urn}
         records = [r for r in records if r.urn in wanted]
-    if args.limit and args.limit > 0:
-        records = records[: args.limit]
 
-    if not records:
-        print("No capture records selected.", file=sys.stderr)
-        return 1
+    skipped_thin = 0
+    skipped_done = 0
+    selected = []
+    for record in records:
+        if args.force:
+            selected.append(record)
+            continue
+        if not record_needs_synthesis(
+            record,
+            only_missing=args.only_missing,
+            min_documented_areas=args.min_documented_areas,
+            min_signals=args.min_signals,
+        ):
+            # Distinguish thin vs already complete for ops stats
+            documented = documented_area_count(
+                record, min_signals=args.min_signals
+            )
+            if documented < args.min_documented_areas:
+                skipped_thin += 1
+            else:
+                skipped_done += 1
+            continue
+        selected.append(record)
+
+    if args.limit and args.limit > 0:
+        selected = selected[: args.limit]
+
+    if not selected:
+        print(
+            "No capture records selected "
+            f"(thin={skipped_thin}, already-complete={skipped_done}).",
+            file=sys.stderr,
+        )
+        return 0
 
     use_llm = args.provider != "none"
     model = args.model or None
     print(
-        f"Synthesizing {len(records)} school(s) with provider={args.provider}",
+        f"Synthesizing {len(selected)} school(s) with provider={args.provider} "
+        f"(skipped thin={skipped_thin}, done={skipped_done})",
         file=sys.stderr,
     )
 
     updated: dict[str, object] = {}
     method_counts: dict[str, int] = {}
-    for i, record in enumerate(records, 1):
-        print(f"[{i}/{len(records)}] {record.urn} {record.name}", file=sys.stderr)
+    for i, record in enumerate(selected, 1):
+        print(f"[{i}/{len(selected)}] {record.urn} {record.name}", file=sys.stderr)
         out = synthesize_record(
             record,
             use_llm=use_llm,
@@ -86,7 +144,6 @@ def main(argv: list[str] | None = None) -> int:
             key = area.synthesisMethod or "none"
             method_counts[key] = method_counts.get(key, 0) + 1
 
-    # Write back into full sidecar (preserve unselected schools).
     new_records = []
     for record in index.records:
         replacement = updated.get(record.urn)
@@ -98,6 +155,10 @@ def main(argv: list[str] | None = None) -> int:
         "synthesizedSchools": len(updated),
         "synthesisMethods": method_counts,
         "synthesisProvider": args.provider,
+        "skippedThin": skipped_thin,
+        "skippedAlreadyComplete": skipped_done,
+        "onlyMissing": bool(args.only_missing),
+        "minDocumentedAreas": args.min_documented_areas,
         "cursorKeyPresent": bool(os.environ.get("CURSOR_API_KEY")),
         "openaiKeyPresent": bool(os.environ.get("OPENAI_API_KEY")),
     }
@@ -126,8 +187,6 @@ def main(argv: list[str] | None = None) -> int:
         str(args.capture),
     ]
     print("Merging:", " ".join(merge_cmd), file=sys.stderr)
-    import subprocess
-
     subprocess.run(merge_cmd, check=True)
     return 0
 
