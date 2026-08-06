@@ -172,6 +172,10 @@ def main() -> None:
     assert looks_like_letterhead_junk(
         "Ofsted Piccadilly Gate Store Street Manchester M1 2WD"
     )
+    assert looks_like_letterhead_junk(
+        "How can I feed back my views? You can use Ofsted Parent View to give "
+        "Ofsted your opinion on your child’s school."
+    )
     assert not looks_like_letterhead_junk("Pupils feel safe and happy at school.")
 
     url = "https://files.ofsted.gov.uk/v1/file/50224032"

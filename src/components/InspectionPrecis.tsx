@@ -6,6 +6,7 @@ import {
   inspectionHighlights,
   inspectionReportHref,
   inspectionSourceLabel,
+  looksLikeInspectionPrecisJunk,
   schoolHasInspectionPrecis,
   shortInspectionSummary,
 } from "@/lib/inspectionHighlights";
@@ -84,7 +85,9 @@ export function InspectionPrecisDetail({ school }: { school: SchoolRecord }) {
   const label = school.inspectionReportLabel || "Latest inspection report";
   const reportHref = inspectionReportHref(school);
   const { strengths, improvements } = inspectionHighlights(school);
-  const precis = school.inspectionPrecis?.trim();
+  const rawPrecis = school.inspectionPrecis?.trim();
+  const precis =
+    rawPrecis && !looksLikeInspectionPrecisJunk(rawPrecis) ? rawPrecis : null;
 
   return (
     <aside
