@@ -41,6 +41,24 @@ async function main() {
     console.error("FAIL summary length", summary);
     process.exit(1);
   }
+
+  const junk = {
+    urn: "junk",
+    name: "Junk",
+    inspectionPrecis:
+      "How can I feed back my views? You can use Ofsted Parent View to give Ofsted your opinion.",
+    inspectionStrengths: [
+      {
+        text: "Pupils are happy and safe.",
+        sourceUrl: "https://example.com/a.pdf",
+      },
+    ],
+  };
+  const junkSummary = shortInspectionSummary(junk, 120);
+  if (!junkSummary || /parent view|feed back my views/i.test(junkSummary)) {
+    console.error("FAIL junk precis should fall back to strength", junkSummary);
+    process.exit(1);
+  }
   const hi = inspectionHighlights(full);
   if (hi.strengths.length !== 1 || hi.improvements.length !== 1) {
     console.error("FAIL highlight buckets", hi);

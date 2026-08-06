@@ -89,9 +89,24 @@ Recommended scale-up (technical order, not a schedule):
 
 ### Learning mechanism (what it can / cannot do)
 
-`output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. Weekly loop applies **decay + stopword prune** so early CMS noise (`and`/`the`/`our`) fades.
+`output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. Weekly loop applies **decay + stopword prune**, and loads **IDF-weighted boosts** (document frequency across schools) so singleton school-name phrases do not dominate ranking.
 
-It is **not** a self-improving LLM loop. Narratives improve only when you re-run synthesis with better evidence or a stronger provider. Still out of scope: human feedback into gates, per-CMS models, IDF downweight of school-specific tokens.
+It is **not** a self-improving LLM loop. Narratives improve only when you re-run synthesis with better evidence or a stronger provider. Still out of scope: human feedback into gates, per-CMS models.
+
+### Coverage report
+
+```bash
+npm run report:qualitative
+```
+
+## Product QA (précis + website)
+
+After capture is merged into `schools-index.json`, review both products school-by-school on the internal lab page:
+
+- Local: [http://localhost:3000/lab/content-review/](http://localhost:3000/lab/content-review/)
+- Production: [https://schoolcompass.uk/lab/content-review/](https://schoolcompass.uk/lab/content-review/)
+
+Sort by ingest date, filter to précis + website / junk flags, and open source links. The older crawler-only prototype viewer remains on the `School_data_crawler` GitHub Pages site (`/evidence/`).
 
 ## Engine version
 

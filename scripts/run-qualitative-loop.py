@@ -54,25 +54,32 @@ def rebuild_learned_terms() -> dict:
     from school_capture.learned_terms import (
         build_from_capture_file,
         decay_learned_terms,
-        load_learned_terms,
+        load_learned_term_counts,
         merge_learned_terms,
         save_learned_terms,
     )
 
     if not DEFAULT_CAPTURE.is_file():
-        return {"termCount": 0, "rebuilt": False}
+        return {"termCount": 0, "boostTermCount": 0, "rebuilt": False}
 
-    rebuilt = build_from_capture_file(DEFAULT_CAPTURE)
-    existing = load_learned_terms(DEFAULT_LEARNED)
+    rebuilt, df, n_schools = build_from_capture_file(DEFAULT_CAPTURE)
+    existing = load_learned_term_counts(DEFAULT_LEARNED)
     # Mild decay on prior store so stale CMS noise fades across weeks.
     decayed = decay_learned_terms(existing, factor=0.92)
     merged = merge_learned_terms(decayed, rebuilt)
-    cleaned = save_learned_terms(merged, DEFAULT_LEARNED, min_count=2)
+    boosts = save_learned_terms(
+        merged,
+        DEFAULT_LEARNED,
+        min_count=2,
+        df=df,
+        school_count=n_schools,
+    )
     return {
-        "termCount": len(cleaned),
+        "termCount": len(merged),
+        "boostTermCount": len(boosts),
+        "schoolCount": n_schools,
         "rebuilt": True,
         "fromCapture": len(rebuilt),
-        "afterDecayMerge": len(cleaned),
     }
 
 
