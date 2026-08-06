@@ -48,6 +48,14 @@ OPENAI_API_KEY=... python3 scripts/enrich-qualitative.py --la Hampshire --limit 
 
 Deterministic synthesis remains the soft-launch default when no key is set.
 
+### Synthesize an existing sidecar (no re-crawl)
+
+```bash
+# Attach Cursor/OpenAI/deterministic narratives to output/qualitative-capture.json
+CURSOR_API_KEY=crsr_... python3 scripts/synthesize-qualitative.py --limit 12
+# or: npm run synthesize:qualitative -- --limit 12
+```
+
 ## Capture contacts
 
 ```bash
@@ -60,6 +68,20 @@ python3 scripts/enrich-contacts.py --la Hampshire --require-website --limit 12
 cd tools/school-capture && python3 -m pytest -q
 npm run test:qualitative-evidence
 ```
+
+## Expanding beyond a pilot
+
+Recommended scale-up (technical order, not a schedule):
+
+1. **Deterministic capture in batches** — `enrich-qualitative.py --la … --limit N` without `--synthesize`. Keep `output/learned-url-terms.json` across runs so URL discovery improves.
+2. **Synthesize selectively** — `synthesize-qualitative.py` on URNs that already have rich signals (or shortlist candidates). Cursor = one agent turn per school; OpenAI is cheaper per area; skip synth where scan coverage is thin.
+3. **Other LAs** — point `--index` at `public/data/packs/{slug}/schools-index.json` (and matching `--la`), merge into that pack index, then deploy.
+
+### Learning mechanism (what it can / cannot do)
+
+`output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. That is mild, automatic improvement of *which pages get fetched* — not of extraction quality, scoring, or narratives.
+
+It is **not** a self-improving LLM loop. True continuous improvement would still need: batch resume, noise/decay on learned terms, human/ops feedback into discovery or synthesis gates, selective synth policy, and a scheduled qualitative job (similar to `loop:pack-quality`).
 
 ## Engine version
 

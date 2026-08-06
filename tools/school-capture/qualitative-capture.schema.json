@@ -79,7 +79,9 @@
         "themes": { "type": "array", "items": { "type": "string" } },
         "offerings": { "type": "array", "items": { "type": "string" } },
         "narrativeSummary": { "type": "string" },
-        "synthesisMethod": { "enum": ["deterministic", "llm"] },
+        "synthesisMethod": {
+          "enum": ["deterministic", "llm", "cursor", "openai"]
+        },
         "signals": {
           "type": "array",
           "items": { "$ref": "#/$defs/QualitativeSignal" }
