@@ -4281,6 +4281,27 @@ a.area-list-link:hover .area-list-meta {
   line-height: 1.55;
 }
 
+/* Progressive data-load status (seed first, packs after) */
+.data-load-banner {
+  border-bottom: 1px solid var(--line);
+  background: rgba(232, 243, 247, 0.92);
+}
+
+.data-load-banner-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  padding: 0.55rem 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.data-load-banner-inner p {
+  margin: 0;
+}
+
 /* —— Lab: content review (précis + website QA) —— */
 .content-review-page {
   padding-bottom: 3rem;
@@ -4604,3 +4625,4 @@ a.area-list-link:hover .area-list-meta {
     max-height: 16rem;
   }
 }
+

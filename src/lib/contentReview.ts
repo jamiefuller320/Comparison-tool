@@ -54,15 +54,26 @@ export function documentedWebsiteAreas(school: SchoolRecord): number {
   }).length;
 }
 
+/** True when there is any précis field worth reviewing — including junk chrome. */
+export function schoolHasPrecisForReview(school: SchoolRecord): boolean {
+  return (
+    schoolHasInspectionPrecis(school) ||
+    Boolean(school.inspectionPrecis?.trim()) ||
+    looksLikePrecisJunk(school.inspectionPrecis)
+  );
+}
+
 export function schoolHasReviewContent(school: SchoolRecord): boolean {
-  return schoolHasInspectionPrecis(school) || schoolHasQualitativeCapture(school);
+  return (
+    schoolHasPrecisForReview(school) || schoolHasQualitativeCapture(school)
+  );
 }
 
 export function matchesContentReviewFilter(
   school: SchoolRecord,
   filter: ContentReviewFilter,
 ): boolean {
-  const hasPrecis = schoolHasInspectionPrecis(school);
+  const hasPrecis = schoolHasPrecisForReview(school);
   const hasWebsite = schoolHasQualitativeCapture(school);
   const junk = looksLikePrecisJunk(school.inspectionPrecis);
   switch (filter) {
