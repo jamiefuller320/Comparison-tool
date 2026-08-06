@@ -25,7 +25,7 @@ class SourceType(str, Enum):
     OTHER = "other"
 
 
-ENGINE_VERSION = "0.6.0"
+ENGINE_VERSION = "0.7.0"
 
 
 @dataclass
@@ -120,9 +120,13 @@ class QualitativeCaptureRecord:
     documentsDiscovered: int = 0
     documentsExtracted: int = 0
     documentInventory: list[dict[str, str]] = field(default_factory=list)
+    # Change-aware re-screen support (validators + extracted page text).
+    verifiedAt: str | None = None
+    discoveredUrls: list[str] = field(default_factory=list)
+    pageCache: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "urn": self.urn,
             "name": self.name,
             "assessedAt": self.assessedAt,
@@ -135,6 +139,13 @@ class QualitativeCaptureRecord:
             "documentsExtracted": self.documentsExtracted,
             "documentInventory": self.documentInventory,
         }
+        if self.verifiedAt:
+            out["verifiedAt"] = self.verifiedAt
+        if self.discoveredUrls:
+            out["discoveredUrls"] = self.discoveredUrls
+        if self.pageCache:
+            out["pageCache"] = self.pageCache
+        return out
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> QualitativeCaptureRecord:
@@ -146,6 +157,11 @@ class QualitativeCaptureRecord:
         inventory = [
             dict(item)
             for item in (data.get("documentInventory") or [])
+            if isinstance(item, dict)
+        ]
+        page_cache = [
+            dict(item)
+            for item in (data.get("pageCache") or [])
             if isinstance(item, dict)
         ]
         return cls(
@@ -160,6 +176,9 @@ class QualitativeCaptureRecord:
             documentsDiscovered=int(data.get("documentsDiscovered") or 0),
             documentsExtracted=int(data.get("documentsExtracted") or 0),
             documentInventory=inventory,
+            verifiedAt=(str(data["verifiedAt"]) if data.get("verifiedAt") else None),
+            discoveredUrls=[str(u) for u in (data.get("discoveredUrls") or []) if str(u).strip()],
+            pageCache=page_cache,
         )
 
 

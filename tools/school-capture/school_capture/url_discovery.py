@@ -7,8 +7,15 @@ from urllib.parse import unquote, urlparse
 
 from school_capture.filters import is_blocked_url
 from school_capture.html_sections import parse_structured_page
-from school_capture.http_utils import link_matches, normalize_url, same_site, safe_fetch
+from school_capture.http_utils import (
+    link_matches,
+    normalize_url,
+    same_site,
+    safe_fetch,
+    safe_fetch_cached,
+)
 from school_capture.offering_terms import CURRICULUM_SUBJECT_TERMS
+from school_capture.page_cache import PageCacheEntry, cache_key
 from school_capture.section_patterns import PRIORITY_URL_TERMS, SECTION_PATTERNS
 
 MAX_PAGES = 18
@@ -87,11 +94,44 @@ def discover_site_pages(
     learned_terms: dict[str, int] | None = None,
     hub_spoke: bool = True,
     max_pages: int = MAX_PAGES,
+    prior_home: PageCacheEntry | None = None,
+    prior_urls: list[str] | None = None,
+    page_cache: dict[str, PageCacheEntry] | None = None,
 ) -> list[str]:
-    """Discover thematic pages on a school site, optionally following hub links."""
-    final, html = safe_fetch(root)
-    if not final or not html:
-        return [root]
+    """Discover thematic pages on a school site, optionally following hub links.
+
+    When the homepage is unchanged (HTTP 304 or content-hash match) and a prior
+    discovered URL list exists, reuse it to avoid re-walking the site tree.
+    """
+    home = prior_home or (page_cache or {}).get(cache_key(root))
+    result = safe_fetch_cached(
+        root,
+        etag=home.etag if home else None,
+        last_modified=home.lastModified if home else None,
+    )
+    unchanged = bool(
+        result.ok
+        and (
+            result.not_modified
+            or (
+                home
+                and result.content_hash
+                and home.contentHash
+                and result.content_hash == home.contentHash
+            )
+        )
+    )
+    if unchanged and prior_urls:
+        urls = [u for u in prior_urls if u and not is_blocked_url(u)]
+        if urls:
+            return urls[:max_pages]
+
+    if result.ok and result.final_url and result.text:
+        final, html = result.final_url, result.text
+    else:
+        final, html = safe_fetch(root)
+        if not final or not html:
+            return list(prior_urls or [root])[:max_pages] or [root]
 
     site_root = final
     parsed = parse_structured_page(html)
@@ -129,7 +169,16 @@ def discover_site_pages(
         ][: max(0, MAX_HUB_PAGES - len(curriculum_hubs))]
         hubs = curriculum_hubs + other_hubs
         for _, hub_url, _ in hubs:
-            hub_final, hub_html = safe_fetch(hub_url)
+            prior_hub = (page_cache or {}).get(cache_key(hub_url))
+            hub_result = safe_fetch_cached(
+                hub_url,
+                etag=prior_hub.etag if prior_hub else None,
+                last_modified=prior_hub.lastModified if prior_hub else None,
+            )
+            if hub_result.ok and hub_result.final_url and hub_result.text:
+                hub_final, hub_html = hub_result.final_url, hub_result.text
+            else:
+                hub_final, hub_html = safe_fetch(hub_url)
             if not hub_final or not hub_html:
                 continue
             hub_bonus = 8 if is_curriculum_hub(hub_url, "") else 0

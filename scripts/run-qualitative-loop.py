@@ -8,6 +8,8 @@ Policy: coverage first, quality at minimum cost.
   - Default provider is none (free deterministic narratives).
   - Capture batches are wide; Cursor/OpenAI are opt-in polish on rich schools.
   - Skip-existing is the default (pass --no-skip-existing to recapture).
+  - Stale re-screens use ETag / Last-Modified / content-hash and reuse
+    unchanged pages (default: 28-day TTL, small refresh limit).
 
 Usage:
   python3 scripts/run-qualitative-loop.py --dry-run
@@ -129,6 +131,18 @@ def main(argv: list[str] | None = None) -> int:
         help="Recapture schools even if already in the sidecar (default: skip existing)",
     )
     parser.add_argument(
+        "--refresh-stale-days",
+        type=int,
+        default=28,
+        help="Re-screen existing captures older than N days (0 = off; default 28)",
+    )
+    parser.add_argument(
+        "--refresh-limit",
+        type=int,
+        default=15,
+        help="Max stale schools to change-detect re-screen per run (default 15)",
+    )
+    parser.add_argument(
         "--synthesize-provider",
         choices=("none", "auto", "cursor", "openai"),
         default="none",
@@ -168,6 +182,8 @@ def main(argv: list[str] | None = None) -> int:
             "limit": args.limit,
             "offset": args.offset,
             "skipExisting": skip_existing,
+            "refreshStaleDays": args.refresh_stale_days,
+            "refreshLimit": args.refresh_limit,
             "sidecarBefore": before,
             "sidecarAfter": before,
             "synthesizeProvider": args.synthesize_provider,
@@ -199,6 +215,15 @@ def main(argv: list[str] | None = None) -> int:
     ]
     if skip_existing:
         capture_cmd.append("--skip-existing")
+        if args.refresh_stale_days > 0 and args.refresh_limit > 0:
+            capture_cmd.extend(
+                [
+                    "--refresh-stale-days",
+                    str(args.refresh_stale_days),
+                    "--refresh-limit",
+                    str(args.refresh_limit),
+                ]
+            )
     if args.no_merge:
         capture_cmd.append("--no-merge")
     # Capture without inline LLM; selective synth is a separate step.
@@ -257,6 +282,8 @@ def main(argv: list[str] | None = None) -> int:
         "limit": args.limit,
         "offset": args.offset,
         "skipExisting": skip_existing,
+        "refreshStaleDays": args.refresh_stale_days,
+        "refreshLimit": args.refresh_limit,
         "sidecarBefore": before,
         "sidecarAfter": after,
         "synthesizeProvider": synth_provider,

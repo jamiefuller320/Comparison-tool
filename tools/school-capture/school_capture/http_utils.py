@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from dataclasses import dataclass
 from html.parser import HTMLParser
 from typing import Iterable
 
@@ -17,6 +19,23 @@ UA = (
 
 DEFAULT_TIMEOUT = 30
 RATE_LIMIT_SECONDS = 0.75
+
+
+@dataclass
+class FetchResult:
+    """Result of a cache-aware GET (supports HTTP 304 Not Modified)."""
+
+    ok: bool
+    final_url: str | None = None
+    body: bytes | None = None
+    text: str | None = None
+    status: int = 0
+    etag: str | None = None
+    last_modified: str | None = None
+    content_length: int | None = None
+    content_hash: str | None = None
+    not_modified: bool = False
+    error: str | None = None
 
 SKIP_TAGS = frozenset(
     {
@@ -67,21 +86,93 @@ def same_site(url: str, root: str) -> bool:
 MAX_FETCH_BYTES = 2_500_000
 
 
-def fetch_text(url: str, *, timeout: int = DEFAULT_TIMEOUT) -> tuple[str, str]:
-    """Return (final_url, html_or_text)."""
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        # Cap body size — some school CDNs stream multi‑MB assets as "html".
-        raw = resp.read(MAX_FETCH_BYTES + 1)
-        final = resp.geturl()
-    if len(raw) > MAX_FETCH_BYTES:
-        raw = raw[:MAX_FETCH_BYTES]
+def _header(headers: object, name: str) -> str | None:
+    try:
+        value = headers.get(name)  # type: ignore[attr-defined]
+    except Exception:  # noqa: BLE001
+        value = None
+    if value is None:
+        try:
+            value = headers.get(name.lower())  # type: ignore[attr-defined]
+        except Exception:  # noqa: BLE001
+            value = None
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _decode_body(raw: bytes) -> str:
     for enc in ("utf-8", "latin-1"):
         try:
-            return final, raw.decode(enc)
+            return raw.decode(enc)
         except UnicodeDecodeError:
             continue
-    return final, raw.decode("utf-8", errors="replace")
+    return raw.decode("utf-8", errors="replace")
+
+
+def fetch_result(
+    url: str,
+    *,
+    etag: str | None = None,
+    last_modified: str | None = None,
+    timeout: int = DEFAULT_TIMEOUT,
+) -> FetchResult:
+    """GET with optional conditional validators. 304 → not_modified, no body."""
+    headers = {"User-Agent": UA}
+    if etag:
+        headers["If-None-Match"] = etag
+    if last_modified:
+        headers["If-Modified-Since"] = last_modified
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            status = getattr(resp, "status", None) or resp.getcode() or 200
+            final = resp.geturl()
+            resp_etag = _header(resp.headers, "ETag")
+            resp_lm = _header(resp.headers, "Last-Modified")
+            resp_len_raw = _header(resp.headers, "Content-Length")
+            resp_len = int(resp_len_raw) if resp_len_raw and resp_len_raw.isdigit() else None
+            raw = resp.read(MAX_FETCH_BYTES + 1)
+    except urllib.error.HTTPError as exc:
+        if exc.code == 304:
+            return FetchResult(
+                ok=True,
+                final_url=url,
+                status=304,
+                etag=etag,
+                last_modified=last_modified,
+                not_modified=True,
+            )
+        return FetchResult(ok=False, status=int(exc.code or 0), error=str(exc.reason or exc))
+    except (urllib.error.URLError, TimeoutError, ValueError, OSError) as exc:
+        return FetchResult(ok=False, error=str(exc))
+
+    if len(raw) > MAX_FETCH_BYTES:
+        raw = raw[:MAX_FETCH_BYTES]
+    body_hash = hashlib.sha256(raw).hexdigest()
+    if resp_len is None:
+        resp_len = len(raw)
+    return FetchResult(
+        ok=True,
+        final_url=final,
+        body=raw,
+        text=_decode_body(raw),
+        status=int(status),
+        etag=resp_etag or etag,
+        last_modified=resp_lm or last_modified,
+        content_length=resp_len,
+        content_hash=body_hash,
+        not_modified=False,
+    )
+
+
+def fetch_text(url: str, *, timeout: int = DEFAULT_TIMEOUT) -> tuple[str, str]:
+    """Return (final_url, html_or_text)."""
+    result = fetch_result(url, timeout=timeout)
+    if not result.ok or not result.final_url or result.text is None:
+        raise urllib.error.URLError(result.error or f"fetch failed for {url}")
+    return result.final_url, result.text
 
 
 def polite_sleep(seconds: float = RATE_LIMIT_SECONDS) -> None:
@@ -221,3 +312,26 @@ def safe_fetch(url: str) -> tuple[str | None, str | None]:
         OSError,
     ):
         return None, None
+
+
+def safe_fetch_cached(
+    url: str,
+    *,
+    etag: str | None = None,
+    last_modified: str | None = None,
+) -> FetchResult:
+    """Polite conditional GET that never raises."""
+    import http.client
+
+    try:
+        polite_sleep()
+        return fetch_result(url, etag=etag, last_modified=last_modified)
+    except (
+        urllib.error.URLError,
+        TimeoutError,
+        ValueError,
+        http.client.IncompleteRead,
+        http.client.HTTPException,
+        OSError,
+    ) as exc:
+        return FetchResult(ok=False, error=str(exc))

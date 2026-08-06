@@ -36,6 +36,18 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Skip URNs already in the qualitative capture sidecar",
     )
+    parser.add_argument(
+        "--refresh-stale-days",
+        type=int,
+        default=0,
+        help="Also re-screen captures older than N days (ETag/hash; 0 = off)",
+    )
+    parser.add_argument(
+        "--refresh-limit",
+        type=int,
+        default=0,
+        help="Max stale schools to re-screen",
+    )
     parser.add_argument("--require-website", action="store_true")
     parser.add_argument("--synthesize", action="store_true")
     parser.add_argument(
@@ -72,6 +84,12 @@ def main(argv: list[str] | None = None) -> int:
         capture_cmd.extend(["--urn", args.urn])
     if args.skip_existing:
         capture_cmd.append("--skip-existing")
+    if args.refresh_stale_days:
+        capture_cmd.extend(
+            ["--refresh-stale-days", str(args.refresh_stale_days)]
+        )
+    if args.refresh_limit:
+        capture_cmd.extend(["--refresh-limit", str(args.refresh_limit)])
     if args.require_website:
         capture_cmd.append("--require-website")
     if args.synthesize:

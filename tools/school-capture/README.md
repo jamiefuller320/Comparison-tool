@@ -102,8 +102,19 @@ After Cursor/OpenAI narratives pass the citation gate, **cited source URLs** get
 | **Coverage (default)** | Wide free crawl (`--limit 50`) + `provider=none` deterministic narratives |
 | **Paid quality polish** | `--provider cursor` / `auto`, small `--limit`, richest schools first; paid gate defaults to **4** documented areas (vs **2** for free) |
 | **Weekly CI** | Capture-heavy, Cursor off unless dispatch overrides |
+| **Cheap re-screens** | `--refresh-stale-days 28 --refresh-limit 15` (loop defaults). Conditional GET (`ETag` / `Last-Modified`) + body SHA-256; unchanged pages reuse cached text and skip re-assess when the whole school is unchanged |
 
 Still out of scope: human feedback into gates, per-CMS models.
+
+### Change-aware re-screens
+
+Each capture stores a per-URL `pageCache` (validators + extracted text) and `discoveredUrls` on the school record.
+
+On refresh:
+1. Homepage conditional GET — if unchanged, reuse prior `discoveredUrls` (no hub walk).
+2. Each page: `If-None-Match` / `If-Modified-Since`, else compare `contentHash`.
+3. Unchanged pages rebuild from cache (no HTML parse). If **all** website pages are unchanged, the prior assessment is kept and only `verifiedAt` advances.
+4. Partial changes re-assess; accepted narratives are preserved via `preserve_narratives`.
 
 ### Coverage report
 

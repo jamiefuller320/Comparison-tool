@@ -139,22 +139,43 @@ def test_assessor_scores_curriculum_and_enrichment():
 
 
 def test_engine_offline_with_mocked_fetch():
+    from school_capture.http_utils import FetchResult
+    from school_capture.page_cache import content_hash
+
     school = SchoolInput(
         urn="116338",
         name="Test Valley School",
         schoolWebsite="https://example.testvalley.sch.uk",
     )
 
-    def fake_fetch(url: str):
+    def fake_fetch_cached(url: str, *, etag=None, last_modified=None):
         if "curriculum" in url:
-            return url, _page("curriculum.html")
-        if "clubs" in url:
-            return url, _page("enrichment.html")
-        return "https://example.testvalley.sch.uk/", _page("homepage.html")
+            html = _page("curriculum.html")
+        elif "clubs" in url:
+            html = _page("enrichment.html")
+        else:
+            url = "https://example.testvalley.sch.uk/"
+            html = _page("homepage.html")
+        raw = html.encode("utf-8")
+        return FetchResult(
+            ok=True,
+            final_url=url,
+            status=200,
+            body=raw,
+            text=html,
+            content_hash=content_hash(raw),
+            content_length=len(raw),
+        )
 
     engine = CaptureEngine(adapters=[SchoolWebsiteAdapter()])
 
-    with patch("school_capture.sources.website.safe_fetch", side_effect=fake_fetch):
+    with patch(
+        "school_capture.sources.website.safe_fetch_cached",
+        side_effect=fake_fetch_cached,
+    ), patch(
+        "school_capture.url_discovery.safe_fetch_cached",
+        side_effect=fake_fetch_cached,
+    ):
         record = engine.capture_school(school)
 
     assert record.urn == "116338"
@@ -162,6 +183,8 @@ def test_engine_offline_with_mocked_fetch():
     by_area = {a.area: a for a in record.areas}
     assert by_area["curriculum"].summary
     assert record.to_dict()["engineVersion"]
+    assert record.pageCache
+    assert record.discoveredUrls
 
 
 def test_sample_fixture_loads():
