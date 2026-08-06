@@ -25,9 +25,11 @@ from school_capture.learned_terms import (  # noqa: E402
     load_learned_terms,
     save_learned_terms,
 )
-from school_capture.models import SchoolInput, today_iso  # noqa: E402
+from school_capture.models import QualitativeCaptureRecord, SchoolInput, today_iso  # noqa: E402
+from school_capture.page_cache import select_stale_urns  # noqa: E402
 from school_capture.sidecar import (  # noqa: E402
     existing_urns,
+    load_capture_index,
     save_progress,
     upsert_records,
 )
@@ -64,6 +66,21 @@ def build_parser() -> argparse.ArgumentParser:
         "--skip-existing",
         action="store_true",
         help="Skip URNs already present in the output sidecar",
+    )
+    p.add_argument(
+        "--refresh-stale-days",
+        type=int,
+        default=0,
+        help=(
+            "Also re-screen existing captures older than N days using "
+            "ETag/Last-Modified/content-hash (0 = off)"
+        ),
+    )
+    p.add_argument(
+        "--refresh-limit",
+        type=int,
+        default=0,
+        help="Max stale schools to re-screen when --refresh-stale-days > 0",
     )
     p.add_argument(
         "--progress",
@@ -164,15 +181,55 @@ def load_schools(args: argparse.Namespace) -> list[SchoolInput]:
             require_website=args.require_website,
         )
 
+    by_urn = {s.urn: s for s in filtered if s.urn}
+    refresh_days = max(0, int(args.refresh_stale_days or 0))
+    refresh_limit = max(0, int(args.refresh_limit or 0))
+    stale_targets: list[SchoolInput] = []
+
+    # Stale refresh is an additive queue used with --skip-existing coverage mode.
+    if (
+        args.skip_existing
+        and refresh_days > 0
+        and refresh_limit > 0
+        and not args.urn
+    ):
+        index = load_capture_index(args.output)
+        if index:
+            stale_urns = select_stale_urns(
+                index.records,
+                stale_days=refresh_days,
+                limit=refresh_limit,
+            )
+            stale_targets = [by_urn[u] for u in stale_urns if u in by_urn]
+            if stale_targets:
+                print(
+                    f"Refresh-stale: queued {len(stale_targets)} school(s) "
+                    f"older than {refresh_days} day(s)",
+                    file=sys.stderr,
+                )
+
     if args.skip_existing:
         known = existing_urns(args.output)
+        keep = {s.urn for s in stale_targets}
         if known:
             before = len(filtered)
-            filtered = [s for s in filtered if s.urn not in known]
+            filtered = [
+                s for s in filtered if s.urn not in known or s.urn in keep
+            ]
             print(
                 f"Skip-existing: dropped {before - len(filtered)} already-captured URN(s)",
                 file=sys.stderr,
             )
+        # Offset/limit apply to new coverage slots; stale refreshes are additive.
+        stale_urn_set = {s.urn for s in stale_targets}
+        new_schools = [s for s in filtered if s.urn not in stale_urn_set]
+        offset = max(0, int(args.offset or 0))
+        if offset:
+            new_schools = new_schools[offset:]
+        limit = max(0, int(args.limit or 0))
+        if limit:
+            new_schools = new_schools[:limit]
+        return new_schools + stale_targets
 
     offset = max(0, int(args.offset or 0))
     if offset:
@@ -181,6 +238,13 @@ def load_schools(args: argparse.Namespace) -> list[SchoolInput]:
     if limit:
         filtered = filtered[:limit]
     return filtered
+
+
+def prior_by_urn(output: Path) -> dict[str, QualitativeCaptureRecord]:
+    index = load_capture_index(output)
+    if not index:
+        return {}
+    return {r.urn: r for r in index.records if r.urn}
 
 
 def build_engine(args: argparse.Namespace) -> CaptureEngine:
@@ -219,12 +283,15 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     engine = build_engine(args)
+    priors = prior_by_urn(args.output)
     records = []
     failures = 0
     for school in schools:
-        print(f"Capturing {school.urn} {school.name}...", file=sys.stderr)
+        prior = priors.get(school.urn)
+        mode = "refresh" if prior else "capture"
+        print(f"Capturing {school.urn} {school.name} ({mode})...", file=sys.stderr)
         try:
-            record = engine.capture_school(school)
+            record = engine.capture_school(school, prior=prior)
         except Exception as exc:  # noqa: BLE001 — keep batch moving; log and continue
             failures += 1
             print(
@@ -243,6 +310,7 @@ def main(argv: list[str] | None = None) -> int:
                 model=model,
             )
         records.append(record)
+        priors[school.urn] = record
         # Persist after each school so IncompleteRead / kills don't lose the batch.
         index = upsert_records(
             args.output,
@@ -254,6 +322,8 @@ def main(argv: list[str] | None = None) -> int:
                 "failures": failures,
                 "offset": int(args.offset or 0),
                 "skipExisting": bool(args.skip_existing),
+                "refreshStaleDays": int(args.refresh_stale_days or 0),
+                "refreshLimit": int(args.refresh_limit or 0),
                 "updatedAt": today_iso(),
             },
         )

@@ -2,6 +2,7 @@ name: Qualitative capture loop
 
 # Coverage-first, min-cost quality:
 # - Weekly: wide free website capture + deterministic narratives (no Cursor spend)
+# - Stale re-screens: ETag / Last-Modified / content-hash; reuse unchanged pages
 # - Manual dispatch: optional Cursor/auto polish on rich schools only
 on:
   workflow_dispatch:
@@ -10,6 +11,14 @@ on:
         description: Max new schools to capture this run (free crawl)
         required: false
         default: "50"
+      refresh_stale_days:
+        description: Re-screen captures older than N days (0 = off)
+        required: false
+        default: "28"
+      refresh_limit:
+        description: Max stale schools to change-detect this run
+        required: false
+        default: "15"
       synthesize_provider:
         description: Narrative provider — prefer none for coverage; cursor/auto for paid polish
         required: false
@@ -52,6 +61,8 @@ jobs:
         env:
           # Schedule defaults: broad free coverage. Dispatch inputs can override.
           LIMIT: ${{ github.event.inputs.limit || '50' }}
+          REFRESH_DAYS: ${{ github.event.inputs.refresh_stale_days || '28' }}
+          REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '15' }}
           SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
           SYNTH_LIMIT: ${{ github.event.inputs.synthesize_limit || '0' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
@@ -63,6 +74,8 @@ jobs:
           ARGS=(
             --la Hampshire
             --limit "$LIMIT"
+            --refresh-stale-days "$REFRESH_DAYS"
+            --refresh-limit "$REFRESH_LIMIT"
             --synthesize-provider "$SYNTH"
           )
           if [ "$SYNTH_LIMIT" != "0" ]; then
