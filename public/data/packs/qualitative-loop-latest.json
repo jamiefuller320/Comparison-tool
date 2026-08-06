@@ -1,18 +1,24 @@
 {
-  "ranAt": "2026-08-06T05:58:31.546791+00:00",
+  "ranAt": "2026-08-06T08:16:39.057873+00:00",
   "la": "Hampshire",
-  "limit": 25,
+  "limit": 3,
   "offset": 0,
   "skipExisting": true,
   "sidecarBefore": 27,
-  "sidecarAfter": 27,
-  "synthesizeProvider": "none",
+  "sidecarAfter": 30,
+  "synthesizeProvider": "cursor",
   "learnedTerms": {
-    "termCount": 343,
-    "rebuilt": false
+    "termCount": 373,
+    "boostTermCount": 196,
+    "schoolCount": 30,
+    "rebuilt": true,
+    "fromCapture": 373,
+    "citationLearning": true
   },
-  "dryRun": true,
+  "dryRun": false,
   "notes": [
-    "Dry run \u2014 capture/synth/merge skipped; digest only."
-  ]
+    "Captured batch (sidecar 27 \u2192 30); learned terms now 373.",
+    "Selective synth provider=cursor; learned terms after citation merge=373."
+  ],
+  "progressPath": "output/qualitative-progress.json"
 }

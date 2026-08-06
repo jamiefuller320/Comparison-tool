@@ -138,6 +138,8 @@ def main(argv: list[str] | None = None) -> int:
             provider=args.provider,  # type: ignore[arg-type]
             model=model,
             cwd=str(ROOT),
+            only_missing=bool(args.only_missing),
+            preserve_llm=True,
         )
         updated[out.urn] = out
         for area in out.areas:
@@ -173,6 +175,23 @@ def main(argv: list[str] | None = None) -> int:
         encoding="utf-8",
     )
     print(f"Wrote {args.capture}", file=sys.stderr)
+
+    # Close the loop: citation-validated Cursor/OpenAI URLs → discovery lexicon.
+    try:
+        from school_capture.citation_learning import apply_citation_learning
+
+        learn_stats = apply_citation_learning(args.capture)
+        index.stats["citationLearning"] = learn_stats
+        print(
+            "Citation learning: "
+            f"{learn_stats.get('citationEvents', 0)} cited URLs → "
+            f"{learn_stats.get('termCount', 0)} terms",
+            file=sys.stderr,
+        )
+    except Exception as exc:  # noqa: BLE001 — learning must not fail the synth write
+        index.stats["citationLearningError"] = str(exc)[:200]
+        print(f"Citation learning skipped: {exc}", file=sys.stderr)
+
     print(json.dumps(index.stats, indent=2))
 
     if args.no_merge:

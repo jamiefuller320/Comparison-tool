@@ -91,7 +91,11 @@ Recommended scale-up (technical order, not a schedule):
 
 `output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. Weekly loop applies **decay + stopword prune**, and loads **IDF-weighted boosts** (document frequency across schools) so singleton school-name phrases do not dominate ranking.
 
-It is **not** a self-improving LLM loop. Narratives improve only when you re-run synthesis with better evidence or a stronger provider. Still out of scope: human feedback into gates, per-CMS models.
+After Cursor/OpenAI narratives pass the citation gate, **cited source URLs** get an extra boost into the same lexicon — so paths that survived parent-facing synthesis are preferred on later crawls. This is still discovery learning, not a self-tuning LLM. Narratives themselves improve when you re-run synthesis with better evidence.
+
+`synthesize-qualitative.py --only-missing` fills **missing areas only** and will not replace an accepted `cursor`/`openai` paragraph with deterministic filler on a partial failure. Weekly `qualitative-loop.yml` defaults to `auto` with a small synthesize limit so Cursor can run when `CURSOR_API_KEY` is set.
+
+Still out of scope: human feedback into gates, per-CMS models.
 
 ### Coverage report
 
