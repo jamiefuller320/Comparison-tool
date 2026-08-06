@@ -149,25 +149,39 @@ def cross_school_boosts(
     *,
     n_schools: int,
 ) -> dict[str, int]:
-    """Convert raw counts into discovery boosts using a light IDF prior.
+    """Convert raw counts into discovery boosts with cross-school ranking.
 
-    - Singleton school-specific terms are dropped
-    - Remaining boosts ≈ (count / df) × idf, capped
+    Raw (count/df)×idf saturates at MAX_BOOST once a few dozen captures land,
+    so every kept term looked equally important. Instead:
+
+    - Require df ≥ 2 (singleton school/CMS fragments never boost discovery)
+    - Drop school-specific phrases unless they appear across ≥3 schools
+    - Score = log(1 + count/df) × log(1 + df), then renormalize to 1..MAX_BOOST
+      so relative strength is preserved as the lexicon grows
     """
-    n = max(1, n_schools)
-    out: dict[str, int] = {}
+    _ = max(1, n_schools)  # API compat; spread is encoded in df
+    raw: dict[str, float] = {}
     for term, count in counts.items():
         if not is_useful_term(term) or count <= 0:
             continue
         d = max(1, int(df.get(term, 1)))
+        if d < 2:
+            continue
         # Multi-word / long tokens are usually school or site names — keep only
         # when they appear across several schools (true cross-site cues).
         if looks_school_specific(term) and d < 3:
             continue
-        idf = math.log(1.0 + (n / d))
-        boost = int(round((count / d) * idf))
-        boost = max(1, min(MAX_BOOST, boost))
-        out[term] = boost
+        # Average path intensity × document frequency (spread).
+        score = math.log(1.0 + (count / d)) * math.log(1.0 + d)
+        if score > 0:
+            raw[term] = score
+    if not raw:
+        return {}
+    peak = max(raw.values())
+    out: dict[str, int] = {}
+    for term, score in raw.items():
+        boost = int(round((score / peak) * MAX_BOOST))
+        out[term] = max(1, min(MAX_BOOST, boost))
     ranked = sorted(out.items(), key=lambda x: (-x[1], x[0]))[:MAX_TERMS]
     return dict(ranked)
 

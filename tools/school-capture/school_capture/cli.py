@@ -19,7 +19,12 @@ from school_capture.index_loader import (  # noqa: E402
     load_schools_index,
     resolve_comparison_tool_index,
 )
-from school_capture.learned_terms import load_learned_terms, save_learned_terms  # noqa: E402
+from school_capture.learned_terms import (  # noqa: E402
+    build_from_capture_file,
+    load_learned_term_counts,
+    load_learned_terms,
+    save_learned_terms,
+)
 from school_capture.models import SchoolInput, today_iso  # noqa: E402
 from school_capture.sidecar import (  # noqa: E402
     existing_urns,
@@ -186,9 +191,14 @@ def build_engine(args: argparse.Namespace) -> CaptureEngine:
         SocialMediaAdapter,
     )
 
-    learned = None if args.no_learned_terms else load_learned_terms(args.learned_terms)
+    # Boosts (IDF) score URL discovery; raw counts are what we mutate/persist.
+    # Never load boosts into the engine store — that used to corrupt the lexicon.
+    boosts = None if args.no_learned_terms else load_learned_terms(args.learned_terms)
+    counts = (
+        None if args.no_learned_terms else load_learned_term_counts(args.learned_terms)
+    )
     website = SchoolWebsiteAdapter(
-        learned_terms=learned,
+        learned_terms=boosts,
         hub_spoke=not args.no_hub_spoke,
     )
     adapters: list = [website]
@@ -198,7 +208,7 @@ def build_engine(args: argparse.Namespace) -> CaptureEngine:
         adapters.append(LocalNewsAdapter())
     if not args.no_social:
         adapters.append(SocialMediaAdapter())
-    return CaptureEngine(adapters=adapters, learned_terms=learned)
+    return CaptureEngine(adapters=adapters, learned_terms=counts)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -269,13 +279,22 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    if engine.learned_terms is not None and not args.no_learned_terms:
-        cleaned = save_learned_terms(
-            engine.learned_terms,
+    if not args.no_learned_terms and args.output.is_file():
+        # Authoritative rebuild from the full sidecar (counts + DF across schools).
+        # Survives partial batches and avoids treating IDF boosts as raw counts.
+        rebuilt, df, n_schools = build_from_capture_file(args.output)
+        boosts = save_learned_terms(
+            rebuilt,
             args.learned_terms,
-            min_count=1,
+            min_count=2,
+            df=df,
+            school_count=n_schools,
         )
-        print(f"Updated learned URL terms ({len(cleaned)})", file=sys.stderr)
+        print(
+            f"Updated learned URL terms "
+            f"({len(boosts)} boosts from {len(rebuilt)} counts across {n_schools} schools)",
+            file=sys.stderr,
+        )
 
     print(
         f"Captured {len(records)} school(s), {failures} failure(s) → {args.output}",
