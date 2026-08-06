@@ -2,14 +2,15 @@
 """Scheduled qualitative capture loop for School Compass.
 
 Batch-resumable website capture → learned-term prune → selective synthesis →
-merge into schools-index → write digest.
+citation learning → merge into schools-index → write digest.
 
-Default CI path uses deterministic narratives (no LLM spend). Pass
---synthesize-provider openai|cursor when the matching API key is available.
+Skip-existing is the default (pass --no-skip-existing to recapture).
+Provider default is auto (Cursor/OpenAI when keyed, else deterministic).
+Accepted Cursor/OpenAI [n] citations boost learned URL discovery terms.
 
 Usage:
   python3 scripts/run-qualitative-loop.py --dry-run
-  python3 scripts/run-qualitative-loop.py --limit 25 --skip-existing
+  python3 scripts/run-qualitative-loop.py --limit 25 --synthesize-limit 8
 """
 
 from __future__ import annotations
@@ -121,8 +122,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--synthesize-provider",
         choices=("none", "auto", "cursor", "openai"),
-        default="none",
-        help="Narrative provider after capture (default: none = deterministic via synthesize script)",
+        default="auto",
+        help="Narrative provider after capture (default: auto = Cursor/OpenAI when keyed, else deterministic)",
     )
     parser.add_argument("--synthesize-limit", type=int, default=0, help="0 = all eligible")
     parser.add_argument("--min-documented-areas", type=int, default=2)
@@ -210,9 +211,25 @@ def main(argv: list[str] | None = None) -> int:
     if args.no_merge:
         synth_cmd.append("--no-merge")
     # When provider is none, still attach deterministic narratives for new areas.
+    # synthesize-qualitative also merges citation-validated URL terms into the lexicon.
     run(synth_cmd, env=env)
 
     after = capture_count(DEFAULT_CAPTURE)
+    # Re-read lexicon after citation learning for an accurate digest.
+    term_count = learned.get("termCount", 0)
+    if DEFAULT_LEARNED.is_file():
+        try:
+            term_count = len(
+                json.loads(DEFAULT_LEARNED.read_text(encoding="utf-8")).get("terms")
+                or {}
+            )
+        except (OSError, json.JSONDecodeError):
+            pass
+    learned = {**learned, "termCount": term_count, "citationLearning": True}
+    notes.append(
+        f"Selective synth provider={synth_provider}; "
+        f"learned terms after citation merge={term_count}."
+    )
     digest = {
         "ranAt": datetime.now(timezone.utc).isoformat(),
         "la": args.la,

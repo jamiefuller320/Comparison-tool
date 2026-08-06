@@ -17,6 +17,7 @@ from dataclasses import replace
 from typing import Literal
 
 from school_capture.models import QualitativeCaptureRecord, SubjectAreaAssessment
+from school_capture.synth_policy import area_needs_narrative
 
 CORE_AREA_LABELS = {
     "curriculum": "Curriculum",
@@ -377,6 +378,36 @@ def synthesize_area(
     return replace(area, narrativeSummary=narrative, synthesisMethod=method)
 
 
+def _preserve_existing(area: SubjectAreaAssessment) -> bool:
+    """Keep prior LLM/Cursor text rather than overwriting with deterministic."""
+    method = (area.synthesisMethod or "").lower()
+    return method in {"cursor", "openai", "llm"} and bool(
+        (area.narrativeSummary or "").strip()
+    )
+
+
+def cited_source_urls(area: SubjectAreaAssessment) -> list[str]:
+    """URLs referenced by [n] markers in an accepted narrative (synthesis order)."""
+    text = (area.narrativeSummary or "").strip()
+    if not text:
+        return []
+    sources = _numbered_sources(area)
+    if not sources:
+        return []
+    refs = sorted({int(m) for m in _CITATION_RE.findall(text)})
+    urls: list[str] = []
+    seen: set[str] = set()
+    for n in refs:
+        if not (1 <= n <= len(sources)):
+            continue
+        url = (sources[n - 1].get("sourceUrl") or "").strip()
+        if not url or url in seen:
+            continue
+        seen.add(url)
+        urls.append(url)
+    return urls
+
+
 def synthesize_record(
     record: QualitativeCaptureRecord,
     *,
@@ -385,8 +416,15 @@ def synthesize_record(
     model: str | None = None,
     provider: Provider = "auto",
     cwd: str | None = None,
+    only_missing: bool = False,
+    preserve_llm: bool = True,
 ) -> QualitativeCaptureRecord:
-    """Synthesize parent-facing narratives for all areas on a capture record."""
+    """Synthesize parent-facing narratives for areas on a capture record.
+
+    When ``only_missing`` is True, areas that already have a narrative are left
+    alone. When Cursor/OpenAI fails an area, ``preserve_llm`` keeps any prior
+    cursor/openai text instead of replacing it with deterministic filler.
+    """
     if provider == "auto":
         resolved, key = resolve_provider("auto")
     elif provider == "cursor":
@@ -402,43 +440,77 @@ def synthesize_record(
     else:
         resolved, key = "none", None
 
+    def _finalize(
+        area: SubjectAreaAssessment,
+        *,
+        override: str | None = None,
+        method: str | None = None,
+    ) -> SubjectAreaAssessment:
+        if override:
+            return replace(
+                area,
+                narrativeSummary=override,
+                synthesisMethod=method or resolved,
+            )
+        if only_missing and (area.narrativeSummary or "").strip():
+            return area
+        if preserve_llm and _preserve_existing(area):
+            return area
+        return synthesize_area(area, use_llm=False)
+
     if not use_llm or resolved == "none" or not key:
-        areas = [
-            synthesize_area(area, use_llm=False)
-            for area in record.areas
-        ]
-        return replace(record, areas=areas)
+        return replace(
+            record,
+            areas=[_finalize(area) for area in record.areas],
+        )
 
     if resolved == "cursor":
         cursor_model = model or "composer-2.5"
-        narratives = cursor_synthesize_record(
-            record, api_key=key, model=cursor_model, cwd=cwd
-        )
-        tagged = []
-        for area in record.areas:
-            override = narratives.get(area.area)
-            if override:
-                tagged.append(
-                    replace(
-                        area,
-                        narrativeSummary=override,
-                        synthesisMethod="cursor",
-                    )
-                )
-            else:
-                tagged.append(synthesize_area(area, use_llm=False))
+        targets = [
+            area
+            for area in record.areas
+            if (not only_missing)
+            or area_needs_narrative(area, only_missing=True)
+        ]
+        narratives: dict[str, str] = {}
+        if targets:
+            slim = replace(record, areas=targets)
+            narratives = cursor_synthesize_record(
+                slim, api_key=key, model=cursor_model, cwd=cwd
+            )
+        tagged = [
+            _finalize(
+                area,
+                override=narratives.get(area.area),
+                method="cursor",
+            )
+            for area in record.areas
+        ]
         return replace(record, areas=tagged)
 
     # openai — one completion per area (cheap chat API)
     openai_model = model or "gpt-4o-mini"
-    areas = [
-        synthesize_area(
+    tagged = []
+    for area in record.areas:
+        needs = (not only_missing) or area_needs_narrative(
+            area, only_missing=True
+        )
+        if not needs:
+            tagged.append(_finalize(area))
+            continue
+        next_area = synthesize_area(
             area,
             use_llm=True,
             api_key=key,
             model=openai_model,
             provider="openai",
         )
-        for area in record.areas
-    ]
-    return replace(record, areas=areas)
+        if (
+            preserve_llm
+            and next_area.synthesisMethod == "deterministic"
+            and _preserve_existing(area)
+        ):
+            tagged.append(area)
+        else:
+            tagged.append(next_area)
+    return replace(record, areas=tagged)
