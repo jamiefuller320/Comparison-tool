@@ -28,6 +28,13 @@ export function looksLikeInspectionPrecisJunk(text: string | null | undefined): 
   }
   // Reject date/page crumbs with almost no letters; keep short pupil sentences.
   if (letters < 18) return true;
+  // Mid-word heading slice (Outcome⊂Outcomes → "s in reading…").
+  if (/^[a-z]/.test(clean) || /^(s|ing|ed|ly|tion|ments?|ness|ies)\b/i.test(clean)) {
+    return true;
+  }
+  if (low.includes("school and pupil context") || low.includes("this data is from")) {
+    return true;
+  }
   return false;
 }
 

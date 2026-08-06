@@ -32,8 +32,9 @@ export default function ContentReviewPage() {
           <p className="content-review-intro">
             School-by-school check of the two qualitative products: inspection
             précis (Ofsted/ISI) and website evidence. Sort by ingest date to
-            review the latest enrichments first. Not linked from the main nav
-            and not indexed.
+            review the latest enrichments first. Treat flagged defects as{" "}
+            <strong>global ingest rules</strong> (re-run the enricher), not
+            one-off copy edits. Not linked from the main nav and not indexed.
           </p>
           <p className="content-review-intro muted">
             The older crawler-only prototype remains at{" "}

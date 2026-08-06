@@ -31,12 +31,18 @@ OFSTED_SECTION_ENDINGS = (
     "Safeguarding",
     "Information about this school",
     "Inspection activities",
+    # New-style reports (2024+) use Next steps instead of "need to improve".
+    "Next steps",
     # Parent View / feedback chrome often follows the main narrative and must
     # not be used as the parent-facing précis.
     "How can I feed back my views?",
     "How can I feed back my views",
     "Ofsted Parent View",
 )
+
+# Stored parent-facing précis length. Compare cells still truncate further in UI;
+# expand panels show this fuller excerpt before the PDF link.
+PRECIS_MAX_CHARS = 720
 
 OFSTED_DO_WELL_HEADINGS = (
     "What does the school do well and what does it need to do better?",
@@ -62,6 +68,7 @@ OFSTED_DO_WELL_ENDINGS = (
     "What does the school need to do to improve further?",
     "What does the early years setting need to do to improve?",
     "Areas for improvement",
+    "Next steps",
     "How can I feed back my views?",
     "How can I feed back my views",
     "Ofsted Parent View",
@@ -136,6 +143,16 @@ def strip_pdf_chrome(text: str) -> str:
     return "\n".join(lines)
 
 
+def _standalone_phrase_at(text: str, idx: int, phrase: str) -> bool:
+    """True when phrase is not a prefix/suffix of a longer word (Outcome≠Outcomes)."""
+    end = idx + len(phrase)
+    before = text[idx - 1] if idx > 0 else " "
+    after = text[end] if end < len(text) else " "
+    if before.isalnum() or after.isalnum():
+        return False
+    return True
+
+
 def find_section(
     text: str,
     start_headings: tuple[str, ...],
@@ -145,6 +162,8 @@ def find_section(
 
     Skips table-of-contents hits (heading followed by dotted leaders).
     Prefers the last non-TOC match so body text wins over a contents page.
+    Headings/endings must be standalone phrases — not substrings of longer words
+    (e.g. ``Outcome`` must not match inside ``Outcomes in reading…``).
     """
     lower = text.lower()
     candidates: list[tuple[int, str]] = []
@@ -160,6 +179,9 @@ def find_section(
             if re.match(r"^\s*\.{3,}", after):
                 start = idx + len(needle)
                 continue
+            if not _standalone_phrase_at(lower, idx, needle):
+                start = idx + len(needle)
+                continue
             candidates.append((idx, heading))
             start = idx + len(needle)
     if not candidates:
@@ -171,9 +193,16 @@ def find_section(
     body_lower = body.lower()
     end_at = len(body)
     for ending in end_headings:
-        idx = body_lower.find(ending.lower())
-        if 0 <= idx < end_at:
-            end_at = idx
+        needle = ending.lower()
+        start = 0
+        while True:
+            idx = body_lower.find(needle, start)
+            if idx < 0 or idx >= end_at:
+                break
+            if _standalone_phrase_at(body_lower, idx, needle):
+                end_at = idx
+                break
+            start = idx + len(needle)
     section = normalize_whitespace(body[:end_at].strip())
     return best_heading, section or None
 
@@ -364,18 +393,22 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
 
     precis = None
     # Prefer Outcome paragraph when present (ungraded / section 8 style).
+    # Heading match is standalone — must not slice through "Outcomes…".
     _, outcome = find_section(
         cleaned,
         ("Outcome",),
         OFSTED_WHAT_LIKE_HEADINGS + OFSTED_SECTION_ENDINGS,
     )
     if outcome:
-        precis = truncate_at_sentence(strip_ofsted_end_matter(outcome), 320)
+        precis = usable_precis_text(
+            truncate_at_sentence(strip_ofsted_end_matter(outcome), PRECIS_MAX_CHARS)
+        )
 
     heading, what_like = find_section(
         cleaned, OFSTED_WHAT_LIKE_HEADINGS, OFSTED_SECTION_ENDINGS
     )
     quotes: list[dict[str, str]] = []
+    what_like_body = None
     if what_like:
         # Skip grade-only lead-in such as "The provision is good".
         body = strip_ofsted_end_matter(what_like)
@@ -385,13 +418,16 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
             body,
             flags=re.I,
         )
+        what_like_body = body.strip() or None
         quotes = pick_quotes(
             body,
             source_url=source_url,
             section_label=heading or "What is it like to attend",
         )
-        if not precis:
-            precis = truncate_at_sentence(body, 320)
+        if not precis and what_like_body:
+            precis = usable_precis_text(
+                truncate_at_sentence(what_like_body, PRECIS_MAX_CHARS)
+            )
 
     if not precis and not quotes:
         # Older reports: first substantial paragraph after title block.
@@ -402,7 +438,9 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
         ]
         if not paras:
             return None
-        precis = truncate_at_sentence(strip_ofsted_end_matter(paras[0]), 320)
+        precis = usable_precis_text(
+            truncate_at_sentence(strip_ofsted_end_matter(paras[0]), PRECIS_MAX_CHARS)
+        )
         if len(paras) > 1:
             quotes = pick_quotes(
                 paras[1],
@@ -414,22 +452,33 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
     strengths, improvements = _extract_highlight_buckets(
         cleaned, source_url=source_url
     )
+    strengths = [
+        q for q in strengths if usable_precis_text(q.get("text"))
+    ]
+    improvements = [
+        q for q in improvements if usable_precis_text(q.get("text"))
+    ]
     # If the do-well extract was empty, fall back to what-it-is-like quotes as strengths.
     if not strengths and quotes:
         strengths = [
             {**q, "section": q.get("section") or "What it is like to attend"}
             for q in quotes[:2]
+            if usable_precis_text(q.get("text"))
         ]
 
-    # Never ship Parent View / letterhead chrome as the précis — prefer a quote.
-    if precis and looks_like_letterhead_junk(precis):
-        precis = None
+    # Never ship Parent View / mid-word chrome as the précis — prefer narrative.
+    if not precis and what_like_body:
+        precis = usable_precis_text(
+            truncate_at_sentence(what_like_body, PRECIS_MAX_CHARS)
+        )
     if not precis:
         fallback = (strengths[0]["text"] if strengths else None) or (
             quotes[0]["text"] if quotes else None
         )
-        if fallback and not looks_like_letterhead_junk(fallback):
-            precis = truncate_at_sentence(fallback, 320)
+        if fallback:
+            precis = usable_precis_text(
+                truncate_at_sentence(fallback, PRECIS_MAX_CHARS)
+            )
 
     if not precis and not quotes and not strengths and not improvements:
         return None
@@ -467,7 +516,9 @@ def extract_isi_precis(pdf_text: str, source_url: str) -> dict[str, Any] | None:
         return re.sub(r"^\d+\.\s*", "", para).strip()
 
     clean_paras = [_strip_isi_number(p) for p in paras]
-    precis = truncate_at_sentence(clean_paras[0], 320) if clean_paras else None
+    precis = usable_precis_text(
+        truncate_at_sentence(clean_paras[0], PRECIS_MAX_CHARS)
+    ) if clean_paras else None
     quote_pool = "\n\n".join(clean_paras[1:4] if len(clean_paras) > 1 else clean_paras)
     quotes = pick_quotes(
         quote_pool,
@@ -536,11 +587,30 @@ _PROSE_HINT = re.compile(
 )
 
 
+def looks_like_mid_sentence_fragment(text: str | None) -> bool:
+    """True when a heading match ate the start of a word (Outcome⊂Outcomes)."""
+    clean = (text or "").strip()
+    if not clean:
+        return False
+    if clean[0].islower():
+        return True
+    # Common remnants after slicing through "Outcomes" / "Standards" etc.
+    if re.match(
+        r"^(s|ing|ed|ly|tion|ments?|ness|ies)\b",
+        clean,
+        flags=re.I,
+    ):
+        return True
+    return False
+
+
 def looks_like_letterhead_junk(text: str | None) -> bool:
     """True when extracted précis is PDF chrome / Parent View boilerplate."""
     clean = (text or "").strip()
     if not clean:
         return False
+    if looks_like_mid_sentence_fragment(clean):
+        return True
     low = clean.lower()
     letters = sum(1 for ch in clean if ch.isalpha())
     # Fragments left after cutting end-matter (e.g. "s. 1 and 2 October 2024 4").
@@ -559,10 +629,21 @@ def looks_like_letterhead_junk(text: str | None) -> bool:
         or "when deciding which schools to inspect" in low
     ):
         return True
+    # Context / MI tables sometimes leak into "next steps" extracts.
+    if "school and pupil context" in low or "this data is from" in low:
+        return True
     # Reject date/page crumbs with almost no letters; keep short pupil sentences.
     if letters < 18:
         return True
     return False
+
+
+def usable_precis_text(text: str | None) -> str | None:
+    """Return précis text only when it is parent-readable prose."""
+    clean = (text or "").strip()
+    if not clean or looks_like_letterhead_junk(clean):
+        return None
+    return clean
 
 
 def strip_ofsted_end_matter(text: str | None) -> str:

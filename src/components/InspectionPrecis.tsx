@@ -99,6 +99,12 @@ export function InspectionPrecisDetail({ school }: { school: SchoolRecord }) {
         From the latest {inspectorate} report
       </p>
       {precis ? <p className="inspection-precis-body">{precis}</p> : null}
+      {precis && /…$|\.\.\.$/.test(precis) ? (
+        <p className="inspection-precis-note">
+          Excerpt ends here in School Compass — open the source report below for
+          the rest of this section.
+        </p>
+      ) : null}
 
       {strengths.length ? (
         <div className="inspection-highlight-block">
@@ -182,12 +188,13 @@ export function InspectionPrecisRows({
           >
             <span className="metric-history-label">Inspection précis</span>
             <span className="metric-history-cta">
-              {open ? "Hide detail" : "Show positives & improvements"}
+              {open ? "Hide detail" : "Show fuller excerpt & highlights"}
             </span>
           </button>
           <span className="hint">
-            Short summary from the latest Ofsted/ISI report — expand for
-            strengths and areas to improve. Use it to prepare visit questions,
+            Short cell summary from the latest Ofsted/ISI report — expand for a
+            longer verbatim excerpt plus strengths and areas to improve, then
+            open the PDF for the full report. Use it to prepare visit questions,
             not as a final verdict.
           </span>
         </th>
