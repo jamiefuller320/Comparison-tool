@@ -68,6 +68,7 @@ class CaptureEngine:
                         url=signal.sourceUrl,
                         area=area.area,
                         signal_count=signal_count,
+                        urn=school.urn,
                     )
         docs_extracted = sum(1 for d in document_inventory if d.get("status") == "extracted")
 

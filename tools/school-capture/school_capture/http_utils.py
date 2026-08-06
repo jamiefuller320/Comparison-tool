@@ -64,12 +64,18 @@ def same_site(url: str, root: str) -> bool:
     return a == b or a.endswith("." + b) or b.endswith("." + a)
 
 
+MAX_FETCH_BYTES = 2_500_000
+
+
 def fetch_text(url: str, *, timeout: int = DEFAULT_TIMEOUT) -> tuple[str, str]:
     """Return (final_url, html_or_text)."""
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
-        raw = resp.read()
+        # Cap body size — some school CDNs stream multi‑MB assets as "html".
+        raw = resp.read(MAX_FETCH_BYTES + 1)
         final = resp.geturl()
+    if len(raw) > MAX_FETCH_BYTES:
+        raw = raw[:MAX_FETCH_BYTES]
     for enc in ("utf-8", "latin-1"):
         try:
             return final, raw.decode(enc)
@@ -167,7 +173,11 @@ class _LinkTextParser(HTMLParser):
 
 def parse_html(html: str) -> _LinkTextParser:
     parser = _LinkTextParser()
-    parser.feed(html)
+    try:
+        parser.feed(html or "")
+    except (AssertionError, ValueError):
+        # Malformed markup / marked sections — return whatever was parsed.
+        pass
     return parser
 
 
@@ -196,9 +206,18 @@ def link_matches(link_text: str, href: str, patterns: Iterable[str]) -> bool:
 
 
 def safe_fetch(url: str) -> tuple[str | None, str | None]:
+    import http.client
+
     try:
         polite_sleep()
         final, body = fetch_text(url)
         return final, body
-    except (urllib.error.URLError, TimeoutError, ValueError):
+    except (
+        urllib.error.URLError,
+        TimeoutError,
+        ValueError,
+        http.client.IncompleteRead,
+        http.client.HTTPException,
+        OSError,
+    ):
         return None, None

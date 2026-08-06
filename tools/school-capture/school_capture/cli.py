@@ -210,9 +210,18 @@ def main(argv: list[str] | None = None) -> int:
 
     engine = build_engine(args)
     records = []
+    failures = 0
     for school in schools:
         print(f"Capturing {school.urn} {school.name}...", file=sys.stderr)
-        record = engine.capture_school(school)
+        try:
+            record = engine.capture_school(school)
+        except Exception as exc:  # noqa: BLE001 — keep batch moving; log and continue
+            failures += 1
+            print(
+                f"  FAILED {school.urn}: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            continue
         if args.synthesize:
             from school_capture.analysis.synthesis import synthesize_record
 
@@ -224,6 +233,41 @@ def main(argv: list[str] | None = None) -> int:
                 model=model,
             )
         records.append(record)
+        # Persist after each school so IncompleteRead / kills don't lose the batch.
+        index = upsert_records(
+            args.output,
+            [record],
+            stats={
+                "la": args.la,
+                "lastUrn": school.urn,
+                "batchSize": len(records),
+                "failures": failures,
+                "offset": int(args.offset or 0),
+                "skipExisting": bool(args.skip_existing),
+                "updatedAt": today_iso(),
+            },
+        )
+        if args.progress:
+            save_progress(
+                args.progress,
+                {
+                    "la": args.la,
+                    "updatedAt": today_iso(),
+                    "sidecarRecords": index.schoolCount,
+                    "lastBatchUrns": [r.urn for r in records],
+                    "lastBatchSize": len(records),
+                    "failures": failures,
+                    "processedUrns": sorted({r.urn for r in index.records}),
+                    "processedCount": index.schoolCount,
+                },
+            )
+
+    if not records:
+        print(
+            f"No successful captures ({failures} failure(s)).",
+            file=sys.stderr,
+        )
+        return 1
 
     if engine.learned_terms is not None and not args.no_learned_terms:
         cleaned = save_learned_terms(
@@ -233,39 +277,10 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(f"Updated learned URL terms ({len(cleaned)})", file=sys.stderr)
 
-    index = upsert_records(
-        args.output,
-        records,
-        stats={
-            "la": args.la,
-            "batchSize": len(records),
-            "withWebsite": sum(1 for s in schools if s.schoolWebsite),
-            "adapters": [a.source_type for a in engine.adapters],
-            "offset": int(args.offset or 0),
-            "skipExisting": bool(args.skip_existing),
-            "updatedAt": today_iso(),
-        },
-    )
     print(
-        f"Upserted {len(records)} record(s); sidecar now has {index.schoolCount} → {args.output}",
+        f"Captured {len(records)} school(s), {failures} failure(s) → {args.output}",
         file=sys.stderr,
     )
-
-    if args.progress:
-        processed = sorted({r.urn for r in index.records})
-        save_progress(
-            args.progress,
-            {
-                "la": args.la,
-                "updatedAt": today_iso(),
-                "sidecarRecords": index.schoolCount,
-                "lastBatchUrns": [r.urn for r in records],
-                "lastBatchSize": len(records),
-                "processedUrns": processed,
-                "processedCount": len(processed),
-            },
-        )
-        print(f"Wrote progress → {args.progress}", file=sys.stderr)
     return 0
 
 

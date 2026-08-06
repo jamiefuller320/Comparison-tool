@@ -183,7 +183,11 @@ def clean_list_item(text: str) -> str:
 
 def parse_structured_page(html: str) -> ParsedPage:
     parser = _SectionParser()
-    parser.feed(html)
+    try:
+        parser.feed(html or "")
+    except (AssertionError, ValueError):
+        # Malformed markup / unknown marked-section keywords — keep partial parse.
+        pass
     parser._flush_capture()
     return ParsedPage(
         title=parser.title.strip(),
