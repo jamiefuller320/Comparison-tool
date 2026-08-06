@@ -1,23 +1,23 @@
 name: Qualitative capture loop
 
-# Weekly batch website capture for Hampshire (skip already-captured URNs by
-# default), prune learned URL terms, selective Cursor/auto narratives when a
-# key is present, citation→lexicon learning, merge.
+# Coverage-first, min-cost quality:
+# - Weekly: wide free website capture + deterministic narratives (no Cursor spend)
+# - Manual dispatch: optional Cursor/auto polish on rich schools only
 on:
   workflow_dispatch:
     inputs:
       limit:
-        description: Max new schools to capture this run
+        description: Max new schools to capture this run (free crawl)
         required: false
-        default: "25"
+        default: "50"
       synthesize_provider:
-        description: Narrative provider (none|auto|openai|cursor)
+        description: Narrative provider — prefer none for coverage; cursor/auto for paid polish
         required: false
-        default: "auto"
+        default: "none"
       synthesize_limit:
-        description: Max schools to synthesize this run (0 = all eligible)
+        description: Max schools to synthesize (0 = all eligible). Keep small for cursor/auto.
         required: false
-        default: "8"
+        default: "0"
       dry_run:
         description: Digest only (no capture)
         required: false
@@ -50,9 +50,10 @@ jobs:
 
       - name: Run qualitative loop
         env:
-          LIMIT: ${{ github.event.inputs.limit || '25' }}
-          SYNTH: ${{ github.event.inputs.synthesize_provider || 'auto' }}
-          SYNTH_LIMIT: ${{ github.event.inputs.synthesize_limit || '8' }}
+          # Schedule defaults: broad free coverage. Dispatch inputs can override.
+          LIMIT: ${{ github.event.inputs.limit || '50' }}
+          SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
+          SYNTH_LIMIT: ${{ github.event.inputs.synthesize_limit || '0' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -63,8 +64,10 @@ jobs:
             --la Hampshire
             --limit "$LIMIT"
             --synthesize-provider "$SYNTH"
-            --synthesize-limit "$SYNTH_LIMIT"
           )
+          if [ "$SYNTH_LIMIT" != "0" ]; then
+            ARGS+=(--synthesize-limit "$SYNTH_LIMIT")
+          fi
           if [ "$DRY_RUN" = "true" ]; then
             ARGS+=(--dry-run)
           fi
@@ -83,7 +86,7 @@ jobs:
             if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
               MSG="Qualitative loop dry-run digest"
             else
-              MSG="Qualitative loop: batch capture and selective narratives"
+              MSG="Qualitative loop: coverage capture and narratives"
             fi
             git commit -m "$MSG"
             git push

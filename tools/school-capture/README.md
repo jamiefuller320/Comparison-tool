@@ -93,7 +93,15 @@ Recommended scale-up (technical order, not a schedule):
 
 After Cursor/OpenAI narratives pass the citation gate, **cited source URLs** get an extra boost into the same lexicon — so paths that survived parent-facing synthesis are preferred on later crawls. This is still discovery learning, not a self-tuning LLM. Narratives themselves improve when you re-run synthesis with better evidence.
 
-`synthesize-qualitative.py --only-missing` fills **missing areas only** and will not replace an accepted `cursor`/`openai` paragraph with deterministic filler on a partial failure. Weekly `qualitative-loop.yml` defaults to `auto` with a small synthesize limit so Cursor can run when `CURSOR_API_KEY` is set.
+`synthesize-qualitative.py --only-missing` fills **missing areas only** and will not replace an accepted `cursor`/`openai` paragraph with deterministic filler on a partial failure.
+
+### Coverage vs cost policy
+
+| Goal | Setting |
+| --- | --- |
+| **Coverage (default)** | Wide free crawl (`--limit 50`) + `provider=none` deterministic narratives |
+| **Paid quality polish** | `--provider cursor` / `auto`, small `--limit`, richest schools first; paid gate defaults to **4** documented areas (vs **2** for free) |
+| **Weekly CI** | Capture-heavy, Cursor off unless dispatch overrides |
 
 Still out of scope: human feedback into gates, per-CMS models.
 

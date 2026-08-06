@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from school_capture.models import QualitativeCaptureRecord, SubjectAreaAssessment
 
-# At least this many areas must have usable scan evidence before spending an
-# agent turn on the whole school.
+# Deterministic narratives: low bar so coverage stays cheap and broad.
 DEFAULT_MIN_DOCUMENTED_AREAS = 2
 DEFAULT_MIN_SIGNALS = 1
+
+# Paid Cursor/OpenAI turns: higher bar — only spend where evidence is rich.
+DEFAULT_CURSOR_MIN_DOCUMENTED_AREAS = 4
 
 
 def area_has_evidence(
@@ -79,3 +81,14 @@ def record_needs_synthesis(
         area_needs_narrative(area, only_missing=True, min_signals=min_signals)
         for area in record.areas
     )
+
+
+def evidence_priority(
+    record: QualitativeCaptureRecord,
+    *,
+    min_signals: int = DEFAULT_MIN_SIGNALS,
+) -> tuple[int, int, str]:
+    """Sort key: richest evidenced schools first (best value for paid synth)."""
+    documented = documented_area_count(record, min_signals=min_signals)
+    signals = sum(len(a.signals or []) for a in record.areas)
+    return (-documented, -signals, record.name)

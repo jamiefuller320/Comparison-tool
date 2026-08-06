@@ -4,13 +4,17 @@
 Batch-resumable website capture → learned-term prune → selective synthesis →
 citation learning → merge into schools-index → write digest.
 
-Skip-existing is the default (pass --no-skip-existing to recapture).
-Provider default is auto (Cursor/OpenAI when keyed, else deterministic).
-Accepted Cursor/OpenAI [n] citations boost learned URL discovery terms.
+Policy: coverage first, quality at minimum cost.
+  - Default provider is none (free deterministic narratives).
+  - Capture batches are wide; Cursor/OpenAI are opt-in polish on rich schools.
+  - Skip-existing is the default (pass --no-skip-existing to recapture).
 
 Usage:
   python3 scripts/run-qualitative-loop.py --dry-run
-  python3 scripts/run-qualitative-loop.py --limit 25 --synthesize-limit 8
+  python3 scripts/run-qualitative-loop.py --limit 50
+  # Paid polish (richest schools first; higher evidence gate):
+  CURSOR_API_KEY=… python3 scripts/run-qualitative-loop.py --limit 0 \\
+    --synthesize-provider cursor --synthesize-limit 5
 """
 
 from __future__ import annotations
@@ -112,7 +116,12 @@ def write_digest(payload: dict) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Qualitative capture continuous loop")
     parser.add_argument("--la", default="Hampshire")
-    parser.add_argument("--limit", type=int, default=25)
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=50,
+        help="Max new schools to capture (free crawl; default 50)",
+    )
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument(
         "--no-skip-existing",
@@ -122,11 +131,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--synthesize-provider",
         choices=("none", "auto", "cursor", "openai"),
-        default="auto",
-        help="Narrative provider after capture (default: auto = Cursor/OpenAI when keyed, else deterministic)",
+        default="none",
+        help="Narrative provider after capture (default: none = free deterministic)",
     )
-    parser.add_argument("--synthesize-limit", type=int, default=0, help="0 = all eligible")
-    parser.add_argument("--min-documented-areas", type=int, default=2)
+    parser.add_argument(
+        "--synthesize-limit",
+        type=int,
+        default=0,
+        help="0 = all eligible (use a small number with cursor/auto)",
+    )
+    parser.add_argument(
+        "--min-documented-areas",
+        type=int,
+        default=-1,
+        help="Evidence gate override (-1 = provider default: 2 for none, 4 for paid)",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--no-merge", action="store_true")
     args = parser.parse_args(argv)
@@ -203,9 +222,11 @@ def main(argv: list[str] | None = None) -> int:
         "--provider",
         synth_provider if synth_provider != "none" else "none",
         "--only-missing",
-        "--min-documented-areas",
-        str(args.min_documented_areas),
     ]
+    if args.min_documented_areas >= 0:
+        synth_cmd.extend(
+            ["--min-documented-areas", str(args.min_documented_areas)]
+        )
     if args.synthesize_limit:
         synth_cmd.extend(["--limit", str(args.synthesize_limit)])
     if args.no_merge:

@@ -1,5 +1,6 @@
 from school_capture.models import QualitativeCaptureRecord, QualitativeSignal, SubjectAreaAssessment
 from school_capture.synth_policy import (
+    evidence_priority,
     record_needs_synthesis,
     should_synthesize_record,
 )
@@ -56,3 +57,25 @@ def test_only_missing_skips_complete_records():
     )
     assert record_needs_synthesis(done, only_missing=True) is False
     assert record_needs_synthesis(done, only_missing=False) is True
+
+
+def test_evidence_priority_ranks_richer_schools_first():
+    thin = QualitativeCaptureRecord(
+        urn="1",
+        name="Thin",
+        assessedAt="2026-08-06",
+        areas=[_area("curriculum", signals=1), _area("enrichment", signals=0)],
+    )
+    rich = QualitativeCaptureRecord(
+        urn="2",
+        name="Rich",
+        assessedAt="2026-08-06",
+        areas=[
+            _area("curriculum", signals=3),
+            _area("enrichment", signals=2),
+            _area("ethos", signals=1),
+            _area("send", signals=1),
+        ],
+    )
+    ordered = sorted([thin, rich], key=evidence_priority)
+    assert ordered[0].urn == "2"
