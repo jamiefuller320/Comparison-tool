@@ -93,6 +93,15 @@ Recommended scale-up (technical order, not a schedule):
 
 It is **not** a self-improving LLM loop. Narratives improve only when you re-run synthesis with better evidence or a stronger provider. Still out of scope: human feedback into gates, per-CMS models, IDF downweight of school-specific tokens.
 
+## Product QA (précis + website)
+
+After capture is merged into `schools-index.json`, review both products school-by-school on the internal lab page:
+
+- Local: [http://localhost:3000/lab/content-review/](http://localhost:3000/lab/content-review/)
+- Production: [https://schoolcompass.uk/lab/content-review/](https://schoolcompass.uk/lab/content-review/)
+
+Sort by ingest date, filter to précis + website / junk flags, and open source links. The older crawler-only prototype viewer remains on the `School_data_crawler` GitHub Pages site (`/evidence/`).
+
 ## Engine version
 
 Current `ENGINE_VERSION` is **0.6.0** (optional Cursor/OpenAI narrative synthesis with citation markers and deterministic fallback).
