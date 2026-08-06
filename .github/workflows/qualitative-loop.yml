@@ -1,8 +1,8 @@
 name: Qualitative capture loop
 
-# Coverage-first, min-cost quality:
-# - Weekly: wide free website capture + deterministic narratives (no Cursor spend)
-# - Stale re-screens: ETag / Last-Modified / content-hash; reuse unchanged pages
+# Coverage-first, min-cost quality (Hampshire expansion):
+# - Daily: 25 new schools + free deterministic narratives (no Cursor spend)
+# - Stale re-screens: small daily budget via ETag / Last-Modified / content-hash
 # - Manual dispatch: optional Cursor/auto polish on rich schools only
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
       limit:
         description: Max new schools to capture this run (free crawl)
         required: false
-        default: "50"
+        default: "25"
       refresh_stale_days:
         description: Re-screen captures older than N days (0 = off)
         required: false
@@ -18,7 +18,7 @@ on:
       refresh_limit:
         description: Max stale schools to change-detect this run
         required: false
-        default: "15"
+        default: "5"
       synthesize_provider:
         description: Narrative provider — prefer none for coverage; cursor/auto for paid polish
         required: false
@@ -33,8 +33,8 @@ on:
         type: boolean
         default: false
   schedule:
-    # Thursdays 07:00 UTC — day after pack-quality loop
-    - cron: "0 7 * * 4"
+    # Daily 07:00 UTC — Hampshire website coverage expansion
+    - cron: "0 7 * * *"
 
 permissions:
   contents: write
@@ -59,10 +59,10 @@ jobs:
 
       - name: Run qualitative loop
         env:
-          # Schedule defaults: broad free coverage. Dispatch inputs can override.
-          LIMIT: ${{ github.event.inputs.limit || '50' }}
+          # Schedule defaults: daily Hampshire coverage. Dispatch inputs can override.
+          LIMIT: ${{ github.event.inputs.limit || '25' }}
           REFRESH_DAYS: ${{ github.event.inputs.refresh_stale_days || '28' }}
-          REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '15' }}
+          REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '5' }}
           SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
           SYNTH_LIMIT: ${{ github.event.inputs.synthesize_limit || '0' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
@@ -99,8 +99,10 @@ jobs:
             if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
               MSG="Qualitative loop dry-run digest"
             else
-              MSG="Qualitative loop: coverage capture and narratives"
+              MSG="Qualitative loop: daily Hampshire coverage capture"
             fi
             git commit -m "$MSG"
+            # Rebase onto tip of main so concurrent merges (e.g. Pages / other bots) don't reject the push.
+            git pull --rebase origin main
             git push
           fi

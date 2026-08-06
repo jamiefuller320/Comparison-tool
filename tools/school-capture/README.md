@@ -84,12 +84,12 @@ Recommended scale-up (technical order, not a schedule):
    python3 scripts/synthesize-qualitative.py --only-missing --min-documented-areas 2 \
      --provider auto --limit 25
    ```
-3. **Weekly loop** — `npm run loop:qualitative` / workflow `qualitative-loop.yml` (default provider `none` = deterministic narratives; set `CURSOR_API_KEY` / `OPENAI_API_KEY` secrets to spend LLM budget).
+3. **Daily loop** — `npm run loop:qualitative` / workflow `qualitative-loop.yml` (Hampshire: **25 new schools/day**, provider `none`; set `CURSOR_API_KEY` / `OPENAI_API_KEY` secrets only for paid polish).
 4. **Other LAs** — point `--index` at `public/data/packs/{slug}/schools-index.json` (and matching `--la`), merge into that pack index, then deploy.
 
 ### Learning mechanism (what it can / cannot do)
 
-`output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. Weekly loop applies **decay + stopword prune**, and loads **IDF-weighted boosts** (document frequency across schools) so singleton school-name phrases do not dominate ranking.
+`output/learned-url-terms.json` is a **cross-school URL/anchor term booster** for page discovery. Successful website signals raise term weights; later crawls prefer those paths. The loop applies **decay + stopword prune**, and loads **IDF-weighted boosts** (document frequency across schools) so singleton school-name phrases do not dominate ranking.
 
 After Cursor/OpenAI narratives pass the citation gate, **cited source URLs** get an extra boost into the same lexicon — so paths that survived parent-facing synthesis are preferred on later crawls. This is still discovery learning, not a self-tuning LLM. Narratives themselves improve when you re-run synthesis with better evidence.
 
@@ -99,10 +99,10 @@ After Cursor/OpenAI narratives pass the citation gate, **cited source URLs** get
 
 | Goal | Setting |
 | --- | --- |
-| **Coverage (default)** | Wide free crawl (`--limit 50`) + `provider=none` deterministic narratives |
+| **Coverage (default)** | Daily free crawl (`--limit 25`) + `provider=none` deterministic narratives |
 | **Paid quality polish** | `--provider cursor` / `auto`, small `--limit`, richest schools first; paid gate defaults to **4** documented areas (vs **2** for free) |
-| **Weekly CI** | Capture-heavy, Cursor off unless dispatch overrides |
-| **Cheap re-screens** | `--refresh-stale-days 28 --refresh-limit 15` (loop defaults). Conditional GET (`ETag` / `Last-Modified`) + body SHA-256; unchanged pages reuse cached text and skip re-assess when the whole school is unchanged |
+| **Daily CI** | Hampshire capture-heavy (~25/day), Cursor off unless dispatch overrides |
+| **Cheap re-screens** | `--refresh-stale-days 28 --refresh-limit 5` (loop defaults). Conditional GET (`ETag` / `Last-Modified`) + body SHA-256; unchanged pages reuse cached text and skip re-assess when the whole school is unchanged |
 
 Still out of scope: human feedback into gates, per-CMS models.
 

@@ -6,14 +6,14 @@ citation learning → merge into schools-index → write digest.
 
 Policy: coverage first, quality at minimum cost.
   - Default provider is none (free deterministic narratives).
-  - Capture batches are wide; Cursor/OpenAI are opt-in polish on rich schools.
+  - Hampshire expansion: daily batches of 25 new schools (CI schedule).
   - Skip-existing is the default (pass --no-skip-existing to recapture).
   - Stale re-screens use ETag / Last-Modified / content-hash and reuse
-    unchanged pages (default: 28-day TTL, small refresh limit).
+    unchanged pages (default: 28-day TTL, small daily refresh limit).
 
 Usage:
   python3 scripts/run-qualitative-loop.py --dry-run
-  python3 scripts/run-qualitative-loop.py --limit 50
+  python3 scripts/run-qualitative-loop.py --limit 25
   # Paid polish (richest schools first; higher evidence gate):
   CURSOR_API_KEY=… python3 scripts/run-qualitative-loop.py --limit 0 \\
     --synthesize-provider cursor --synthesize-limit 5
@@ -121,8 +121,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--limit",
         type=int,
-        default=50,
-        help="Max new schools to capture (free crawl; default 50)",
+        default=25,
+        help="Max new schools to capture (free crawl; default 25 for daily Hampshire runs)",
     )
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument(
@@ -139,8 +139,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--refresh-limit",
         type=int,
-        default=15,
-        help="Max stale schools to change-detect re-screen per run (default 15)",
+        default=5,
+        help="Max stale schools to change-detect re-screen per run (default 5)",
     )
     parser.add_argument(
         "--synthesize-provider",
