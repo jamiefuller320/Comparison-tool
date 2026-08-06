@@ -8,6 +8,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: ["/lab/"],
     },
     sitemap: `${BRAND_HOME_URL}/sitemap.xml`,
     host: BRAND_HOME_URL,
