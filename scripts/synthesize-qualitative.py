@@ -36,7 +36,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--provider",
         choices=("auto", "cursor", "openai", "none"),
-        default="auto",
+        default="none",
+        help="none = free deterministic (default); cursor/auto/openai = paid polish",
     )
     parser.add_argument("--model", default="")
     parser.add_argument(
@@ -47,8 +48,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--min-documented-areas",
         type=int,
-        default=2,
-        help="Require this many evidenced areas before synthesizing a school",
+        default=-1,
+        help=(
+            "Require this many evidenced areas before synthesizing a school. "
+            "Default: 2 for provider=none, 4 for paid providers."
+        ),
     )
     parser.add_argument(
         "--min-signals",
@@ -69,13 +73,26 @@ def main(argv: list[str] | None = None) -> int:
     from school_capture.analysis.synthesis import synthesize_record
     from school_capture.models import QualitativeCaptureIndex
     from school_capture.synth_policy import (
+        DEFAULT_CURSOR_MIN_DOCUMENTED_AREAS,
+        DEFAULT_MIN_DOCUMENTED_AREAS,
         documented_area_count,
+        evidence_priority,
         record_needs_synthesis,
     )
 
     if not args.capture.is_file():
         print(f"Missing capture sidecar: {args.capture}", file=sys.stderr)
         return 1
+
+    # Coverage-first / min-cost: paid providers need richer evidence.
+    paid = args.provider in {"auto", "cursor", "openai"}
+    min_documented = args.min_documented_areas
+    if min_documented < 0:
+        min_documented = (
+            DEFAULT_CURSOR_MIN_DOCUMENTED_AREAS
+            if paid
+            else DEFAULT_MIN_DOCUMENTED_AREAS
+        )
 
     payload = json.loads(args.capture.read_text(encoding="utf-8"))
     index = QualitativeCaptureIndex.from_dict(payload)
@@ -95,19 +112,22 @@ def main(argv: list[str] | None = None) -> int:
         if not record_needs_synthesis(
             record,
             only_missing=args.only_missing,
-            min_documented_areas=args.min_documented_areas,
+            min_documented_areas=min_documented,
             min_signals=args.min_signals,
         ):
             # Distinguish thin vs already complete for ops stats
             documented = documented_area_count(
                 record, min_signals=args.min_signals
             )
-            if documented < args.min_documented_areas:
+            if documented < min_documented:
                 skipped_thin += 1
             else:
                 skipped_done += 1
             continue
         selected.append(record)
+
+    # Richest schools first so a small Cursor budget buys the most quality.
+    selected.sort(key=lambda r: evidence_priority(r, min_signals=args.min_signals))
 
     if args.limit and args.limit > 0:
         selected = selected[: args.limit]
@@ -160,7 +180,7 @@ def main(argv: list[str] | None = None) -> int:
         "skippedThin": skipped_thin,
         "skippedAlreadyComplete": skipped_done,
         "onlyMissing": bool(args.only_missing),
-        "minDocumentedAreas": args.min_documented_areas,
+        "minDocumentedAreas": min_documented,
         "cursorKeyPresent": bool(os.environ.get("CURSOR_API_KEY")),
         "openaiKeyPresent": bool(os.environ.get("OPENAI_API_KEY")),
     }
