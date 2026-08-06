@@ -308,6 +308,12 @@ def main() -> None:
     parser.add_argument("--cm-index", default="")
     parser.add_argument("--la", default="", help="Optional LA filter for schools list")
     parser.add_argument(
+        "--urn",
+        action="append",
+        default=[],
+        help="Only enrich these URNs (repeatable)",
+    )
+    parser.add_argument(
         "--limit",
         type=int,
         default=120,
@@ -449,8 +455,15 @@ def main() -> None:
     if target_la:
         schools = filter_schools_to_la(schools, target_la)
         # Keep full payload schools; enrich matching URNs in place.
+    if args.urn:
+        wanted = {str(u).strip() for u in args.urn}
+        schools = [s for s in schools if str(s.get("urn") or "").strip() in wanted]
+        # Force re-fetch when targeting specific URNs (e.g. Parent View junk).
+        for school in schools:
+            if looks_like_letterhead_junk(school.get("inspectionPrecis")):
+                school["inspectionPrecis"] = None
     ordered = prioritize_records(
-        schools if target_la else payload.get("schools") or [],
+        schools if (target_la or args.urn) else payload.get("schools") or [],
         upgrade_highlights=args.upgrade_highlights,
     )
     # When LA filtered, ordered is the filtered list but we must mutate payload schools.

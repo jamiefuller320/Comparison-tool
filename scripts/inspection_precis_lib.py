@@ -31,6 +31,11 @@ OFSTED_SECTION_ENDINGS = (
     "Safeguarding",
     "Information about this school",
     "Inspection activities",
+    # Parent View / feedback chrome often follows the main narrative and must
+    # not be used as the parent-facing précis.
+    "How can I feed back my views?",
+    "How can I feed back my views",
+    "Ofsted Parent View",
 )
 
 OFSTED_DO_WELL_HEADINGS = (
@@ -57,6 +62,9 @@ OFSTED_DO_WELL_ENDINGS = (
     "What does the school need to do to improve further?",
     "What does the early years setting need to do to improve?",
     "Areas for improvement",
+    "How can I feed back my views?",
+    "How can I feed back my views",
+    "Ofsted Parent View",
 )
 
 ISI_SUMMARY_HEADING = "Summary of inspection findings"
@@ -362,7 +370,7 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
         OFSTED_WHAT_LIKE_HEADINGS + OFSTED_SECTION_ENDINGS,
     )
     if outcome:
-        precis = truncate_at_sentence(outcome, 320)
+        precis = truncate_at_sentence(strip_ofsted_end_matter(outcome), 320)
 
     heading, what_like = find_section(
         cleaned, OFSTED_WHAT_LIKE_HEADINGS, OFSTED_SECTION_ENDINGS
@@ -370,7 +378,7 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
     quotes: list[dict[str, str]] = []
     if what_like:
         # Skip grade-only lead-in such as "The provision is good".
-        body = what_like
+        body = strip_ofsted_end_matter(what_like)
         body = re.sub(
             r"^(The provision is (?:outstanding|good|requires improvement|inadequate)\.?\s*)",
             "",
@@ -387,10 +395,14 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
 
     if not precis and not quotes:
         # Older reports: first substantial paragraph after title block.
-        paras = [p for p in cleaned.split("\n\n") if len(p) > 80]
+        paras = [
+            p
+            for p in cleaned.split("\n\n")
+            if len(p) > 80 and not looks_like_letterhead_junk(p)
+        ]
         if not paras:
             return None
-        precis = truncate_at_sentence(paras[0], 320)
+        precis = truncate_at_sentence(strip_ofsted_end_matter(paras[0]), 320)
         if len(paras) > 1:
             quotes = pick_quotes(
                 paras[1],
@@ -408,6 +420,16 @@ def extract_ofsted_precis(pdf_text: str, source_url: str) -> dict[str, Any] | No
             {**q, "section": q.get("section") or "What it is like to attend"}
             for q in quotes[:2]
         ]
+
+    # Never ship Parent View / letterhead chrome as the précis — prefer a quote.
+    if precis and looks_like_letterhead_junk(precis):
+        precis = None
+    if not precis:
+        fallback = (strengths[0]["text"] if strengths else None) or (
+            quotes[0]["text"] if quotes else None
+        )
+        if fallback and not looks_like_letterhead_junk(fallback):
+            precis = truncate_at_sentence(fallback, 320)
 
     if not precis and not quotes and not strengths and not improvements:
         return None
@@ -507,12 +529,53 @@ def is_non_inspection_report_label(label: str | None) -> bool:
     return bool(_NON_INSPECTION_TITLE_RE.search(label or ""))
 
 
+_PROSE_HINT = re.compile(
+    r"\b(pupils?|child|children|school|staff|leaders?|parents?|curriculum|"
+    r"safeguard(?:ing)?|learning|behaviour|attendance|reading|maths|teachers?)\b",
+    re.I,
+)
+
+
 def looks_like_letterhead_junk(text: str | None) -> bool:
-    """True when extracted précis is PDF chrome (address block) rather than prose."""
-    low = (text or "").lower()
-    return "piccadilly gate" in low or (
+    """True when extracted précis is PDF chrome / Parent View boilerplate."""
+    clean = (text or "").strip()
+    if not clean:
+        return False
+    low = clean.lower()
+    letters = sum(1 for ch in clean if ch.isalpha())
+    # Fragments left after cutting end-matter (e.g. "s. 1 and 2 October 2024 4").
+    if len(clean) < 40 and not (_PROSE_HINT.search(clean) and letters >= 20):
+        return True
+    if "piccadilly gate" in low or (
         "store street" in low and "manchester" in low
-    )
+    ):
+        return True
+    # Ofsted report end-matter — not a school narrative.
+    if "how can i feed back my views" in low:
+        return True
+    if "ofsted parent view" in low and (
+        "give ofsted your opinion" in low
+        or "other parents and carers think" in low
+        or "when deciding which schools to inspect" in low
+    ):
+        return True
+    # Reject date/page crumbs with almost no letters; keep short pupil sentences.
+    if letters < 18:
+        return True
+    return False
+
+
+def strip_ofsted_end_matter(text: str | None) -> str:
+    """Cut Parent View / feedback chrome that leaked past section boundaries."""
+    raw = (text or "").strip()
+    if not raw:
+        return ""
+    cut = re.split(
+        r"(?i)\bhow can i feed back my views\b|\bofsted parent view\b",
+        raw,
+        maxsplit=1,
+    )[0].strip()
+    return cut
 
 
 def _timeline_pdf_candidates(html: str) -> list[dict[str, str]]:

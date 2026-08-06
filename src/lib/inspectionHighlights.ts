@@ -3,18 +3,50 @@ import type { InspectionQuote, SchoolRecord } from "@/lib/types";
 const IMPROVE_HINT =
   /\b(need to|needs to|should|must|ought to|improve|improving|not yet|inconsistent|less well|further work|develop further|address|tackle|weakness|gap)\b/i;
 
+/** Ofsted PDF end-matter / address chrome that must never be shown as a précis. */
+const PROSE_HINT =
+  /\b(pupils?|child|children|school|staff|leaders?|parents?|curriculum|safeguard(?:ing)?|learning|behaviour|attendance|reading|maths|teachers?)\b/i;
+
+export function looksLikeInspectionPrecisJunk(text: string | null | undefined): boolean {
+  const clean = (text || "").trim();
+  if (!clean) return false;
+  const letters = [...clean].filter((ch) => /\p{L}/u.test(ch)).length;
+  if (clean.length < 40 && !(PROSE_HINT.test(clean) && letters >= 20)) {
+    return true;
+  }
+  const low = clean.toLowerCase();
+  if (low.includes("piccadilly gate")) return true;
+  if (low.includes("store street") && low.includes("manchester")) return true;
+  if (low.includes("how can i feed back my views")) return true;
+  if (
+    low.includes("ofsted parent view") &&
+    (low.includes("give ofsted your opinion") ||
+      low.includes("other parents and carers think") ||
+      low.includes("when deciding which schools to inspect"))
+  ) {
+    return true;
+  }
+  // Reject date/page crumbs with almost no letters; keep short pupil sentences.
+  if (letters < 18) return true;
+  return false;
+}
+
 export function shortInspectionSummary(
   school: SchoolRecord,
   maxChars = 160,
 ): string | null {
   const precis = school.inspectionPrecis?.trim();
-  if (!precis) {
-    const first =
-      school.inspectionStrengths?.[0]?.text ||
-      school.inspectionQuotes?.[0]?.text;
-    return first ? truncateSummary(first, maxChars) : null;
+  if (precis && !looksLikeInspectionPrecisJunk(precis)) {
+    return truncateSummary(precis, maxChars);
   }
-  return truncateSummary(precis, maxChars);
+  // Strengths/quotes are curated extract lines — do not apply PDF junk filters.
+  const first =
+    school.inspectionStrengths?.[0]?.text ||
+    school.inspectionQuotes?.[0]?.text;
+  if (first?.trim()) {
+    return truncateSummary(first.trim(), maxChars);
+  }
+  return null;
 }
 
 function truncateSummary(text: string, maxChars: number): string {
@@ -29,8 +61,10 @@ function truncateSummary(text: string, maxChars: number): string {
 }
 
 export function schoolHasInspectionPrecis(school: SchoolRecord): boolean {
+  const precis = school.inspectionPrecis?.trim();
+  const usablePrecis = Boolean(precis && !looksLikeInspectionPrecisJunk(precis));
   return Boolean(
-    school.inspectionPrecis?.trim() ||
+    usablePrecis ||
       (school.inspectionQuotes && school.inspectionQuotes.length) ||
       (school.inspectionStrengths && school.inspectionStrengths.length) ||
       (school.inspectionImprovements && school.inspectionImprovements.length),
