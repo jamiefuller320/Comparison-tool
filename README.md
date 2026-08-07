@@ -77,7 +77,8 @@ To rebuild the legacy `/Comparison-tool/` project path instead, set
 - **“A school is missing”** queues a directory rebuild (one force refresh per UTC day; also limited once per browser/day)
 - **How to use** walkthrough — highlights the main controls on first visit (restart anytime from the header)
 - **Home postcode** at the top of the page, with parsing for common syntax (`SO40 2HR`, `so402hr`, `SO40-2HR`)
-- **Map of nearby schools** with a selectable range ring, door-to-door road distance, and tick-to-compare suggestions
+- **Map of nearby schools** with a selectable range ring, door-to-door road distance, optional **Hampshire catchment overlay** (in/out chips — not a place guarantee), and tick-to-compare suggestions
+- **Places & offer pressure** on compare boards — DfE school capacity fill and National Offer Day first-preference demand (context, not admission odds; school-level catchment participation rates are not published nationally)
 - **Harvests** institution-level KS2 attainment from the DfE Explore Education Statistics API for every school in the KS2 tables
 - Lets parents **search** by name, town, postcode or URN and compare **up to four schools** side by side
 - Surfaces expected/higher standards, scaled scores, cohort mix and group differences against the **England** benchmark
@@ -101,6 +102,8 @@ npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 h
 # or: npm run enrich:precis         # Ofsted/ISI report précis + footnoted quotes (needs pypdf)
 # harvest:hampshire ends with enrich:precis:hampshire (bounded widen)
 # or: npm run enrich:phonics        # England / LA phonics screening benchmarks only
+# or: npm run enrich:admissions     # school capacity fill + applications/offers pressure
+# or: npm run harvest:catchments    # Hampshire catchment polygons for map overlay
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
 # or: npm run pack:la -- --la Surrey   # one on-demand LA pack under public/data/packs/
 # or: npm run pack:southeast           # batch SE + Dorset packs (skips ready)
