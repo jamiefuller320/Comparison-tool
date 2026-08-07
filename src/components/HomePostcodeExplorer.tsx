@@ -44,6 +44,16 @@ import {
   hasPublishedKs4,
   ks4MissingGapMeta,
 } from "@/lib/dataGaps";
+import {
+  bandsForStages,
+  catchmentRelationForSchool,
+  catchmentRelationLabel,
+  featuresForUrns,
+  homeCatchmentMatches,
+  loadHampshireCatchments,
+  type CatchmentCollection,
+  type CatchmentFeature,
+} from "@/lib/catchments";
 
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
@@ -101,6 +111,11 @@ export function HomePostcodeExplorer({
   const [roadsPending, setRoadsPending] = useState(false);
   const roadRequestId = useRef(0);
   const deferredRaw = useDeferredValue(rawPostcode);
+  const [showCatchments, setShowCatchments] = useState(false);
+  const [catchments, setCatchments] = useState<CatchmentCollection | null>(
+    null,
+  );
+  const [catchmentsLoading, setCatchmentsLoading] = useState(false);
 
   const parsedPreview = useMemo(
     () => parseUkPostcode(deferredRaw),
@@ -127,6 +142,23 @@ export function HomePostcodeExplorer({
   useEffect(() => {
     if (home?.postcode) recordFeedbackUsage({ hadPostcode: true });
   }, [home?.postcode]);
+
+  useEffect(() => {
+    if (!showCatchments) return;
+    if (catchments) return;
+    let cancelled = false;
+    setCatchmentsLoading(true);
+    void loadHampshireCatchments()
+      .then((data) => {
+        if (!cancelled) setCatchments(data);
+      })
+      .finally(() => {
+        if (!cancelled) setCatchmentsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [showCatchments, catchments]);
 
   async function lookup(explicit?: string) {
     const candidate = explicit ?? rawPostcode;
@@ -199,6 +231,46 @@ export function HomePostcodeExplorer({
       }),
     [nearbyStraight, roadByUrn],
   );
+
+  const catchmentBands = useMemo(
+    () => bandsForStages(stageFilter),
+    [stageFilter],
+  );
+
+  const overlayCatchmentFeatures = useMemo((): CatchmentFeature[] => {
+    if (!showCatchments || !catchments) return [];
+    const nearbyUrns = nearby.map((s) => s.urn);
+    const selectedInView = selectedUrns.filter((urn) =>
+      nearbyUrns.includes(urn),
+    );
+    const focusUrns =
+      selectedInView.length > 0
+        ? selectedInView
+        : nearbyUrns.slice(0, 12);
+    return featuresForUrns(catchments, focusUrns, catchmentBands);
+  }, [
+    showCatchments,
+    catchments,
+    nearby,
+    selectedUrns,
+    catchmentBands,
+  ]);
+
+  const homeCatchmentNote = useMemo(() => {
+    if (!showCatchments || !home || !catchments) return null;
+    const matches = homeCatchmentMatches(
+      home,
+      catchments,
+      nearby.map((s) => s.urn),
+      catchmentBands,
+    );
+    if (matches.length === 0) {
+      return "Outside catchments of schools shown for these stages";
+    }
+    const names = [...new Set(matches.map((m) => m.name || m.urn))].slice(0, 3);
+    const more = matches.length > names.length ? "…" : "";
+    return `In catchment: ${names.join(", ")}${more}`;
+  }, [showCatchments, home, catchments, nearby, catchmentBands]);
 
   useEffect(() => {
     if (!home || nearbyStraight.length === 0) {
@@ -398,10 +470,39 @@ export function HomePostcodeExplorer({
                   Comparable KS4 only
                 </button>
               ) : null}
+              <button
+                type="button"
+                className={
+                  showCatchments ? "radius-chip active" : "radius-chip"
+                }
+                aria-pressed={showCatchments}
+                title="Hampshire County Council catchment polygons for the stages you selected. Living in catchment does not guarantee a place; academies and faith schools may use different criteria."
+                onClick={() => setShowCatchments((v) => !v)}
+              >
+                {catchmentsLoading ? "Catchments…" : "Catchments"}
+              </button>
               {roadsPending ? (
                 <span className="postcode-meta">Updating road times…</span>
               ) : null}
             </div>
+            {showCatchments ? (
+              <p className="footnote catchment-footnote">
+                Hampshire catchments for the selected stages
+                {homeCatchmentNote ? ` · ${homeCatchmentNote}` : ""}. Overlay is
+                context only — confirm on the{" "}
+                <a
+                  href={
+                    catchments?.source?.finder ||
+                    "https://www.hants.gov.uk/educationandlearning/findaschool/schooldetails"
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Hampshire school finder
+                </a>
+                .
+              </p>
+            ) : null}
 
             <div className="nearby-layout">
               <NearbyMap
@@ -410,9 +511,11 @@ export function HomePostcodeExplorer({
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}
                 selectedUrns={selectedUrns}
-                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${comparableKs4Only}:${[...nearby].map((s) => s.urn).sort().join(",")}`}
+                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${comparableKs4Only}:${showCatchments}:${[...nearby].map((s) => s.urn).sort().join(",")}`}
                 emphasizeKs4={wantsKs4Metrics(stageFilter)}
                 comparableKs4Only={comparableKs4Only}
+                catchmentFeatures={overlayCatchmentFeatures}
+                homeCatchmentNote={homeCatchmentNote}
                 onSelect={(urn) => {
                   if (selectedUrns.includes(urn) || !atMax) onToggle(urn);
                 }}
@@ -456,6 +559,14 @@ export function HomePostcodeExplorer({
                       const ks4Gap = showKs4Gap
                         ? ks4MissingGapMeta(classifyKs4Missing(school))
                         : null;
+                      const catchmentRelation = showCatchments
+                        ? catchmentRelationForSchool(
+                            home,
+                            catchments,
+                            school.urn,
+                            catchmentBands,
+                          )
+                        : "unknown";
                       return (
                         <li key={school.urn}>
                           <label
@@ -503,6 +614,10 @@ export function HomePostcodeExplorer({
                                           : null,
                                   ks4Gap
                                     ? `No comparable Att8 · ${ks4Gap.label}`
+                                    : null,
+                                  showCatchments &&
+                                  catchmentRelation !== "unknown"
+                                    ? catchmentRelationLabel(catchmentRelation)
                                     : null,
                                 ]
                                   .filter(Boolean)

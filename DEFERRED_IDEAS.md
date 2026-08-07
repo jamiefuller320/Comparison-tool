@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in School Compass work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-08-06 (client data-load resilience; dynamic hosting still deferred).
+Last reviewed from agent chat: 2026-08-07 (Hampshire catchments + admissions places context).
 
 ## How to use
 
@@ -46,6 +46,7 @@ Goal: close the loop from **assess → prioritise → bounded re-fetch → diges
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
+| **Hampshire catchment overlay + places/offers context** | Map polygons (HCC open data) with home in/out; DfE capacity fill + school-level applications/offers demand ratio on compare boards. True LA catchment participation rates (&gt;100% ⇒ out-of-catchment on roll) remain unpublished school-level nationally — do not invent them. | Partial (Hampshire overlay + capacity/offers shipped; pack LAs / participation rates still open) | User |
 | **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
 | **Second geography** | Widen beyond Hampshire via silent-merge packs. **South East + Dorset** is now the coverage region (`pack:southeast`); Hampshire stays the sole maintained root. Promoting a second maintained seed still deferred. | Partial (packs shipped; second maintained seed still deferred) | User |
 | **Optional parent accounts** | Soft “Save shortlist” after engagement (never a login wall). Browser-local by default; Supabase magic-link when env secrets set. | Shipped (soft-prompt module) | User |

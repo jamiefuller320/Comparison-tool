@@ -9,6 +9,7 @@ import {
   ks4MissingGapMeta,
 } from "@/lib/dataGaps";
 import { schoolOffersSecondary } from "@/lib/phases";
+import type { CatchmentFeature } from "@/lib/catchments";
 import "leaflet/dist/leaflet.css";
 
 const RING_STYLE = {
@@ -17,6 +18,20 @@ const RING_STYLE = {
   dashArray: "6 6",
   fillColor: "#0b4f6c",
   fillOpacity: 0.06,
+};
+
+const CATCHMENT_STYLE_SELECTED = {
+  color: "#c45c26",
+  weight: 2,
+  fillColor: "#c45c26",
+  fillOpacity: 0.14,
+};
+
+const CATCHMENT_STYLE_NEARBY = {
+  color: "#0b4f6c",
+  weight: 1.25,
+  fillColor: "#0b4f6c",
+  fillOpacity: 0.08,
 };
 
 function schoolIcon(
@@ -66,6 +81,8 @@ export function NearbyMap({
   refreshToken,
   emphasizeKs4 = false,
   comparableKs4Only = true,
+  catchmentFeatures = [],
+  homeCatchmentNote,
   onSelect,
 }: {
   home: { latitude: number; longitude: number; postcode: string };
@@ -77,6 +94,8 @@ export function NearbyMap({
   refreshToken?: string;
   emphasizeKs4?: boolean;
   comparableKs4Only?: boolean;
+  catchmentFeatures?: CatchmentFeature[];
+  homeCatchmentNote?: string | null;
   onSelect: (urn: string) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,6 +115,14 @@ export function NearbyMap({
         .sort()
         .join(","),
     [schools],
+  );
+  const catchmentKey = useMemo(
+    () =>
+      catchmentFeatures
+        .map((f) => `${f.properties.urn}:${f.properties.band}`)
+        .sort()
+        .join("|"),
+    [catchmentFeatures],
   );
 
   useEffect(() => {
@@ -134,17 +161,35 @@ export function NearbyMap({
 
     layers.clearLayers();
 
+    for (const feature of catchmentFeatures) {
+      if (!feature.geometry) continue;
+      const urn = feature.properties.urn || "";
+      const selected = urn ? selectedSet.has(urn) : false;
+      const layer = L.geoJSON(feature as never, {
+        style: selected ? CATCHMENT_STYLE_SELECTED : CATCHMENT_STYLE_NEARBY,
+      });
+      const label = feature.properties.name || "School catchment";
+      layer.bindPopup(
+        `<strong>${label}</strong><br/>Hampshire catchment · not a place guarantee`,
+      );
+      layer.addTo(layers);
+    }
+
     const ring = L.circle([home.latitude, home.longitude], {
       radius: radiusMetres,
       ...RING_STYLE,
     }).addTo(layers);
+
+    const homePopup =
+      `<strong>Home</strong><br/>${home.postcode}` +
+      (homeCatchmentNote ? `<br/>${homeCatchmentNote}` : "");
 
     L.marker([home.latitude, home.longitude], {
       icon: homeIcon(),
       title: `Home · ${home.postcode}`,
       zIndexOffset: 500,
     })
-      .bindPopup(`<strong>Home</strong><br/>${home.postcode}`)
+      .bindPopup(homePopup)
       .addTo(layers);
 
     for (const school of schools) {
@@ -193,6 +238,9 @@ export function NearbyMap({
     refreshToken,
     emphasizeKs4,
     comparableKs4Only,
+    catchmentFeatures,
+    catchmentKey,
+    homeCatchmentNote,
   ]);
 
   return (

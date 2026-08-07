@@ -29,7 +29,7 @@ const SHARED_LIMITS: DecisionGuidanceSection = {
   title: "What this is not telling you",
   items: [
     "Whether your child will be happy, taught well, or make friends here.",
-    "Admissions chances, catchment, faith criteria, or waiting-list practice.",
+    "A guaranteed place — catchment overlays and offer-day demand figures are context, not admission chances, faith criteria, or waiting-list practice.",
     "Day-to-day ethos, behaviour climate, or SEND support beyond short excerpts.",
     "A ranked “best school” — tables and reports are one lens, not a verdict.",
   ],

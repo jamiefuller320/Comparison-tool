@@ -268,6 +268,31 @@ export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   /** Merged from qualitative-capture sidecar when enriched. */
   qualitativeCapture?: QualitativeCaptureRecord | null;
   qualitativeCaptureEnrichedAt?: string | null;
+
+  /** DfE school capacity (SCAP) — places vs pupils on roll. */
+  schoolPlaces?: number | null;
+  pupilsOnRoll?: number | null;
+  placesFillPercent?: number | null;
+  pupilsOverCapacity?: number | null;
+  unfilledPlaces?: number | null;
+  placesPeriod?: string | null;
+  placesSource?: string | null;
+
+  /**
+   * DfE applications & offers (school-level). Demand pressure context —
+   * not an admission probability or catchment participation rate.
+   */
+  admissionEntryYear?: string | null;
+  admissionPhase?: string | null;
+  admissionPlacesOffered?: number | null;
+  firstPreferenceApplications?: number | null;
+  anyPreferenceApplications?: number | null;
+  firstPreferenceOffers?: number | null;
+  firstPreferenceDemandRatio?: number | null;
+  applicationsFromOtherLa?: number | null;
+  offersToOtherLa?: number | null;
+  admissionsPeriod?: string | null;
+  admissionsSource?: string | null;
 }
 
 export interface DirectorySchool {

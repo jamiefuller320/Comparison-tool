@@ -2742,6 +2742,21 @@ body:has(.floating-controls) {
   color: #fff7ef;
 }
 
+.catchment-footnote {
+  margin: 0.35rem 0 0.75rem;
+  max-width: 52rem;
+}
+
+.admissions-places-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.admissions-places-summary .hint {
+  display: block;
+}
+
 .nearby-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.9fr);

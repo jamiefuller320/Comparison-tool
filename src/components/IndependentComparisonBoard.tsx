@@ -32,6 +32,7 @@ import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
 import { InspectionPrecisRows } from "@/components/InspectionPrecis";
 import { QualitativeEvidenceRows } from "@/components/QualitativeEvidence";
+import { AdmissionsPlacesRows } from "@/components/AdmissionsPlacesRows";
 import {
   gapsForKs4Board,
   gapsForKs4OfstedAsAt,
@@ -285,6 +286,7 @@ export function IndependentComparisonBoard({
           <tbody>
             <InspectionPrecisRows schools={schools} />
             <QualitativeEvidenceRows schools={schools} />
+            <AdmissionsPlacesRows schools={schools} />
             {visibleGroups.map((group) => {
               const metrics = INDEPENDENT_METRICS.filter((m) => m.group === group);
               return (
