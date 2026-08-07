@@ -1,13 +1,14 @@
 # Qualitative capture loop
 
-- Ran at: `2026-08-06T10:17:20.498926+00:00`
+- Ran at: `2026-08-07T10:48:24.812726+00:00`
 - LA: `Hampshire`
-- Batch limit: `50`
-- Sidecar records before → after: `70` → `70`
+- Batch limit: `25`
+- Sidecar records before → after: `70` → `95`
 - Synthesize provider: `none`
 - Learned terms: `500`
-- Dry run: `True`
+- Dry run: `False`
 
 ## Notes
 
-- Dry run — capture/synth/merge skipped; digest only.
+- Captured batch (sidecar 70 → 95); learned terms now 500.
+- Selective synth provider=none; learned terms after citation merge=500.
