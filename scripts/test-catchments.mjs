@@ -2,6 +2,8 @@ async function main() {
   const {
     bandsForStages,
     catchmentRelationForSchool,
+    catchmentRelationLabel,
+    classifyCatchmentUnknown,
     featuresForUrns,
     pointInGeometry,
     pointInRing,
@@ -83,6 +85,47 @@ async function main() {
   );
   if (inside !== "in" || outside !== "out") {
     console.error("FAIL catchmentRelationForSchool", { inside, outside });
+    process.exit(1);
+  }
+
+  if (
+    classifyCatchmentUnknown(
+      { latitude: 50.95, longitude: -1.35 },
+      null,
+      "u1",
+    ) !== "not-loaded"
+  ) {
+    console.error("FAIL unknown not-loaded");
+    process.exit(1);
+  }
+  if (
+    classifyCatchmentUnknown(
+      { latitude: 50.95, longitude: -1.35 },
+      collection,
+      "missing",
+    ) !== "no-polygon"
+  ) {
+    console.error("FAIL unknown no-polygon");
+    process.exit(1);
+  }
+  if (
+    classifyCatchmentUnknown(
+      { latitude: 50.95, longitude: -1.35 },
+      collection,
+      "u1",
+      ["ages-11-16"],
+    ) !== "wrong-band"
+  ) {
+    console.error("FAIL unknown wrong-band");
+    process.exit(1);
+  }
+  if (
+    catchmentRelationLabel("unknown", "no-polygon") !== "No catchment polygon"
+  ) {
+    console.error(
+      "FAIL catchmentRelationLabel",
+      catchmentRelationLabel("unknown", "no-polygon"),
+    );
     process.exit(1);
   }
 
