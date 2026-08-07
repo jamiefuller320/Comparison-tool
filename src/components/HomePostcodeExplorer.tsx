@@ -48,6 +48,7 @@ import {
   bandsForStages,
   catchmentRelationForSchool,
   catchmentRelationLabel,
+  classifyCatchmentUnknown,
   featuresForUrns,
   homeCatchmentMatches,
   loadHampshireCatchments,
@@ -559,6 +560,14 @@ export function HomePostcodeExplorer({
                       const ks4Gap = showKs4Gap
                         ? ks4MissingGapMeta(classifyKs4Missing(school))
                         : null;
+                      const catchmentUnknown = showCatchments
+                        ? classifyCatchmentUnknown(
+                            home,
+                            catchments,
+                            school.urn,
+                            catchmentBands,
+                          )
+                        : null;
                       const catchmentRelation = showCatchments
                         ? catchmentRelationForSchool(
                             home,
@@ -615,9 +624,11 @@ export function HomePostcodeExplorer({
                                   ks4Gap
                                     ? `No comparable Att8 · ${ks4Gap.label}`
                                     : null,
-                                  showCatchments &&
-                                  catchmentRelation !== "unknown"
-                                    ? catchmentRelationLabel(catchmentRelation)
+                                  showCatchments
+                                    ? catchmentRelationLabel(
+                                        catchmentRelation,
+                                        catchmentUnknown,
+                                      )
                                     : null,
                                 ]
                                   .filter(Boolean)

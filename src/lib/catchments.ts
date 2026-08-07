@@ -4,6 +4,12 @@ export type CatchmentBand = "ages-4-6" | "ages-7-10" | "ages-11-16";
 
 export type CatchmentRelation = "in" | "out" | "unknown";
 
+export type CatchmentUnknownReason =
+  | "not-loaded"
+  | "no-home"
+  | "no-polygon"
+  | "wrong-band";
+
 export interface CatchmentFeatureProperties {
   urn?: string | null;
   name?: string | null;
@@ -159,17 +165,61 @@ export function featuresForUrns(
   });
 }
 
+export function classifyCatchmentUnknown(
+  home: { latitude: number; longitude: number } | null,
+  collection: CatchmentCollection | null,
+  urn: string,
+  bands?: CatchmentBand[],
+): CatchmentUnknownReason | null {
+  if (!collection) return "not-loaded";
+  if (!home) return "no-home";
+  const anyForUrn = featuresForUrns(collection, [urn]);
+  if (anyForUrn.length === 0) return "no-polygon";
+  const bandFeats = featuresForUrns(collection, [urn], bands);
+  if (bandFeats.length === 0) return "wrong-band";
+  return null;
+}
+
+export function catchmentUnknownMeta(reason: CatchmentUnknownReason): {
+  label: string;
+  detail: string;
+} {
+  switch (reason) {
+    case "not-loaded":
+      return {
+        label: "Catchments still loading",
+        detail: "Hampshire catchment polygons have not loaded yet.",
+      };
+    case "no-home":
+      return {
+        label: "Needs a home postcode",
+        detail: "Set a home postcode to test in/out of catchment.",
+      };
+    case "wrong-band":
+      return {
+        label: "No catchment for these stages",
+        detail:
+          "This school has a Hampshire catchment polygon, but not for the stage bands currently selected.",
+      };
+    default:
+      return {
+        label: "No catchment polygon",
+        detail:
+          "No Hampshire open-data catchment polygon matched this school (common for academies with different arrangements, independents, or special settings).",
+      };
+  }
+}
+
 export function catchmentRelationForSchool(
   home: { latitude: number; longitude: number } | null,
   collection: CatchmentCollection | null,
   urn: string,
   bands?: CatchmentBand[],
 ): CatchmentRelation {
-  if (!home || !collection) return "unknown";
+  if (classifyCatchmentUnknown(home, collection, urn, bands)) return "unknown";
   const feats = featuresForUrns(collection, [urn], bands);
-  if (feats.length === 0) return "unknown";
   const inside = feats.some((f) =>
-    pointInGeometry(home.longitude, home.latitude, f.geometry),
+    pointInGeometry(home!.longitude, home!.latitude, f.geometry),
   );
   return inside ? "in" : "out";
 }
@@ -199,8 +249,12 @@ export function homeCatchmentMatches(
   return matches;
 }
 
-export function catchmentRelationLabel(relation: CatchmentRelation): string {
+export function catchmentRelationLabel(
+  relation: CatchmentRelation,
+  unknownReason?: CatchmentUnknownReason | null,
+): string {
   if (relation === "in") return "In catchment";
   if (relation === "out") return "Outside catchment";
+  if (unknownReason) return catchmentUnknownMeta(unknownReason).label;
   return "Catchment unknown";
 }

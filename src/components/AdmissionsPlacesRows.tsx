@@ -3,9 +3,12 @@
 import { type ReactNode } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import {
+  admissionsSummaryGapLabel,
+  capacityBlankLabel,
   demandPressureHint,
   fillPressureHint,
   formatDemandRatio,
+  offersBlankLabel,
   schoolHasAdmissionsPlaces,
 } from "@/lib/admissionsPlaces";
 import { fmtNum, fmtPct } from "@/lib/format";
@@ -14,13 +17,40 @@ function Cell({ children }: { children: ReactNode }) {
   return <td className="metric-cell admissions-places-cell">{children}</td>;
 }
 
+function GapLabel({
+  label,
+  title,
+}: {
+  label: string;
+  title?: string;
+}) {
+  return (
+    <span className="admissions-gap-label" title={title || label}>
+      {label}
+    </span>
+  );
+}
+
+function valueOrGap(
+  value: string,
+  gap: string | null,
+  emptyToken = "—",
+): ReactNode {
+  if (value !== emptyToken) return value;
+  if (gap) return <GapLabel label={gap} />;
+  return emptyToken;
+}
+
 function AdmissionsPlacesSummary({ school }: { school: SchoolRecord }) {
-  if (!schoolHasAdmissionsPlaces(school)) {
-    return <span className="hint">No places / offers figures in this release.</span>;
+  const gap = admissionsSummaryGapLabel(school);
+  if (gap) {
+    return <GapLabel label={gap} />;
   }
   const bits: string[] = [];
   if (school.placesFillPercent != null) {
     bits.push(`${fmtPct(school.placesFillPercent)} full`);
+  } else if (capacityBlankLabel(school)) {
+    bits.push(capacityBlankLabel(school)!);
   }
   if (school.firstPreferenceDemandRatio != null) {
     bits.push(
@@ -28,6 +58,8 @@ function AdmissionsPlacesSummary({ school }: { school: SchoolRecord }) {
     );
   } else if (school.firstPreferenceApplications != null) {
     bits.push(`${fmtNum(school.firstPreferenceApplications)} first prefs`);
+  } else if (offersBlankLabel(school)) {
+    bits.push(offersBlankLabel(school)!);
   }
   return (
     <div className="admissions-places-summary">
@@ -49,8 +81,14 @@ export function AdmissionsPlacesRows({
 }: {
   schools: SchoolRecord[];
 }): ReactNode {
-  const any = schools.some(schoolHasAdmissionsPlaces);
-  if (!any) return null;
+  // Show the block when any shortlisted school could have places context,
+  // including positive "why blank" labels for independents / juniors / etc.
+  const anyRelevant = schools.some(
+    (school) =>
+      schoolHasAdmissionsPlaces(school) ||
+      admissionsSummaryGapLabel(school) != null,
+  );
+  if (!anyRelevant) return null;
 
   return (
     <>
@@ -60,8 +98,9 @@ export function AdmissionsPlacesRows({
           <span className="hint">
             Published capacity fill and National Offer Day preference counts —
             context for how contested a school has been, not a chance of getting
-            in. Catchment participation rates (&gt;100% = more on roll than live
-            in catchment) are LA place-planning figures and are not published
+            in. Blank cells say why the figure is missing when we can tell.
+            Catchment participation rates (&gt;100% = more on roll than live in
+            catchment) are LA place-planning figures and are not published
             school-by-school nationally.
           </span>
         </td>
@@ -89,7 +128,9 @@ export function AdmissionsPlacesRows({
           </span>
         </th>
         {schools.map((school) => (
-          <Cell key={school.urn}>{fmtNum(school.schoolPlaces)}</Cell>
+          <Cell key={school.urn}>
+            {valueOrGap(fmtNum(school.schoolPlaces), capacityBlankLabel(school))}
+          </Cell>
         ))}
       </tr>
       <tr>
@@ -98,7 +139,9 @@ export function AdmissionsPlacesRows({
           <span className="hint">Census count paired with the capacity release.</span>
         </th>
         {schools.map((school) => (
-          <Cell key={school.urn}>{fmtNum(school.pupilsOnRoll)}</Cell>
+          <Cell key={school.urn}>
+            {valueOrGap(fmtNum(school.pupilsOnRoll), capacityBlankLabel(school))}
+          </Cell>
         ))}
       </tr>
       <tr>
@@ -110,7 +153,12 @@ export function AdmissionsPlacesRows({
           </span>
         </th>
         {schools.map((school) => (
-          <Cell key={school.urn}>{fmtPct(school.placesFillPercent)}</Cell>
+          <Cell key={school.urn}>
+            {valueOrGap(
+              fmtPct(school.placesFillPercent),
+              capacityBlankLabel(school),
+            )}
+          </Cell>
         ))}
       </tr>
       <tr>
@@ -126,7 +174,10 @@ export function AdmissionsPlacesRows({
         </th>
         {schools.map((school) => (
           <Cell key={school.urn}>
-            {fmtNum(school.firstPreferenceApplications)}
+            {valueOrGap(
+              fmtNum(school.firstPreferenceApplications),
+              offersBlankLabel(school),
+            )}
           </Cell>
         ))}
       </tr>
@@ -143,7 +194,10 @@ export function AdmissionsPlacesRows({
         </th>
         {schools.map((school) => (
           <Cell key={school.urn}>
-            {fmtNum(school.admissionPlacesOffered)}
+            {valueOrGap(
+              fmtNum(school.admissionPlacesOffered),
+              offersBlankLabel(school),
+            )}
           </Cell>
         ))}
       </tr>
@@ -157,7 +211,10 @@ export function AdmissionsPlacesRows({
         </th>
         {schools.map((school) => (
           <Cell key={school.urn}>
-            {formatDemandRatio(school.firstPreferenceDemandRatio)}
+            {valueOrGap(
+              formatDemandRatio(school.firstPreferenceDemandRatio),
+              offersBlankLabel(school),
+            )}
           </Cell>
         ))}
       </tr>
@@ -170,7 +227,9 @@ export function AdmissionsPlacesRows({
           </span>
         </th>
         {schools.map((school) => (
-          <Cell key={school.urn}>{fmtNum(school.offersToOtherLa)}</Cell>
+          <Cell key={school.urn}>
+            {valueOrGap(fmtNum(school.offersToOtherLa), offersBlankLabel(school))}
+          </Cell>
         ))}
       </tr>
     </>
