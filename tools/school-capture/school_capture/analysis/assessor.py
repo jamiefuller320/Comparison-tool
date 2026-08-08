@@ -143,6 +143,30 @@ def _looks_like_sen_referral_directory(cap: RawCapture, sec: StructuredSection) 
     )
 
 
+def _looks_like_staff_policy_document(cap: RawCapture, sec: StructuredSection) -> bool:
+    blob = " ".join(
+        [
+            cap.url or "",
+            cap.page_title or "",
+            sec.heading or "",
+        ]
+    ).lower()
+    blob = re.sub(r"[_\-/]+", " ", blob)
+    return any(
+        marker in blob
+        for marker in (
+            "code of conduct",
+            "whistleblowing",
+            "whistle blowing",
+            "lower level concerns",
+            "acceptable use of ict",
+            "personnel practice",
+            "staff appraisal",
+            "manual of personnel",
+        )
+    )
+
+
 def _candidate_from_list_item(
     cap: RawCapture,
     sec: StructuredSection,
@@ -156,6 +180,11 @@ def _candidate_from_list_item(
 
     # SEN referral / need-type directories are SEND evidence, not community.
     if area == SubjectArea.COMMUNITY and _looks_like_sen_referral_directory(cap, sec):
+        return None
+    # Staff policy PDFs (code of conduct, whistleblowing…) are not community provision.
+    if area in (SubjectArea.COMMUNITY, SubjectArea.ETHOS) and _looks_like_staff_policy_document(
+        cap, sec
+    ):
         return None
     if area == SubjectArea.COMMUNITY and item.lower() in {
         "cognition and learning",

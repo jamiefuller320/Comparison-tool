@@ -60,6 +60,20 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "use of ict",
         "assess, plan, do,",
         "ehcp myths and",
+        # Staff / statutory policy TOC labels (not parent-facing provision)
+        "confidentiality",
+        "health and safety policy",
+        "health and safety policy.",
+        "manual of personnel practice",
+        "manual of personnel practice).",
+        "pay and staff appraisal",
+        "safeguarding",
+        "single equalities statement",
+        "staff code of conduct",
+        "code of conduct",
+        "version date author status summary",
+        "whistleblowing",
+        "acceptable use of ict",
     }
 )
 
@@ -84,22 +98,6 @@ CHROME_FRAGMENTS: tuple[str, ...] = (
     "code of conduct",
     "whistleblowing",
     "version date author",
-)
-
-POLICY_DOCUMENT_LABELS: frozenset[str] = frozenset(
-    {
-        "confidentiality",
-        "health and safety policy",
-        "health and safety policy.",
-        "manual of personnel practice",
-        "manual of personnel practice).",
-        "pay and staff appraisal",
-        "safeguarding",
-        "single equalities statement",
-        "staff code of conduct",
-        "code of conduct",
-        "version date author status summary",
-    }
 )
 
 JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
@@ -153,6 +151,13 @@ JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"^social,\s*emotional\s*&?\s*$",
         r"^educational$",
         r"^physio(therapy)?$",
+        # Policy titles / TOC debris
+        r"\bpolicy\.?\s*$",
+        r"\bpolicies\b",
+        r"personnel practice",
+        r"staff (code of )?conduct",
+        r"version date",
+        r"status summary",
     )
 )
 
@@ -269,6 +274,25 @@ def is_plausible_list_offering(item: str) -> bool:
         ):
             return True
     return False
+
+
+POLICY_DOCUMENT_LABELS: frozenset[str] = frozenset(
+    {
+        "confidentiality",
+        "health and safety policy",
+        "health and safety policy.",
+        "manual of personnel practice",
+        "manual of personnel practice).",
+        "pay and staff appraisal",
+        "safeguarding",
+        "single equalities statement",
+        "staff code of conduct",
+        "code of conduct",
+        "version date author status summary",
+        "whistleblowing",
+        "acceptable use of ict",
+    }
+)
 
 
 # Need-type / external-agency labels belong on SEND pages, not community engagement.

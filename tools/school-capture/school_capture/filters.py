@@ -55,6 +55,18 @@ POLICY_URL_HINTS = (
     "terms",
     "complaints",
     "freedom-of-information",
+    "code-of-conduct",
+    "code_of_conduct",
+    "whistleblowing",
+    "whistle-blowing",
+    "acceptable-use",
+    "acceptable_use",
+    "staff-appraisal",
+    "personnel-practice",
+    "manual-of-personnel",
+    "single-equalities",
+    "health-and-safety",
+    "safeguarding-policy",
 )
 
 ACCESSIBILITY_URL_HINTS = (
@@ -111,10 +123,15 @@ BLOCKED_SENTENCE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bmake sure they get enough sleep\b",
         r"\bpraising them for their hard work\b",
         r"\bcome to meetings such as parents'? evenings\b",
+        # Policy document boilerplate openings
         r"^by creating this policy\b",
         r"\bby creating this policy\b",
         r"^this policy (aims|sets out|outlines|applies|covers)\b",
         r"\bthe purpose of this policy\b",
+        r"\bthis code of conduct\b",
+        r"\bwhistleblow(ing)?\b",
+        r"\blower level concerns?\b",
+        r"\bacceptable use of (ict|it)\b",
     )
 )
 
@@ -195,11 +212,25 @@ def is_blocked_url(url: str) -> bool:
 
 def classify_page_type(url: str, title: str = "") -> PageType:
     blob = f"{url_path_blob(url)} {title.lower()}"
+    # Normalise separators so "Code_of_Conduct" / "code of conduct" both match.
+    blob_norm = re.sub(r"[_\-/]+", " ", blob)
     if any(h in blob for h in ADMIN_URL_HINTS):
         return PageType.ADMIN
     if any(h in blob for h in ACCESSIBILITY_URL_HINTS):
         return PageType.ACCESSIBILITY
-    if any(h in blob for h in POLICY_URL_HINTS):
+    policy_phrases = (
+        "code of conduct",
+        "whistleblowing",
+        "whistle blowing",
+        "acceptable use",
+        "personnel practice",
+        "staff appraisal",
+        "single equalities",
+        "health and safety",
+        "safeguarding policy",
+        "lower level concerns",
+    )
+    if any(h in blob for h in POLICY_URL_HINTS) or any(p in blob_norm for p in policy_phrases):
         return PageType.POLICY
     return PageType.SUBSTANTIVE
 
