@@ -18,6 +18,7 @@ from school_capture.filters import (
     classify_page_type,
     has_school_context,
     is_blocked_sentence,
+    looks_like_admissions_marketing,
     looks_like_parent_home_advice,
     page_type_confidence_multiplier,
 )
@@ -142,6 +143,30 @@ def _looks_like_sen_referral_directory(cap: RawCapture, sec: StructuredSection) 
     )
 
 
+def _looks_like_staff_policy_document(cap: RawCapture, sec: StructuredSection) -> bool:
+    blob = " ".join(
+        [
+            cap.url or "",
+            cap.page_title or "",
+            sec.heading or "",
+        ]
+    ).lower()
+    blob = re.sub(r"[_\-/]+", " ", blob)
+    return any(
+        marker in blob
+        for marker in (
+            "code of conduct",
+            "whistleblowing",
+            "whistle blowing",
+            "lower level concerns",
+            "acceptable use of ict",
+            "personnel practice",
+            "staff appraisal",
+            "manual of personnel",
+        )
+    )
+
+
 def _candidate_from_list_item(
     cap: RawCapture,
     sec: StructuredSection,
@@ -155,6 +180,11 @@ def _candidate_from_list_item(
 
     # SEN referral / need-type directories are SEND evidence, not community.
     if area == SubjectArea.COMMUNITY and _looks_like_sen_referral_directory(cap, sec):
+        return None
+    # Staff policy PDFs (code of conduct, whistleblowing…) are not community provision.
+    if area in (SubjectArea.COMMUNITY, SubjectArea.ETHOS) and _looks_like_staff_policy_document(
+        cap, sec
+    ):
         return None
     if area == SubjectArea.COMMUNITY and item.lower() in {
         "cognition and learning",
@@ -239,6 +269,11 @@ def _areas_for_sentence(
     if looks_like_parent_home_advice(sentence):
         hits.discard(SubjectArea.CURRICULUM)
         hits.discard(SubjectArea.ENRICHMENT)
+
+    # Settling-in / Stay & Play / application marketing is admissions, not clubs.
+    if looks_like_admissions_marketing(sentence):
+        hits.discard(SubjectArea.ENRICHMENT)
+        hits.discard(SubjectArea.CURRICULUM)
 
     # Keep SEND-tagged pages/documents from leaking weak keyword matches into
     # curriculum (e.g. "phonics sessions" inside a parent guide).
