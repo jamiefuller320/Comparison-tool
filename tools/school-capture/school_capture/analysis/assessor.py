@@ -18,6 +18,7 @@ from school_capture.filters import (
     classify_page_type,
     has_school_context,
     is_blocked_sentence,
+    looks_like_parent_home_advice,
     page_type_confidence_multiplier,
 )
 from school_capture.list_filters import (
@@ -69,7 +70,7 @@ def assess_captures(captures: list[RawCapture]) -> list[SubjectAreaAssessment]:
                 continue
             if not has_school_context(sentence):
                 continue
-            areas = _areas_for_sentence(sentence, primary)
+            areas = _areas_for_sentence(sentence, primary, cap_section=cap.section)
             for area in areas:
                 if not passes_specificity_gate(sentence, area):
                     continue
@@ -119,6 +120,28 @@ def _ingest_structured_sections(
     return by_area
 
 
+def _looks_like_sen_referral_directory(cap: RawCapture, sec: StructuredSection) -> bool:
+    blob = " ".join(
+        [
+            cap.url or "",
+            cap.page_title or "",
+            sec.heading or "",
+            cap.section or "",
+        ]
+    ).lower()
+    return any(
+        marker in blob
+        for marker in (
+            "outside agencies",
+            "referral to outside",
+            "sen flow chart",
+            "send flow",
+            "parent guide to sen",
+            "parent guide sen",
+        )
+    )
+
+
 def _candidate_from_list_item(
     cap: RawCapture,
     sec: StructuredSection,
@@ -128,6 +151,27 @@ def _candidate_from_list_item(
 ) -> _Candidate | None:
     item = clean_list_item(raw_item)
     if not item or not is_plausible_list_offering(item):
+        return None
+
+    # SEN referral / need-type directories are SEND evidence, not community.
+    if area == SubjectArea.COMMUNITY and _looks_like_sen_referral_directory(cap, sec):
+        return None
+    if area == SubjectArea.COMMUNITY and item.lower() in {
+        "cognition and learning",
+        "cognition & learning",
+        "communication and interaction",
+        "sensory and physical",
+        "physical & sensory",
+        "physical and sensory",
+        "social, emotional and mental health",
+        "semh wellbeing",
+        "primary behaviour",
+        "school nursing team",
+        "special school",
+        "speech & language",
+        "speech and language",
+        "zones of regulation",
+    }:
         return None
 
     offerings = extract_offerings(item, area)
@@ -170,7 +214,12 @@ def _page_type_for_capture(cap: RawCapture) -> PageType:
     return classify_page_type(cap.url, cap.page_title or "")
 
 
-def _areas_for_sentence(sentence: str, primary: SubjectArea) -> set[SubjectArea]:
+def _areas_for_sentence(
+    sentence: str,
+    primary: SubjectArea,
+    *,
+    cap_section: str | None = None,
+) -> set[SubjectArea]:
     lower = sentence.lower()
     hits: set[SubjectArea] = set()
     for area, groups in AREA_LEXICONS.items():
@@ -184,6 +233,21 @@ def _areas_for_sentence(sentence: str, primary: SubjectArea) -> set[SubjectArea]
         ].get("quality", ())
         if len(keyword_hits(lower, primary_kw)) >= 1:
             hits.add(primary)
+
+    # Parent tip sheets (often in SEN PDFs) mention phonics/challenge/balanced diet —
+    # that is not school curriculum or clubs evidence.
+    if looks_like_parent_home_advice(sentence):
+        hits.discard(SubjectArea.CURRICULUM)
+        hits.discard(SubjectArea.ENRICHMENT)
+
+    # Keep SEND-tagged pages/documents from leaking weak keyword matches into
+    # curriculum (e.g. "phonics sessions" inside a parent guide).
+    section = (cap_section or "").lower()
+    if section in ("send",) and SubjectArea.CURRICULUM in hits:
+        strong = ("curriculum", "subjects", "key stage", "gcse", "scheme of work")
+        if not any(s in lower for s in strong):
+            hits.discard(SubjectArea.CURRICULUM)
+
     return hits
 
 
@@ -289,7 +353,7 @@ def _assess_area(area: SubjectArea, candidates: list[_Candidate]) -> SubjectArea
                 )
             )
 
-    offerings = filter_offerings(offerings)[:20]
+    offerings = filter_offerings(offerings, area=area.value)[:20]
     corroborated = sum(1 for o in offerings if len(offering_urls.get(o.lower(), set())) >= 2)
     themes = sorted(set(breadth_hits | quality_hits))[:12]
     score = _compute_score(

@@ -105,13 +105,15 @@ class CaptureEngine:
                 f"({fetch_count} re-parsed)."
             )
 
-        # All website pages unchanged and we have a prior assessment → skip re-assess.
+        # All website pages unchanged and assessor unchanged → skip re-assess.
+        # Bump ENGINE_VERSION when filters/scoring change so caches re-score.
         website_captures = [c for c in captures if c.source_type == "school-website"]
         all_reused = bool(website_captures) and all(
             (c.meta or {}).get("reused") == "1" for c in website_captures
         )
         non_website = [c for c in captures if c.source_type != "school-website"]
-        if prior and all_reused and not non_website:
+        same_engine = bool(prior and prior.engineVersion == ENGINE_VERSION)
+        if prior and all_reused and not non_website and same_engine:
             verified = today_iso()
             notes = list(prior.captureNotes or []) + [
                 n for n in notes if n not in (prior.captureNotes or [])
@@ -133,6 +135,11 @@ class CaptureEngine:
                 discoveredUrls=discovered_urls or list(prior.discoveredUrls),
                 pageCache=[e.to_dict() for e in page_entries]
                 or list(prior.pageCache),
+            )
+        if prior and all_reused and not same_engine:
+            notes.append(
+                f"Re-assessing unchanged pages under engine {ENGINE_VERSION} "
+                f"(was {prior.engineVersion})."
             )
 
         captures = dedupe_captures(captures)
