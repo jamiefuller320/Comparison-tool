@@ -75,13 +75,13 @@ async function main() {
     console.error("FAIL junior offers", classifyOffersMissing(junior));
     process.exit(1);
   }
-  if (!offersBlankLabel(junior)?.includes("Junior transfer")) {
+  if (!offersBlankLabel(junior)?.includes("Junior Year 3")) {
     console.error("FAIL offersBlankLabel junior", offersBlankLabel(junior));
     process.exit(1);
   }
   // Juniors often still have capacity — summary should prefer junior-transfer
   // only when capacity is also missing.
-  if (!admissionsSummaryGapLabel(junior)?.includes("Junior transfer")) {
+  if (!admissionsSummaryGapLabel(junior)?.includes("Junior Year 3")) {
     console.error(
       "FAIL summary junior",
       admissionsSummaryGapLabel(junior),

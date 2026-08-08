@@ -5,10 +5,14 @@ import type { SchoolRecord } from "@/lib/types";
 import {
   admissionsSummaryGapLabel,
   capacityBlankLabel,
+  capacityMissingMeta,
+  classifyCapacityMissing,
+  classifyOffersMissing,
   demandPressureHint,
   fillPressureHint,
   formatDemandRatio,
   offersBlankLabel,
+  offersMissingMeta,
   schoolHasAdmissionsPlaces,
 } from "@/lib/admissionsPlaces";
 import { fmtNum, fmtPct } from "@/lib/format";
@@ -19,13 +23,23 @@ function Cell({ children }: { children: ReactNode }) {
 
 function GapLabel({
   label,
-  title,
+  detail,
+  stacked = false,
 }: {
   label: string;
-  title?: string;
+  detail?: string;
+  /** Sit on its own line under metrics, with quieter type. */
+  stacked?: boolean;
 }) {
   return (
-    <span className="admissions-gap-label" title={title || label}>
+    <span
+      className={
+        stacked
+          ? "admissions-gap-label admissions-gap-label-stacked"
+          : "admissions-gap-label"
+      }
+      title={detail || label}
+    >
       {label}
     </span>
   );
@@ -35,35 +49,72 @@ function valueOrGap(
   value: string,
   gap: string | null,
   emptyToken = "—",
+  detail?: string | null,
 ): ReactNode {
   if (value !== emptyToken) return value;
-  if (gap) return <GapLabel label={gap} />;
+  if (gap) return <GapLabel label={gap} detail={detail || undefined} />;
   return emptyToken;
+}
+
+function offersGapDetail(school: SchoolRecord): string | undefined {
+  const reason = classifyOffersMissing(school);
+  return reason ? offersMissingMeta(reason).detail : undefined;
+}
+
+function capacityGapDetail(school: SchoolRecord): string | undefined {
+  const reason = classifyCapacityMissing(school);
+  return reason ? capacityMissingMeta(reason).detail : undefined;
 }
 
 function AdmissionsPlacesSummary({ school }: { school: SchoolRecord }) {
   const gap = admissionsSummaryGapLabel(school);
   if (gap) {
-    return <GapLabel label={gap} />;
+    const offersReason = classifyOffersMissing(school);
+    const capReason = classifyCapacityMissing(school);
+    const detail =
+      (offersReason === "junior-transfer" || !capReason) && offersReason
+        ? offersMissingMeta(offersReason).detail
+        : capReason
+          ? capacityMissingMeta(capReason).detail
+          : undefined;
+    return <GapLabel label={gap} detail={detail} />;
   }
-  const bits: string[] = [];
+
+  const metrics: string[] = [];
   if (school.placesFillPercent != null) {
-    bits.push(`${fmtPct(school.placesFillPercent)} full`);
+    metrics.push(`${fmtPct(school.placesFillPercent)} full`);
   } else if (capacityBlankLabel(school)) {
-    bits.push(capacityBlankLabel(school)!);
+    metrics.push(capacityBlankLabel(school)!);
   }
+
+  let offersGap: string | null = null;
   if (school.firstPreferenceDemandRatio != null) {
-    bits.push(
+    metrics.push(
       `${formatDemandRatio(school.firstPreferenceDemandRatio)} first prefs / place`,
     );
   } else if (school.firstPreferenceApplications != null) {
-    bits.push(`${fmtNum(school.firstPreferenceApplications)} first prefs`);
-  } else if (offersBlankLabel(school)) {
-    bits.push(offersBlankLabel(school)!);
+    metrics.push(`${fmtNum(school.firstPreferenceApplications)} first prefs`);
+  } else {
+    offersGap = offersBlankLabel(school);
   }
+
   return (
     <div className="admissions-places-summary">
-      <strong>{bits.join(" · ") || "Places context"}</strong>
+      {metrics.length ? (
+        <strong className="admissions-places-metrics">
+          {metrics.join(" · ")}
+        </strong>
+      ) : null}
+      {offersGap ? (
+        <GapLabel
+          label={offersGap}
+          detail={offersGapDetail(school)}
+          stacked={metrics.length > 0}
+        />
+      ) : null}
+      {!metrics.length && !offersGap ? (
+        <strong className="admissions-places-metrics">Places context</strong>
+      ) : null}
       {fillPressureHint(school.placesFillPercent) ? (
         <span className="hint">{fillPressureHint(school.placesFillPercent)}</span>
       ) : null}
@@ -129,7 +180,12 @@ export function AdmissionsPlacesRows({
         </th>
         {schools.map((school) => (
           <Cell key={school.urn}>
-            {valueOrGap(fmtNum(school.schoolPlaces), capacityBlankLabel(school))}
+            {valueOrGap(
+              fmtNum(school.schoolPlaces),
+              capacityBlankLabel(school),
+              "—",
+              capacityGapDetail(school),
+            )}
           </Cell>
         ))}
       </tr>
@@ -140,7 +196,12 @@ export function AdmissionsPlacesRows({
         </th>
         {schools.map((school) => (
           <Cell key={school.urn}>
-            {valueOrGap(fmtNum(school.pupilsOnRoll), capacityBlankLabel(school))}
+            {valueOrGap(
+              fmtNum(school.pupilsOnRoll),
+              capacityBlankLabel(school),
+              "—",
+              capacityGapDetail(school),
+            )}
           </Cell>
         ))}
       </tr>
@@ -157,6 +218,8 @@ export function AdmissionsPlacesRows({
             {valueOrGap(
               fmtPct(school.placesFillPercent),
               capacityBlankLabel(school),
+              "—",
+              capacityGapDetail(school),
             )}
           </Cell>
         ))}
@@ -177,6 +240,8 @@ export function AdmissionsPlacesRows({
             {valueOrGap(
               fmtNum(school.firstPreferenceApplications),
               offersBlankLabel(school),
+              "—",
+              offersGapDetail(school),
             )}
           </Cell>
         ))}
@@ -197,6 +262,8 @@ export function AdmissionsPlacesRows({
             {valueOrGap(
               fmtNum(school.admissionPlacesOffered),
               offersBlankLabel(school),
+              "—",
+              offersGapDetail(school),
             )}
           </Cell>
         ))}
@@ -214,6 +281,8 @@ export function AdmissionsPlacesRows({
             {valueOrGap(
               formatDemandRatio(school.firstPreferenceDemandRatio),
               offersBlankLabel(school),
+              "—",
+              offersGapDetail(school),
             )}
           </Cell>
         ))}
@@ -228,7 +297,12 @@ export function AdmissionsPlacesRows({
         </th>
         {schools.map((school) => (
           <Cell key={school.urn}>
-            {valueOrGap(fmtNum(school.offersToOtherLa), offersBlankLabel(school))}
+            {valueOrGap(
+              fmtNum(school.offersToOtherLa),
+              offersBlankLabel(school),
+              "—",
+              offersGapDetail(school),
+            )}
           </Cell>
         ))}
       </tr>
