@@ -43,7 +43,41 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "home learning",
         "school meals",
         "term dates",
+        # Recurring PrimarySite / school CMS chrome
+        "ofsted report",
+        "ofsted",
+        "parent view",
+        "staff portal",
+        "report student absence",
+        "report absence",
+        "student absence",
+        "special educational needs",
+        "special educational needs & disabilities",
+        "special educational needs and disabilities",
+        "hampshire county council",
+        "map of hampshire support",
+        "review cycle and",
+        "use of ict",
+        "assess, plan, do,",
+        "ehcp myths and",
     }
+)
+
+# Fragments that mark site chrome / form labels / county-directory noise.
+CHROME_FRAGMENTS: tuple[str, ...] = (
+    "ofsted report",
+    "parent view",
+    "staff portal",
+    "student absence",
+    "report absence",
+    "name of child",
+    "hampshire county council",
+    "map of hampshire",
+    "learning disability care",
+    "specialist eating disorder",
+    "occupational therpay",  # misspelled county-directory row on Bursledon SEN map
+    "county specialist",
+    "special school outreach",
 )
 
 JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
@@ -82,17 +116,38 @@ JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"^imagination$",
         r"^creativity$",
         r"^in years \d+",
+        # Form fields / truncated flowchart labels / parent tip bullets
+        r":\s*$",
+        r"\bname of child\b",
+        r"\bclass:\b",
+        r"^limit screen time$",
+        r"^read with your child$",
+        r"^offer a balanced",
+        r"^make sure they get enough sleep$",
+        r"^come to meetings",
+        r"^assess,\s*plan,\s*do",
+        r"^ehcp myths",
+        r"^review cycle",
+        r"^social,\s*emotional\s*&?\s*$",
+        r"^educational$",
+        r"^physio(therapy)?$",
     )
 )
 
 
 def is_nav_or_junk_list_item(item: str) -> bool:
     lower = re.sub(r"\s+", " ", item.lower()).strip()
+    # Strip common PDF/private-use bullet glyphs before matching.
+    lower = lower.lstrip("•·▪◦\uf09f\u2022-–—* ").strip()
     if not lower:
         return True
     if lower in NAV_LIST_LABELS:
         return True
+    if any(frag in lower for frag in CHROME_FRAGMENTS):
+        return True
     if any(p.search(item) for p in JUNK_LIST_PATTERNS):
+        return True
+    if any(p.search(lower) for p in JUNK_LIST_PATTERNS):
         return True
     if "http" in lower or "www." in lower:
         return True
@@ -185,14 +240,40 @@ def is_plausible_list_offering(item: str) -> bool:
     return False
 
 
-def filter_offerings(items: list[str]) -> list[str]:
+# Need-type / external-agency labels belong on SEND pages, not community engagement.
+SEND_DIRECTORY_LABELS: frozenset[str] = frozenset(
+    {
+        "cognition and learning",
+        "cognition & learning",
+        "communication and interaction",
+        "sensory and physical",
+        "physical & sensory",
+        "physical and sensory",
+        "social, emotional and mental health",
+        "social, emotional & mental health",
+        "semh wellbeing",
+        "primary behaviour",
+        "school nursing team",
+        "special school",
+        "speech & language",
+        "speech and language",
+        "zones of regulation",
+    }
+)
+
+
+def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
     seen: set[str] = set()
     out: list[str] = []
+    area_key = (area or "").lower()
     for raw in items:
         item = raw.strip()
         if not item or not is_plausible_list_offering(item):
             continue
         key = item.lower()
+        # Community should be PTA / parents evening / local links — not SEN directories.
+        if area_key == "community" and key in SEND_DIRECTORY_LABELS:
+            continue
         if key not in seen:
             seen.add(key)
             out.append(item)

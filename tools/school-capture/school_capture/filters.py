@@ -98,6 +98,34 @@ BLOCKED_SENTENCE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bpowered by\b",
         r"\baccept all\b.*\bcookies\b",
         r"\bmanage (your )?preferences\b",
+        # Site chrome often extracted as a one-line "signal"
+        r"^ofsted report\b",
+        r"^parent view\b",
+        r"^staff portal\b",
+        r"^report student absence\b",
+        r"^name of child\b",
+        # Generic parenting tips from SEN leaflets — not school curriculum evidence
+        r"\blimit screen time\b",
+        r"\bread with your child\b",
+        r"\boffer a balanced and varied diet\b",
+        r"\bmake sure they get enough sleep\b",
+        r"\bpraising them for their hard work\b",
+        r"\bcome to meetings such as parents'? evenings\b",
+    )
+)
+
+# Home/parenting advice that must not be scored as curriculum/enrichment.
+PARENT_HOME_ADVICE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
+    re.compile(p, re.I)
+    for p in (
+        r"\blimit screen time\b",
+        r"\bread with your child\b",
+        r"\bbalanced and varied diet\b",
+        r"\benough sleep\b",
+        r"\bpraise(ing)? (them|effort|hard work)\b",
+        r"\bpersonal circumstances\b",
+        r"\bencourage your child to read\b",
+        r"\bbuild resilience to challenges\b",
     )
 )
 
@@ -154,6 +182,12 @@ def classify_page_type(url: str, title: str = "") -> PageType:
 
 def is_blocked_sentence(sentence: str) -> bool:
     return any(p.search(sentence) for p in BLOCKED_SENTENCE_PATTERNS)
+
+
+def looks_like_parent_home_advice(sentence: str) -> bool:
+    """True for parenting tip sheets that must not feed curriculum/enrichment."""
+    hits = sum(1 for p in PARENT_HOME_ADVICE_PATTERNS if p.search(sentence))
+    return hits >= 1
 
 
 def has_school_context(sentence: str) -> bool:
