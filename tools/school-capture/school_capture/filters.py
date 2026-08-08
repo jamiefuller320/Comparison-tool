@@ -236,7 +236,14 @@ def classify_page_type(url: str, title: str = "") -> PageType:
 
 
 def is_blocked_sentence(sentence: str) -> bool:
-    return any(p.search(sentence) for p in BLOCKED_SENTENCE_PATTERNS)
+    if any(p.search(sentence) for p in BLOCKED_SENTENCE_PATTERNS):
+        return True
+    try:
+        from school_capture.learned_qa_patterns import phrase_matches_learned
+
+        return phrase_matches_learned(sentence)
+    except Exception:  # noqa: BLE001 — learning store must never break ingest
+        return False
 
 
 def looks_like_parent_home_advice(sentence: str) -> bool:

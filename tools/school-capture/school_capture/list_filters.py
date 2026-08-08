@@ -170,12 +170,21 @@ def is_nav_or_junk_list_item(item: str) -> bool:
         return True
     if lower in NAV_LIST_LABELS:
         return True
+    if lower in POLICY_DOCUMENT_LABELS:
+        return True
     if any(frag in lower for frag in CHROME_FRAGMENTS):
         return True
     if any(p.search(item) for p in JUNK_LIST_PATTERNS):
         return True
     if any(p.search(lower) for p in JUNK_LIST_PATTERNS):
         return True
+    try:
+        from school_capture.learned_qa_patterns import phrase_matches_learned
+
+        if phrase_matches_learned(lower):
+            return True
+    except Exception:  # noqa: BLE001 — learning store must never break ingest
+        pass
     if "http" in lower or "www." in lower:
         return True
     # Menu breadcrumbs
@@ -280,6 +289,8 @@ POLICY_DOCUMENT_LABELS: frozenset[str] = frozenset(
         "staff code of conduct",
         "code of conduct",
         "version date author status summary",
+        "whistleblowing",
+        "acceptable use of ict",
     }
 )
 
@@ -304,7 +315,6 @@ SEND_DIRECTORY_LABELS: frozenset[str] = frozenset(
         "zones of regulation",
     }
 )
-
 
 def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
     seen: set[str] = set()

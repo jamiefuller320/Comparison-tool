@@ -20,6 +20,8 @@ def main() -> int:
     payload = json.loads(out)
     assert payload["dryRun"] is True
     assert payload["la"] == "Hampshire"
+    assert payload.get("qaProvider") == "none"
+    assert "qa" in payload
     digest = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.json"
     assert digest.is_file()
     print("OK qualitative-loop dry-run")

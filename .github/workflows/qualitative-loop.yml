@@ -3,6 +3,7 @@ name: Qualitative capture loop
 # Coverage-first, min-cost quality (Hampshire expansion):
 # - Daily: 25 new schools + free deterministic narratives (no Cursor spend)
 # - Stale re-screens: small daily budget via ETag / Last-Modified / content-hash
+# - Heuristic QA on worst suspects (default; optional Cursor/OpenAI via dispatch)
 # - Manual dispatch: optional Cursor/auto polish on rich schools only
 on:
   workflow_dispatch:
@@ -27,6 +28,14 @@ on:
         description: Max schools to synthesize (0 = all eligible). Keep small for cursor/auto.
         required: false
         default: "0"
+      qa_limit:
+        description: Max suspect schools for post-synth QA (0 = skip)
+        required: false
+        default: "8"
+      qa_provider:
+        description: QA reviewer — none (free heuristics) or cursor/auto/openai
+        required: false
+        default: "none"
       dry_run:
         description: Digest only (no capture)
         required: false
@@ -65,6 +74,8 @@ jobs:
           REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '5' }}
           SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
           SYNTH_LIMIT: ${{ github.event.inputs.synthesize_limit || '0' }}
+          QA_LIMIT: ${{ github.event.inputs.qa_limit || '8' }}
+          QA_PROVIDER: ${{ github.event.inputs.qa_provider || 'none' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -77,6 +88,8 @@ jobs:
             --refresh-stale-days "$REFRESH_DAYS"
             --refresh-limit "$REFRESH_LIMIT"
             --synthesize-provider "$SYNTH"
+            --qa-limit "$QA_LIMIT"
+            --qa-provider "$QA_PROVIDER"
           )
           if [ "$SYNTH_LIMIT" != "0" ]; then
             ARGS+=(--synthesize-limit "$SYNTH_LIMIT")
@@ -92,7 +105,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A output public/data/schools-index.json \
             public/data/packs/qualitative-loop-latest.json \
-            public/data/packs/qualitative-loop-latest.md
+            public/data/packs/qualitative-loop-latest.md \
+            public/data/packs/qualitative-qa-latest.json \
+            public/data/packs/qualitative-qa-latest.md
           if git diff --staged --quiet; then
             echo "No qualitative loop changes"
           else
