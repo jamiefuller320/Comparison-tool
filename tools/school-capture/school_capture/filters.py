@@ -55,6 +55,18 @@ POLICY_URL_HINTS = (
     "terms",
     "complaints",
     "freedom-of-information",
+    "code-of-conduct",
+    "code_of_conduct",
+    "whistleblowing",
+    "whistle-blowing",
+    "acceptable-use",
+    "acceptable_use",
+    "staff-appraisal",
+    "personnel-practice",
+    "manual-of-personnel",
+    "single-equalities",
+    "health-and-safety",
+    "safeguarding-policy",
 )
 
 ACCESSIBILITY_URL_HINTS = (
@@ -111,6 +123,15 @@ BLOCKED_SENTENCE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bmake sure they get enough sleep\b",
         r"\bpraising them for their hard work\b",
         r"\bcome to meetings such as parents'? evenings\b",
+        # Policy document boilerplate openings
+        r"^by creating this policy\b",
+        r"\bby creating this policy\b",
+        r"^this policy (aims|sets out|outlines|applies|covers)\b",
+        r"\bthe purpose of this policy\b",
+        r"\bthis code of conduct\b",
+        r"\bwhistleblow(ing)?\b",
+        r"\blower level concerns?\b",
+        r"\bacceptable use of (ict|it)\b",
     )
 )
 
@@ -126,6 +147,26 @@ PARENT_HOME_ADVICE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bpersonal circumstances\b",
         r"\bencourage your child to read\b",
         r"\bbuild resilience to challenges\b",
+    )
+)
+
+# Admissions / settling-in marketing — not enrichment clubs.
+ADMISSIONS_MARKETING_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
+    re.compile(p, re.I)
+    for p in (
+        r"\bstay\s*&\s*play\b",
+        r"\bstay and play\b",
+        r"\bsettling[- ]in\b",
+        r"\bnew starters?\b",
+        r"\bin-year transfers?\b",
+        r"\bnot yet applied for a place\b",
+        r"\boversubscribed\b",
+        r"\bfill in form\b",
+        r"\byear r\s*20\d{2}\b",
+        r"\bdue to start school in september\b",
+        r"\bwarmly welcome visits\b",
+        r"\bopen (day|evening|morning)s?\b",
+        r"\btaster (day|session)s?\b",
     )
 )
 
@@ -171,11 +212,25 @@ def is_blocked_url(url: str) -> bool:
 
 def classify_page_type(url: str, title: str = "") -> PageType:
     blob = f"{url_path_blob(url)} {title.lower()}"
+    # Normalise separators so "Code_of_Conduct" / "code of conduct" both match.
+    blob_norm = re.sub(r"[_\-/]+", " ", blob)
     if any(h in blob for h in ADMIN_URL_HINTS):
         return PageType.ADMIN
     if any(h in blob for h in ACCESSIBILITY_URL_HINTS):
         return PageType.ACCESSIBILITY
-    if any(h in blob for h in POLICY_URL_HINTS):
+    policy_phrases = (
+        "code of conduct",
+        "whistleblowing",
+        "whistle blowing",
+        "acceptable use",
+        "personnel practice",
+        "staff appraisal",
+        "single equalities",
+        "health and safety",
+        "safeguarding policy",
+        "lower level concerns",
+    )
+    if any(h in blob for h in POLICY_URL_HINTS) or any(p in blob_norm for p in policy_phrases):
         return PageType.POLICY
     return PageType.SUBSTANTIVE
 
@@ -187,6 +242,12 @@ def is_blocked_sentence(sentence: str) -> bool:
 def looks_like_parent_home_advice(sentence: str) -> bool:
     """True for parenting tip sheets that must not feed curriculum/enrichment."""
     hits = sum(1 for p in PARENT_HOME_ADVICE_PATTERNS if p.search(sentence))
+    return hits >= 1
+
+
+def looks_like_admissions_marketing(sentence: str) -> bool:
+    """True for settling-in / open-day / application marketing copy."""
+    hits = sum(1 for p in ADMISSIONS_MARKETING_PATTERNS if p.search(sentence))
     return hits >= 1
 
 

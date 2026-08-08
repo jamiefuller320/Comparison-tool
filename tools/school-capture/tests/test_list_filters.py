@@ -63,6 +63,14 @@ def test_plausible_offerings():
     assert is_plausible_list_offering("cricket")
 
 
+def test_rejects_policy_toc_labels():
+    assert is_nav_or_junk_list_item("Confidentiality")
+    assert is_nav_or_junk_list_item("Health and Safety Policy.")
+    assert is_nav_or_junk_list_item("Staff Code of Conduct")
+    assert is_nav_or_junk_list_item("Version Date Author Status Summary")
+    assert not is_plausible_list_offering("Pay and Staff Appraisal")
+
+
 def test_parent_home_advice_blocked_from_curriculum_path():
     tip = (
         "Limit screen time. Read with your child. Offer a balanced and varied diet. "
