@@ -18,6 +18,7 @@ from school_capture.filters import (
     classify_page_type,
     has_school_context,
     is_blocked_sentence,
+    looks_like_admissions_marketing,
     looks_like_parent_home_advice,
     page_type_confidence_multiplier,
 )
@@ -239,6 +240,11 @@ def _areas_for_sentence(
     if looks_like_parent_home_advice(sentence):
         hits.discard(SubjectArea.CURRICULUM)
         hits.discard(SubjectArea.ENRICHMENT)
+
+    # Settling-in / Stay & Play / application marketing is admissions, not clubs.
+    if looks_like_admissions_marketing(sentence):
+        hits.discard(SubjectArea.ENRICHMENT)
+        hits.discard(SubjectArea.CURRICULUM)
 
     # Keep SEND-tagged pages/documents from leaking weak keyword matches into
     # curriculum (e.g. "phonics sessions" inside a parent guide).

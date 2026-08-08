@@ -111,6 +111,10 @@ BLOCKED_SENTENCE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bmake sure they get enough sleep\b",
         r"\bpraising them for their hard work\b",
         r"\bcome to meetings such as parents'? evenings\b",
+        r"^by creating this policy\b",
+        r"\bby creating this policy\b",
+        r"^this policy (aims|sets out|outlines|applies|covers)\b",
+        r"\bthe purpose of this policy\b",
     )
 )
 
@@ -126,6 +130,26 @@ PARENT_HOME_ADVICE_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bpersonal circumstances\b",
         r"\bencourage your child to read\b",
         r"\bbuild resilience to challenges\b",
+    )
+)
+
+# Admissions / settling-in marketing — not enrichment clubs.
+ADMISSIONS_MARKETING_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
+    re.compile(p, re.I)
+    for p in (
+        r"\bstay\s*&\s*play\b",
+        r"\bstay and play\b",
+        r"\bsettling[- ]in\b",
+        r"\bnew starters?\b",
+        r"\bin-year transfers?\b",
+        r"\bnot yet applied for a place\b",
+        r"\boversubscribed\b",
+        r"\bfill in form\b",
+        r"\byear r\s*20\d{2}\b",
+        r"\bdue to start school in september\b",
+        r"\bwarmly welcome visits\b",
+        r"\bopen (day|evening|morning)s?\b",
+        r"\btaster (day|session)s?\b",
     )
 )
 
@@ -181,12 +205,25 @@ def classify_page_type(url: str, title: str = "") -> PageType:
 
 
 def is_blocked_sentence(sentence: str) -> bool:
-    return any(p.search(sentence) for p in BLOCKED_SENTENCE_PATTERNS)
+    if any(p.search(sentence) for p in BLOCKED_SENTENCE_PATTERNS):
+        return True
+    try:
+        from school_capture.learned_qa_patterns import phrase_matches_learned
+
+        return phrase_matches_learned(sentence)
+    except Exception:  # noqa: BLE001 — learning store must never break ingest
+        return False
 
 
 def looks_like_parent_home_advice(sentence: str) -> bool:
     """True for parenting tip sheets that must not feed curriculum/enrichment."""
     hits = sum(1 for p in PARENT_HOME_ADVICE_PATTERNS if p.search(sentence))
+    return hits >= 1
+
+
+def looks_like_admissions_marketing(sentence: str) -> bool:
+    """True for settling-in / open-day / application marketing copy."""
+    hits = sum(1 for p in ADMISSIONS_MARKETING_PATTERNS if p.search(sentence))
     return hits >= 1
 
 

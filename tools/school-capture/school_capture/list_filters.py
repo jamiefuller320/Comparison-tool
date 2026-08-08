@@ -78,6 +78,28 @@ CHROME_FRAGMENTS: tuple[str, ...] = (
     "occupational therpay",  # misspelled county-directory row on Bursledon SEN map
     "county specialist",
     "special school outreach",
+    "personnel practice",
+    "staff appraisal",
+    "equalities statement",
+    "code of conduct",
+    "whistleblowing",
+    "version date author",
+)
+
+POLICY_DOCUMENT_LABELS: frozenset[str] = frozenset(
+    {
+        "confidentiality",
+        "health and safety policy",
+        "health and safety policy.",
+        "manual of personnel practice",
+        "manual of personnel practice).",
+        "pay and staff appraisal",
+        "safeguarding",
+        "single equalities statement",
+        "staff code of conduct",
+        "code of conduct",
+        "version date author status summary",
+    }
 )
 
 JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
@@ -143,12 +165,21 @@ def is_nav_or_junk_list_item(item: str) -> bool:
         return True
     if lower in NAV_LIST_LABELS:
         return True
+    if lower in POLICY_DOCUMENT_LABELS:
+        return True
     if any(frag in lower for frag in CHROME_FRAGMENTS):
         return True
     if any(p.search(item) for p in JUNK_LIST_PATTERNS):
         return True
     if any(p.search(lower) for p in JUNK_LIST_PATTERNS):
         return True
+    try:
+        from school_capture.learned_qa_patterns import phrase_matches_learned
+
+        if phrase_matches_learned(lower):
+            return True
+    except Exception:  # noqa: BLE001 — learning store must never break ingest
+        pass
     if "http" in lower or "www." in lower:
         return True
     # Menu breadcrumbs
@@ -261,7 +292,6 @@ SEND_DIRECTORY_LABELS: frozenset[str] = frozenset(
     }
 )
 
-
 def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
     seen: set[str] = set()
     out: list[str] = []
@@ -273,6 +303,10 @@ def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
         key = item.lower()
         # Community should be PTA / parents evening / local links — not SEN directories.
         if area_key == "community" and key in SEND_DIRECTORY_LABELS:
+            continue
+        if area_key in {"community", "ethos"} and (
+            key in POLICY_DOCUMENT_LABELS or "policy" in key or "personnel" in key
+        ):
             continue
         if key not in seen:
             seen.add(key)

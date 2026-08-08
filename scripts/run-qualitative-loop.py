@@ -2,7 +2,8 @@
 """Scheduled qualitative capture loop for School Compass.
 
 Batch-resumable website capture → learned-term prune → selective synthesis →
-citation learning → merge into schools-index → write digest.
+citation learning → heuristic QA (optional agent) → merge into schools-index →
+write digest.
 
 Policy: coverage first, quality at minimum cost.
   - Default provider is none (free deterministic narratives).
@@ -10,6 +11,8 @@ Policy: coverage first, quality at minimum cost.
   - Skip-existing is the default (pass --no-skip-existing to recapture).
   - Stale re-screens use ETag / Last-Modified / content-hash and reuse
     unchanged pages (default: 28-day TTL, small daily refresh limit).
+  - Daily QA defaults to heuristics only (`--qa-provider none`); strip junk
+    and learn phrases into output/learned-qa-patterns.json.
 
 Usage:
   python3 scripts/run-qualitative-loop.py --dry-run
@@ -36,9 +39,11 @@ SCRIPTS = Path(__file__).resolve().parent
 DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 DEFAULT_CAPTURE = ROOT / "output" / "qualitative-capture.json"
 DEFAULT_LEARNED = ROOT / "output" / "learned-url-terms.json"
+DEFAULT_QA_LEARNED = ROOT / "output" / "learned-qa-patterns.json"
 DEFAULT_PROGRESS = ROOT / "output" / "qualitative-progress.json"
 DIGEST_JSON = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.json"
 DIGEST_MD = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.md"
+QA_DIGEST_JSON = ROOT / "public" / "data" / "packs" / "qualitative-qa-latest.json"
 
 
 def run(cmd: list[str], *, env: dict[str, str] | None = None) -> None:
@@ -102,7 +107,12 @@ def write_digest(payload: dict) -> None:
         f"- Sidecar records before → after: "
         f"`{payload.get('sidecarBefore')}` → `{payload.get('sidecarAfter')}`",
         f"- Synthesize provider: `{payload.get('synthesizeProvider')}`",
+        f"- QA provider: `{payload.get('qaProvider')}`",
+        f"- QA reviewed / changed: "
+        f"`{payload.get('qa', {}).get('reviewed', 0)}` / "
+        f"`{payload.get('qa', {}).get('changedSchools', 0)}`",
         f"- Learned terms: `{payload.get('learnedTerms', {}).get('termCount', 0)}`",
+        f"- Learned QA phrases: `{payload.get('qa', {}).get('learningAdded', 0)}`",
         f"- Dry run: `{payload.get('dryRun')}`",
         "",
     ]
@@ -160,6 +170,24 @@ def main(argv: list[str] | None = None) -> int:
         default=-1,
         help="Evidence gate override (-1 = provider default: 2 for none, 4 for paid)",
     )
+    parser.add_argument(
+        "--qa-limit",
+        type=int,
+        default=8,
+        help="Max suspect schools for post-synth QA (0 = skip QA; default 8)",
+    )
+    parser.add_argument(
+        "--qa-provider",
+        choices=("none", "auto", "cursor", "openai"),
+        default="none",
+        help="QA agent provider (default: none = free heuristics only)",
+    )
+    parser.add_argument(
+        "--qa-min-score",
+        type=float,
+        default=2.0,
+        help="Minimum suspicion score for QA review",
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--no-merge", action="store_true")
     args = parser.parse_args(argv)
@@ -187,6 +215,9 @@ def main(argv: list[str] | None = None) -> int:
             "sidecarBefore": before,
             "sidecarAfter": before,
             "synthesizeProvider": args.synthesize_provider,
+            "qaProvider": args.qa_provider,
+            "qaLimit": args.qa_limit,
+            "qa": {"reviewed": 0, "changedSchools": 0, "learningAdded": 0},
             "learnedTerms": {"termCount": term_count, "rebuilt": False},
             "dryRun": True,
             "notes": notes,
@@ -276,6 +307,68 @@ def main(argv: list[str] | None = None) -> int:
         f"Selective synth provider={synth_provider}; "
         f"learned terms after citation merge={term_count}."
     )
+
+    qa_stats: dict = {
+        "reviewed": 0,
+        "changedSchools": 0,
+        "findingsApplied": 0,
+        "learningAdded": 0,
+        "provider": args.qa_provider,
+    }
+    if args.qa_limit > 0:
+        qa_cmd = [
+            sys.executable,
+            str(SCRIPTS / "qa-qualitative.py"),
+            "--capture",
+            str(DEFAULT_CAPTURE),
+            "--limit",
+            str(args.qa_limit),
+            "--min-score",
+            str(args.qa_min_score),
+            "--provider",
+            args.qa_provider,
+            "--learned",
+            str(DEFAULT_QA_LEARNED),
+        ]
+        run(qa_cmd, env=env)
+        if QA_DIGEST_JSON.is_file():
+            try:
+                qa_payload = json.loads(QA_DIGEST_JSON.read_text(encoding="utf-8"))
+                qa_stats = {
+                    "reviewed": int(qa_payload.get("reviewed") or 0),
+                    "changedSchools": int(qa_payload.get("changedSchools") or 0),
+                    "findingsApplied": int(qa_payload.get("findingsApplied") or 0),
+                    "learningAdded": int(qa_payload.get("learningAdded") or 0),
+                    "provider": qa_payload.get("provider") or args.qa_provider,
+                }
+            except (OSError, json.JSONDecodeError, TypeError, ValueError):
+                pass
+        notes.append(
+            f"QA provider={qa_stats.get('provider')}: "
+            f"reviewed {qa_stats.get('reviewed', 0)}, "
+            f"changed {qa_stats.get('changedSchools', 0)}, "
+            f"learned phrases +{qa_stats.get('learningAdded', 0)}."
+        )
+        # Re-merge so stripped junk does not linger on the public index.
+        if (
+            not args.no_merge
+            and int(qa_stats.get("changedSchools") or 0) > 0
+            and DEFAULT_CAPTURE.is_file()
+        ):
+            merge_cmd = [
+                sys.executable,
+                str(CAPTURE_ROOT / "scripts" / "merge-qualitative.py"),
+                "--index",
+                str(DEFAULT_INDEX),
+                "--capture",
+                str(DEFAULT_CAPTURE),
+            ]
+            run(merge_cmd, env=env)
+            notes.append("Re-merged schools-index after QA fixes.")
+    else:
+        notes.append("QA skipped (--qa-limit 0).")
+
+    after = capture_count(DEFAULT_CAPTURE)
     digest = {
         "ranAt": datetime.now(timezone.utc).isoformat(),
         "la": args.la,
@@ -287,6 +380,9 @@ def main(argv: list[str] | None = None) -> int:
         "sidecarBefore": before,
         "sidecarAfter": after,
         "synthesizeProvider": synth_provider,
+        "qaProvider": args.qa_provider,
+        "qaLimit": args.qa_limit,
+        "qa": qa_stats,
         "learnedTerms": learned,
         "dryRun": False,
         "notes": notes,

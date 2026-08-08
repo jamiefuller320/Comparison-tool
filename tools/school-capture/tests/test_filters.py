@@ -8,6 +8,7 @@ from school_capture.filters import (
     has_school_context,
     is_blocked_sentence,
     is_blocked_url,
+    looks_like_admissions_marketing,
 )
 
 
@@ -33,6 +34,18 @@ def test_blocked_sentences():
 def test_school_context():
     assert has_school_context("Our pupils enjoy a wide range of clubs.")
     assert not has_school_context("Responsive design works on various devices.")
+
+
+def test_admissions_marketing_detection():
+    assert looks_like_admissions_marketing(
+        "Stay & Play sessions help new starters settle in before Year R 2026."
+    )
+    assert looks_like_admissions_marketing(
+        "We warmly welcome visits from families who have not yet applied for a place."
+    )
+    assert not looks_like_admissions_marketing(
+        "Pupils can join football, choir, and coding club after school."
+    )
 
 
 def test_page_type_classification():
