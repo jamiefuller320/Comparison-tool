@@ -50,6 +50,63 @@ def test_chrome_list_items_do_not_become_offerings_or_signals():
     )
 
 
+def test_admissions_stay_and_play_not_enrichment():
+    text = (
+        "Year R 2027 - Stay & Play Session - Thursday 15th October - 3.30 - 4.30pm – "
+        "Fill in form September 2026 new starters and in-year transfers If your child "
+        "is due to start school in September 2026 and you have not yet applied for a "
+        "place, we are currently not oversubscribed and would warmly welcome visits "
+        "to the school art club visit."
+    )
+    cap = RawCapture(
+        url="http://www.buryfieldsinfants.co.uk",
+        source_type="school-website",
+        text=text,
+        page_title="Buryfields Infant School - Home Page",
+        section="homepage",
+        meta={"pageType": "substantive"},
+    )
+    by_area = {a.area: a for a in assess_captures([cap])}
+    enrichment = by_area["enrichment"]
+    assert enrichment.score == 0 or not enrichment.signals
+    assert not any("stay & play" in (s.text or "").lower() for s in enrichment.signals)
+
+
+def test_policy_boilerplate_not_ethos_or_community_toc():
+    cap = RawCapture(
+        url="https://school.example/_documents/Code_of_Conduct_incl_Whistleblowing.pdf",
+        source_type="school-document",
+        text=(
+            "By creating this policy, we aim to ensure our school is an environment "
+            "where everyone is safe, happy and treated with respect. "
+            "Staff should follow confidentiality and safeguarding procedures."
+        ),
+        page_title="Code of Conduct incl Whistleblowing Lower Level Concerns",
+        section="community",
+        structured_sections=[
+            StructuredSection(
+                heading="Related policies",
+                inferred_section="community",
+                list_items=[
+                    "Confidentiality",
+                    "Health and Safety Policy.",
+                    "Staff Code of Conduct",
+                    "Pay and Staff Appraisal",
+                    "Version Date Author Status Summary",
+                ],
+            )
+        ],
+        meta={"pageType": "substantive"},
+    )
+    by_area = {a.area: a for a in assess_captures([cap])}
+    ethos = by_area["ethos"]
+    community = by_area["community"]
+    assert not any("by creating this policy" in (s.text or "").lower() for s in ethos.signals)
+    assert "Confidentiality" not in community.offerings
+    assert "Staff Code of Conduct" not in community.offerings
+    assert "Health and Safety Policy." not in community.offerings
+
+
 def test_outside_agency_flowchart_stays_out_of_community():
     cap = RawCapture(
         url="https://school.example/docs/REFERRAL_TO_OUTSIDE_AGENCIES.pdf",

@@ -60,6 +60,20 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "use of ict",
         "assess, plan, do,",
         "ehcp myths and",
+        # Staff / statutory policy TOC labels (not parent-facing provision)
+        "confidentiality",
+        "health and safety policy",
+        "health and safety policy.",
+        "manual of personnel practice",
+        "manual of personnel practice).",
+        "pay and staff appraisal",
+        "safeguarding",
+        "single equalities statement",
+        "staff code of conduct",
+        "code of conduct",
+        "version date author status summary",
+        "whistleblowing",
+        "acceptable use of ict",
     }
 )
 
@@ -78,6 +92,12 @@ CHROME_FRAGMENTS: tuple[str, ...] = (
     "occupational therpay",  # misspelled county-directory row on Bursledon SEN map
     "county specialist",
     "special school outreach",
+    "personnel practice",
+    "staff appraisal",
+    "equalities statement",
+    "code of conduct",
+    "whistleblowing",
+    "version date author",
 )
 
 JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
@@ -131,6 +151,13 @@ JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"^social,\s*emotional\s*&?\s*$",
         r"^educational$",
         r"^physio(therapy)?$",
+        # Policy titles / TOC debris
+        r"\bpolicy\.?\s*$",
+        r"\bpolicies\b",
+        r"personnel practice",
+        r"staff (code of )?conduct",
+        r"version date",
+        r"status summary",
     )
 )
 
@@ -240,6 +267,23 @@ def is_plausible_list_offering(item: str) -> bool:
     return False
 
 
+POLICY_DOCUMENT_LABELS: frozenset[str] = frozenset(
+    {
+        "confidentiality",
+        "health and safety policy",
+        "health and safety policy.",
+        "manual of personnel practice",
+        "manual of personnel practice).",
+        "pay and staff appraisal",
+        "safeguarding",
+        "single equalities statement",
+        "staff code of conduct",
+        "code of conduct",
+        "version date author status summary",
+    }
+)
+
+
 # Need-type / external-agency labels belong on SEND pages, not community engagement.
 SEND_DIRECTORY_LABELS: frozenset[str] = frozenset(
     {
@@ -273,6 +317,10 @@ def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
         key = item.lower()
         # Community should be PTA / parents evening / local links — not SEN directories.
         if area_key == "community" and key in SEND_DIRECTORY_LABELS:
+            continue
+        if area_key in {"community", "ethos"} and (
+            key in POLICY_DOCUMENT_LABELS or "policy" in key or "personnel" in key
+        ):
             continue
         if key not in seen:
             seen.add(key)
