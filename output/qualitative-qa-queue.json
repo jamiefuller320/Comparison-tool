@@ -53,7 +53,8 @@
           "source": "heuristic"
         }
       ],
-      "status": "report_only"
+      "status": "auto_fixed",
+      "changes": 4
     },
     {
       "urn": "116172",
@@ -105,7 +106,8 @@
           "source": "heuristic"
         }
       ],
-      "status": "report_only"
+      "status": "auto_fixed",
+      "changes": 4
     },
     {
       "urn": "116169",
@@ -152,12 +154,14 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Ofsted Report"
+            "Ofsted Report",
+            "School Policies"
           ],
           "source": "heuristic"
         }
       ],
-      "status": "report_only"
+      "status": "auto_fixed",
+      "changes": 4
     },
     {
       "urn": "116270",
@@ -214,7 +218,8 @@
           "source": "heuristic"
         }
       ],
-      "status": "report_only"
+      "status": "auto_fixed",
+      "changes": 4
     },
     {
       "urn": "116027",
@@ -287,60 +292,8 @@
           "source": "heuristic"
         }
       ],
-      "status": "report_only"
-    },
-    {
-      "urn": "115933",
-      "name": "Buryfields Infant School",
-      "score": 15.5,
-      "flags": [
-        "admissions",
-        "admissions_in_enrichment",
-        "policy_boilerplate",
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "Year R 2027 - Stay & Play Session - Thursday 15th October - 3.30 - 4.30pm \u2013 Fill in form September 2026 new starters and in-year transfers If your child is due to start school in S",
-            "Year R 2027 - Stay & Play Session - Thursday 15th October - 3.30 - 4.30pm \u2013 Fill in form September 2026 new starters and in-year transfers If your child is due to start school in S"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Narrative opens with staff/policy boilerplate.",
-          "junkClass": "policy_boilerplate",
-          "offendingExcerpts": [
-            "By creating this policy, we aim to ensure our school is an environment where everyone is safe, happy and treated with respect."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Confidentiality",
-            "Health and Safety Policy.",
-            "Manual of Personnel Practice).",
-            "Pay and Staff Appraisal",
-            "Safeguarding",
-            "Single Equalities Statement",
-            "Staff Code of Conduct",
-            "Version Date Author Status Summary"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "report_only"
+      "status": "auto_fixed",
+      "changes": 4
     },
     {
       "urn": "116005",
@@ -383,7 +336,8 @@
           "source": "heuristic"
         }
       ],
-      "status": "report_only"
+      "status": "auto_fixed",
+      "changes": 3
     },
     {
       "urn": "136078",
@@ -426,7 +380,53 @@
           "source": "heuristic"
         }
       ],
-      "status": "report_only"
+      "status": "auto_fixed",
+      "changes": 3
+    },
+    {
+      "urn": "115887",
+      "name": "Cherbourg Primary School",
+      "score": 13.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Safeguarding",
+            "Special Educational Needs"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "PE & Outdoor Learning: Subject Information"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "RE, Values & Beliefs: Subject Information"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 3
     }
   ]
 }

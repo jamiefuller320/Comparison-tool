@@ -1,10 +1,10 @@
 {
-  "ranAt": "2026-08-08T06:54:56.548055+00:00",
+  "ranAt": "2026-08-08T10:01:44.521867+00:00",
   "dryRun": false,
   "reviewed": 8,
-  "changedSchools": 0,
-  "findingsApplied": 0,
-  "learningAdded": 0,
+  "changedSchools": 8,
+  "findingsApplied": 29,
+  "learningAdded": 22,
   "suspects": [
     {
       "urn": "116174",
@@ -153,7 +153,8 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Ofsted Report"
+            "Ofsted Report",
+            "School Policies"
           ],
           "source": "heuristic"
         }
@@ -288,58 +289,6 @@
       ]
     },
     {
-      "urn": "115933",
-      "name": "Buryfields Infant School",
-      "score": 15.5,
-      "flags": [
-        "admissions",
-        "admissions_in_enrichment",
-        "policy_boilerplate",
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "Year R 2027 - Stay & Play Session - Thursday 15th October - 3.30 - 4.30pm \u2013 Fill in form September 2026 new starters and in-year transfers If your child is due to start school in S",
-            "Year R 2027 - Stay & Play Session - Thursday 15th October - 3.30 - 4.30pm \u2013 Fill in form September 2026 new starters and in-year transfers If your child is due to start school in S"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Narrative opens with staff/policy boilerplate.",
-          "junkClass": "policy_boilerplate",
-          "offendingExcerpts": [
-            "By creating this policy, we aim to ensure our school is an environment where everyone is safe, happy and treated with respect."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Confidentiality",
-            "Health and Safety Policy.",
-            "Manual of Personnel Practice).",
-            "Pay and Staff Appraisal",
-            "Safeguarding",
-            "Single Equalities Statement",
-            "Staff Code of Conduct",
-            "Version Date Author Status Summary"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
       "urn": "116005",
       "name": "Castle Hill Primary School",
       "score": 15.0,
@@ -422,9 +371,54 @@
           "source": "heuristic"
         }
       ]
+    },
+    {
+      "urn": "115887",
+      "name": "Cherbourg Primary School",
+      "score": 13.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Safeguarding",
+            "Special Educational Needs"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "PE & Outdoor Learning: Subject Information"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "RE, Values & Beliefs: Subject Information"
+          ],
+          "source": "heuristic"
+        }
+      ]
     }
   ],
   "notes": [
+    "Applied QA fixes to 8 school(s) (29 area finding(s)).",
+    "Learned 22 new junk phrase(s) (store size 22).",
     "Reviewed top 8 suspect(s); provider=none."
   ],
   "provider": "none"
