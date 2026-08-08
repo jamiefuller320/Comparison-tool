@@ -165,9 +165,9 @@ export function offersMissingMeta(reason: OffersMissingReason): {
       };
     case "junior-transfer":
       return {
-        label: "Junior transfer not in this file",
+        label: "Junior Year 3 entry — not in offer-day stats",
         detail:
-          "This DfE school-level file is mainly Reception and Year 7 National Offer Day. Year 3 junior transfers are often omitted — that is expected, not a join error.",
+          "National Offer Day preference counts cover Reception and Year 7. Junior schools usually admit at Year 3, so those figures are often not published for them.",
       };
     case "nursery":
       return {

@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { ScrollRegion } from "@/components/ScrollRegion";
 import { useUiPreferences } from "@/components/UiPreferencesProvider";
 import type { CompareTableId } from "@/lib/uiPreferences";
 
@@ -52,15 +53,20 @@ export function CompareTableFrame({
           Pin measure labels
         </button>
       </div>
-      <div
-        className="compare-board"
-        data-sticky-header={sticky.stickyHeader ? "true" : "false"}
-        data-sticky-first-column={
-          sticky.stickyFirstColumn ? "true" : "false"
-        }
+      <ScrollRegion
+        className="compare-board-scroll"
+        hint="Scroll for more school data"
       >
-        {children}
-      </div>
+        <div
+          className="compare-board"
+          data-sticky-header={sticky.stickyHeader ? "true" : "false"}
+          data-sticky-first-column={
+            sticky.stickyFirstColumn ? "true" : "false"
+          }
+        >
+          {children}
+        </div>
+      </ScrollRegion>
     </div>
   );
 }
