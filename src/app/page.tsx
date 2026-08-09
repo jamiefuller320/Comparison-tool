@@ -11,7 +11,6 @@ import { BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
 import { guidePath, guidesIndexPath } from "@/lib/guides";
-import { SEO_DESCRIPTION } from "@/lib/seo";
 
 export const metadata: Metadata = {
   alternates: {
@@ -46,7 +45,6 @@ export default function HomePage() {
             published figures and inspection excerpts before you visit. A
             parental compass — not a league table.
           </p>
-          <p className="seo-intro-meta">{SEO_DESCRIPTION}</p>
         </div>
       </header>
 
