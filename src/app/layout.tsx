@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Figtree, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
+import { HttpsUpgrade } from "@/components/HttpsUpgrade";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
@@ -110,6 +111,7 @@ export default function RootLayout({
   return (
     <html lang="en-GB" className={`${figtree.variable} ${fraunces.variable}`}>
       <body>
+        <HttpsUpgrade />
         <JsonLd data={websiteJsonLd()} />
         <a className="skip-link" href="#main">
           Skip to main content

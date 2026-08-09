@@ -80,7 +80,8 @@ export function websiteJsonLd(): Record<string, unknown> {
         url: `${BRAND_HOME_URL}/`,
         applicationCategory: "EducationalApplication",
         operatingSystem: "Web",
-        browserRequirements: "Requires JavaScript",
+        // Homepage chrome is server-rendered; do not tell crawlers the site
+        // "Requires JavaScript" (that can discourage indexing of SSR content).
         description: SEO_DESCRIPTION,
         offers: {
           "@type": "Offer",

@@ -49,6 +49,10 @@ domain is active.
 2. **Build and deployment** → **Source** → **GitHub Actions**
 3. Under **Custom domain**, set `schoolcompass.uk` (the deploy also publishes
    `public/CNAME`). Wait for DNS check to go green, then enable **Enforce HTTPS**.
+   Without **Enforce HTTPS**, `http://schoolcompass.uk/` serves **200** (no
+   redirect) and the `*.github.io` project URL redirects to **http**, which
+   confuses Google indexing of the homepage. Confirm with
+   `curl -sI http://schoolcompass.uk/` → `301` to `https://…`.
 4. At your DNS host for `schoolcompass.uk`, point the apex at GitHub Pages:
 
    | Type | Name | Value |
