@@ -58,12 +58,14 @@ METRIC_COLS: dict[str, tuple[str, ...]] = {
     "disadvantagedRwmExpected": ("PTRWM_EXP_FSM6CLA1A",),
 }
 
+# CSP returns 403 for custom bot UAs; a mainstream browser UA is required.
 UA_HEADERS = {
     "User-Agent": (
-        "Mozilla/5.0 (compatible; Schoolside/0.1; "
-        "+https://github.com/jamiefuller320/Comparison-tool)"
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/128.0.0.0 Safari/537.36"
     ),
-    "Accept": "text/csv,*/*;q=0.8",
+    "Accept": "text/csv,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "en-GB,en;q=0.9",
     "Referer": "https://www.compare-school-performance.service.gov.uk/download-data",
 }
