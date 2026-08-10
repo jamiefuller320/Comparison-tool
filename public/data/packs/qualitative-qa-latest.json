@@ -1,19 +1,18 @@
 {
-  "ranAt": "2026-08-09T08:33:53.792533+00:00",
+  "ranAt": "2026-08-10T09:16:19.360874+00:00",
   "dryRun": false,
   "reviewed": 8,
   "changedSchools": 8,
-  "findingsApplied": 28,
-  "learningAdded": 23,
+  "findingsApplied": 25,
+  "learningAdded": 9,
   "suspects": [
     {
-      "urn": "136643",
-      "name": "Bohunt School",
-      "score": 21.0,
+      "urn": "116579",
+      "name": "Churcher's College",
+      "score": 30.0,
       "flags": [
         "policy_toc",
-        "implausible_offerings",
-        "chrome"
+        "implausible_offerings"
       ],
       "findings": [
         {
@@ -22,68 +21,17 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Purpose of Policy"
+            "Frequently Asked Questions"
           ],
           "source": "heuristic"
         },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Educational Innovations"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Educational Innovations"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Frequently Asked Questions:"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Liphook SEND Information Report 2025: Cognition & Learning:"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116169",
-      "name": "Alverstoke Community Infant and Pre-School",
-      "score": 20.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
         {
           "area": "enrichment",
           "action": "strip",
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Safeguarding Support"
+            "Frequently Asked Questions"
           ],
           "source": "heuristic"
         },
@@ -93,7 +41,17 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Safeguarding Support"
+            "Frequently Asked Questions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Frequently Asked Questions"
           ],
           "source": "heuristic"
         },
@@ -103,9 +61,7 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Safeguarding Governor Role",
-            "Safeguarding and SEND Newsletter",
-            "Hampshire Safeguarding Children Partnership"
+            "Frequently Asked Questions"
           ],
           "source": "heuristic"
         },
@@ -115,150 +71,49 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Safeguarding Support"
+            "Frequently Asked Questions"
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "115876",
-      "name": "Clanfield Junior School",
-      "score": 19.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Safeguarding Curriculum CJS",
-            "Safeguarding\u00bb"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Safeguarding curriculum: Safeguarding Curriculum CJS",
-            "Safeguarding\u00bb"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "At Clanfield, we understand that Special Educational Needs and/or Disabilities (SEND) are not a limitation, but a difference in how some children learn, communicate, or access the world around them.",
-            "In particular, pupils with special educational needs and/or disabilities (SEND) feel welcomed, supported and cared for by staff and pupils alike."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Safeguarding\u00bb"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Safeguarding\u00bb"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "115973",
-      "name": "Anton Infant School",
+      "urn": "116069",
+      "name": "Fordingbridge Infant School",
       "score": 16.0,
       "flags": [
-        "chrome",
         "policy_toc",
+        "chrome",
         "implausible_offerings"
       ],
       "findings": [
         {
           "area": "curriculum",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "safeguarding pshe rhe curriculum 2024 2025: Anton Infant Safeguarding/PSHE/RHE Curriculum Map 2024-2025"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Accessibility Policy",
-            "Equalities Policy",
-            "Hampshire County Council",
-            "Learning Disability Care",
-            "Map of Hampshire Support",
-            "Specialist Eating Disorder Team",
-            "Use of ICT"
+            "Educational Visits"
           ],
           "source": "heuristic"
         },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Hampshire County Council"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "penalty notices for non attendance guidance for parents and carers aug24: Hampshire County Council"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116285",
-      "name": "Ecchinswell and Sydmonton Church of England Primary School",
-      "score": 15.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
         {
           "area": "curriculum",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "All children are entitled to have access to a broad, balanced and relevant curriculum, including the NationalCurriculum, whichisdifferentiatedaccordingtoindividual needs.a) all moneyfromtheHantsSpecial Educational NeedsandDisabilityAudit isusedsolelyfor providinganappropriatelevel of support, e.g."
+            "Curriculum: Educational Visits"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Educational Visits"
           ],
           "source": "heuristic"
         },
@@ -268,53 +123,21 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "This year has been filled with so many moments that have made us proud; achievements in the classroom, sporting successes, musical performances, educational visits, acts of kindness and countless examples of children living out our Christian values each day."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This year has been filled with so many moments that have made us proud; achievements in the classroom, sporting successes, musical performances, educational visits, acts of kindness and countless examples of children living out our Christian values each day."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "\uf06e The inspector looked at a number of documents, including plans for improvement, teachers\u2019 plans, safeguarding arrangements, records relating to behaviour and attendance, governing body minutes and records of the school leaders\u2019 monitoring of lessons.",
-            "Through a calm and purposeful environment, we aim to equip children not only to succeed in school, but to grow into thoughtful, respectful individuals who contribute positively to their community Safeguarding At Ecchinswell, safeguarding is at the heart of everything we do."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "All children are entitled to have access to a broad, balanced and relevant curriculum, including the NationalCurriculum, whichisdifferentiatedaccordingtoindividual needs.a) all moneyfromtheHantsSpecial Educational NeedsandDisabilityAudit isusedsolelyfor providinganappropriatelevel of support, e.g.",
-            "Identificationof pupilsneedsOur policy is to promote early identification of any children who may have Special Educational Needs andDisability(SEND) either throughout, or at any time during their school life, whether it be academic, physical, emotional orsocial.",
-            "Some may alsohaveSpecial Educational NeedsandDisability(SEND) andmayhaveastatement, or Education, HealthandCare (EHC) Plan which brings together health and social care needs, as well as their special educational provisionandtheSENDCodeof Practice(2014) isfollowed."
+            "Educational Visits: Educational Visits",
+            "Educational Visits: Key Information"
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "138437",
-      "name": "Bridgemary School",
-      "score": 14.0,
+      "urn": "116068",
+      "name": "Fordingbridge Junior School",
+      "score": 16.0,
       "flags": [
         "policy_toc",
-        "implausible_offerings",
-        "chrome"
+        "chrome",
+        "implausible_offerings"
       ],
       "findings": [
         {
@@ -323,8 +146,58 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Safeguarding",
-            "Safeguarding Assemblies"
+            "Educational Visits"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Curriculum: Educational Visits"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Educational Visits"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Educational Visits: Educational Visits",
+            "Educational Visits: Key Information"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116519",
+      "name": "Forres Sandle Manor School",
+      "score": 12.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Lauren Marks - Deputy Head (Pastoral) and Designated Safeguarding Lead (DSL) After completing her degree in Sports Science at Loughborough University, she has worked at a number of schools across the country, from EYFS through to GCSE and A-Level, and most recently taught at Talbot Heath School in Bournemouth."
           ],
           "source": "heuristic"
         },
@@ -334,7 +207,7 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Safer Schools supports our staff, pupils and school community, providing up-to-date online safety safeguarding information."
+            "Inspection findings 5 \u00a9 Independent Schools Inspectorate 2023 Forres Sandle Manor School \u2013 January 2023 Provision of information [ISSR Part 6, paragraph 32(1)(c)] 2.9 The school meets the requirements for providing information relating to safeguarding to parents."
           ],
           "source": "heuristic"
         },
@@ -344,7 +217,8 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Our PSHE curriculum covers many different areas of Safeguarding including RSE (Relationships and Sex Education), drugs and alcohol education, anti-bullying, healthy relationships, citizenship and health education."
+            "Lauren Marks - Deputy Head (Pastoral) and Designated Safeguarding Lead (DSL) After completing her degree in Sports Science at Loughborough University, she has worked at a number of schools across the country, from EYFS through to GCSE and A-Level, and most recently taught at Talbot Heath School in Bournemouth.",
+            "As a successful leader, Russell is a keen advocate for synthesising academic progress with pastoral guidance and has mentored pupils throughout their school career, most recently undertaking training in restorative practice and the development of positive relationships within an educational environment."
           ],
           "source": "heuristic"
         },
@@ -354,19 +228,18 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "The SEND Code of Practice says: A child or young person has SEN if they have a learning difficulty or disability which calls for special educational provision to be made for him or her."
+            "The school has identified 22 pupils as having special educational needs and/or disabilities (SEND), which include dyslexia and dyspraxia, 21 of whom receive specialist support."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "116027",
-      "name": "Bursledon Junior School(CA)",
-      "score": 13.0,
+      "urn": "116277",
+      "name": "Bursledon Church of England Infant School",
+      "score": 11.0,
       "flags": [
         "chrome",
-        "policy_toc",
         "implausible_offerings"
       ],
       "findings": [
@@ -383,51 +256,10 @@
         {
           "area": "send",
           "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
           "offendingExcerpts": [
-            "Specialist Eating Disorder Team",
-            "Use of ICT"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Primary Behaviour",
-            "SEMH Wellbeing",
-            "School Nursing Team",
-            "Social, Emotional &",
-            "Special School",
-            "Special School Outreach",
-            "Speech & Language",
-            "Report Student Absence"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116488",
-      "name": "Ashley Junior School",
-      "score": 11.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "wrong_area",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Safeguarding"
+            "SEN FLOW CHART C   L PARENTS: COGNITION & LEARNING"
           ],
           "source": "heuristic"
         },
@@ -437,27 +269,141 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Safeguarding"
+            "Each year, they deliver: This partnership ensures that our whole school community benefits from expert knowledge, consistent messaging, and a proactive approach to digital safeguarding."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116280",
+      "name": "Catherington Church of England Infant School",
+      "score": 11.0,
+      "flags": [
+        "chrome",
+        "policy_toc",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our school policies reflect our inclusive ethos in particular, our policies for SEND, Behaviour and our Accessibility Plan."
           ],
           "source": "heuristic"
         },
         {
-          "area": "community",
+          "area": "send",
           "action": "strip",
-          "reason": "Community offerings are SEN directory / policy labels.",
-          "junkClass": "wrong_area",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Safeguarding"
+            "Special Educational Needs and Disability"
           ],
-          "suggestedArea": "send",
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Special Educational Needs and Disability (SEND): Hampshire's Local Offer"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116006",
+      "name": "Bishop's Waltham Junior School",
+      "score": 9.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Safeguarding within the BWJS Curriculum: Bikeability",
+            "Our broad curriculum gives pupils opportunities to experience life in all its diversity, to acquire knowledge, understanding and skills that significantly impact on personal development, behaviour and welfare and equips every child with the knowledge and skills required for personal safeguarding."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "We give them opportunities across the curriculum to explore values, personal rights, responsibilities and equal opportunities that develop moral concepts that impact positively on safeguarding, promote British values and prevent radicalisation and extremism."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "We give them opportunities across the curriculum to explore values, personal rights, responsibilities and equal opportunities that develop moral concepts that impact positively on safeguarding, promote British values and prevent radicalisation and extremism.",
+            "Our broad curriculum gives pupils opportunities to experience life in all its diversity, to acquire knowledge, understanding and skills that significantly impact on personal development, behaviour and welfare and equips every child with the knowledge and skills required for personal safeguarding."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "149863",
+      "name": "Dibden Park School",
+      "score": 9.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Curriculum Objectives: Terms & Conditions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "We are committed to providing the highest standards in relation to the safeguarding of the children and young people entrusted to our care.: Slavery Statement",
+            "We are committed to providing the highest standards in relation to the safeguarding of the children and young people entrusted to our care.: Terms & Conditions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Home Our Approach Clinical therapy Clinical therapy Dibden Park School offers a therapeutic educational approach with a staff team dedicated and determined to support every individual and a pastoral area that offers purposeful break out, sensory and individual learning spaces."
+          ],
           "source": "heuristic"
         }
       ]
     }
   ],
   "notes": [
-    "Applied QA fixes to 8 school(s) (28 area finding(s)).",
-    "Learned 23 new junk phrase(s) (store size 45).",
+    "Applied QA fixes to 8 school(s) (25 area finding(s)).",
+    "Learned 9 new junk phrase(s) (store size 54).",
     "Reviewed top 8 suspect(s); provider=none."
   ],
   "provider": "none"
