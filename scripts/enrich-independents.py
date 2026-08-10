@@ -51,11 +51,13 @@ KS4_DATASET = "19e39901-a96c-be76-b9c2-6af54ae076d2"
 KS4_YEAR = "2024/2025"
 
 # Filter option IDs for Total on each breakdown (from dataset meta).
+# Keep in sync with live /meta — EES added Prior attainment (ETvqF) in 2024/25.
 KS4_FILTER_TOTALS = [
     "5Kydi",  # disadvantage_status Total
     "mws9K",  # first_language Total
     "WCb2b",  # mobility Total
     "9b64v",  # sex Total
+    "TaYuP",  # prior_attainment Total
 ]
 
 # EES ORs repeated filters.eq — keep only the all-Total cross-tab client-side.
@@ -64,6 +66,7 @@ KS4_TOTAL_FILTERS = {
     "IzpBz": "mws9K",  # First language
     "ibG6X": "WCb2b",  # Mobility status
     "LZ6Wj": "9b64v",  # Sex
+    "ETvqF": "TaYuP",  # Prior attainment
 }
 
 KS4_INDICATORS = {
