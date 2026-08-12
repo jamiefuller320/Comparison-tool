@@ -1,36 +1,36 @@
 {
-  "ranAt": "2026-08-11T08:44:38.880535+00:00",
+  "ranAt": "2026-08-12T08:40:04.166353+00:00",
   "la": "Hampshire",
   "limit": 25,
   "offset": 0,
   "skipExisting": true,
   "refreshStaleDays": 28,
   "refreshLimit": 5,
-  "sidecarBefore": 170,
-  "sidecarAfter": 195,
+  "sidecarBefore": 195,
+  "sidecarAfter": 211,
   "synthesizeProvider": "none",
   "qaProvider": "none",
   "qaLimit": 8,
   "qa": {
     "reviewed": 8,
     "changedSchools": 8,
-    "findingsApplied": 20,
-    "learningAdded": 7,
+    "findingsApplied": 18,
+    "learningAdded": 11,
     "provider": "none"
   },
   "learnedTerms": {
     "termCount": 500,
-    "boostTermCount": 263,
-    "schoolCount": 195,
+    "boostTermCount": 276,
+    "schoolCount": 211,
     "rebuilt": true,
     "fromCapture": 500,
     "citationLearning": true
   },
   "dryRun": false,
   "notes": [
-    "Captured batch (sidecar 170 \u2192 195); learned terms now 500.",
+    "Captured batch (sidecar 195 \u2192 211); learned terms now 500.",
     "Selective synth provider=none; learned terms after citation merge=500.",
-    "QA provider=none: reviewed 8, changed 8, learned phrases +7.",
+    "QA provider=none: reviewed 8, changed 8, learned phrases +11.",
     "Re-merged schools-index after QA fixes."
   ],
   "progressPath": "output/qualitative-progress.json"

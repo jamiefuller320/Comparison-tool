@@ -1,17 +1,18 @@
 {
-  "ranAt": "2026-08-11T08:44:38.594901+00:00",
+  "ranAt": "2026-08-12T08:40:03.796268+00:00",
   "dryRun": false,
   "reviewed": 8,
   "changedSchools": 8,
-  "findingsApplied": 20,
-  "learningAdded": 7,
+  "findingsApplied": 18,
+  "learningAdded": 11,
   "suspects": [
     {
-      "urn": "144808",
-      "name": "Releasing Potential School",
-      "score": 37.0,
+      "urn": "116553",
+      "name": "Yateley Manor School",
+      "score": 14.0,
       "flags": [
         "policy_toc",
+        "admissions",
         "chrome",
         "implausible_offerings"
       ],
@@ -22,7 +23,18 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Frequently Asked Questions"
+            "Special Educational Needs and"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists childcare, Admission Process, Nursery Fees, Open Days, Pre-Prep, School Fees and 4 more. Information appears across 2 pages.",
+            "Excellence Backed by a Legacy of Learning: Open Days"
           ],
           "source": "heuristic"
         },
@@ -32,85 +44,26 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Frequently Asked Questions"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Frequently Asked Questions"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Frequently Asked Questions"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Frequently Asked Questions"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Frequently Asked Questions"
+            "SpecialEducationalNeedsandLearningDifficulties2024: 3.1.4 Childcare Act 2006",
+            "SpecialEducationalNeedsandLearningDifficulties2024: spelling, maths and handwriting."
           ],
           "source": "heuristic"
         },
         {
           "area": "send",
           "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Frequently Asked Questions"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Frequently Asked Questions"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Frequently Asked Questions"
+            "The use of provision maps can help the Special Educational Needs Co-ordinator (SENCO) to maintain an overview of the programmes and interventions used with different groups of pupils and provide a basis for monitoring the levels of intervention."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "150808",
-      "name": "Hawley Woods School",
+      "urn": "116636",
+      "name": "Treloar School",
       "score": 12.0,
       "flags": [
         "chrome"
@@ -122,7 +75,7 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Inspectors praised a wide range of enrichment activities, including educational visits and a thoughtful \u2018life skills curriculum\u2019 that prepares pupils for adulthood through practical learning such as cooking, domestic tasks and using public transport."
+            "For information on local offers in your area, please visit your county\u2019s Safeguarding Children Partnership website."
           ],
           "source": "heuristic"
         },
@@ -132,18 +85,17 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Safeguarding at the Kedleston Group Part of the Kedleston Group We\u2019re proud to be part of the Kedleston Group family of schools, all committed to providing safe, nurturing and ambitious education for neurodivergent learners.",
-            "Safeguarding at the Kedleston Group Part of the Kedleston Group We\u2019re proud to be part of the Kedleston Group family of schools, all committed to providing safe, nurturing and ambitious education for neurodivergent learners."
+            "Community access for primary students Thanks to \u00a33,300 in Councillor Grants from East Hampshire District Councillors, Treloar\u2019s has purchased a specialist Baffin Simon car seat, helping students safely access educational trips and community activities."
           ],
           "source": "heuristic"
         },
         {
-          "area": "send",
+          "area": "behaviour",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "SEND term glossary Frequently asked questions Request for assessment (weeks 0-6) EHC needs assessment (weeks 6-16) Draft EHCP issued (by week 16) School/setting consultation (usually 15 days) Final EHCP issued (by week 20) Open days See how learning comes to life in our schools."
+            "We support a culture of openness, honesty and transparency, where the safeguarding of our students and wellbeing of our staff is paramount."
           ],
           "source": "heuristic"
         },
@@ -153,18 +105,156 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "IPSEA (Independent Provider of Special Education Advice) is an English charity established in 1983 that provides free, legally based advice and support to families of children and young people with special educational needs and disabilities (SEND)."
+            "For information on local offers in your area, please visit your county\u2019s Safeguarding Children Partnership website."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "116555",
-      "name": "Hurst Lodge School",
+      "urn": "116518",
+      "name": "St Nicholas' School",
       "score": 9.0,
       "flags": [
         "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Through exciting activities like educational trips, the exploration of inspiring artists and designers, and the integration of photography and drawing into their textile projects, pupils will cultivate a dynamic range of design and making skills."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Vision and Values EDUCATIONAL AIMS AND ETHOS St Nicholas' School is a happy, thriving school where education is seen as a partnership between teachers, pupils and parents."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Vision and Values EDUCATIONAL AIMS AND ETHOS St Nicholas' School is a happy, thriving school where education is seen as a partnership between teachers, pupils and parents."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116357",
+      "name": "Charles Kingsley's Church of England Primary School",
+      "score": 8.0,
+      "flags": [
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "SEND info report 2026: Special Educational Needs and Disabilities",
+            "Identification of SEND The school will use parents, previous educational settings, preschool, class teacher, SEND Co-ordinator (SENDCo) and external agencies to gather information that would enable us to identify SEND."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "This local offer was drafted and amended after consultation with parents, pupils and Governors and in consultation with a network of Hampshire schools and Educational Psychologists."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "132802",
+      "name": "Cherrywood Community Primary School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Reports and Policies"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "SEND: Reports and Policies"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116432",
+      "name": "Cranbourne",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Educational Psychologists"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "SEND: Educational Psychologists"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115918",
+      "name": "Freegrounds Infant School",
+      "score": 8.0,
+      "flags": [
+        "chrome",
+        "policy_toc",
+        "implausible_offerings"
       ],
       "findings": [
         {
@@ -173,166 +263,26 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Not all students within Hurst have Special Educational Needs, but benefit from small classes and a broad, stimulating curriculum."
+            "Curriculum: Computing & Technology"
           ],
           "source": "heuristic"
         },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Residential educational experiences bring students together and allow them to take part in exciting and memorable team-building exercises, geography field work, ICT work and some challenging physical activities, such as climbing and abseiling."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Designed and led by Laura Benetton, Art and Science Coordinator at Hurst Lodge School, the programme invites students with Special Educational Needs (SEN) to explore the natural world through both scientific observation and creative expression."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116063",
-      "name": "Balksbury Infant School",
-      "score": 8.0,
-      "flags": [
-        "chrome",
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
         {
           "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Providing a safe, secure and welcoming learning environment, we will ensure that children gain a wealth of educational experiences as they move on their journey from Year R to Year 6.",
-            "Providing a safe, secure and welcoming learning environment, we will ensure that children gain a wealth of educational experiences as they move on their journey from Year R to Year 6."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Special Educational Needs and"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "115852",
-      "name": "Balksbury Junior School",
-      "score": 8.0,
-      "flags": [
-        "chrome",
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Providing a safe, secure and welcoming learning environment, we will ensure that children gain a wealth of educational experiences as they move on their journey from Year R to Year 6.",
-            "Providing a safe, secure and welcoming learning environment, we will ensure that children gain a wealth of educational experiences as they move on their journey from Year R to Year 6."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Special Educational Needs and"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116270",
-      "name": "Barton Stacey Church of England Primary School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Hampshire Educational Psychology Service"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEN INFORMATION REPORT 2024 25: Hampshire Educational Psychology Service"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "150418",
-      "name": "Bordon Infant School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "send",
           "action": "strip",
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
             "Educational Psychology Service",
-            "Primary Behaviour Support Service"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Which outside agency experts are available to support my child\u2019s SEN?: Educational Psychology Service"
+            "Speech & Language Therapy"
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "137538",
-      "name": "Cams Hill School",
+      "urn": "116534",
+      "name": "St Swithuns",
       "score": 8.0,
       "flags": [
         "policy_toc",
@@ -346,8 +296,7 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Frequently Asked Questions:",
-            "Hampshire Educational Psychology Services"
+            "EDUCATIONAL QUALITY INSPECTION"
           ],
           "source": "heuristic"
         },
@@ -357,7 +306,10 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "SEND Information Report 2026: Frequently Asked Questions:"
+            "Senior School Educational Quality Inspection 2017 1012: development and collaborative learning in mathematics.",
+            "Senior School Educational Quality Inspection 2017 1012: Address St Swithun\u2019s School",
+            "Senior School Educational Quality Inspection 2017 1012: BACKGROUND INFORMATION",
+            "Senior School Educational Quality Inspection 2017 1012: EDUCATIONAL QUALITY INSPECTION"
           ],
           "source": "heuristic"
         }
@@ -365,8 +317,8 @@
     }
   ],
   "notes": [
-    "Applied QA fixes to 8 school(s) (20 area finding(s)).",
-    "Learned 7 new junk phrase(s) (store size 61).",
+    "Applied QA fixes to 8 school(s) (18 area finding(s)).",
+    "Learned 11 new junk phrase(s) (store size 72).",
     "Reviewed top 8 suspect(s); provider=none."
   ],
   "provider": "none"
