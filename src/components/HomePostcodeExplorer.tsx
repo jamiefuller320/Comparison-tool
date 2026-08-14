@@ -20,15 +20,20 @@ import {
 import { fmtPct } from "@/lib/format";
 import { PhaseSelector } from "@/components/PhaseSelector";
 import { SectorSelector } from "@/components/SectorSelector";
+import { StageMatchSelector } from "@/components/StageMatchSelector";
+import { ProvisionSelector } from "@/components/ProvisionSelector";
 import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
   schoolOffersSecondary,
+  schoolStageIds,
   wantsChildminders,
   wantsEyMetrics,
   wantsKs4Metrics,
   type PhaseId,
+  type StageMatchMode,
+  DEFAULT_STAGE_MATCH,
 } from "@/lib/phases";
 import {
   formatSector,
@@ -36,6 +41,11 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import {
+  schoolMatchesProvision,
+  type ProvisionFilterId,
+  DEFAULT_PROVISION,
+} from "@/lib/provisionFilter";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 import { requestTourStart } from "@/lib/tour";
 import { recordFeedbackUsage } from "@/lib/productFeedback";
@@ -77,8 +87,12 @@ export function HomePostcodeExplorer({
   onToggle,
   stageFilter,
   onStageFilterChange,
+  stageMatch = DEFAULT_STAGE_MATCH,
+  onStageMatchChange,
   sectorFilter,
   onSectorFilterChange,
+  provisionFilter = DEFAULT_PROVISION,
+  onProvisionFilterChange,
   showComparableKs4Toggle = false,
   comparableKs4Only = true,
   onComparableKs4OnlyChange,
@@ -89,8 +103,12 @@ export function HomePostcodeExplorer({
   onToggle: (urn: string) => void;
   stageFilter: PhaseId[];
   onStageFilterChange: (next: PhaseId[]) => void;
+  stageMatch?: StageMatchMode;
+  onStageMatchChange?: (next: StageMatchMode) => void;
   sectorFilter: SectorId[];
   onSectorFilterChange: (next: SectorId[]) => void;
+  provisionFilter?: ProvisionFilterId;
+  onProvisionFilterChange?: (next: ProvisionFilterId) => void;
   showComparableKs4Toggle?: boolean;
   comparableKs4Only?: boolean;
   onComparableKs4OnlyChange?: (next: boolean) => void;
@@ -202,22 +220,33 @@ export function HomePostcodeExplorer({
       radiusKm * 1000,
       listLimitForRadius(radiusKm),
       (school) => {
-        // Directory categories bypass school-type chips and age-range AND.
-        if (isEyProvider(school) && wantsEyMetrics(stageFilter)) return true;
-        if (isChildminder(school) && wantsChildminders(stageFilter)) {
-          return true;
+        // Directory categories bypass school-type chips and age-range match.
+        if (isEyProvider(school) && wantsEyMetrics(stageFilter)) {
+          return provisionFilter !== "specialist";
         }
-        if (!schoolMatchesPhases(school, stageFilter)) return false;
-        return schoolMatchesSectors(school, sectorFilter);
+        if (isChildminder(school) && wantsChildminders(stageFilter)) {
+          return provisionFilter !== "specialist";
+        }
+        if (!schoolMatchesPhases(school, stageFilter, stageMatch)) return false;
+        if (!schoolMatchesSectors(school, sectorFilter)) return false;
+        return schoolMatchesProvision(school, provisionFilter);
       },
     );
-  }, [home, schools, radiusKm, stageFilter, sectorFilter]);
+  }, [
+    home,
+    schools,
+    radiusKm,
+    stageFilter,
+    stageMatch,
+    sectorFilter,
+    provisionFilter,
+  ]);
 
   useEffect(() => {
     // Drop stale road times as soon as the sector/stage filter changes so the
     // nearby pane does not briefly show distances for the previous set.
     setRoadByUrn({});
-  }, [sectorFilter, stageFilter, comparableKs4Only]);
+  }, [sectorFilter, stageFilter, stageMatch, provisionFilter, comparableKs4Only]);
 
   const nearby = useMemo(
     () =>
@@ -405,12 +434,28 @@ export function HomePostcodeExplorer({
             tone="hero"
             tourId="stages"
           />
+          {onStageMatchChange ? (
+            <StageMatchSelector
+              selected={stageMatch}
+              stages={stageFilter}
+              onChange={onStageMatchChange}
+              tone="hero"
+            />
+          ) : null}
           <SectorSelector
             selected={sectorFilter}
             onChange={onSectorFilterChange}
             tone="hero"
             tourId="sector"
           />
+          {onProvisionFilterChange ? (
+            <ProvisionSelector
+              selected={provisionFilter}
+              onChange={onProvisionFilterChange}
+              tone="hero"
+              tourId="provision"
+            />
+          ) : null}
         </div>
       </div>
 
@@ -431,8 +476,19 @@ export function HomePostcodeExplorer({
                   : sectorFilter.includes("independent")
                     ? "independent"
                     : "state"}{" "}
-                schools for the stages you selected. Range ring on the map,
-                door-to-door road distance in the list — tick to shortlist.
+                {provisionFilter === "specialist"
+                  ? "specialist / AP "
+                  : provisionFilter === "mainstream"
+                    ? "mainstream "
+                    : ""}
+                schools for the stages you selected
+                {stageMatch === "all" && schoolStageIds(stageFilter).length > 1
+                  ? " (must cover every selected stage)"
+                  : schoolStageIds(stageFilter).length > 1
+                    ? " (any selected stage)"
+                    : ""}
+                . Range ring on the map, door-to-door road distance in the list —
+                tick to shortlist.
               </p>
             </div>
 

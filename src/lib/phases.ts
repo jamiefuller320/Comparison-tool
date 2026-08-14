@@ -330,13 +330,32 @@ export function migrateStagesFromLegacyEySettings(
 }
 
 /**
- * School matches if it offers every selected *school* stage (AND).
+ * Match mode for selected school stages.
+ * - any (default): school offers at least one selected stage (OR)
+ * - all: school offers every selected stage (AND) — e.g. all-through covering KS1+KS2
+ */
+export type StageMatchMode = "any" | "all";
+
+export const DEFAULT_STAGE_MATCH: StageMatchMode = "any";
+
+export function normalizeStageMatchMode(
+  raw: string | null | undefined,
+): StageMatchMode {
+  const id = (raw || "").trim().toLowerCase();
+  if (id === "all" || id === "and") return "all";
+  return "any";
+}
+
+/**
+ * School matches selected *school* stages.
+ * Default is OR (any selected stage). Pass mode "all" to require every stage.
  * The Childminders category is ignored here — directory rows are stitched
  * in separately when that chip is on.
  */
 export function schoolMatchesPhases(
   school: { ageRange?: string | null; phases?: string[] | null },
   selected: PhaseId[],
+  mode: StageMatchMode = DEFAULT_STAGE_MATCH,
 ): boolean {
   const schoolStages = schoolStageIds(selected);
   if (!schoolStages.length) return false;
@@ -344,7 +363,10 @@ export function schoolMatchesPhases(
   // even when the harvested JSON still carries a legacy "phases" array.
   const offered = phasesFromAgeRange(school.ageRange);
   if (!offered.length) return false;
-  return schoolStages.every((phase) => offered.includes(phase));
+  if (mode === "all") {
+    return schoolStages.every((phase) => offered.includes(phase));
+  }
+  return schoolStages.some((phase) => offered.includes(phase));
 }
 
 export function formatPhases(phases: PhaseId[]): string {

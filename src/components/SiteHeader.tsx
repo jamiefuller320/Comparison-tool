@@ -3,19 +3,24 @@
 import { useEffect, useId, useState } from "react";
 import { FloatingControls } from "@/components/FloatingControls";
 import { AccountMenu } from "@/components/AccountMenu";
+import { HomeSectionLink } from "@/components/HomeSectionLink";
 import { useUiPreferences } from "@/components/UiPreferencesProvider";
 import { requestTourStart } from "@/lib/tour";
 import { requestOpenFeedback } from "@/lib/productFeedback";
 
-const PRIMARY_LINKS = [
-  { href: "/areas/", label: "Areas" },
-  { href: "/guides/", label: "Guides" },
-  { href: "/#nearby", label: "Near home" },
-  { href: "/#compare", label: "Shortlist" },
-  { href: "/#side-by-side", label: "Side by side" },
-  { href: "/#how", label: "How to read" },
-  { href: "/#data", label: "Data" },
-] as const;
+type PrimaryLink =
+  | { kind: "page"; href: string; label: string }
+  | { kind: "section"; hash: string; label: string };
+
+const PRIMARY_LINKS: PrimaryLink[] = [
+  { kind: "page", href: "/areas/", label: "Areas" },
+  { kind: "page", href: "/guides/", label: "Guides" },
+  { kind: "section", hash: "nearby", label: "Near home" },
+  { kind: "section", hash: "compare", label: "Shortlist" },
+  { kind: "section", hash: "side-by-side", label: "Side by side" },
+  { kind: "section", hash: "how", label: "How to read" },
+  { kind: "section", hash: "data", label: "Data" },
+];
 
 export function SiteHeader() {
   const { prefs, hydrated, setFloatingControls } = useUiPreferences();
@@ -79,11 +84,17 @@ export function SiteHeader() {
               Feedback
             </button>
             <nav className="nav-links" aria-label="Primary">
-              {PRIMARY_LINKS.map((link) => (
-                <a key={link.href} href={link.href}>
-                  {link.label}
-                </a>
-              ))}
+              {PRIMARY_LINKS.map((link) =>
+                link.kind === "page" ? (
+                  <a key={link.href} href={link.href}>
+                    {link.label}
+                  </a>
+                ) : (
+                  <HomeSectionLink key={link.hash} hash={link.hash}>
+                    {link.label}
+                  </HomeSectionLink>
+                ),
+              )}
             </nav>
             <button
               type="button"
@@ -122,11 +133,21 @@ export function SiteHeader() {
         hidden={!menuOpen}
       >
         <nav className="nav-drawer-links" aria-label="Mobile primary">
-          {PRIMARY_LINKS.map((link) => (
-            <a key={link.href} href={link.href} onClick={closeMenu}>
-              {link.label}
-            </a>
-          ))}
+          {PRIMARY_LINKS.map((link) =>
+            link.kind === "page" ? (
+              <a key={link.href} href={link.href} onClick={closeMenu}>
+                {link.label}
+              </a>
+            ) : (
+              <HomeSectionLink
+                key={link.hash}
+                hash={link.hash}
+                onNavigate={closeMenu}
+              >
+                {link.label}
+              </HomeSectionLink>
+            ),
+          )}
         </nav>
         <div className="nav-drawer-actions">
           <button

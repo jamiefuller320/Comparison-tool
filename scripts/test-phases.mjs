@@ -36,9 +36,14 @@ async function main() {
       process.exit(1);
     }
   }
-  // AND: primary must NOT match KS2+KS3 together
-  if (schoolMatchesPhases(primary, ["ks2", "ks3"])) {
-    console.error("FAIL primary should not match KS2 AND KS3");
+  // OR default: primary matches KS2+KS3 because it offers KS2
+  if (!schoolMatchesPhases(primary, ["ks2", "ks3"])) {
+    console.error("FAIL primary should match KS2 OR KS3 (has KS2)");
+    process.exit(1);
+  }
+  // AND mode: primary must NOT match KS2+KS3 together
+  if (schoolMatchesPhases(primary, ["ks2", "ks3"], "all")) {
+    console.error("FAIL primary should not match KS2 AND KS3 in all mode");
     process.exit(1);
   }
   if (schoolMatchesPhases(primary, ["ks3"]) || schoolMatchesPhases(primary, ["ks4"])) {
@@ -54,27 +59,39 @@ async function main() {
     }
   }
   if (!schoolMatchesPhases(allThrough, ["ks3", "ks4"])) {
-    console.error("FAIL all-through should match KS3 AND KS4");
+    console.error("FAIL all-through should match KS3 OR KS4");
     process.exit(1);
   }
-  if (!schoolMatchesPhases(allThrough, ["ks2", "ks3", "ks4"])) {
+  if (!schoolMatchesPhases(allThrough, ["ks2", "ks3", "ks4"], "all")) {
     console.error("FAIL all-through should match KS2+KS3+KS4 AND");
     process.exit(1);
   }
 
   const secondary = { ageRange: "11 to 16" };
   if (!schoolMatchesPhases(secondary, ["ks3", "ks4"])) {
-    console.error("FAIL secondary should match KS3 AND KS4");
+    console.error("FAIL secondary should match KS3 OR KS4");
     process.exit(1);
   }
-  if (schoolMatchesPhases(secondary, ["ks2", "ks3"])) {
-    console.error("FAIL secondary should not match KS2 AND KS3");
+  if (!schoolMatchesPhases(secondary, ["ks3", "ks4"], "all")) {
+    console.error("FAIL secondary should match KS3 AND KS4 in all mode");
+    process.exit(1);
+  }
+  if (!schoolMatchesPhases(secondary, ["ks2", "ks3"])) {
+    console.error("FAIL secondary should match KS2 OR KS3 (has KS3)");
+    process.exit(1);
+  }
+  if (schoolMatchesPhases(secondary, ["ks2", "ks3"], "all")) {
+    console.error("FAIL secondary should not match KS2 AND KS3 in all mode");
     process.exit(1);
   }
 
   const junior = { ageRange: "7 to 11" };
-  if (schoolMatchesPhases(junior, ["ks1", "ks2"])) {
-    console.error("FAIL junior should not match KS1 AND KS2");
+  if (!schoolMatchesPhases(junior, ["ks1", "ks2"])) {
+    console.error("FAIL junior should match KS1 OR KS2 (has KS2)");
+    process.exit(1);
+  }
+  if (schoolMatchesPhases(junior, ["ks1", "ks2"], "all")) {
+    console.error("FAIL junior should not match KS1 AND KS2 in all mode");
     process.exit(1);
   }
   if (!schoolMatchesPhases(junior, ["ks2"])) {
@@ -147,7 +164,7 @@ async function main() {
     console.error("FAIL schoolStageIds should drop childminders");
     process.exit(1);
   }
-  // Childminders chip must not participate in school age-range AND.
+  // Childminders chip must not participate in school age-range match.
   if (schoolMatchesPhases(primary, ["childminders"])) {
     console.error("FAIL schools should not match childminders-only via phases");
     process.exit(1);

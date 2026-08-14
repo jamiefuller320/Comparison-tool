@@ -10,6 +10,8 @@ import {
   wantsChildminders,
   wantsEyMetrics,
   type PhaseId,
+  type StageMatchMode,
+  DEFAULT_STAGE_MATCH,
 } from "@/lib/phases";
 import {
   formatSector,
@@ -17,6 +19,11 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import {
+  schoolMatchesProvision,
+  type ProvisionFilterId,
+  DEFAULT_PROVISION,
+} from "@/lib/provisionFilter";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 
 export function SchoolSearch({
@@ -24,14 +31,18 @@ export function SchoolSearch({
   selectedUrns,
   onAdd,
   stageFilter,
+  stageMatch = DEFAULT_STAGE_MATCH,
   sectorFilter,
+  provisionFilter = DEFAULT_PROVISION,
   max = 4,
 }: {
   schools: Array<DirectorySchool | SchoolRecord>;
   selectedUrns: string[];
   onAdd: (urn: string) => void;
   stageFilter: PhaseId[];
+  stageMatch?: StageMatchMode;
   sectorFilter: SectorId[];
+  provisionFilter?: ProvisionFilterId;
   max?: number;
 }) {
   const [query, setQuery] = useState("");
@@ -42,13 +53,18 @@ export function SchoolSearch({
   const pool = useMemo(
     () =>
       schools.filter((s) => {
-        // Directory categories bypass school-type chips and age-range AND.
-        if (isEyProvider(s) && wantsEyMetrics(stageFilter)) return true;
-        if (isChildminder(s) && wantsChildminders(stageFilter)) return true;
-        if (!schoolMatchesPhases(s, stageFilter)) return false;
-        return schoolMatchesSectors(s, sectorFilter);
+        // Directory categories bypass school-type chips and age-range match.
+        if (isEyProvider(s) && wantsEyMetrics(stageFilter)) {
+          return provisionFilter !== "specialist";
+        }
+        if (isChildminder(s) && wantsChildminders(stageFilter)) {
+          return provisionFilter !== "specialist";
+        }
+        if (!schoolMatchesPhases(s, stageFilter, stageMatch)) return false;
+        if (!schoolMatchesSectors(s, sectorFilter)) return false;
+        return schoolMatchesProvision(s, provisionFilter);
       }),
-    [schools, stageFilter, sectorFilter],
+    [schools, stageFilter, stageMatch, sectorFilter, provisionFilter],
   );
 
   const results = useMemo(() => {

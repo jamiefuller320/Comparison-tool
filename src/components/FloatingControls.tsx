@@ -1,5 +1,6 @@
 "use client";
 
+import { HomeSectionLink } from "@/components/HomeSectionLink";
 import { useUiPreferences } from "@/components/UiPreferencesProvider";
 
 export function FloatingControls() {
@@ -14,14 +15,14 @@ export function FloatingControls() {
     >
       <div className="floating-controls-inner">
         <span className="floating-controls-label">Jump</span>
-        <a href="/#top">Home</a>
+        <HomeSectionLink hash="top">Home</HomeSectionLink>
         <a href="/areas/">Areas</a>
         <a href="/guides/">Guides</a>
-        <a href="/#nearby">Near home</a>
-        <a href="/#compare">Shortlist</a>
-        <a href="/#side-by-side">Side by side</a>
-        <a href="/#how">How to read</a>
-        <a href="/#data">Data</a>
+        <HomeSectionLink hash="nearby">Near home</HomeSectionLink>
+        <HomeSectionLink hash="compare">Shortlist</HomeSectionLink>
+        <HomeSectionLink hash="side-by-side">Side by side</HomeSectionLink>
+        <HomeSectionLink hash="how">How to read</HomeSectionLink>
+        <HomeSectionLink hash="data">Data</HomeSectionLink>
       </div>
     </div>
   );

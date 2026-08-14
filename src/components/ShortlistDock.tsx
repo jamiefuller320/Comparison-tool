@@ -1,6 +1,7 @@
 "use client";
 
 import { ShareShortlistButton } from "@/components/ShareShortlistButton";
+import { scrollToHomeSection } from "@/lib/inPageNav";
 
 /** Sticky bottom dock: shortlist count + Compare + Share. */
 export function ShortlistDock({
@@ -25,17 +26,25 @@ export function ShortlistDock({
       <div className="shortlist-dock-inner">
         <p className="shortlist-dock-count">{label}</p>
         <div className="shortlist-dock-actions">
-          <a className="btn btn-primary" href="/#side-by-side">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => scrollToHomeSection("side-by-side")}
+          >
             Compare
-          </a>
+          </button>
           <ShareShortlistButton
             schoolNames={schoolNames}
             className="btn btn-ghost"
             label="Share"
           />
-          <a className="btn btn-ghost shortlist-dock-edit" href="/#compare">
+          <button
+            type="button"
+            className="btn btn-ghost shortlist-dock-edit"
+            onClick={() => scrollToHomeSection("compare")}
+          >
             Edit
-          </a>
+          </button>
         </div>
       </div>
     </div>
