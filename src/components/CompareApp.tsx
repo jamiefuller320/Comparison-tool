@@ -18,6 +18,8 @@ import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChec
 import { VisitPack } from "@/components/VisitPack";
 import { DecisionGuidancePanel } from "@/components/DecisionGuidance";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
+import { ShareShortlistButton } from "@/components/ShareShortlistButton";
+import { ShortlistDock } from "@/components/ShortlistDock";
 import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
 import { useAccount } from "@/components/AccountProvider";
@@ -807,6 +809,16 @@ export function CompareApp({
             sectorFilter={sectors}
           />
           <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
+          {selectedSchools.length > 0 ? (
+            <div className="shortlist-inline-actions">
+              <a className="btn btn-primary" href="/#side-by-side">
+                Compare side by side
+              </a>
+              <ShareShortlistButton
+                schoolNames={selectedSchools.map((s) => s.name)}
+              />
+            </div>
+          ) : null}
           <SaveShortlistPrompt
             schools={selected}
             stages={stages}
@@ -843,6 +855,14 @@ export function CompareApp({
                 : null}
               . Patterns to visit on, not a final verdict.
             </p>
+            {selectedSchools.length > 0 ? (
+              <div className="shortlist-inline-actions section-head-actions">
+                <ShareShortlistButton
+                  schoolNames={selectedSchools.map((s) => s.name)}
+                  label="Share this comparison"
+                />
+              </div>
+            ) : null}
           </div>
 
           {activePath ? (
@@ -872,6 +892,11 @@ export function CompareApp({
           </div>
         </section>
       ) : null}
+
+      <ShortlistDock
+        count={selectedSchools.length}
+        schoolNames={selectedSchools.map((s) => s.name)}
+      />
     </>
   );
 }
