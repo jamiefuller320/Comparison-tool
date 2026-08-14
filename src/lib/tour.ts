@@ -81,7 +81,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "shortlist",
     target: "shortlist",
     title: "Your shortlist (up to four)",
-    body: "Selected schools appear as chips here. Remove one with × if you want to try another. Your shortlist is kept in the page URL so you can share or bookmark it.",
+    body: "Selected schools appear as chips here. Use Compare or Share when you’re ready — your shortlist stays in the page URL so a co-parent can open the same view.",
   },
   {
     id: "boards",
