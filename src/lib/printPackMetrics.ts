@@ -182,7 +182,7 @@ function numericField(
   school: SchoolRecord,
   key: string,
 ): number | null {
-  const raw = (school as Record<string, unknown>)[key];
+  const raw = (school as unknown as Record<string, unknown>)[key];
   if (raw == null || raw === "") return null;
   const n = Number(raw);
   return Number.isFinite(n) ? n : null;
