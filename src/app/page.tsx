@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CompareLoader } from "@/components/CompareLoader";
 import { AreaCoverageList } from "@/components/AreaCoverageList";
+import { BrandWordmark } from "@/components/BrandWordmark";
 import {
   areasIndexPath,
   formatCount,
@@ -35,9 +36,7 @@ export default function HomePage() {
       */}
       <header className="hero-stack seo-intro" id="top" data-tour="hero">
         <div className="shell hero-inner">
-          <p className="hero-brand">
-            School <em>Compass</em>
-          </p>
+          <BrandWordmark className="hero-brand" as="p" />
           <h1>Find your bearings when choosing a school.</h1>
           <p>
             Map nearby schools from your home postcode, shortlist a few, then

@@ -3,6 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import { FloatingControls } from "@/components/FloatingControls";
 import { AccountMenu } from "@/components/AccountMenu";
+import { BrandWordmark } from "@/components/BrandWordmark";
 import { HomeSectionLink } from "@/components/HomeSectionLink";
 import { useUiPreferences } from "@/components/UiPreferencesProvider";
 import { requestTourStart } from "@/lib/tour";
@@ -12,11 +13,15 @@ type PrimaryLink =
   | { kind: "page"; href: string; label: string }
   | { kind: "section"; hash: string; label: string };
 
+/** Compact primary nav — deeper links live in the menu drawer. */
 const PRIMARY_LINKS: PrimaryLink[] = [
   { kind: "page", href: "/areas/", label: "Areas" },
   { kind: "page", href: "/guides/", label: "Guides" },
   { kind: "section", hash: "nearby", label: "Near home" },
   { kind: "section", hash: "compare", label: "Shortlist" },
+];
+
+const MORE_LINKS: PrimaryLink[] = [
   { kind: "section", hash: "side-by-side", label: "Side by side" },
   { kind: "section", hash: "how", label: "How to read" },
   { kind: "section", hash: "data", label: "Data" },
@@ -51,38 +56,10 @@ export function SiteHeader() {
       <header className="site-header" role="banner">
         <div className="shell header-inner">
           <a className="brand" href="/" aria-label="School Compass home">
-            School<span>Compass</span>
+            <BrandWordmark className="brand-wordmark" />
           </a>
           <div className="header-actions">
             <AccountMenu />
-            <button
-              type="button"
-              className={
-                floatingOn
-                  ? "header-pref-toggle on header-desktop-only"
-                  : "header-pref-toggle header-desktop-only"
-              }
-              aria-pressed={floatingOn}
-              title="Keep quick page links visible while you scroll"
-              onClick={() => setFloatingControls(!prefs.floatingControls)}
-            >
-              Float jump links
-            </button>
-            <button
-              type="button"
-              className="tour-launch header-desktop-only"
-              onClick={() => requestTourStart()}
-            >
-              How to use
-            </button>
-            <button
-              type="button"
-              className="tour-launch header-desktop-only"
-              title="School Compass is under development — share structured feedback"
-              onClick={() => requestOpenFeedback("manual")}
-            >
-              Feedback
-            </button>
             <nav className="nav-links" aria-label="Primary">
               {PRIMARY_LINKS.map((link) =>
                 link.kind === "page" ? (
@@ -109,7 +86,7 @@ export function SiteHeader() {
                 <span />
               </span>
               <span className="nav-menu-toggle-label">
-                {menuOpen ? "Close" : "Menu"}
+                {menuOpen ? "Close" : "More"}
               </span>
             </button>
           </div>
@@ -132,8 +109,8 @@ export function SiteHeader() {
         aria-label="Site menu"
         hidden={!menuOpen}
       >
-        <nav className="nav-drawer-links" aria-label="Mobile primary">
-          {PRIMARY_LINKS.map((link) =>
+        <nav className="nav-drawer-links" aria-label="Site sections">
+          {[...PRIMARY_LINKS, ...MORE_LINKS].map((link) =>
             link.kind === "page" ? (
               <a key={link.href} href={link.href} onClick={closeMenu}>
                 {link.label}
