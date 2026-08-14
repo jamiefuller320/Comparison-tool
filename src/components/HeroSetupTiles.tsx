@@ -4,7 +4,6 @@ import {
   useEffect,
   useId,
   useRef,
-  useState,
   type ReactNode,
 } from "react";
 
@@ -20,10 +19,16 @@ const TILE_META: Record<
   provision: { label: "Specialist", short: "Specialist", step: 4 },
 };
 
+const TILE_ORDER: HeroTileId[] = [
+  "postcode",
+  "stages",
+  "sector",
+  "provision",
+];
+
 /**
- * Compact overlapping labelled tiles for the hero setup flow.
- * Active tile is front-most; completed previous tiles auto-advance;
- * a corner tab on every tile stays selectable so options stay explicit.
+ * Ring-binder style setup: one option sheet with index tabs along the top.
+ * Completing the active step auto-advances; every tab stays selectable.
  */
 export function HeroSetupTiles({
   activeId,
@@ -39,82 +44,81 @@ export function HeroSetupTiles({
   children: Record<HeroTileId, ReactNode>;
 }) {
   const baseId = useId();
-  const order: HeroTileId[] = ["postcode", "stages", "sector", "provision"];
   const prevCompleted = useRef(completed);
+  const visibleIds = TILE_ORDER.filter((id) => children[id] != null);
+  const activeMeta = TILE_META[activeId];
+  const activeSummary = summaries[activeId];
+  const panelId = `${baseId}-panel`;
+  const activeIndex = Math.max(0, visibleIds.indexOf(activeId));
 
-  // Auto-advance when the active tile newly becomes complete.
   useEffect(() => {
     const was = prevCompleted.current[activeId];
     const now = completed[activeId];
     prevCompleted.current = { ...prevCompleted.current, ...completed };
     if (!now || was) return;
+    const order = TILE_ORDER.filter((id) => children[id] != null);
     const idx = order.indexOf(activeId);
-    for (let i = idx + 1; i < order.length; i += 1) {
-      const next = order[i];
-      if (next) {
-        onActiveChange(next);
-        break;
-      }
-    }
-  }, [activeId, completed, onActiveChange]);
+    const next = order[idx + 1];
+    if (next) onActiveChange(next);
+  }, [activeId, completed, onActiveChange, children]);
 
   return (
-    <div className="hero-tiles" data-tour="hero-tiles">
-      <ol className="hero-tiles-stack" aria-label="Shortlist setup">
-        {order.map((id) => {
-          if (children[id] == null) return null;
+    <div
+      className="hero-binder"
+      data-tour="hero-tiles"
+      data-active-index={activeIndex}
+      data-tab-count={visibleIds.length}
+    >
+      <div
+        className="hero-binder-tabs"
+        role="tablist"
+        aria-label="Shortlist setup"
+      >
+        {visibleIds.map((id) => {
           const meta = TILE_META[id];
           const isActive = id === activeId;
           const isDone = Boolean(completed[id]);
           const summary = summaries[id];
-          const panelId = `${baseId}-${id}-panel`;
-          const tabId = `${baseId}-${id}-tab`;
           return (
-            <li
+            <button
               key={id}
+              type="button"
+              role="tab"
+              id={`${baseId}-${id}-tab`}
               className={
                 isActive
-                  ? "hero-tile is-active"
+                  ? "hero-binder-tab is-active"
                   : isDone
-                    ? "hero-tile is-done"
-                    : "hero-tile"
+                    ? "hero-binder-tab is-done"
+                    : "hero-binder-tab"
               }
-              data-tile={id}
-              style={{ ["--tile-step" as string]: meta.step }}
+              aria-selected={isActive}
+              aria-controls={panelId}
+              title={
+                summary ? `${meta.label}: ${summary}` : `Open ${meta.label}`
+              }
+              onClick={() => onActiveChange(id)}
             >
-              <button
-                type="button"
-                id={tabId}
-                className="hero-tile-tab"
-                aria-controls={panelId}
-                aria-expanded={isActive}
-                aria-current={isActive ? "step" : undefined}
-                title={`Open ${meta.label}`}
-                onClick={() => onActiveChange(id)}
-              >
-                <span className="hero-tile-tab-step">{meta.step}</span>
-                <span className="hero-tile-tab-label">{meta.short}</span>
-                {isDone && summary ? (
-                  <span className="hero-tile-tab-summary">{summary}</span>
-                ) : null}
-              </button>
-              <div
-                id={panelId}
-                role="region"
-                aria-labelledby={tabId}
-                className="hero-tile-panel"
-                hidden={!isActive}
-              >
-                <header className="hero-tile-head">
-                  <h3>{meta.label}</h3>
-                  {summary ? <p>{summary}</p> : null}
-                </header>
-                <div className="hero-tile-body">{children[id]}</div>
-              </div>
-            </li>
+              <span className="hero-binder-tab-step">{meta.step}</span>
+              <span className="hero-binder-tab-label">{meta.short}</span>
+            </button>
           );
         })}
-      </ol>
+      </div>
+
+      <div
+        id={panelId}
+        role="tabpanel"
+        aria-labelledby={`${baseId}-${activeId}-tab`}
+        className="hero-binder-sheet"
+        data-tile={activeId}
+      >
+        <header className="hero-tile-head">
+          <h3>{activeMeta.label}</h3>
+          {activeSummary ? <p>{activeSummary}</p> : null}
+        </header>
+        <div className="hero-tile-body">{children[activeId]}</div>
+      </div>
     </div>
   );
 }
