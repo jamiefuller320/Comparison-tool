@@ -143,3 +143,102 @@ export function buildPrintCompareTable(
 
   return null;
 }
+
+/** Series for a print-only SVG bar chart (no Recharts — iOS-safe). */
+export interface PrintChartSeries {
+  title: string;
+  caption: string;
+  /** Measure labels (y categories). */
+  measures: string[];
+  /** One series per school. */
+  schools: Array<{
+    urn: string;
+    name: string;
+    /** Parallel to measures; null = missing. */
+    values: Array<number | null>;
+  }>;
+  /** Axis unit for labels. */
+  unit: "pct" | "score";
+}
+
+const KS2_CHART_KEYS = [
+  { key: "rwmExpected", label: "RWM expected" },
+  { key: "readingExpected", label: "Reading" },
+  { key: "writingExpected", label: "Writing" },
+  { key: "mathsExpected", label: "Maths" },
+] as const;
+
+const KS4_SCORE_KEYS = [
+  { key: "att8Average", label: "Attainment 8" },
+] as const;
+
+const KS4_PCT_KEYS = [
+  { key: "engMath94Percent", label: "Eng & maths 4+" },
+  { key: "engMath95Percent", label: "Eng & maths 5+" },
+  { key: "ebaccEnteringPercent", label: "EBacc entry" },
+] as const;
+
+function numericField(
+  school: SchoolRecord,
+  key: string,
+): number | null {
+  const raw = (school as Record<string, unknown>)[key];
+  if (raw == null || raw === "") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+function chartFromKeys(
+  schools: SchoolRecord[],
+  keys: ReadonlyArray<{ key: string; label: string }>,
+  meta: { title: string; caption: string; unit: "pct" | "score" },
+): PrintChartSeries | null {
+  const measures = keys.map((m) => m.label);
+  const series = schools.map((s) => ({
+    urn: s.urn,
+    name: shortName(s.name, 18),
+    values: keys.map((m) => numericField(s, m.key)),
+  }));
+  if (!series.some((s) => s.values.some((v) => v != null))) return null;
+  return { ...meta, measures, schools: series };
+}
+
+/** Print-safe chart series for the pack graphs sheet (empty when not applicable). */
+export function buildPrintChartSeries(
+  schools: SchoolRecord[],
+  path: GuidancePathId,
+): PrintChartSeries[] {
+  if (schools.length < 1 || schools.length > 4) return [];
+
+  if (path === "ks2" || path === "ks1") {
+    const chart = chartFromKeys(schools, KS2_CHART_KEYS, {
+      title:
+        path === "ks1"
+          ? "Published attainment snapshot (KS2 context)"
+          : "Published Key Stage 2 attainment",
+      caption:
+        "Percentages at expected standard. Dash on the figures sheet = not published.",
+      unit: "pct",
+    });
+    return chart ? [chart] : [];
+  }
+
+  if (path === "ks4") {
+    const out: PrintChartSeries[] = [];
+    const score = chartFromKeys(schools, KS4_SCORE_KEYS, {
+      title: "Key Stage 4 — Attainment 8",
+      caption: "Average Attainment 8 score (not a percentage).",
+      unit: "score",
+    });
+    if (score) out.push(score);
+    const pct = chartFromKeys(schools, KS4_PCT_KEYS, {
+      title: "Key Stage 4 — GCSE thresholds",
+      caption: "Percentages of pupils. Missing bars = not published.",
+      unit: "pct",
+    });
+    if (pct) out.push(pct);
+    return out;
+  }
+
+  return [];
+}

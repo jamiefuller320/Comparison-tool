@@ -29,15 +29,27 @@ import type { GuidancePathId } from "@/lib/decisionGuidance";
 import type { PhaseId } from "@/lib/phases";
 import type { SectorId } from "@/lib/sectors";
 import {
+  buildPrintChartSeries,
   buildPrintCompareTable,
   type PrintCompareTable,
 } from "@/lib/printPackMetrics";
 import {
   inspectionHighlights,
+  inspectionReportHref,
   inspectionSourceLabel,
+  looksLikeInspectionPrecisJunk,
   schoolHasInspectionPrecis,
   shortInspectionSummary,
 } from "@/lib/inspectionHighlights";
+import {
+  CORE_AREA_LABELS,
+  coverageLevel,
+  parentParagraph,
+  schoolHasQualitativeCapture,
+  shortQualitativeSummary,
+} from "@/lib/qualitativeEvidence";
+import { PrintPackChart } from "@/components/PrintPackChart";
+import type { InspectionQuote, QualitativeSubjectArea } from "@/lib/types";
 
 function QuestionBlock({
   kind,
@@ -164,6 +176,84 @@ function ScreenStatusRow({
   );
 }
 
+function PrintQuoteList({
+  schoolName,
+  quotes,
+  heading,
+}: {
+  schoolName: string;
+  quotes: InspectionQuote[];
+  heading: string;
+}) {
+  if (!quotes.length) return null;
+  return (
+    <div className="visit-pack-quote-block">
+      <h6>{heading}</h6>
+      <ol className="visit-pack-quotes">
+        {quotes.slice(0, 4).map((quote, index) => (
+          <li key={`${schoolName}-${heading}-${index}-${quote.text.slice(0, 20)}`}>
+            <blockquote>
+              “{quote.text}”
+              {quote.section ? (
+                <span className="visit-pack-quote-section"> — {quote.section}</span>
+              ) : null}
+            </blockquote>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+function WebsiteEvidencePrint({ school }: { school: SchoolRecord }) {
+  if (!schoolHasQualitativeCapture(school)) {
+    return (
+      <section className="visit-pack-school-website">
+        <h5>Website evidence</h5>
+        <p className="visit-pack-school-empty">
+          No website scan on this shortlist yet — check the school site before
+          you visit, or wait for the daily qualitative loop to enrich it.
+        </p>
+      </section>
+    );
+  }
+
+  const summary = shortQualitativeSummary(school);
+  const areas = (school.qualitativeCapture.areas || []).filter(
+    (a) => coverageLevel(a).id !== "none",
+  );
+
+  return (
+    <section className="visit-pack-school-website">
+      <h5>Website evidence</h5>
+      {summary ? <p className="visit-pack-school-summary">{summary}</p> : null}
+      {areas.map((area) => {
+        const label =
+          CORE_AREA_LABELS[area.area as QualitativeSubjectArea] || area.area;
+        const cov = coverageLevel(area);
+        const paragraph = parentParagraph(area);
+        const offerings = (area.offerings || []).slice(0, 8);
+        return (
+          <div className="visit-pack-website-area" key={area.area}>
+            <p className="visit-pack-website-area-head">
+              <strong>{label}</strong>
+              <span className={`visit-pack-cov ${cov.className}`}>
+                {cov.label}
+              </span>
+            </p>
+            <p className="visit-pack-school-body">{paragraph}</p>
+            {offerings.length ? (
+              <p className="visit-pack-school-bullets">
+                <strong>Listed:</strong> {offerings.join(" · ")}
+              </p>
+            ) : null}
+          </div>
+        );
+      })}
+    </section>
+  );
+}
+
 function SchoolNotesPage({
   school,
   row,
@@ -177,7 +267,12 @@ function SchoolNotesPage({
   const summary = shortInspectionSummary(school);
   const { strengths, improvements } = inspectionHighlights(school);
   const inspectorate = inspectionSourceLabel(school.inspectionPrecisSource);
-  const precis = school.inspectionPrecis?.trim();
+  const rawPrecis = school.inspectionPrecis?.trim();
+  const precis =
+    rawPrecis && !looksLikeInspectionPrecisJunk(rawPrecis) ? rawPrecis : null;
+  const reportHref = inspectionReportHref(school);
+  const hasWebsite = schoolHasQualitativeCapture(school);
+  const compactNotes = hasPrecis || hasWebsite;
 
   return (
     <article className="visit-pack-school">
@@ -241,22 +336,22 @@ function SchoolNotesPage({
             {precis && precis !== summary ? (
               <p className="visit-pack-school-body">{precis}</p>
             ) : null}
-            {strengths.length ? (
-              <p className="visit-pack-school-bullets">
-                <strong>Positives:</strong>{" "}
-                {strengths
-                  .slice(0, 2)
-                  .map((q) => q.text)
-                  .join(" · ")}
-              </p>
-            ) : null}
-            {improvements.length ? (
-              <p className="visit-pack-school-bullets">
-                <strong>Improve:</strong>{" "}
-                {improvements
-                  .slice(0, 2)
-                  .map((q) => q.text)
-                  .join(" · ")}
+            <PrintQuoteList
+              schoolName={row.name}
+              quotes={strengths}
+              heading="What the report highlights"
+            />
+            <PrintQuoteList
+              schoolName={row.name}
+              quotes={improvements}
+              heading="Areas to improve"
+            />
+            {reportHref ? (
+              <p className="visit-pack-report-link">
+                Full report:{" "}
+                <a href={reportHref} target="_blank" rel="noopener noreferrer">
+                  {school.inspectionReportLabel || "Open source PDF"}
+                </a>
               </p>
             ) : null}
           </>
@@ -268,12 +363,19 @@ function SchoolNotesPage({
         )}
       </section>
 
+      <WebsiteEvidencePrint school={school} />
+
       <section className="visit-pack-school-notes">
         <h5>Notes</h5>
         {entry.note ? (
           <p className="visit-note-print-text">{entry.note}</p>
         ) : null}
-        <div className="visit-note-lines" aria-hidden />
+        <div
+          className={
+            compactNotes ? "visit-note-lines is-compact" : "visit-note-lines"
+          }
+          aria-hidden
+        />
       </section>
     </article>
   );
@@ -366,6 +468,11 @@ export function VisitPack({
     [allRecords, guidancePath],
   );
 
+  const chartSeries = useMemo(
+    () => buildPrintChartSeries(allRecords, guidancePath),
+    [allRecords, guidancePath],
+  );
+
   const schoolNotePages = useMemo(
     () =>
       allRows.map((row) => ({
@@ -429,9 +536,10 @@ export function VisitPack({
           </h3>
           <p className="footnote" style={{ margin: 0 }}>
             Print a visit pack for {settingCount}{" "}
-            {settingCount === 1 ? "setting" : "settings"} — advice, figures, and
-            note pages. Preview stays collapsed until you open it; status notes
-            stay in this browser.
+            {settingCount === 1 ? "setting" : "settings"} — advice, figures
+            {chartSeries.length ? ", comparison graphs" : ""}, expanded Ofsted
+            &amp; website précis, and note pages. Preview stays collapsed until
+            you open it; status notes stay in this browser.
           </p>
         </div>
         <div className="visit-pack-toolbar-actions">
@@ -504,7 +612,7 @@ export function VisitPack({
           ) : null}
         </div>
 
-        {figures || schoolNotePages.length ? (
+        {figures || chartSeries.length || schoolNotePages.length ? (
           <div className="visit-pack-page-break" aria-hidden="true" />
         ) : null}
 
@@ -515,14 +623,37 @@ export function VisitPack({
           </div>
         ) : null}
 
+        {chartSeries.length ? (
+          <>
+            {figures ? (
+              <div className="visit-pack-page-break" aria-hidden="true" />
+            ) : null}
+            <div className="visit-pack-sheet visit-pack-graphs-sheet">
+              <PackSheetTitle
+                subtitle="comparison graphs"
+                printedOn={printedOn}
+              />
+              <p className="visit-pack-figures-caption">
+                Visual side-by-side of the same published metrics — on a separate
+                sheet so the figures table stays readable on phones and in print.
+              </p>
+              <div className="visit-pack-graphs-grid">
+                {chartSeries.map((series) => (
+                  <PrintPackChart key={series.title} series={series} />
+                ))}
+              </div>
+            </div>
+          </>
+        ) : null}
+
         {schoolNotePages.map(({ row, school }, index) => (
           <Fragment key={row.urn}>
-            {figures || index > 0 ? (
+            {figures || chartSeries.length > 0 || index > 0 ? (
               <div className="visit-pack-page-break" aria-hidden="true" />
             ) : null}
             <div className="visit-pack-sheet visit-pack-school-sheet">
               <PackSheetTitle
-                subtitle={`précis & notes · ${row.name}`}
+                subtitle={`Ofsted, website & notes · ${row.name}`}
                 printedOn={printedOn}
               />
               <SchoolNotesPage

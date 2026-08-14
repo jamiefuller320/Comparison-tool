@@ -1,7 +1,7 @@
 /** Unit checks for printable shortlist figure tables. */
 
 async function main() {
-  const { buildPrintCompareTable } = await import(
+  const { buildPrintCompareTable, buildPrintChartSeries } = await import(
     "../src/lib/printPackMetrics.ts"
   );
 
@@ -30,6 +30,16 @@ async function main() {
     process.exit(1);
   }
 
+  const ks2Charts = buildPrintChartSeries([primary], "ks2");
+  if (ks2Charts.length !== 1 || ks2Charts[0].unit !== "pct") {
+    console.error("FAIL ks2 chart series", ks2Charts);
+    process.exit(1);
+  }
+  if (ks2Charts[0].schools[0].values[0] !== 72) {
+    console.error("FAIL ks2 chart value", ks2Charts[0]);
+    process.exit(1);
+  }
+
   const secondary = {
     urn: "2",
     name: "Example College",
@@ -38,11 +48,23 @@ async function main() {
     phases: ["ks4"],
     att8Average: 55.2,
     engMath94Percent: 80,
+    engMath95Percent: 62,
+    ebaccEnteringPercent: 40,
     ofstedOverall: null,
   };
   const ks4 = buildPrintCompareTable([secondary], "ks4");
   if (!ks4?.rows.some((r) => r.id === "att8Average")) {
     console.error("FAIL ks4 print table", ks4);
+    process.exit(1);
+  }
+
+  const ks4Charts = buildPrintChartSeries([secondary], "ks4");
+  if (ks4Charts.length !== 2) {
+    console.error("FAIL ks4 should split score + pct charts", ks4Charts);
+    process.exit(1);
+  }
+  if (ks4Charts[0].unit !== "score" || ks4Charts[1].unit !== "pct") {
+    console.error("FAIL ks4 chart units", ks4Charts.map((c) => c.unit));
     process.exit(1);
   }
 
@@ -56,6 +78,10 @@ async function main() {
   const ey = buildPrintCompareTable([nursery], "early-years");
   if (!ey?.rows.some((r) => r.id === "ofstedOverall" && r.values[0] === "Good")) {
     console.error("FAIL ey print table", ey);
+    process.exit(1);
+  }
+  if (buildPrintChartSeries([nursery], "early-years").length !== 0) {
+    console.error("FAIL ey should not produce attainment charts");
     process.exit(1);
   }
 

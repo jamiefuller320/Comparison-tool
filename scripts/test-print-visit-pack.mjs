@@ -98,6 +98,11 @@ async function main() {
     },
   );
 
+  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-note-lines\.is-compact/);
+  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-figures-scroll[\s\S]*overflow:\s*visible/);
+  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-chart/);
+  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-school-website/);
+
   console.log("OK print-visit-pack");
 }
 
