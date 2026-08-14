@@ -73,6 +73,24 @@ async function main() {
   assert.equal(decision.open, false);
 
   // Deep usage still waits for page-load grace even when engaged long enough.
+  // Mark the tour seen so we exercise the grace gate (not tour-pending).
+  const g = globalThis;
+  const store = new Map();
+  g.window = {
+    localStorage: {
+      getItem: (k) => (store.has(k) ? store.get(k) : null),
+      setItem: (k, v) => store.set(k, String(v)),
+      removeItem: (k) => store.delete(k),
+    },
+    sessionStorage: {
+      getItem: () => null,
+      setItem: () => {},
+      removeItem: () => {},
+    },
+  };
+  const { TOUR_STORAGE_KEY } = await import("../src/lib/tour.ts");
+  g.window.localStorage.setItem(TOUR_STORAGE_KEY, "1");
+
   const deepReady = {
     ...compared,
     engagedSeconds: FEEDBACK_AUTO_PROMPT_ENGAGED_SECONDS,
@@ -82,6 +100,12 @@ async function main() {
   });
   assert.equal(tooSoon.open, false);
   assert.equal(tooSoon.reason, "page-grace");
+
+  const ready = shouldAutoPromptFeedback(deepReady, {
+    pageLoadSeconds: FEEDBACK_AUTO_PROMPT_PAGE_GRACE_SECONDS,
+  });
+  assert.equal(ready.open, true);
+  assert.equal(ready.reason, "deep-engagement");
 
   console.log("OK product-feedback");
 }
