@@ -94,6 +94,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Skip schools without a schoolWebsite URL",
     )
     p.add_argument(
+        "--allow-empty",
+        action="store_true",
+        help="Exit 0 when no schools match filters (coverage exhausted)",
+    )
+    p.add_argument(
         "--output",
         type=Path,
         default=Path("output/qualitative-capture.json"),
@@ -280,6 +285,9 @@ def main(argv: list[str] | None = None) -> int:
     schools = load_schools(args)
     if not schools:
         print("No schools matched filters.", file=sys.stderr)
+        if args.allow_empty:
+            print("Allow-empty: treating as successful no-op.", file=sys.stderr)
+            return 0
         return 1
 
     engine = build_engine(args)

@@ -7,16 +7,18 @@ write digest.
 
 Policy: coverage first, quality at minimum cost.
   - Default provider is none (free deterministic narratives).
-  - Hampshire expansion: daily batches of 25 new schools (CI schedule).
+  - Auto scope: GIAS website enrich, then pick the LA (Hampshire seed or a
+    ready pack) with the most remaining website-bearing schools.
   - Skip-existing is the default (pass --no-skip-existing to recapture).
   - Stale re-screens use ETag / Last-Modified / content-hash and reuse
-    unchanged pages (default: 28-day TTL, small daily refresh limit).
-  - Daily QA defaults to heuristics only (`--qa-provider none`); strip junk
-    and learn phrases into output/learned-qa-patterns.json.
+    unchanged pages (default: 28-day TTL, daily refresh budget).
+  - Empty match is a successful no-op (allow-empty) so CI stays green when
+    a pool is temporarily exhausted.
+  - Daily QA defaults to heuristics only (`--qa-provider none`).
 
 Usage:
   python3 scripts/run-qualitative-loop.py --dry-run
-  python3 scripts/run-qualitative-loop.py --limit 25
+  python3 scripts/run-qualitative-loop.py --limit 40 --scope auto
   # Paid polish (richest schools first; higher evidence gate):
   CURSOR_API_KEY=… python3 scripts/run-qualitative-loop.py --limit 0 \\
     --synthesize-provider cursor --synthesize-limit 5
@@ -35,6 +37,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CAPTURE_ROOT = ROOT / "tools" / "school-capture"
 SCRIPTS = Path(__file__).resolve().parent
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+
+from seed_scope import (  # noqa: E402
+    PACKS_ROOT_REL,
+    SEED_LOCAL_AUTHORITY,
+    la_slug,
+    normalize_la_name,
+)
 
 DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 DEFAULT_CAPTURE = ROOT / "output" / "qualitative-capture.json"
@@ -44,6 +55,8 @@ DEFAULT_PROGRESS = ROOT / "output" / "qualitative-progress.json"
 DIGEST_JSON = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.json"
 DIGEST_MD = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.md"
 QA_DIGEST_JSON = ROOT / "public" / "data" / "packs" / "qualitative-qa-latest.json"
+PACKS_ROOT = ROOT / PACKS_ROOT_REL
+MANIFEST = PACKS_ROOT / "manifest.json"
 
 
 def run(cmd: list[str], *, env: dict[str, str] | None = None) -> None:
@@ -59,6 +72,129 @@ def capture_count(path: Path) -> int:
     except (OSError, json.JSONDecodeError):
         return 0
     return len(payload.get("records") or [])
+
+
+def processed_urns() -> set[str]:
+    if not DEFAULT_PROGRESS.is_file():
+        return set()
+    try:
+        payload = json.loads(DEFAULT_PROGRESS.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    return {str(u) for u in (payload.get("processedUrns") or []) if u}
+
+
+def remaining_with_website(index_path: Path, *, la: str, known: set[str]) -> int:
+    if not index_path.is_file():
+        return 0
+    try:
+        schools = json.loads(index_path.read_text(encoding="utf-8")).get("schools") or []
+    except (OSError, json.JSONDecodeError):
+        return 0
+    la_norm = normalize_la_name(la)
+    n = 0
+    for row in schools:
+        if row.get("closed"):
+            continue
+        if la_norm and normalize_la_name(row.get("localAuthority")) != la_norm:
+            continue
+        urn = str(row.get("urn") or "").strip()
+        if not urn or urn in known:
+            continue
+        if not (row.get("schoolWebsite") or "").strip():
+            continue
+        n += 1
+    return n
+
+
+def list_targets() -> list[tuple[str, Path]]:
+    """Hampshire seed root + every ready region pack index."""
+    targets: list[tuple[str, Path]] = [(SEED_LOCAL_AUTHORITY, DEFAULT_INDEX)]
+    if not MANIFEST.is_file():
+        return targets
+    try:
+        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return targets
+    packs = manifest.get("packs") or {}
+    for slug, meta in packs.items():
+        if not isinstance(meta, dict) or meta.get("status") != "ready":
+            continue
+        path = PACKS_ROOT / str(slug) / "schools-index.json"
+        if not path.is_file():
+            continue
+        la = meta.get("localAuthority") or meta.get("la") or str(slug)
+        # Prefer canonical label from the index when present.
+        try:
+            schools = json.loads(path.read_text(encoding="utf-8")).get("schools") or []
+            if schools:
+                la = schools[0].get("localAuthority") or la
+        except (OSError, json.JSONDecodeError, IndexError, TypeError):
+            pass
+        # Never double-count Hampshire as a pack.
+        if normalize_la_name(la) == normalize_la_name(SEED_LOCAL_AUTHORITY):
+            continue
+        if la_slug(la) != str(slug) and path.parent.name != la_slug(la):
+            # Still allow; pack dir is source of truth.
+            pass
+        targets.append((str(la), path))
+    return targets
+
+
+def pick_target(
+    *,
+    scope: str,
+    la_arg: str,
+    known: set[str],
+) -> tuple[str, Path, int]:
+    """Choose (la, index_path, remaining_website_count)."""
+    if scope == "seed":
+        remaining = remaining_with_website(
+            DEFAULT_INDEX, la=SEED_LOCAL_AUTHORITY, known=known
+        )
+        return SEED_LOCAL_AUTHORITY, DEFAULT_INDEX, remaining
+
+    if scope == "la":
+        # Explicit --la: seed index unless a matching ready pack exists.
+        if normalize_la_name(la_arg) == normalize_la_name(SEED_LOCAL_AUTHORITY):
+            remaining = remaining_with_website(
+                DEFAULT_INDEX, la=SEED_LOCAL_AUTHORITY, known=known
+            )
+            return SEED_LOCAL_AUTHORITY, DEFAULT_INDEX, remaining
+        slug = la_slug(la_arg)
+        pack_index = PACKS_ROOT / slug / "schools-index.json"
+        if pack_index.is_file():
+            remaining = remaining_with_website(pack_index, la=la_arg, known=known)
+            return la_arg, pack_index, remaining
+        remaining = remaining_with_website(DEFAULT_INDEX, la=la_arg, known=known)
+        return la_arg, DEFAULT_INDEX, remaining
+
+    # scope == auto (or region): prefer Hampshire while it has website work,
+    # otherwise the ready pack with the largest remaining website pool.
+    scored: list[tuple[int, str, Path]] = []
+    for la, path in list_targets():
+        n = remaining_with_website(path, la=la, known=known)
+        scored.append((n, la, path))
+    scored.sort(key=lambda t: (-t[0], t[1] != SEED_LOCAL_AUTHORITY, t[1]))
+    # Prefer seed when it still has work.
+    for n, la, path in scored:
+        if la == SEED_LOCAL_AUTHORITY and n > 0:
+            return la, path, n
+    best = scored[0] if scored else (0, SEED_LOCAL_AUTHORITY, DEFAULT_INDEX)
+    return best[1], best[2], best[0]
+
+
+def enrich_websites() -> None:
+    """Fill schoolWebsite from GIAS for seed + ready packs before capture."""
+    run(
+        [
+            sys.executable,
+            str(SCRIPTS / "enrich-school-websites.py"),
+            "--index",
+            str(DEFAULT_INDEX),
+            "--all-packs",
+        ]
+    )
 
 
 def rebuild_learned_terms() -> dict:
@@ -102,7 +238,10 @@ def write_digest(payload: dict) -> None:
         "# Qualitative capture loop",
         "",
         f"- Ran at: `{payload.get('ranAt')}`",
+        f"- Scope: `{payload.get('scope')}`",
         f"- LA: `{payload.get('la')}`",
+        f"- Index: `{payload.get('index')}`",
+        f"- Remaining with website (pre-capture): `{payload.get('remainingWithWebsite')}`",
         f"- Batch limit: `{payload.get('limit')}`",
         f"- Sidecar records before → after: "
         f"`{payload.get('sidecarBefore')}` → `{payload.get('sidecarAfter')}`",
@@ -127,12 +266,19 @@ def write_digest(payload: dict) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Qualitative capture continuous loop")
-    parser.add_argument("--la", default="Hampshire")
+    parser.add_argument(
+        "--scope",
+        choices=("auto", "seed", "la"),
+        default="auto",
+        help="auto = Hampshire then widest ready pack; seed = Hampshire only; "
+        "la = honour --la",
+    )
+    parser.add_argument("--la", default=SEED_LOCAL_AUTHORITY)
     parser.add_argument(
         "--limit",
         type=int,
-        default=25,
-        help="Max new schools to capture (free crawl; default 25 for daily Hampshire runs)",
+        default=40,
+        help="Max new schools to capture (free crawl; default 40)",
     )
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument(
@@ -149,8 +295,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--refresh-limit",
         type=int,
-        default=5,
-        help="Max stale schools to change-detect re-screen per run (default 5)",
+        default=15,
+        help="Max stale schools to change-detect re-screen per run (default 15)",
     )
     parser.add_argument(
         "--synthesize-provider",
@@ -173,8 +319,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--qa-limit",
         type=int,
-        default=8,
-        help="Max suspect schools for post-synth QA (0 = skip QA; default 8)",
+        default=16,
+        help="Max suspect schools for post-synth QA (0 = skip QA; default 16)",
     )
     parser.add_argument(
         "--qa-provider",
@@ -187,6 +333,11 @@ def main(argv: list[str] | None = None) -> int:
         type=float,
         default=2.0,
         help="Minimum suspicion score for QA review",
+    )
+    parser.add_argument(
+        "--skip-website-enrich",
+        action="store_true",
+        help="Skip GIAS website enrich (faster dry debugging)",
     )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--no-merge", action="store_true")
@@ -204,9 +355,16 @@ def main(argv: list[str] | None = None) -> int:
                 json.loads(DEFAULT_LEARNED.read_text(encoding="utf-8")).get("terms")
                 or {}
             )
+        known = processed_urns()
+        la, index_path, remaining = pick_target(
+            scope=args.scope, la_arg=args.la, known=known
+        )
         digest = {
             "ranAt": datetime.now(timezone.utc).isoformat(),
-            "la": args.la,
+            "scope": args.scope,
+            "la": la,
+            "index": str(index_path.relative_to(ROOT)),
+            "remainingWithWebsite": remaining,
             "limit": args.limit,
             "offset": args.offset,
             "skipExisting": skip_existing,
@@ -231,18 +389,32 @@ def main(argv: list[str] | None = None) -> int:
         ":" + env["PYTHONPATH"] if env.get("PYTHONPATH") else ""
     )
 
+    if not args.skip_website_enrich:
+        notes.append("Enriched schoolWebsite from GIAS (seed + ready packs).")
+        enrich_websites()
+
+    known = processed_urns()
+    la, index_path, remaining = pick_target(
+        scope=args.scope, la_arg=args.la, known=known
+    )
+    notes.append(
+        f"Selected LA={la} index={index_path.relative_to(ROOT)} "
+        f"remainingWithWebsite={remaining}."
+    )
+
     capture_cmd = [
         sys.executable,
         str(SCRIPTS / "enrich-qualitative.py"),
         "--index",
-        str(DEFAULT_INDEX),
+        str(index_path),
         "--la",
-        args.la,
+        la,
         "--limit",
         str(args.limit),
         "--offset",
         str(args.offset),
         "--require-website",
+        "--allow-empty",
     ]
     if skip_existing:
         capture_cmd.append("--skip-existing")
@@ -266,6 +438,11 @@ def main(argv: list[str] | None = None) -> int:
         f"Captured batch (sidecar {before} → {after_capture}); "
         f"learned terms now {learned.get('termCount', 0)}."
     )
+    if after_capture == before and remaining == 0:
+        notes.append(
+            "No new captures — website pool exhausted for selected LA "
+            "(allow-empty no-op); still running synth/QA/refresh budget."
+        )
 
     synth_provider = args.synthesize_provider
     synth_cmd = [
@@ -274,7 +451,7 @@ def main(argv: list[str] | None = None) -> int:
         "--capture",
         str(DEFAULT_CAPTURE),
         "--index",
-        str(DEFAULT_INDEX),
+        str(index_path),
         "--provider",
         synth_provider if synth_provider != "none" else "none",
         "--only-missing",
@@ -359,19 +536,24 @@ def main(argv: list[str] | None = None) -> int:
                 sys.executable,
                 str(CAPTURE_ROOT / "scripts" / "merge-qualitative.py"),
                 "--index",
-                str(DEFAULT_INDEX),
+                str(index_path),
                 "--capture",
                 str(DEFAULT_CAPTURE),
             ]
             run(merge_cmd, env=env)
-            notes.append("Re-merged schools-index after QA fixes.")
+            notes.append(
+                f"Re-merged {index_path.relative_to(ROOT)} after QA fixes."
+            )
     else:
         notes.append("QA skipped (--qa-limit 0).")
 
     after = capture_count(DEFAULT_CAPTURE)
     digest = {
         "ranAt": datetime.now(timezone.utc).isoformat(),
-        "la": args.la,
+        "scope": args.scope,
+        "la": la,
+        "index": str(index_path.relative_to(ROOT)),
+        "remainingWithWebsite": remaining,
         "limit": args.limit,
         "offset": args.offset,
         "skipExisting": skip_existing,

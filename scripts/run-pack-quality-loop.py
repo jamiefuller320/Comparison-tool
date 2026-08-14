@@ -7,7 +7,7 @@ polish, then writes a before/after digest for ops.
 
 Usage:
   python3 scripts/run-pack-quality-loop.py --dry-run
-  python3 scripts/run-pack-quality-loop.py --max-packs 3 --isi-resolve-cap 50 --precis-limit 40
+  python3 scripts/run-pack-quality-loop.py --max-packs 6 --isi-resolve-cap 80 --precis-limit 60
 """
 
 from __future__ import annotations
@@ -177,11 +177,11 @@ def main() -> int:
     parser.add_argument(
         "--max-packs",
         type=int,
-        default=3,
-        help="How many weakest ready packs to polish (default 3)",
+        default=6,
+        help="How many weakest ready packs to polish (default 6)",
     )
-    parser.add_argument("--isi-resolve-cap", type=int, default=50)
-    parser.add_argument("--precis-limit", type=int, default=40)
+    parser.add_argument("--isi-resolve-cap", type=int, default=80)
+    parser.add_argument("--precis-limit", type=int, default=60)
     parser.add_argument(
         "--upgrade-highlights",
         action="store_true",
