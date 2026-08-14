@@ -8,6 +8,7 @@ import {
   wantsChildminders,
   wantsEyMetrics,
   type PhaseId,
+  type StageMatchMode,
 } from "@/lib/phases";
 import {
   resolveSchoolSector,
@@ -41,6 +42,7 @@ export function suggestAlternatives(
   limit = 6,
   stageFilter: PhaseId[] = [],
   sectorFilter: SectorId[] = [],
+  stageMatch: StageMatchMode = "any",
 ): SimilarSchool[] {
   const focusArea = postcodeArea(focus.postcode);
   const focusN = focus.eligiblePupils ?? focus.pupilsAged11 ?? null;
@@ -58,7 +60,7 @@ export function suggestAlternatives(
       // Directory categories are already filtered into the pool by stage chips.
     } else {
       if (!schoolStageIds(stageFilter).length) continue;
-      if (!schoolMatchesPhases(school, stageFilter)) continue;
+      if (!schoolMatchesPhases(school, stageFilter, stageMatch)) continue;
       if (!schoolMatchesSectors(school, sectorFilter)) continue;
       const schoolPhases = phasesFromAgeRange(school.ageRange);
       if (!phasesOverlap(focusPhases, schoolPhases)) continue;

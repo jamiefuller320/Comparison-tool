@@ -93,8 +93,11 @@ export function PhaseSelector({
           Drag the age range if key stages are unfamiliar — we turn on the
           matching school stages (Early years through KS4). You can still press
           the stage buttons to override. <strong>Childminders</strong> stay a
-          separate care category and are not driven by the age slider. School
-          stages use <strong>AND</strong> logic when several are selected.
+          separate care category and are not driven by the age slider. When
+          several school stages are selected, a school appears if it covers{" "}
+          <strong>any</strong> of them — use{" "}
+          <strong>Every selected stage</strong> below when you specifically want
+          settings that span all of them.
         </SelectorHelp>
       </div>
 

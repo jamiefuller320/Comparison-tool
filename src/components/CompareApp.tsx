@@ -48,9 +48,11 @@ import {
 import { passesComparableKs4Filter } from "@/lib/dataGaps";
 import {
   DEFAULT_PHASES,
+  DEFAULT_STAGE_MATCH,
   defaultPhasesForSectors,
   migrateStagesFromLegacyEySettings,
   normalizePhaseIds,
+  normalizeStageMatchMode,
   schoolMatchesPhases,
   schoolOffersKs1,
   schoolOffersKs2,
@@ -63,6 +65,7 @@ import {
   wantsKs2Metrics,
   wantsKs4Metrics,
   type PhaseId,
+  type StageMatchMode,
 } from "@/lib/phases";
 import {
   DEFAULT_SECTORS,
@@ -71,6 +74,13 @@ import {
   schoolMatchesSectors,
   type SectorId,
 } from "@/lib/sectors";
+import {
+  DEFAULT_PROVISION,
+  normalizeProvisionFilter,
+  schoolMatchesProvision,
+  type ProvisionFilterId,
+} from "@/lib/provisionFilter";
+import { scrollToHomeSection } from "@/lib/inPageNav";
 import {
   childminderConsentStamp,
   eyfspStamp,
@@ -151,7 +161,11 @@ export function CompareApp({
   const account = useAccount();
   const [selected, setSelected] = useState<string[]>([]);
   const [stages, setStages] = useState<PhaseId[]>(DEFAULT_PHASES);
+  const [stageMatch, setStageMatch] =
+    useState<StageMatchMode>(DEFAULT_STAGE_MATCH);
   const [sectors, setSectors] = useState<SectorId[]>(DEFAULT_SECTORS);
+  const [provision, setProvision] =
+    useState<ProvisionFilterId>(DEFAULT_PROVISION);
   const [pending, startTransition] = useTransition();
   const [hydrated, setHydrated] = useState(false);
   const [sectorNote, setSectorNote] = useState<string | null>(null);
@@ -211,6 +225,16 @@ export function CompareApp({
     setSectors(
       parseSectorsParam(params.get("sectors") || params.get("sector")),
     );
+    setStageMatch(
+      normalizeStageMatchMode(
+        params.get("stagesMatch") || params.get("stageMatch"),
+      ),
+    );
+    setProvision(
+      normalizeProvisionFilter(
+        params.get("provision") || params.get("specialist"),
+      ),
+    );
     setHydrated(true);
   }, [byUrn]);
 
@@ -220,6 +244,16 @@ export function CompareApp({
     if (selected.length) url.searchParams.set("schools", selected.join(","));
     else url.searchParams.delete("schools");
     url.searchParams.set("stages", stages.join(","));
+    if (stageMatch === DEFAULT_STAGE_MATCH) {
+      url.searchParams.delete("stagesMatch");
+    } else {
+      url.searchParams.set("stagesMatch", stageMatch);
+    }
+    if (provision === DEFAULT_PROVISION) {
+      url.searchParams.delete("provision");
+    } else {
+      url.searchParams.set("provision", provision);
+    }
     if (
       sectors.length === DEFAULT_SECTORS.length &&
       sectors[0] === DEFAULT_SECTORS[0]
@@ -232,11 +266,13 @@ export function CompareApp({
     url.searchParams.delete("pack");
     url.searchParams.delete("eySettings");
     url.searchParams.delete("ey");
+    url.searchParams.delete("stageMatch");
+    url.searchParams.delete("specialist");
     window.history.replaceState({}, "", url.toString());
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(ACTIVE_PACK_STORAGE_KEY);
     }
-  }, [selected, stages, sectors, hydrated]);
+  }, [selected, stages, sectors, stageMatch, provision, hydrated]);
 
   const selectedSchools: SchoolRecord[] = selected
     .map((urn) => byUrn.get(urn))
@@ -336,7 +372,7 @@ export function CompareApp({
         : []),
       ...index.schools,
     ];
-    return suggestAlternatives(focus, pool, 6, stages, sectors).filter(
+    return suggestAlternatives(focus, pool, 6, stages, sectors, stageMatch).filter(
       (s) => !selected.includes(s.urn),
     );
   }, [
@@ -348,6 +384,7 @@ export function CompareApp({
     showChildminderCategory,
     selected,
     stages,
+    stageMatch,
     sectors,
   ]);
 
@@ -382,9 +419,13 @@ export function CompareApp({
       const kept = prev.filter((urn) => {
         const school = byUrn.get(urn);
         if (!school) return false;
-        if (isEyProvider(school) && !wantsEyMetrics(next)) return false;
-        if (isChildminder(school) && !wantsChildminders(next)) return false;
-        return true;
+        if (isEyProvider(school)) return wantsEyMetrics(next);
+        if (isChildminder(school)) return wantsChildminders(next);
+        if (!schoolStageIds(next).length) return false;
+        return (
+          schoolMatchesPhases(school, next, stageMatch) &&
+          schoolMatchesProvision(school, provision)
+        );
       });
       const removed = prev.length - kept.length;
       if (removed > 0) {
@@ -392,6 +433,54 @@ export function CompareApp({
           removed === 1
             ? "Removed 1 setting from your shortlist that sits outside the selected categories."
             : `Removed ${removed} settings from your shortlist that sit outside the selected categories.`,
+        );
+      } else {
+        setSectorNote(null);
+      }
+      return kept;
+    });
+  }
+
+  function changeStageMatch(next: StageMatchMode) {
+    setStageMatch(next);
+    setSelected((prev) => {
+      const kept = prev.filter((urn) => {
+        const school = byUrn.get(urn);
+        if (!school) return false;
+        if (isEyProvider(school) || isChildminder(school)) return true;
+        return schoolMatchesPhases(school, stages, next);
+      });
+      const removed = prev.length - kept.length;
+      if (removed > 0) {
+        setSectorNote(
+          removed === 1
+            ? "Removed 1 school that does not cover every selected stage."
+            : `Removed ${removed} schools that do not cover every selected stage.`,
+        );
+      } else {
+        setSectorNote(null);
+      }
+      return kept;
+    });
+  }
+
+  function changeProvision(next: ProvisionFilterId) {
+    setProvision(next);
+    setSelected((prev) => {
+      const kept = prev.filter((urn) => {
+        const school = byUrn.get(urn);
+        if (!school) return false;
+        if (isEyProvider(school) || isChildminder(school)) {
+          return next !== "specialist";
+        }
+        return schoolMatchesProvision(school, next);
+      });
+      const removed = prev.length - kept.length;
+      if (removed > 0) {
+        setSectorNote(
+          removed === 1
+            ? "Removed 1 school from your shortlist that sits outside the specialist filter."
+            : `Removed ${removed} schools from your shortlist that sit outside the specialist filter.`,
         );
       } else {
         setSectorNote(null);
@@ -443,8 +532,9 @@ export function CompareApp({
         ? []
         : index.schools.filter(
             (s) =>
-              schoolMatchesPhases(s, stages) &&
+              schoolMatchesPhases(s, stages, stageMatch) &&
               schoolMatchesSectors(s, sectors) &&
+              schoolMatchesProvision(s, provision) &&
               passesComparableKs4Filter(s, {
                 comparableOnly: comparableKs4Only,
                 secondaryStagesActive,
@@ -456,7 +546,7 @@ export function CompareApp({
       ...(wantsChildminders(stages)
         ? (childmindersIndex?.providers ?? [])
         : []),
-    ].filter((p) => !seen.has(p.urn));
+    ].filter((p) => !seen.has(p.urn) && provision !== "specialist");
     if (!extra.length) return fromSchools;
     return [...extra, ...fromSchools];
   }, [
@@ -464,7 +554,9 @@ export function CompareApp({
     eyIndex,
     childmindersIndex,
     stages,
+    stageMatch,
     sectors,
+    provision,
     comparableKs4Only,
   ]);
 
@@ -775,8 +867,12 @@ export function CompareApp({
         onToggle={toggleSchool}
         stageFilter={stages}
         onStageFilterChange={changeStages}
+        stageMatch={stageMatch}
+        onStageMatchChange={changeStageMatch}
         sectorFilter={sectors}
         onSectorFilterChange={changeSectors}
+        provisionFilter={provision}
+        onProvisionFilterChange={changeProvision}
         showComparableKs4Toggle={showKs4}
         comparableKs4Only={comparableKs4Only}
         onComparableKs4OnlyChange={setComparableKs4Only}
@@ -801,19 +897,25 @@ export function CompareApp({
           />
 
           <SchoolSearch
-            key={`search-${stages.join("-")}-${sectors.join("-")}`}
+            key={`search-${stages.join("-")}-${stageMatch}-${sectors.join("-")}-${provision}`}
             schools={filteredSchools}
             selectedUrns={selected}
             onAdd={addSchool}
             stageFilter={stages}
+            stageMatch={stageMatch}
             sectorFilter={sectors}
+            provisionFilter={provision}
           />
           <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
           {selectedSchools.length > 0 ? (
             <div className="shortlist-inline-actions">
-              <a className="btn btn-primary" href="/#side-by-side">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => scrollToHomeSection("side-by-side")}
+              >
                 Compare side by side
-              </a>
+              </button>
               <ShareShortlistButton
                 schoolNames={selectedSchools.map((s) => s.name)}
               />
