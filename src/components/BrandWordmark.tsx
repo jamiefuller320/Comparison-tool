@@ -1,4 +1,4 @@
-/** Inline compass dial used as the “o” in Compass. */
+/** Inline compass dial used as the “o” in Compass — NE-pointing, letter-sized. */
 
 export function CompassO({ className = "" }: { className?: string }) {
   return (
@@ -10,21 +10,25 @@ export function CompassO({ className = "" }: { className?: string }) {
       aria-hidden="true"
       focusable="false"
     >
+      {/* Outer ring sized like a Fraunces o counter. */}
       <circle
         cx="16"
         cy="16"
-        r="13"
+        r="12.25"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2.4"
+        strokeWidth="2.1"
       />
-      <circle cx="16" cy="16" r="1.8" fill="currentColor" />
-      <path d="M16 5.5 L18.2 16 L16 26.5 L13.8 16 Z" fill="currentColor" />
-      <path
-        d="M5.5 16 L16 13.8 L26.5 16 L16 18.2 Z"
-        fill="currentColor"
-        opacity="0.72"
-      />
+      {/* Needles rotated 45° so the bright axis points north-east. */}
+      <g transform="rotate(45 16 16)">
+        <path d="M16 4.8 L18.35 16 L16 27.2 L13.65 16 Z" fill="currentColor" />
+        <path
+          d="M4.8 16 L16 13.65 L27.2 16 L16 18.35 Z"
+          fill="currentColor"
+          opacity="0.78"
+        />
+      </g>
+      <circle cx="16" cy="16" r="1.55" fill="currentColor" />
     </svg>
   );
 }
