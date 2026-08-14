@@ -6,7 +6,10 @@ async function main() {
   const mod = await import("../src/lib/productFeedback.ts");
   const {
     adaptiveFeedbackQuestion,
+    FEEDBACK_AUTO_PROMPT_ENGAGED_SECONDS,
+    FEEDBACK_AUTO_PROMPT_PAGE_GRACE_SECONDS,
     FEEDBACK_CAMPAIGN_ID,
+    FEEDBACK_ENGAGED_SECONDS,
     isUsageDeep,
     isUsageEngaged,
     serializeFeedbackForIntake,
@@ -14,6 +17,9 @@ async function main() {
   } = mod;
 
   assert.ok(FEEDBACK_CAMPAIGN_ID.length > 3);
+  assert.ok(FEEDBACK_AUTO_PROMPT_ENGAGED_SECONDS >= 180);
+  assert.ok(FEEDBACK_AUTO_PROMPT_PAGE_GRACE_SECONDS >= 60);
+  assert.ok(FEEDBACK_ENGAGED_SECONDS >= 60);
 
   const cold = {
     hadPostcode: false,
@@ -63,8 +69,43 @@ async function main() {
   assert.deepEqual(machine.topics, ["compare", "data-trust"]);
 
   // Without browser storage, auto-prompt should stay closed (tour / storage gates).
-  const decision = shouldAutoPromptFeedback(compared);
+  const decision = shouldAutoPromptFeedback(compared, { pageLoadSeconds: 300 });
   assert.equal(decision.open, false);
+
+  // Deep usage still waits for page-load grace even when engaged long enough.
+  // Mark the tour seen so we exercise the grace gate (not tour-pending).
+  const g = globalThis;
+  const store = new Map();
+  g.window = {
+    localStorage: {
+      getItem: (k) => (store.has(k) ? store.get(k) : null),
+      setItem: (k, v) => store.set(k, String(v)),
+      removeItem: (k) => store.delete(k),
+    },
+    sessionStorage: {
+      getItem: () => null,
+      setItem: () => {},
+      removeItem: () => {},
+    },
+  };
+  const { TOUR_STORAGE_KEY } = await import("../src/lib/tour.ts");
+  g.window.localStorage.setItem(TOUR_STORAGE_KEY, "1");
+
+  const deepReady = {
+    ...compared,
+    engagedSeconds: FEEDBACK_AUTO_PROMPT_ENGAGED_SECONDS,
+  };
+  const tooSoon = shouldAutoPromptFeedback(deepReady, {
+    pageLoadSeconds: FEEDBACK_AUTO_PROMPT_PAGE_GRACE_SECONDS - 1,
+  });
+  assert.equal(tooSoon.open, false);
+  assert.equal(tooSoon.reason, "page-grace");
+
+  const ready = shouldAutoPromptFeedback(deepReady, {
+    pageLoadSeconds: FEEDBACK_AUTO_PROMPT_PAGE_GRACE_SECONDS,
+  });
+  assert.equal(ready.open, true);
+  assert.equal(ready.reason, "deep-engagement");
 
   console.log("OK product-feedback");
 }

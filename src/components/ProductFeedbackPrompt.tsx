@@ -52,6 +52,10 @@ export function ProductFeedbackPrompt({
   const [message, setMessage] = useState<string | null>(null);
   const [tone, setTone] = useState<"ok" | "warn" | "err">("ok");
   const autoOpenedRef = useRef(false);
+  const mountedAtRef = useRef(
+    typeof performance !== "undefined" ? performance.now() : Date.now(),
+  );
+  const [pageLoadSeconds, setPageLoadSeconds] = useState(0);
 
   // Keep usage snapshot fresh from the live journey.
   useEffect(() => {
@@ -73,6 +77,18 @@ export function ProductFeedbackPrompt({
     sectors,
   ]);
 
+  // Page-load clock — auto-prompt waits for grace even if past visits qualify.
+  useEffect(() => {
+    const tick = window.setInterval(() => {
+      const elapsed =
+        ((typeof performance !== "undefined" ? performance.now() : Date.now()) -
+          mountedAtRef.current) /
+        1000;
+      setPageLoadSeconds(elapsed);
+    }, 5000);
+    return () => window.clearInterval(tick);
+  }, []);
+
   // Accumulate engaged time while the tab is visible.
   useEffect(() => {
     let tick: number | null = null;
@@ -87,13 +103,21 @@ export function ProductFeedbackPrompt({
     };
   }, []);
 
-  // Exit / tab-hide → ask on return if they were engaged.
+  // Exit / tab-hide → ask on return if they were engaged (after grace).
   useEffect(() => {
     const onVisibility = () => {
       if (document.visibilityState === "hidden") {
         markExitFeedbackPending();
       } else if (!autoOpenedRef.current) {
-        const decision = shouldAutoPromptFeedback(getFeedbackUsage());
+        const elapsed =
+          ((typeof performance !== "undefined"
+            ? performance.now()
+            : Date.now()) -
+            mountedAtRef.current) /
+          1000;
+        const decision = shouldAutoPromptFeedback(getFeedbackUsage(), {
+          pageLoadSeconds: elapsed,
+        });
         if (decision.open) {
           autoOpenedRef.current = true;
           markFeedbackPrompted();
@@ -106,17 +130,17 @@ export function ProductFeedbackPrompt({
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
-  // Engaged / after-print auto prompt.
+  // Engaged / after-print auto prompt (delayed).
   useEffect(() => {
     if (autoOpenedRef.current || open) return;
     if (hasRespondedFeedback() || hasDismissedFeedback()) return;
-    const decision = shouldAutoPromptFeedback(usage);
+    const decision = shouldAutoPromptFeedback(usage, { pageLoadSeconds });
     if (!decision.open) return;
     autoOpenedRef.current = true;
     markFeedbackPrompted();
     setTrigger(decision.trigger);
     setOpen(true);
-  }, [usage, open]);
+  }, [usage, open, pageLoadSeconds]);
 
   // Manual open + print signal from elsewhere.
   useEffect(() => {
