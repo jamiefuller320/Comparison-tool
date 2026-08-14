@@ -1,6 +1,6 @@
 name: Pack quality loop
 
-# Weekly assess → capped polish on weakest ready packs → commit digest.
+# Twice-weekly assess → capped polish on weakest ready packs → commit digest.
 # Complements monthly Hampshire refresh and weekly EY refresh.
 on:
   workflow_dispatch:
@@ -8,15 +8,15 @@ on:
       max_packs:
         description: Max weakest packs to polish
         required: false
-        default: "3"
+        default: "6"
       isi_resolve_cap:
         description: ISI HTML resolve cap per pack
         required: false
-        default: "50"
+        default: "80"
       precis_limit:
         description: Precis fetch limit per pack
         required: false
-        default: "40"
+        default: "60"
       dry_run:
         description: Assess + digest only (no polish)
         required: false
@@ -28,8 +28,8 @@ on:
         type: boolean
         default: false
   schedule:
-    # Wednesdays 06:00 UTC — after Monday EY refresh
-    - cron: "0 6 * * 3"
+    # Mondays + Wednesdays 06:00 UTC — keep weakest packs moving
+    - cron: "0 6 * * 1,3"
 
 permissions:
   contents: write
@@ -54,9 +54,9 @@ jobs:
 
       - name: Run pack quality loop
         env:
-          MAX_PACKS: ${{ github.event.inputs.max_packs || '3' }}
-          ISI_CAP: ${{ github.event.inputs.isi_resolve_cap || '50' }}
-          PRECIS_LIMIT: ${{ github.event.inputs.precis_limit || '40' }}
+          MAX_PACKS: ${{ github.event.inputs.max_packs || '6' }}
+          ISI_CAP: ${{ github.event.inputs.isi_resolve_cap || '80' }}
+          PRECIS_LIMIT: ${{ github.event.inputs.precis_limit || '60' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           UPGRADE_HL: ${{ github.event.inputs.upgrade_highlights || 'false' }}
         run: |
@@ -88,5 +88,6 @@ jobs:
               MSG="Pack quality loop: polish weakest ready packs"
             fi
             git commit -m "$MSG"
+            git pull --rebase origin main
             git push
           fi

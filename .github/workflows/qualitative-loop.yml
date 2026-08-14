@@ -1,9 +1,11 @@
 name: Qualitative capture loop
 
-# Coverage-first, min-cost quality (Hampshire expansion):
-# - Daily: 25 new schools + free deterministic narratives (no Cursor spend)
-# - Stale re-screens: small daily budget via ETag / Last-Modified / content-hash
+# Coverage-first, min-cost quality (region expansion):
+# - Daily: GIAS website enrich → auto-pick Hampshire or widest ready pack
+# - 40 new website-bearing schools + free deterministic narratives (no Cursor spend)
+# - Stale re-screens: larger daily budget via ETag / Last-Modified / content-hash
 # - Heuristic QA on worst suspects (default; optional Cursor/OpenAI via dispatch)
+# - Empty website pools are a successful no-op (allow-empty) so CI stays green
 # - Manual dispatch: optional Cursor/auto polish on rich schools only
 on:
   workflow_dispatch:
@@ -11,7 +13,15 @@ on:
       limit:
         description: Max new schools to capture this run (free crawl)
         required: false
-        default: "25"
+        default: "40"
+      scope:
+        description: auto | seed | la (honour --la via LA input)
+        required: false
+        default: "auto"
+      la:
+        description: LA label when scope=la (default Hampshire)
+        required: false
+        default: "Hampshire"
       refresh_stale_days:
         description: Re-screen captures older than N days (0 = off)
         required: false
@@ -19,7 +29,7 @@ on:
       refresh_limit:
         description: Max stale schools to change-detect this run
         required: false
-        default: "5"
+        default: "15"
       synthesize_provider:
         description: Narrative provider — prefer none for coverage; cursor/auto for paid polish
         required: false
@@ -31,7 +41,7 @@ on:
       qa_limit:
         description: Max suspect schools for post-synth QA (0 = skip)
         required: false
-        default: "8"
+        default: "16"
       qa_provider:
         description: QA reviewer — none (free heuristics) or cursor/auto/openai
         required: false
@@ -42,7 +52,7 @@ on:
         type: boolean
         default: false
   schedule:
-    # Daily 07:00 UTC — Hampshire website coverage expansion
+    # Daily 07:00 UTC — region website coverage expansion
     - cron: "0 7 * * *"
 
 permissions:
@@ -68,22 +78,23 @@ jobs:
 
       - name: Run qualitative loop
         env:
-          # Schedule defaults: daily Hampshire coverage. Dispatch inputs can override.
-          LIMIT: ${{ github.event.inputs.limit || '25' }}
+          LIMIT: ${{ github.event.inputs.limit || '40' }}
+          SCOPE: ${{ github.event.inputs.scope || 'auto' }}
+          LA: ${{ github.event.inputs.la || 'Hampshire' }}
           REFRESH_DAYS: ${{ github.event.inputs.refresh_stale_days || '28' }}
-          REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '5' }}
+          REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '15' }}
           SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
           SYNTH_LIMIT: ${{ github.event.inputs.synthesize_limit || '0' }}
-          QA_LIMIT: ${{ github.event.inputs.qa_limit || '8' }}
+          QA_LIMIT: ${{ github.event.inputs.qa_limit || '16' }}
           QA_PROVIDER: ${{ github.event.inputs.qa_provider || 'none' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          # skip-existing is the Python default — do not pass a rejected flag.
           ARGS=(
-            --la Hampshire
+            --scope "$SCOPE"
+            --la "$LA"
             --limit "$LIMIT"
             --refresh-stale-days "$REFRESH_DAYS"
             --refresh-limit "$REFRESH_LIMIT"
@@ -103,21 +114,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A output public/data/schools-index.json \
-            public/data/packs/qualitative-loop-latest.json \
-            public/data/packs/qualitative-loop-latest.md \
-            public/data/packs/qualitative-qa-latest.json \
-            public/data/packs/qualitative-qa-latest.md
+          git add -A output public/data/schools-index.json public/data/packs
           if git diff --staged --quiet; then
             echo "No qualitative loop changes"
           else
             if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
               MSG="Qualitative loop dry-run digest"
             else
-              MSG="Qualitative loop: daily Hampshire coverage capture"
+              MSG="Qualitative loop: daily coverage capture"
             fi
             git commit -m "$MSG"
-            # Rebase onto tip of main so concurrent merges (e.g. Pages / other bots) don't reject the push.
+            # Rebase onto tip of main so concurrent merges don't reject the push.
             git pull --rebase origin main
             git push
           fi

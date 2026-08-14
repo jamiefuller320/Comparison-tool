@@ -49,6 +49,11 @@ def main(argv: list[str] | None = None) -> int:
         help="Max stale schools to re-screen",
     )
     parser.add_argument("--require-website", action="store_true")
+    parser.add_argument(
+        "--allow-empty",
+        action="store_true",
+        help="Pass through to capture CLI — exit 0 when nothing matched",
+    )
     parser.add_argument("--synthesize", action="store_true")
     parser.add_argument(
         "--synthesize-provider",
@@ -92,6 +97,8 @@ def main(argv: list[str] | None = None) -> int:
         capture_cmd.extend(["--refresh-limit", str(args.refresh_limit)])
     if args.require_website:
         capture_cmd.append("--require-website")
+    if args.allow_empty:
+        capture_cmd.append("--allow-empty")
     if args.synthesize:
         capture_cmd.append("--synthesize")
         capture_cmd.extend(["--synthesize-provider", args.synthesize_provider])

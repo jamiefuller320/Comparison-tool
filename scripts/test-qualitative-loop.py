@@ -13,13 +13,21 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
     out = subprocess.check_output(
-        [sys.executable, str(ROOT / "scripts" / "run-qualitative-loop.py"), "--dry-run"],
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "run-qualitative-loop.py"),
+            "--dry-run",
+            "--skip-website-enrich",
+        ],
         cwd=ROOT,
         text=True,
     )
     payload = json.loads(out)
     assert payload["dryRun"] is True
-    assert payload["la"] == "Hampshire"
+    assert payload.get("scope") == "auto"
+    assert payload.get("la")
+    assert payload.get("index")
+    assert "remainingWithWebsite" in payload
     assert payload.get("qaProvider") == "none"
     assert "qa" in payload
     digest = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.json"
