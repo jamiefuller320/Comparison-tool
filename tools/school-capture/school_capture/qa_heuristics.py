@@ -17,6 +17,7 @@ from school_capture.list_filters import (
     SEND_DIRECTORY_LABELS,
     is_nav_or_junk_list_item,
     is_plausible_list_offering,
+    looks_like_named_person,
 )
 from school_capture.models import QualitativeCaptureRecord, SubjectAreaAssessment
 
@@ -33,7 +34,16 @@ POLICY_BOILERPLATE_RE = re.compile(
 MID_SENTENCE_RE = re.compile(r"^[a-z]")
 CHROME_LABEL_RE = re.compile(
     r"\b(ofsted report|parent view|staff portal|report student absence|"
-    r"name of child)\b",
+    r"name of child|key information|online payments|current vacancies|"
+    r"financial information|slavery statement|statutory information|"
+    r"data protection regulation)\b",
+    re.I,
+)
+CMS_CHROME_NARRATIVE_RE = re.compile(
+    r"\b(current (staff )?vacancies|slavery statement|terms\s*&\s*conditions|"
+    r"terms and conditions|online payments|financial information|"
+    r"general data protection|key information|statutory information|"
+    r"cookie policy|privacy notice)\b",
     re.I,
 )
 
@@ -104,6 +114,8 @@ def _is_junk_offering(item: str, *, area: str) -> bool:
     # Legitimate SEND labels must stay on the SEND area.
     if area == "send" and (key in _SEND_KEEP_LABELS or _is_send_need_label(item)):
         return False
+    if looks_like_named_person(item):
+        return True
     if key in POLICY_DOCUMENT_LABELS:
         return True
     if area == "community" and key in SEND_DIRECTORY_LABELS:
@@ -127,6 +139,8 @@ def _looks_like_chrome_signal(text: str) -> bool:
     if POLICY_BOILERPLATE_RE.search(t):
         return True
     if phrase_matches_learned(t):
+        return True
+    if looks_like_named_person(t) and len(t.split()) <= 8:
         return True
     words = t.split()
     # Short labels / footer chrome only (is_nav treats >7 words as junk lists).
@@ -152,18 +166,36 @@ def heuristic_area_findings(area: SubjectAreaAssessment) -> list[AreaQaFinding]:
         o for o in (area.offerings or []) if _is_junk_offering(o, area=area.area)
     ]
     if junk_offerings:
-        chrome_hit = any(
-            "ofsted" in o.lower() or "parent view" in o.lower() for o in junk_offerings
-        )
-        findings.append(
-            AreaQaFinding(
-                area=area.area,
-                action="strip",
-                reason="Offerings look like site chrome, policy TOC, or learned junk.",
-                junkClass="chrome" if chrome_hit else "policy_toc",
-                offendingExcerpts=junk_offerings[:8],
+        named = [o for o in junk_offerings if looks_like_named_person(o)]
+        rest = [o for o in junk_offerings if o not in named]
+        if named:
+            findings.append(
+                AreaQaFinding(
+                    area=area.area,
+                    action="strip",
+                    reason="Offerings are staff/person names, not activities or provision.",
+                    junkClass="named_person",
+                    offendingExcerpts=named[:8],
+                )
             )
-        )
+        if rest:
+            chrome_hit = any(
+                "ofsted" in o.lower()
+                or "parent view" in o.lower()
+                or "key information" in o.lower()
+                or "vacancies" in o.lower()
+                or "online payments" in o.lower()
+                for o in rest
+            )
+            findings.append(
+                AreaQaFinding(
+                    area=area.area,
+                    action="strip",
+                    reason="Offerings look like site chrome, policy TOC, or learned junk.",
+                    junkClass="chrome" if chrome_hit else "policy_toc",
+                    offendingExcerpts=rest[:8],
+                )
+            )
 
     narrative = (area.narrativeSummary or "").strip()
     signals = area.signals or []
@@ -204,6 +236,17 @@ def heuristic_area_findings(area: SubjectAreaAssessment) -> list[AreaQaFinding]:
                 action="strip",
                 reason="Narrative opens with staff/policy boilerplate.",
                 junkClass="policy_boilerplate",
+                offendingExcerpts=[narrative[:180]],
+            )
+        )
+    elif narrative and CMS_CHROME_NARRATIVE_RE.search(narrative):
+        # Deterministic synth often lists CMS footer links as if they were provision.
+        findings.append(
+            AreaQaFinding(
+                area=area.area,
+                action="thin",
+                reason="Narrative is dominated by CMS chrome / compliance footer labels.",
+                junkClass="cms_chrome",
                 offendingExcerpts=[narrative[:180]],
             )
         )
@@ -287,9 +330,15 @@ def score_record_suspicion(record: QualitativeCaptureRecord) -> SchoolQaSuspect:
         if narrative and POLICY_BOILERPLATE_RE.search(narrative):
             score += 2.5
             flags.append("policy_boilerplate")
+        if any(looks_like_named_person(o) for o in offerings):
+            score += 3.0
+            flags.append("named_person")
         if any(not is_plausible_list_offering(o) for o in offerings):
             score += 2.0
             flags.append("implausible_offerings")
+        if narrative and CMS_CHROME_NARRATIVE_RE.search(narrative):
+            score += 2.0
+            flags.append("cms_chrome")
 
     # Dedupe flags while keeping order
     seen: set[str] = set()

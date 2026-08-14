@@ -7,7 +7,25 @@ from school_capture.list_filters import (
     filter_offerings,
     is_nav_or_junk_list_item,
     is_plausible_list_offering,
+    looks_like_named_person,
 )
+
+
+def test_rejects_named_people_and_cms_chrome():
+    assert looks_like_named_person("Mr J Anderson")
+    assert looks_like_named_person("Mrs Kate Steven,")
+    assert looks_like_named_person("Miss Taylor (Art)")
+    assert looks_like_named_person("Mr Sasso Executive Principal")
+    assert looks_like_named_person("Mrs Swallow Inclusive NATURE CLUB")
+    assert not looks_like_named_person("Football club")
+    assert not looks_like_named_person("House Captain")
+    assert is_nav_or_junk_list_item("Key Information")
+    assert is_nav_or_junk_list_item("Online Payments")
+    assert is_nav_or_junk_list_item("Current Vacancies")
+    assert is_nav_or_junk_list_item("Slavery Statement")
+    assert not is_plausible_list_offering("Mr J Anderson")
+    assert not is_plausible_list_offering("Key Information")
+    assert not is_plausible_list_offering("Online Payments")
 
 
 def test_rejects_nav_and_files():

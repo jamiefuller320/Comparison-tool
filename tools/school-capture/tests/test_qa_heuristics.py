@@ -40,6 +40,38 @@ def _area(
     )
 
 
+def test_named_people_stripped_from_enrichment():
+    area = _area(
+        "enrichment",
+        offerings=[
+            "Mr Bloodworth &",
+            "Mrs Swallow Inclusive NATURE CLUB",
+            "Football club",
+        ],
+    )
+    findings = heuristic_area_findings(area)
+    assert any(f.junkClass == "named_person" and f.action == "strip" for f in findings)
+    excerpts = []
+    for f in findings:
+        excerpts.extend(f.offendingExcerpts)
+    assert "Mr Bloodworth &" in excerpts
+    assert "Football club" not in excerpts
+
+
+def test_cms_chrome_narrative_thinned():
+    area = _area(
+        "community",
+        narrative=(
+            "The school website lists current staff vacancies, slavery statement, "
+            "terms & conditions and online payments."
+        ),
+        offerings=["Key Information", "Online Payments"],
+    )
+    findings = heuristic_area_findings(area)
+    classes = {f.junkClass for f in findings}
+    assert "cms_chrome" in classes or "chrome" in classes
+
+
 def test_chrome_offerings_produce_strip_finding():
     area = _area(
         "send",
