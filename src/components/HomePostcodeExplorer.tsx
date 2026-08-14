@@ -428,34 +428,39 @@ export function HomePostcodeExplorer({
             {error ? <p className="postcode-error">{error}</p> : null}
           </form>
 
-          <PhaseSelector
-            selected={stageFilter}
-            onChange={onStageFilterChange}
-            tone="hero"
-            tourId="stages"
-          />
-          {onStageMatchChange ? (
-            <StageMatchSelector
-              selected={stageMatch}
-              stages={stageFilter}
-              onChange={onStageMatchChange}
-              tone="hero"
-            />
-          ) : null}
-          <SectorSelector
-            selected={sectorFilter}
-            onChange={onSectorFilterChange}
-            tone="hero"
-            tourId="sector"
-          />
-          {onProvisionFilterChange ? (
-            <ProvisionSelector
-              selected={provisionFilter}
-              onChange={onProvisionFilterChange}
-              tone="hero"
-              tourId="provision"
-            />
-          ) : null}
+          <details className="hero-refine">
+            <summary>Refine shortlist</summary>
+            <div className="hero-refine-body">
+              <PhaseSelector
+                selected={stageFilter}
+                onChange={onStageFilterChange}
+                tone="hero"
+                tourId="stages"
+              />
+              {onStageMatchChange ? (
+                <StageMatchSelector
+                  selected={stageMatch}
+                  stages={stageFilter}
+                  onChange={onStageMatchChange}
+                  tone="hero"
+                />
+              ) : null}
+              <SectorSelector
+                selected={sectorFilter}
+                onChange={onSectorFilterChange}
+                tone="hero"
+                tourId="sector"
+              />
+              {onProvisionFilterChange ? (
+                <ProvisionSelector
+                  selected={provisionFilter}
+                  onChange={onProvisionFilterChange}
+                  tone="hero"
+                  tourId="provision"
+                />
+              ) : null}
+            </div>
+          </details>
         </div>
       </div>
 
