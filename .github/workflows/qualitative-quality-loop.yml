@@ -1,0 +1,85 @@
+name: Qualitative quality loop
+
+# Corpus cleanup separate from coverage ingest:
+# analyse → heuristic QA over the full sidecar → merge → digest.
+# Rule improvements (filters / learned phrases) re-apply here without recrawl.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Max suspect schools to review (default full sidecar)
+        required: false
+        default: "250"
+      min_score:
+        description: Minimum suspicion score
+        required: false
+        default: "1.5"
+      qa_provider:
+        description: QA reviewer — none (free) or cursor/auto/openai
+        required: false
+        default: "none"
+      dry_run:
+        description: Analyse + digest only (no apply)
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Daily 08:00 UTC — after coverage loop (07:00); apply rules to existing records
+    - cron: "0 8 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qualitative-quality-loop
+  cancel-in-progress: false
+
+jobs:
+  qualitative-quality-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install data enrichment deps
+        run: pip install -r requirements-data.txt
+
+      - name: Run qualitative quality loop
+        env:
+          LIMIT: ${{ github.event.inputs.limit || '250' }}
+          MIN_SCORE: ${{ github.event.inputs.min_score || '1.5' }}
+          QA_PROVIDER: ${{ github.event.inputs.qa_provider || 'none' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          ARGS=(
+            --limit "$LIMIT"
+            --min-score "$MIN_SCORE"
+            --provider "$QA_PROVIDER"
+          )
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          python3 scripts/run-qualitative-quality-loop.py "${ARGS[@]}"
+
+      - name: Commit quality cleanup + digest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A output public/data/schools-index.json public/data/packs
+          if git diff --staged --quiet; then
+            echo "No qualitative quality loop changes"
+          else
+            git commit -m "Qualitative quality loop: apply ingest rules to existing records"
+            # Rebase-safe push when coverage loop commits land first
+            for i in 1 2 3 4 5; do
+              git pull --rebase origin main && git push origin HEAD:main && break
+              sleep $((i * 4))
+            done
+          fi

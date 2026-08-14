@@ -35,7 +35,7 @@ Last reviewed: 2026-08-03.
 | 2 Quantitative honesty | **Pass** | Gap chips on KS4/EY/KS2 (incl. missing Ofsted grade on KS2) |
 | 3 Qualitative enough | **Pass (guideline)** | Hampshire mainstream ~91% / EY ~43% / CM ~51%. Region packs: schools ~88%+ précis, EY ~87%, CM ~74%; mainstream primary/secondary ≫70%. Independent ISI/précis polish waves + weekly automated loop — measure with `npm run report:pack-quality` |
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
-| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; twice-weekly `pack-quality-loop` + daily auto-scope `qualitative-loop` (`npm run loop:pack-quality` / `loop:qualitative`) |
+| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; twice-weekly `pack-quality-loop` + daily auto-scope `qualitative-loop` + daily `qualitative-quality-loop` (`npm run loop:pack-quality` / `loop:qualitative` / `loop:qualitative-quality`) |
 | 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East parental compare; soft-launch feedback prompt + structured intake for improvement cycle |
 | 7 Regional packs | **Pass** | All 20 South East + Dorset pack LAs `ready` in `public/data/packs/manifest.json` (Hampshire remains maintained root) |
 

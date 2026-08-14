@@ -143,4 +143,4 @@ Sort by ingest date, filter to précis + website / junk flags, and open source l
 
 ## Engine version
 
-Current `ENGINE_VERSION` is **0.7.3** (chrome/policy/admissions filters, heuristic QA loop with learned junk phrases, optional Cursor/OpenAI narrative synthesis).
+Current `ENGINE_VERSION` is **0.7.4** (named-person + CMS chrome filters, heuristic QA loop with learned junk phrases, dedicated quality-apply loop, optional Cursor/OpenAI narrative synthesis).

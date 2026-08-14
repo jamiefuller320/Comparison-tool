@@ -25,7 +25,7 @@ class SourceType(str, Enum):
     OTHER = "other"
 
 
-ENGINE_VERSION = "0.7.3"
+ENGINE_VERSION = "0.7.4"
 
 
 @dataclass

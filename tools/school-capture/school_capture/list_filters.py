@@ -27,8 +27,10 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "parents info",
         "policies",
         "governors",
+        "governing body",
         "staff",
         "vacancies",
+        "current vacancies",
         "search",
         "login",
         "menu",
@@ -36,6 +38,11 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "curriculum",
         "send",
         "useful information",
+        "key information",
+        "statutory information",
+        "statutory info",
+        "financial information",
+        "online payments",
         "absence reporting",
         "attendance information",
         "awards and recognition",
@@ -60,6 +67,33 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "use of ict",
         "assess, plan, do,",
         "ehcp myths and",
+        "general data protection regulations",
+        "general data protection regulation",
+        "slavery statement",
+        "terms & conditions",
+        "terms and conditions",
+        "privacy notice",
+        "cookie policy",
+        "assessment",
+        "definitions",
+        "register",
+        "families",
+        "heads’ welcome",
+        "heads' welcome",
+        "head's welcome",
+        "meet the team",
+        "our staff",
+        "staff list",
+        "staff directory",
+        "admission process",
+        "nursery fees",
+        "school fees",
+        "open days",
+        "open day",
+        "pupil’s date of birth",
+        "pupil's date of birth",
+        "staff duties & pupil supervision",
+        "staff duties and pupil supervision",
         # Staff / statutory policy TOC labels (not parent-facing provision)
         "confidentiality",
         "health and safety policy",
@@ -98,7 +132,70 @@ CHROME_FRAGMENTS: tuple[str, ...] = (
     "code of conduct",
     "whistleblowing",
     "version date author",
+    "current vacancies",
+    "key information",
+    "statutory information",
+    "financial information",
+    "online payments",
+    "data protection regulation",
+    "slavery statement",
+    "terms & conditions",
+    "terms and conditions",
+    "privacy notice",
+    "cookie policy",
+    "heads’ welcome",
+    "heads' welcome",
+    "meet the team",
+    "staff directory",
+    "equalities assessment",
+    "admission process",
+    "nursery fees",
+    "school fees",
+    "open days",
 )
+
+# Staff-directory / named-person list items mistaken for clubs or provision.
+HONORIFIC_PERSON_RE = re.compile(
+    r"^(?:mr|mrs|ms|miss|dr|sir|dame)\.?\s+\S",
+    re.I,
+)
+# "Smith — Teacher", "Jane Doe - SENCO", truncated "Mrs Hicks and"
+NAMED_ROLE_RE = re.compile(
+    r"^[A-Z][a-z]+(?:\s+[A-Z][a-z'’\-]+){0,3}\s*[–—\-:,]\s*"
+    r"(?:teacher|head|principal|senco|coach|governor|ta|hlta|"
+    r"assistant|leader|coordinator|co-ordinator|inclusive|cancelled)\b",
+    re.I,
+)
+TRAILING_PERSON_ROLE_RE = re.compile(
+    r"\b(?:executive\s+)?(?:principal|headteacher|head\s+teacher|senco)\s*$",
+    re.I,
+)
+
+
+def looks_like_named_person(item: str) -> bool:
+    """True when a list label is a staff/person name, not a club or provision."""
+    text = re.sub(r"\s+", " ", (item or "").strip())
+    if not text:
+        return False
+    # Drop trailing punctuation / truncated conjunctions from CMS scrapes.
+    cleaned = re.sub(r"[,&]\s*$", "", text).strip()
+    if HONORIFIC_PERSON_RE.match(cleaned):
+        return True
+    if NAMED_ROLE_RE.match(cleaned):
+        return True
+    # "Mr Sasso Executive Principal" — honorific already caught; role-only titles
+    # with a capitalised personal name and no activity keyword.
+    if (
+        TRAILING_PERSON_ROLE_RE.search(cleaned)
+        and len(cleaned.split()) <= 6
+        and cleaned[:1].isupper()
+        and not any(
+            t in cleaned.lower()
+            for t in ("club", "sport", "choir", "orchestra", "team")
+        )
+    ):
+        return True
+    return False
 
 JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
     re.compile(p, re.I)
@@ -158,6 +255,18 @@ JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"staff (code of )?conduct",
         r"version date",
         r"status summary",
+        r"^key information",
+        r"^statutory info",
+        r"^current vacancies$",
+        r"^online payments$",
+        r"slavery statement",
+        r"data protection regulation",
+        # Staff directory rows scraped into activity lists
+        r"^(mr|mrs|ms|miss|dr)\.?\s+",
+        r"\binclusive\s*$",
+        r"\bcancelled\s*$",
+        r"\b(deputy|assistant)\s+headteachers?\b",
+        r"\bheadteachers?\s+and\s+assistant\b",
     )
 )
 
@@ -168,7 +277,11 @@ def is_nav_or_junk_list_item(item: str) -> bool:
     lower = lower.lstrip("•·▪◦\uf09f\u2022-–—* ").strip()
     if not lower:
         return True
+    if looks_like_named_person(item):
+        return True
     if lower in NAV_LIST_LABELS:
+        return True
+    if lower.rstrip("»›>") in NAV_LIST_LABELS:
         return True
     if lower in POLICY_DOCUMENT_LABELS:
         return True
@@ -250,6 +363,8 @@ def _term_in_text(term: str, text: str) -> bool:
 
 def is_plausible_list_offering(item: str) -> bool:
     """List items should look like club/subject/provision labels, not nav or prose."""
+    if looks_like_named_person(item):
+        return False
     if is_nav_or_junk_list_item(item):
         return False
     lower = item.lower()
@@ -259,6 +374,9 @@ def is_plausible_list_offering(item: str) -> bool:
         if len(lower.split()) > 6:
             return False
         if any(p in lower for p in (" is called ", " of our ", " of personal ", " either ", " including ")):
+            return False
+        # "Mrs Swallow Inclusive NATURE CLUB" — person-led scrape, not a club label.
+        if HONORIFIC_PERSON_RE.match(item.strip()):
             return False
         return True
     words = item.split()
