@@ -198,6 +198,18 @@ export function requestOpenFeedback(trigger: FeedbackTrigger = "manual"): void {
   );
 }
 
+/** Soft “engaged enough to remember” — used for exit-return, not auto-open. */
+export const FEEDBACK_ENGAGED_SECONDS = 90;
+
+/** Auto-prompt only after this much visible dwell (gives time to evaluate). */
+export const FEEDBACK_AUTO_PROMPT_ENGAGED_SECONDS = 240;
+
+/**
+ * Even when cumulative usage already qualifies, wait this long on the current
+ * page load before auto-opening (stops return visits from prompting instantly).
+ */
+export const FEEDBACK_AUTO_PROMPT_PAGE_GRACE_SECONDS = 90;
+
 export function isUsageEngaged(usage: FeedbackUsage): boolean {
   return (
     usage.hadPostcode ||
@@ -205,7 +217,7 @@ export function isUsageEngaged(usage: FeedbackUsage): boolean {
     usage.openedSideBySide ||
     usage.sawVisitPack ||
     usage.printedVisitPack ||
-    usage.engagedSeconds >= 45
+    usage.engagedSeconds >= FEEDBACK_ENGAGED_SECONDS
   );
 }
 
@@ -214,7 +226,8 @@ export function isUsageDeep(usage: FeedbackUsage): boolean {
     usage.shortlistCountMax >= 2 ||
     usage.openedSideBySide ||
     usage.printedVisitPack ||
-    (usage.sawVisitPack && usage.engagedSeconds >= 60)
+    (usage.sawVisitPack &&
+      usage.engagedSeconds >= FEEDBACK_AUTO_PROMPT_ENGAGED_SECONDS)
   );
 }
 
@@ -226,11 +239,16 @@ export interface FeedbackPromptDecision {
 
 /**
  * Decide whether to auto-open the soft feedback sheet.
- * Avoids colliding with the first-run tour.
+ * Avoids colliding with the first-run tour and waits for real evaluation time.
  */
 export function shouldAutoPromptFeedback(
   usage: FeedbackUsage,
-  opts: { tourOpen?: boolean; forceTrigger?: FeedbackTrigger | null } = {},
+  opts: {
+    tourOpen?: boolean;
+    forceTrigger?: FeedbackTrigger | null;
+    /** Seconds since this page load (client mount). */
+    pageLoadSeconds?: number;
+  } = {},
 ): FeedbackPromptDecision {
   if (opts.forceTrigger) {
     return {
@@ -250,9 +268,18 @@ export function shouldAutoPromptFeedback(
     return { open: false, trigger: "engaged", reason: "tour-pending" };
   }
 
+  const pageLoadSeconds = Math.max(0, Number(opts.pageLoadSeconds) || 0);
+  const graceOk = pageLoadSeconds >= FEEDBACK_AUTO_PROMPT_PAGE_GRACE_SECONDS;
+
   if (typeof window !== "undefined") {
     const exitPending = window.sessionStorage.getItem(EXIT_PENDING_KEY) === "1";
-    if (exitPending && isUsageEngaged(usage) && !hasPromptedFeedback()) {
+    if (
+      exitPending &&
+      isUsageEngaged(usage) &&
+      usage.engagedSeconds >= FEEDBACK_ENGAGED_SECONDS &&
+      graceOk &&
+      !hasPromptedFeedback()
+    ) {
       window.sessionStorage.removeItem(EXIT_PENDING_KEY);
       return {
         open: true,
@@ -262,7 +289,9 @@ export function shouldAutoPromptFeedback(
     }
   }
 
-  if (usage.printedVisitPack && !hasPromptedFeedback()) {
+  // Print is a strong signal, but still respect the page-load grace so the
+  // sheet does not fight the print dialog / immediate return to the page.
+  if (usage.printedVisitPack && graceOk && !hasPromptedFeedback()) {
     return {
       open: true,
       trigger: "after-print",
@@ -270,12 +299,21 @@ export function shouldAutoPromptFeedback(
     };
   }
 
-  if (isUsageDeep(usage) && usage.engagedSeconds >= 75 && !hasPromptedFeedback()) {
+  if (
+    isUsageDeep(usage) &&
+    usage.engagedSeconds >= FEEDBACK_AUTO_PROMPT_ENGAGED_SECONDS &&
+    graceOk &&
+    !hasPromptedFeedback()
+  ) {
     return {
       open: true,
       trigger: "engaged",
       reason: "deep-engagement",
     };
+  }
+
+  if (!graceOk) {
+    return { open: false, trigger: "engaged", reason: "page-grace" };
   }
 
   return { open: false, trigger: "engaged", reason: "waiting" };
