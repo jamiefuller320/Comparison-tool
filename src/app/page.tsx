@@ -40,10 +40,8 @@ export default function HomePage() {
           </p>
           <h1>Find your bearings when choosing a school.</h1>
           <p>
-            Start with your home postcode to map nearby schools and early years
-            across {COVERAGE_REGION_LABEL}, shortlist a few, then compare
-            published figures and inspection excerpts before you visit. A
-            parental compass — not a league table.
+            Map nearby schools from your home postcode, shortlist a few, then
+            compare published figures before you visit.
           </p>
         </div>
       </header>
