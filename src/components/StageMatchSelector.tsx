@@ -29,16 +29,15 @@ export function StageMatchSelector({
       aria-label="How selected stages combine"
     >
       <div className="phase-selector-heading">
-        <span className="phase-selector-label">Stage match</span>
+        <span className="phase-selector-label">Combine stages</span>
         <SelectorHelp label="About matching several stages">
-          By default a school appears if it covers <strong>any</strong> of the
-          stages you selected (for example infants for KS1 or juniors for KS2).
-          Choose <strong>Every selected stage</strong> when you specifically
-          want settings that span all of them (all-through / primary covering
-          KS1 and KS2 together).
+          <strong>Any stage (OR)</strong> is the default — infants for KS1 or
+          juniors for KS2 both appear when both chips are on.{" "}
+          <strong>Every stage (AND)</strong> keeps only settings that span all
+          selected stages (for example a primary covering KS1 and KS2).
         </SelectorHelp>
       </div>
-      <div className="phase-chips">
+      <div className="phase-chips stage-match-chips">
         <button
           type="button"
           role="radio"
@@ -47,7 +46,7 @@ export function StageMatchSelector({
           title="Show schools that offer at least one selected stage"
           onClick={() => onChange("any")}
         >
-          Any selected stage
+          Any stage <span className="stage-match-logic">OR</span>
         </button>
         <button
           type="button"
@@ -57,9 +56,14 @@ export function StageMatchSelector({
           title="Only schools that offer every selected stage"
           onClick={() => onChange("all")}
         >
-          Every selected stage
+          Every stage <span className="stage-match-logic">AND</span>
         </button>
       </div>
+      <p className="stage-match-hint" aria-live="polite">
+        {selected === "all"
+          ? "Only schools that cover every selected stage."
+          : "Schools that cover any one of the selected stages."}
+      </p>
     </div>
   );
 }

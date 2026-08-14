@@ -49,7 +49,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "stages",
     target: "stages",
     title: "Choose by age or key stage",
-    body: "Drag the child’s age range if key stages are unfamiliar — matching stages turn on automatically. Or press the stage chips (ages shown on each) to override. Childminders stay a separate care category. Several school stages use OR by default; choose “Every selected stage” when you want only schools that cover all of them.",
+    body: "Drag the child’s age range if key stages are unfamiliar — matching stages turn on automatically. Or press the stage chips (ages shown on each) to override. Childminders stay a separate care category. Several school stages use OR by default (Any stage); choose Every stage (AND) when you want only schools that cover all of them.",
   },
   {
     id: "sector",
