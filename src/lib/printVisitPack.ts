@@ -85,7 +85,8 @@ html, body {
 .visit-pack-school-sheet,
 .visit-pack-school,
 .visit-pack-school-notes,
-.visit-pack-school-precis {
+.visit-pack-school-precis,
+.visit-pack-school-website {
   display: block !important;
   float: none !important;
   position: static !important;
@@ -110,8 +111,8 @@ html, body {
 .visit-note-lines {
   display: block !important;
   width: 100% !important;
-  min-height: 120mm !important;
-  height: 120mm !important;
+  min-height: var(--visit-print-note-height, 120mm) !important;
+  height: var(--visit-print-note-height, 120mm) !important;
   flex: none !important;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -123,6 +124,13 @@ html, body {
   background-size: 100% 1.35rem;
   background-repeat: repeat-y;
 }
+.visit-note-lines.is-compact {
+  min-height: 42mm !important;
+  height: 42mm !important;
+}
+.visit-pack-figures-scroll {
+  overflow: visible !important;
+}
 .visit-pack-compare-table {
   width: 100%;
   border-collapse: collapse;
@@ -133,6 +141,59 @@ html, body {
   border: 1px solid rgba(20,35,58,0.18);
   padding: 0.28rem 0.35rem;
   text-align: left;
+}
+.visit-pack-school-website,
+.visit-pack-quote-block,
+.visit-pack-website-area {
+  display: block !important;
+  overflow: visible !important;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.visit-pack-quotes {
+  margin: 0.25rem 0 0.5rem;
+  padding-left: 1.1rem;
+}
+.visit-pack-quotes blockquote {
+  margin: 0.2rem 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.visit-pack-chart {
+  display: block !important;
+  margin: 0 0 0.75rem;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.visit-pack-chart-svg {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+.visit-pack-chart-label,
+.visit-pack-chart-value,
+.visit-pack-chart-missing {
+  font-size: 9px;
+  fill: #14233a;
+}
+.visit-pack-chart-missing { fill: #6b7c93; }
+.visit-pack-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  font-size: 0.78rem;
+}
+.visit-pack-chart-swatch {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-right: 0.3rem;
+  border-radius: 2px;
+  vertical-align: middle;
 }
 .decision-guidance-print-columns {
   display: block !important;

@@ -3892,6 +3892,54 @@ html.tour-running .hero-inner > * {
   overflow-x: auto;
 }
 
+.visit-pack-graphs-grid {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.visit-pack-chart {
+  margin: 0;
+}
+
+.visit-pack-chart-svg {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  height: auto;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.visit-pack-chart-label,
+.visit-pack-chart-value,
+.visit-pack-chart-missing {
+  font-size: 11px;
+  fill: var(--ink);
+}
+
+.visit-pack-chart-missing {
+  fill: var(--ink-soft);
+}
+
+.visit-pack-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  list-style: none;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.visit-pack-chart-swatch {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin-right: 0.35rem;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
 .visit-pack-compare-table {
   width: 100%;
   border-collapse: collapse;
@@ -3953,6 +4001,10 @@ html.tour-running .hero-inner > * {
   flex: 0 1 auto;
 }
 
+.visit-pack-school-website {
+  flex: 0 1 auto;
+}
+
 .visit-pack-school-notes {
   display: flex;
   flex-direction: column;
@@ -3961,7 +4013,9 @@ html.tour-running .hero-inner > * {
 }
 
 .visit-pack-school-precis h5,
-.visit-pack-school-notes h5 {
+.visit-pack-school-website h5,
+.visit-pack-school-notes h5,
+.visit-pack-quote-block h6 {
   margin: 0 0 0.35rem;
   font-family: var(--font-display);
   font-size: 0.92rem;
@@ -3969,6 +4023,76 @@ html.tour-running .hero-inner > * {
   color: var(--sea-deep);
   border-bottom: 1px solid var(--line);
   padding-bottom: 0.2rem;
+}
+
+.visit-pack-quote-block {
+  margin: 0.55rem 0 0;
+}
+
+.visit-pack-quote-block h6 {
+  font-size: 0.82rem;
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.visit-pack-quotes {
+  margin: 0.2rem 0 0;
+  padding-left: 1.15rem;
+}
+
+.visit-pack-quotes li {
+  margin: 0 0 0.35rem;
+}
+
+.visit-pack-quotes blockquote {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.visit-pack-quote-section {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.visit-pack-report-link {
+  margin: 0.45rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.visit-pack-website-area {
+  margin: 0.45rem 0 0;
+}
+
+.visit-pack-website-area-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  margin: 0 0 0.2rem;
+  font-size: 0.88rem;
+}
+
+.visit-pack-cov {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.visit-pack-cov.cov-rich {
+  color: var(--sea-deep);
+}
+
+.visit-pack-cov.cov-some {
+  color: #8a5a12;
+}
+
+.visit-pack-cov.cov-thin {
+  color: #8a3d2a;
 }
 
 .visit-pack-school-summary {
@@ -4013,6 +4137,11 @@ html.tour-running .hero-inner > * {
   );
   background-size: 100% 1.35rem;
   background-repeat: repeat-y;
+}
+
+.visit-note-lines.is-compact {
+  min-height: 5.5rem;
+  flex: 0 0 auto;
 }
 
 .visit-note-print-text {
@@ -4244,6 +4373,7 @@ html.tour-running .hero-inner > * {
   .visit-pack-school-sheet,
   .visit-pack-school,
   .visit-pack-school-precis,
+  .visit-pack-school-website,
   .visit-pack-school-notes {
     display: block !important;
     float: none !important;
@@ -4251,6 +4381,10 @@ html.tour-running .hero-inner > * {
     overflow: visible !important;
     min-height: 0 !important;
     flex: none !important;
+  }
+
+  .visit-pack-figures-scroll {
+    overflow: visible !important;
   }
 
   .visit-pack-school {
@@ -4262,8 +4396,8 @@ html.tour-running .hero-inner > * {
   .visit-note-lines {
     display: block !important;
     flex: none !important;
-    min-height: 120mm !important;
-    height: 120mm !important;
+    min-height: var(--visit-print-note-height, 120mm) !important;
+    height: var(--visit-print-note-height, 120mm) !important;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0,
@@ -4271,6 +4405,16 @@ html.tour-running .hero-inner > * {
       rgba(20, 35, 58, 0.22) calc(1.35rem - 1px),
       rgba(20, 35, 58, 0.22) 1.35rem
     );
+  }
+
+  .visit-note-lines.is-compact {
+    min-height: 42mm !important;
+    height: 42mm !important;
+  }
+
+  .visit-pack-chart {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .visit-questions {
