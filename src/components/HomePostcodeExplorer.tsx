@@ -23,6 +23,10 @@ import { SectorSelector } from "@/components/SectorSelector";
 import { StageMatchSelector } from "@/components/StageMatchSelector";
 import { ProvisionSelector } from "@/components/ProvisionSelector";
 import {
+  HeroSetupTiles,
+  type HeroTileId,
+} from "@/components/HeroSetupTiles";
+import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
@@ -39,12 +43,14 @@ import {
   formatSector,
   resolveSchoolSector,
   schoolMatchesSectors,
+  SECTOR_OPTIONS,
   type SectorId,
 } from "@/lib/sectors";
 import {
   schoolMatchesProvision,
   type ProvisionFilterId,
   DEFAULT_PROVISION,
+  PROVISION_OPTIONS,
 } from "@/lib/provisionFilter";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
 import { requestTourStart } from "@/lib/tour";
@@ -135,6 +141,12 @@ export function HomePostcodeExplorer({
     null,
   );
   const [catchmentsLoading, setCatchmentsLoading] = useState(false);
+  const [activeTile, setActiveTile] = useState<HeroTileId>("postcode");
+  const [touchedTiles, setTouchedTiles] = useState({
+    stages: false,
+    sector: false,
+    provision: false,
+  });
 
   const parsedPreview = useMemo(
     () => parseUkPostcode(deferredRaw),
@@ -347,6 +359,48 @@ export function HomePostcodeExplorer({
 
   const atMax = selectedUrns.length >= max;
 
+  const stageSummary = useMemo(() => {
+    const labels = formatPhases(stageFilter);
+    if (!labels) return "Choose ages or stages";
+    if (schoolStageIds(stageFilter).length > 1) {
+      return `${labels} · ${stageMatch === "all" ? "AND" : "OR"}`;
+    }
+    return labels;
+  }, [stageFilter, stageMatch]);
+
+  const sectorSummary = useMemo(() => {
+    if (sectorFilter.includes("state") && sectorFilter.includes("independent")) {
+      return "State & independent";
+    }
+    return (
+      SECTOR_OPTIONS.find((o) => sectorFilter.includes(o.id))?.label ||
+      formatSector(sectorFilter[0]) ||
+      "School type"
+    );
+  }, [sectorFilter]);
+
+  const provisionSummary = useMemo(() => {
+    return (
+      PROVISION_OPTIONS.find((o) => o.id === provisionFilter)?.label ||
+      "Any provision"
+    );
+  }, [provisionFilter]);
+
+  const tileCompleted = useMemo(
+    () => ({
+      postcode: Boolean(home?.postcode),
+      stages: touchedTiles.stages,
+      sector: touchedTiles.sector,
+      // Default provision counts once the user opens/acts on the tile.
+      provision: touchedTiles.provision,
+    }),
+    [home?.postcode, touchedTiles],
+  );
+
+  function markTileTouched(id: "stages" | "sector" | "provision") {
+    setTouchedTiles((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+  }
+
   function handleRadiusChange(km: number) {
     setRadiusKm(km);
     // Drop stale road times immediately so the list reflects the new ring
@@ -361,7 +415,7 @@ export function HomePostcodeExplorer({
         see them without JS. This block is the interactive hero controls only.
       */}
       <div className="hero-controls">
-        <div className="shell hero-inner">
+        <div className="shell hero-inner hero-inner-wide">
           <p className="hero-tour-launch">
             <button
               type="button"
@@ -372,95 +426,164 @@ export function HomePostcodeExplorer({
             </button>
           </p>
 
-          <form
-            className="postcode-form hero-postcode"
-            data-tour="postcode"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void lookup();
+          <HeroSetupTiles
+            activeId={activeTile}
+            onActiveChange={setActiveTile}
+            completed={tileCompleted}
+            summaries={{
+              postcode: home?.postcode
+                ? home.adminDistrict
+                  ? `${home.postcode} · ${home.adminDistrict}`
+                  : home.postcode
+                : undefined,
+              stages: stageSummary,
+              sector: sectorSummary,
+              provision: provisionSummary,
             }}
           >
-            <label className="sr-only" htmlFor="home-postcode">
-              Home postcode
-            </label>
-            <div className="postcode-row">
-              <input
-                id="home-postcode"
-                name="postcode"
-                autoComplete="postal-code"
-                spellCheck={false}
-                placeholder="Home postcode — SO40 2HR, so402hr, SO40-2HR"
-                value={rawPostcode}
-                onChange={(e) => {
-                  setRawPostcode(e.target.value);
-                  setError(null);
-                }}
-                onBlur={() => {
-                  const normalised = parseUkPostcode(rawPostcode);
-                  if (normalised) setRawPostcode(normalised);
-                }}
-              />
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={lookingUp}
-              >
-                {lookingUp ? "Finding…" : "Find nearby"}
-              </button>
-            </div>
-            <div className="postcode-meta hero-postcode-meta">
-              {parsedPreview ? (
-                <span>
-                  Reading as <strong>{parsedPreview}</strong>
-                </span>
-              ) : rawPostcode.trim() ? (
-                <span>Keep typing a full postcode…</span>
-              ) : (
-                <span>Accepts spaces, hyphens or compact forms.</span>
-              )}
-              {home?.adminDistrict ? (
-                <span>
-                  {" "}
-                  · Located in <strong>{home.adminDistrict}</strong>
-                </span>
-              ) : null}
-            </div>
-            {error ? <p className="postcode-error">{error}</p> : null}
-          </form>
-
-          <details className="hero-refine">
-            <summary>Refine shortlist</summary>
-            <div className="hero-refine-body">
-              <PhaseSelector
-                selected={stageFilter}
-                onChange={onStageFilterChange}
-                tone="hero"
-                tourId="stages"
-              />
-              {onStageMatchChange ? (
-                <StageMatchSelector
-                  selected={stageMatch}
-                  stages={stageFilter}
-                  onChange={onStageMatchChange}
-                  tone="hero"
-                />
-              ) : null}
-              <SectorSelector
-                selected={sectorFilter}
-                onChange={onSectorFilterChange}
-                tone="hero"
-                tourId="sector"
-              />
-              {onProvisionFilterChange ? (
-                <ProvisionSelector
-                  selected={provisionFilter}
-                  onChange={onProvisionFilterChange}
-                  tone="hero"
-                  tourId="provision"
-                />
-              ) : null}
-            </div>
-          </details>
+            {{
+              postcode: (
+                <form
+                  className="postcode-form hero-postcode"
+                  data-tour="postcode"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    void lookup();
+                  }}
+                >
+                  <label className="sr-only" htmlFor="home-postcode">
+                    Home postcode
+                  </label>
+                  <div className="postcode-row">
+                    <input
+                      id="home-postcode"
+                      name="postcode"
+                      autoComplete="postal-code"
+                      spellCheck={false}
+                      placeholder="Home postcode — SO40 2HR, so402hr, SO40-2HR"
+                      value={rawPostcode}
+                      onChange={(e) => {
+                        setRawPostcode(e.target.value);
+                        setError(null);
+                      }}
+                      onBlur={() => {
+                        const normalised = parseUkPostcode(rawPostcode);
+                        if (normalised) setRawPostcode(normalised);
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={lookingUp}
+                    >
+                      {lookingUp ? "Finding…" : "Find nearby"}
+                    </button>
+                  </div>
+                  <div className="postcode-meta hero-postcode-meta">
+                    {parsedPreview ? (
+                      <span>
+                        Reading as <strong>{parsedPreview}</strong>
+                      </span>
+                    ) : rawPostcode.trim() ? (
+                      <span>Keep typing a full postcode…</span>
+                    ) : (
+                      <span>Accepts spaces, hyphens or compact forms.</span>
+                    )}
+                    {home?.adminDistrict ? (
+                      <span>
+                        {" "}
+                        · Located in <strong>{home.adminDistrict}</strong>
+                      </span>
+                    ) : null}
+                  </div>
+                  {error ? <p className="postcode-error">{error}</p> : null}
+                </form>
+              ),
+              stages: (
+                <>
+                  <PhaseSelector
+                    selected={stageFilter}
+                    onChange={onStageFilterChange}
+                    tone="hero"
+                    tourId="stages"
+                  />
+                  {onStageMatchChange ? (
+                    <StageMatchSelector
+                      selected={stageMatch}
+                      stages={stageFilter}
+                      onChange={onStageMatchChange}
+                      tone="hero"
+                    />
+                  ) : null}
+                  <div className="hero-tile-continue">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => {
+                        markTileTouched("stages");
+                        setActiveTile("sector");
+                      }}
+                    >
+                      Continue to school type
+                    </button>
+                  </div>
+                </>
+              ),
+              sector: (
+                <>
+                  <SectorSelector
+                    selected={sectorFilter}
+                    onChange={onSectorFilterChange}
+                    tone="hero"
+                    tourId="sector"
+                  />
+                  <div className="hero-tile-continue">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => {
+                        markTileTouched("sector");
+                        setActiveTile("provision");
+                      }}
+                    >
+                      Continue to specialist filter
+                    </button>
+                  </div>
+                </>
+              ),
+              provision: onProvisionFilterChange ? (
+                <>
+                  <ProvisionSelector
+                    selected={provisionFilter}
+                    onChange={(next) => {
+                      markTileTouched("provision");
+                      onProvisionFilterChange(next);
+                    }}
+                    tone="hero"
+                    tourId="provision"
+                  />
+                  <div className="hero-tile-continue">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => {
+                        markTileTouched("provision");
+                        if (home?.postcode) {
+                          document
+                            .getElementById("nearby")
+                            ?.scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          setActiveTile("postcode");
+                        }
+                      }}
+                    >
+                      {home?.postcode ? "See schools near home" : "Add a postcode"}
+                    </button>
+                  </div>
+                </>
+              ) : null,
+            }}
+          </HeroSetupTiles>
         </div>
       </div>
 

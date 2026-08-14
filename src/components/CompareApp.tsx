@@ -415,7 +415,12 @@ export function CompareApp({
 
   function changeStages(next: PhaseId[]) {
     startTransition(() => setStages(next));
+    if (schoolStageIds(next).length < 2 && stageMatch !== DEFAULT_STAGE_MATCH) {
+      setStageMatch(DEFAULT_STAGE_MATCH);
+    }
     setSelected((prev) => {
+      const matchMode =
+        schoolStageIds(next).length < 2 ? DEFAULT_STAGE_MATCH : stageMatch;
       const kept = prev.filter((urn) => {
         const school = byUrn.get(urn);
         if (!school) return false;
@@ -423,7 +428,7 @@ export function CompareApp({
         if (isChildminder(school)) return wantsChildminders(next);
         if (!schoolStageIds(next).length) return false;
         return (
-          schoolMatchesPhases(school, next, stageMatch) &&
+          schoolMatchesPhases(school, next, matchMode) &&
           schoolMatchesProvision(school, provision)
         );
       });
@@ -442,7 +447,7 @@ export function CompareApp({
   }
 
   function changeStageMatch(next: StageMatchMode) {
-    setStageMatch(next);
+    startTransition(() => setStageMatch(next));
     setSelected((prev) => {
       const kept = prev.filter((urn) => {
         const school = byUrn.get(urn);
@@ -453,9 +458,13 @@ export function CompareApp({
       const removed = prev.length - kept.length;
       if (removed > 0) {
         setSectorNote(
-          removed === 1
-            ? "Removed 1 school that does not cover every selected stage."
-            : `Removed ${removed} schools that do not cover every selected stage.`,
+          next === "all"
+            ? removed === 1
+              ? "Removed 1 school that does not cover every selected stage."
+              : `Removed ${removed} schools that do not cover every selected stage.`
+            : removed === 1
+              ? "Removed 1 school outside the updated stage match."
+              : `Removed ${removed} schools outside the updated stage match.`,
         );
       } else {
         setSectorNote(null);
