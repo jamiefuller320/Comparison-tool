@@ -3,6 +3,7 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   type ReactNode,
 } from "react";
@@ -45,6 +46,10 @@ export function HeroSetupTiles({
 }) {
   const baseId = useId();
   const prevCompleted = useRef(completed);
+  const binderRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Partial<Record<HeroTileId, HTMLButtonElement | null>>>(
+    {},
+  );
   const visibleIds = TILE_ORDER.filter((id) => children[id] != null);
   const activeMeta = TILE_META[activeId];
   const activeSummary = summaries[activeId];
@@ -62,8 +67,37 @@ export function HeroSetupTiles({
     if (next) onActiveChange(next);
   }, [activeId, completed, onActiveChange, children]);
 
+  useLayoutEffect(() => {
+    const binder = binderRef.current;
+
+    function syncSeamGap() {
+      const tab = tabRefs.current[activeId];
+      if (!binder || !tab) return;
+      const binderBox = binder.getBoundingClientRect();
+      const tabBox = tab.getBoundingClientRect();
+      // Gap under the active tab’s outer box so side strokes meet the seam
+      // as clean L-joins instead of crossing the sheet’s top edge.
+      const start = Math.max(0, tabBox.left - binderBox.left);
+      const end = Math.min(binderBox.width, tabBox.right - binderBox.left);
+      binder.style.setProperty("--seam-gap-start", `${start}px`);
+      binder.style.setProperty("--seam-gap-end", `${end}px`);
+    }
+
+    syncSeamGap();
+    const observer = new ResizeObserver(syncSeamGap);
+    if (binder) observer.observe(binder);
+    const tab = tabRefs.current[activeId];
+    if (tab) observer.observe(tab);
+    window.addEventListener("resize", syncSeamGap);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", syncSeamGap);
+    };
+  }, [activeId, visibleIds.length]);
+
   return (
     <div
+      ref={binderRef}
       className="hero-binder"
       data-tour="hero-tiles"
       data-active-index={activeIndex}
@@ -85,6 +119,9 @@ export function HeroSetupTiles({
               type="button"
               role="tab"
               id={`${baseId}-${id}-tab`}
+              ref={(el) => {
+                tabRefs.current[id] = el;
+              }}
               className={
                 isActive
                   ? "hero-binder-tab is-active"
