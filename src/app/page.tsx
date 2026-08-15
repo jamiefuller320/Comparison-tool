@@ -48,11 +48,12 @@ export default function HomePage() {
       <CompareLoader />
 
       <section
-        className="section"
+        className="section page-chapter"
         id="areas"
         aria-labelledby="home-areas-heading"
       >
         <div className="shell">
+          <div className="page-chapter-sheet">
           <div className="section-head">
             <h2 id="home-areas-heading">Browse by local authority</h2>
             <p>
@@ -69,15 +70,17 @@ export default function HomePage() {
             {" · "}
             <Link href="/areas/surrey/secondary/">Surrey secondary</Link>
           </p>
+          </div>
         </div>
       </section>
 
       <section
-        className="section"
+        className="section page-chapter"
         id="guides"
         aria-labelledby="home-guides-heading"
       >
         <div className="shell">
+          <div className="page-chapter-sheet">
           <div className="section-head">
             <h2 id="home-guides-heading">Guides before you shortlist</h2>
             <p>
@@ -95,11 +98,13 @@ export default function HomePage() {
             {" · "}
             <Link href={guidePath("secondary-ks4")}>Secondary KS4</Link>
           </p>
+          </div>
         </div>
       </section>
 
-      <section className="section" id="how" data-tour="how" aria-labelledby="how-heading">
+      <section className="section page-chapter" id="how" data-tour="how" aria-labelledby="how-heading">
         <div className="shell">
+          <div className="page-chapter-sheet">
           <div className="section-head">
             <h2 id="how-heading">{how.heading}</h2>
             <p>
@@ -134,16 +139,18 @@ export default function HomePage() {
               open the full report for context.
             </p>
           </div>
+          </div>
         </div>
       </section>
 
       <section
-        className="section"
+        className="section page-chapter"
         id="data"
         aria-labelledby="data-heading"
         style={{ paddingTop: 0, paddingBottom: "4rem" }}
       >
         <div className="shell">
+          <div className="page-chapter-sheet">
           <div className="section-head">
             <h2 id="data-heading">Where the numbers come from</h2>
             <p>
@@ -178,6 +185,7 @@ export default function HomePage() {
               </a>
               .
             </p>
+          </div>
           </div>
         </div>
       </section>

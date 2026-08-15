@@ -26,6 +26,7 @@ import {
   HeroSetupTiles,
   type HeroTileId,
 } from "@/components/HeroSetupTiles";
+import { PageChapterNav } from "@/components/PageChapterNav";
 import {
   formatPhases,
   phasesFromAgeRange,
@@ -436,7 +437,7 @@ export function HomePostcodeExplorer({
         Brand + H1 live in the server-rendered .seo-intro (page.tsx) so crawlers
         see them without JS. This block is the interactive hero controls only.
       */}
-      <div className="hero-controls">
+      <div className="hero-controls" id="setup" data-tour="setup">
         <div className="shell hero-inner hero-inner-wide">
           <p className="hero-tour-launch">
             <button
@@ -609,13 +610,16 @@ export function HomePostcodeExplorer({
         </div>
       </div>
 
+      <PageChapterNav />
+
       {home ? (
         <section
-          className="section postcode-section"
+          className="section postcode-section page-chapter"
           id="nearby"
           data-tour="nearby"
         >
           <div className="shell">
+            <div className="page-chapter-sheet">
             <div className="section-head">
               <h2>Near home · {home.postcode}</h2>
               <p>
@@ -851,6 +855,7 @@ export function HomePostcodeExplorer({
                   </ul>
                 )}
               </div>
+            </div>
             </div>
           </div>
         </section>

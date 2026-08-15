@@ -895,8 +895,9 @@ export function CompareApp({
         onComparableKs4OnlyChange={setComparableKs4Only}
       />
 
-      <section className="section" id="compare">
+      <section className="section page-chapter" id="compare">
         <div className="shell">
+          <div className="page-chapter-sheet">
           <div className="section-head">
             <h2>Shortlist</h2>
             <p>
@@ -955,16 +956,18 @@ export function CompareApp({
               {sectorNote}
             </p>
           ) : null}
+          </div>
         </div>
       </section>
 
       <section
-        className="section"
+        className="section page-chapter"
         id="side-by-side"
         data-tour="boards"
         style={{ paddingTop: 0 }}
       >
         <div className="shell">
+          <div className="page-chapter-sheet">
           <div className="section-head">
             <h2>Side by side</h2>
             <p>
@@ -994,6 +997,7 @@ export function CompareApp({
           ) : null}
 
           {renderActivePath()}
+          </div>
         </div>
       </section>
 
