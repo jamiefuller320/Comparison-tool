@@ -51,6 +51,36 @@ async function main() {
     console.error("FAIL specialist should not match mainstream-only");
     process.exit(1);
   }
+  if (!schoolMatchesProvision(special, "any") || !schoolMatchesProvision(mainstream, "any")) {
+    console.error("FAIL any provision should include both");
+    process.exit(1);
+  }
+
+  // Name-only "special" must not classify a mainstream school as specialist.
+  const senUnitName = {
+    urn: "3",
+    name: "Oak Primary School Special Needs Base",
+    schoolTypeLabel: "Community school",
+  };
+  if (schoolMatchesProvision(senUnitName, "specialist")) {
+    console.error("FAIL bare name special should not force specialist");
+    process.exit(1);
+  }
+  if (!schoolMatchesProvision(senUnitName, "mainstream")) {
+    console.error("FAIL mainstream community school with SEN in name");
+    process.exit(1);
+  }
+
+  // Mainstream must be a subset of any.
+  const pool = [special, mainstream, senUnitName];
+  const anyCount = pool.filter((s) => schoolMatchesProvision(s, "any")).length;
+  const mainCount = pool.filter((s) =>
+    schoolMatchesProvision(s, "mainstream"),
+  ).length;
+  if (mainCount > anyCount) {
+    console.error("FAIL mainstream count cannot exceed any", mainCount, anyCount);
+    process.exit(1);
+  }
 
   if (normalizeStageMatchMode("all") !== "all") {
     console.error("FAIL stage match all");

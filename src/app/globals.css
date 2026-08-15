@@ -751,6 +751,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .hero-binder-tab {
   appearance: none;
+  position: relative;
   flex: 1 1 0;
   min-width: 0;
   display: inline-flex;
@@ -786,6 +787,18 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   padding-bottom: 0.72rem;
   transform: translateY(0);
   box-shadow: none;
+}
+
+/* Bridge over the sheet’s top border so the tab reads as attached. */
+.hero-binder-tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 4px;
+  background: rgba(7, 58, 80, 0.55);
+  pointer-events: none;
 }
 
 .hero-binder-tab.is-done:not(.is-active) {

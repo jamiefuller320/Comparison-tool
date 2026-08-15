@@ -12,7 +12,7 @@ import type { SchoolRecord } from "@/lib/types";
 import { geocodePostcode, parseUkPostcode } from "@/lib/postcode";
 import {
   fetchRoadDistances,
-  findNearbySchools,
+  findAllNearbySchools,
   fmtDistance,
   fmtDrive,
   type NearbySchool,
@@ -82,9 +82,9 @@ const NearbyMap = dynamic(
 
 const RADIUS_OPTIONS_KM = [1, 2, 3, 5, 8, 10, 15] as const;
 
-/** Allow denser rings to surface more schools as the range widens. */
-function listLimitForRadius(radiusKm: number): number {
-  return Math.min(120, Math.max(40, Math.round(radiusKm * 14)));
+/** Soft cap for list rendering only — map/count use every in-radius match. */
+function listDisplayLimit(radiusKm: number): number {
+  return Math.min(200, Math.max(60, Math.round(radiusKm * 20)));
 }
 
 export function HomePostcodeExplorer({
@@ -222,15 +222,15 @@ export function HomePostcodeExplorer({
     }
   }
 
-  // Parent passes stage + sector filtered schools; keep a defensive match so the
-  // map and list stay aligned with the active chips.
+  // Parent passes the discovery pool (stage/sector/KS4 gates). Provision and
+  // stage-match are applied here so map markers and the in-radius count stay
+  // in lockstep with the binder buttons.
   const nearbyStraight = useMemo(() => {
     if (!home) return [] as NearbySchool[];
-    return findNearbySchools(
+    return findAllNearbySchools(
       home,
       schools,
       radiusKm * 1000,
-      listLimitForRadius(radiusKm),
       (school) => {
         // Directory categories bypass school-type chips and age-range match.
         if (isEyProvider(school) && wantsEyMetrics(stageFilter)) {
@@ -254,6 +254,13 @@ export function HomePostcodeExplorer({
     provisionFilter,
   ]);
 
+  const nearbyList = useMemo(() => {
+    const limit = listDisplayLimit(radiusKm);
+    return nearbyStraight.length > limit
+      ? nearbyStraight.slice(0, limit)
+      : nearbyStraight;
+  }, [nearbyStraight, radiusKm]);
+
   useEffect(() => {
     // Drop stale road times as soon as the sector/stage filter changes so the
     // nearby pane does not briefly show distances for the previous set.
@@ -272,6 +279,20 @@ export function HomePostcodeExplorer({
         };
       }),
     [nearbyStraight, roadByUrn],
+  );
+
+  const nearbyListed = useMemo(
+    () =>
+      nearbyList.map((school) => {
+        const road = roadByUrn[school.urn];
+        if (!road) return school;
+        return {
+          ...school,
+          roadMetres: road.metres,
+          roadMinutes: road.minutes,
+        };
+      }),
+    [nearbyList, roadByUrn],
   );
 
   const catchmentBands = useMemo(
@@ -314,6 +335,7 @@ export function HomePostcodeExplorer({
     return `In catchment: ${names.join(", ")}${more}`;
   }, [showCatchments, home, catchments, nearby, catchmentBands]);
 
+  // Road times for the in-radius set (full match count, not the list cap).
   useEffect(() => {
     if (!home || nearbyStraight.length === 0) {
       setRoadByUrn({});
@@ -696,7 +718,7 @@ export function HomePostcodeExplorer({
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}
                 selectedUrns={selectedUrns}
-                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${sectorFilter.join(",")}:${comparableKs4Only}:${showCatchments}:${[...nearby].map((s) => s.urn).sort().join(",")}`}
+                refreshToken={`${radiusKm}:${stageFilter.join(",")}:${stageMatch}:${sectorFilter.join(",")}:${provisionFilter}:${comparableKs4Only}:${showCatchments}:${nearby.length}:${[...nearby].map((s) => s.urn).sort().join(",")}`}
                 emphasizeKs4={wantsKs4Metrics(stageFilter)}
                 comparableKs4Only={comparableKs4Only}
                 catchmentFeatures={overlayCatchmentFeatures}
@@ -713,6 +735,9 @@ export function HomePostcodeExplorer({
                     {radiusKm} km
                   </strong>
                   <span>
+                    {nearbyListed.length < nearby.length
+                      ? `Showing nearest ${nearbyListed.length} in the list · `
+                      : null}
                     List updates with the range ring · tick to compare
                     {showComparableKs4Toggle && comparableKs4Only
                       ? " · comparable KS4 only"
@@ -730,9 +755,9 @@ export function HomePostcodeExplorer({
                   </p>
                 ) : (
                   <ul
-                    key={`nearby-${radiusKm}-${stageFilter.join("-")}-${sectorFilter.join("-")}-${comparableKs4Only}`}
+                    key={`nearby-${radiusKm}-${stageFilter.join("-")}-${stageMatch}-${sectorFilter.join("-")}-${provisionFilter}-${comparableKs4Only}`}
                   >
-                    {nearby.map((school) => {
+                    {nearbyListed.map((school) => {
                       const checked = selectedUrns.includes(school.urn);
                       const disabled = !checked && atMax;
                       const sector = formatSector(resolveSchoolSector(school));
