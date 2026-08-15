@@ -102,7 +102,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section page-chapter" id="how" data-tour="how" aria-labelledby="how-heading">
+      {/*
+        Static How copy for crawlers / no-JS. Hidden when the journey toolbar
+        is present — the interactive How chapter owns #how then.
+      */}
+      <section
+        className="section page-chapter seo-how-fallback"
+        data-tour="how"
+        aria-labelledby="how-heading"
+      >
         <div className="shell">
           <div className="page-chapter-sheet">
           <div className="section-head">

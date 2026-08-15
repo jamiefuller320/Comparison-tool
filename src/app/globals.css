@@ -76,10 +76,20 @@ html {
   scroll-margin-top: 4.5rem;
 }
 
+html:has(.journey-toolbar),
 html:has(.page-chapter-nav) {
   scroll-padding-top: 7.25rem;
 }
 
+html:has(.journey-toolbar) #top,
+html:has(.journey-toolbar) #setup,
+html:has(.journey-toolbar) #nearby,
+html:has(.journey-toolbar) #compare,
+html:has(.journey-toolbar) #side-by-side,
+html:has(.journey-toolbar) #areas,
+html:has(.journey-toolbar) #guides,
+html:has(.journey-toolbar) #how,
+html:has(.journey-toolbar) #data,
 html:has(.page-chapter-nav) #top,
 html:has(.page-chapter-nav) #setup,
 html:has(.page-chapter-nav) #nearby,
@@ -90,6 +100,11 @@ html:has(.page-chapter-nav) #guides,
 html:has(.page-chapter-nav) #how,
 html:has(.page-chapter-nav) #data {
   scroll-margin-top: 7.25rem;
+}
+
+/* Interactive How chapter owns #how; hide the static SEO copy once JS mounts. */
+html:has(.journey-toolbar) .seo-how-fallback {
+  display: none;
 }
 
 body {
@@ -970,8 +985,61 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Sticky chapter strip — same binder dialect for the rest of the journey. */
-.page-chapter-nav {
+/* Sticky journey chrome: How to use + chapter tabs on one row. */
+.journey-toolbar-wrap {
+  position: sticky;
+  top: 3.75rem;
+  z-index: 24;
+  margin: 0;
+  padding: 0.4rem 0 0.45rem;
+  background:
+    linear-gradient(180deg, rgba(244, 247, 249, 0.97) 0%, rgba(244, 247, 249, 0.92) 100%);
+  border-bottom: 1px solid rgba(11, 79, 108, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.journey-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.85rem;
+}
+
+.journey-toolbar .journey-tour-btn {
+  flex: 0 0 auto;
+  border-color: rgba(11, 79, 108, 0.22);
+  color: var(--sea-deep);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.journey-toolbar .journey-tour-btn:hover {
+  border-color: rgba(11, 79, 108, 0.4);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.page-chapter-nav-toolbar {
+  position: static;
+  flex: 1 1 12rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.page-chapter-nav-toolbar .binder {
+  margin: 0;
+}
+
+.page-chapter-nav-toolbar .binder-tabs {
+  padding: 0;
+}
+
+/* Legacy sticky strip (if remounted without journey toolbar). */
+.page-chapter-nav:not(.page-chapter-nav-toolbar) {
   position: sticky;
   top: 3.75rem;
   z-index: 24;
@@ -987,11 +1055,11 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   max-width: 44rem;
 }
 
-.page-chapter-nav .binder {
+.page-chapter-nav:not(.page-chapter-nav-toolbar) .binder {
   margin: 0;
 }
 
-.page-chapter-nav .binder-tabs {
+.page-chapter-nav:not(.page-chapter-nav-toolbar) .binder-tabs {
   padding: 0 0.15rem;
 }
 
@@ -1001,6 +1069,10 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   background: rgba(255, 255, 255, 0.55);
   padding: 1.15rem 1.1rem 1.35rem;
   box-shadow: 0 12px 28px rgba(20, 35, 58, 0.05);
+}
+
+.journey-page {
+  padding-top: 1.35rem;
 }
 
 .compare-path-binder {
@@ -1034,7 +1106,16 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
     padding: 0.75rem 0.75rem 0.9rem;
   }
 
-  .page-chapter-nav {
+  .journey-toolbar-wrap {
+    top: 3.35rem;
+    padding: 0.35rem 0 0.4rem;
+  }
+
+  .journey-toolbar {
+    gap: 0.4rem 0.55rem;
+  }
+
+  .page-chapter-nav:not(.page-chapter-nav-toolbar) {
     top: 3.35rem;
   }
 
@@ -1902,7 +1983,12 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .compare-board {
-  overflow-x: auto;
+  /*
+    Overflow must stay visible here: ScrollRegion owns the scrollport.
+    Nested overflow-x:auto makes sticky thead stick to this box (which does
+    not scroll vertically), so pinned headings scroll away on iPhone.
+  */
+  overflow: visible;
   border-radius: 1.25rem;
   border: 1px solid var(--line);
   background: rgba(255, 252, 247, 0.72);
@@ -2043,6 +2129,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgba(11, 79, 108, 0.45) rgba(11, 79, 108, 0.08);
+  border-radius: 1.25rem;
 }
 
 .compare-board-scroll > .scroll-region-viewport::-webkit-scrollbar {
@@ -2073,6 +2160,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   -webkit-backdrop-filter: blur(8px);
 }
 
+html:has(.journey-toolbar) .compare-table-controls,
 html:has(.page-chapter-nav) .compare-table-controls {
   top: 7.25rem;
 }
@@ -2105,7 +2193,12 @@ html:has(.page-chapter-nav) .compare-table-controls {
 
 .compare-table {
   width: 100%;
-  border-collapse: collapse;
+  /*
+    separate + spacing 0 keeps cell seams while allowing sticky thead on
+    Safari / iOS (collapse breaks position:sticky on table headers).
+  */
+  border-collapse: separate;
+  border-spacing: 0;
   min-width: 720px;
 }
 

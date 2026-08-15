@@ -24,7 +24,9 @@ import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
 import { useAccount } from "@/components/AccountProvider";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
+import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import { RESTORE_SHORTLIST_EVENT } from "@/lib/account";
+import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
 import { ComparePathTabs } from "@/components/ComparePathTabs";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import {
@@ -147,6 +149,7 @@ export function CompareApp({
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
 }) {
+  const { chapter, setChapter } = useJourneyChapter();
   const byUrn = useMemo(() => {
     const map = new Map(index.schools.map((s) => [s.urn, s]));
     for (const provider of eyIndex?.providers ?? []) {
@@ -895,14 +898,15 @@ export function CompareApp({
         onComparableKs4OnlyChange={setComparableKs4Only}
       />
 
-      <section className="section page-chapter" id="compare">
+      {chapter === "compare" ? (
+      <section className="section page-chapter journey-page" id="compare">
         <div className="shell">
           <div className="page-chapter-sheet">
           <div className="section-head">
             <h2>Shortlist</h2>
             <p>
               Tick settings on the map or search below — two to four is plenty.
-              Stages and school type stay in the hero above.
+              Stages and school type live under Setup.
             </p>
             <p className="footnote data-slim-line">
               {index.period} · refreshed {index.generatedAt}
@@ -930,7 +934,7 @@ export function CompareApp({
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={() => scrollToHomeSection("side-by-side")}
+                onClick={() => setChapter("side-by-side")}
               >
                 Compare side by side
               </button>
@@ -959,12 +963,13 @@ export function CompareApp({
           </div>
         </div>
       </section>
+      ) : null}
 
+      {chapter === "side-by-side" ? (
       <section
-        className="section page-chapter"
+        className="section page-chapter journey-page"
         id="side-by-side"
         data-tour="boards"
-        style={{ paddingTop: 0 }}
       >
         <div className="shell">
           <div className="page-chapter-sheet">
@@ -1000,8 +1005,43 @@ export function CompareApp({
           </div>
         </div>
       </section>
+      ) : null}
 
-      {suggestions.length > 0 ? (
+      {chapter === "how" ? (
+        <section
+          className="section page-chapter journey-page"
+          id="how"
+          data-tour="how"
+        >
+          <div className="shell">
+            <div className="page-chapter-sheet">
+              <div className="section-head">
+                <h2>{DECISION_GUIDANCE.general.heading}</h2>
+                <p>{DECISION_GUIDANCE.general.lead}</p>
+              </div>
+              <div className="decision-guidance-grid page-how-grid">
+                {DECISION_GUIDANCE.general.sections
+                  .filter((s) => s.id !== "precis")
+                  .map((section) => (
+                    <section
+                      key={section.id}
+                      className="decision-guidance-block"
+                    >
+                      <h3>{section.title}</h3>
+                      <ul>
+                        {section.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {chapter === "side-by-side" && suggestions.length > 0 ? (
         <section className="section" style={{ paddingTop: 0 }}>
           <div className="shell">
             <div className="section-head">

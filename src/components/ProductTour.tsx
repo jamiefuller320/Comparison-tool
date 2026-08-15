@@ -23,11 +23,29 @@ import {
   type TourTargetCache,
   type ViewportRect,
 } from "@/lib/tour";
+import {
+  TOUR_TARGET_CHAPTER,
+  useJourneyChapter,
+} from "@/components/JourneyChapterContext";
 
 const AUTO_START_DELAY_MS = 900;
 
+function waitFrames(count: number): Promise<void> {
+  return new Promise((resolve) => {
+    function tick(left: number) {
+      if (left <= 0) {
+        resolve();
+        return;
+      }
+      requestAnimationFrame(() => tick(left - 1));
+    }
+    tick(count);
+  });
+}
+
 export function ProductTour() {
   const titleId = useId();
+  const { setChapter } = useJourneyChapter();
   const cacheRef = useRef<Map<string, TourTargetCache>>(new Map());
   const scrollingRef = useRef(false);
   const rafRef = useRef<number | null>(null);
@@ -77,6 +95,16 @@ export function ProductTour() {
     cacheRef.current = cacheTourTargets(active);
   }, []);
 
+  const ensureChapterForTarget = useCallback(
+    async (target: string) => {
+      const chapter = TOUR_TARGET_CHAPTER[target];
+      if (!chapter) return;
+      setChapter(chapter, { scroll: false });
+      await waitFrames(2);
+    },
+    [setChapter],
+  );
+
   const collapseTourTrendDemo = useCallback(() => {
     if (demoTimerRef.current != null) {
       window.clearTimeout(demoTimerRef.current);
@@ -113,15 +141,18 @@ export function ProductTour() {
   );
 
   const start = useCallback(() => {
-    const active = resolveActiveTourSteps(TOUR_STEPS);
-    if (!active.length) return;
-    // Snapshot layout once so step changes only read the cache.
-    rebuildCache(active);
-    document.documentElement.classList.add("tour-running");
-    setSteps(active);
-    setIndex(0);
-    setOpen(true);
-  }, [rebuildCache]);
+    void (async () => {
+      await ensureChapterForTarget("postcode");
+      const active = resolveActiveTourSteps(TOUR_STEPS);
+      if (!active.length) return;
+      // Snapshot layout once so step changes only read the cache.
+      rebuildCache(active);
+      document.documentElement.classList.add("tour-running");
+      setSteps(active);
+      setIndex(0);
+      setOpen(true);
+    })();
+  }, [rebuildCache, ensureChapterForTarget]);
 
   useEffect(() => {
     function onStart() {
@@ -146,8 +177,19 @@ export function ProductTour() {
 
   useLayoutEffect(() => {
     if (!open || !step) return;
-    paintFromCache(step.target, true);
-  }, [open, step, paintFromCache]);
+    let cancelled = false;
+    void (async () => {
+      await ensureChapterForTarget(step.target);
+      if (cancelled) return;
+      // Peer pages remount — refresh boxes before spotlighting.
+      rebuildCache(steps);
+      if (cancelled) return;
+      paintFromCache(step.target, true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, step, steps, ensureChapterForTarget, rebuildCache, paintFromCache]);
 
   // On the year-trend step, expand the first KS2 measure when a live table is
   // present so parents see the graph as well as the control.
