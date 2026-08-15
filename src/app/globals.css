@@ -852,12 +852,13 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   top: 0;
   height: 1px;
   pointer-events: none;
+  /* Same-alpha transparent avoids muddy interpolation through black. */
   background: linear-gradient(
     to right,
     var(--binder-stroke) 0,
     var(--binder-stroke) var(--seam-gap-start),
-    transparent var(--seam-gap-start),
-    transparent var(--seam-gap-end),
+    rgba(255, 255, 255, 0) var(--seam-gap-start),
+    rgba(255, 255, 255, 0) var(--seam-gap-end),
     var(--binder-stroke) var(--seam-gap-end),
     var(--binder-stroke) 100%
   );
