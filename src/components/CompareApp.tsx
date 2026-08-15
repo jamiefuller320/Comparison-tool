@@ -24,6 +24,7 @@ import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
 import { useAccount } from "@/components/AccountProvider";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
+import { PageChapterNav } from "@/components/PageChapterNav";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import { RESTORE_SHORTLIST_EVENT } from "@/lib/account";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
@@ -904,8 +905,11 @@ export function CompareApp({
 
       {chapter === "compare" ? (
       <section className="section page-chapter journey-page" id="compare">
-        <div className="shell">
-          <div className="page-chapter-sheet">
+        <div className="shell hero-inner-wide">
+          <PageChapterNav
+            tone="paper"
+            sheet={
+              <>
           <div className="section-head">
             <h2>Shortlist</h2>
             <p>
@@ -964,7 +968,9 @@ export function CompareApp({
               {sectorNote}
             </p>
           ) : null}
-          </div>
+              </>
+            }
+          />
         </div>
       </section>
       ) : null}
@@ -975,8 +981,11 @@ export function CompareApp({
         id="side-by-side"
         data-tour="boards"
       >
-        <div className="shell">
-          <div className="page-chapter-sheet">
+        <div className="shell hero-inner-wide">
+          <PageChapterNav
+            tone="paper"
+            sheet={
+              <>
           <div className="section-head">
             <h2>Side by side</h2>
             <p>
@@ -1006,7 +1015,9 @@ export function CompareApp({
           ) : null}
 
           {renderActivePath()}
-          </div>
+              </>
+            }
+          />
         </div>
       </section>
       ) : null}
@@ -1017,8 +1028,11 @@ export function CompareApp({
           id="how"
           data-tour="how"
         >
-          <div className="shell">
-            <div className="page-chapter-sheet">
+          <div className="shell hero-inner-wide">
+            <PageChapterNav
+              tone="paper"
+              sheet={
+                <>
               <div className="section-head">
                 <h2>{DECISION_GUIDANCE.general.heading}</h2>
                 <p>{DECISION_GUIDANCE.general.lead}</p>
@@ -1040,7 +1054,9 @@ export function CompareApp({
                     </section>
                   ))}
               </div>
-            </div>
+                </>
+              }
+            />
           </div>
         </section>
       ) : null}

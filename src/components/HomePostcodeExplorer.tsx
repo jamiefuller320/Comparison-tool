@@ -56,7 +56,6 @@ import {
   PROVISION_OPTIONS,
 } from "@/lib/provisionFilter";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
-import { requestTourStart } from "@/lib/tour";
 import { recordFeedbackUsage } from "@/lib/productFeedback";
 import {
   classifyKs4Missing,
@@ -446,8 +445,8 @@ export function HomePostcodeExplorer({
   return (
     <>
       {/*
-        One harbour band: SEO head + journey chrome (+ Setup tiles) share a
-        single continuous gradient wash.
+        One harbour band: SEO head + Setup chapter binder share a continuous
+        wash. Other chapters use a paper binder that joins tabs to the page.
       */}
       <div
         className="harbour-band"
@@ -455,25 +454,14 @@ export function HomePostcodeExplorer({
         data-includes-setup={chapter === "setup" ? "true" : "false"}
       >
         {intro}
-        <div className="journey-toolbar-wrap no-print" id="journey">
-          <div className="shell hero-inner-wide">
-            <div className="journey-toolbar">
-              <button
-                type="button"
-                className="btn btn-ghost journey-tour-btn"
-                onClick={() => requestTourStart()}
-              >
-                How to use
-              </button>
-              <PageChapterNav tone="harbour" />
-            </div>
-          </div>
-        </div>
 
         {chapter === "setup" ? (
-          <div className="hero-controls" data-tour="setup">
+          <div className="hero-controls" id="journey" data-tour="setup">
             <div className="shell hero-inner hero-inner-wide">
               <div id="setup">
+                <PageChapterNav
+                  tone="harbour"
+                  sheet={
                 <HeroSetupTiles
                   activeId={activeTile}
                   onActiveChange={setActiveTile}
@@ -637,6 +625,8 @@ export function HomePostcodeExplorer({
                     ) : null,
                   }}
                 </HeroSetupTiles>
+                  }
+                />
               </div>
             </div>
           </div>
@@ -649,8 +639,11 @@ export function HomePostcodeExplorer({
           id="nearby"
           data-tour="nearby"
         >
-          <div className="shell">
-            <div className="page-chapter-sheet">
+          <div className="shell hero-inner-wide">
+            <PageChapterNav
+              tone="paper"
+              sheet={
+                <>
             <div className="section-head">
               <h2>Finder · {home.postcode}</h2>
               <p>
@@ -897,7 +890,9 @@ export function HomePostcodeExplorer({
                 </div>
               </div>
             </div>
-            </div>
+                </>
+              }
+            />
           </div>
         </section>
       ) : chapter === "nearby" ? (
@@ -906,23 +901,28 @@ export function HomePostcodeExplorer({
           id="nearby"
           data-tour="nearby"
         >
-          <div className="shell">
-            <div className="page-chapter-sheet">
-              <div className="section-head">
-                <h2>Finder</h2>
-                <p>
-                  Add a home postcode in Setup to map schools around you and
-                  tick ones worth shortlisting.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => setChapter("setup")}
-              >
-                Go to Setup
-              </button>
-            </div>
+          <div className="shell hero-inner-wide">
+            <PageChapterNav
+              tone="paper"
+              sheet={
+                <>
+                  <div className="section-head">
+                    <h2>Finder</h2>
+                    <p>
+                      Add a home postcode in Setup to map schools around you and
+                      tick ones worth shortlisting.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setChapter("setup")}
+                  >
+                    Go to Setup
+                  </button>
+                </>
+              }
+            />
           </div>
         </section>
       ) : null}
