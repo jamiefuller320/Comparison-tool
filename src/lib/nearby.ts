@@ -69,7 +69,22 @@ export function findNearbySchools(
     hits.push({ ...school, straightLineMetres });
   }
   hits.sort((a, b) => compareNearbySchools(a, b, sort?.prefer));
-  return hits.slice(0, limit);
+  if (limit > 0 && hits.length > limit) return hits.slice(0, limit);
+  return hits;
+}
+
+/**
+ * Every matching school inside the radius (no display cap).
+ * Use for accurate counts and map markers so filters change the total.
+ */
+export function findAllNearbySchools(
+  home: { latitude: number; longitude: number },
+  schools: SchoolRecord[],
+  radiusMetres: number,
+  matches?: (school: SchoolRecord) => boolean,
+  sort?: NearbySortOptions,
+): NearbySchool[] {
+  return findNearbySchools(home, schools, radiusMetres, 0, matches, sort);
 }
 
 /** Door-to-door driving distances via the public OSRM table service. */

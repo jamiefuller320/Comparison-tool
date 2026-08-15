@@ -130,24 +130,34 @@ export function inspectorateIsIsi(school: SchoolRecord): boolean {
 
 /** Special school, alternative provision, or pupil referral unit. */
 export function isSpecialApOrPru(school: SchoolRecord): boolean {
-  const blob = [
-    school.schoolType,
-    school.schoolTypeLabel,
-    school.phase,
-    school.name,
-  ]
+  const typeBlob = [school.schoolType, school.schoolTypeLabel, school.phase]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-  if (!blob) return false;
   if (isHospitalOrSecure(school)) return false;
+  if (typeBlob) {
+    if (
+      /\bpru\b/.test(typeBlob) ||
+      typeBlob.includes("pupil referral") ||
+      typeBlob.includes("alternative provision") ||
+      typeBlob.includes("special school") ||
+      typeBlob.includes("special academy") ||
+      // DfE type codes / labels: "Community special school", "Academy special converter"
+      /\bspecial\b/.test(typeBlob)
+    ) {
+      return true;
+    }
+  }
+  // Name fallback only for clear specialist wording — avoid bare "special"
+  // (false positives like "Specialist language" resource bases on mainstream sites).
+  const name = (school.name || "").toLowerCase();
+  if (!name) return false;
   return (
-    /\bpru\b/.test(blob) ||
-    blob.includes("pupil referral") ||
-    blob.includes("alternative provision") ||
-    blob.includes("special school") ||
-    blob.includes("special academy") ||
-    /\bspecial\b/.test(blob)
+    /\bpru\b/.test(name) ||
+    name.includes("pupil referral") ||
+    name.includes("alternative provision") ||
+    /\bspecial school\b/.test(name) ||
+    /\bspecial academy\b/.test(name)
   );
 }
 

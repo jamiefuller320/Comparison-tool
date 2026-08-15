@@ -135,6 +135,13 @@ async function main() {
     process.exit(1);
   }
 
+  const { findAllNearbySchools } = await import("../src/lib/nearby.ts");
+  const unlimited = findAllNearbySchools(home, [...fillers, primary], 10000);
+  if (unlimited.length !== fillers.length + 1) {
+    console.error("FAIL findAllNearbySchools should not cap", unlimited.length);
+    process.exit(1);
+  }
+
   console.log("nearby stage-prefer sort ok");
 }
 

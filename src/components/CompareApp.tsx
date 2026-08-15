@@ -474,7 +474,7 @@ export function CompareApp({
   }
 
   function changeProvision(next: ProvisionFilterId) {
-    setProvision(next);
+    startTransition(() => setProvision(next));
     setSelected((prev) => {
       const kept = prev.filter((urn) => {
         const school = byUrn.get(urn);
@@ -532,8 +532,8 @@ export function CompareApp({
     });
   }
 
-  /** Stage + sector filter for search / shortlist building. */
-  const filteredSchools = useMemo(() => {
+  /** Stage + sector + KS4 gates for discovery (provision applied in the map). */
+  const discoveryPool = useMemo(() => {
     const schoolStages = schoolStageIds(stages);
     const secondaryStagesActive = wantsKs4Metrics(stages);
     const fromSchools =
@@ -543,7 +543,6 @@ export function CompareApp({
             (s) =>
               schoolMatchesPhases(s, stages, stageMatch) &&
               schoolMatchesSectors(s, sectors) &&
-              schoolMatchesProvision(s, provision) &&
               passesComparableKs4Filter(s, {
                 comparableOnly: comparableKs4Only,
                 secondaryStagesActive,
@@ -555,7 +554,7 @@ export function CompareApp({
       ...(wantsChildminders(stages)
         ? (childmindersIndex?.providers ?? [])
         : []),
-    ].filter((p) => !seen.has(p.urn) && provision !== "specialist");
+    ].filter((p) => !seen.has(p.urn));
     if (!extra.length) return fromSchools;
     return [...extra, ...fromSchools];
   }, [
@@ -565,9 +564,18 @@ export function CompareApp({
     stages,
     stageMatch,
     sectors,
-    provision,
     comparableKs4Only,
   ]);
+
+  /** Search / shortlist pool — discovery plus provision filter. */
+  const filteredSchools = useMemo(() => {
+    return discoveryPool.filter((s) => {
+      if (isEyProvider(s) || isChildminder(s)) {
+        return provision !== "specialist";
+      }
+      return schoolMatchesProvision(s, provision);
+    });
+  }, [discoveryPool, provision]);
 
   const summaryOpts = {
     englandRwm: index.benchmarks.england.rwmExpected,
@@ -871,7 +879,7 @@ export function CompareApp({
         sectors={sectors}
       />
       <HomePostcodeExplorer
-        schools={filteredSchools}
+        schools={discoveryPool}
         selectedUrns={selected}
         onToggle={toggleSchool}
         stageFilter={stages}
