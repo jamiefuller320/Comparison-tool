@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 import dynamic from "next/dynamic";
 import type { SchoolRecord } from "@/lib/types";
@@ -105,6 +106,7 @@ export function HomePostcodeExplorer({
   comparableKs4Only = true,
   onComparableKs4OnlyChange,
   max = 4,
+  intro,
 }: {
   schools: SchoolRecord[];
   selectedUrns: string[];
@@ -121,6 +123,8 @@ export function HomePostcodeExplorer({
   comparableKs4Only?: boolean;
   onComparableKs4OnlyChange?: (next: boolean) => void;
   max?: number;
+  /** Server SEO head — shares the harbour band with journey chrome / Setup. */
+  intro?: ReactNode;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
   const [home, setHome] = useState<{
@@ -436,194 +440,202 @@ export function HomePostcodeExplorer({
   return (
     <>
       {/*
-        Sticky journey chrome: How to use + chapter tabs on one row so Setup
-        is a peer page with Finder / Shortlist / Compare / How.
+        One harbour band: SEO head + journey chrome (+ Setup tiles) share a
+        single continuous gradient wash.
       */}
-      <div className="journey-toolbar-wrap no-print" id="journey">
-        <div className="shell hero-inner-wide">
-          <div className="journey-toolbar">
-            <button
-              type="button"
-              className="btn btn-ghost journey-tour-btn"
-              onClick={() => requestTourStart()}
-            >
-              How to use
-            </button>
-            <PageChapterNav tone="harbour" />
-          </div>
-        </div>
-      </div>
-
-      {/*
-        Brand + H1 live in the server-rendered .seo-intro (page.tsx) so crawlers
-        see them without JS. Setup is one subordinate journey page.
-      */}
-      {chapter === "setup" ? (
-        <div className="hero-controls" data-tour="setup">
-          <div className="shell hero-inner hero-inner-wide">
-            <div id="setup">
-              <HeroSetupTiles
-                activeId={activeTile}
-                onActiveChange={setActiveTile}
-                completed={tileCompleted}
-                summaries={{
-                  postcode: home?.postcode
-                    ? home.adminDistrict
-                      ? `${home.postcode} · ${home.adminDistrict}`
-                      : home.postcode
-                    : undefined,
-                  stages: stageSummary,
-                  sector: sectorSummary,
-                  provision: provisionSummary,
-                }}
+      <div
+        className="harbour-band"
+        data-chapter={chapter}
+        data-includes-setup={chapter === "setup" ? "true" : "false"}
+      >
+        {intro}
+        <div className="journey-toolbar-wrap no-print" id="journey">
+          <div className="shell hero-inner-wide">
+            <div className="journey-toolbar">
+              <button
+                type="button"
+                className="btn btn-ghost journey-tour-btn"
+                onClick={() => requestTourStart()}
               >
-                {{
-                  postcode: (
-                    <form
-                      className="postcode-form hero-postcode"
-                      data-tour="postcode"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        void lookup();
-                      }}
-                    >
-                      <label className="sr-only" htmlFor="home-postcode">
-                        Home postcode
-                      </label>
-                      <div className="postcode-row">
-                        <input
-                          id="home-postcode"
-                          name="postcode"
-                          autoComplete="postal-code"
-                          spellCheck={false}
-                          placeholder="Home postcode — SO40 2HR, so402hr, SO40-2HR"
-                          value={rawPostcode}
-                          onChange={(e) => {
-                            setRawPostcode(e.target.value);
-                            setError(null);
-                          }}
-                          onBlur={() => {
-                            const normalised = parseUkPostcode(rawPostcode);
-                            if (normalised) setRawPostcode(normalised);
-                          }}
-                        />
-                        <button
-                          type="submit"
-                          className="btn btn-primary"
-                          disabled={lookingUp}
-                        >
-                          {lookingUp ? "Finding…" : "Find nearby"}
-                        </button>
-                      </div>
-                      <div className="postcode-meta hero-postcode-meta">
-                        {parsedPreview ? (
-                          <span>
-                            Reading as <strong>{parsedPreview}</strong>
-                          </span>
-                        ) : rawPostcode.trim() ? (
-                          <span>Keep typing a full postcode…</span>
-                        ) : (
-                          <span>Accepts spaces, hyphens or compact forms.</span>
-                        )}
-                        {home?.adminDistrict ? (
-                          <span>
-                            {" "}
-                            · Located in <strong>{home.adminDistrict}</strong>
-                          </span>
-                        ) : null}
-                      </div>
-                      {error ? <p className="postcode-error">{error}</p> : null}
-                    </form>
-                  ),
-                  stages: (
-                    <>
-                      <PhaseSelector
-                        selected={stageFilter}
-                        onChange={onStageFilterChange}
-                        tone="hero"
-                        tourId="stages"
-                      />
-                      {onStageMatchChange ? (
-                        <StageMatchSelector
-                          selected={stageMatch}
-                          stages={stageFilter}
-                          onChange={onStageMatchChange}
-                          tone="hero"
-                        />
-                      ) : null}
-                      <div className="hero-tile-continue">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => {
-                            markTileTouched("stages");
-                            setActiveTile("sector");
-                          }}
-                        >
-                          Continue to school type
-                        </button>
-                      </div>
-                    </>
-                  ),
-                  sector: (
-                    <>
-                      <SectorSelector
-                        selected={sectorFilter}
-                        onChange={onSectorFilterChange}
-                        tone="hero"
-                        tourId="sector"
-                      />
-                      <div className="hero-tile-continue">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => {
-                            markTileTouched("sector");
-                            setActiveTile("provision");
-                          }}
-                        >
-                          Continue to specialist filter
-                        </button>
-                      </div>
-                    </>
-                  ),
-                  provision: onProvisionFilterChange ? (
-                    <>
-                      <ProvisionSelector
-                        selected={provisionFilter}
-                        onChange={(next) => {
-                          markTileTouched("provision");
-                          onProvisionFilterChange(next);
-                        }}
-                        tone="hero"
-                        tourId="provision"
-                      />
-                      <div className="hero-tile-continue">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => {
-                            markTileTouched("provision");
-                            if (home?.postcode) {
-                              setChapter("nearby");
-                            } else {
-                              setActiveTile("postcode");
-                            }
-                          }}
-                        >
-                          {home?.postcode
-                            ? "See schools near home"
-                            : "Add a postcode"}
-                        </button>
-                      </div>
-                    </>
-                  ) : null,
-                }}
-              </HeroSetupTiles>
+                How to use
+              </button>
+              <PageChapterNav tone="harbour" />
             </div>
           </div>
         </div>
-      ) : null}
+
+        {chapter === "setup" ? (
+          <div className="hero-controls" data-tour="setup">
+            <div className="shell hero-inner hero-inner-wide">
+              <div id="setup">
+                <HeroSetupTiles
+                  activeId={activeTile}
+                  onActiveChange={setActiveTile}
+                  completed={tileCompleted}
+                  summaries={{
+                    postcode: home?.postcode
+                      ? home.adminDistrict
+                        ? `${home.postcode} · ${home.adminDistrict}`
+                        : home.postcode
+                      : undefined,
+                    stages: stageSummary,
+                    sector: sectorSummary,
+                    provision: provisionSummary,
+                  }}
+                >
+                  {{
+                    postcode: (
+                      <form
+                        className="postcode-form hero-postcode"
+                        data-tour="postcode"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          void lookup();
+                        }}
+                      >
+                        <label className="sr-only" htmlFor="home-postcode">
+                          Home postcode
+                        </label>
+                        <div className="postcode-row">
+                          <input
+                            id="home-postcode"
+                            name="postcode"
+                            autoComplete="postal-code"
+                            spellCheck={false}
+                            placeholder="Home postcode — SO40 2HR, so402hr, SO40-2HR"
+                            value={rawPostcode}
+                            onChange={(e) => {
+                              setRawPostcode(e.target.value);
+                              setError(null);
+                            }}
+                            onBlur={() => {
+                              const normalised = parseUkPostcode(rawPostcode);
+                              if (normalised) setRawPostcode(normalised);
+                            }}
+                          />
+                          <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={lookingUp}
+                          >
+                            {lookingUp ? "Finding…" : "Find nearby"}
+                          </button>
+                        </div>
+                        <div className="postcode-meta hero-postcode-meta">
+                          {parsedPreview ? (
+                            <span>
+                              Reading as <strong>{parsedPreview}</strong>
+                            </span>
+                          ) : rawPostcode.trim() ? (
+                            <span>Keep typing a full postcode…</span>
+                          ) : (
+                            <span>
+                              Accepts spaces, hyphens or compact forms.
+                            </span>
+                          )}
+                          {home?.adminDistrict ? (
+                            <span>
+                              {" "}
+                              · Located in{" "}
+                              <strong>{home.adminDistrict}</strong>
+                            </span>
+                          ) : null}
+                        </div>
+                        {error ? (
+                          <p className="postcode-error">{error}</p>
+                        ) : null}
+                      </form>
+                    ),
+                    stages: (
+                      <>
+                        <PhaseSelector
+                          selected={stageFilter}
+                          onChange={onStageFilterChange}
+                          tone="hero"
+                          tourId="stages"
+                        />
+                        {onStageMatchChange ? (
+                          <StageMatchSelector
+                            selected={stageMatch}
+                            stages={stageFilter}
+                            onChange={onStageMatchChange}
+                            tone="hero"
+                          />
+                        ) : null}
+                        <div className="hero-tile-continue">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => {
+                              markTileTouched("stages");
+                              setActiveTile("sector");
+                            }}
+                          >
+                            Continue to school type
+                          </button>
+                        </div>
+                      </>
+                    ),
+                    sector: (
+                      <>
+                        <SectorSelector
+                          selected={sectorFilter}
+                          onChange={onSectorFilterChange}
+                          tone="hero"
+                          tourId="sector"
+                        />
+                        <div className="hero-tile-continue">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => {
+                              markTileTouched("sector");
+                              setActiveTile("provision");
+                            }}
+                          >
+                            Continue to specialist filter
+                          </button>
+                        </div>
+                      </>
+                    ),
+                    provision: onProvisionFilterChange ? (
+                      <>
+                        <ProvisionSelector
+                          selected={provisionFilter}
+                          onChange={(next) => {
+                            markTileTouched("provision");
+                            onProvisionFilterChange(next);
+                          }}
+                          tone="hero"
+                          tourId="provision"
+                        />
+                        <div className="hero-tile-continue">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={() => {
+                              markTileTouched("provision");
+                              if (home?.postcode) {
+                                setChapter("nearby");
+                              } else {
+                                setActiveTile("postcode");
+                              }
+                            }}
+                          >
+                            {home?.postcode
+                              ? "See schools near home"
+                              : "Add a postcode"}
+                          </button>
+                        </div>
+                      </>
+                    ) : null,
+                  }}
+                </HeroSetupTiles>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
 
       {chapter === "nearby" && home ? (
         <section
