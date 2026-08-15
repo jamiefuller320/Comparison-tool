@@ -12,6 +12,7 @@ import {
   mergePacksIntoIndexes,
 } from "@/lib/collateIndexes";
 import { CompareApp } from "@/components/CompareApp";
+import { JourneyChapterProvider } from "@/components/JourneyChapterContext";
 
 type PackPhase = "idle" | "loading" | "ready" | "partial";
 
@@ -221,12 +222,14 @@ export function CompareLoader() {
           </div>
         </div>
       ) : null}
-      <CompareApp
-        index={index}
-        eyIndex={eyIndex}
-        childmindersIndex={childmindersIndex}
-        onIndexReload={reloadIndex}
-      />
+      <JourneyChapterProvider>
+        <CompareApp
+          index={index}
+          eyIndex={eyIndex}
+          childmindersIndex={childmindersIndex}
+          onIndexReload={reloadIndex}
+        />
+      </JourneyChapterProvider>
     </>
   );
 }
