@@ -27,6 +27,7 @@ import {
   type HeroTileId,
 } from "@/components/HeroSetupTiles";
 import { PageChapterNav } from "@/components/PageChapterNav";
+import { scrollToHomeSection } from "@/lib/inPageNav";
 import {
   formatPhases,
   phasesFromAgeRange,
@@ -592,9 +593,7 @@ export function HomePostcodeExplorer({
                       onClick={() => {
                         markTileTouched("provision");
                         if (home?.postcode) {
-                          document
-                            .getElementById("nearby")
-                            ?.scrollIntoView({ behavior: "smooth" });
+                          scrollToHomeSection("nearby");
                         } else {
                           setActiveTile("postcode");
                         }
