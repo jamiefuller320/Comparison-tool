@@ -5,6 +5,7 @@ import { EY_PROVIDER_METRICS, isEyProvider } from "@/lib/eyMetrics";
 import { fmtNum, shortName } from "@/lib/format";
 import { SourceStampLine } from "@/components/SourceStampLine";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
+import { SchoolColumnHeader } from "@/components/SchoolColumnHeader";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import type { SourceStamp } from "@/lib/sourceStamp";
@@ -118,8 +119,7 @@ export function EarlyYearsComparisonBoard({
               <th scope="col">Measure</th>
               {providers.map((provider) => (
                 <th key={provider.urn} scope="col">
-                  {shortName(provider.name, 32)}
-                  <div className="school-meta">
+                  <SchoolColumnHeader title={shortName(provider.name, 32)}>
                     <span>
                       {[provider.town, provider.localAuthority, provider.postcode]
                         .filter(Boolean)
@@ -174,7 +174,7 @@ export function EarlyYearsComparisonBoard({
                       compact
                       gaps={schoolGaps(dataGaps, provider.urn)}
                     />
-                  </div>
+                  </SchoolColumnHeader>
                 </th>
               ))}
             </tr>

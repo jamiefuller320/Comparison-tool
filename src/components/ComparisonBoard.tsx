@@ -26,6 +26,7 @@ import {
 import { MetricHistoryChart } from "@/components/MetricHistoryChart";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
+import { SchoolColumnHeader } from "@/components/SchoolColumnHeader";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import { CoverageStrip } from "@/components/CoverageStrip";
 import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
@@ -250,8 +251,7 @@ export function ComparisonBoard({
               <th scope="col">Measure</th>
               {schools.map((school) => (
                 <th key={school.urn} scope="col">
-                  {shortName(school.name, 32)}
-                  <div className="school-meta">
+                  <SchoolColumnHeader title={shortName(school.name, 32)}>
                     <span>
                       {[
                         formatSector(resolveSchoolSector(school)),
@@ -311,7 +311,7 @@ export function ComparisonBoard({
                         schoolName={school.name}
                       />
                     ) : null}
-                  </div>
+                  </SchoolColumnHeader>
                 </th>
               ))}
             </tr>

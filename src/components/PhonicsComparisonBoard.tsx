@@ -22,6 +22,7 @@ import { fmtNum, fmtPct, fmtPp, ppGap, shortName } from "@/lib/format";
 import { formatSector, resolveSchoolSector } from "@/lib/sectors";
 import { BoardProvenance } from "@/components/BoardProvenance";
 import { CompareTableFrame } from "@/components/CompareTableFrame";
+import { SchoolColumnHeader } from "@/components/SchoolColumnHeader";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import type { SourceStamp } from "@/lib/sourceStamp";
@@ -130,20 +131,18 @@ export function PhonicsComparisonBoard({
               <th scope="col">Measure</th>
               {singleLaMode ? (
                 <th scope="col">
-                  {sharedLa}
-                  <div className="school-meta">
+                  <SchoolColumnHeader title={sharedLa}>
                     <span>Local authority phonics context</span>
                     <span>
                       Shortlist:{" "}
                       {schools.map((s) => shortName(s.name, 20)).join(" · ")}
                     </span>
-                  </div>
+                  </SchoolColumnHeader>
                 </th>
               ) : (
                 schools.map((school) => (
                   <th key={school.urn} scope="col">
-                    {shortName(school.name, 32)}
-                    <div className="school-meta">
+                    <SchoolColumnHeader title={shortName(school.name, 32)}>
                       <span>
                         {[
                           formatSector(resolveSchoolSector(school)),
@@ -162,7 +161,7 @@ export function PhonicsComparisonBoard({
                         compact
                         gaps={schoolGaps(dataGaps, school.urn)}
                       />
-                    </div>
+                    </SchoolColumnHeader>
                   </th>
                 ))
               )}
