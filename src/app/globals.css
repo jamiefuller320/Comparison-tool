@@ -985,16 +985,18 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Sticky journey chrome: How to use + chapter tabs on one row. */
+/* Sticky journey chrome: How to use + chapter tabs on one row.
+   Same harbour wash as the SEO head (.hero-stack) and Setup band. */
 .journey-toolbar-wrap {
   position: sticky;
   top: 3.75rem;
   z-index: 24;
   margin: 0;
-  padding: 0.4rem 0 0.45rem;
+  padding: 0.45rem 0 0.5rem;
   background:
-    linear-gradient(180deg, rgba(244, 247, 249, 0.97) 0%, rgba(244, 247, 249, 0.92) 100%);
-  border-bottom: 1px solid rgba(11, 79, 108, 0.1);
+    radial-gradient(720px 420px at 18% 20%, rgba(232, 243, 247, 0.12), transparent 62%),
+    linear-gradient(155deg, #073a50 0%, #0b4f6c 48%, #1a6578 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -1008,14 +1010,15 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .journey-toolbar .journey-tour-btn {
   flex: 0 0 auto;
-  border-color: rgba(11, 79, 108, 0.22);
-  color: var(--sea-deep);
-  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #f7fbff;
+  background: rgba(7, 58, 80, 0.42);
 }
 
 .journey-toolbar .journey-tour-btn:hover {
-  border-color: rgba(11, 79, 108, 0.4);
-  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(7, 58, 80, 0.58);
+  color: #f7fbff;
 }
 
 .page-chapter-nav-toolbar {

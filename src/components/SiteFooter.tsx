@@ -6,7 +6,7 @@ import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 
 const TOOL_LINKS = [
   { href: "/#top", label: "Compare" },
-  { href: "/#nearby", label: "Near home" },
+  { href: "/#nearby", label: "Finder" },
   { href: "/#compare", label: "Shortlist" },
   { href: "/#side-by-side", label: "Side by side" },
   { href: "/#areas", label: "Areas" },

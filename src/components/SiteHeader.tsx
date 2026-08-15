@@ -17,7 +17,7 @@ type PrimaryLink =
 const PRIMARY_LINKS: PrimaryLink[] = [
   { kind: "page", href: "/areas/", label: "Areas" },
   { kind: "page", href: "/guides/", label: "Guides" },
-  { kind: "section", hash: "nearby", label: "Near home" },
+  { kind: "section", hash: "nearby", label: "Finder" },
   { kind: "section", hash: "compare", label: "Shortlist" },
 ];
 

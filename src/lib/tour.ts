@@ -60,8 +60,8 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "nearby",
     target: "nearby",
-    title: "Nearby map and tick list",
-    body: "After a postcode lookup, the map shows schools in range and the list adds road distance. Tick a school to add it to your shortlist (up to four).",
+    title: "Finder map and tick list",
+    body: "After a postcode lookup, Finder maps schools in range and the list adds road distance. Tick a school to add it to your shortlist (up to four).",
     optional: true,
   },
   {
