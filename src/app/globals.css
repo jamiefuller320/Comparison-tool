@@ -65,6 +65,7 @@ html {
 }
 
 #top,
+#setup,
 #nearby,
 #compare,
 #side-by-side,
@@ -73,6 +74,22 @@ html {
 #how,
 #data {
   scroll-margin-top: 4.5rem;
+}
+
+html:has(.page-chapter-nav) {
+  scroll-padding-top: 7.25rem;
+}
+
+html:has(.page-chapter-nav) #top,
+html:has(.page-chapter-nav) #setup,
+html:has(.page-chapter-nav) #nearby,
+html:has(.page-chapter-nav) #compare,
+html:has(.page-chapter-nav) #side-by-side,
+html:has(.page-chapter-nav) #areas,
+html:has(.page-chapter-nav) #guides,
+html:has(.page-chapter-nav) #how,
+html:has(.page-chapter-nav) #data {
+  scroll-margin-top: 7.25rem;
 }
 
 body {
@@ -733,19 +750,44 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   max-width: 44rem;
 }
 
-/* Ring-binder setup: index tabs sit on the sheet they open. */
-.hero-binder {
+/* Shared ring-binder chrome (hero setup, chapter nav, path tabs). */
+.binder {
   --binder-fill: rgba(7, 58, 80, 0.55);
   --binder-stroke: rgba(255, 255, 255, 0.28);
   --binder-tab-fill: rgba(7, 58, 80, 0.42);
   --binder-tab-stroke: rgba(255, 255, 255, 0.24);
+  --binder-tab-color: rgba(247, 251, 255, 0.82);
+  --binder-tab-color-active: #f7fbff;
+  --binder-tab-hover: rgba(7, 58, 80, 0.5);
+  --binder-step-fill: rgba(247, 251, 255, 0.12);
+  --binder-step-stroke: rgba(255, 255, 255, 0.22);
+  --binder-head-line: rgba(255, 255, 255, 0.14);
+  --binder-head-color: #f7fbff;
+  --binder-head-muted: rgba(247, 251, 255, 0.72);
+  --binder-shadow: 0 16px 36px rgba(7, 58, 80, 0.28);
   --seam-gap-start: 0px;
   --seam-gap-end: 0px;
   margin: 0.35rem 0 0;
   position: relative;
 }
 
-.hero-binder-tabs {
+.binder[data-tone="paper"] {
+  --binder-fill: rgba(255, 255, 255, 0.72);
+  --binder-stroke: rgba(11, 79, 108, 0.18);
+  --binder-tab-fill: rgba(232, 238, 242, 0.92);
+  --binder-tab-stroke: rgba(11, 79, 108, 0.16);
+  --binder-tab-color: var(--ink-soft);
+  --binder-tab-color-active: var(--sea-deep);
+  --binder-tab-hover: rgba(255, 255, 255, 0.9);
+  --binder-step-fill: rgba(11, 79, 108, 0.08);
+  --binder-step-stroke: rgba(11, 79, 108, 0.18);
+  --binder-head-line: rgba(11, 79, 108, 0.12);
+  --binder-head-color: var(--sea-deep);
+  --binder-head-muted: var(--ink-soft);
+  --binder-shadow: 0 12px 28px rgba(20, 35, 58, 0.06);
+}
+
+.binder-tabs {
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-end;
@@ -756,7 +798,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   margin: 0;
 }
 
-.hero-binder-tab {
+.binder-tab {
   appearance: none;
   position: relative;
   flex: 1 1 0;
@@ -770,66 +812,81 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   border-bottom: none;
   border-radius: 0.65rem 0.65rem 0 0;
   background: var(--binder-tab-fill);
-  color: rgba(247, 251, 255, 0.82);
+  color: var(--binder-tab-color);
   font: inherit;
   font-size: 0.82rem;
   font-weight: 650;
   line-height: 1.15;
   cursor: pointer;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  /* Keep joins on whole pixels — translateY caused stroke crossings. */
   transform: none;
   transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 
-.hero-binder-tab:hover {
-  color: #f7fbff;
-  background: rgba(7, 58, 80, 0.5);
+.binder-tab:hover {
+  color: var(--binder-tab-color-active);
+  background: var(--binder-tab-hover);
 }
 
-.hero-binder-tab.is-active {
+.binder-tab.is-active {
   z-index: 3;
-  color: #f7fbff;
+  color: var(--binder-tab-color-active);
   background: var(--binder-fill);
   border-color: var(--binder-stroke);
-  /* Sit on the sheet top edge; seam is gapped under this tab. */
   margin-bottom: -1px;
   padding-bottom: calc(0.55rem + 1px);
   box-shadow: none;
 }
 
-.hero-binder-tab.is-done:not(.is-active) {
-  border-color: rgba(232, 213, 163, 0.4);
+.binder[data-mode="tabs"] .binder-tab.is-active {
+  /* Tabs-only strips sit on a rail — keep a flush bottom edge. */
+  margin-bottom: 0;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--binder-fill);
 }
 
-.hero-binder-tab-step {
+.binder-tab.is-done:not(.is-active) {
+  border-color: rgba(176, 137, 45, 0.45);
+}
+
+.binder-tab-step {
   display: inline-grid;
   place-items: center;
   flex: 0 0 auto;
   width: 1.15rem;
   height: 1.15rem;
   border-radius: 0.3rem;
-  background: rgba(247, 251, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--binder-step-fill);
+  border: 1px solid var(--binder-step-stroke);
   font-size: 0.68rem;
   font-weight: 700;
 }
 
-/* Only the open tab’s step glows. Completed tabs keep a quiet border cue
-   on the tab itself — not a lit step badge that reads as still selected. */
-.hero-binder-tab.is-active .hero-binder-tab-step {
+.binder-tab.is-active .binder-tab-step {
   background: var(--pin);
   border-color: var(--pin);
   color: #fffdf8;
 }
 
-.hero-binder-tab-label {
+.binder-tab-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.hero-binder-sheet {
+.binder-tab-badge {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--pin);
+  flex: 0 0 auto;
+}
+
+.binder-tab.is-active .binder-tab-badge {
+  background: var(--pin-bright);
+}
+
+.binder-sheet {
   position: relative;
   z-index: 1;
   padding: 0.85rem 0.95rem 1rem;
@@ -837,14 +894,10 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   border-top: none;
   border-radius: 0.85rem;
   background: var(--binder-fill);
-  box-shadow: 0 16px 36px rgba(7, 58, 80, 0.28);
+  box-shadow: var(--binder-shadow);
 }
 
-/*
-  Top seam is drawn here (not as border-top) so we can leave a measured gap
-  under the active tab. Side strokes of that tab meet the seam as L-joins.
-*/
-.hero-binder-sheet::before {
+.binder-sheet::before {
   content: "";
   position: absolute;
   left: 0;
@@ -852,7 +905,6 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   top: 0;
   height: 1px;
   pointer-events: none;
-  /* Same-alpha transparent avoids muddy interpolation through black. */
   background: linear-gradient(
     to right,
     var(--binder-stroke) 0,
@@ -864,30 +916,19 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   );
 }
 
-@media (max-width: 560px) {
-  .hero-binder-tabs {
-    gap: 0.22rem;
-    padding: 0 0.25rem;
-  }
-
-  .hero-binder-tab {
-    flex-direction: column;
-    gap: 0.15rem;
-    padding: 0.4rem 0.28rem 0.48rem;
-    font-size: 0.72rem;
-  }
-
-  .hero-binder-tab.is-active {
-    padding-bottom: calc(0.48rem + 1px);
-  }
-
-  .hero-binder-sheet {
-    border-radius: 0.55rem 0.55rem 0.75rem 0.75rem;
-    padding: 0.75rem 0.75rem 0.9rem;
-  }
+.binder[data-tone="paper"] .binder-sheet::before {
+  background: linear-gradient(
+    to right,
+    var(--binder-stroke) 0,
+    var(--binder-stroke) var(--seam-gap-start),
+    rgba(11, 79, 108, 0) var(--seam-gap-start),
+    rgba(11, 79, 108, 0) var(--seam-gap-end),
+    var(--binder-stroke) var(--seam-gap-end),
+    var(--binder-stroke) 100%
+  );
 }
 
-.hero-tile-head {
+.binder-sheet-head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -895,21 +936,25 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   gap: 0.35rem 0.85rem;
   margin: 0 0 0.35rem;
   padding: 0 0 0.45rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid var(--binder-head-line);
 }
 
-.hero-tile-head h3 {
+.binder-sheet-head h3 {
   margin: 0;
   font-family: var(--font-sans);
   font-size: 1rem;
   font-weight: 650;
-  color: #f7fbff;
+  color: var(--binder-head-color);
 }
 
-.hero-tile-head p {
+.binder-sheet-head p {
   margin: 0;
   font-size: 0.84rem;
-  color: rgba(247, 251, 255, 0.72);
+  color: var(--binder-head-muted);
+}
+
+.hero-binder {
+  margin: 0.35rem 0 0;
 }
 
 .hero-tile-body .phase-selector {
@@ -923,6 +968,80 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .hero-tile-continue .btn-primary {
   width: 100%;
   justify-content: center;
+}
+
+/* Sticky chapter strip — same binder dialect for the rest of the journey. */
+.page-chapter-nav {
+  position: sticky;
+  top: 3.75rem;
+  z-index: 24;
+  margin: 0;
+  padding: 0.35rem 0 0;
+  background:
+    linear-gradient(180deg, rgba(244, 247, 249, 0.96) 0%, rgba(244, 247, 249, 0.9) 100%);
+  border-bottom: 1px solid rgba(11, 79, 108, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.page-chapter-nav-inner {
+  max-width: 44rem;
+}
+
+.page-chapter-nav .binder {
+  margin: 0;
+}
+
+.page-chapter-nav .binder-tabs {
+  padding: 0 0.15rem;
+}
+
+.page-chapter-sheet {
+  border: 1px solid rgba(11, 79, 108, 0.14);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 1.15rem 1.1rem 1.35rem;
+  box-shadow: 0 12px 28px rgba(20, 35, 58, 0.05);
+}
+
+.compare-path-binder {
+  margin: 0 0 1.15rem;
+  max-width: 36rem;
+}
+
+@media (max-width: 560px) {
+  .binder-tabs {
+    gap: 0.22rem;
+    padding: 0 0.25rem;
+  }
+
+  .binder-tab {
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.4rem 0.28rem 0.48rem;
+    font-size: 0.72rem;
+  }
+
+  .binder-tab.is-active {
+    padding-bottom: calc(0.48rem + 1px);
+  }
+
+  .binder[data-mode="tabs"] .binder-tab.is-active {
+    padding-bottom: 0.48rem;
+  }
+
+  .binder-sheet {
+    border-radius: 0.55rem 0.55rem 0.75rem 0.75rem;
+    padding: 0.75rem 0.75rem 0.9rem;
+  }
+
+  .page-chapter-nav {
+    top: 3.35rem;
+  }
+
+  .page-chapter-sheet {
+    padding: 0.95rem 0.85rem 1.1rem;
+    border-radius: 0.7rem;
+  }
 }
 
 .stage-match-logic {

@@ -1,5 +1,6 @@
 "use client";
 
+import { BinderTabs, type BinderTabItem } from "@/components/BinderTabs";
 import {
   COMPARE_PATH_OPTIONS,
   type ComparePathId,
@@ -19,37 +20,28 @@ export function ComparePathTabs({
   if (available.length <= 1) return null;
 
   const shortlisted = new Set(withShortlist);
+  const items: BinderTabItem<ComparePathId>[] = COMPARE_PATH_OPTIONS.filter(
+    (opt) => available.includes(opt.id),
+  ).map((opt, index) => ({
+    id: opt.id,
+    label: opt.label,
+    shortLabel: opt.shortLabel,
+    step: index + 1,
+    badge: shortlisted.has(opt.id),
+    title: shortlisted.has(opt.id)
+      ? `${opt.label} (on your shortlist)`
+      : opt.label,
+  }));
 
   return (
-    <div
-      className="compare-path-tabs"
-      role="tablist"
-      aria-label="Comparison path"
-      data-tour="compare-paths"
-    >
-      {COMPARE_PATH_OPTIONS.filter((opt) => available.includes(opt.id)).map(
-        (opt) => {
-          const selected = active === opt.id;
-          const hasItems = shortlisted.has(opt.id);
-          return (
-            <button
-              key={opt.id}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              className={
-                selected ? "compare-path-tab active" : "compare-path-tab"
-              }
-              onClick={() => onChange(opt.id)}
-            >
-              {opt.shortLabel}
-              {hasItems ? (
-                <span className="compare-path-dot" aria-hidden />
-              ) : null}
-            </button>
-          );
-        },
-      )}
-    </div>
+    <BinderTabs
+      className="compare-path-binder"
+      tone="paper"
+      ariaLabel="Comparison path"
+      dataTour="compare-paths"
+      items={items}
+      activeId={active}
+      onChange={onChange}
+    />
   );
 }
