@@ -437,7 +437,7 @@ export function HomePostcodeExplorer({
     <>
       {/*
         Sticky journey chrome: How to use + chapter tabs on one row so Setup
-        is a peer page with Near home / Shortlist / Compare / How.
+        is a peer page with Finder / Shortlist / Compare / How.
       */}
       <div className="journey-toolbar-wrap no-print" id="journey">
         <div className="shell hero-inner-wide">
@@ -449,7 +449,7 @@ export function HomePostcodeExplorer({
             >
               How to use
             </button>
-            <PageChapterNav tone="paper" />
+            <PageChapterNav tone="harbour" />
           </div>
         </div>
       </div>
@@ -634,7 +634,7 @@ export function HomePostcodeExplorer({
           <div className="shell">
             <div className="page-chapter-sheet">
             <div className="section-head">
-              <h2>Near home · {home.postcode}</h2>
+              <h2>Finder · {home.postcode}</h2>
               <p>
                 Showing{" "}
                 {sectorFilter.includes("state") &&
@@ -881,7 +881,7 @@ export function HomePostcodeExplorer({
           <div className="shell">
             <div className="page-chapter-sheet">
               <div className="section-head">
-                <h2>Near home</h2>
+                <h2>Finder</h2>
                 <p>
                   Add a home postcode in Setup to map schools around you and
                   tick ones worth shortlisting.

@@ -18,7 +18,7 @@ export function FloatingControls() {
         <HomeSectionLink hash="top">Home</HomeSectionLink>
         <a href="/areas/">Areas</a>
         <a href="/guides/">Guides</a>
-        <HomeSectionLink hash="nearby">Near home</HomeSectionLink>
+        <HomeSectionLink hash="nearby">Finder</HomeSectionLink>
         <HomeSectionLink hash="compare">Shortlist</HomeSectionLink>
         <HomeSectionLink hash="side-by-side">Side by side</HomeSectionLink>
         <HomeSectionLink hash="how">How to read</HomeSectionLink>

@@ -9,7 +9,7 @@ import {
 
 const CHAPTERS: BinderTabItem<JourneyChapterId>[] = [
   { id: "setup", label: "Setup", shortLabel: "Setup", step: 1 },
-  { id: "nearby", label: "Near home", shortLabel: "Near home", step: 2 },
+  { id: "nearby", label: "Finder", shortLabel: "Finder", step: 2 },
   { id: "compare", label: "Shortlist", shortLabel: "Shortlist", step: 3 },
   {
     id: "side-by-side",
@@ -22,10 +22,10 @@ const CHAPTERS: BinderTabItem<JourneyChapterId>[] = [
 
 /**
  * Chapter tabs for the home journey — sits on the How-to-use toolbar so
- * Setup is one peer page among Near home / Shortlist / Compare / How.
+ * Setup is one peer page among Finder / Shortlist / Compare / How.
  */
 export function PageChapterNav({
-  tone = "paper",
+  tone = "harbour",
 }: {
   tone?: "harbour" | "paper";
 }) {
