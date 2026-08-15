@@ -23,6 +23,8 @@ export type BinderTabItem<Id extends string = string> = {
  * Shared ring-binder chrome: index tabs with a measured seam gap.
  * `harbour` = hero glass; `paper` = page sections / sticky chapter nav.
  * Pass `sheet` to render an attached panel; omit for tabs-only navigation.
+ * Optional `leading` sits beside the tabs (e.g. How to use) while the sheet
+ * spans the full width underneath.
  */
 export function BinderTabs<Id extends string>({
   items,
@@ -32,6 +34,7 @@ export function BinderTabs<Id extends string>({
   ariaLabel,
   sheet,
   sheetHeader,
+  leading,
   className,
   dataTour,
 }: {
@@ -42,6 +45,7 @@ export function BinderTabs<Id extends string>({
   ariaLabel: string;
   sheet?: ReactNode;
   sheetHeader?: ReactNode;
+  leading?: ReactNode;
   className?: string;
   dataTour?: string;
 }) {
@@ -56,6 +60,7 @@ export function BinderTabs<Id extends string>({
     items.findIndex((item) => item.id === activeId),
   );
   const hasSheet = sheet != null;
+  const hasLeading = leading != null;
 
   useLayoutEffect(() => {
     if (!hasSheet) return;
@@ -105,47 +110,91 @@ export function BinderTabs<Id extends string>({
       className={["binder", className].filter(Boolean).join(" ")}
       data-tone={tone}
       data-mode={hasSheet ? "sheet" : "tabs"}
+      data-leading={hasLeading ? "true" : "false"}
       data-active-index={activeIndex}
       data-tab-count={items.length}
       data-tour={dataTour}
     >
-      <div className="binder-tabs" role="tablist" aria-label={ariaLabel}>
-        {items.map((item) => {
-          const isActive = item.id === activeId;
-          const isDone = Boolean(item.done);
-          const label = item.shortLabel || item.label;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              id={`${baseId}-${item.id}-tab`}
-              ref={(el) => {
-                tabRefs.current[item.id] = el;
-              }}
-              className={
-                isActive
-                  ? "binder-tab is-active"
-                  : isDone
-                    ? "binder-tab is-done"
-                    : "binder-tab"
-              }
-              aria-selected={isActive}
-              aria-controls={hasSheet ? panelId : undefined}
-              title={item.title || `Open ${item.label}`}
-              onClick={() => onChange(item.id)}
-            >
-              {item.step != null ? (
-                <span className="binder-tab-step">{item.step}</span>
-              ) : null}
-              <span className="binder-tab-label">{label}</span>
-              {item.badge ? (
-                <span className="binder-tab-badge" aria-hidden />
-              ) : null}
-            </button>
-          );
-        })}
-      </div>
+      {hasLeading ? (
+        <div className="binder-rail">
+          <div className="binder-leading">{leading}</div>
+          <div className="binder-tabs" role="tablist" aria-label={ariaLabel}>
+            {items.map((item) => {
+              const isActive = item.id === activeId;
+              const isDone = Boolean(item.done);
+              const label = item.shortLabel || item.label;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  id={`${baseId}-${item.id}-tab`}
+                  ref={(el) => {
+                    tabRefs.current[item.id] = el;
+                  }}
+                  className={
+                    isActive
+                      ? "binder-tab is-active"
+                      : isDone
+                        ? "binder-tab is-done"
+                        : "binder-tab"
+                  }
+                  aria-selected={isActive}
+                  aria-controls={hasSheet ? panelId : undefined}
+                  title={item.title || `Open ${item.label}`}
+                  onClick={() => onChange(item.id)}
+                >
+                  {item.step != null ? (
+                    <span className="binder-tab-step">{item.step}</span>
+                  ) : null}
+                  <span className="binder-tab-label">{label}</span>
+                  {item.badge ? (
+                    <span className="binder-tab-badge" aria-hidden />
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="binder-tabs" role="tablist" aria-label={ariaLabel}>
+          {items.map((item) => {
+            const isActive = item.id === activeId;
+            const isDone = Boolean(item.done);
+            const label = item.shortLabel || item.label;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                id={`${baseId}-${item.id}-tab`}
+                ref={(el) => {
+                  tabRefs.current[item.id] = el;
+                }}
+                className={
+                  isActive
+                    ? "binder-tab is-active"
+                    : isDone
+                      ? "binder-tab is-done"
+                      : "binder-tab"
+                }
+                aria-selected={isActive}
+                aria-controls={hasSheet ? panelId : undefined}
+                title={item.title || `Open ${item.label}`}
+                onClick={() => onChange(item.id)}
+              >
+                {item.step != null ? (
+                  <span className="binder-tab-step">{item.step}</span>
+                ) : null}
+                <span className="binder-tab-label">{label}</span>
+                {item.badge ? (
+                  <span className="binder-tab-badge" aria-hidden />
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {hasSheet ? (
         <div

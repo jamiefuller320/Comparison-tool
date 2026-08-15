@@ -23,12 +23,13 @@ export function homeSectionHref(hash: string, search?: string): string {
   return `/#${clean}`;
 }
 
-/** Height of sticky header (+ journey toolbar when present). */
+/** Height of sticky header (+ journey chrome when present). */
 export function stickyChromeOffsetPx(sectionId?: string): number {
   if (typeof document === "undefined") return 0;
   const header = document.querySelector(".site-header");
   const headerH = header?.getBoundingClientRect().height ?? 0;
   const toolbar =
+    document.querySelector(".journey-chapter-binder .binder-rail") ||
     document.querySelector(".journey-toolbar-wrap") ||
     document.querySelector(".journey-toolbar") ||
     document.querySelector(".page-chapter-nav");
