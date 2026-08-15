@@ -198,7 +198,10 @@ export function HomePostcodeExplorer({
     };
   }, [showCatchments, catchments]);
 
-  async function lookup(explicit?: string) {
+  async function lookup(
+    explicit?: string,
+    opts?: { advanceToStages?: boolean },
+  ) {
     const candidate = explicit ?? rawPostcode;
     const normalised = parseUkPostcode(candidate);
     if (!normalised) {
@@ -222,6 +225,9 @@ export function HomePostcodeExplorer({
         longitude: geo.longitude,
         adminDistrict: geo.adminDistrict,
       });
+      // Find nearby always opens Stages — including re-submits after a postcode
+      // is already set (completed-flip auto-advance only fires once).
+      if (opts?.advanceToStages) setActiveTile("stages");
     } catch {
       setError("Postcode lookup is unavailable right now. Try again in a moment.");
     } finally {
@@ -490,7 +496,7 @@ export function HomePostcodeExplorer({
                         data-tour="postcode"
                         onSubmit={(e) => {
                           e.preventDefault();
-                          void lookup();
+                          void lookup(undefined, { advanceToStages: true });
                         }}
                       >
                         <label className="sr-only" htmlFor="home-postcode">
@@ -879,6 +885,16 @@ export function HomePostcodeExplorer({
                     })}
                   </ul>
                 )}
+                <div className="nearby-list-actions">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={selectedUrns.length === 0}
+                    onClick={() => setChapter("side-by-side")}
+                  >
+                    Compare
+                  </button>
+                </div>
               </div>
             </div>
             </div>
