@@ -75,12 +75,16 @@ export function HeroSetupTiles({
       if (!binder || !tab) return;
       const binderBox = binder.getBoundingClientRect();
       const tabBox = tab.getBoundingClientRect();
-      // Gap under the active tab’s outer box so side strokes meet the seam
-      // as clean L-joins instead of crossing the sheet’s top edge.
-      const start = Math.max(0, tabBox.left - binderBox.left);
-      const end = Math.min(binderBox.width, tabBox.right - binderBox.left);
+      // Gap between the inner edges of the active tab’s side strokes so those
+      // strokes sit on top of the seam ends (clean L-joins, no cross/hairline).
+      const start = Math.round(
+        Math.max(0, tabBox.left - binderBox.left + 1),
+      );
+      const end = Math.round(
+        Math.min(binderBox.width, tabBox.right - binderBox.left - 1),
+      );
       binder.style.setProperty("--seam-gap-start", `${start}px`);
-      binder.style.setProperty("--seam-gap-end", `${end}px`);
+      binder.style.setProperty("--seam-gap-end", `${Math.max(start, end)}px`);
     }
 
     syncSeamGap();
