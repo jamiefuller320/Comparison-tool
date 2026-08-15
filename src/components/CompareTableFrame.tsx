@@ -53,6 +53,11 @@ export function CompareTableFrame({
           Pin measure labels
         </button>
       </div>
+      {/*
+        Scrollport is always height-capped so the control row stays in view
+        above the table (independent of pin toggles). Heading/label pins only
+        affect sticky behaviour inside the scrollport.
+      */}
       <ScrollRegion
         className="compare-board-scroll"
         hint="Scroll for more school data"

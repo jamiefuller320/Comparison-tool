@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BinderTabs, type BinderTabItem } from "@/components/BinderTabs";
-import { scrollToHomeSection } from "@/lib/inPageNav";
+import {
+  HOME_SECTION_CHANGE_EVENT,
+  scrollToHomeSection,
+  stickyChromeOffsetPx,
+} from "@/lib/inPageNav";
 
 export type PageChapterId =
   | "setup"
@@ -26,12 +30,33 @@ const CHAPTERS: BinderTabItem<PageChapterId>[] = [
 
 const CHAPTER_IDS = CHAPTERS.map((c) => c.id);
 
+function isChapterId(id: string): id is PageChapterId {
+  return (CHAPTER_IDS as string[]).includes(id);
+}
+
 /**
  * Sticky binder chapter strip for the home journey. Scroll-spy keeps the
  * open tab in sync; clicks smooth-scroll without dropping query params.
  */
 export function PageChapterNav() {
   const [activeId, setActiveId] = useState<PageChapterId>("setup");
+  const ignoreSpyUntil = useRef(0);
+
+  useEffect(() => {
+    function onSectionChange(event: Event) {
+      const id = (event as CustomEvent<{ id?: string }>).detail?.id;
+      if (!id || !isChapterId(id)) return;
+      setActiveId(id);
+      // Smooth scroll takes a moment — don't let spy fight the intended tab.
+      ignoreSpyUntil.current = Date.now() + 1200;
+    }
+    window.addEventListener(HOME_SECTION_CHANGE_EVENT, onSectionChange);
+    const hash = window.location.hash.replace(/^#/, "");
+    if (hash && isChapterId(hash)) setActiveId(hash);
+    return () => {
+      window.removeEventListener(HOME_SECTION_CHANGE_EVENT, onSectionChange);
+    };
+  }, []);
 
   useEffect(() => {
     const nodes = CHAPTER_IDS.map((id) => document.getElementById(id)).filter(
@@ -41,8 +66,13 @@ export function PageChapterNav() {
 
     const visibility = new Map<string, number>();
 
+    function topMarginPx() {
+      return Math.max(64, stickyChromeOffsetPx("nearby"));
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
+        if (Date.now() < ignoreSpyUntil.current) return;
         for (const entry of entries) {
           visibility.set(
             entry.target.id,
@@ -61,9 +91,8 @@ export function PageChapterNav() {
         if (bestRatio > 0) setActiveId(bestId);
       },
       {
-        // Account for sticky header + chapter strip.
-        rootMargin: "-20% 0px -55% 0px",
-        threshold: [0, 0.15, 0.35, 0.55, 0.75],
+        rootMargin: `-${topMarginPx()}px 0px -45% 0px`,
+        threshold: [0, 0.12, 0.28, 0.45, 0.65],
       },
     );
 
@@ -87,6 +116,7 @@ export function PageChapterNav() {
           activeId={activeId}
           onChange={(id) => {
             setActiveId(id);
+            ignoreSpyUntil.current = Date.now() + 1200;
             scrollToHomeSection(id);
           }}
         />

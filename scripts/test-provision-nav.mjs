@@ -5,9 +5,14 @@ async function main() {
     normalizeProvisionFilter,
     DEFAULT_PROVISION,
   } = await import("../src/lib/provisionFilter.ts");
-  const { isHomePath, homeSectionHref, scrollToHomeSection } = await import(
-    "../src/lib/inPageNav.ts"
-  );
+  const {
+    isHomePath,
+    homeSectionHref,
+    scrollToHomeSection,
+    HOME_SECTION_CHANGE_EVENT,
+    stickyChromeOffsetPx,
+  } = await import("../src/lib/inPageNav.ts");
+
   const { normalizeStageMatchMode, schoolMatchesPhases } = await import(
     "../src/lib/phases.ts"
   );
@@ -108,6 +113,17 @@ async function main() {
   }
   if (typeof scrollToHomeSection !== "function") {
     console.error("FAIL scrollToHomeSection export");
+    process.exit(1);
+  }
+  if (
+    typeof HOME_SECTION_CHANGE_EVENT !== "string" ||
+    !HOME_SECTION_CHANGE_EVENT
+  ) {
+    console.error("FAIL HOME_SECTION_CHANGE_EVENT");
+    process.exit(1);
+  }
+  if (typeof stickyChromeOffsetPx !== "function") {
+    console.error("FAIL stickyChromeOffsetPx export");
     process.exit(1);
   }
   // Without window, homeSectionHref falls back to absolute home hash.

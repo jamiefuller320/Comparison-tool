@@ -1854,12 +1854,6 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   gap: 0.55rem;
 }
 
-.compare-table-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
 .table-pin-toggle {
   appearance: none;
   border: 1px solid var(--line);
@@ -1978,35 +1972,53 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   box-shadow: 0 1px 4px rgba(7, 58, 80, 0.1);
 }
 
-/* Scrollport lives on ScrollRegion so fade/hint cues track overflow. */
-.compare-board-scroll:has(.compare-board[data-sticky-header="true"])
-  > .scroll-region-viewport {
+/* Scrollport lives on ScrollRegion so fade/hint cues track overflow.
+   Always height-cap compare boards so pin toggles stay above the table;
+   sticky heading/label toggles only affect behaviour inside the viewport. */
+.compare-board-scroll > .scroll-region-viewport {
   max-height: min(70vh, 42rem);
   overflow: auto;
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgba(11, 79, 108, 0.45) rgba(11, 79, 108, 0.08);
 }
 
-.compare-board-scroll:has(.compare-board[data-sticky-header="true"])
-  > .scroll-region-viewport::-webkit-scrollbar {
+.compare-board-scroll > .scroll-region-viewport::-webkit-scrollbar {
   width: 0.55rem;
   height: 0.55rem;
 }
 
-.compare-board-scroll:has(.compare-board[data-sticky-header="true"])
-  > .scroll-region-viewport::-webkit-scrollbar-thumb {
+.compare-board-scroll > .scroll-region-viewport::-webkit-scrollbar-thumb {
   background: rgba(11, 79, 108, 0.4);
   border-radius: 999px;
 }
 
-.compare-board-scroll:has(.compare-board[data-sticky-header="true"])
-  > .scroll-region-viewport::-webkit-scrollbar-track {
+.compare-board-scroll > .scroll-region-viewport::-webkit-scrollbar-track {
   background: rgba(11, 79, 108, 0.06);
 }
 
+.compare-table-controls {
+  position: sticky;
+  top: 4.5rem;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0.35rem 0.1rem;
+  margin: 0 0 0.15rem;
+  background: rgba(244, 247, 249, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+html:has(.page-chapter-nav) .compare-table-controls {
+  top: 7.25rem;
+}
+
 .compare-board[data-sticky-header="true"] thead th {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 2;
@@ -2016,6 +2028,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .compare-board[data-sticky-first-column="true"] thead th:first-child,
 .compare-board[data-sticky-first-column="true"] tbody th {
+  position: -webkit-sticky;
   position: sticky;
   left: 0;
   z-index: 1;
