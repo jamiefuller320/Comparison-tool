@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition, type ReactNode } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
@@ -143,15 +143,12 @@ export function CompareApp({
   eyIndex = null,
   childmindersIndex = null,
   onIndexReload,
-  intro,
 }: {
   /** Hampshire seed with any ready area packs already merged in. */
   index: SchoolsIndex | SchoolsIndexWithPack;
   eyIndex?: EyProvidersIndex | null;
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
-  /** Server SEO head — rendered inside the shared harbour band. */
-  intro?: ReactNode;
 }) {
   const { chapter, setChapter } = useJourneyChapter();
   const byUrn = useMemo(() => {
@@ -886,7 +883,6 @@ export function CompareApp({
         sectors={sectors}
       />
       <HomePostcodeExplorer
-        intro={intro}
         schools={discoveryPool}
         selectedUrns={selected}
         onToggle={toggleSchool}

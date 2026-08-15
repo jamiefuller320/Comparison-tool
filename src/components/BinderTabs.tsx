@@ -69,14 +69,17 @@ export function BinderTabs<Id extends string>({
 
     function syncSeamGap() {
       const tab = tabRefs.current[activeId];
-      if (!binder || !tab) return;
-      const binderBox = binder.getBoundingClientRect();
+      const sheet = binder?.querySelector(".binder-sheet");
+      if (!binder || !tab || !(sheet instanceof HTMLElement)) return;
+      // Measure against the sheet — not the binder — so leading chrome
+      // (How to use) cannot offset the gap under the active tab.
+      const sheetBox = sheet.getBoundingClientRect();
       const tabBox = tab.getBoundingClientRect();
       const start = Math.round(
-        Math.max(0, tabBox.left - binderBox.left + 1),
+        Math.max(0, tabBox.left - sheetBox.left + 1),
       );
       const end = Math.round(
-        Math.min(binderBox.width, tabBox.right - binderBox.left - 1),
+        Math.min(sheetBox.width, tabBox.right - sheetBox.left - 1),
       );
       binder.style.setProperty("--seam-gap-start", `${start}px`);
       binder.style.setProperty("--seam-gap-end", `${Math.max(start, end)}px`);
@@ -94,6 +97,8 @@ export function BinderTabs<Id extends string>({
     syncSoon();
     const observer = new ResizeObserver(syncSoon);
     if (binder) observer.observe(binder);
+    const sheet = binder?.querySelector(".binder-sheet");
+    if (sheet) observer.observe(sheet);
     const tab = tabRefs.current[activeId];
     if (tab) observer.observe(tab);
     window.addEventListener("resize", syncSoon);

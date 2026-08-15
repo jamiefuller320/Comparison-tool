@@ -6,8 +6,11 @@ import {
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
+import {
+  HarbourSetupPortal,
+  useHarbourBandSetupFlag,
+} from "@/components/HarbourBand";
 import dynamic from "next/dynamic";
 import type { SchoolRecord } from "@/lib/types";
 import { geocodePostcode, parseUkPostcode } from "@/lib/postcode";
@@ -105,7 +108,6 @@ export function HomePostcodeExplorer({
   comparableKs4Only = true,
   onComparableKs4OnlyChange,
   max = 4,
-  intro,
 }: {
   schools: SchoolRecord[];
   selectedUrns: string[];
@@ -122,8 +124,6 @@ export function HomePostcodeExplorer({
   comparableKs4Only?: boolean;
   onComparableKs4OnlyChange?: (next: boolean) => void;
   max?: number;
-  /** Server SEO head — shares the harbour band with journey chrome / Setup. */
-  intro?: ReactNode;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
   const [home, setHome] = useState<{
@@ -153,6 +153,7 @@ export function HomePostcodeExplorer({
     provision: false,
   });
   const { chapter, setChapter } = useJourneyChapter();
+  useHarbourBandSetupFlag(chapter === "setup");
 
   const parsedPreview = useMemo(
     () => parseUkPostcode(deferredRaw),
@@ -445,17 +446,10 @@ export function HomePostcodeExplorer({
   return (
     <>
       {/*
-        One harbour band: SEO head + Setup chapter binder share a continuous
-        wash. Other chapters use a paper binder that joins tabs to the page.
+        Setup portals into the server-rendered harbour band so head + chrome
+        share one wash from first paint. Other chapters use a paper binder.
       */}
-      <div
-        className="harbour-band"
-        data-chapter={chapter}
-        data-includes-setup={chapter === "setup" ? "true" : "false"}
-      >
-        {intro}
-
-        {chapter === "setup" ? (
+      <HarbourSetupPortal active={chapter === "setup"}>
           <div className="hero-controls" id="journey" data-tour="setup">
             <div className="shell hero-inner hero-inner-wide">
               <div id="setup">
@@ -630,8 +624,7 @@ export function HomePostcodeExplorer({
               </div>
             </div>
           </div>
-        ) : null}
-      </div>
+      </HarbourSetupPortal>
 
       {chapter === "nearby" && home ? (
         <section

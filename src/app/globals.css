@@ -677,9 +677,8 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   border-radius: inherit;
   background-color: #0b4f6c;
   background-image: var(--harbour-wash);
-  /* Viewport-fixed so head, chrome, and Setup sample the same continuous wash. */
-  background-attachment: fixed, fixed, fixed;
-  /* No transform animation — it would desync from the sticky chrome fill. */
+  /* Scroll-attached wash — fixed attachment caused a slow double-paint flash. */
+  background-attachment: scroll;
   animation: none;
 }
 
@@ -910,7 +909,16 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   border: 1px solid var(--binder-tab-stroke);
   border-bottom: none;
   border-radius: 0.65rem 0.65rem 0 0;
-  background: var(--binder-tab-fill);
+  /*
+    Keep the tab’s own fill, then blend quickly into the chapter/sheet colour
+    so the join into the panel reads soft rather than a hard shelf.
+  */
+  background: linear-gradient(
+    180deg,
+    var(--binder-tab-fill) 0%,
+    var(--binder-tab-fill) 62%,
+    var(--binder-fill) 100%
+  );
   color: var(--binder-tab-color);
   font: inherit;
   font-size: 0.82rem;
@@ -924,12 +932,18 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .binder-tab:hover {
   color: var(--binder-tab-color-active);
-  background: var(--binder-tab-hover);
+  background: linear-gradient(
+    180deg,
+    var(--binder-tab-hover) 0%,
+    var(--binder-tab-hover) 58%,
+    var(--binder-fill) 100%
+  );
 }
 
 .binder-tab.is-active {
   z-index: 3;
   color: var(--binder-tab-color-active);
+  /* Solid sheet fill so side strokes meet a hidden seam as clean L-joins. */
   background: var(--binder-fill);
   border-color: var(--binder-stroke);
   margin-bottom: -1px;
@@ -937,11 +951,39 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   box-shadow: none;
 }
 
+/*
+  Extend active tab side strokes down onto the sheet edge so the measured
+  seam gap reads as an open mouth, not a floating label.
+*/
+.binder[data-mode="sheet"] .binder-tab.is-active::before,
+.binder[data-mode="sheet"] .binder-tab.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  height: calc(100% + 1px);
+  background: var(--binder-stroke);
+  pointer-events: none;
+}
+
+.binder[data-mode="sheet"] .binder-tab.is-active::before {
+  left: -1px;
+}
+
+.binder[data-mode="sheet"] .binder-tab.is-active::after {
+  right: -1px;
+}
+
 .binder[data-mode="tabs"] .binder-tab.is-active {
   /* Tabs-only strips sit on a rail — keep a flush bottom edge. */
   margin-bottom: 0;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--binder-fill);
+}
+
+.binder[data-mode="tabs"] .binder-tab.is-active::before,
+.binder[data-mode="tabs"] .binder-tab.is-active::after {
+  content: none;
 }
 
 .binder-tab.is-done:not(.is-active) {
@@ -1120,14 +1162,30 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   position: sticky;
   top: 3.75rem;
   z-index: 24;
+  /* Fade only above the tabs — keep the join into the sheet clean. */
   background: linear-gradient(
     180deg,
     rgba(244, 247, 249, 0.97) 0%,
-    rgba(244, 247, 249, 0.9) 72%,
+    rgba(244, 247, 249, 0.92) 55%,
     rgba(244, 247, 249, 0) 100%
   );
+  background-size: 100% 0.55rem;
+  background-repeat: no-repeat;
+  background-position: top left;
   padding-top: 0.35rem;
   margin-top: -0.35rem;
+}
+
+.harbour-setup-slot:empty {
+  display: none;
+}
+
+.harbour-band[data-includes-setup="false"] {
+  padding-bottom: 1.5rem;
+}
+
+.harbour-band[data-includes-setup="true"] .harbour-setup-slot:not(:empty) {
+  display: block;
 }
 
 .journey-chapter-binder .binder-sheet-body {
@@ -1137,10 +1195,6 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .journey-chapter-binder .binder-sheet-body > .section-head {
   margin: 0;
-}
-
-.harbour-band[data-includes-setup="false"] {
-  padding-bottom: 1.5rem;
 }
 
 /* Legacy sticky strip / toolbar helpers (kept for older mounts). */
