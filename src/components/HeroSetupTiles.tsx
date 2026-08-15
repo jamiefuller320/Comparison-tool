@@ -69,6 +69,7 @@ export function HeroSetupTiles({
 
   useLayoutEffect(() => {
     const binder = binderRef.current;
+    let raf = 0;
 
     function syncSeamGap() {
       const tab = tabRefs.current[activeId];
@@ -87,15 +88,26 @@ export function HeroSetupTiles({
       binder.style.setProperty("--seam-gap-end", `${Math.max(start, end)}px`);
     }
 
-    syncSeamGap();
-    const observer = new ResizeObserver(syncSeamGap);
+    function syncSoon() {
+      syncSeamGap();
+      cancelAnimationFrame(raf);
+      // Second frame catches late flex/font layout after the tab switch.
+      raf = requestAnimationFrame(() => {
+        syncSeamGap();
+        raf = requestAnimationFrame(syncSeamGap);
+      });
+    }
+
+    syncSoon();
+    const observer = new ResizeObserver(syncSoon);
     if (binder) observer.observe(binder);
     const tab = tabRefs.current[activeId];
     if (tab) observer.observe(tab);
-    window.addEventListener("resize", syncSeamGap);
+    window.addEventListener("resize", syncSoon);
     return () => {
+      cancelAnimationFrame(raf);
       observer.disconnect();
-      window.removeEventListener("resize", syncSeamGap);
+      window.removeEventListener("resize", syncSoon);
     };
   }, [activeId, visibleIds.length]);
 
