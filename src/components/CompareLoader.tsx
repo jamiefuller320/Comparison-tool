@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
@@ -13,6 +13,7 @@ import {
 } from "@/lib/collateIndexes";
 import { CompareApp } from "@/components/CompareApp";
 import { JourneyChapterProvider } from "@/components/JourneyChapterContext";
+import { HarbourSetupPortal } from "@/components/HarbourBand";
 
 type PackPhase = "idle" | "loading" | "ready" | "partial";
 
@@ -55,7 +56,7 @@ async function progressiveLoad(
   };
 }
 
-export function CompareLoader({ intro }: { intro?: ReactNode }) {
+export function CompareLoader() {
   const [index, setIndex] = useState<SchoolsIndex | null>(null);
   const [eyIndex, setEyIndex] = useState<EyProvidersIndex | null>(null);
   const [childmindersIndex, setChildmindersIndex] =
@@ -157,8 +158,7 @@ export function CompareLoader({ intro }: { intro?: ReactNode }) {
 
   if (error && !index) {
     return (
-      <div className="harbour-band">
-        {intro}
+      <HarbourSetupPortal active>
         <div className="hero-controls">
           <div className="shell hero-inner">
             <p className="postcode-error" role="alert">
@@ -181,14 +181,13 @@ export function CompareLoader({ intro }: { intro?: ReactNode }) {
             </button>
           </div>
         </div>
-      </div>
+      </HarbourSetupPortal>
     );
   }
 
   if (!index) {
     return (
-      <div className="harbour-band">
-        {intro}
+      <HarbourSetupPortal active>
         <div className="hero-controls">
           <div className="shell hero-inner">
             <p>Loading school and early-years data…</p>
@@ -197,7 +196,7 @@ export function CompareLoader({ intro }: { intro?: ReactNode }) {
             </p>
           </div>
         </div>
-      </div>
+      </HarbourSetupPortal>
     );
   }
 
@@ -234,7 +233,6 @@ export function CompareLoader({ intro }: { intro?: ReactNode }) {
           eyIndex={eyIndex}
           childmindersIndex={childmindersIndex}
           onIndexReload={reloadIndex}
-          intro={intro}
         />
       </JourneyChapterProvider>
     </>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition, type ReactNode } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
@@ -24,6 +24,7 @@ import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
 import { useAccount } from "@/components/AccountProvider";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
+import { PageChapterNav } from "@/components/PageChapterNav";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import { RESTORE_SHORTLIST_EVENT } from "@/lib/account";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
@@ -142,15 +143,12 @@ export function CompareApp({
   eyIndex = null,
   childmindersIndex = null,
   onIndexReload,
-  intro,
 }: {
   /** Hampshire seed with any ready area packs already merged in. */
   index: SchoolsIndex | SchoolsIndexWithPack;
   eyIndex?: EyProvidersIndex | null;
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
-  /** Server SEO head — rendered inside the shared harbour band. */
-  intro?: ReactNode;
 }) {
   const { chapter, setChapter } = useJourneyChapter();
   const byUrn = useMemo(() => {
@@ -885,7 +883,6 @@ export function CompareApp({
         sectors={sectors}
       />
       <HomePostcodeExplorer
-        intro={intro}
         schools={discoveryPool}
         selectedUrns={selected}
         onToggle={toggleSchool}
@@ -904,8 +901,11 @@ export function CompareApp({
 
       {chapter === "compare" ? (
       <section className="section page-chapter journey-page" id="compare">
-        <div className="shell">
-          <div className="page-chapter-sheet">
+        <div className="shell hero-inner-wide">
+          <PageChapterNav
+            tone="paper"
+            sheet={
+              <>
           <div className="section-head">
             <h2>Shortlist</h2>
             <p>
@@ -964,7 +964,9 @@ export function CompareApp({
               {sectorNote}
             </p>
           ) : null}
-          </div>
+              </>
+            }
+          />
         </div>
       </section>
       ) : null}
@@ -975,8 +977,11 @@ export function CompareApp({
         id="side-by-side"
         data-tour="boards"
       >
-        <div className="shell">
-          <div className="page-chapter-sheet">
+        <div className="shell hero-inner-wide">
+          <PageChapterNav
+            tone="paper"
+            sheet={
+              <>
           <div className="section-head">
             <h2>Side by side</h2>
             <p>
@@ -1006,7 +1011,9 @@ export function CompareApp({
           ) : null}
 
           {renderActivePath()}
-          </div>
+              </>
+            }
+          />
         </div>
       </section>
       ) : null}
@@ -1017,8 +1024,11 @@ export function CompareApp({
           id="how"
           data-tour="how"
         >
-          <div className="shell">
-            <div className="page-chapter-sheet">
+          <div className="shell hero-inner-wide">
+            <PageChapterNav
+              tone="paper"
+              sheet={
+                <>
               <div className="section-head">
                 <h2>{DECISION_GUIDANCE.general.heading}</h2>
                 <p>{DECISION_GUIDANCE.general.lead}</p>
@@ -1040,7 +1050,9 @@ export function CompareApp({
                     </section>
                   ))}
               </div>
-            </div>
+                </>
+              }
+            />
           </div>
         </section>
       ) : null}

@@ -6,8 +6,11 @@ import {
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
+import {
+  HarbourSetupPortal,
+  useHarbourBandSetupFlag,
+} from "@/components/HarbourBand";
 import dynamic from "next/dynamic";
 import type { SchoolRecord } from "@/lib/types";
 import { geocodePostcode, parseUkPostcode } from "@/lib/postcode";
@@ -56,7 +59,6 @@ import {
   PROVISION_OPTIONS,
 } from "@/lib/provisionFilter";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
-import { requestTourStart } from "@/lib/tour";
 import { recordFeedbackUsage } from "@/lib/productFeedback";
 import {
   classifyKs4Missing,
@@ -106,7 +108,6 @@ export function HomePostcodeExplorer({
   comparableKs4Only = true,
   onComparableKs4OnlyChange,
   max = 4,
-  intro,
 }: {
   schools: SchoolRecord[];
   selectedUrns: string[];
@@ -123,8 +124,6 @@ export function HomePostcodeExplorer({
   comparableKs4Only?: boolean;
   onComparableKs4OnlyChange?: (next: boolean) => void;
   max?: number;
-  /** Server SEO head — shares the harbour band with journey chrome / Setup. */
-  intro?: ReactNode;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
   const [home, setHome] = useState<{
@@ -154,6 +153,7 @@ export function HomePostcodeExplorer({
     provision: false,
   });
   const { chapter, setChapter } = useJourneyChapter();
+  useHarbourBandSetupFlag(chapter === "setup");
 
   const parsedPreview = useMemo(
     () => parseUkPostcode(deferredRaw),
@@ -446,34 +446,16 @@ export function HomePostcodeExplorer({
   return (
     <>
       {/*
-        One harbour band: SEO head + journey chrome (+ Setup tiles) share a
-        single continuous gradient wash.
+        Setup portals into the server-rendered harbour band so head + chrome
+        share one wash from first paint. Other chapters use a paper binder.
       */}
-      <div
-        className="harbour-band"
-        data-chapter={chapter}
-        data-includes-setup={chapter === "setup" ? "true" : "false"}
-      >
-        {intro}
-        <div className="journey-toolbar-wrap no-print" id="journey">
-          <div className="shell hero-inner-wide">
-            <div className="journey-toolbar">
-              <button
-                type="button"
-                className="btn btn-ghost journey-tour-btn"
-                onClick={() => requestTourStart()}
-              >
-                How to use
-              </button>
-              <PageChapterNav tone="harbour" />
-            </div>
-          </div>
-        </div>
-
-        {chapter === "setup" ? (
-          <div className="hero-controls" data-tour="setup">
+      <HarbourSetupPortal active={chapter === "setup"}>
+          <div className="hero-controls" id="journey" data-tour="setup">
             <div className="shell hero-inner hero-inner-wide">
               <div id="setup">
+                <PageChapterNav
+                  tone="harbour"
+                  sheet={
                 <HeroSetupTiles
                   activeId={activeTile}
                   onActiveChange={setActiveTile}
@@ -637,11 +619,12 @@ export function HomePostcodeExplorer({
                     ) : null,
                   }}
                 </HeroSetupTiles>
+                  }
+                />
               </div>
             </div>
           </div>
-        ) : null}
-      </div>
+      </HarbourSetupPortal>
 
       {chapter === "nearby" && home ? (
         <section
@@ -649,8 +632,11 @@ export function HomePostcodeExplorer({
           id="nearby"
           data-tour="nearby"
         >
-          <div className="shell">
-            <div className="page-chapter-sheet">
+          <div className="shell hero-inner-wide">
+            <PageChapterNav
+              tone="paper"
+              sheet={
+                <>
             <div className="section-head">
               <h2>Finder · {home.postcode}</h2>
               <p>
@@ -897,7 +883,9 @@ export function HomePostcodeExplorer({
                 </div>
               </div>
             </div>
-            </div>
+                </>
+              }
+            />
           </div>
         </section>
       ) : chapter === "nearby" ? (
@@ -906,23 +894,28 @@ export function HomePostcodeExplorer({
           id="nearby"
           data-tour="nearby"
         >
-          <div className="shell">
-            <div className="page-chapter-sheet">
-              <div className="section-head">
-                <h2>Finder</h2>
-                <p>
-                  Add a home postcode in Setup to map schools around you and
-                  tick ones worth shortlisting.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => setChapter("setup")}
-              >
-                Go to Setup
-              </button>
-            </div>
+          <div className="shell hero-inner-wide">
+            <PageChapterNav
+              tone="paper"
+              sheet={
+                <>
+                  <div className="section-head">
+                    <h2>Finder</h2>
+                    <p>
+                      Add a home postcode in Setup to map schools around you and
+                      tick ones worth shortlisting.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setChapter("setup")}
+                  >
+                    Go to Setup
+                  </button>
+                </>
+              }
+            />
           </div>
         </section>
       ) : null}

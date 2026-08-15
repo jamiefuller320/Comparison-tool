@@ -42,11 +42,20 @@ export default function HomePage() {
   return (
     <main id="main">
       {/*
-        Server-rendered hero chrome (brand + H1 + lead) is passed into
-        CompareLoader so head + journey chrome (+ Setup) share one harbour
-        band and a continuous gradient.
+        Server-rendered harbour band so the head wash is one continuous block
+        on first paint (avoids client remount flash of separate gradients).
+        Setup journey chrome portals into #harbour-setup-slot.
       */}
-      <CompareLoader intro={harbourIntro} />
+      <div
+        className="harbour-band"
+        id="harbour-band"
+        data-includes-setup="true"
+      >
+        {harbourIntro}
+        <div id="harbour-setup-slot" className="harbour-setup-slot" />
+      </div>
+
+      <CompareLoader />
 
       <section
         className="section page-chapter"
