@@ -50,6 +50,8 @@ export default function HomePage() {
         className="harbour-band"
         id="harbour-band"
         data-includes-setup="true"
+        data-chapter="setup"
+        data-chapter-step="0"
       >
         {harbourIntro}
         <div id="harbour-setup-slot" className="harbour-setup-slot" />

@@ -24,7 +24,7 @@ import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
 import { useAccount } from "@/components/AccountProvider";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
-import { PageChapterNav } from "@/components/PageChapterNav";
+import { JourneyStageFrame } from "@/components/JourneyStageFrame";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import { RESTORE_SHORTLIST_EVENT } from "@/lib/account";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
@@ -897,138 +897,107 @@ export function CompareApp({
         showComparableKs4Toggle={showKs4}
         comparableKs4Only={comparableKs4Only}
         onComparableKs4OnlyChange={setComparableKs4Only}
-      />
-
-      {chapter === "compare" ? (
-      <section className="section page-chapter journey-page" id="compare">
-        <div className="shell hero-inner-wide">
-          <PageChapterNav
-            tone="paper"
-            sheet={
-              <>
-          <div className="section-head">
-            <h2>Shortlist</h2>
-            <p>
-              Tick settings on the map or search below — two to four is plenty.
-              Stages and school type live under Setup.
-            </p>
-            <p className="footnote data-slim-line">
-              {index.period} · refreshed {index.generatedAt}
-            </p>
-          </div>
-
-          <MissingSchoolButton
-            schools={index.schools}
-            onIndexReload={onIndexReload}
-          />
-
-          <SchoolSearch
-            key={`search-${stages.join("-")}-${stageMatch}-${sectors.join("-")}-${provision}`}
-            schools={filteredSchools}
-            selectedUrns={selected}
-            onAdd={addSchool}
-            stageFilter={stages}
-            stageMatch={stageMatch}
-            sectorFilter={sectors}
-            provisionFilter={provision}
-          />
-          <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
-          {selectedSchools.length > 0 ? (
-            <div className="shortlist-inline-actions">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => setChapter("side-by-side")}
-              >
-                Compare side by side
-              </button>
-              <ShareShortlistButton
-                schoolNames={selectedSchools.map((s) => s.name)}
-              />
-            </div>
-          ) : null}
-          <SaveShortlistPrompt
-            schools={selected}
-            stages={stages}
-            sectors={sectors}
-            variant="shortlist"
-          />
-          <RestoreShortlistBanner
-            ready={hydrated}
-            currentCount={selected.length}
-            onRestore={applyRestoredShortlist}
-          />
-
-          {sectorNote ? (
-            <p className="footnote sector-prune-note" role="status">
-              {sectorNote}
-            </p>
-          ) : null}
-              </>
-            }
-          />
-        </div>
-      </section>
-      ) : null}
-
-      {chapter === "side-by-side" ? (
-      <section
-        className="section page-chapter journey-page"
-        id="side-by-side"
-        data-tour="boards"
       >
-        <div className="shell hero-inner-wide">
-          <PageChapterNav
-            tone="paper"
-            sheet={
-              <>
-          <div className="section-head">
-            <h2>Side by side</h2>
-            <p>
-              One path at a time
-              {availablePaths.length > 1
-                ? " — switch tabs when several categories are on"
-                : null}
-              . Patterns to visit on, not a final verdict.
-            </p>
-            {selectedSchools.length > 0 ? (
-              <div className="shortlist-inline-actions section-head-actions">
-                <ShareShortlistButton
-                  schoolNames={selectedSchools.map((s) => s.name)}
-                  label="Share this comparison"
-                />
+        {({ setupSheet, nearbySheet }) => {
+          const compareSheet = (
+            <>
+              <div className="section-head">
+                <h2>Shortlist</h2>
+                <p>
+                  Tick settings on the map or search below — two to four is plenty.
+                  Stages and school type live under Setup.
+                </p>
+                <p className="footnote data-slim-line">
+                  {index.period} · refreshed {index.generatedAt}
+                </p>
               </div>
-            ) : null}
-          </div>
 
-          {activePath ? (
-            <ComparePathTabs
-              available={availablePaths}
-              active={activePath}
-              onChange={setActivePath}
-              withShortlist={shortlistPaths}
-            />
-          ) : null}
+              <MissingSchoolButton
+                schools={index.schools}
+                onIndexReload={onIndexReload}
+              />
 
-          {renderActivePath()}
-              </>
-            }
-          />
-        </div>
-      </section>
-      ) : null}
+              <SchoolSearch
+                key={`search-${stages.join("-")}-${stageMatch}-${sectors.join("-")}-${provision}`}
+                schools={filteredSchools}
+                selectedUrns={selected}
+                onAdd={addSchool}
+                stageFilter={stages}
+                stageMatch={stageMatch}
+                sectorFilter={sectors}
+                provisionFilter={provision}
+              />
+              <SelectedChips schools={selectedSchools} onRemove={removeSchool} />
+              {selectedSchools.length > 0 ? (
+                <div className="shortlist-inline-actions">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => setChapter("side-by-side")}
+                  >
+                    Compare side by side
+                  </button>
+                  <ShareShortlistButton
+                    schoolNames={selectedSchools.map((s) => s.name)}
+                  />
+                </div>
+              ) : null}
+              <SaveShortlistPrompt
+                schools={selected}
+                stages={stages}
+                sectors={sectors}
+                variant="shortlist"
+              />
+              <RestoreShortlistBanner
+                ready={hydrated}
+                currentCount={selected.length}
+                onRestore={applyRestoredShortlist}
+              />
 
-      {chapter === "how" ? (
-        <section
-          className="section page-chapter journey-page"
-          id="how"
-          data-tour="how"
-        >
-          <div className="shell hero-inner-wide">
-            <PageChapterNav
-              tone="paper"
-              sheet={
-                <>
+              {sectorNote ? (
+                <p className="footnote sector-prune-note" role="status">
+                  {sectorNote}
+                </p>
+              ) : null}
+            </>
+          );
+
+          const sideBySideSheet = (
+            <>
+              <div className="section-head">
+                <h2>Side by side</h2>
+                <p>
+                  One path at a time
+                  {availablePaths.length > 1
+                    ? " — switch tabs when several categories are on"
+                    : null}
+                  . Patterns to visit on, not a final verdict.
+                </p>
+                {selectedSchools.length > 0 ? (
+                  <div className="shortlist-inline-actions section-head-actions">
+                    <ShareShortlistButton
+                      schoolNames={selectedSchools.map((s) => s.name)}
+                      label="Share this comparison"
+                    />
+                  </div>
+                ) : null}
+              </div>
+
+              {activePath ? (
+                <ComparePathTabs
+                  available={availablePaths}
+                  active={activePath}
+                  onChange={setActivePath}
+                  withShortlist={shortlistPaths}
+                />
+              ) : null}
+
+              {renderActivePath()}
+            </>
+          );
+
+          const howSheet = (
+            <>
               <div className="section-head">
                 <h2>{DECISION_GUIDANCE.general.heading}</h2>
                 <p>{DECISION_GUIDANCE.general.lead}</p>
@@ -1050,12 +1019,23 @@ export function CompareApp({
                     </section>
                   ))}
               </div>
-                </>
-              }
-            />
-          </div>
-        </section>
-      ) : null}
+            </>
+          );
+
+          const sheet =
+            chapter === "setup"
+              ? setupSheet
+              : chapter === "nearby"
+                ? nearbySheet
+                : chapter === "compare"
+                  ? compareSheet
+                  : chapter === "side-by-side"
+                    ? sideBySideSheet
+                    : howSheet;
+
+          return <JourneyStageFrame sheet={sheet} />;
+        }}
+      </HomePostcodeExplorer>
 
       {chapter === "side-by-side" && suggestions.length > 0 ? (
         <section className="section" style={{ paddingTop: 0 }}>

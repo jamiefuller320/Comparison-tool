@@ -656,10 +656,25 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 /*
-  One harbour band: SEO head (.hero-stack), journey chrome, and Setup
-  (.hero-controls) share a single continuous wash — no stacked gradients.
+  Journey harbour band: head + stage share a wash that eases from setup blue
+  (step 0) through to a light How tone (step 4).
 */
 .harbour-band {
+  --stage-duration: 0.55s;
+  --stage-bg: #0b4f6c;
+  --stage-wash-opacity: 1;
+  --stage-ink: #f7fbff;
+  --stage-ink-muted: rgba(247, 251, 255, 0.82);
+  --stage-sheet-fill: rgba(7, 58, 80, 0.55);
+  --stage-sheet-stroke: rgba(255, 255, 255, 0.28);
+  --stage-tab-fill: rgba(7, 58, 80, 0.42);
+  --stage-tab-stroke: rgba(255, 255, 255, 0.24);
+  --stage-tab-color: rgba(247, 251, 255, 0.82);
+  --stage-tab-color-active: #f7fbff;
+  --stage-tab-hover: rgba(7, 58, 80, 0.5);
+  --stage-step-fill: rgba(247, 251, 255, 0.12);
+  --stage-step-stroke: rgba(255, 255, 255, 0.22);
+  --stage-shadow: 0 16px 36px rgba(7, 58, 80, 0.28);
   --harbour-wash:
     radial-gradient(720px 420px at 18% 20%, rgba(232, 243, 247, 0.18), transparent 62%),
     radial-gradient(520px 340px at 88% 70%, rgba(176, 137, 45, 0.12), transparent 58%),
@@ -667,6 +682,75 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   position: relative;
   isolation: isolate;
   border-radius: 0 0 1.35rem 1.35rem;
+  padding-bottom: 0.35rem;
+}
+
+.harbour-band[data-chapter-step="1"] {
+  --stage-bg: #1f5f78;
+  --stage-wash-opacity: 0.85;
+  --stage-ink: #f4fafc;
+  --stage-ink-muted: rgba(244, 250, 252, 0.86);
+  --stage-sheet-fill: rgba(255, 255, 255, 0.16);
+  --stage-sheet-stroke: rgba(255, 255, 255, 0.26);
+  --stage-tab-fill: rgba(7, 58, 80, 0.28);
+  --stage-tab-stroke: rgba(255, 255, 255, 0.22);
+  --stage-tab-color: rgba(247, 251, 255, 0.88);
+  --stage-tab-color-active: #f7fbff;
+  --stage-tab-hover: rgba(7, 58, 80, 0.4);
+  --stage-step-fill: rgba(247, 251, 255, 0.14);
+  --stage-step-stroke: rgba(255, 255, 255, 0.24);
+  --stage-shadow: 0 14px 32px rgba(7, 58, 80, 0.2);
+}
+
+.harbour-band[data-chapter-step="2"] {
+  --stage-bg: #5b8799;
+  --stage-wash-opacity: 0.45;
+  --stage-ink: #073a50;
+  --stage-ink-muted: rgba(7, 58, 80, 0.78);
+  --stage-sheet-fill: rgba(255, 255, 255, 0.55);
+  --stage-sheet-stroke: rgba(11, 79, 108, 0.18);
+  --stage-tab-fill: rgba(232, 238, 242, 0.78);
+  --stage-tab-stroke: rgba(11, 79, 108, 0.16);
+  --stage-tab-color: var(--ink-soft);
+  --stage-tab-color-active: var(--sea-deep);
+  --stage-tab-hover: rgba(255, 255, 255, 0.9);
+  --stage-step-fill: rgba(11, 79, 108, 0.1);
+  --stage-step-stroke: rgba(11, 79, 108, 0.18);
+  --stage-shadow: 0 12px 28px rgba(20, 35, 58, 0.08);
+}
+
+.harbour-band[data-chapter-step="3"] {
+  --stage-bg: #b7cdd6;
+  --stage-wash-opacity: 0.2;
+  --stage-ink: #14233a;
+  --stage-ink-muted: rgba(20, 35, 58, 0.72);
+  --stage-sheet-fill: rgba(255, 255, 255, 0.72);
+  --stage-sheet-stroke: rgba(11, 79, 108, 0.16);
+  --stage-tab-fill: rgba(232, 238, 242, 0.92);
+  --stage-tab-stroke: rgba(11, 79, 108, 0.14);
+  --stage-tab-color: var(--ink-soft);
+  --stage-tab-color-active: var(--sea-deep);
+  --stage-tab-hover: rgba(255, 255, 255, 0.95);
+  --stage-step-fill: rgba(11, 79, 108, 0.08);
+  --stage-step-stroke: rgba(11, 79, 108, 0.16);
+  --stage-shadow: 0 12px 28px rgba(20, 35, 58, 0.06);
+}
+
+.harbour-band[data-chapter-step="4"] {
+  --stage-bg: #eef4f7;
+  --stage-wash-opacity: 0;
+  --stage-ink: #14233a;
+  --stage-ink-muted: rgba(20, 35, 58, 0.7);
+  --stage-sheet-fill: rgba(255, 255, 255, 0.88);
+  --stage-sheet-stroke: rgba(11, 79, 108, 0.14);
+  --stage-tab-fill: rgba(236, 242, 245, 0.98);
+  --stage-tab-stroke: rgba(11, 79, 108, 0.12);
+  --stage-tab-color: var(--ink-soft);
+  --stage-tab-color-active: var(--sea-deep);
+  --stage-tab-hover: #fff;
+  --stage-step-fill: rgba(11, 79, 108, 0.07);
+  --stage-step-stroke: rgba(11, 79, 108, 0.14);
+  --stage-shadow: 0 10px 24px rgba(20, 35, 58, 0.05);
 }
 
 .harbour-band::before {
@@ -675,12 +759,35 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background-color: #0b4f6c;
-  background-image: var(--harbour-wash);
-  /* Scroll-attached wash — fixed attachment caused a slow double-paint flash. */
-  background-attachment: scroll;
+  background-color: var(--stage-bg);
+  transition: background-color var(--stage-duration) ease;
   animation: none;
 }
+
+.harbour-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-image: var(--harbour-wash);
+  opacity: var(--stage-wash-opacity);
+  transition: opacity var(--stage-duration) ease;
+  pointer-events: none;
+}
+
+.harbour-band .hero-inner,
+.harbour-band .hero-stack h1,
+.harbour-band .hero-brand {
+  color: var(--stage-ink);
+  transition: color var(--stage-duration) ease;
+}
+
+.harbour-band .hero-stack p {
+  color: var(--stage-ink-muted);
+  transition: color var(--stage-duration) ease;
+}
+
 
 .hero-stack,
 .hero {
@@ -1111,7 +1218,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Journey chapter binder: How to use + tabs seam-join the chapter sheet. */
+/* Journey chapter binder: persistent frame; colours ease with chapter step. */
 .page-chapter-nav-binder {
   position: static;
   margin: 0;
@@ -1120,81 +1227,114 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   border: none;
 }
 
-.journey-chapter-binder {
-  margin: 0;
+.journey-stage {
+  background: transparent !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  padding: 0.15rem 0 1.75rem !important;
+}
+
+.journey-stage-shell {
+  width: min(calc(100% - 1.25rem), 72rem);
   max-width: none;
 }
 
-.journey-chapter-binder[data-tone="harbour"] .journey-tour-btn {
-  border-color: rgba(255, 255, 255, 0.28);
-  color: #f7fbff;
-  background: rgba(7, 58, 80, 0.42);
+.journey-stage-anchor {
+  position: relative;
+  height: 0;
+  width: 0;
+  overflow: hidden;
 }
 
-.journey-chapter-binder[data-tone="harbour"] .journey-tour-btn:hover {
-  border-color: rgba(255, 255, 255, 0.45);
-  background: rgba(7, 58, 80, 0.58);
-  color: #f7fbff;
+.journey-chapter-binder {
+  margin: 0.35rem 0 0;
+  max-width: none;
+  /* Pull stage tokens over the binder tone defaults. */
+  --binder-fill: var(--stage-sheet-fill);
+  --binder-stroke: var(--stage-sheet-stroke);
+  --binder-tab-fill: var(--stage-tab-fill);
+  --binder-tab-stroke: var(--stage-tab-stroke);
+  --binder-tab-color: var(--stage-tab-color);
+  --binder-tab-color-active: var(--stage-tab-color-active);
+  --binder-tab-hover: var(--stage-tab-hover);
+  --binder-step-fill: var(--stage-step-fill);
+  --binder-step-stroke: var(--stage-step-stroke);
+  --binder-head-line: var(--stage-sheet-stroke);
+  --binder-head-color: var(--stage-ink);
+  --binder-head-muted: var(--stage-ink-muted);
+  --binder-shadow: var(--stage-shadow);
 }
 
-.journey-chapter-binder[data-tone="paper"] .journey-tour-btn {
-  border-color: rgba(11, 79, 108, 0.22);
-  color: var(--sea-deep);
-  background: rgba(255, 255, 255, 0.72);
+.journey-chapter-binder .binder-tab,
+.journey-chapter-binder .binder-sheet,
+.journey-chapter-binder .journey-tour-btn,
+.journey-chapter-binder .binder-tab-step,
+.journey-chapter-binder .binder-sheet-head h3,
+.journey-chapter-binder .binder-sheet-head p {
+  transition:
+    background var(--stage-duration, 0.55s) ease,
+    background-color var(--stage-duration, 0.55s) ease,
+    color var(--stage-duration, 0.55s) ease,
+    border-color var(--stage-duration, 0.55s) ease,
+    box-shadow var(--stage-duration, 0.55s) ease;
 }
 
-.journey-chapter-binder[data-tone="paper"] .journey-tour-btn:hover {
-  border-color: rgba(11, 79, 108, 0.4);
-  background: rgba(255, 255, 255, 0.92);
+.journey-chapter-binder .journey-tour-btn {
+  border-color: var(--stage-tab-stroke);
+  color: var(--stage-tab-color-active);
+  background: var(--stage-tab-fill);
 }
 
-.harbour-band .journey-chapter-binder {
-  margin-top: 0.35rem;
+.journey-chapter-binder .journey-tour-btn:hover {
+  border-color: var(--stage-sheet-stroke);
+  background: var(--stage-tab-hover);
+  color: var(--stage-tab-color-active);
 }
 
-.harbour-band .journey-chapter-binder .binder-rail {
+.journey-chapter-binder .binder-rail {
   position: sticky;
   top: 3.75rem;
   z-index: 24;
 }
 
-.journey-chapter-binder[data-tone="paper"] .binder-rail {
-  position: sticky;
-  top: 3.75rem;
-  z-index: 24;
-  /* Fade only above the tabs — keep the join into the sheet clean. */
-  background: linear-gradient(
-    180deg,
-    rgba(244, 247, 249, 0.97) 0%,
-    rgba(244, 247, 249, 0.92) 55%,
-    rgba(244, 247, 249, 0) 100%
-  );
-  background-size: 100% 0.55rem;
-  background-repeat: no-repeat;
-  background-position: top left;
-  padding-top: 0.35rem;
-  margin-top: -0.35rem;
-}
-
-.harbour-setup-slot:empty {
-  display: none;
-}
-
-.harbour-band[data-includes-setup="false"] {
-  padding-bottom: 1.5rem;
-}
-
-.harbour-band[data-includes-setup="true"] .harbour-setup-slot:not(:empty) {
-  display: block;
+.journey-chapter-binder .binder-sheet {
+  /* Device-aware workspace: tall enough to use the screen without feeling tiny. */
+  min-height: clamp(22rem, calc(100dvh - 13.5rem), 56rem);
 }
 
 .journey-chapter-binder .binder-sheet-body {
   display: grid;
   gap: 0.85rem;
+  min-height: inherit;
 }
 
 .journey-chapter-binder .binder-sheet-body > .section-head {
   margin: 0;
+}
+
+.journey-stage .section-head h2 {
+  color: var(--stage-ink);
+  transition: color var(--stage-duration, 0.55s) ease;
+}
+
+.journey-stage .section-head p,
+.journey-stage .footnote,
+.journey-stage .nearby-list-head span {
+  color: var(--stage-ink-muted);
+  transition: color var(--stage-duration, 0.55s) ease;
+}
+
+.journey-stage .nearby-list-head strong {
+  color: var(--stage-ink);
+}
+
+.harbour-setup-slot:empty {
+  min-height: 0;
+}
+
+.harbour-band[data-includes-setup="false"] {
+  /* Keep bottom rounding even when journey content is light. */
+  padding-bottom: 0.35rem;
 }
 
 /* Legacy sticky strip / toolbar helpers (kept for older mounts). */
