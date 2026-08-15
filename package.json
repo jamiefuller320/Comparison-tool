@@ -67,7 +67,7 @@
     "test:resilient-fetch": "npx --yes tsx scripts/test-resilient-fetch.mjs",
     "test:collate-indexes": "npx --yes tsx scripts/test-collate-indexes.mjs",
     "test:headlines": "npx --yes tsx scripts/test-headlines.mjs",
-    "test:ks2-history": "npx --yes tsx scripts/test-ks2-history.mjs",
+    "test:ks2-history": "npx --yes tsx scripts/test-ks2-history.mjs && python3 scripts/test-extract-ks2-history.py",
     "test:compare-paths": "npx --yes tsx scripts/test-compare-paths.mjs",
     "test:source-stamp": "npx --yes tsx scripts/test-source-stamp.mjs",
     "test:data-gaps": "npx --yes tsx scripts/test-data-gaps.mjs",

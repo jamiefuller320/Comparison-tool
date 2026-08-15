@@ -62,7 +62,10 @@ jobs:
           python3 scripts/harvest-ey-providers.py
           python3 scripts/harvest-childminders.py
           python3 scripts/enrich-ey-schools.py
-          python3 scripts/extract-ks2-history.py --seed-la
+      - name: Extract KS2 history (soft-fail)
+        if: steps.gate.outputs.allowed == 'true'
+        continue-on-error: true
+        run: python3 scripts/extract-ks2-history.py --seed-la
 
       - name: Record force-refresh stamp
         if: steps.gate.outputs.allowed == 'true'
