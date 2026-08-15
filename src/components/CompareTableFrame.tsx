@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { ScrollRegion } from "@/components/ScrollRegion";
+import { CompareStickyProvider } from "@/components/CompareStickyContext";
 import { useUiPreferences } from "@/components/UiPreferencesProvider";
 import type { CompareTableId } from "@/lib/uiPreferences";
 
@@ -62,15 +63,23 @@ export function CompareTableFrame({
         className="compare-board-scroll"
         hint="Scroll for more school data"
       >
-        <div
-          className="compare-board"
-          data-sticky-header={sticky.stickyHeader ? "true" : "false"}
-          data-sticky-first-column={
-            sticky.stickyFirstColumn ? "true" : "false"
-          }
+        <CompareStickyProvider
+          value={{
+            stickyHeader: sticky.stickyHeader,
+            stickyFirstColumn: sticky.stickyFirstColumn,
+          }}
         >
-          {children}
-        </div>
+          <div
+            className="compare-board"
+            data-sticky-header={sticky.stickyHeader ? "true" : "false"}
+            data-sticky-first-column={
+              sticky.stickyFirstColumn ? "true" : "false"
+            }
+            data-compact-headers={sticky.stickyHeader ? "true" : "false"}
+          >
+            {children}
+          </div>
+        </CompareStickyProvider>
       </ScrollRegion>
     </div>
   );

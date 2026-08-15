@@ -1332,30 +1332,90 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   max-width: 12rem;
 }
 
-/* Keep sticky school headers slim so performance rows stay visible. */
-.compare-board[data-sticky-header="true"] thead .school-meta {
-  max-height: 7.5rem;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(11, 79, 108, 0.45) rgba(11, 79, 108, 0.08);
-  /* Soft cue that the school blurb can scroll when pin headings is on. */
-  background:
-    linear-gradient(var(--foam) 55%, rgba(255, 252, 247, 0)) center bottom / 100% 1.1rem
-      no-repeat local,
-    linear-gradient(rgba(255, 252, 247, 0), var(--foam) 45%) center top / 100% 0.7rem
-      no-repeat local,
-    var(--foam);
+/* When pin headings is on, meta collapses into Info — keep the sticky row one line. */
+.compare-board[data-compact-headers="true"] thead th {
+  vertical-align: bottom;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
 }
 
-.compare-board[data-sticky-header="true"] thead .school-meta::-webkit-scrollbar {
-  width: 0.45rem;
+.school-column-heading.is-compact {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.4rem;
+  position: relative;
+  min-width: 7.5rem;
 }
 
-.compare-board[data-sticky-header="true"] thead .school-meta::-webkit-scrollbar-thumb {
-  background: rgba(11, 79, 108, 0.4);
+.school-column-title {
+  font-weight: 650;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.school-column-info {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.school-column-info-btn {
+  appearance: none;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid rgba(11, 79, 108, 0.28);
   border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--sea-deep);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.school-column-info-btn::-webkit-details-marker {
+  display: none;
+}
+
+.school-column-info-btn::marker {
+  content: "";
+}
+
+.school-column-info[open] > .school-column-info-btn {
+  background: rgba(11, 79, 108, 0.12);
+  border-color: rgba(11, 79, 108, 0.4);
+}
+
+.school-column-info-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.3rem);
+  z-index: 12;
+  width: min(16rem, 70vw);
+  max-height: min(50vh, 18rem);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  background: #fffefb;
+  box-shadow: 0 12px 28px rgba(20, 35, 58, 0.14);
+  text-align: left;
+  font-weight: 500;
+}
+
+.school-column-info-panel .school-meta {
+  margin: 0;
+  max-height: none;
+  overflow: visible;
+  background: transparent;
 }
 
 .inspection-precis-card {
