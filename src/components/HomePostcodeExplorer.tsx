@@ -6,11 +6,8 @@ import {
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
-import {
-  HarbourSetupPortal,
-  useHarbourBandSetupFlag,
-} from "@/components/HarbourBand";
 import dynamic from "next/dynamic";
 import type { SchoolRecord } from "@/lib/types";
 import { geocodePostcode, parseUkPostcode } from "@/lib/postcode";
@@ -30,7 +27,6 @@ import {
   HeroSetupTiles,
   type HeroTileId,
 } from "@/components/HeroSetupTiles";
-import { PageChapterNav } from "@/components/PageChapterNav";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import {
   formatPhases,
@@ -108,6 +104,7 @@ export function HomePostcodeExplorer({
   comparableKs4Only = true,
   onComparableKs4OnlyChange,
   max = 4,
+  children,
 }: {
   schools: SchoolRecord[];
   selectedUrns: string[];
@@ -124,6 +121,10 @@ export function HomePostcodeExplorer({
   comparableKs4Only?: boolean;
   onComparableKs4OnlyChange?: (next: boolean) => void;
   max?: number;
+  children: (parts: {
+    setupSheet: ReactNode;
+    nearbySheet: ReactNode;
+  }) => ReactNode;
 }) {
   const [rawPostcode, setRawPostcode] = useState("");
   const [home, setHome] = useState<{
@@ -152,8 +153,7 @@ export function HomePostcodeExplorer({
     sector: false,
     provision: false,
   });
-  const { chapter, setChapter } = useJourneyChapter();
-  useHarbourBandSetupFlag(chapter === "setup");
+  const { setChapter } = useJourneyChapter();
 
   const parsedPreview = useMemo(
     () => parseUkPostcode(deferredRaw),
@@ -443,20 +443,8 @@ export function HomePostcodeExplorer({
     setRoadByUrn({});
   }
 
-  return (
-    <>
-      {/*
-        Setup portals into the server-rendered harbour band so head + chrome
-        share one wash from first paint. Other chapters use a paper binder.
-      */}
-      <HarbourSetupPortal active={chapter === "setup"}>
-          <div className="hero-controls" id="journey" data-tour="setup">
-            <div className="shell hero-inner hero-inner-wide">
-              <div id="setup">
-                <PageChapterNav
-                  tone="harbour"
-                  sheet={
-                <HeroSetupTiles
+  const setupSheet = (
+              <HeroSetupTiles
                   activeId={activeTile}
                   onActiveChange={setActiveTile}
                   completed={tileCompleted}
@@ -619,23 +607,9 @@ export function HomePostcodeExplorer({
                     ) : null,
                   }}
                 </HeroSetupTiles>
-                  }
-                />
-              </div>
-            </div>
-          </div>
-      </HarbourSetupPortal>
+  );
 
-      {chapter === "nearby" && home ? (
-        <section
-          className="section postcode-section page-chapter journey-page"
-          id="nearby"
-          data-tour="nearby"
-        >
-          <div className="shell hero-inner-wide">
-            <PageChapterNav
-              tone="paper"
-              sheet={
+  const nearbySheet = home ? (
                 <>
             <div className="section-head">
               <h2>Finder · {home.postcode}</h2>
@@ -884,20 +858,7 @@ export function HomePostcodeExplorer({
               </div>
             </div>
                 </>
-              }
-            />
-          </div>
-        </section>
-      ) : chapter === "nearby" ? (
-        <section
-          className="section page-chapter journey-page"
-          id="nearby"
-          data-tour="nearby"
-        >
-          <div className="shell hero-inner-wide">
-            <PageChapterNav
-              tone="paper"
-              sheet={
+  ) : (
                 <>
                   <div className="section-head">
                     <h2>Finder</h2>
@@ -914,11 +875,7 @@ export function HomePostcodeExplorer({
                     Go to Setup
                   </button>
                 </>
-              }
-            />
-          </div>
-        </section>
-      ) : null}
-    </>
   );
+
+  return children({ setupSheet, nearbySheet });
 }
