@@ -818,17 +818,12 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   font-weight: 700;
 }
 
-/* Only the open tab’s step glows — completed tabs keep a quieter cue. */
+/* Only the open tab’s step glows. Completed tabs keep a quiet border cue
+   on the tab itself — not a lit step badge that reads as still selected. */
 .hero-binder-tab.is-active .hero-binder-tab-step {
   background: var(--pin);
   border-color: var(--pin);
   color: #fffdf8;
-}
-
-.hero-binder-tab.is-done:not(.is-active) .hero-binder-tab-step {
-  background: rgba(232, 213, 163, 0.18);
-  border-color: rgba(232, 213, 163, 0.45);
-  color: rgba(247, 251, 255, 0.88);
 }
 
 .hero-binder-tab-label {
