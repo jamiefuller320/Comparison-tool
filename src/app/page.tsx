@@ -26,26 +26,27 @@ export default function HomePage() {
     areas.filter((area) => !area.isSeed).slice(0, 8),
   );
 
+  const harbourIntro = (
+    <header className="hero-stack seo-intro" id="top" data-tour="hero">
+      <div className="shell hero-inner">
+        <BrandWordmark className="hero-brand" as="p" />
+        <h1>Find your bearings when choosing a school.</h1>
+        <p>
+          Map nearby schools from your home postcode, shortlist a few, then
+          compare published figures before you visit.
+        </p>
+      </div>
+    </header>
+  );
+
   return (
     <main id="main">
       {/*
-        Server-rendered hero chrome (brand + H1 + lead) so crawlers and no-JS
-        clients see the value proposition. CompareLoader mounts interactive
-        controls in a matching .hero-controls band, then nearby / shortlist
-        as normal page sections below.
+        Server-rendered hero chrome (brand + H1 + lead) is passed into
+        CompareLoader so head + journey chrome (+ Setup) share one harbour
+        band and a continuous gradient.
       */}
-      <header className="hero-stack seo-intro" id="top" data-tour="hero">
-        <div className="shell hero-inner">
-          <BrandWordmark className="hero-brand" as="p" />
-          <h1>Find your bearings when choosing a school.</h1>
-          <p>
-            Map nearby schools from your home postcode, shortlist a few, then
-            compare published figures before you visit.
-          </p>
-        </div>
-      </header>
-
-      <CompareLoader />
+      <CompareLoader intro={harbourIntro} />
 
       <section
         className="section page-chapter"

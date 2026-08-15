@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
@@ -55,7 +55,7 @@ async function progressiveLoad(
   };
 }
 
-export function CompareLoader() {
+export function CompareLoader({ intro }: { intro?: ReactNode }) {
   const [index, setIndex] = useState<SchoolsIndex | null>(null);
   const [eyIndex, setEyIndex] = useState<EyProvidersIndex | null>(null);
   const [childmindersIndex, setChildmindersIndex] =
@@ -157,26 +157,29 @@ export function CompareLoader() {
 
   if (error && !index) {
     return (
-      <div className="hero-controls">
-        <div className="shell hero-inner">
-          <p className="postcode-error" role="alert">
-            {error}
-          </p>
-          <p className="hint">
-            On a slow connection this can time out before the first file
-            finishes. Wait a moment and try again — Hampshire data alone is
-            enough to start.
-          </p>
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={() => {
-              setError(null);
-              setReloadToken((n) => n + 1);
-            }}
-          >
-            Retry loading data
-          </button>
+      <div className="harbour-band">
+        {intro}
+        <div className="hero-controls">
+          <div className="shell hero-inner">
+            <p className="postcode-error" role="alert">
+              {error}
+            </p>
+            <p className="hint">
+              On a slow connection this can time out before the first file
+              finishes. Wait a moment and try again — Hampshire data alone is
+              enough to start.
+            </p>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => {
+                setError(null);
+                setReloadToken((n) => n + 1);
+              }}
+            >
+              Retry loading data
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -184,12 +187,15 @@ export function CompareLoader() {
 
   if (!index) {
     return (
-      <div className="hero-controls">
-        <div className="shell hero-inner">
-          <p>Loading school and early-years data…</p>
-          <p className="hint">
-            First load brings Hampshire; other areas follow in the background.
-          </p>
+      <div className="harbour-band">
+        {intro}
+        <div className="hero-controls">
+          <div className="shell hero-inner">
+            <p>Loading school and early-years data…</p>
+            <p className="hint">
+              First load brings Hampshire; other areas follow in the background.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -228,6 +234,7 @@ export function CompareLoader() {
           eyIndex={eyIndex}
           childmindersIndex={childmindersIndex}
           onIndexReload={reloadIndex}
+          intro={intro}
         />
       </JourneyChapterProvider>
     </>

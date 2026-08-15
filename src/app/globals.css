@@ -645,9 +645,33 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 /*
-  One visual hero band: server SEO chrome (.hero-stack.seo-intro) then
-  client controls (.hero-controls) sharing the same cool harbour fog.
+  One harbour band: SEO head (.hero-stack), journey chrome, and Setup
+  (.hero-controls) share a single continuous wash — no stacked gradients.
 */
+.harbour-band {
+  --harbour-wash:
+    radial-gradient(720px 420px at 18% 20%, rgba(232, 243, 247, 0.18), transparent 62%),
+    radial-gradient(520px 340px at 88% 70%, rgba(176, 137, 45, 0.12), transparent 58%),
+    linear-gradient(155deg, #073a50 0%, #0b4f6c 48%, #1a6578 100%);
+  position: relative;
+  isolation: isolate;
+  border-radius: 0 0 1.35rem 1.35rem;
+}
+
+.harbour-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: #0b4f6c;
+  background-image: var(--harbour-wash);
+  /* Viewport-fixed so head, chrome, and Setup sample the same continuous wash. */
+  background-attachment: fixed, fixed, fixed;
+  /* No transform animation — it would desync from the sticky chrome fill. */
+  animation: none;
+}
+
 .hero-stack,
 .hero {
   position: relative;
@@ -671,6 +695,18 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   animation: heroWash 18s ease-in-out infinite alternate;
 }
 
+.harbour-band .hero-stack,
+.harbour-band .hero {
+  overflow: visible;
+  isolation: auto;
+}
+
+.harbour-band .hero-stack::before,
+.harbour-band .hero::before {
+  content: none;
+  animation: none;
+}
+
 @keyframes heroWash {
   from {
     transform: scale(1) translateY(0);
@@ -689,6 +725,13 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
     radial-gradient(720px 420px at 18% 20%, rgba(232, 243, 247, 0.14), transparent 62%),
     linear-gradient(155deg, #073a50 0%, #0b4f6c 48%, #1a6578 100%);
   border-radius: 0 0 1.35rem 1.35rem;
+}
+
+.harbour-band .hero-controls {
+  background: transparent;
+  border-radius: 0;
+  isolation: auto;
+  overflow: visible;
 }
 
 .hero-controls::before {
@@ -985,20 +1028,29 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Sticky journey chrome: How to use + chapter tabs on one row.
-   Same harbour wash as the SEO head (.hero-stack) and Setup band. */
+/* Sticky journey chrome inside the harbour band — transparent at rest so the
+   shared wash reads continuous; solid harbour fill when stuck over page content. */
 .journey-toolbar-wrap {
   position: sticky;
   top: 3.75rem;
   z-index: 24;
   margin: 0;
   padding: 0.45rem 0 0.5rem;
-  background:
-    radial-gradient(720px 420px at 18% 20%, rgba(232, 243, 247, 0.12), transparent 62%),
-    linear-gradient(155deg, #073a50 0%, #0b4f6c 48%, #1a6578 100%);
+  background: transparent;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+}
+
+.harbour-band .journey-toolbar-wrap {
+  /*
+    Match the band wash with fixed attachment so sticky chrome stays aligned
+    to the same continuous gradient (falls back to mid harbour if fixed fails).
+  */
+  background-color: #0b4f6c;
+  background-image: var(--harbour-wash);
+  background-attachment: fixed, fixed, fixed;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .journey-toolbar {
@@ -3773,6 +3825,7 @@ html.tour-running .leaflet-container {
   pointer-events: none;
 }
 
+html.tour-running .harbour-band::before,
 html.tour-running .hero-stack::before,
 html.tour-running .hero::before,
 html.tour-running .section-head,
