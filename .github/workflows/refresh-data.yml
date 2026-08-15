@@ -32,7 +32,14 @@ jobs:
           python3 scripts/harvest-ey-providers.py
           python3 scripts/harvest-childminders.py
           python3 scripts/enrich-ey-schools.py
-          python3 scripts/extract-ks2-history.py --seed-la
+      - name: Extract KS2 history (soft-fail)
+        # CSP occasionally 403s from Actions. The script retries, recovers from
+        # the committed archive, and soft-keeps on total failure. continue-on-error
+        # still lets precis enrich + commit of other harvest outputs proceed.
+        continue-on-error: true
+        run: python3 scripts/extract-ks2-history.py --seed-la
+      - name: Enrich inspection precis
+        run: |
           python3 scripts/enrich-inspection-precis.py --limit 250
           python3 scripts/enrich-inspection-precis.py --ey --limit 120
           python3 scripts/enrich-inspection-precis.py --childminders --limit 80
