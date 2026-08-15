@@ -1,41 +1,16 @@
 {
-  "ranAt": "2026-08-14T08:56:39.186974+00:00",
+  "ranAt": "2026-08-15T08:21:57.827293+00:00",
   "dryRun": false,
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
     "recordCount": 211,
-    "suspectCount": 8,
+    "suspectCount": 5,
     "flagCounts": {
-      "implausible_offerings": 5,
-      "chrome": 3
+      "implausible_offerings": 5
     },
     "topSuspects": [
-      {
-        "urn": "116575",
-        "name": "Ditcham Park School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "116285",
-        "name": "Ecchinswell and Sydmonton Church of England Primary School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "116595",
-        "name": "The King's School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
       {
         "urn": "136643",
         "name": "Bohunt School",
@@ -128,19 +103,17 @@
     ]
   },
   "qa": {
-    "reviewed": 8,
-    "changedSchools": 3,
-    "findingsApplied": 3,
-    "learningAdded": 4,
+    "reviewed": 5,
+    "changedSchools": 0,
+    "findingsApplied": 0,
+    "learningAdded": 0,
     "provider": "none"
   },
-  "merged": true,
+  "merged": false,
   "notes": [
-    "Before: 8 suspects across 211 records.",
-    "Applied QA fixes to 3 school(s) (3 area finding(s)).",
-    "Learned 4 new junk phrase(s) (store size 230).",
-    "Reviewed top 8 suspect(s); provider=none.",
-    "Merged cleaned sidecar into schools-index.",
+    "Before: 5 suspects across 211 records.",
+    "Reviewed top 5 suspect(s); provider=none.",
+    "No schools changed — merge skipped.",
     "After: 5 suspects across 211 records."
   ]
 }
