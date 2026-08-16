@@ -4,6 +4,7 @@ import {
   useId,
   useLayoutEffect,
   useRef,
+  type CSSProperties,
   type ReactNode,
 } from "react";
 
@@ -119,6 +120,11 @@ export function BinderTabs<Id extends string>({
       data-active-index={activeIndex}
       data-tab-count={items.length}
       data-tour={dataTour}
+      style={
+        {
+          "--binder-tab-count": String(items.length),
+        } as CSSProperties
+      }
     >
       {hasLeading ? (
         <div className="binder-rail">

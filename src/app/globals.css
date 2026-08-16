@@ -656,12 +656,10 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 /*
-  Journey harbour band: page wash stays standard harbour. Chapter sheets ease
-  from Setup (dark glass, light ink) toward Finder/How (frosted light sheet,
-  dark ink). Tabs keep light labels on harbour fills throughout.
+  Journey harbour band: page wash and chapter chrome stay Setup harbour
+  throughout (no per-chapter colour drift).
 */
 .harbour-band {
-  --stage-duration: 0.55s;
   /* Binder/tab stage tokens (page wash stays harbour below). */
   --stage-ink: #f7fbff;
   --stage-ink-muted: rgba(247, 251, 255, 0.82);
@@ -683,56 +681,6 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   isolation: isolate;
   border-radius: 0 0 1.35rem 1.35rem;
   padding-bottom: 0.35rem;
-}
-
-/* Finder end of the narrow range — also used for How.
-   Frosted light sheet + dark body ink so chapter copy stays readable. */
-.harbour-band[data-chapter-step="1"],
-.harbour-band[data-chapter-step="4"] {
-  --stage-ink: #073a50;
-  --stage-ink-muted: rgba(7, 58, 80, 0.78);
-  --stage-sheet-fill: rgba(232, 243, 247, 0.92);
-  --stage-sheet-stroke: rgba(11, 79, 108, 0.18);
-  --stage-tab-fill: rgba(7, 58, 80, 0.34);
-  --stage-tab-stroke: rgba(255, 255, 255, 0.28);
-  --stage-tab-color: rgba(247, 251, 255, 0.88);
-  --stage-tab-color-active: #f7fbff;
-  --stage-tab-hover: rgba(7, 58, 80, 0.46);
-  --stage-step-fill: rgba(247, 251, 255, 0.14);
-  --stage-step-stroke: rgba(255, 255, 255, 0.24);
-  --stage-shadow: 0 14px 32px rgba(7, 58, 80, 0.16);
-}
-
-/* Shortlist — midpoint Setup → Finder. */
-.harbour-band[data-chapter-step="2"] {
-  --stage-ink: #0a455c;
-  --stage-ink-muted: rgba(7, 58, 80, 0.76);
-  --stage-sheet-fill: rgba(214, 232, 240, 0.88);
-  --stage-sheet-stroke: rgba(11, 79, 108, 0.2);
-  --stage-tab-fill: rgba(7, 58, 80, 0.38);
-  --stage-tab-stroke: rgba(255, 255, 255, 0.26);
-  --stage-tab-color: rgba(247, 251, 255, 0.86);
-  --stage-tab-color-active: #f7fbff;
-  --stage-tab-hover: rgba(7, 58, 80, 0.48);
-  --stage-step-fill: rgba(247, 251, 255, 0.13);
-  --stage-step-stroke: rgba(255, 255, 255, 0.23);
-  --stage-shadow: 0 15px 34px rgba(7, 58, 80, 0.18);
-}
-
-/* Side by side — nearer Finder. */
-.harbour-band[data-chapter-step="3"] {
-  --stage-ink: #073a50;
-  --stage-ink-muted: rgba(7, 58, 80, 0.78);
-  --stage-sheet-fill: rgba(226, 239, 244, 0.9);
-  --stage-sheet-stroke: rgba(11, 79, 108, 0.18);
-  --stage-tab-fill: rgba(7, 58, 80, 0.36);
-  --stage-tab-stroke: rgba(255, 255, 255, 0.27);
-  --stage-tab-color: rgba(247, 251, 255, 0.87);
-  --stage-tab-color-active: #f7fbff;
-  --stage-tab-hover: rgba(7, 58, 80, 0.47);
-  --stage-step-fill: rgba(247, 251, 255, 0.14);
-  --stage-step-stroke: rgba(255, 255, 255, 0.24);
-  --stage-shadow: 0 14px 32px rgba(7, 58, 80, 0.17);
 }
 
 .harbour-band::before {
@@ -952,21 +900,23 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .binder-tabs {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(var(--binder-tab-count, 5), minmax(0, 1fr));
+  align-items: end;
   gap: 0.3rem;
   padding: 0 0.55rem;
   position: relative;
   z-index: 2;
   margin: 0;
+  width: 100%;
 }
 
 .binder-tab {
   appearance: none;
   position: relative;
-  flex: 1 1 0;
+  width: 100%;
   min-width: 0;
+  min-height: 2.45rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1009,41 +959,23 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .binder-tab.is-active {
   z-index: 3;
   color: var(--binder-tab-color-active);
-  /* Solid sheet fill so side strokes meet a hidden seam as clean L-joins. */
+  /* Solid sheet fill; seam gap under the tab opens the join. */
   background: var(--binder-fill);
   border-color: var(--binder-stroke);
-  margin-bottom: -1px;
-  padding-bottom: calc(0.55rem + 1px);
   box-shadow: none;
 }
 
 /*
-  Extend active tab side strokes down onto the sheet edge so the measured
-  seam gap reads as an open mouth, not a floating label.
+  Active tab side strokes stop at the sheet join — no extensions past the
+  rounded sheet corners.
 */
 .binder[data-mode="sheet"] .binder-tab.is-active::before,
 .binder[data-mode="sheet"] .binder-tab.is-active::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  width: 1px;
-  height: calc(100% + 1px);
-  background: var(--binder-stroke);
-  pointer-events: none;
-}
-
-.binder[data-mode="sheet"] .binder-tab.is-active::before {
-  left: -1px;
-}
-
-.binder[data-mode="sheet"] .binder-tab.is-active::after {
-  right: -1px;
+  content: none;
 }
 
 .binder[data-mode="tabs"] .binder-tab.is-active {
   /* Tabs-only strips sit on a rail — keep a flush bottom edge. */
-  margin-bottom: 0;
-  padding-bottom: 0.55rem;
   border-bottom: 1px solid var(--binder-fill);
 }
 
@@ -1099,9 +1031,11 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   padding: 0.85rem 0.95rem 1rem;
   border: 1px solid var(--binder-stroke);
   border-top: none;
-  border-radius: 0.85rem;
+  /* Flat top under tabs; round only the free corners so strokes don't overshoot. */
+  border-radius: 0 0 0.85rem 0.85rem;
   background: var(--binder-fill);
   box-shadow: var(--binder-shadow);
+  overflow: hidden;
 }
 
 .binder-sheet::before {
@@ -1116,8 +1050,8 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
     to right,
     var(--binder-stroke) 0,
     var(--binder-stroke) var(--seam-gap-start),
-    rgba(255, 255, 255, 0) var(--seam-gap-start),
-    rgba(255, 255, 255, 0) var(--seam-gap-end),
+    transparent var(--seam-gap-start),
+    transparent var(--seam-gap-end),
     var(--binder-stroke) var(--seam-gap-end),
     var(--binder-stroke) 100%
   );
@@ -1177,7 +1111,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Journey chapter binder: persistent frame; colours ease with chapter step. */
+/* Journey chapter binder: one wide harbour frame; tabs stay put across chapters. */
 .page-chapter-nav-binder {
   position: static;
   margin: 0;
@@ -1191,23 +1125,12 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   border-radius: 0 !important;
   overflow: visible !important;
   padding: 0.15rem 0 1.75rem !important;
-}
-
-/* Setup keeps the earlier compact harbour chrome; other chapters stay wide. */
-.journey-stage[data-chapter="setup"] {
-  padding: 0.15rem 0 2.75rem !important;
+  color: var(--stage-ink);
 }
 
 .journey-stage-shell {
   width: min(calc(100% - 1.25rem), 72rem);
   max-width: none;
-  transition: width var(--stage-duration, 0.55s) ease;
-}
-
-.journey-stage[data-chapter="setup"] .journey-stage-shell {
-  width: min(calc(100% - 1.25rem), 44rem);
-  max-width: 44rem;
-  color: #f7fbff;
 }
 
 .journey-stage-anchor {
@@ -1236,21 +1159,6 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   --binder-shadow: var(--stage-shadow);
 }
 
-.journey-chapter-binder .binder-tab,
-.journey-chapter-binder .binder-sheet,
-.journey-chapter-binder .journey-tour-btn,
-.journey-chapter-binder .binder-tab-step,
-.journey-chapter-binder .binder-sheet-head h3,
-.journey-chapter-binder .binder-sheet-head p {
-  transition:
-    background var(--stage-duration, 0.55s) ease,
-    background-color var(--stage-duration, 0.55s) ease,
-    color var(--stage-duration, 0.55s) ease,
-    border-color var(--stage-duration, 0.55s) ease,
-    box-shadow var(--stage-duration, 0.55s) ease,
-    min-height var(--stage-duration, 0.55s) ease;
-}
-
 .journey-chapter-binder .journey-tour-btn {
   border-color: var(--stage-tab-stroke);
   color: var(--stage-tab-color-active);
@@ -1274,47 +1182,36 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   min-height: clamp(22rem, calc(100dvh - 13.5rem), 56rem);
 }
 
-/* Setup sheet hugs content again (pre–viewport-frame sizing). */
-.journey-stage[data-chapter="setup"] .journey-chapter-binder .binder-sheet {
-  min-height: 0;
-}
-
 .journey-chapter-binder .binder-sheet-body {
   display: grid;
   gap: 0.85rem;
   min-height: inherit;
-}
-
-.journey-stage[data-chapter="setup"] .journey-chapter-binder .binder-sheet-body {
-  min-height: 0;
+  color: var(--stage-ink);
 }
 
 .journey-chapter-binder .binder-sheet-body > .section-head {
   margin: 0;
 }
 
-/* Lighter chapters: dark body copy on frosted sheets; tabs keep light labels. */
-.journey-stage:not([data-chapter="setup"]) .binder-sheet-body {
+.journey-stage .section-head h2 {
   color: var(--stage-ink);
 }
 
-.journey-stage:not([data-chapter="setup"]) .section-head h2 {
-  color: var(--stage-ink);
-  transition: color var(--stage-duration, 0.55s) ease;
-}
-
-.journey-stage:not([data-chapter="setup"]) .section-head p,
-.journey-stage:not([data-chapter="setup"]) .footnote {
+.journey-stage .section-head p,
+.journey-stage .footnote {
   color: var(--stage-ink-muted);
-  transition: color var(--stage-duration, 0.55s) ease;
+}
+
+.journey-stage .radius-row {
+  color: var(--stage-ink-muted);
 }
 
 /* Nested light cards keep their own ink — do not force harbour wash colours. */
-.journey-stage:not([data-chapter="setup"]) .nearby-list-head strong {
+.journey-stage .nearby-list-head strong {
   color: var(--sea-deep);
 }
 
-.journey-stage:not([data-chapter="setup"]) .nearby-list-head span {
+.journey-stage .nearby-list-head span {
   color: var(--ink-soft);
 }
 
