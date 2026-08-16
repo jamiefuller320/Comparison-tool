@@ -27,19 +27,21 @@ export function JourneyStageFrame({ sheet }: { sheet: ReactNode }) {
   const tabDatumInStageRef = useRef<number | null>(null);
 
   useLayoutEffect(() => {
-    const shell = shellRef.current;
-    if (!shell) return;
-    const stageEl =
-      shell.closest<HTMLElement>(".journey-stage") ?? shell.parentElement;
-    if (!stageEl) return;
+    const shellNode = shellRef.current;
+    if (!shellNode) return;
+    const stageNode =
+      shellNode.closest<HTMLElement>(".journey-stage") ?? shellNode.parentElement;
+    if (!stageNode) return;
+    const shellEl: HTMLDivElement = shellNode;
+    const stageEl: HTMLElement = stageNode;
 
     function syncTabDatum() {
-      const rail = shell.querySelector(".journey-chapter-binder .binder-rail");
+      const rail = shellEl.querySelector(".journey-chapter-binder .binder-rail");
       if (!(rail instanceof HTMLElement)) return;
 
       const stageBox = stageEl.getBoundingClientRect();
       const railBox = rail.getBoundingClientRect();
-      const shellBox = shell.getBoundingClientRect();
+      const shellBox = shellEl.getBoundingClientRect();
 
       if (chapter === "setup") {
         tabDatumInStageRef.current = Math.round(railBox.left - stageBox.left);
@@ -66,7 +68,7 @@ export function JourneyStageFrame({ sheet }: { sheet: ReactNode }) {
 
     const observer = new ResizeObserver(() => syncTabDatum());
     observer.observe(stageEl);
-    observer.observe(shell);
+    observer.observe(shellEl);
     window.addEventListener("resize", syncTabDatum);
     return () => {
       cancelAnimationFrame(raf);
