@@ -1111,7 +1111,8 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Journey chapter binder: one wide harbour frame; tabs stay put across chapters. */
+/* Journey chapter binder: Setup stays compact; later chapters use the wide
+   viewport frame. Chapter tabs keep a fixed track so they do not jump. */
 .page-chapter-nav-binder {
   position: static;
   margin: 0;
@@ -1128,9 +1129,19 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   color: var(--stage-ink);
 }
 
+.journey-stage[data-chapter="setup"] {
+  padding: 0.15rem 0 2.75rem !important;
+}
+
 .journey-stage-shell {
   width: min(calc(100% - 1.25rem), 72rem);
   max-width: none;
+}
+
+/* Previous compact Setup frame (~hero-inner-wide). No width animation. */
+.journey-stage[data-chapter="setup"] .journey-stage-shell {
+  width: min(calc(100% - 1.25rem), 44rem);
+  max-width: 44rem;
 }
 
 .journey-stage-anchor {
@@ -1177,9 +1188,23 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   z-index: 24;
 }
 
+/*
+  Cap the chapter tab track to the compact Setup width so equal columns stay
+  put when the sheet expands for Finder+.
+*/
+.journey-chapter-binder[data-leading="true"] .binder-tabs {
+  flex: 0 1 auto;
+  width: min(100%, 34rem);
+  max-width: 34rem;
+}
+
 .journey-chapter-binder .binder-sheet {
-  /* Device-aware workspace: tall enough to use the screen without feeling tiny. */
+  /* Device-aware workspace on non-Setup chapters. */
   min-height: clamp(22rem, calc(100dvh - 13.5rem), 56rem);
+}
+
+.journey-stage[data-chapter="setup"] .journey-chapter-binder .binder-sheet {
+  min-height: 0;
 }
 
 .journey-chapter-binder .binder-sheet-body {
@@ -1187,6 +1212,10 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   gap: 0.85rem;
   min-height: inherit;
   color: var(--stage-ink);
+}
+
+.journey-stage[data-chapter="setup"] .journey-chapter-binder .binder-sheet-body {
+  min-height: 0;
 }
 
 .journey-chapter-binder .binder-sheet-body > .section-head {
