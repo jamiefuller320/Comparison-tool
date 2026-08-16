@@ -1,22 +1,26 @@
-# Qualitative quality loop — 2026-08-15T08:21:57.827293+00:00
+# Qualitative quality loop — 2026-08-16T08:23:46.256427+00:00
 
 - Mode: `apply`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
-- Records: `211`
-- Suspects before → after: `5` → `5`
-- QA reviewed / changed: `5` / `0`
-- Findings applied: `0`
-- Learned phrases added: `0`
-- Merged to index: `False`
+- Records: `251`
+- Suspects before → after: `20` → `6`
+- QA reviewed / changed: `20` / `14`
+- Findings applied: `21`
+- Learned phrases added: `3`
+- Merged to index: `True`
 
 ## Top flag counts (before)
 
-- `implausible_offerings`: 5
+- `chrome`: 13
+- `implausible_offerings`: 6
+- `boilerplate`: 1
 
 ## Notes
 
-- Before: 5 suspects across 211 records.
-- Reviewed top 5 suspect(s); provider=none.
-- No schools changed — merge skipped.
-- After: 5 suspects across 211 records.
+- Before: 20 suspects across 251 records.
+- Applied QA fixes to 14 school(s) (21 area finding(s)).
+- Learned 3 new junk phrase(s) (store size 261).
+- Reviewed top 20 suspect(s); provider=none.
+- Merged cleaned sidecar into schools-index.
+- After: 6 suspects across 251 records.
