@@ -3923,7 +3923,8 @@ html:has(.page-chapter-nav) .compare-table-controls {
   align-items: stretch;
 }
 
-.nearby-map {
+.nearby-map-frame {
+  position: relative;
   min-height: 380px;
   height: 100%;
   border-radius: 1.25rem;
@@ -3933,6 +3934,17 @@ html:has(.page-chapter-nav) .compare-table-controls {
   animation: riseIn 0.45s ease-out both;
 }
 
+.nearby-map-frame.is-pin-unlocked {
+  border-color: rgba(196, 92, 38, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(196, 92, 38, 0.18);
+}
+
+.nearby-map {
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+}
+
 .nearby-map .leaflet-container {
   width: 100%;
   height: 100%;
@@ -3940,10 +3952,73 @@ html:has(.page-chapter-nav) .compare-table-controls {
   font: inherit;
 }
 
+.nearby-map-chrome {
+  position: absolute;
+  left: 0.65rem;
+  right: 0.65rem;
+  bottom: 0.65rem;
+  z-index: 450;
+  display: grid;
+  gap: 0.35rem;
+  pointer-events: none;
+}
+
+.nearby-map-chrome-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem 0.65rem;
+}
+
+.nearby-map-hint {
+  margin: 0;
+  flex: 1 1 12rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.65rem;
+  background: rgba(7, 58, 80, 0.82);
+  color: #f7fbff;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.nearby-map-unlock {
+  pointer-events: auto;
+  background: rgba(255, 252, 247, 0.94);
+  border: 1px solid rgba(11, 79, 108, 0.22);
+  color: var(--sea-deep);
+  box-shadow: 0 6px 16px rgba(20, 35, 58, 0.12);
+}
+
+.nearby-map-unlock:hover:not(:disabled) {
+  background: #fff;
+  border-color: rgba(11, 79, 108, 0.4);
+}
+
+.nearby-map-error {
+  margin: 0;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.55rem;
+  background: rgba(255, 252, 247, 0.96);
+  color: #8a2f1a;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
 .school-marker,
 .home-marker {
   background: transparent;
   border: none;
+}
+
+.home-marker-unlocked {
+  cursor: grab;
+}
+
+.home-marker-unlocked:active {
+  cursor: grabbing;
 }
 
 .nearby-list {
