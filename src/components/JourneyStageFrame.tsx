@@ -14,8 +14,7 @@ import {
 
 /**
  * Single persistent journey frame (tabs + sheet) portaled into the harbour
- * band so chapter switches ease tab/sheet colour instead of remounting shells.
- * Setup keeps compact harbour sizing; later chapters use the wide stage shell.
+ * band. One wide harbour shell for every chapter — no colour or size drift.
  */
 export function JourneyStageFrame({ sheet }: { sheet: ReactNode }) {
   const { chapter } = useJourneyChapter();
