@@ -257,11 +257,13 @@ export function HomePostcodeExplorer({
         );
         return;
       }
+      // Keep the dropped pin position — reverse geocode only labels the nearest
+      // postcode. Using the API centroid snapped short drags back to the old lock.
       setRawPostcode(geo.postcode);
       setHome({
         postcode: geo.postcode,
-        latitude: geo.latitude,
-        longitude: geo.longitude,
+        latitude: next.latitude,
+        longitude: next.longitude,
         adminDistrict: geo.adminDistrict,
       });
       setRoadByUrn({});
@@ -747,7 +749,7 @@ export function HomePostcodeExplorer({
 
             <div className="nearby-layout">
               <NearbyMap
-                key={`map-${home.postcode}`}
+                key={`map-${home.postcode}-${home.latitude.toFixed(5)}-${home.longitude.toFixed(5)}`}
                 home={home}
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}
