@@ -1,37 +1,42 @@
 {
-  "ranAt": "2026-08-12T08:40:04.166353+00:00",
+  "ranAt": "2026-08-16T08:21:53.005239+00:00",
+  "scope": "auto",
   "la": "Hampshire",
-  "limit": 25,
+  "index": "public/data/schools-index.json",
+  "remainingWithWebsite": 374,
+  "limit": 40,
   "offset": 0,
   "skipExisting": true,
   "refreshStaleDays": 28,
-  "refreshLimit": 5,
-  "sidecarBefore": 195,
-  "sidecarAfter": 211,
+  "refreshLimit": 15,
+  "sidecarBefore": 211,
+  "sidecarAfter": 251,
   "synthesizeProvider": "none",
   "qaProvider": "none",
-  "qaLimit": 8,
+  "qaLimit": 16,
   "qa": {
-    "reviewed": 8,
-    "changedSchools": 8,
-    "findingsApplied": 18,
-    "learningAdded": 11,
+    "reviewed": 16,
+    "changedSchools": 16,
+    "findingsApplied": 48,
+    "learningAdded": 28,
     "provider": "none"
   },
   "learnedTerms": {
     "termCount": 500,
-    "boostTermCount": 276,
-    "schoolCount": 211,
+    "boostTermCount": 284,
+    "schoolCount": 251,
     "rebuilt": true,
     "fromCapture": 500,
     "citationLearning": true
   },
   "dryRun": false,
   "notes": [
-    "Captured batch (sidecar 195 \u2192 211); learned terms now 500.",
+    "Enriched schoolWebsite from GIAS (seed + ready packs).",
+    "Selected LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=374.",
+    "Captured batch (sidecar 211 \u2192 251); learned terms now 500.",
     "Selective synth provider=none; learned terms after citation merge=500.",
-    "QA provider=none: reviewed 8, changed 8, learned phrases +11.",
-    "Re-merged schools-index after QA fixes."
+    "QA provider=none: reviewed 16, changed 16, learned phrases +28.",
+    "Re-merged public/data/schools-index.json after QA fixes."
   ],
   "progressPath": "output/qualitative-progress.json"
 }
