@@ -29,22 +29,22 @@ export function JourneyStageFrame({ sheet }: { sheet: ReactNode }) {
   useLayoutEffect(() => {
     const shell = shellRef.current;
     if (!shell) return;
-    const stage =
+    const stageEl =
       shell.closest<HTMLElement>(".journey-stage") ?? shell.parentElement;
-    if (!stage) return;
+    if (!stageEl) return;
 
     function syncTabDatum() {
       const rail = shell.querySelector(".journey-chapter-binder .binder-rail");
       if (!(rail instanceof HTMLElement)) return;
 
-      const stageBox = stage.getBoundingClientRect();
+      const stageBox = stageEl.getBoundingClientRect();
       const railBox = rail.getBoundingClientRect();
       const shellBox = shell.getBoundingClientRect();
 
       if (chapter === "setup") {
         tabDatumInStageRef.current = Math.round(railBox.left - stageBox.left);
         rail.style.marginLeft = "0px";
-        stage.dataset.tabDatum = String(tabDatumInStageRef.current);
+        stageEl.dataset.tabDatum = String(tabDatumInStageRef.current);
         return;
       }
 
@@ -65,7 +65,7 @@ export function JourneyStageFrame({ sheet }: { sheet: ReactNode }) {
     const raf = requestAnimationFrame(syncTabDatum);
 
     const observer = new ResizeObserver(() => syncTabDatum());
-    observer.observe(stage);
+    observer.observe(stageEl);
     observer.observe(shell);
     window.addEventListener("resize", syncTabDatum);
     return () => {
