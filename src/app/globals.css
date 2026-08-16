@@ -1111,8 +1111,8 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Journey chapter binder: Setup stays compact; later chapters use the wide
-   viewport frame. Chapter tabs keep a fixed track so they do not jump. */
+/* Journey chapter binder: Setup stays compact; later chapters expand right
+   from the Setup shell’s left edge so chapter tabs keep absolute page position. */
 .page-chapter-nav-binder {
   position: static;
   margin: 0;
@@ -1134,13 +1134,23 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .journey-stage-shell {
-  width: min(calc(100% - 1.25rem), 72rem);
+  /* Datum = centered compact Setup shell (~hero-inner-wide). */
+  --journey-gutter: 0.625rem;
+  --journey-setup-width: min(calc(100% - 1.25rem), 44rem);
+  --journey-setup-left: max(
+    var(--journey-gutter),
+    calc((100% - var(--journey-setup-width)) / 2)
+  );
+  /* Grow right from Setup’s left edge — do not re-center when widening. */
+  width: min(72rem, calc(100% - var(--journey-setup-left) - var(--journey-gutter)));
   max-width: none;
+  margin-left: var(--journey-setup-left);
+  margin-right: auto;
 }
 
-/* Previous compact Setup frame (~hero-inner-wide). No width animation. */
+/* Compact Setup frame; same left edge as wider chapters. */
 .journey-stage[data-chapter="setup"] .journey-stage-shell {
-  width: min(calc(100% - 1.25rem), 44rem);
+  width: var(--journey-setup-width);
   max-width: 44rem;
 }
 
@@ -1186,16 +1196,19 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   position: sticky;
   top: 3.75rem;
   z-index: 24;
+  /* Rail stays Setup-wide so How to use + tabs never shift with the sheet. */
+  width: min(100%, var(--journey-setup-width, 44rem));
+  max-width: var(--journey-setup-width, 44rem);
 }
 
 /*
-  Cap the chapter tab track to the compact Setup width so equal columns stay
-  put when the sheet expands for Finder+.
+  Cap the chapter tab track inside the Setup-width rail.
 */
 .journey-chapter-binder[data-leading="true"] .binder-tabs {
-  flex: 0 1 auto;
-  width: min(100%, 34rem);
-  max-width: 34rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  max-width: none;
 }
 
 .journey-chapter-binder .binder-sheet {

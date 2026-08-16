@@ -14,8 +14,8 @@ import {
 
 /**
  * Single persistent journey frame (tabs + sheet) portaled into the harbour
- * band. Setup uses the compact shell; later chapters expand to the wide frame.
- * Chapter tabs stay on a fixed-width track so they do not jump.
+ * band. Setup uses the compact shell as the left-edge datum; later chapters
+ * expand right so chapter tabs keep the same absolute page position.
  */
 export function JourneyStageFrame({ sheet }: { sheet: ReactNode }) {
   const { chapter } = useJourneyChapter();
