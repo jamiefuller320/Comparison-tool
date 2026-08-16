@@ -42,6 +42,22 @@ export interface GeocodedPostcode {
   region?: string | null;
 }
 
+function readGeocodeResult(result: {
+  postcode: string;
+  latitude: number;
+  longitude: number;
+  admin_district?: string;
+  region?: string;
+}): GeocodedPostcode {
+  return {
+    postcode: result.postcode,
+    latitude: result.latitude,
+    longitude: result.longitude,
+    adminDistrict: result.admin_district ?? null,
+    region: result.region ?? null,
+  };
+}
+
 export async function geocodePostcode(
   postcode: string,
 ): Promise<GeocodedPostcode | null> {
@@ -62,11 +78,33 @@ export async function geocodePostcode(
     } | null;
   };
   if (!data.result) return null;
-  return {
-    postcode: data.result.postcode,
-    latitude: data.result.latitude,
-    longitude: data.result.longitude,
-    adminDistrict: data.result.admin_district ?? null,
-    region: data.result.region ?? null,
+  return readGeocodeResult(data.result);
+}
+
+/** Nearest UK postcode for a map pin (postcodes.io reverse lookup). */
+export async function reverseGeocode(
+  latitude: number,
+  longitude: number,
+): Promise<GeocodedPostcode | null> {
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+  const params = new URLSearchParams({
+    lat: String(latitude),
+    lon: String(longitude),
+    limit: "1",
+  });
+  const res = await fetch(`https://api.postcodes.io/postcodes?${params}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Reverse postcode lookup failed (${res.status})`);
+  const data = (await res.json()) as {
+    result?: Array<{
+      postcode: string;
+      latitude: number;
+      longitude: number;
+      admin_district?: string;
+      region?: string;
+    }> | null;
   };
+  const nearest = data.result?.[0];
+  if (!nearest) return null;
+  return readGeocodeResult(nearest);
 }

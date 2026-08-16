@@ -10,7 +10,11 @@ import {
 } from "react";
 import dynamic from "next/dynamic";
 import type { SchoolRecord } from "@/lib/types";
-import { geocodePostcode, parseUkPostcode } from "@/lib/postcode";
+import {
+  geocodePostcode,
+  parseUkPostcode,
+  reverseGeocode,
+} from "@/lib/postcode";
 import {
   fetchRoadDistances,
   findAllNearbySchools,
@@ -136,6 +140,8 @@ export function HomePostcodeExplorer({
   const [radiusKm, setRadiusKm] = useState<number>(3);
   const [error, setError] = useState<string | null>(null);
   const [lookingUp, setLookingUp] = useState(false);
+  const [relocatingHome, setRelocatingHome] = useState(false);
+  const [relocateError, setRelocateError] = useState<string | null>(null);
   const [roadByUrn, setRoadByUrn] = useState<
     Record<string, { metres: number | null; minutes: number | null }>
   >({});
@@ -211,6 +217,7 @@ export function HomePostcodeExplorer({
     }
     setLookingUp(true);
     setError(null);
+    setRelocateError(null);
     try {
       const geo = await geocodePostcode(normalised);
       if (!geo) {
@@ -232,6 +239,38 @@ export function HomePostcodeExplorer({
       setError("Postcode lookup is unavailable right now. Try again in a moment.");
     } finally {
       setLookingUp(false);
+    }
+  }
+
+  /** Map pin drag: resolve nearest postcode and rebuild the Finder ring. */
+  async function relocateHomeFromMap(next: {
+    latitude: number;
+    longitude: number;
+  }) {
+    setRelocatingHome(true);
+    setRelocateError(null);
+    try {
+      const geo = await reverseGeocode(next.latitude, next.longitude);
+      if (!geo) {
+        setRelocateError(
+          "No UK postcode near that spot. Try nearer a road or building.",
+        );
+        return;
+      }
+      setRawPostcode(geo.postcode);
+      setHome({
+        postcode: geo.postcode,
+        latitude: geo.latitude,
+        longitude: geo.longitude,
+        adminDistrict: geo.adminDistrict,
+      });
+      setRoadByUrn({});
+    } catch {
+      setRelocateError(
+        "Postcode lookup is unavailable right now. Try again in a moment.",
+      );
+    } finally {
+      setRelocatingHome(false);
     }
   }
 
@@ -718,6 +757,9 @@ export function HomePostcodeExplorer({
                 comparableKs4Only={comparableKs4Only}
                 catchmentFeatures={overlayCatchmentFeatures}
                 homeCatchmentNote={homeCatchmentNote}
+                relocating={relocatingHome}
+                relocateError={relocateError}
+                onHomeRelocate={relocateHomeFromMap}
                 onSelect={(urn) => {
                   if (selectedUrns.includes(urn) || !atMax) onToggle(urn);
                 }}
