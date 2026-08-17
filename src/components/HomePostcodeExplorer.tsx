@@ -749,7 +749,7 @@ export function HomePostcodeExplorer({
 
             <div className="nearby-layout">
               <NearbyMap
-                key={`map-${home.postcode}-${home.latitude.toFixed(5)}-${home.longitude.toFixed(5)}`}
+                key={`map-${home.postcode}`}
                 home={home}
                 schools={nearby}
                 radiusMetres={radiusKm * 1000}

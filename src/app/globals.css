@@ -1243,21 +1243,53 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .journey-stage .section-head p,
-.journey-stage .footnote {
+.journey-stage .footnote,
+.journey-stage .data-slim-line,
+.journey-stage .sector-prune-note,
+.journey-stage .radius-row,
+.journey-stage .empty-compare,
+.journey-stage .compare-subhead,
+.journey-stage .decision-guidance-lead,
+.journey-stage .decision-guidance-summary-hint,
+.journey-stage .decision-guidance-block ul,
+.journey-stage .decision-guidance-block li,
+.journey-stage .precis-reading-note {
   color: var(--stage-ink-muted);
 }
 
-.journey-stage .radius-row {
-  color: var(--stage-ink-muted);
+.journey-stage .decision-guidance-block h3,
+.journey-stage .decision-guidance-block h4,
+.journey-stage .compare-subhead {
+  color: var(--stage-ink);
 }
 
-/* Nested light cards keep their own ink — do not force harbour wash colours. */
-.journey-stage .nearby-list-head strong {
-  color: var(--sea-deep);
+/* Nested light cards keep dark ink on foam/paper surfaces. */
+.journey-stage .nearby-list,
+.journey-stage .nearby-list-head strong,
+.journey-stage .search-panel,
+.journey-stage .selected-chips,
+.journey-stage .compare-table-frame,
+.journey-stage .compare-board,
+.journey-stage .compare-path-binder,
+.journey-stage .decision-guidance,
+.journey-stage .missing-school-panel,
+.journey-stage .save-shortlist-prompt,
+.journey-stage .restore-shortlist-banner {
+  color: var(--ink);
 }
 
-.journey-stage .nearby-list-head span {
+.journey-stage .nearby-list-head span,
+.journey-stage .search-panel,
+.journey-stage .decision-guidance .decision-guidance-lead,
+.journey-stage .decision-guidance .decision-guidance-block ul {
   color: var(--ink-soft);
+}
+
+.journey-stage .nearby-list-head strong,
+.journey-stage .decision-guidance > summary,
+.journey-stage .decision-guidance .decision-guidance-block h3,
+.journey-stage .decision-guidance .decision-guidance-block h4 {
+  color: var(--sea-deep);
 }
 
 .harbour-setup-slot:empty {
@@ -3967,7 +3999,8 @@ html:has(.page-chapter-nav) .compare-table-controls {
 }
 
 .school-marker,
-.home-marker {
+.home-marker,
+.leaflet-default-hidden {
   background: transparent;
   border: none;
 }
