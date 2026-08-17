@@ -34,6 +34,14 @@ const CATCHMENT_STYLE_NEARBY = {
   fillOpacity: 0.08,
 };
 
+/** Avoid Leaflet’s default pin/shadow assets (broken URLs look like triangles). */
+const EMPTY_DEFAULT_ICON = L.divIcon({
+  className: "leaflet-default-hidden",
+  html: "",
+  iconSize: [0, 0],
+  iconAnchor: [0, 0],
+});
+
 function schoolIcon(
   selected: boolean,
   focused: boolean,
@@ -110,6 +118,7 @@ export function NearbyMap({
   const mapRef = useRef<L.Map | null>(null);
   const layersRef = useRef<L.LayerGroup | null>(null);
   const homeMarkerRef = useRef<L.Marker | null>(null);
+  const ringRef = useRef<L.Circle | null>(null);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
   const onHomeRelocateRef = useRef(onHomeRelocate);
@@ -117,6 +126,10 @@ export function NearbyMap({
   /** Bumps after Leaflet map + layer group exist so marker redraw cannot race init. */
   const [mapReady, setMapReady] = useState(0);
   const [pinUnlocked, setPinUnlocked] = useState(false);
+  /** Dropped pin while reverse-geocode runs — keeps short moves from snapping back. */
+  const pendingPinRef = useRef<{ latitude: number; longitude: number } | null>(
+    null,
+  );
 
   const selectedSet = useMemo(() => new Set(selectedUrns), [selectedUrns]);
   // Order-independent so a stage-prefer reorder alone does not force a full fitBounds.
@@ -140,26 +153,28 @@ export function NearbyMap({
   useEffect(() => {
     if (!containerRef.current) return;
     const map = L.map(containerRef.current, {
-      // Map stays fixed unless the home pin is unlocked for drag-relocate.
-      dragging: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      touchZoom: false,
+      dragging: true,
+      scrollWheelZoom: true,
+      doubleClickZoom: true,
+      boxZoom: true,
+      keyboard: true,
+      touchZoom: true,
       zoomControl: true,
     }).setView([home.latitude, home.longitude], 12);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    // Carto Positron — fewer peak/POI glyphs than stock OSM tiles.
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
       maxZoom: 18,
+      subdomains: "abcd",
     }).addTo(map);
 
     layersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
     setMapReady((n) => n + 1);
     setPinUnlocked(false);
+    pendingPinRef.current = null;
 
     requestAnimationFrame(() => map.invalidateSize());
 
@@ -168,10 +183,11 @@ export function NearbyMap({
       mapRef.current = null;
       layersRef.current = null;
       homeMarkerRef.current = null;
+      ringRef.current = null;
     };
-    // Recreate only when the home postcode/location changes (parent key also covers this).
+    // Keep the map instance across pin nudges — remounting snapped short drags.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [home.postcode, home.latitude, home.longitude]);
+  }, []);
 
   useEffect(() => {
     if (!mapReady) return;
@@ -181,6 +197,7 @@ export function NearbyMap({
 
     layers.clearLayers();
     homeMarkerRef.current = null;
+    ringRef.current = null;
 
     for (const feature of catchmentFeatures) {
       if (!feature.geometry) continue;
@@ -188,6 +205,8 @@ export function NearbyMap({
       const selected = urn ? selectedSet.has(urn) : false;
       const layer = L.geoJSON(feature as never, {
         style: selected ? CATCHMENT_STYLE_SELECTED : CATCHMENT_STYLE_NEARBY,
+        pointToLayer: (_feature, latlng) =>
+          L.marker(latlng, { icon: EMPTY_DEFAULT_ICON }),
       });
       const label = feature.properties.name || "School catchment";
       layer.bindPopup(
@@ -196,10 +215,12 @@ export function NearbyMap({
       layer.addTo(layers);
     }
 
-    const ring = L.circle([home.latitude, home.longitude], {
+    const pin = pendingPinRef.current ?? home;
+    const ring = L.circle([pin.latitude, pin.longitude], {
       radius: radiusMetres,
       ...RING_STYLE,
     }).addTo(layers);
+    ringRef.current = ring;
 
     const homePopup =
       `<strong>Home</strong><br/>${home.postcode}` +
@@ -208,14 +229,14 @@ export function NearbyMap({
         ? "<br/><em>Drag this pin, then release to update the map</em>"
         : "");
 
-    const marker = L.marker([home.latitude, home.longitude], {
+    const marker = L.marker([pin.latitude, pin.longitude], {
       icon: homeIcon(pinUnlocked),
       title: pinUnlocked
         ? `Drag to move home · ${home.postcode}`
         : `Home · ${home.postcode}`,
       zIndexOffset: 500,
       draggable: pinUnlocked,
-      autoPan: false,
+      autoPan: true,
     })
       .bindPopup(homePopup)
       .addTo(layers);
@@ -223,6 +244,7 @@ export function NearbyMap({
     if (pinUnlocked) {
       marker.on("dragend", () => {
         const { lat, lng } = marker.getLatLng();
+        pendingPinRef.current = { latitude: lat, longitude: lng };
         onHomeRelocateRef.current?.({ latitude: lat, longitude: lng });
       });
       marker.openPopup();
@@ -261,7 +283,7 @@ export function NearbyMap({
 
     map.invalidateSize();
     // Keep framing stable while the pin is unlocked for drag.
-    if (!pinUnlocked) {
+    if (!pinUnlocked && !pendingPinRef.current) {
       map.fitBounds(ring.getBounds(), {
         animate: true,
         padding: [28, 28],
@@ -293,10 +315,28 @@ export function NearbyMap({
     else dragging.disable();
   }, [pinUnlocked, relocating, mapReady]);
 
+  // Parent caught up with the dropped pin — clear pending and re-lock.
+  useEffect(() => {
+    if (relocating || relocateError || !pendingPinRef.current) return;
+    pendingPinRef.current = null;
+    setPinUnlocked(false);
+    const map = mapRef.current;
+    const ring = ringRef.current;
+    if (map && ring) {
+      map.fitBounds(ring.getBounds(), {
+        animate: true,
+        padding: [28, 28],
+        maxZoom: 15,
+      });
+    }
+  }, [home.latitude, home.longitude, home.postcode, relocating, relocateError]);
+
   // Failed reverse-geocode: put the pin back on the current home.
   useEffect(() => {
     if (relocating || !relocateError) return;
+    pendingPinRef.current = null;
     homeMarkerRef.current?.setLatLng([home.latitude, home.longitude]);
+    ringRef.current?.setLatLng([home.latitude, home.longitude]);
   }, [relocating, relocateError, home.latitude, home.longitude]);
 
   const canRelocate = Boolean(onHomeRelocate);
@@ -310,8 +350,8 @@ export function NearbyMap({
       <div
         ref={containerRef}
         className="nearby-map"
-        role="img"
-        aria-label={`Map of schools within ${Math.round(radiusMetres / 1000)} kilometres`}
+        role="application"
+        aria-label={`Map of schools within ${Math.round(radiusMetres / 1000)} kilometres. Scroll or pinch to zoom; unlock postcode to move home.`}
       />
       {canRelocate ? (
         <div className="nearby-map-chrome">
@@ -327,7 +367,10 @@ export function NearbyMap({
                   type="button"
                   className="btn btn-ghost nearby-map-unlock"
                   disabled={relocating}
-                  onClick={() => setPinUnlocked(false)}
+                  onClick={() => {
+                    pendingPinRef.current = null;
+                    setPinUnlocked(false);
+                  }}
                 >
                   Lock postcode
                 </button>
