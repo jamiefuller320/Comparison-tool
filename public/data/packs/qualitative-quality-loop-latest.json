@@ -1,112 +1,62 @@
 {
-  "ranAt": "2026-08-16T08:23:46.256427+00:00",
+  "ranAt": "2026-08-17T08:37:33.493851+00:00",
   "dryRun": false,
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
     "recordCount": 251,
-    "suspectCount": 20,
+    "suspectCount": 6,
     "flagCounts": {
-      "chrome": 13,
-      "implausible_offerings": 6,
-      "boilerplate": 1
+      "implausible_offerings": 6
     },
     "topSuspects": [
       {
-        "urn": "116639",
-        "name": "Glenwood School",
-        "score": 6.0,
+        "urn": "136643",
+        "name": "Bohunt School",
+        "score": 2.0,
         "flags": [
-          "chrome"
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "115897",
-        "name": "Grateley Primary School",
-        "score": 6.0,
+        "urn": "116277",
+        "name": "Bursledon Church of England Infant School",
+        "score": 2.0,
         "flags": [
-          "chrome"
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "116071",
-        "name": "Greenfields Junior School",
-        "score": 6.0,
+        "urn": "116027",
+        "name": "Bursledon Junior School(CA)",
+        "score": 2.0,
         "flags": [
-          "chrome"
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "115901",
-        "name": "Hamble Primary School",
-        "score": 6.0,
+        "urn": "134734",
+        "name": "Cadland Primary School",
+        "score": 2.0,
         "flags": [
-          "chrome"
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "116255",
-        "name": "Hatch Warren Junior School",
-        "score": 6.0,
+        "urn": "116357",
+        "name": "Charles Kingsley's Church of England Primary School",
+        "score": 2.0,
         "flags": [
-          "chrome"
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "115830",
-        "name": "Haven Early Years Centre",
-        "score": 6.0,
+        "urn": "116431",
+        "name": "Harrow Way Community School",
+        "score": 2.0,
         "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "116010",
-        "name": "Heatherside Junior School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "139273",
-        "name": "Front Lawn Primary Academy",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "116170",
-        "name": "Grange Junior School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "148216",
-        "name": "Halterworth Primary School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "116244",
-        "name": "Hart Plain Junior School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "136156",
-        "name": "Havant Academy",
-        "score": 3.0,
-        "flags": [
-          "chrome"
+          "implausible_offerings"
         ]
       }
     ]
@@ -169,19 +119,17 @@
     ]
   },
   "qa": {
-    "reviewed": 20,
-    "changedSchools": 14,
-    "findingsApplied": 21,
-    "learningAdded": 3,
+    "reviewed": 6,
+    "changedSchools": 0,
+    "findingsApplied": 0,
+    "learningAdded": 0,
     "provider": "none"
   },
-  "merged": true,
+  "merged": false,
   "notes": [
-    "Before: 20 suspects across 251 records.",
-    "Applied QA fixes to 14 school(s) (21 area finding(s)).",
-    "Learned 3 new junk phrase(s) (store size 261).",
-    "Reviewed top 20 suspect(s); provider=none.",
-    "Merged cleaned sidecar into schools-index.",
+    "Before: 6 suspects across 251 records.",
+    "Reviewed top 6 suspect(s); provider=none.",
+    "No schools changed — merge skipped.",
     "After: 6 suspects across 251 records."
   ]
 }
