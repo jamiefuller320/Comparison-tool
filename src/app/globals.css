@@ -1111,8 +1111,8 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: center;
 }
 
-/* Journey chapter binder: Setup stays compact; later chapters expand right
-   from the Setup shell’s left edge so chapter tabs keep absolute page position. */
+/* Journey chapter binder: Setup stays compact + centered. Later chapters use
+   a full centered frame; JS pins the tab rail to Setup’s measured page datum. */
 .page-chapter-nav-binder {
   position: static;
   margin: 0;
@@ -1134,21 +1134,15 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .journey-stage-shell {
-  /* Datum = centered compact Setup shell (~hero-inner-wide). */
-  --journey-gutter: 0.625rem;
   --journey-setup-width: min(calc(100% - 1.25rem), 44rem);
-  --journey-setup-left: max(
-    var(--journey-gutter),
-    calc((100% - var(--journey-setup-width)) / 2)
-  );
-  /* Grow right from Setup’s left edge — do not re-center when widening. */
-  width: min(72rem, calc(100% - var(--journey-setup-left) - var(--journey-gutter)));
+  --journey-wide-width: min(calc(100% - 1.25rem), 72rem);
+  width: var(--journey-wide-width);
   max-width: none;
-  margin-left: var(--journey-setup-left);
-  margin-right: auto;
+  /* Full chapters stay symmetrically centered (not one-sided growth). */
+  margin-inline: auto;
 }
 
-/* Compact Setup frame; same left edge as wider chapters. */
+/* Compact Setup frame — also centered; its tab rail position is the datum. */
 .journey-stage[data-chapter="setup"] .journey-stage-shell {
   width: var(--journey-setup-width);
   max-width: 44rem;
@@ -1196,14 +1190,23 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   position: sticky;
   top: 3.75rem;
   z-index: 24;
-  /* Rail stays Setup-wide so How to use + tabs never shift with the sheet. */
+  /* Rail stays Setup-wide; margin-left is set from the measured datum in JS. */
   width: min(100%, var(--journey-setup-width, 44rem));
   max-width: var(--journey-setup-width, 44rem);
+  box-sizing: border-box;
 }
 
-/*
-  Cap the chapter tab track inside the Setup-width rail.
-*/
+/* CSS fallback before/without a Setup measurement: centre the Setup-width rail. */
+.journey-stage:not([data-chapter="setup"]) .journey-chapter-binder .binder-rail {
+  margin-left: calc(
+    (var(--journey-wide-width, 72rem) - var(--journey-setup-width, 44rem)) / 2
+  );
+}
+
+.journey-stage[data-chapter="setup"] .journey-chapter-binder .binder-rail {
+  margin-left: 0;
+}
+
 .journey-chapter-binder[data-leading="true"] .binder-tabs {
   flex: 1 1 auto;
   min-width: 0;
