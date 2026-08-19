@@ -6,7 +6,7 @@ export const PHASE_OPTIONS = [
     label: "Early years",
     short: "EY",
     ages: "0–4",
-    hint: "Nursery and reception (typically ages 0–5) — day care, school nurseries/infants, and EYFSP area context",
+    hint: "Nursery, reception, and wrap-around (typically ages 0–5 plus before/after school & holiday clubs) — day care, out-of-school settings, school nurseries/infants, and EYFSP area context",
   },
   {
     id: "childminders",

@@ -73,7 +73,7 @@ export const EY_PROVIDER_METRICS: EyDisplayMetric[] = [
     key: "ofstedOverall",
     label: "Ofsted overall effectiveness",
     parentHint:
-      "Most recent full inspection overall grade from Ofsted. Some newer framework visits publish domain judgements or a report without a single overall grade.",
+      "Most recent full inspection overall grade from Ofsted. Full/sessional nurseries usually show Outstanding–Inadequate; out-of-school / holiday clubs often show Met or Not met (safeguarding and welfare focus — curriculum domains are not graded the same way).",
     unit: "text",
     get: (s) => {
       if (s.ofstedOverall) return s.ofstedOverall;
@@ -152,7 +152,8 @@ export const EY_PROVIDER_METRICS: EyDisplayMetric[] = [
   {
     key: "providerSubtype",
     label: "Provider / school type",
-    parentHint: "Ofsted subtype for day care, or school phase / type label.",
+    parentHint:
+      "Ofsted subtype for day care (Full, Sessional, or Out-of-school), or school phase / type label.",
     unit: "text",
     get: (s) => s.providerSubtype || s.schoolTypeLabel || s.phase,
   },

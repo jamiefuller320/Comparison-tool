@@ -3,7 +3,9 @@
 
 MVP seed scope (see scripts/seed_scope.py):
   - Ofsted childcare MI: Active, Early Years Register, Hampshire,
-    non-domestic Full/Sessional day care (named settings; childminders deferred)
+    non-domestic Full/Sessional day care plus Out-of-school day care
+    (before/after school and holiday clubs on the EYR; named settings;
+    childminders harvested separately)
   - EES EYFSP headline measures: England + Hampshire only
     (DfE does not publish provider/school-level EYFSP)
 
@@ -72,7 +74,16 @@ OFSTED_GRADE_LABELS = {
     "4": "Inadequate",
 }
 
-ALLOWED_SUBTYPES = {"Full day care", "Sessional day care"}
+ALLOWED_SUBTYPES = {
+    "Full day care",
+    "Sessional day care",
+    # Before/after school and holiday clubs on the EYR (Ofsted MI label).
+    "Out-of-school day care",
+}
+
+# Out-of-school EYR inspections publish under OOSC:* columns (often Met / Not met)
+# rather than the Outstanding–Inadequate "Most Recent Full:*" fields.
+OOSC_SUBTYPE = "Out-of-school day care"
 
 _MONTHS = {
     "january": 1,
@@ -165,9 +176,85 @@ def grade_label(code: str | None) -> str | None:
         return None
     if text in OFSTED_GRADE_LABELS:
         return OFSTED_GRADE_LABELS[text]
+    # Normalise common OOSC met/not-met wording for parent-facing boards.
+    lower = text.lower()
+    if lower == "met":
+        return "Met"
+    if lower.startswith("not met"):
+        # Preserve actions/enforcement detail when present.
+        return text[0].upper() + text[1:] if text else text
     if any(ch.isalpha() for ch in text):
         return text
     return text
+
+
+def inspection_fields(row: dict, subtype: str) -> dict[str, str | None]:
+    """Pick overall + date (+ domain grades when published) for this subtype."""
+    if subtype == OOSC_SUBTYPE:
+        overall = first_value(
+            row,
+            "OOSC: Overall Effectiveness",
+            "Most Recent Full: Overall Effectiveness",
+            "Overall effectiveness",
+        )
+        inspected = first_value(
+            row,
+            "OOSC: Inspection Date",
+            "Most Recent Full: Inspection Date",
+            "Inspection date",
+        )
+        # Domain grades are usually blank for OOSC (safeguarding/welfare focus).
+        return {
+            "overall": overall,
+            "inspected": inspected,
+            "quality": None,
+            "leadership": None,
+            "behaviour": None,
+            "personal": None,
+            "safeguarding": first_value(
+                row,
+                "Most Recent Full: Safeguarding is Effective?",
+                "Safeguarding is effective?",
+            ),
+        }
+
+    return {
+        "overall": first_value(
+            row,
+            "Most Recent Full: Overall Effectiveness",
+            "Overall effectiveness",
+        ),
+        "quality": first_value(
+            row,
+            "Most Recent Full: Quality of Education",
+            "Quality of education",
+        ),
+        "leadership": first_value(
+            row,
+            "Most Recent Full: Effectiveness of Leadership and Management",
+            "Effectiveness of leadership and management",
+        ),
+        "behaviour": first_value(
+            row,
+            "Most Recent Full: Behaviour and Attitudes",
+            "Behaviour and Attitudes",
+        ),
+        "personal": first_value(
+            row,
+            "Most Recent Full: Personal Development",
+            "Personal Development",
+        ),
+        "inspected": first_value(
+            row,
+            "Most Recent Full: Inspection Date",
+            "Inspection date",
+        ),
+        "safeguarding": first_value(
+            row,
+            "Most Recent Full: Safeguarding is Effective?",
+            "Safeguarding is effective?",
+        ),
+    }
 
 
 def ofsted_csv_sort_key(url: str) -> tuple[int, int, int]:
@@ -265,43 +352,16 @@ def harvest_providers(target_la: str) -> tuple[list[dict], str, str]:
         if not ofsted_urn:
             continue
 
-        overall_code = first_value(
-            row,
-            "Most Recent Full: Overall Effectiveness",
-            "Overall effectiveness",
-        )
-        quality_code = first_value(
-            row,
-            "Most Recent Full: Quality of Education",
-            "Quality of education",
-        )
-        leadership_code = first_value(
-            row,
-            "Most Recent Full: Effectiveness of Leadership and Management",
-            "Effectiveness of leadership and management",
-        )
-        behaviour_code = first_value(
-            row,
-            "Most Recent Full: Behaviour and Attitudes",
-            "Behaviour and Attitudes",
-        )
-        personal_code = first_value(
-            row,
-            "Most Recent Full: Personal Development",
-            "Personal Development",
-        )
-        inspected = first_value(
-            row,
-            "Most Recent Full: Inspection Date",
-            "Inspection date",
-        )
-        safeguarding = first_value(
-            row,
-            "Most Recent Full: Safeguarding is Effective?",
-            "Safeguarding is effective?",
-        )
         places = parse_metric(first_value(row, "Places"))
         places_est = parse_metric(first_value(row, "Places including Estimates"))
+        insp = inspection_fields(row, subtype)
+        overall_code = insp["overall"]
+        quality_code = insp["quality"]
+        leadership_code = insp["leadership"]
+        behaviour_code = insp["behaviour"]
+        personal_code = insp["personal"]
+        inspected = insp["inspected"]
+        safeguarding = insp["safeguarding"]
 
         addr_bits = [
             first_value(row, "Provider Address Line 1"),
@@ -309,6 +369,13 @@ def harvest_providers(target_la: str) -> tuple[list[dict], str, str]:
             first_value(row, "Provider Address Line 3"),
         ]
         address = ", ".join(b for b in addr_bits if b)
+
+        # OOSC wrap-around / holiday clubs are not nursery age 0–5; keep them on
+        # the Early years path via explicit phases, without leaking into KS chips.
+        is_oosc = subtype == OOSC_SUBTYPE
+        age_range = (
+            "Before/after school & holidays" if is_oosc else "0 to 5"
+        )
 
         providers.append(
             {
@@ -326,7 +393,7 @@ def harvest_providers(target_la: str) -> tuple[list[dict], str, str]:
                 "registerCombination": first_value(
                     row, "Individual Register Combinations"
                 ),
-                "ageRange": "0 to 5",
+                "ageRange": age_range,
                 "phase": "early-years",
                 "phases": ["early-years"],
                 "sector": "independent",
@@ -569,6 +636,7 @@ def main() -> None:
             "eyfspPublication": eyfsp["sourceUrl"],
             "note": (
                 f"{eyfsp_la_name} scope: named non-domestic Full/Sessional day care "
+                "and Out-of-school day care (before/after school & holiday clubs) "
                 "on the Early Years Register, plus EYFSP England/LA benchmarks. "
                 "Consented childminders are harvested separately."
             ),
