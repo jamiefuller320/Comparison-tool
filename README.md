@@ -80,6 +80,30 @@ domain is active.
 To rebuild the legacy `/Comparison-tool/` project path instead, set
 `GITHUB_PAGES_PROJECT_PATH=true` on the Pages build (not the default).
 
+### Google Search Console — “Page with redirect”
+
+After **Enforce HTTPS** is on, these URLs **should** keep returning `301` forever:
+
+| URL | Redirects to |
+| --- | --- |
+| `http://schoolcompass.uk/…` | `https://schoolcompass.uk/…` |
+| `https://www.schoolcompass.uk/…` | `https://schoolcompass.uk/…` |
+| `https://jamiefuller320.github.io/Comparison-tool/…` | `https://schoolcompass.uk/…` |
+| Paths without a trailing slash (e.g. `/guides`) | Same path with `/` |
+
+In Search Console they correctly appear under **Page with redirect**. That is **not** a site
+failure — Google only indexes the destination. Clicking **Validate fix** on that bucket
+will keep failing, because the redirects are intentional.
+
+Do this instead (property `sc-domain:schoolcompass.uk`):
+
+1. Confirm live: `curl -sI https://schoolcompass.uk/` → **200** (not a redirect).
+2. URL Inspection → inspect **`https://schoolcompass.uk/`** (HTTPS + trailing slash).
+3. If the live test is indexable, click **Request indexing**.
+4. Submit / refresh sitemap `https://schoolcompass.uk/sitemap.xml`.
+5. Prefer the **Domain** property only. Drop any **URL-prefix** property for
+   `http://schoolcompass.uk` — every page there will show as “Page with redirect”.
+
 ## What it does
 
 - **Stage & care selector** for Early years / Childminders / KS1 / KS2 / KS3 / KS4 — a **child age-range slider** turns on matching school stages (chips still override); school stages use **OR** by default (optional **Every selected stage** AND filter); **Specialist / AP** filter for special schools and alternative provision; Childminders is a separate wrap-around category (directory + checklist), not mixed into Early years nursery tables

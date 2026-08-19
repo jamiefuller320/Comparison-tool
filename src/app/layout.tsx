@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Figtree, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
-import { HttpsUpgrade } from "@/components/HttpsUpgrade";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
@@ -41,7 +40,7 @@ export const metadata: Metadata = {
   description: SEO_DESCRIPTION,
   applicationName: BRAND_NAME,
   keywords: [...SEO_KEYWORDS],
-  authors: [{ name: BRAND_NAME, url: BRAND_HOME_URL }],
+  authors: [{ name: BRAND_NAME, url: `${BRAND_HOME_URL}/` }],
   creator: BRAND_NAME,
   publisher: BRAND_NAME,
   category: "education",
@@ -67,7 +66,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_GB",
-    url: BRAND_HOME_URL,
+    // Match <link rel="canonical"> — trailing slash is the indexed homepage.
+    url: `${BRAND_HOME_URL}/`,
     siteName: BRAND_NAME,
     title: SEO_TITLE,
     description: SEO_DESCRIPTION,
@@ -111,7 +111,6 @@ export default function RootLayout({
   return (
     <html lang="en-GB" className={`${figtree.variable} ${fraunces.variable}`}>
       <body>
-        <HttpsUpgrade />
         <JsonLd data={websiteJsonLd()} />
         <a className="skip-link" href="#main">
           Skip to main content

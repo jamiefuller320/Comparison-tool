@@ -52,6 +52,10 @@ jobs:
           # Without these, Save shortlist still works as a browser-local email save.
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Optional Google Search Console HTML-tag verification token.
+          # Domain property (sc-domain:schoolcompass.uk) uses DNS and needs no
+          # meta tag; set this only if you also verify a URL-prefix property.
+          NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${{ secrets.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}
         run: npm run build:pages
       - uses: actions/upload-pages-artifact@v3
         with:
