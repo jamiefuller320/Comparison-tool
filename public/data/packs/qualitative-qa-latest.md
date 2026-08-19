@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-08-18T08:31:40.121021+00:00`
+- Ran at: `2026-08-19T08:25:51.162876+00:00`
 - Provider: `none`
-- Reviewed: `20`
-- Schools changed: `15`
-- Findings applied: `18`
-- New learned phrases: `1`
+- Reviewed: `16`
+- Schools changed: `16`
+- Findings applied: `33`
+- New learned phrases: `19`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 15 school(s) (18 area finding(s)).
-- Learned 1 new junk phrase(s) (store size 296).
-- Reviewed top 20 suspect(s); provider=none.
+- Applied QA fixes to 16 school(s) (33 area finding(s)).
+- Learned 19 new junk phrase(s) (store size 315).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `144093` King's Academy Gomer — score 6.0 flags=chrome
-- `151167` Kings Furlong Infant School and Nursery — score 6.0 flags=chrome
-- `116468` Kings' School — score 6.0 flags=chrome
-- `134734` Cadland Primary School — score 5.0 flags=chrome,implausible_offerings
-- `116174` Alver Valley Infant and Nursery School — score 3.0 flags=chrome
-- `116172` Alver Valley Junior School — score 3.0 flags=chrome
-- `115851` Anstey Junior School — score 3.0 flags=chrome
-- `116486` Hordle CofE (VA) Primary School — score 3.0 flags=chrome
-- `116361` John Keble Church of England Primary School — score 3.0 flags=chrome
-- `116036` Kempshott Infant School — score 3.0 flags=chrome
-- `116016` Kempshott Junior School — score 3.0 flags=chrome
-- `116296` King's Somborne Church of England Primary School — score 3.0 flags=chrome
-- `116060` Kings Copse Primary School — score 3.0 flags=chrome
-- `131717` Knightwood Primary School — score 3.0 flags=chrome
-- `116180` Lee-On-the-Solent Infant and Nursery School — score 3.0 flags=chrome
-- `136643` Bohunt School — score 2.0 flags=implausible_offerings
-- `116277` Bursledon Church of England Infant School — score 2.0 flags=implausible_offerings
-- `116027` Bursledon Junior School(CA) — score 2.0 flags=implausible_offerings
-- `116357` Charles Kingsley's Church of England Primary School — score 2.0 flags=implausible_offerings
-- `116431` Harrow Way Community School — score 2.0 flags=implausible_offerings
+- `116015` Manor Field Junior School — score 19.0 flags=chrome,policy_toc,implausible_offerings,boilerplate
+- `116298` Long Sutton Church of England Primary School — score 14.0 flags=policy_toc,implausible_offerings,chrome
+- `133292` Micheldever CofE Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
+- `116330` Liphook Church of England Controlled Junior School — score 11.0 flags=boilerplate,chrome,policy_toc,implausible_offerings
+- `116056` Liphook Infant School — score 11.0 flags=boilerplate,chrome,policy_toc,implausible_offerings
+- `116052` Mengham Junior School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `115989` Locks Heath Infant & Nursery  School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `116299` Marchwood Church of England Infant School — score 8.0 flags=chrome,policy_toc,implausible_offerings
+- `138585` Lift New Forest — score 6.0 flags=chrome
+- `140098` Milford-on-Sea Church of England Primary School — score 6.0 flags=chrome
+- `116490` Mill Rythe Infant School — score 6.0 flags=chrome
+- `116365` Lymington Church of England Infant School — score 5.0 flags=policy_toc,implausible_offerings
+- `115926` Locks Heath Junior School — score 3.0 flags=boilerplate
+- `116051` Lymington Junior School — score 3.0 flags=chrome
+- `138242` Manor Church of England Infant School — score 3.0 flags=chrome
+- `116150` Manor Infant School — score 3.0 flags=chrome
