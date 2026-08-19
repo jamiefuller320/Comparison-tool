@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in School Compass work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-08-07 (Hampshire catchments + admissions places context).
+Last reviewed from agent chat: 2026-08-19 (interest weighting, OOSC day care, COVID caveats, citation footnotes, multi-LA catchment loader).
 
 ## How to use
 
