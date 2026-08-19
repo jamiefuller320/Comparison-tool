@@ -162,13 +162,16 @@ export function NearbyMap({
       zoomControl: true,
     }).setView([home.latitude, home.longitude], 12);
 
-    // Carto Positron — fewer peak/POI glyphs than stock OSM tiles.
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      maxZoom: 18,
-      subdomains: "abcd",
-    }).addTo(map);
+    // Carto Voyager — coloured parks/water/roads without OSM peak-height clutter.
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        maxZoom: 18,
+        subdomains: "abcd",
+      },
+    ).addTo(map);
 
     layersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
@@ -393,6 +396,26 @@ export function NearbyMap({
           ) : null}
         </div>
       ) : null}
+      <div className="nearby-map-legend" aria-label="Map key">
+        <span className="nearby-map-legend-item">
+          <span className="nearby-map-legend-dot is-home" aria-hidden />
+          Home
+        </span>
+        <span className="nearby-map-legend-item">
+          <span className="nearby-map-legend-dot is-selected" aria-hidden />
+          Shortlisted
+        </span>
+        <span className="nearby-map-legend-item">
+          <span className="nearby-map-legend-dot is-default" aria-hidden />
+          In range
+        </span>
+        {emphasizeKs4 && !comparableKs4Only ? (
+          <span className="nearby-map-legend-item">
+            <span className="nearby-map-legend-dot is-muted" aria-hidden />
+            No comparable Att8
+          </span>
+        ) : null}
+      </div>
     </div>
   );
 }
