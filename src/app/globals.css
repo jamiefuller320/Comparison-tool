@@ -5652,6 +5652,67 @@ a.area-list-link:hover .area-list-meta {
   color: rgba(247, 251, 255, 0.78);
 }
 
+.school-seo-note {
+  margin: 0.85rem 0 0;
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+.school-seo-note a {
+  color: var(--sea);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.school-seo-note a:hover {
+  color: var(--coral);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.school-seo-precis {
+  margin: 0;
+  max-width: 44rem;
+  padding: 1rem 1.15rem;
+  border-left: 3px solid var(--sea);
+  background: color-mix(in srgb, var(--sea) 6%, transparent);
+  border-radius: 0 0.65rem 0.65rem 0;
+}
+
+.school-seo-precis p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.school-seo-town-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+.school-seo-town-row .area-list-link {
+  flex: 1;
+  min-width: 0;
+}
+
+.school-seo-compare-link {
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.55rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--sea-deep);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--sea) 10%, transparent);
+}
+
+.school-seo-compare-link:hover {
+  background: color-mix(in srgb, var(--sea) 18%, transparent);
+  color: var(--coral);
+}
+
 .guide-faq {
   display: grid;
   gap: 0.65rem;

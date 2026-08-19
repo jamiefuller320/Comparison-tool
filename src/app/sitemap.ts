@@ -3,12 +3,22 @@ import { areaPath, areasIndexPath, listCoverageAreas } from "@/lib/areas";
 import { AREA_STAGE_LANDINGS, areaStagePath } from "@/lib/areaStages";
 import { BRAND_HOME_URL } from "@/lib/brand";
 import { GUIDE_PAGES, guidePath, guidesIndexPath } from "@/lib/guides";
+import {
+  listSeoHampshireSchools,
+  listSeoHampshireTowns,
+  schoolPath,
+  townPath,
+  townsIndexPath,
+} from "@/lib/seoSchools";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   const areas = listCoverageAreas();
+  const hampshire = areas.find((area) => area.isSeed);
+  const towns = listSeoHampshireTowns();
+  const schools = listSeoHampshireSchools();
 
   return [
     {
@@ -54,5 +64,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
         })),
       ];
     }),
+    ...(hampshire
+      ? [
+          {
+            url: `${BRAND_HOME_URL}${townsIndexPath(hampshire.slug)}`,
+            lastModified: hampshire.lastModified
+              ? new Date(hampshire.lastModified)
+              : lastModified,
+            changeFrequency: "weekly" as const,
+            priority: 0.82,
+          },
+          ...towns.map((town) => ({
+            url: `${BRAND_HOME_URL}${townPath(town.slug, town.areaSlug)}`,
+            lastModified: hampshire.lastModified
+              ? new Date(hampshire.lastModified)
+              : lastModified,
+            changeFrequency: "weekly" as const,
+            priority: 0.78,
+          })),
+          ...schools.map((school) => ({
+            url: `${BRAND_HOME_URL}${schoolPath(school.urn)}`,
+            lastModified: hampshire.lastModified
+              ? new Date(hampshire.lastModified)
+              : lastModified,
+            changeFrequency: "weekly" as const,
+            priority: 0.65,
+          })),
+        ]
+      : []),
   ];
 }

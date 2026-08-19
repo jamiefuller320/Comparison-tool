@@ -37,11 +37,19 @@ Scheduled refresh uses the Hampshire maintained harvest. A **twice-weekly pack q
 
 ## Live site
 
-**https://schoolcompass.uk** (GitHub Pages + custom domain)
+**https://schoolcompass.uk/** (GitHub Pages + custom domain)
 
 The static export is rooted at `/` (see `public/CNAME`). The old project URL
 `https://jamiefuller320.github.io/Comparison-tool/` is not used once the custom
 domain is active.
+
+### SEO landings (Hampshire first)
+
+- **Town hub:** `/areas/hampshire/towns/` — postal towns with ≥8 schools
+- **Town page:** `/areas/hampshire/towns/{town}/` — school list + compare deep links
+- **School page:** `/schools/{urn}/` — Ofsted/outcomes snapshot, inspection excerpt,
+  CTA `/?schools={urn}#side-by-side`
+- All of the above are in `sitemap.xml` (Hampshire seed only for now; packs later)
 
 ### Enable GitHub Pages + schoolcompass.uk (one-time)
 
