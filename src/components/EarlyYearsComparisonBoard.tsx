@@ -101,7 +101,7 @@ export function EarlyYearsComparisonBoard({
   const hasPlaces = compareSectionHasData("places", providers);
   const providerHeaders = providers.map((provider) => (
     <th key={provider.urn} scope="col">
-      <SchoolColumnHeader title={shortName(provider.name, 32)}>
+      <SchoolColumnHeader title={provider.name}>
         <span>
           {[provider.town, provider.localAuthority, provider.postcode]
             .filter(Boolean)
@@ -223,17 +223,24 @@ export function EarlyYearsComparisonBoard({
               ))}
             </CompareSectionTable>
           ),
-          website: hasWebsite ? (
+          website: (
             <CompareSectionTable
               tableId="early-years-ofsted"
               headerCells={providerHeaders}
             >
-              <QualitativeEvidenceRows schools={providers} />
+              {hasWebsite ? (
+                <QualitativeEvidenceRows schools={providers} />
+              ) : (
+                <tr>
+                  <td colSpan={providers.length + 1}>
+                    <CompareSectionEmpty>
+                      No website evidence captured for these early-years settings
+                      yet.
+                    </CompareSectionEmpty>
+                  </td>
+                </tr>
+              )}
             </CompareSectionTable>
-          ) : (
-            <CompareSectionEmpty>
-              No website evidence captured for these early-years settings yet.
-            </CompareSectionEmpty>
           ),
           places: hasPlaces ? (
             <CompareSectionTable

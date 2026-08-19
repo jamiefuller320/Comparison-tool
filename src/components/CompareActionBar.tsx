@@ -40,8 +40,12 @@ export function CompareActionBar({
           schoolNames={schoolNames}
           label="Share this comparison"
           idleLabel="Share this comparison"
+          className="compare-action-btn"
         />
-        <PrintComparisonPackButton disabled={!canPrint} />
+        <PrintComparisonPackButton
+          disabled={!canPrint}
+          className="compare-action-btn"
+        />
       </div>
 
       {pathOptions.length > 0 ? (

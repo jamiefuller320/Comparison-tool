@@ -194,7 +194,7 @@ export function IndependentComparisonBoard({
   const hasPlaces = compareSectionHasData("places", schools);
   const schoolHeaders = schools.map((school) => (
     <th key={school.urn} scope="col">
-      <SchoolColumnHeader title={shortName(school.name, 32)}>
+      <SchoolColumnHeader title={school.name}>
         <span>
           {[
             formatSector(resolveSchoolSector(school)),
@@ -284,7 +284,7 @@ export function IndependentComparisonBoard({
       }
     >
       {{
-          ofsted: hasOfsted ? (
+          ofsted: (
             <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
               <InspectionPrecisRows schools={schools} />
               {showInspectionMetrics ? (
@@ -296,22 +296,33 @@ export function IndependentComparisonBoard({
                   benchmarkLabel={benchmarkLabel}
                 />
               ) : null}
+              {!hasOfsted ? (
+                <tr>
+                  <td colSpan={schools.length + 1}>
+                    <CompareSectionEmpty>
+                      No inspection précis or published Ofsted / ISI grades for
+                      this shortlist — open report links from each column header
+                      when available.
+                    </CompareSectionEmpty>
+                  </td>
+                </tr>
+              ) : null}
             </CompareSectionTable>
-          ) : (
-            <CompareSectionEmpty>
-              No inspection précis or published Ofsted / ISI grades for this
-              shortlist — open report links from each column header when
-              available.
-            </CompareSectionEmpty>
           ),
-          website: hasWebsite ? (
+          website: (
             <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
-              <QualitativeEvidenceRows schools={schools} />
+              {hasWebsite ? (
+                <QualitativeEvidenceRows schools={schools} />
+              ) : (
+                <tr>
+                  <td colSpan={schools.length + 1}>
+                    <CompareSectionEmpty>
+                      No website evidence captured for these schools yet.
+                    </CompareSectionEmpty>
+                  </td>
+                </tr>
+              )}
             </CompareSectionTable>
-          ) : (
-            <CompareSectionEmpty>
-              No website evidence captured for these schools yet.
-            </CompareSectionEmpty>
           ),
           places: hasPlaces ? (
             <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>

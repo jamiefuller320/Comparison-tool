@@ -7,7 +7,7 @@ import { FEEDBACK_PRINTED_EVENT } from "@/lib/productFeedback";
 export function PrintComparisonPackButton({
   disabled = false,
   packSelector = '[data-visit-pack="compare"]',
-  className = "btn btn-ghost",
+  className = "compare-action-btn",
 }: {
   disabled?: boolean;
   packSelector?: string;

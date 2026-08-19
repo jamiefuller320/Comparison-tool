@@ -151,7 +151,7 @@ export function PhonicsComparisonBoard({
       ) : (
         schools.map((school) => (
           <th key={school.urn} scope="col">
-            <SchoolColumnHeader title={shortName(school.name, 32)}>
+            <SchoolColumnHeader title={school.name}>
               <span>
                 {[
                   formatSector(resolveSchoolSector(school)),
