@@ -17,6 +17,7 @@ import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { guidesIndexPath } from "@/lib/guides";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { areaLandingJsonLd } from "@/lib/seo";
+import { townsIndexPath } from "@/lib/seoSchools";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -112,6 +113,24 @@ export default async function AreaLandingPage({ params }: PageProps) {
           <AreaStageList area={area} />
         </div>
       </section>
+
+      {area.isSeed ? (
+        <section className="section" aria-labelledby="area-towns-heading">
+          <div className="shell">
+            <div className="section-head">
+              <h2 id="area-towns-heading">Browse {area.localAuthority} by town</h2>
+              <p>
+                Postal-town pages with school snapshots — Winchester,
+                Basingstoke, Farnborough, and more — then shortlist in the
+                compare tool.
+              </p>
+            </div>
+            <p className="area-home-more">
+              <Link href={townsIndexPath(area.slug)}>See Hampshire towns</Link>
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section" aria-labelledby="area-counts-heading">
         <div className="shell">
