@@ -4,12 +4,14 @@ import { schoolHasInspectionPrecis } from "@/lib/inspectionHighlights";
 import { schoolHasQualitativeCapture } from "@/lib/qualitativeEvidence";
 
 export type CompareSectionId =
+  | "context"
   | "ofsted"
   | "website"
   | "places"
   | "performance";
 
 export const COMPARE_SECTION_ORDER: CompareSectionId[] = [
+  "context",
   "ofsted",
   "website",
   "places",
@@ -20,31 +22,38 @@ export const COMPARE_SECTION_META: Record<
   CompareSectionId,
   { label: string; short: string; step: number; lead: string }
 > = {
+  context: {
+    label: "Context",
+    short: "Context",
+    step: 1,
+    lead:
+      "How to read this comparison, shortlist headlines, data sources, and coverage notes.",
+  },
   ofsted: {
     label: "Ofsted",
     short: "Ofsted",
-    step: 1,
+    step: 2,
     lead:
       "Inspection précis and published grades from Ofsted or ISI — prepare visit questions, not a final verdict.",
   },
   website: {
     label: "Website evidence",
     short: "Website",
-    step: 2,
+    step: 3,
     lead:
       "Paragraph summaries from each setting’s own website and documents — curriculum, clubs, and ethos in their words.",
   },
   places: {
     label: "Places & offers",
     short: "Places",
-    step: 3,
+    step: 4,
     lead:
       "Published capacity fill and National Offer Day preference counts — how contested a school has been, not your chance of getting in.",
   },
   performance: {
     label: "Performance statistics",
     short: "Stats",
-    step: 4,
+    step: 5,
     lead:
       "Published attainment and progress figures from official tables — patterns to discuss on visits, not league-table rankings.",
   },
@@ -72,6 +81,8 @@ export function compareSectionHasData(
 ): boolean {
   if (schools.length === 0) return false;
   switch (id) {
+    case "context":
+      return true;
     case "ofsted":
       return schools.some(schoolHasOfstedSection);
     case "website":
@@ -93,6 +104,8 @@ export function compareSectionSummary(
   if (n === 0) return undefined;
 
   switch (id) {
+    case "context":
+      return n > 0 ? `${n} setting${n === 1 ? "" : "s"} on this board` : undefined;
     case "ofsted": {
       const count = schools.filter(schoolHasOfstedSection).length;
       if (count === 0) return "No inspection précis or grades in this shortlist";

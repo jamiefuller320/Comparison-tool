@@ -12,55 +12,78 @@ import {
 import type { SchoolRecord } from "@/lib/types";
 
 /**
- * Ring-binder compare sections — mirrors setup tiles for side-by-side boards.
- * Each tab shows one category (Ofsted, website, places, performance).
+ * Ring-binder compare sections — mirrors HeroSetupTiles chrome and position.
+ * Context is always the first tab; data sections follow.
  */
 export function CompareSectionTabs({
   schools,
   activeId,
   onActiveChange,
+  contextSlot,
+  contextSummary,
   children,
 }: {
   schools: SchoolRecord[];
   activeId: CompareSectionId;
   onActiveChange: (id: CompareSectionId) => void;
+  /** Guidance, summaries, provenance, and other framing — shown in Context. */
+  contextSlot: ReactNode;
+  contextSummary?: string;
   children: Partial<Record<CompareSectionId, ReactNode>>;
 }) {
-  const visibleIds = COMPARE_SECTION_ORDER.filter((id) => children[id] != null);
+  const sectionIds = COMPARE_SECTION_ORDER.filter(
+    (id) => id === "context" || children[id] != null,
+  );
   const activeMeta = COMPARE_SECTION_META[activeId];
-  const activeSummary = compareSectionSummary(activeId, schools);
+  const activeSummary =
+    activeId === "context"
+      ? contextSummary || compareSectionSummary("context", schools)
+      : compareSectionSummary(activeId, schools);
 
-  const items: BinderTabItem<CompareSectionId>[] = visibleIds.map((id) => {
+  const items: BinderTabItem<CompareSectionId>[] = sectionIds.map((id) => {
     const meta = COMPARE_SECTION_META[id];
-    const summary = compareSectionSummary(id, schools);
+    const summary =
+      id === "context"
+        ? contextSummary || compareSectionSummary("context", schools)
+        : compareSectionSummary(id, schools);
     return {
       id,
       label: meta.label,
       shortLabel: meta.short,
       step: meta.step,
-      done: compareSectionHasData(id, schools),
+      done:
+        id === "context"
+          ? Boolean(contextSlot)
+          : compareSectionHasData(id, schools),
       title: summary ? `${meta.label}: ${summary}` : `Open ${meta.label}`,
     };
   });
 
+  const activeBody =
+    activeId === "context" ? (
+      <div className="hero-tile-body compare-context-body">{contextSlot}</div>
+    ) : (
+      <div className="hero-tile-body compare-section-body">
+        {children[activeId]}
+      </div>
+    );
+
   return (
     <BinderTabs
-      className="compare-section-binder"
-      tone="paper"
+      className="hero-binder compare-section-binder"
+      tone="harbour"
       ariaLabel="Comparison sections"
       dataTour="compare-sections"
       items={items}
       activeId={activeId}
       onChange={onActiveChange}
       sheetHeader={
-        <header className="binder-sheet-head compare-section-head">
+        <header className="binder-sheet-head hero-tile-head">
           <h3>{activeMeta.label}</h3>
-          <p>{activeSummary || activeMeta.lead}</p>
+          {activeSummary ? <p>{activeSummary}</p> : null}
         </header>
       }
-      sheet={
-        <div className="compare-section-body">{children[activeId]}</div>
-      }
+      sheet={activeBody}
     />
   );
 }

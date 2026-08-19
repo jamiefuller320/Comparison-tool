@@ -642,8 +642,12 @@ export function CompareApp({
     }
 
     if (activePath === "early-years") {
-      return (
-        <div data-tour="boards-early-years">
+      const eyContext = (
+        <>
+          <p className="footnote compare-path-intro">
+            Inspection grades and area EYFSP context — not individual provider
+            attainment scores.
+          </p>
           {showEarlyNotice ? (
             <div className="empty-compare" role="status">
               Early years data isn’t available in this build yet. Try another
@@ -658,36 +662,35 @@ export function CompareApp({
               sourceStamp={eyfspSourceStamp}
             />
           ) : null}
-          {eySelected.length > 0 ? (
-            <div style={{ marginTop: hasEyData ? "1.5rem" : 0 }}>
-              <EarlyYearsComparisonBoard
-                providers={eySelected}
-                childcareOfstedAsAt={eyIndex?.ofstedAsAt}
-                stateOfstedAsAt={index.stats.ofstedStateAsAt}
-                childcareSourcePage={eyIndex?.source.ofstedChildcareMiPage}
-                stateSourcePage={index.source.datasets.ofstedStateSchoolsMi}
-                childcareStamp={childcareOfstedStamp}
-                stateStamp={stateOfstedStamp}
-              />
-            </div>
-          ) : selectedSchools.length > 0 ? (
-            <div
-              className="empty-compare"
-              role="status"
-              style={{ marginTop: "1rem" }}
-            >
+          {eySelected.length === 0 && selectedSchools.length > 0 ? (
+            <div className="empty-compare" role="status">
               Your shortlist is schools without an early-years Ofsted row here
               (for example junior or secondary only). Add a nursery, or a school
               with nursery / reception, to compare inspection grades — the EYFSP
               area table above still gives local context.
             </div>
-          ) : (
+          ) : eySelected.length === 0 ? (
             <div className="empty-compare">
               Add a nursery or school nursery / reception setting from the map
               or search to compare Ofsted grades. Childminders use their own
               category.
             </div>
-          )}
+          ) : null}
+        </>
+      );
+
+      return (
+        <div data-tour="boards-early-years">
+          <EarlyYearsComparisonBoard
+            providers={eySelected}
+            childcareOfstedAsAt={eyIndex?.ofstedAsAt}
+            stateOfstedAsAt={index.stats.ofstedStateAsAt}
+            childcareSourcePage={eyIndex?.source.ofstedChildcareMiPage}
+            stateSourcePage={index.source.datasets.ofstedStateSchoolsMi}
+            childcareStamp={childcareOfstedStamp}
+            stateStamp={stateOfstedStamp}
+            contextSlot={eyContext}
+          />
           {eySelected.length > 0 ? (
             <div style={{ marginTop: "1.75rem" }}>
               <VisitPack
@@ -751,8 +754,11 @@ export function CompareApp({
     }
 
     if (activePath === "ks1") {
-      return (
-        <div>
+      const ks1Context = (
+        <>
+          <p className="footnote compare-path-intro">
+            Local-authority phonics context — not a per-school league table.
+          </p>
           <DecisionGuidancePanel path="ks1" />
           <PathSummaries schools={ks1Selected} {...summaryOpts} />
           {!showPhonicsBoard ? (
@@ -766,12 +772,21 @@ export function CompareApp({
               context. School-level phonics scores are not published — this board
               is area background for Year 1 choice, not a school league table.
             </div>
-          ) : (
+          ) : null}
+        </>
+      );
+
+      return (
+        <div>
+          {showPhonicsBoard ? (
             <PhonicsComparisonBoard
               schools={ks1Selected}
               phonics={index.benchmarks.phonics}
               sourceStamp={phonicsSourceStamp}
+              contextSlot={ks1Context}
             />
+          ) : (
+            ks1Context
           )}
           {ks1Selected.length > 0 ? (
             <div style={{ marginTop: "1.75rem" }}>
@@ -788,8 +803,11 @@ export function CompareApp({
     }
 
     if (activePath === "ks2") {
-      return (
-        <div>
+      const ks2Context = (
+        <>
+          <p className="footnote compare-path-intro">
+            State Year 6 tables — patterns to visit on, not a final verdict.
+          </p>
           <DecisionGuidancePanel path="ks2" />
           {ks2Selected.length > 0 ? (
             <aside className="year-trend-tip" data-tour="year-trend">
@@ -806,13 +824,18 @@ export function CompareApp({
               cells later are usually suppression or a missing Year 6 table, not a
               join error.
             </div>
-          ) : (
-            <ComparisonBoard
-              schools={ks2Selected}
-              england={index.benchmarks.england}
-              sourceStamp={ks2Stamp}
-            />
-          )}
+          ) : null}
+        </>
+      );
+
+      return (
+        <div>
+          <ComparisonBoard
+            schools={ks2Selected}
+            england={index.benchmarks.england}
+            sourceStamp={ks2Stamp}
+            contextSlot={ks2Context}
+          />
           {ks2Selected.length > 0 ? (
             <div style={{ marginTop: "1.75rem" }}>
               <VisitPack
@@ -827,9 +850,12 @@ export function CompareApp({
       );
     }
 
-    // ks4
-    return (
-      <div>
+    const ks4Context = (
+      <>
+        <p className="footnote compare-path-intro">
+          Compared on published Key Stage 4 figures when available — patterns to
+          discuss on visits, not league-table rankings.
+        </p>
         <DecisionGuidancePanel path="ks4" />
         <PathSummaries
           schools={ks4Selected}
@@ -844,15 +870,20 @@ export function CompareApp({
             off “Comparable KS4 only” to see special / alternative provision with
             a reason chip.
           </div>
-        ) : (
-          <IndependentComparisonBoard
-            schools={ks4Selected}
-            benchmark={ks4Bench}
-            benchmarkLabel={ks4BenchLabel}
-            sourceStamp={ks4Stamp}
-            ofstedStateAsAt={index.stats.ofstedStateAsAt}
-          />
-        )}
+        ) : null}
+      </>
+    );
+
+    return (
+      <div>
+        <IndependentComparisonBoard
+          schools={ks4Selected}
+          benchmark={ks4Bench}
+          benchmarkLabel={ks4BenchLabel}
+          sourceStamp={ks4Stamp}
+          ofstedStateAsAt={index.stats.ofstedStateAsAt}
+          contextSlot={ks4Context}
+        />
         {ks4Selected.length > 0 ? (
           <div style={{ marginTop: "1.75rem" }}>
             <VisitPack
@@ -980,25 +1011,6 @@ export function CompareApp({
 
           const sideBySideSheet = (
             <>
-              <div className="section-head">
-                <h2>Side by side</h2>
-                <p>
-                  One path at a time
-                  {availablePaths.length > 1
-                    ? " — switch tabs when several categories are on"
-                    : null}
-                  . Patterns to visit on, not a final verdict.
-                </p>
-                {selectedSchools.length > 0 ? (
-                  <div className="shortlist-inline-actions section-head-actions">
-                    <ShareShortlistButton
-                      schoolNames={selectedSchools.map((s) => s.name)}
-                      label="Share this comparison"
-                    />
-                  </div>
-                ) : null}
-              </div>
-
               {activePath ? (
                 <ComparePathTabs
                   available={availablePaths}
@@ -1006,6 +1018,15 @@ export function CompareApp({
                   onChange={setActivePath}
                   withShortlist={shortlistPaths}
                 />
+              ) : null}
+
+              {selectedSchools.length > 0 ? (
+                <div className="shortlist-inline-actions compare-share-row no-print">
+                  <ShareShortlistButton
+                    schoolNames={selectedSchools.map((s) => s.name)}
+                    label="Share this comparison"
+                  />
+                </div>
               ) : null}
 
               {renderActivePath()}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Bar,
   BarChart,
@@ -87,6 +87,7 @@ export function IndependentComparisonBoard({
   benchmarkLabel = "Sector mean",
   sourceStamp,
   ofstedStateAsAt,
+  contextSlot,
 }: {
   schools: SchoolRecord[];
   /** @deprecated Prefer `benchmark` — kept for older call sites. */
@@ -95,10 +96,11 @@ export function IndependentComparisonBoard({
   benchmarkLabel?: string;
   sourceStamp?: SourceStamp | null;
   ofstedStateAsAt?: string | null;
+  contextSlot: ReactNode;
 }) {
   const activeBench = benchmark ?? independentBench;
   const [activeSection, setActiveSection] =
-    useState<CompareSectionId>("ofsted");
+    useState<CompareSectionId>("context");
   const dataGaps = [
     ...gapsForKs4Board(schools),
     ...gapsForKs4OfstedAsAt(schools, ofstedStateAsAt),
@@ -106,17 +108,40 @@ export function IndependentComparisonBoard({
   const urnKey = schools.map((s) => s.urn).join(",");
 
   useEffect(() => {
-    setActiveSection("ofsted");
+    setActiveSection("context");
   }, [urnKey]);
 
   if (schools.length === 0) {
     return (
-      <div className="empty-compare">
-        Add a secondary or 16–18 setting to compare published GCSE and A-level
-        figures. Selecting KS3 shortlists schools that offer Years 7–9; school-level
-        attainment is still published at KS4, so this board shows later outcomes
-        rather than KS3 scores.
-      </div>
+      <CompareSectionTabs
+        schools={[]}
+        activeId={activeSection}
+        onActiveChange={setActiveSection}
+        contextSlot={contextSlot}
+      >
+        {{
+          ofsted: (
+            <CompareSectionEmpty>
+              Add a secondary or 16–18 setting to compare inspection data.
+            </CompareSectionEmpty>
+          ),
+          website: (
+            <CompareSectionEmpty>
+              Add schools to your shortlist to compare website evidence.
+            </CompareSectionEmpty>
+          ),
+          places: (
+            <CompareSectionEmpty>
+              Add schools to your shortlist to compare places and offers.
+            </CompareSectionEmpty>
+          ),
+          performance: (
+            <CompareSectionEmpty>
+              Add a secondary or 16–18 setting for GCSE / A-level tables.
+            </CompareSectionEmpty>
+          ),
+        }}
+      </CompareSectionTabs>
     );
   }
 
@@ -235,26 +260,30 @@ export function IndependentComparisonBoard({
   ));
 
   return (
-    <div>
-      {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="ks4" gaps={dataGaps} />
-      ) : (
-        <DataGapFlags gaps={dataGaps.filter((g) => g.level === "board")} />
-      )}
-
-      <CoverageStrip
-        schools={schools}
-        board="ks4"
-        gaps={dataGaps}
-        secondarySlot={<SecondaryContextPane schools={schools} board="ks4" />}
-      />
-
-      <CompareSectionTabs
-        schools={schools}
-        activeId={activeSection}
-        onActiveChange={setActiveSection}
-      >
-        {{
+    <CompareSectionTabs
+      schools={schools}
+      activeId={activeSection}
+      onActiveChange={setActiveSection}
+      contextSlot={
+        <>
+          {contextSlot}
+          {sourceStamp ? (
+            <BoardProvenance stamp={sourceStamp} board="ks4" gaps={dataGaps} />
+          ) : (
+            <DataGapFlags gaps={dataGaps.filter((g) => g.level === "board")} />
+          )}
+          <CoverageStrip
+            schools={schools}
+            board="ks4"
+            gaps={dataGaps}
+            secondarySlot={
+              <SecondaryContextPane schools={schools} board="ks4" />
+            }
+          />
+        </>
+      }
+    >
+      {{
           ofsted: hasOfsted ? (
             <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
               <InspectionPrecisRows schools={schools} />
@@ -296,20 +325,8 @@ export function IndependentComparisonBoard({
           performance: (
             <>
               <p className="footnote compare-section-note">
-                Compared on published Key Stage 4
-                {hasAnyKs5 ? " and 16–18" : ""} figures
-                {hasIndie ? " plus inspection outcomes where available" : ""}
-                {hasState && hasIndie
-                  ? " — state and independent schools share these secondary measures."
-                  : hasState
-                    ? " for secondary stages (not the Key Stage 2 tables used for primaries)."
-                    : " — not the Key Stage 2 tables used for state primaries."}{" "}
-                The DfE does not publish school-level KS3 attainment: selecting{" "}
-                <strong>KS3</strong> shortlists schools that offer Years 7–9,
-                while this board shows later GCSE / 16–18 outcomes when
-                published.
                 {activeBench?.att8Average != null
-                  ? ` ${benchmarkLabel} Attainment 8 is ${activeBench.att8Average} across ${activeBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} schools with usable figures (${activeBench.period}).`
+                  ? `${benchmarkLabel} Attainment 8 is ${activeBench.att8Average} across ${activeBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} schools with usable figures (${activeBench.period}).`
                   : null}
                 {!hasAnyKs4
                   ? " None of these schools have published KS4 figures in the latest tables."
@@ -385,8 +402,7 @@ export function IndependentComparisonBoard({
             </>
           ),
         }}
-      </CompareSectionTabs>
-    </div>
+    </CompareSectionTabs>
   );
 }
 
