@@ -6,14 +6,62 @@ import {
   CORE_AREA_LABELS,
   SOURCE_LABELS,
   citationFootnotes,
+  citationSegments,
   coverageLevel,
   evidenceCount,
   groupSources,
+  numberedCitationSources,
   parentParagraph,
   schoolHasQualitativeCapture,
   shortQualitativeSummary,
   type SourceGroupKey,
 } from "@/lib/qualitativeEvidence";
+
+function CitedParagraph({
+  text,
+  sources,
+}: {
+  text: string;
+  sources: ReturnType<typeof numberedCitationSources>;
+}) {
+  const footnotes = citationFootnotes(text, sources);
+  const byN = new Map(footnotes.map((fn) => [fn.n, fn]));
+  const segments = citationSegments(text);
+
+  if (!footnotes.length) {
+    return <p className="qual-evidence-paragraph">{text}</p>;
+  }
+
+  return (
+    <p className="qual-evidence-paragraph">
+      {segments.map((seg, index) => {
+        if (seg.kind === "text") {
+          return <span key={`t-${index}`}>{seg.value}</span>;
+        }
+        const fn = byN.get(seg.n);
+        if (!fn || !fn.href || fn.href === "#") {
+          return (
+            <sup key={`c-${index}`} className="qual-evidence-footnote-missing">
+              {seg.n}
+            </sup>
+          );
+        }
+        return (
+          <a
+            key={`c-${index}`}
+            className="qual-evidence-footnote"
+            href={fn.href}
+            target="_blank"
+            rel="noreferrer"
+            title={fn.label}
+          >
+            <sup>{seg.n}</sup>
+          </a>
+        );
+      })}
+    </p>
+  );
+}
 
 function SourceList({
   areaKey,
@@ -61,13 +109,8 @@ function AreaBlock({
   const cov = coverageLevel(area);
   const paragraph = parentParagraph(area);
   const groups = groupSources(area, school.qualitativeCapture);
-  const flatSources = [
-    ...groups["school-website"],
-    ...groups["school-document"],
-    ...groups["local-news"],
-    ...groups.other,
-  ];
-  const footnotes = citationFootnotes(paragraph, flatSources);
+  // Footnotes must follow synthesis numbering (signal order), not regrouped sources.
+  const citationSources = numberedCitationSources(area);
   const sourceCount = evidenceCount(area, school.qualitativeCapture);
 
   return (
@@ -90,21 +133,7 @@ function AreaBlock({
           </button>
         ) : null}
       </header>
-      <p className="qual-evidence-paragraph">
-        {paragraph}
-        {footnotes.map((fn) => (
-          <a
-            key={fn.n}
-            className="qual-evidence-footnote"
-            href={fn.href}
-            target="_blank"
-            rel="noreferrer"
-            title={fn.label}
-          >
-            <sup>{fn.n}</sup>
-          </a>
-        ))}
-      </p>
+      <CitedParagraph text={paragraph} sources={citationSources} />
       {area.synthesisMethod ? (
         <p className="qual-evidence-method">
           Summary:{" "}
