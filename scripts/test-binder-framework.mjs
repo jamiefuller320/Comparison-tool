@@ -23,6 +23,12 @@ async function main() {
     process.exit(1);
   }
 
+  const sections = await import("../src/components/CompareSectionTabs.tsx");
+  if (typeof sections.CompareSectionTabs !== "function") {
+    console.error("FAIL CompareSectionTabs export");
+    process.exit(1);
+  }
+
   console.log("binder framework exports ok");
 }
 

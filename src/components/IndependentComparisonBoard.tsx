@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -22,7 +23,11 @@ import {
   resolveSchoolSector,
 } from "@/lib/sectors";
 import { BoardProvenance } from "@/components/BoardProvenance";
-import { CompareTableFrame } from "@/components/CompareTableFrame";
+import {
+  CompareSectionEmpty,
+  CompareSectionTabs,
+} from "@/components/CompareSectionTabs";
+import { CompareSectionTable } from "@/components/CompareSectionTable";
 import { SchoolColumnHeader } from "@/components/SchoolColumnHeader";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import { CoverageStrip } from "@/components/CoverageStrip";
@@ -39,6 +44,10 @@ import {
   gapsForKs4OfstedAsAt,
   schoolGaps,
 } from "@/lib/dataGaps";
+import {
+  compareSectionHasData,
+  type CompareSectionId,
+} from "@/lib/compareSections";
 
 const CHART_KEYS = [
   "engMath94Percent",
@@ -88,10 +97,17 @@ export function IndependentComparisonBoard({
   ofstedStateAsAt?: string | null;
 }) {
   const activeBench = benchmark ?? independentBench;
+  const [activeSection, setActiveSection] =
+    useState<CompareSectionId>("ofsted");
   const dataGaps = [
     ...gapsForKs4Board(schools),
     ...gapsForKs4OfstedAsAt(schools, ofstedStateAsAt),
   ];
+  const urnKey = schools.map((s) => s.urn).join(",");
+
+  useEffect(() => {
+    setActiveSection("ofsted");
+  }, [urnKey]);
 
   if (schools.length === 0) {
     return (
@@ -132,52 +148,94 @@ export function IndependentComparisonBoard({
   const hasAnyKs4 = schools.some((s) => s.att8Average != null);
   const hasAnyKs5 = schools.some((s) => s.ks5ApsPerEntry != null);
   const hasAnyOfsted = schools.some((s) => s.ofstedOverall || s.ofstedIssCompliance);
-  const hasNilCleared = schools.some(
-    (s) => (s.ks4ClearedNilFields && s.ks4ClearedNilFields.length > 0) || s.engMathMeasureUnavailable,
-  );
   const hasIsi = schools.some(
     (s) => (s.inspectorateName || "").toUpperCase() === "ISI" || s.isiReportsUrl,
   );
   const hasState = schools.some((s) => resolveSchoolSector(s) === "state");
   const hasIndie = schools.some((s) => resolveSchoolSector(s) === "independent");
   const visibleGroups = groups.filter((group) => {
-    if (group === "inspection") return hasAnyOfsted || hasIsi || hasIndie;
+    if (group === "inspection") return false;
     if (group === "ks5") return hasAnyKs5;
     return true;
   });
+  const inspectionMetrics = INDEPENDENT_METRICS.filter(
+    (m) => m.group === "inspection",
+  );
+  const showInspectionMetrics =
+    (hasAnyOfsted || hasIsi || hasIndie) && inspectionMetrics.length > 0;
+  const hasOfsted =
+    compareSectionHasData("ofsted", schools) || showInspectionMetrics;
+  const hasWebsite = compareSectionHasData("website", schools);
+  const hasPlaces = compareSectionHasData("places", schools);
+  const schoolHeaders = schools.map((school) => (
+    <th key={school.urn} scope="col">
+      <SchoolColumnHeader title={shortName(school.name, 32)}>
+        <span>
+          {[
+            formatSector(resolveSchoolSector(school)),
+            school.town,
+            school.localAuthority,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </span>
+        <span>
+          {school.ageRange ? `Ages ${school.ageRange}` : null}
+          {school.schoolTypeLabel ? ` · ${school.schoolTypeLabel}` : null}
+        </span>
+        {school.ks4Period ? <span>KS4 {school.ks4Period}</span> : null}
+        {school.ks5Period ? <span>16–18 {school.ks5Period}</span> : null}
+        {school.engMath94IsPillarFallback ? (
+          <span>English &amp; maths 4+ from EBacc pillars</span>
+        ) : school.engMathMeasureUnavailable ? (
+          <span>Combined English &amp; maths GCSE measure not published</span>
+        ) : null}
+        {school.ofstedReportUrl ? (
+          <a href={school.ofstedReportUrl} target="_blank" rel="noreferrer">
+            Ofsted reports ↗
+          </a>
+        ) : null}
+        {school.isiLatestReportUrl ? (
+          <a href={school.isiLatestReportUrl} target="_blank" rel="noreferrer">
+            {school.isiLatestReportTitle || "Latest ISI report"}
+            {school.isiLatestReportDate
+              ? ` (${school.isiLatestReportDate})`
+              : ""}{" "}
+            ↗
+          </a>
+        ) : null}
+        {school.isiProfileUrl || school.isiReportsUrl ? (
+          <a
+            href={school.isiProfileUrl || school.isiReportsUrl!}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {school.isiLatestReportUrl ? "All ISI reports ↗" : "ISI reports ↗"}
+          </a>
+        ) : null}
+        <SchoolOutboundLinks school={school} />
+        <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
+        {sourceStamp ? (
+          <ReportProblemButton
+            compact
+            board="ks4"
+            stamp={{
+              ...sourceStamp,
+              deepLink:
+                school.isiReportsUrl ||
+                schoolDeepLink(school) ||
+                sourceStamp.deepLink,
+            }}
+            urn={school.urn}
+            schoolName={school.name}
+          />
+        ) : null}
+      </SchoolColumnHeader>
+    </th>
+  ));
 
   return (
     <div>
-      <p className="footnote" style={{ marginBottom: "1rem" }}>
-        Compared on published Key Stage 4
-        {hasAnyKs5 ? " and 16–18" : ""} figures
-        {hasIndie ? " plus inspection outcomes where available" : ""}
-        {hasState && hasIndie
-          ? " — state and independent schools share these secondary measures."
-          : hasState
-            ? " for secondary stages (not the Key Stage 2 tables used for primaries)."
-            : " — not the Key Stage 2 tables used for state primaries."}{" "}
-        The DfE does not publish school-level KS3 attainment: selecting{" "}
-        <strong>KS3</strong> shortlists schools that offer Years 7–9, while this
-        board shows later GCSE / 16–18 outcomes when published. Zero percent
-        English &amp; maths GCSE returns are treated as missing when other
-        attainment shows the school is active (common with IGCSEs).
-        {activeBench?.att8Average != null
-          ? ` ${benchmarkLabel} Attainment 8 is ${activeBench.att8Average} across ${activeBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} schools with usable figures (${activeBench.period}).`
-          : null}
-        {!hasAnyKs4
-          ? " None of these schools have published KS4 figures in the latest tables — chips below explain common reasons (special/AP, no Year 11 cohort, or unpublished)."
-          : null}
-        {hasAnyKs5
-          ? " Sixth-form rows use A-level APS where the school appears in the 16–18 tables."
-          : null}
-        {hasNilCleared
-          ? " Some combined English & maths cells were cleared as nil returns; check EBacc English/maths pillars instead."
-          : null}
-        {hasIsi && !hasAnyOfsted
-          ? " ISI-inspected schools link to ISI reports rather than Ofsted grades — that does not explain missing KS4 attainment."
-          : null}
-      </p>
       {sourceStamp ? (
         <BoardProvenance stamp={sourceStamp} board="ks4" gaps={dataGaps} />
       ) : (
@@ -191,163 +249,143 @@ export function IndependentComparisonBoard({
         secondarySlot={<SecondaryContextPane schools={schools} board="ks4" />}
       />
 
-      <CompareTableFrame tableId="ks4">
-        <table className="compare-table">
-          <thead>
-            <tr>
-              <th scope="col">Measure</th>
-              {schools.map((school) => (
-                <th key={school.urn} scope="col">
-                  <SchoolColumnHeader title={shortName(school.name, 32)}>
-                    <span>
-                      {[
-                        formatSector(resolveSchoolSector(school)),
-                        school.town,
-                        school.localAuthority,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </span>
-                    <span>
-                      {school.ageRange ? `Ages ${school.ageRange}` : null}
-                      {school.schoolTypeLabel
-                        ? ` · ${school.schoolTypeLabel}`
-                        : null}
-                    </span>
-                    {school.ks4Period ? (
-                      <span>KS4 {school.ks4Period}</span>
-                    ) : null}
-                    {school.ks5Period ? (
-                      <span>16–18 {school.ks5Period}</span>
-                    ) : null}
-                    {school.engMath94IsPillarFallback ? (
-                      <span>English &amp; maths 4+ from EBacc pillars</span>
-                    ) : school.engMathMeasureUnavailable ? (
-                      <span>Combined English &amp; maths GCSE measure not published</span>
-                    ) : null}
-                    {school.ofstedReportUrl ? (
-                      <a
-                        href={school.ofstedReportUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Ofsted reports ↗
-                      </a>
-                    ) : null}
-                    {school.isiLatestReportUrl ? (
-                      <a
-                        href={school.isiLatestReportUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {school.isiLatestReportTitle || "Latest ISI report"}
-                        {school.isiLatestReportDate
-                          ? ` (${school.isiLatestReportDate})`
-                          : ""}{" "}
-                        ↗
-                      </a>
-                    ) : null}
-                    {school.isiProfileUrl || school.isiReportsUrl ? (
-                      <a
-                        href={school.isiProfileUrl || school.isiReportsUrl!}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {school.isiLatestReportUrl
-                          ? "All ISI reports ↗"
-                          : "ISI reports ↗"}
-                      </a>
-                    ) : null}
-                    <SchoolOutboundLinks school={school} />
-                    <DataGapFlags
-                      compact
-                      gaps={schoolGaps(dataGaps, school.urn)}
-                    />
-                    {sourceStamp ? (
-                      <ReportProblemButton
-                        compact
-                        board="ks4"
-                        stamp={{
-                          ...sourceStamp,
-                          deepLink:
-                            school.isiReportsUrl ||
-                            schoolDeepLink(school) ||
-                            sourceStamp.deepLink,
-                        }}
-                        urn={school.urn}
-                        schoolName={school.name}
-                      />
-                    ) : null}
-                  </SchoolColumnHeader>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <InspectionPrecisRows schools={schools} />
-            <QualitativeEvidenceRows schools={schools} />
-            <AdmissionsPlacesRows schools={schools} />
-            {visibleGroups.map((group) => {
-              const metrics = INDEPENDENT_METRICS.filter((m) => m.group === group);
-              return (
+      <CompareSectionTabs
+        schools={schools}
+        activeId={activeSection}
+        onActiveChange={setActiveSection}
+      >
+        {{
+          ofsted: hasOfsted ? (
+            <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
+              <InspectionPrecisRows schools={schools} />
+              {showInspectionMetrics ? (
                 <GroupRows
-                  key={group}
-                  title={groupTitles[group]}
-                  metrics={metrics}
+                  title={groupTitles.inspection}
+                  metrics={inspectionMetrics}
                   schools={schools}
                   bench={activeBench}
                   benchmarkLabel={benchmarkLabel}
                 />
-              );
-            })}
-          </tbody>
-        </table>
-      </CompareTableFrame>
-
-      {hasAnyKs4 ? (
-        <div
-          className="chart-wrap"
-          aria-label="Independent school GCSE comparison chart"
-        >
-          <ResponsiveContainer width="100%" height={320}>
-            <BarChart
-              data={chartData}
-              margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(20,35,58,0.1)" />
-              <XAxis dataKey="label" tick={{ fill: "#3d4f66", fontSize: 12 }} />
-              <YAxis
-                domain={[0, 100]}
-                tick={{ fill: "#3d4f66", fontSize: 12 }}
-                unit="%"
-              />
-              <Tooltip
-                formatter={(value) =>
-                  value == null || value === ""
-                    ? "—"
-                    : `${Number(value).toFixed(0)}%`
-                }
-              />
-              <Legend />
-              {schools.map((school, i) => (
-                <Bar
-                  key={school.urn}
-                  dataKey={school.urn}
-                  name={shortName(school.name, 22)}
-                  fill={palette[i % palette.length]}
-                  radius={[6, 6, 0, 0]}
-                />
-              ))}
-              <Bar
-                dataKey="benchmark"
-                name={benchmarkLabel}
-                fill="rgba(20,35,58,0.28)"
-                radius={[6, 6, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ) : null}
+              ) : null}
+            </CompareSectionTable>
+          ) : (
+            <CompareSectionEmpty>
+              No inspection précis or published Ofsted / ISI grades for this
+              shortlist — open report links from each column header when
+              available.
+            </CompareSectionEmpty>
+          ),
+          website: hasWebsite ? (
+            <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
+              <QualitativeEvidenceRows schools={schools} />
+            </CompareSectionTable>
+          ) : (
+            <CompareSectionEmpty>
+              No website evidence captured for these schools yet.
+            </CompareSectionEmpty>
+          ),
+          places: hasPlaces ? (
+            <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
+              <AdmissionsPlacesRows schools={schools} />
+            </CompareSectionTable>
+          ) : (
+            <CompareSectionEmpty>
+              No published places or offer-day figures for this shortlist.
+            </CompareSectionEmpty>
+          ),
+          performance: (
+            <>
+              <p className="footnote compare-section-note">
+                Compared on published Key Stage 4
+                {hasAnyKs5 ? " and 16–18" : ""} figures
+                {hasIndie ? " plus inspection outcomes where available" : ""}
+                {hasState && hasIndie
+                  ? " — state and independent schools share these secondary measures."
+                  : hasState
+                    ? " for secondary stages (not the Key Stage 2 tables used for primaries)."
+                    : " — not the Key Stage 2 tables used for state primaries."}{" "}
+                The DfE does not publish school-level KS3 attainment: selecting{" "}
+                <strong>KS3</strong> shortlists schools that offer Years 7–9,
+                while this board shows later GCSE / 16–18 outcomes when
+                published.
+                {activeBench?.att8Average != null
+                  ? ` ${benchmarkLabel} Attainment 8 is ${activeBench.att8Average} across ${activeBench.schoolCount?.toLocaleString("en-GB") ?? "matched"} schools with usable figures (${activeBench.period}).`
+                  : null}
+                {!hasAnyKs4
+                  ? " None of these schools have published KS4 figures in the latest tables."
+                  : null}
+              </p>
+              <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
+                {visibleGroups.map((group) => {
+                  const metrics = INDEPENDENT_METRICS.filter(
+                    (m) => m.group === group,
+                  );
+                  return (
+                    <GroupRows
+                      key={group}
+                      title={groupTitles[group]}
+                      metrics={metrics}
+                      schools={schools}
+                      bench={activeBench}
+                      benchmarkLabel={benchmarkLabel}
+                    />
+                  );
+                })}
+              </CompareSectionTable>
+              {hasAnyKs4 ? (
+                <div
+                  className="chart-wrap"
+                  aria-label="Independent school GCSE comparison chart"
+                >
+                  <ResponsiveContainer width="100%" height={320}>
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+                    >
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="rgba(20,35,58,0.1)"
+                      />
+                      <XAxis
+                        dataKey="label"
+                        tick={{ fill: "#3d4f66", fontSize: 12 }}
+                      />
+                      <YAxis
+                        domain={[0, 100]}
+                        tick={{ fill: "#3d4f66", fontSize: 12 }}
+                        unit="%"
+                      />
+                      <Tooltip
+                        formatter={(value) =>
+                          value == null || value === ""
+                            ? "—"
+                            : `${Number(value).toFixed(0)}%`
+                        }
+                      />
+                      <Legend />
+                      {schools.map((school, i) => (
+                        <Bar
+                          key={school.urn}
+                          dataKey={school.urn}
+                          name={shortName(school.name, 22)}
+                          fill={palette[i % palette.length]}
+                          radius={[6, 6, 0, 0]}
+                        />
+                      ))}
+                      <Bar
+                        dataKey="benchmark"
+                        name={benchmarkLabel}
+                        fill="rgba(20,35,58,0.28)"
+                        radius={[6, 6, 0, 0]}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : null}
+            </>
+          ),
+        }}
+      </CompareSectionTabs>
     </div>
   );
 }

@@ -25,7 +25,11 @@ import {
 } from "@/lib/ks2History";
 import { MetricHistoryChart } from "@/components/MetricHistoryChart";
 import { BoardProvenance } from "@/components/BoardProvenance";
-import { CompareTableFrame } from "@/components/CompareTableFrame";
+import {
+  CompareSectionEmpty,
+  CompareSectionTabs,
+} from "@/components/CompareSectionTabs";
+import { CompareSectionTable } from "@/components/CompareSectionTable";
 import { SchoolColumnHeader } from "@/components/SchoolColumnHeader";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import { CoverageStrip } from "@/components/CoverageStrip";
@@ -38,6 +42,10 @@ import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
 import { gapsForKs2Board, schoolGaps } from "@/lib/dataGaps";
+import {
+  compareSectionHasData,
+  type CompareSectionId,
+} from "@/lib/compareSections";
 
 const SUBJECT_KEYS = [
   "rwmExpected",
@@ -85,6 +93,8 @@ export function ComparisonBoard({
   england: BenchmarkSet;
   sourceStamp?: SourceStamp | null;
 }) {
+  const [activeSection, setActiveSection] =
+    useState<CompareSectionId>("ofsted");
   const [activeMetric, setActiveMetric] = useState<HistoryMetricKey | null>(
     null,
   );
@@ -101,6 +111,7 @@ export function ComparisonBoard({
   const dataGaps = gapsForKs2Board(schools);
 
   useEffect(() => {
+    setActiveSection("ofsted");
     setActiveMetric(null);
     setSchoolSeries(null);
     setHistoryError(null);
@@ -227,12 +238,68 @@ export function ComparisonBoard({
       </div>
     ) : null;
 
+  const hasOfsted = compareSectionHasData("ofsted", schools);
+  const hasWebsite = compareSectionHasData("website", schools);
+  const hasPlaces = compareSectionHasData("places", schools);
+  const schoolHeaders = schools.map((school) => (
+    <th key={school.urn} scope="col">
+      <SchoolColumnHeader title={shortName(school.name, 32)}>
+        <span>
+          {[
+            formatSector(resolveSchoolSector(school)),
+            school.town,
+            school.localAuthority,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </span>
+        <span>
+          {school.ageRange ? `Ages ${school.ageRange}` : null}
+          {school.schoolTypeLabel ? ` · ${school.schoolTypeLabel}` : null}
+        </span>
+        {resolveSchoolSector(school) === "independent" &&
+        school.rwmExpected == null ? (
+          <span>
+            Independent schools often do not publish KS2 table figures
+            comparable with state schools.
+          </span>
+        ) : null}
+        {resolveSchoolSector(school) === "state" &&
+        school.rwmExpected == null ? (
+          <span>
+            No Year 6 reading, writing and maths table figure in this release
+            — common for new schools, very small cohorts, or suppressed results.
+            Check the official tables link.
+          </span>
+        ) : null}
+        <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
+        <SchoolOutboundLinks school={school} />
+        {school.ofstedOverall ? (
+          <span>Ofsted overall: {school.ofstedOverall}</span>
+        ) : null}
+        {school.ofstedReportUrl ? (
+          <a href={school.ofstedReportUrl} target="_blank" rel="noreferrer">
+            Ofsted reports ↗
+          </a>
+        ) : null}
+        {sourceStamp ? (
+          <ReportProblemButton
+            compact
+            board="ks2"
+            stamp={{
+              ...sourceStamp,
+              deepLink: schoolDeepLink(school) || sourceStamp.deepLink,
+            }}
+            urn={school.urn}
+            schoolName={school.name}
+          />
+        ) : null}
+      </SchoolColumnHeader>
+    </th>
+  ));
+
   return (
     <div>
-      <p className="footnote" style={{ marginBottom: "0.85rem" }}>
-        Click a measure name to open its year-by-year trend directly under that
-        row (state KS2 archive from Compare school performance).
-      </p>
       {sourceStamp ? (
         <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
       ) : null}
@@ -244,142 +311,133 @@ export function ComparisonBoard({
         secondarySlot={<SecondaryContextPane schools={schools} board="ks2" />}
       />
 
-      <CompareTableFrame tableId="ks2">
-        <table className="compare-table">
-          <thead>
-            <tr>
-              <th scope="col">Measure</th>
-              {schools.map((school) => (
-                <th key={school.urn} scope="col">
-                  <SchoolColumnHeader title={shortName(school.name, 32)}>
-                    <span>
-                      {[
-                        formatSector(resolveSchoolSector(school)),
-                        school.town,
-                        school.localAuthority,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </span>
-                    <span>
-                      {school.ageRange ? `Ages ${school.ageRange}` : null}
-                      {school.schoolTypeLabel ? ` · ${school.schoolTypeLabel}` : null}
-                    </span>
-                    {resolveSchoolSector(school) === "independent" &&
-                    school.rwmExpected == null ? (
-                      <span>
-                        Independent schools often do not publish KS2 table
-                        figures comparable with state schools.
-                      </span>
-                    ) : null}
-                    {resolveSchoolSector(school) === "state" &&
-                    school.rwmExpected == null ? (
-                      <span>
-                        No Year 6 reading, writing and maths table figure in
-                        this release — common for new schools, very small
-                        cohorts, or suppressed results. Check the official
-                        tables link.
-                      </span>
-                    ) : null}
-                    <DataGapFlags
-                      compact
-                      gaps={schoolGaps(dataGaps, school.urn)}
+      <CompareSectionTabs
+        schools={schools}
+        activeId={activeSection}
+        onActiveChange={setActiveSection}
+      >
+        {{
+          ofsted: hasOfsted ? (
+            <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
+              <InspectionPrecisRows schools={schools} />
+            </CompareSectionTable>
+          ) : (
+            <CompareSectionEmpty>
+              No inspection précis or published Ofsted grades for this
+              shortlist yet — check column links after reports are processed, or
+              open the official Ofsted site from each school&apos;s page.
+            </CompareSectionEmpty>
+          ),
+          website: hasWebsite ? (
+            <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
+              <QualitativeEvidenceRows schools={schools} />
+            </CompareSectionTable>
+          ) : (
+            <CompareSectionEmpty>
+              No website evidence captured for these schools yet — summaries
+              appear when public pages have been processed for curriculum,
+              clubs, and ethos.
+            </CompareSectionEmpty>
+          ),
+          places: hasPlaces ? (
+            <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
+              <AdmissionsPlacesRows schools={schools} />
+            </CompareSectionTable>
+          ) : (
+            <CompareSectionEmpty>
+              No published places or offer-day figures for this shortlist —
+              common for independents, junior-transfer schools, or settings
+              outside the admissions release.
+            </CompareSectionEmpty>
+          ),
+          performance: (
+            <>
+              <p className="footnote compare-section-note">
+                Click a measure name to open its year-by-year trend directly
+                under that row (state KS2 archive from Compare school
+                performance).
+              </p>
+              <CompareSectionTable
+                tableId="ks2"
+                headerCells={schoolHeaders}
+              >
+                {groups.map((group) => {
+                  const metrics = PARENT_METRICS.filter(
+                    (m) => m.group === group,
+                  );
+                  return (
+                    <GroupRows
+                      key={group}
+                      title={groupTitles[group]}
+                      metrics={metrics}
+                      schools={schools}
+                      england={england}
+                      activeMetric={activeMetric}
+                      onToggleMetric={(key) =>
+                        setActiveMetric((prev) => (prev === key ? null : key))
+                      }
+                      historyPanel={
+                        activeMetric &&
+                        metrics.some((m) => m.key === activeMetric)
+                          ? historyBody
+                          : null
+                      }
                     />
-                    <SchoolOutboundLinks school={school} />
-                    {school.ofstedOverall ? (
-                      <span>Ofsted overall: {school.ofstedOverall}</span>
-                    ) : null}
-                    {school.ofstedReportUrl ? (
-                      <a
-                        href={school.ofstedReportUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Ofsted reports ↗
-                      </a>
-                    ) : null}
-                    {sourceStamp ? (
-                      <ReportProblemButton
-                        compact
-                        board="ks2"
-                        stamp={{
-                          ...sourceStamp,
-                          deepLink:
-                            schoolDeepLink(school) || sourceStamp.deepLink,
-                        }}
-                        urn={school.urn}
-                        schoolName={school.name}
+                  );
+                })}
+              </CompareSectionTable>
+              <div
+                className="chart-wrap"
+                aria-label="Expected standard comparison chart"
+              >
+                <ResponsiveContainer width="100%" height={320} minWidth={0}>
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="rgba(20,35,58,0.1)"
+                    />
+                    <XAxis
+                      dataKey="label"
+                      tick={{ fill: "#3d4f66", fontSize: 12 }}
+                    />
+                    <YAxis
+                      domain={[0, 100]}
+                      tick={{ fill: "#3d4f66", fontSize: 12 }}
+                      unit="%"
+                    />
+                    <Tooltip
+                      formatter={(value) =>
+                        value == null || value === ""
+                          ? "—"
+                          : `${Number(value).toFixed(0)}%`
+                      }
+                    />
+                    <Legend />
+                    {schools.map((school, i) => (
+                      <Bar
+                        key={school.urn}
+                        dataKey={school.urn}
+                        name={shortName(school.name, 22)}
+                        fill={palette[i % palette.length]}
+                        radius={[6, 6, 0, 0]}
                       />
-                    ) : null}
-                  </SchoolColumnHeader>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            <InspectionPrecisRows schools={schools} />
-            <QualitativeEvidenceRows schools={schools} />
-            <AdmissionsPlacesRows schools={schools} />
-            {groups.map((group) => {
-              const metrics = PARENT_METRICS.filter((m) => m.group === group);
-              return (
-                <GroupRows
-                  key={group}
-                  title={groupTitles[group]}
-                  metrics={metrics}
-                  schools={schools}
-                  england={england}
-                  activeMetric={activeMetric}
-                  onToggleMetric={(key) =>
-                    setActiveMetric((prev) => (prev === key ? null : key))
-                  }
-                  historyPanel={
-                    activeMetric &&
-                    metrics.some((m) => m.key === activeMetric)
-                      ? historyBody
-                      : null
-                  }
-                />
-              );
-            })}
-          </tbody>
-        </table>
-      </CompareTableFrame>
-
-      <div className="chart-wrap" aria-label="Expected standard comparison chart">
-        <ResponsiveContainer width="100%" height={320} minWidth={0}>
-          <BarChart data={chartData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(20,35,58,0.1)" />
-            <XAxis dataKey="label" tick={{ fill: "#3d4f66", fontSize: 12 }} />
-            <YAxis
-              domain={[0, 100]}
-              tick={{ fill: "#3d4f66", fontSize: 12 }}
-              unit="%"
-            />
-            <Tooltip
-              formatter={(value) =>
-                value == null || value === "" ? "—" : `${Number(value).toFixed(0)}%`
-              }
-            />
-            <Legend />
-            {schools.map((school, i) => (
-              <Bar
-                key={school.urn}
-                dataKey={school.urn}
-                name={shortName(school.name, 22)}
-                fill={palette[i % palette.length]}
-                radius={[6, 6, 0, 0]}
-              />
-            ))}
-            <Bar
-              dataKey="england"
-              name="England"
-              fill="rgba(20,35,58,0.28)"
-              radius={[6, 6, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+                    ))}
+                    <Bar
+                      dataKey="england"
+                      name="England"
+                      fill="rgba(20,35,58,0.28)"
+                      radius={[6, 6, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </>
+          ),
+        }}
+      </CompareSectionTabs>
     </div>
   );
 }
