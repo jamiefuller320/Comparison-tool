@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
-"""Unit tests for pack quality loop target selection (no network)."""
+"""Unit tests for pack quality loop target selection + interest weighting."""
 
 from __future__ import annotations
 
 import importlib.util
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
 
 
-def load_loop():
-    path = SCRIPTS / "run-pack-quality-loop.py"
-    spec = importlib.util.spec_from_file_location("pack_quality_loop", path)
+def load_mod(name: str, filename: str):
+    path = SCRIPTS / filename
+    spec = importlib.util.spec_from_file_location(name, path)
     assert spec and spec.loader
     mod = importlib.util.module_from_spec(spec)
+    # Ensure sibling imports (seed_scope / pack_interest) resolve.
+    if str(SCRIPTS) not in sys.path:
+        sys.path.insert(0, str(SCRIPTS))
     spec.loader.exec_module(mod)
     return mod
 
@@ -46,7 +50,9 @@ def row(
 
 
 def main() -> int:
-    mod = load_loop()
+    mod = load_mod("pack_quality_loop", "run-pack-quality-loop.py")
+    interest = load_mod("pack_interest", "pack_interest.py")
+
     rows = [
         row("Hampshire", "hampshire", indie_n=70, indie_precis=52, isi=37),
         row("Weak A", "weak-a", indie_n=10, indie_precis=4, isi=2),
@@ -65,17 +71,91 @@ def main() -> int:
     assert not mod.has_polish_headroom(rows[4])
     assert mod.has_polish_headroom(rows[1])
 
-    # Large ISI gap sorts ahead of equal indie% with smaller gap when pct ties…
-    # Weak A 40% vs Weak B 50% — A first. Good.
+    # Interest can promote a slightly stronger pack ahead of a weaker untouched one.
+    # Weak A = 40%, Weak B = 50%, Weak C = 62.5%. Boost on Weak B (score 5 → 18% cap)
+    # makes effective 50-18=32 < 40, so Weak B sorts first.
+    boosted = mod.select_targets(
+        rows,
+        max_packs=2,
+        interest_by_slug={"weak-b": 5.0, "weak-a": 0.0},
+    )
+    boosted_names = [r["localAuthority"] for r in boosted]
+    assert boosted_names[0] == "Weak B", boosted_names
+    assert "Weak A" in boosted_names
 
     # Pack above indie bar but with ISI gap still has headroom.
     isi_gap_only = row("ISI Gap", "isi-gap", indie_n=10, indie_precis=9, isi=5)
     assert mod.has_polish_headroom(isi_gap_only)
 
-    snap = mod.snapshot_row(rows[1])
+    snap = mod.snapshot_row(rows[1], interest_by_slug={"weak-a": 2.5})
     assert snap["independentPrecis"] == "4/10"
     assert snap["isiUrls"] == "2/10"
     assert snap["isiGap"] == 8
+    assert snap["interestScore"] == 2.5
+    assert snap["interestBoostPct"] == 10.0
+
+    # --- pack_interest helpers ---
+    now = datetime(2026, 8, 19, tzinfo=timezone.utc)
+    manifest_scores = interest.scores_from_manifest(
+        {
+            "packs": {
+                "surrey": {
+                    "localAuthority": "Surrey",
+                    "status": "ready",
+                    "requestedAt": "2026-08-18T12:00:00Z",
+                },
+                "kent": {
+                    "localAuthority": "Kent",
+                    "status": "ready",
+                    "requestedAt": "2026-06-01T12:00:00Z",
+                },
+            }
+        },
+        now=now,
+    )
+    assert manifest_scores["surrey"] > manifest_scores["kent"]
+
+    log_scores = interest.scores_from_interest_log(
+        [
+            {
+                "kind": "la-pack",
+                "localAuthority": "Surrey",
+                "at": "2026-08-18T10:00:00Z",
+            },
+            {
+                "kind": "missing-school",
+                "localAuthority": "Kent",
+                "school": "Some School",
+                "at": "2026-08-18T11:00:00Z",
+            },
+        ],
+        now=now,
+    )
+    assert log_scores["surrey"] >= interest.WEIGHT_LA_PACK_REQUEST * 0.5
+    assert log_scores["kent"] >= interest.WEIGHT_MISSING_SCHOOL * 0.5
+
+    assert interest.las_from_page_url(
+        "https://schoolcompass.uk/areas/surrey/towns/guildford/"
+    ) == ["surrey"]
+    assert interest.las_from_page_url("https://schoolcompass.uk/") == []
+
+    fb_scores = interest.scores_from_feedback_rows(
+        [
+            {
+                "requestedAt": "2026-08-18T12:00:00Z",
+                "pageUrl": "https://schoolcompass.uk/areas/oxfordshire/",
+                "shortlistLas": ["Surrey", "Hampshire"],
+            }
+        ],
+        now=now,
+    )
+    assert "oxfordshire" in fb_scores
+    assert "surrey" in fb_scores
+    assert "hampshire" not in fb_scores  # seed excluded from shortlist boost
+
+    assert interest.interest_pct_boost(0) == 0.0
+    assert interest.interest_pct_boost(1) == 4.0
+    assert interest.interest_pct_boost(10) == interest.INTEREST_PCT_BOOST_CAP
 
     print("test-pack-quality-loop: ok")
     return 0

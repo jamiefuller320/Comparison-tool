@@ -26,7 +26,7 @@ Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHO
 
 **Hampshire maintained set (live path):**
 
-- **Early years / childminders** — Ofsted day care + school nursery Ofsted join + EYFSP area benches; consented childminder directory + vetting checklist + visit pack (`npm run harvest:ey`)
+- **Early years / childminders** — Ofsted day care (full/sessional + out-of-school / holiday clubs) + school nursery Ofsted join + EYFSP area benches; consented childminder directory + vetting checklist + visit pack (`npm run harvest:ey`)
 - **School stages** — Hampshire KS1 phonics context, KS2 tables + year trends, and KS4/16–18 where published, via `npm run harvest:hampshire` (seed-LA trim of the school index + history)
 
 Scheduled refresh uses the Hampshire maintained harvest. A **twice-weekly pack quality loop** (`npm run loop:pack-quality`, workflow `pack-quality-loop.yml`) assesses ready packs, polishes the weakest indie/ISI gaps under caps, and commits a digest. The daily **qualitative coverage loop** (`npm run loop:qualitative`) GIAS-enriches websites, then auto-picks Hampshire or the ready pack with the most remaining website-bearing schools (40/day + stale refresh + light QA). A separate daily **qualitative quality loop** (`npm run loop:qualitative-quality`, workflow `qualitative-quality-loop.yml`) re-applies ingest/QA rules across the existing sidecar without recrawl. `npm run harvest` remains the **full England scaffold** for capability / escape hatch.

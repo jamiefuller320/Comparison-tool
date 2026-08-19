@@ -67,24 +67,38 @@ jobs:
         continue-on-error: true
         run: python3 scripts/extract-ks2-history.py --seed-la
 
-      - name: Record force-refresh stamp
+      - name: Record force-refresh stamp + interest signal
         if: steps.gate.outputs.allowed == 'true'
         env:
           TODAY: ${{ steps.gate.outputs.today }}
           SCHOOL: ${{ github.event.client_payload.school || inputs.school || '' }}
         run: |
           python3 - <<'PY'
-          import json, os
+          import json, os, sys
           from pathlib import Path
           from datetime import datetime, timezone
+          sys.path.insert(0, "scripts")
+          from pack_interest import append_interest_event, _resolve_school_query_to_la
+
+          school = (os.environ.get("SCHOOL") or "").strip() or None
           path = Path("public/data/force-refresh-state.json")
           payload = {
             "lastForcedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "lastForcedDate": os.environ["TODAY"],
-            "school": (os.environ.get("SCHOOL") or "").strip() or None,
+            "school": school,
             "triggeredBy": os.environ.get("GITHUB_ACTOR") or "workflow",
           }
           path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+          event = {
+            "kind": "missing-school",
+            "school": school,
+            "source": "force-refresh",
+          }
+          if school:
+            la = _resolve_school_query_to_la(school)
+            if la:
+              event["localAuthority"] = la
+          append_interest_event(event)
           print(payload)
           PY
 
@@ -93,10 +107,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/schools-index.json public/data/schools-directory.json public/data/harvest-summary.json public/data/force-refresh-state.json src/data/harvest-summary.json public/data/ks2-history public/data/ey-providers-index.json public/data/childminders-index.json
+          git add public/data/schools-index.json public/data/schools-directory.json public/data/harvest-summary.json public/data/force-refresh-state.json public/data/packs/interest-log.jsonl src/data/harvest-summary.json public/data/ks2-history public/data/ey-providers-index.json public/data/childminders-index.json
           if git diff --staged --quiet; then
             # Still commit stamp if harvest produced no diff but stamp is new
-            git add public/data/force-refresh-state.json
+            git add public/data/force-refresh-state.json public/data/packs/interest-log.jsonl
             if git diff --staged --quiet; then
               echo "No data changes"
             else

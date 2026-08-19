@@ -5,6 +5,7 @@ async function main() {
     catchmentRelationLabel,
     classifyCatchmentUnknown,
     featuresForUrns,
+    mergeCatchmentCollections,
     pointInGeometry,
     pointInRing,
   } = await import("../src/lib/catchments.ts");
@@ -126,6 +127,29 @@ async function main() {
       "FAIL catchmentRelationLabel",
       catchmentRelationLabel("unknown", "no-polygon"),
     );
+    process.exit(1);
+  }
+
+  const merged = mergeCatchmentCollections([
+    collection,
+    {
+      type: "FeatureCollection",
+      localAuthority: "Surrey",
+      features: [
+        {
+          type: "Feature",
+          properties: { urn: "s1", name: "Surrey Infant", band: "ages-4-6" },
+          geometry: square,
+        },
+      ],
+    },
+  ]);
+  if (!merged || merged.features.length !== 3) {
+    console.error("FAIL mergeCatchmentCollections", merged?.features?.length);
+    process.exit(1);
+  }
+  if (!merged.localAuthorities?.includes("Surrey")) {
+    console.error("FAIL merge localAuthorities", merged.localAuthorities);
     process.exit(1);
   }
 

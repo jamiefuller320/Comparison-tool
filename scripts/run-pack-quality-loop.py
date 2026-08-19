@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Automated pack quality loop: assess → polish weakest ready packs → digest.
 
-Phase 1 continuous-improvement orchestrator. Selects ready region packs with
-the weakest independent précis (and ISI headroom), runs capped ISI + précis
-polish, then writes a before/after digest for ops.
+Continuous-improvement orchestrator. Selects ready region packs with the
+weakest independent précis (and ISI headroom), biased toward LAs parents
+actually touch (interest weighting), runs capped ISI + précis polish, then
+writes a before/after digest for ops.
 
 Usage:
   python3 scripts/run-pack-quality-loop.py --dry-run
@@ -26,6 +27,11 @@ SCRIPTS = Path(__file__).resolve().parent
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
+from pack_interest import (  # noqa: E402
+    combine_interest_scores,
+    interest_pct_boost,
+    rank_key_with_interest,
+)
 from seed_scope import SEED_LOCAL_AUTHORITY, la_slug  # noqa: E402
 
 DIGEST_JSON = ROOT / "public" / "data" / "packs" / "quality-loop-latest.json"
@@ -79,9 +85,19 @@ def has_polish_headroom(row: dict) -> bool:
     return _isi_gap(row) > 0 or _indie_missing(row) > 0
 
 
-def select_targets(rows: list[dict], *, max_packs: int) -> list[dict]:
-    """Pick weakest ready packs (exclude Hampshire seed) with polish headroom."""
+def select_targets(
+    rows: list[dict],
+    *,
+    max_packs: int,
+    interest_by_slug: dict[str, float] | None = None,
+) -> list[dict]:
+    """Pick weakest ready packs (exclude Hampshire seed) with polish headroom.
+
+    When interest_by_slug is provided, weakness stays primary but parent-touched
+    LAs get an indie-% equivalent boost (see pack_interest.interest_pct_boost).
+    """
     seed_slug = la_slug(SEED_LOCAL_AUTHORITY)
+    interest = interest_by_slug or {}
     candidates = [
         r
         for r in rows
@@ -89,22 +105,29 @@ def select_targets(rows: list[dict], *, max_packs: int) -> list[dict]:
         and (r.get("independentCount") or 0) > 0
         and has_polish_headroom(r)
     ]
-    candidates.sort(
-        key=lambda r: (
-            (r.get("independentPrecis") or {}).get("pct") or 0.0,
-            -_isi_gap(r),
-            r.get("precisPct") or 0.0,
-            r.get("localAuthority") or "",
+    if interest:
+        candidates.sort(key=lambda r: rank_key_with_interest(r, interest))
+    else:
+        candidates.sort(
+            key=lambda r: (
+                (r.get("independentPrecis") or {}).get("pct") or 0.0,
+                -_isi_gap(r),
+                r.get("precisPct") or 0.0,
+                r.get("localAuthority") or "",
+            )
         )
-    )
     return candidates[: max(0, max_packs)]
 
 
-def snapshot_row(row: dict) -> dict:
+def snapshot_row(
+    row: dict, *, interest_by_slug: dict[str, float] | None = None
+) -> dict:
     indie = row.get("independentPrecis") or {}
-    return {
+    slug = row.get("slug")
+    interest = (interest_by_slug or {}).get(str(slug) if slug else "", 0.0)
+    snap = {
         "localAuthority": row.get("localAuthority"),
-        "slug": row.get("slug"),
+        "slug": slug,
         "independentPrecisPct": indie.get("pct"),
         "independentPrecis": f"{indie.get('withPrecis', 0)}/{indie.get('n', 0)}",
         "isiUrls": f"{row.get('independentWithIsiUrl', 0)}/{row.get('independentCount', 0)}",
@@ -114,6 +137,10 @@ def snapshot_row(row: dict) -> dict:
         "childminderPct": (row.get("childminders") or {}).get("pct"),
         "softLaunchPass": row.get("softLaunchPass"),
     }
+    if interest_by_slug is not None:
+        snap["interestScore"] = round(interest, 3)
+        snap["interestBoostPct"] = round(interest_pct_boost(interest), 1)
+    return snap
 
 
 def write_digest(payload: dict) -> None:
@@ -128,6 +155,7 @@ def write_digest(payload: dict) -> None:
         f"- ISI resolve cap: {payload.get('isiResolveCap')}",
         f"- Precis limit: {payload.get('precisLimit')}",
         f"- Upgrade highlights: {payload.get('upgradeHighlights')}",
+        f"- Interest weighting: {'on' if payload.get('interestWeighting') else 'off'}",
         "",
         "## Targets",
         "",
@@ -139,18 +167,27 @@ def write_digest(payload: dict) -> None:
         )
     else:
         lines.append(
-            "| LA | Before indie% | After indie% | Before ISI | After ISI |"
+            "| LA | Interest | Boost | Before indie% | After indie% | Before ISI | After ISI |"
         )
-        lines.append("|---|---:|---:|---|---|")
+        lines.append("|---|---:|---:|---:|---:|---|---|")
         after_map = {
             a["slug"]: a for a in (payload.get("after") or []) if a.get("slug")
         }
         for t in targets:
             a = after_map.get(t["slug"]) or {}
             lines.append(
-                f"| {t['localAuthority']} | {t.get('independentPrecisPct')} | "
+                f"| {t['localAuthority']} | {t.get('interestScore', 0)} | "
+                f"{t.get('interestBoostPct', 0)} | {t.get('independentPrecisPct')} | "
                 f"{a.get('independentPrecisPct', '—')} | {t.get('isiUrls')} | "
                 f"{a.get('isiUrls', '—')} |"
+            )
+    top_interest = payload.get("topInterest") or []
+    if top_interest:
+        lines.extend(["", "## Top interest signals", ""])
+        for item in top_interest:
+            lines.append(
+                f"- `{item.get('slug')}`: score {item.get('score')} "
+                f"(boost {item.get('boostPct')}%)"
             )
     lines.extend(["", "## Weakest packs (after)", ""])
     for w in payload.get("weakestAfter") or []:
@@ -197,20 +234,48 @@ def main() -> int:
         action="store_true",
         help="Do not write quality-loop-latest.{json,md}",
     )
+    parser.add_argument(
+        "--no-interest",
+        action="store_true",
+        help="Disable interest weighting (weakness-only selection)",
+    )
+    parser.add_argument(
+        "--feedback-repo",
+        help="Optional intake repo for product-feedback issues (gh)",
+    )
     args = parser.parse_args()
 
     started = time.time()
     before_rows = collect_rows()
-    targets = select_targets(before_rows, max_packs=args.max_packs)
-    before_snaps = [snapshot_row(r) for r in targets]
+    interest_by_slug: dict[str, float] = {}
+    if not args.no_interest:
+        interest_by_slug = combine_interest_scores(
+            feedback_repo=args.feedback_repo
+            or os.environ.get("CHALLENGE_INTAKE_REPO")
+        )
+    targets = select_targets(
+        before_rows,
+        max_packs=args.max_packs,
+        interest_by_slug=interest_by_slug or None,
+    )
+    before_snaps = [
+        snapshot_row(r, interest_by_slug=interest_by_slug) for r in targets
+    ]
 
     print("Selected targets:", flush=True)
     if not before_snaps:
         print("  (none)", flush=True)
     for snap in before_snaps:
+        interest_bit = ""
+        if snap.get("interestScore"):
+            interest_bit = (
+                f" · interest {snap['interestScore']} "
+                f"(boost {snap.get('interestBoostPct')}%)"
+            )
         print(
             f"  - {snap['localAuthority']}: indie {snap['independentPrecis']} "
-            f"({snap['independentPrecisPct']}%) · ISI {snap['isiUrls']}",
+            f"({snap['independentPrecisPct']}%) · ISI {snap['isiUrls']}"
+            f"{interest_bit}",
             flush=True,
         )
 
@@ -237,7 +302,7 @@ def main() -> int:
     after_rows = collect_rows() if not args.dry_run else before_rows
     after_by = {r["slug"]: r for r in after_rows if r.get("slug")}
     after_snaps = [
-        snapshot_row(after_by[t["slug"]])
+        snapshot_row(after_by[t["slug"]], interest_by_slug=interest_by_slug)
         for t in before_snaps
         if t["slug"] in after_by
     ]
@@ -255,7 +320,7 @@ def main() -> int:
 
     weakest_after = sorted(
         [
-            snapshot_row(r)
+            snapshot_row(r, interest_by_slug=interest_by_slug)
             for r in after_rows
             if r.get("slug") != la_slug(SEED_LOCAL_AUTHORITY)
         ],
@@ -265,6 +330,17 @@ def main() -> int:
         ),
     )[:5]
 
+    top_interest = [
+        {
+            "slug": slug,
+            "score": score,
+            "boostPct": round(interest_pct_boost(score), 1),
+        }
+        for slug, score in sorted(
+            interest_by_slug.items(), key=lambda kv: (-kv[1], kv[0])
+        )[:8]
+    ]
+
     payload = {
         "ranAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "dryRun": bool(args.dry_run),
@@ -272,7 +348,10 @@ def main() -> int:
         "isiResolveCap": args.isi_resolve_cap,
         "precisLimit": args.precis_limit,
         "upgradeHighlights": bool(args.upgrade_highlights),
+        "interestWeighting": not args.no_interest,
         "elapsedSeconds": round(time.time() - started, 1),
+        "interestBySlug": interest_by_slug,
+        "topInterest": top_interest,
         "targets": before_snaps,
         "after": after_snaps,
         "stuck": stuck,

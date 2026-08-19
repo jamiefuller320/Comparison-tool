@@ -72,7 +72,7 @@ import {
   classifyCatchmentUnknown,
   featuresForUrns,
   homeCatchmentMatches,
-  loadHampshireCatchments,
+  loadCatchmentOverlay,
   type CatchmentCollection,
   type CatchmentFeature,
 } from "@/lib/catchments";
@@ -192,7 +192,7 @@ export function HomePostcodeExplorer({
     if (catchments) return;
     let cancelled = false;
     setCatchmentsLoading(true);
-    void loadHampshireCatchments()
+    void loadCatchmentOverlay()
       .then((data) => {
         if (!cancelled) setCatchments(data);
       })
@@ -719,7 +719,7 @@ export function HomePostcodeExplorer({
                   showCatchments ? "radius-chip active" : "radius-chip"
                 }
                 aria-pressed={showCatchments}
-                title="Hampshire County Council catchment polygons for the stages you selected. Living in catchment does not guarantee a place; academies and faith schools may use different criteria."
+                title="Open-data catchment polygons where published (Hampshire today; other LAs when they release reusable GIS). Living in catchment does not guarantee a place; academies and faith schools may use different criteria."
                 onClick={() => setShowCatchments((v) => !v)}
               >
                 {catchmentsLoading ? "Catchments…" : "Catchments"}
@@ -730,7 +730,10 @@ export function HomePostcodeExplorer({
             </div>
             {showCatchments ? (
               <p className="footnote catchment-footnote">
-                Hampshire catchments for the selected stages
+                {(catchments?.localAuthorities || [catchments?.localAuthority])
+                  .filter(Boolean)
+                  .join(", ") || "Open-data"}{" "}
+                catchments for the selected stages
                 {homeCatchmentNote ? ` · ${homeCatchmentNote}` : ""}. Overlay is
                 context only — confirm on the{" "}
                 <a
@@ -741,9 +744,10 @@ export function HomePostcodeExplorer({
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Hampshire school finder
+                  local authority school finder
                 </a>
-                .
+                . Other South East packs appear here when they publish open
+                catchment GIS.
               </p>
             ) : null}
 

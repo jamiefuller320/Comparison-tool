@@ -112,6 +112,16 @@ def main() -> int:
         for r in rows
         if int((r.get("usage") or {}).get("shortlistCountMax") or 0) == 0
     )
+    shortlist_las = Counter(
+        la
+        for r in rows
+        for la in (
+            r.get("shortlistLas")
+            or (r.get("usage") or {}).get("shortlistLas")
+            or []
+        )
+        if isinstance(la, str) and la.strip()
+    )
 
     lines = [
         "# Product feedback digest",
@@ -131,6 +141,10 @@ def main() -> int:
     lines += ["", "## Topics"]
     for key, count in topics.most_common():
         lines.append(f"- `{key}`: {count}")
+    if shortlist_las:
+        lines += ["", "## Shortlist LAs (voluntary intake)"]
+        for key, count in shortlist_las.most_common():
+            lines.append(f"- `{key}`: {count}")
     lines += [
         "",
         "## Usage slices",
@@ -143,7 +157,8 @@ def main() -> int:
         "1. Cluster notes by top topics + stuck/mixed sentiment.",
         "2. Prioritise friction before first shortlist if `never shortlisted` is high.",
         "3. If print-pack feedback is thin but shortlists are common, prompt earlier after compare.",
-        "4. Bump `FEEDBACK_CAMPAIGN_ID` in `src/lib/buildMeta.ts` when shipping a significant fix wave.",
+        "4. Feed shortlist / area-page LAs into `npm run loop:pack-quality` interest weighting.",
+        "5. Bump `FEEDBACK_CAMPAIGN_ID` in `src/lib/buildMeta.ts` when shipping a significant fix wave.",
         "",
     ]
 

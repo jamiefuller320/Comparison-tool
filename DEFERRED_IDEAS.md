@@ -2,7 +2,7 @@
 
 A living record of product ideas discussed in School Compass work that are **not fully implemented**, plus ideas we **explicitly parked or rejected** so we don’t re-litigate them without new evidence.
 
-Last reviewed from agent chat: 2026-08-07 (Hampshire catchments + admissions places context).
+Last reviewed from agent chat: 2026-08-19 (interest weighting, OOSC day care, COVID caveats, citation footnotes, multi-LA catchment loader).
 
 ## How to use
 
@@ -25,7 +25,7 @@ Hampshire stays the **maintained root**. Other LAs build into `public/data/packs
 | **4. Pack depth: EY + childminders** | Parameterise EY/childminder harvests with `--la` into the same pack folder; silent merge into EY/CM indexes + multi-LA EYFSP board | Shipped (#50; IoW EY/CM rebuild this PR) | Done |
 | **5. SCH-batched KS2 performance** | Stop downloading full England performance pages for scoped harvests (`locations.in=SCH\|id\|…` batches) | Not started | Cost optimisation |
 | **6. Pack prune / TTL** | Drop unused packs from repo/Pages when stale to bound size | Not started | When pack count grows |
-| **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. See **Continuous data-quality automation** phases below. | Partial (phase 1 shipped #80) | Phases 2–4 when signals / cost justify |
+| **7. Area interest library loop** | Small **ingest → assess → improve** loop over *offline* pack libraries, prioritised by statistical areas of user interest (request frequency, postcode searches, shortlist LAs) — completeness scores, gap flags, bounded re-fetch — **not** agent memo research. Inspired by Value_Investor health/gap patterns; bespoke for DfE/Ofsted joins. See **Continuous data-quality automation** phases below. | Partial (phases 1–2 shipped) | Phases 3–4 when signals / cost justify |
 | **8. Client load: geo-lazy packs** | After seed-first progressive load + retries (hardening pass), only fetch packs for the postcode’s LA / neighbours instead of all ready SE packs (~20 MB). Keep static Pages hosting. | Not started | When low-bandwidth failures persist after seed-first |
 | **9. Dynamic data API / CDN** | Move off “download every pack JSON in the browser” to an edge/API that returns a postcode-scoped slice (or versioned regional bundles on a real CDN). Only justify if geo-lazy static packs are still too heavy or pack count grows nationally. | Deferred | After step 8; do **not** jump here for flaky first loads alone |
 
@@ -36,7 +36,7 @@ Goal: close the loop from **assess → prioritise → bounded re-fetch → diges
 | Phase | Scope | Status | Notes / entry points |
 | --- | --- | --- | --- |
 | **1. Scheduled polish loop** | Weekly assess → select weakest ready packs with indie/ISI headroom → capped `polish:pack-quality` → commit `quality-loop-latest.{json,md}` | **Shipped (#80)** | `npm run loop:pack-quality`; `.github/workflows/pack-quality-loop.yml` (Wed 06:00 UTC + dispatch); see `SOFT_LAUNCH.md` |
-| **2. Interest weighting** | Score LAs from product-feedback issues, missing-school force-refresh, and LA-pack request signals; bias target selection toward areas parents actually touch | Not started | Inputs already exist (`product-feedback` / `missing-school` / `la-pack` dispatches + `digest:feedback`). Extend `select_targets` in `scripts/run-pack-quality-loop.py` — do **not** scrape private shortlists |
+| **2. Interest weighting** | Score LAs from product-feedback issues, missing-school force-refresh, and LA-pack request signals; bias target selection toward areas parents actually touch | **Shipped** | `scripts/pack_interest.py` + `select_targets` interest boost; interest-log append from `la-pack` / `force-refresh`; voluntary `shortlistLas` on feedback intake. Soft-fails without `gh`/intake. |
 | **3. Pack hygiene (TTL / stale)** | Flag or drop unused / stale packs from repo/Pages to bound size; surface `builtAt` freshness in digest | Not started | Same intent as roadmap step **6. Pack prune / TTL**; trigger when pack count or Pages payload grows |
 | **4. Harvest cost path** | SCH-batched KS2 (`locations.in=SCH\|id\|…`) so scoped / pack harvests stop pulling full England performance pages | Not started | Same as roadmap step **5**; separate from qualitative polish — do when harvest cost or runtime hurts |
 
@@ -46,7 +46,7 @@ Goal: close the loop from **assess → prioritise → bounded re-fetch → diges
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Hampshire catchment overlay + places/offers context** | Map polygons (HCC open data) with home in/out; DfE capacity fill + school-level applications/offers demand ratio on compare boards. True LA catchment participation rates (&gt;100% ⇒ out-of-catchment on roll) remain unpublished school-level nationally — do not invent them. | Partial (Hampshire overlay + capacity/offers shipped; pack LAs / participation rates still open) | User |
+| **Hampshire catchment overlay + places/offers context** | Map polygons (HCC open data) with home in/out; DfE capacity fill + school-level applications/offers demand ratio on compare boards. True LA catchment participation rates (&gt;100% ⇒ out-of-catchment on roll) remain unpublished school-level nationally — do not invent them. | Partial (**multi-LA catchment loader + manifest** ready; Hampshire polygons live. Pack LAs still need each LA’s open GIS — Southampton/Portsmouth/etc. do not publish reusable catchment FeatureServers today. Participation rates still blocked.) | User |
 | **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
 | **Second geography** | Widen beyond Hampshire via silent-merge packs. **South East + Dorset** is now the coverage region (`pack:southeast`); Hampshire stays the sole maintained root. Promoting a second maintained seed still deferred. | Partial (packs shipped; second maintained seed still deferred) | User |
 | **Optional parent accounts** | Soft “Save shortlist” after engagement (never a login wall). Browser-local by default; Supabase magic-link when env secrets set. | Shipped (soft-prompt module) | User |
@@ -67,10 +67,10 @@ Only after durable parent and (separately) board audiences exist. Not a near-ter
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
-| **Out-of-school / holiday day care** | Include EYR out-of-school and holiday day-care providers in Hampshire EY coverage. | Not started | Agent (“still to do” after EY MVP) |
-| **Richer qualitative evidence layer** | Deeper researched qualitative context with user-accessible evidence (beyond current Ofsted/EYFSP footnotes); optional key phrases from Ofsted reports. | Partial (coverage-first free crawl + deterministic narratives; Cursor reserved for rich-school polish; citation→URL learning; change-aware re-screens via ETag/Last-Modified/content-hash + stale TTL; heuristic QA loop with optional agent review + learned junk phrases into ingest filters). Still open: pack-wide roll-out, human feedback into gates, citation index alignment with UI footnotes | North Star #2 |
+| **Out-of-school / holiday day care** | Include EYR out-of-school and holiday day-care providers in Hampshire EY coverage. | **Shipped** (Hampshire harvest + OOSC Met/Not met grades; pack LAs pick up on next `build-la-pack` / EY pack refresh) | Agent (“still to do” after EY MVP) |
+| **Richer qualitative evidence layer** | Deeper researched qualitative context with user-accessible evidence (beyond current Ofsted/EYFSP footnotes); optional key phrases from Ofsted reports. | Partial (coverage-first free crawl + deterministic narratives; Cursor reserved for rich-school polish; citation→URL learning; change-aware re-screens; heuristic QA loop + learned junk phrases. **Citation footnotes now use synthesis numbering** (not regrouped source lists); **human junk flags** via `npm run qa:human-flags` → `learned-qa-patterns.json`. Still open: pack-wide website qualitative roll-out; content-review UI write-back) | North Star #2 |
 | **Ofsted report précis engine** | Second-pass item: generate a short, parent-facing précis of each setting’s latest Ofsted report (verifiable quotes / footnote back to the report). | Partial (engine + UI shipped; **Hampshire soft-launch** requires majority mainstream primary/secondary coverage — see `SOFT_LAUNCH.md`) | User |
-| **Layperson empty-state polish** | Clearer empty states (e.g. schools-only shortlist under EY); fuller COVID/data caveats; prove full North Star loop on the EY vertical. | Partial (EY schools-only / KS1–KS4 empty copy + KS4 gap chip wording shipped; COVID caveats still thin) | North Star #3 / agent |
+| **Layperson empty-state polish** | Clearer empty states (e.g. schools-only shortlist under EY); fuller COVID/data caveats; prove full North Star loop on the EY vertical. | Partial (EY schools-only / KS1–KS4 empty copy + KS4 gap chips shipped; **COVID / blank-cell caveats thickened** on KS2 tip, chart note, guidance, tour) | North Star #3 / agent |
 | **Hampshire FIS contact enrichment** | Optionally link Hampshire Family Information Service (or a public FIS feed) for contacts beyond address + Ofsted report. | Not started | Agent recommendation |
 | **Childminder “market overview”** | Area signal such as % Good by constituency — not side-by-side named compare. Floated when redacted MI looked weak; consented directory shipped instead; overview never built. | Deferred | Agent alternative |
 

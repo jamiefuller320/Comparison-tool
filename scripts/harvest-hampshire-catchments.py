@@ -10,6 +10,11 @@ Writes a lean GeoJSON FeatureCollection under public/data/catchments/ for
 map overlay + home in/out checks. Features are keyed by URN when the DfE
 establishment number maps via GIAS (LA 850).
 
+Register the file in `public/data/catchments/manifest.json` so the app’s
+multi-LA loader (`loadCatchmentOverlay`) merges it with any other ready
+packs. Other LAs: only add a harvest when that council publishes open GIS
+under a reusable licence — do not scrape interactive postcode checkers.
+
 Usage:
   python3 scripts/harvest-hampshire-catchments.py
 """

@@ -17,6 +17,7 @@ import { ChildminderDirectoryBoard } from "@/components/ChildminderDirectoryBoar
 import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChecklist";
 import { VisitPack } from "@/components/VisitPack";
 import { DecisionGuidancePanel } from "@/components/DecisionGuidance";
+import { KS2_YEAR_TREND_TIP } from "@/lib/covid-gap";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { ShareShortlistButton } from "@/components/ShareShortlistButton";
 import { ShortlistDock } from "@/components/ShortlistDock";
@@ -793,10 +794,7 @@ export function CompareApp({
           <DecisionGuidancePanel path="ks2" />
           {ks2Selected.length > 0 ? (
             <aside className="year-trend-tip" data-tour="year-trend">
-              <strong>Year trends:</strong> click a measure name (or{" "}
-              <em>Year trend</em>) for a year-by-year graph — schools and
-              England, with a hatched band for COVID years when tables were
-              unpublished.
+              <strong>Year trends &amp; COVID years:</strong> {KS2_YEAR_TREND_TIP}
             </aside>
           ) : null}
           <PathSummaries schools={ks2Selected} {...summaryOpts} />
@@ -804,7 +802,10 @@ export function CompareApp({
             <div className="empty-compare" role="status">
               Add a state primary or junior with Year 6 tables to compare reading,
               writing and maths. Independent prep schools usually have no
-              comparable KS2 table figures here.
+              comparable KS2 table figures here. When trends appear, 2019/20–2021/22
+              sit in a hatched COVID gap (tables unpublished nationally) — blank
+              cells later are usually suppression or a missing Year 6 table, not a
+              join error.
             </div>
           ) : (
             <ComparisonBoard
@@ -872,11 +873,27 @@ export function CompareApp({
     /* path boards mount VisitPack when the shortlist has items */
     Boolean(activePath && selected.length > 0);
 
+  const shortlistLas = useMemo(() => {
+    const labels: string[] = [];
+    const seen = new Set<string>();
+    for (const school of selectedSchools) {
+      const la = (school.localAuthority || "").trim();
+      if (!la) continue;
+      const key = la.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      labels.push(la);
+      if (labels.length >= 8) break;
+    }
+    return labels;
+  }, [selectedSchools]);
+
   return (
     <>
       <ProductTour />
       <ProductFeedbackPrompt
         shortlistCount={selected.length}
+        shortlistLas={shortlistLas}
         openedSideBySide={Boolean(activePath && selected.length > 0)}
         sawVisitPack={sawVisitPack}
         stages={stages}

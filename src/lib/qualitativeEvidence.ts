@@ -195,6 +195,27 @@ export function documentedAreaCount(record: QualitativeCaptureRecord): number {
 
 const CITATION_RE = /\[(\d+)\]/g;
 
+/**
+ * Numbered citation list matching synthesis `_numbered_sources`:
+ * signal order, dedupe by URL (or text prefix), cap 8.
+ * Footnotes must use this — not `groupSources` flatten (which regroups by
+ * type and injects documentInventory, shifting [n] targets).
+ */
+export function numberedCitationSources(
+  area: SubjectAreaAssessment,
+): GroupedSource[] {
+  const sources: GroupedSource[] = [];
+  const seen = new Set<string>();
+  for (const signal of area.signals || []) {
+    const key = signal.sourceUrl || signal.text.slice(0, 80);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    sources.push(signal);
+    if (sources.length >= 8) break;
+  }
+  return sources;
+}
+
 export function citationFootnotes(
   text: string,
   sources: GroupedSource[],
@@ -213,6 +234,28 @@ export function citationFootnotes(
         label: src?.pageTitle || src?.sourceUrl || `Source ${n}`,
       };
     });
+}
+
+/** Split narrative text into plain runs and citation markers for inline links. */
+export function citationSegments(
+  text: string,
+): Array<{ kind: "text"; value: string } | { kind: "cite"; n: number }> {
+  const segments: Array<
+    { kind: "text"; value: string } | { kind: "cite"; n: number }
+  > = [];
+  let last = 0;
+  for (const match of text.matchAll(CITATION_RE)) {
+    const start = match.index ?? 0;
+    if (start > last) {
+      segments.push({ kind: "text", value: text.slice(last, start) });
+    }
+    segments.push({ kind: "cite", n: Number(match[1]) });
+    last = start + match[0].length;
+  }
+  if (last < text.length) {
+    segments.push({ kind: "text", value: text.slice(last) });
+  }
+  return segments;
 }
 
 export function shortQualitativeSummary(school: SchoolRecord): string | null {

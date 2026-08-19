@@ -59,6 +59,9 @@ jobs:
           PRECIS_LIMIT: ${{ github.event.inputs.precis_limit || '60' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           UPGRADE_HL: ${{ github.event.inputs.upgrade_highlights || 'false' }}
+          # Private intake when configured — soft-fails to weakness-only otherwise.
+          CHALLENGE_INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO }}
+          GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           ARGS=(
