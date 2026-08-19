@@ -88,13 +88,15 @@ export function ComparisonBoard({
   schools,
   england,
   sourceStamp,
+  contextSlot,
 }: {
   schools: SchoolRecord[];
   england: BenchmarkSet;
   sourceStamp?: SourceStamp | null;
+  contextSlot: ReactNode;
 }) {
   const [activeSection, setActiveSection] =
-    useState<CompareSectionId>("ofsted");
+    useState<CompareSectionId>("context");
   const [activeMetric, setActiveMetric] = useState<HistoryMetricKey | null>(
     null,
   );
@@ -111,7 +113,7 @@ export function ComparisonBoard({
   const dataGaps = gapsForKs2Board(schools);
 
   useEffect(() => {
-    setActiveSection("ofsted");
+    setActiveSection("context");
     setActiveMetric(null);
     setSchoolSeries(null);
     setHistoryError(null);
@@ -162,9 +164,36 @@ export function ComparisonBoard({
 
   if (schools.length === 0) {
     return (
-      <div className="empty-compare">
-        Add two to four schools to see a side-by-side parental comparison.
-      </div>
+      <CompareSectionTabs
+        schools={[]}
+        activeId={activeSection}
+        onActiveChange={setActiveSection}
+        contextSlot={contextSlot}
+      >
+        {{
+          ofsted: (
+            <CompareSectionEmpty>
+              Add two to four schools to compare inspection data side by side.
+            </CompareSectionEmpty>
+          ),
+          website: (
+            <CompareSectionEmpty>
+              Add schools to your shortlist to compare website evidence.
+            </CompareSectionEmpty>
+          ),
+          places: (
+            <CompareSectionEmpty>
+              Add schools to your shortlist to compare places and offers.
+            </CompareSectionEmpty>
+          ),
+          performance: (
+            <CompareSectionEmpty>
+              Add a state primary or junior with Year 6 tables to compare
+              reading, writing and maths.
+            </CompareSectionEmpty>
+          ),
+        }}
+      </CompareSectionTabs>
     );
   }
 
@@ -299,24 +328,28 @@ export function ComparisonBoard({
   ));
 
   return (
-    <div>
-      {sourceStamp ? (
-        <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
-      ) : null}
-
-      <CoverageStrip
-        schools={schools}
-        board="ks2"
-        gaps={dataGaps}
-        secondarySlot={<SecondaryContextPane schools={schools} board="ks2" />}
-      />
-
-      <CompareSectionTabs
-        schools={schools}
-        activeId={activeSection}
-        onActiveChange={setActiveSection}
-      >
-        {{
+    <CompareSectionTabs
+      schools={schools}
+      activeId={activeSection}
+      onActiveChange={setActiveSection}
+      contextSlot={
+        <>
+          {contextSlot}
+          {sourceStamp ? (
+            <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
+          ) : null}
+          <CoverageStrip
+            schools={schools}
+            board="ks2"
+            gaps={dataGaps}
+            secondarySlot={
+              <SecondaryContextPane schools={schools} board="ks2" />
+            }
+          />
+        </>
+      }
+    >
+      {{
           ofsted: hasOfsted ? (
             <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
               <InspectionPrecisRows schools={schools} />
@@ -437,8 +470,7 @@ export function ComparisonBoard({
             </>
           ),
         }}
-      </CompareSectionTabs>
-    </div>
+    </CompareSectionTabs>
   );
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import { EY_PROVIDER_METRICS, isEyProvider } from "@/lib/eyMetrics";
 import { fmtNum, shortName } from "@/lib/format";
@@ -46,6 +46,7 @@ export function EarlyYearsComparisonBoard({
   stateSourcePage,
   childcareStamp,
   stateStamp,
+  contextSlot,
 }: {
   providers: SchoolRecord[];
   childcareOfstedAsAt?: string | null;
@@ -54,22 +55,39 @@ export function EarlyYearsComparisonBoard({
   stateSourcePage?: string | null;
   childcareStamp?: SourceStamp | null;
   stateStamp?: SourceStamp | null;
+  contextSlot: ReactNode;
 }) {
   const [activeSection, setActiveSection] =
-    useState<CompareSectionId>("ofsted");
+    useState<CompareSectionId>("context");
   const urnKey = providers.map((p) => p.urn).join(",");
 
   useEffect(() => {
-    setActiveSection("ofsted");
+    setActiveSection("context");
   }, [urnKey]);
 
   if (providers.length === 0) {
     return (
-      <div className="empty-compare">
-        Add a nursery, preschool, or school with nursery / reception to compare
-        published Ofsted grades side by side. This is inspection history, not
-        each setting’s EYFSP scores (those exist only for areas).
-      </div>
+      <CompareSectionTabs
+        schools={[]}
+        activeId={activeSection}
+        onActiveChange={setActiveSection}
+        contextSlot={contextSlot}
+      >
+        {{
+          ofsted: (
+            <CompareSectionEmpty>
+              Add a nursery or school with nursery / reception to compare Ofsted
+              grades.
+            </CompareSectionEmpty>
+          ),
+          performance: (
+            <CompareSectionEmpty>
+              Individual EYFSP scores are not published for providers — use the
+              area EYFSP table in Context for local reception context.
+            </CompareSectionEmpty>
+          ),
+        }}
+      </CompareSectionTabs>
     );
   }
 
@@ -130,62 +148,60 @@ export function EarlyYearsComparisonBoard({
   ));
 
   return (
-    <div>
-      <p className="footnote" style={{ marginBottom: "1rem" }}>
-        Compared on published Ofsted inspection outcomes for early years
-        settings in the directory — Early Years Register day care (full and
-        sessional) and state-funded schools with a nursery or reception intake.
-        Grades describe the setting at the last graded inspection. Where Ofsted
-        publishes domain judgements or a report without a single overall grade,
-        overall shows as ungraded / report-led. They are not the same as
-        reception EYFSP attainment (DfE only publishes EYFSP for areas, not
-        individual providers or schools).
-        {hasChildcare && childcareOfstedAsAt
-          ? ` Childcare MI as at ${childcareOfstedAsAt}.`
-          : null}
-        {hasSchool && stateOfstedAsAt
-          ? ` State school MI as at ${stateOfstedAsAt}.`
-          : null}{" "}
-        {hasChildcare && childcareSourcePage ? (
-          <a href={childcareSourcePage} target="_blank" rel="noreferrer">
-            Ofsted childcare MI ↗
-          </a>
-        ) : null}
-        {hasChildcare && hasSchool && childcareSourcePage && stateSourcePage
-          ? " · "
-          : null}
-        {hasSchool && stateSourcePage ? (
-          <a href={stateSourcePage} target="_blank" rel="noreferrer">
-            Ofsted school inspections MI ↗
-          </a>
-        ) : null}
-      </p>
-      {hasChildcare && childcareStamp ? (
-        <SourceStampLine stamp={childcareStamp} />
-      ) : null}
-      {hasSchool && stateStamp ? <SourceStampLine stamp={stateStamp} /> : null}
-      <DataGapFlags gaps={boardGaps(dataGaps)} />
-      {(childcareStamp || stateStamp) ? (
-        <div className="board-provenance-actions">
-          <ReportProblemButton
+    <CompareSectionTabs
+      schools={providers}
+      activeId={activeSection}
+      onActiveChange={setActiveSection}
+      contextSlot={
+        <>
+          {contextSlot}
+          <p className="footnote">
+            Compared on published Ofsted inspection outcomes for early years
+            settings in the directory — Early Years Register day care (full and
+            sessional) and state-funded schools with a nursery or reception
+            intake.
+            {hasChildcare && childcareOfstedAsAt
+              ? ` Childcare MI as at ${childcareOfstedAsAt}.`
+              : null}
+            {hasSchool && stateOfstedAsAt
+              ? ` State school MI as at ${stateOfstedAsAt}.`
+              : null}{" "}
+            {hasChildcare && childcareSourcePage ? (
+              <a href={childcareSourcePage} target="_blank" rel="noreferrer">
+                Ofsted childcare MI ↗
+              </a>
+            ) : null}
+            {hasChildcare && hasSchool && childcareSourcePage && stateSourcePage
+              ? " · "
+              : null}
+            {hasSchool && stateSourcePage ? (
+              <a href={stateSourcePage} target="_blank" rel="noreferrer">
+                Ofsted school inspections MI ↗
+              </a>
+            ) : null}
+          </p>
+          {hasChildcare && childcareStamp ? (
+            <SourceStampLine stamp={childcareStamp} />
+          ) : null}
+          {hasSchool && stateStamp ? <SourceStampLine stamp={stateStamp} /> : null}
+          <DataGapFlags gaps={boardGaps(dataGaps)} />
+          {childcareStamp || stateStamp ? (
+            <div className="board-provenance-actions">
+              <ReportProblemButton
+                board="early-years-ofsted"
+                stamp={(stateStamp || childcareStamp)!}
+              />
+            </div>
+          ) : null}
+          <CoverageStrip
+            schools={providers}
             board="early-years-ofsted"
-            stamp={(stateStamp || childcareStamp)!}
+            gaps={dataGaps}
           />
-        </div>
-      ) : null}
-
-      <CoverageStrip
-        schools={providers}
-        board="early-years-ofsted"
-        gaps={dataGaps}
-      />
-
-      <CompareSectionTabs
-        schools={providers}
-        activeId={activeSection}
-        onActiveChange={setActiveSection}
-      >
-        {{
+        </>
+      }
+    >
+      {{
           ofsted: (
             <CompareSectionTable
               tableId="early-years-ofsted"
@@ -241,7 +257,6 @@ export function EarlyYearsComparisonBoard({
             </CompareSectionEmpty>
           ),
         }}
-      </CompareSectionTabs>
-    </div>
+    </CompareSectionTabs>
   );
 }

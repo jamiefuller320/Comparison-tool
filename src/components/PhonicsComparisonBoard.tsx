@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Bar,
   BarChart,
@@ -53,25 +53,49 @@ export function PhonicsComparisonBoard({
   schools,
   phonics,
   sourceStamp,
+  contextSlot,
 }: {
   schools: SchoolRecord[];
   phonics?: PhonicsBenchmarkSet;
   sourceStamp?: SourceStamp | null;
+  contextSlot: ReactNode;
 }) {
   const [activeSection, setActiveSection] =
-    useState<CompareSectionId>("performance");
+    useState<CompareSectionId>("context");
   const urnKey = schools.map((s) => s.urn).join(",");
 
   useEffect(() => {
-    setActiveSection("performance");
+    setActiveSection("context");
   }, [urnKey]);
 
   if (schools.length === 0) {
     return (
-      <div className="empty-compare">
-        Add state schools that offer KS1 to see local-authority phonics context
-        alongside England.
-      </div>
+      <CompareSectionTabs
+        schools={[]}
+        activeId={activeSection}
+        onActiveChange={setActiveSection}
+        contextSlot={
+          <>
+            {contextSlot}
+            {sourceStamp ? (
+              <BoardProvenance
+                stamp={sourceStamp}
+                board="ks1-phonics"
+                gaps={gapsForPhonics(schools, phonics)}
+              />
+            ) : null}
+          </>
+        }
+      >
+        {{
+          performance: (
+            <CompareSectionEmpty>
+              Add state schools that offer KS1 to see local-authority phonics
+              context.
+            </CompareSectionEmpty>
+          ),
+        }}
+      </CompareSectionTabs>
     );
   }
 
@@ -152,21 +176,29 @@ export function PhonicsComparisonBoard({
   );
 
   return (
-    <div>
-      {sourceStamp ? (
-        <BoardProvenance
-          stamp={sourceStamp}
-          board="ks1-phonics"
-          gaps={dataGaps}
-        />
-      ) : null}
-
-      <CompareSectionTabs
-        schools={schools}
-        activeId={activeSection}
-        onActiveChange={setActiveSection}
-      >
-        {{
+    <CompareSectionTabs
+      schools={schools}
+      activeId={activeSection}
+      onActiveChange={setActiveSection}
+      contextSlot={
+        <>
+          {contextSlot}
+          {sourceStamp ? (
+            <BoardProvenance
+              stamp={sourceStamp}
+              board="ks1-phonics"
+              gaps={dataGaps}
+            />
+          ) : null}
+          <p className="footnote">
+            Phonics figures are published for the{" "}
+            <strong>local authority</strong> and <strong>England</strong> only
+            — not for each school. Use this as area context while you shortlist.
+          </p>
+        </>
+      }
+    >
+      {{
           ofsted: (
             <CompareSectionEmpty>
               Phonics figures are local-authority context, not per-school
@@ -191,11 +223,7 @@ export function PhonicsComparisonBoard({
           performance: (
             <>
               <p className="footnote compare-section-note">
-                Phonics figures are published for the{" "}
-                <strong>local authority</strong> and <strong>England</strong>{" "}
-                only — not for each school. Use this as area context while you
-                shortlist. KS1 teacher assessment is no longer collected
-                nationally.
+                KS1 teacher assessment is no longer collected nationally.
                 {singleLaMode
                   ? ` Showing ${sharedLa} versus England for your shortlist (${schools.map((s) => shortName(s.name, 24)).join(", ")}).`
                   : null}
@@ -345,7 +373,6 @@ export function PhonicsComparisonBoard({
             </>
           ),
         }}
-      </CompareSectionTabs>
-    </div>
+    </CompareSectionTabs>
   );
 }
