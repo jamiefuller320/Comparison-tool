@@ -27,6 +27,7 @@ import { BRAND_NAME } from "@/lib/brand";
 
 export function ProductFeedbackPrompt({
   shortlistCount = 0,
+  shortlistLas = [],
   hadPostcode = false,
   openedSideBySide = false,
   sawVisitPack = false,
@@ -34,6 +35,8 @@ export function ProductFeedbackPrompt({
   sectors = [],
 }: {
   shortlistCount?: number;
+  /** Distinct DfE LA labels from the live shortlist (voluntary intake signal). */
+  shortlistLas?: string[];
   hadPostcode?: boolean;
   openedSideBySide?: boolean;
   sawVisitPack?: boolean;
@@ -61,6 +64,7 @@ export function ProductFeedbackPrompt({
   useEffect(() => {
     const next = recordFeedbackUsage({
       shortlistCount,
+      shortlistLas,
       hadPostcode,
       openedSideBySide,
       sawVisitPack,
@@ -70,6 +74,7 @@ export function ProductFeedbackPrompt({
     setUsage(next);
   }, [
     shortlistCount,
+    shortlistLas,
     hadPostcode,
     openedSideBySide,
     sawVisitPack,

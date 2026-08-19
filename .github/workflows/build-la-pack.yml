@@ -79,13 +79,17 @@ jobs:
           fi
           "${ARGS[@]}"
 
-      - name: Record build stamp
+      - name: Record build stamp + interest signal
         if: steps.gate.outputs.allowed == 'true'
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, time
+          import json, time, sys
           from pathlib import Path
+          sys.path.insert(0, "scripts")
+          from pack_interest import append_interest_event
+
+          la = """${{ steps.la.outputs.la }}"""
           path = Path("public/data/packs/build-state.json")
           path.parent.mkdir(parents=True, exist_ok=True)
           path.write_text(
@@ -93,12 +97,19 @@ jobs:
                   {
                       "lastBuildAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                       "lastBuildDate": time.strftime("%Y-%m-%d", time.gmtime()),
-                      "localAuthority": """${{ steps.la.outputs.la }}""",
+                      "localAuthority": la,
                   },
                   indent=2,
               )
               + "\n",
               encoding="utf-8",
+          )
+          append_interest_event(
+              {
+                  "kind": "la-pack",
+                  "localAuthority": la,
+                  "source": "build-la-pack",
+              }
           )
           PY
 
@@ -108,7 +119,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/data/packs
+          git add public/data/packs public/data/packs/interest-log.jsonl
           if git diff --staged --quiet; then
             echo "No pack files to commit"
             exit 0

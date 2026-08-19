@@ -79,6 +79,7 @@ jobs:
               f"| Printed visit pack | {clean('usagePrintedVisitPack', 8) or '—'} |",
               f"| Stages | {clean('usageStages', 120) or '—'} |",
               f"| Sectors | {clean('usageSectors', 80) or '—'} |",
+              f"| Shortlist LAs | {clean('usageShortlistLas', 200) or '—'} |",
               f"| Engaged seconds | {clean('usageEngagedSeconds', 12) or '0'} |",
               f"| Session started | {clean('usageSessionStartedAt', 40) or '—'} |",
               "",

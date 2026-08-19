@@ -42,6 +42,11 @@ export interface FeedbackUsage {
   printedVisitPack: boolean;
   stages: string[];
   sectors: string[];
+  /**
+   * Distinct DfE LA labels from settings the parent shortlisted this session.
+   * Sent with voluntary feedback only — not scraped from private shortlists.
+   */
+  shortlistLas: string[];
   sessionStartedAt: string;
   /** Rough engaged seconds accumulated while the tab is visible. */
   engagedSeconds: number;
@@ -77,9 +82,33 @@ function emptyUsage(): FeedbackUsage {
     printedVisitPack: false,
     stages: [],
     sectors: [],
+    shortlistLas: [],
     sessionStartedAt: new Date().toISOString(),
     engagedSeconds: 0,
   };
+}
+
+/** Cap distinct shortlist LAs kept in usage / intake payloads. */
+const SHORTLIST_LA_CAP = 8;
+
+function mergeShortlistLas(
+  prev: string[],
+  incoming: string[] | undefined,
+): string[] {
+  const merged: string[] = [];
+  const seen = new Set<string>();
+  for (const raw of [...prev, ...(incoming || [])]) {
+    const label = String(raw || "")
+      .trim()
+      .replace(/\s+/g, " ");
+    if (!label) continue;
+    const key = label.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(label);
+    if (merged.length >= SHORTLIST_LA_CAP) break;
+  }
+  return merged;
 }
 
 function readJson<T>(key: string, fallback: T): T {
@@ -101,6 +130,9 @@ export function getFeedbackUsage(): FeedbackUsage {
     ...stored,
     stages: Array.isArray(stored.stages) ? stored.stages.map(String) : [],
     sectors: Array.isArray(stored.sectors) ? stored.sectors.map(String) : [],
+    shortlistLas: Array.isArray(stored.shortlistLas)
+      ? mergeShortlistLas([], stored.shortlistLas.map(String))
+      : [],
     shortlistCountMax: Math.max(0, Number(stored.shortlistCountMax) || 0),
     engagedSeconds: Math.max(0, Number(stored.engagedSeconds) || 0),
   };
@@ -122,6 +154,7 @@ export function recordFeedbackUsage(
     printedVisitPack: Boolean(prev.printedVisitPack || patch.printedVisitPack),
     stages: patch.stages ?? prev.stages,
     sectors: patch.sectors ?? prev.sectors,
+    shortlistLas: mergeShortlistLas(prev.shortlistLas, patch.shortlistLas),
     sessionStartedAt: prev.sessionStartedAt || new Date().toISOString(),
     engagedSeconds:
       typeof patch.engagedSeconds === "number"
@@ -383,6 +416,7 @@ export function serializeFeedbackForIntake(
     usagePrintedVisitPack: usage.printedVisitPack ? "yes" : "no",
     usageStages: usage.stages.join(","),
     usageSectors: usage.sectors.join(","),
+    usageShortlistLas: usage.shortlistLas.join(","),
     usageEngagedSeconds: String(Math.round(usage.engagedSeconds)),
     usageSessionStartedAt: usage.sessionStartedAt,
     machineJson: JSON.stringify({
@@ -401,9 +435,11 @@ export function serializeFeedbackForIntake(
         printedVisitPack: usage.printedVisitPack,
         stages: usage.stages,
         sectors: usage.sectors,
+        shortlistLas: usage.shortlistLas,
         engagedSeconds: Math.round(usage.engagedSeconds),
         sessionStartedAt: usage.sessionStartedAt,
       },
+      shortlistLas: usage.shortlistLas,
       requestedAt: payload.requestedAt,
       pageUrl: payload.pageUrl ?? null,
       hasEmail: Boolean(payload.email?.trim()),

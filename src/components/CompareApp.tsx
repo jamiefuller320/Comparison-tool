@@ -872,11 +872,27 @@ export function CompareApp({
     /* path boards mount VisitPack when the shortlist has items */
     Boolean(activePath && selected.length > 0);
 
+  const shortlistLas = useMemo(() => {
+    const labels: string[] = [];
+    const seen = new Set<string>();
+    for (const school of selectedSchools) {
+      const la = (school.localAuthority || "").trim();
+      if (!la) continue;
+      const key = la.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      labels.push(la);
+      if (labels.length >= 8) break;
+    }
+    return labels;
+  }, [selectedSchools]);
+
   return (
     <>
       <ProductTour />
       <ProductFeedbackPrompt
         shortlistCount={selected.length}
+        shortlistLas={shortlistLas}
         openedSideBySide={Boolean(activePath && selected.length > 0)}
         sawVisitPack={sawVisitPack}
         stages={stages}

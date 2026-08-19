@@ -71,7 +71,7 @@ npm run loop:pack-quality -- --dry-run
 npm run loop:pack-quality -- --max-packs 6 --isi-resolve-cap 80 --precis-limit 60
 ```
 
-Future phases (interest weighting, pack TTL, SCH-batched KS2) are logged under **Continuous data-quality automation** in `DEFERRED_IDEAS.md` — return there rather than re-deriving from chat.
+Future phases (pack TTL, SCH-batched KS2) are logged under **Continuous data-quality automation** in `DEFERRED_IDEAS.md` — return there rather than re-deriving from chat. Interest weighting (phase 2) ships with `scripts/pack_interest.py` and biases `loop:pack-quality` target selection.
 
 Soft-launch qualitative target (guideline, not a hard CI gate):
 

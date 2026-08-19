@@ -29,6 +29,7 @@ async function main() {
     printedVisitPack: false,
     stages: [],
     sectors: [],
+    shortlistLas: [],
     sessionStartedAt: new Date().toISOString(),
     engagedSeconds: 10,
   };
@@ -56,17 +57,20 @@ async function main() {
     topics: ["compare", "data-trust"],
     note: "Hard to tell what Att8 means",
     email: "parent@example.com",
-    usage: compared,
+    usage: { ...compared, shortlistLas: ["Surrey", "Hampshire"] },
     adaptiveQuestion: adaptiveFeedbackQuestion(compared),
-    pageUrl: "https://schoolcompass.uk/",
+    pageUrl: "https://schoolcompass.uk/areas/surrey/",
     requestedAt: "2026-08-01T12:00:00.000Z",
   });
   assert.equal(serialized.kind, "product-feedback");
   assert.equal(serialized.sentiment, "mixed");
   assert.equal(serialized.hasEmail, "yes");
   assert.ok(serialized.machineJson.includes('"openedSideBySide":true'));
+  assert.ok(serialized.machineJson.includes('"shortlistLas"'));
+  assert.match(serialized.usageShortlistLas, /Surrey/);
   const machine = JSON.parse(serialized.machineJson);
   assert.deepEqual(machine.topics, ["compare", "data-trust"]);
+  assert.deepEqual(machine.shortlistLas, ["Surrey", "Hampshire"]);
 
   // Without browser storage, auto-prompt should stay closed (tour / storage gates).
   const decision = shouldAutoPromptFeedback(compared, { pageLoadSeconds: 300 });
