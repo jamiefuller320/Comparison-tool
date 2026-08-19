@@ -15,11 +15,9 @@ import { EarlyYearsComparisonBoard } from "@/components/EarlyYearsComparisonBoar
 import { EyfspComparisonBoard } from "@/components/EyfspComparisonBoard";
 import { ChildminderDirectoryBoard } from "@/components/ChildminderDirectoryBoard";
 import { ChildminderVettingChecklist } from "@/components/ChildminderVettingChecklist";
-import { VisitPack } from "@/components/VisitPack";
+import { CompareActionBar } from "@/components/CompareActionBar";
+import { CompareVisitPack } from "@/components/CompareVisitPack";
 import { DecisionGuidancePanel } from "@/components/DecisionGuidance";
-import { KS2_YEAR_TREND_TIP } from "@/lib/covid-gap";
-import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
-import { ShareShortlistButton } from "@/components/ShareShortlistButton";
 import { ShortlistDock } from "@/components/ShortlistDock";
 import { SaveShortlistPrompt } from "@/components/SaveShortlistPrompt";
 import { RestoreShortlistBanner } from "@/components/RestoreShortlistBanner";
@@ -29,7 +27,9 @@ import { JourneyStageFrame } from "@/components/JourneyStageFrame";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import { RESTORE_SHORTLIST_EVENT } from "@/lib/account";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
-import { ComparePathTabs } from "@/components/ComparePathTabs";
+import { KS2_YEAR_TREND_TIP } from "@/lib/covid-gap";
+import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
+import { ShareShortlistButton } from "@/components/ShareShortlistButton";
 import { MissingSchoolButton } from "@/components/MissingSchoolButton";
 import {
   ACTIVE_PACK_STORAGE_KEY,
@@ -623,6 +623,32 @@ export function CompareApp({
     sourcePage: childmindersIndex?.source.consentedAddressesPage,
   });
 
+  const canPrintComparePack = useMemo(() => {
+    if (!activePath || selectedSchools.length === 0) return false;
+    switch (activePath) {
+      case "early-years":
+        return eySelected.length > 0;
+      case "childminders":
+        return childminderSelected.length > 0;
+      case "ks1":
+        return ks1Selected.length > 0;
+      case "ks2":
+        return ks2Selected.length > 0;
+      case "ks4":
+        return ks4Selected.length > 0;
+      default:
+        return false;
+    }
+  }, [
+    activePath,
+    selectedSchools.length,
+    eySelected.length,
+    childminderSelected.length,
+    ks1Selected.length,
+    ks2Selected.length,
+    ks4Selected.length,
+  ]);
+
   function renderActivePath() {
     if (!activePath) {
       if (selectedSchools.length === 0) {
@@ -691,16 +717,6 @@ export function CompareApp({
             stateStamp={stateOfstedStamp}
             contextSlot={eyContext}
           />
-          {eySelected.length > 0 ? (
-            <div style={{ marginTop: "1.75rem" }}>
-              <VisitPack
-                nurseries={eySelected}
-                childminders={[]}
-                stages={stages}
-                sectors={sectors}
-              />
-            </div>
-          ) : null}
         </div>
       );
     }
@@ -737,14 +753,6 @@ export function CompareApp({
                     childmindersIndex?.source.consentedAddressesPage
                   }
                   providerCount={childmindersIndex?.stats.providerCount}
-                />
-              </div>
-              <div style={{ marginTop: "1.75rem" }}>
-                <VisitPack
-                  nurseries={[]}
-                  childminders={childminderSelected}
-                  stages={stages}
-                  sectors={sectors}
                 />
               </div>
             </>
@@ -788,16 +796,6 @@ export function CompareApp({
           ) : (
             ks1Context
           )}
-          {ks1Selected.length > 0 ? (
-            <div style={{ marginTop: "1.75rem" }}>
-              <VisitPack
-                schools={ks1Selected}
-                preferPath="ks1"
-                stages={stages}
-                sectors={sectors}
-              />
-            </div>
-          ) : null}
         </div>
       );
     }
@@ -836,16 +834,6 @@ export function CompareApp({
             sourceStamp={ks2Stamp}
             contextSlot={ks2Context}
           />
-          {ks2Selected.length > 0 ? (
-            <div style={{ marginTop: "1.75rem" }}>
-              <VisitPack
-                schools={ks2Selected}
-                preferPath="ks2"
-                stages={stages}
-                sectors={sectors}
-              />
-            </div>
-          ) : null}
         </div>
       );
     }
@@ -884,16 +872,6 @@ export function CompareApp({
           ofstedStateAsAt={index.stats.ofstedStateAsAt}
           contextSlot={ks4Context}
         />
-        {ks4Selected.length > 0 ? (
-          <div style={{ marginTop: "1.75rem" }}>
-            <VisitPack
-              schools={ks4Selected}
-              preferPath="ks4"
-              stages={stages}
-              sectors={sectors}
-            />
-          </div>
-        ) : null}
       </div>
     );
   }
@@ -1011,25 +989,36 @@ export function CompareApp({
 
           const sideBySideSheet = (
             <>
-              {activePath ? (
-                <ComparePathTabs
-                  available={availablePaths}
-                  active={activePath}
-                  onChange={setActivePath}
-                  withShortlist={shortlistPaths}
-                />
-              ) : null}
+              <div className="section-head">
+                <h2>Side by side</h2>
+                <p>
+                  One path at a time — patterns to visit on, not a final verdict.
+                  Use the tabs below for context, Ofsted, website evidence,
+                  places, and performance figures.
+                </p>
+              </div>
 
-              {selectedSchools.length > 0 ? (
-                <div className="shortlist-inline-actions compare-share-row no-print">
-                  <ShareShortlistButton
-                    schoolNames={selectedSchools.map((s) => s.name)}
-                    label="Share this comparison"
-                  />
-                </div>
-              ) : null}
+              <CompareActionBar
+                schoolNames={selectedSchools.map((s) => s.name)}
+                availablePaths={availablePaths}
+                activePath={activePath}
+                onPathChange={setActivePath}
+                shortlistPaths={shortlistPaths}
+                canPrint={canPrintComparePack}
+              />
 
               {renderActivePath()}
+
+              <CompareVisitPack
+                activePath={activePath}
+                eySelected={eySelected}
+                childminderSelected={childminderSelected}
+                ks1Selected={ks1Selected}
+                ks2Selected={ks2Selected}
+                ks4Selected={ks4Selected}
+                stages={stages}
+                sectors={sectors}
+              />
             </>
           );
 
