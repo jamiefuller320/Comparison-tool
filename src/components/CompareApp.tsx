@@ -660,7 +660,6 @@ export function CompareApp({
           ) : null}
           {eySelected.length > 0 ? (
             <div style={{ marginTop: hasEyData ? "1.5rem" : 0 }}>
-              <h3 className="compare-subhead">Ofsted comparison</h3>
               <EarlyYearsComparisonBoard
                 providers={eySelected}
                 childcareOfstedAsAt={eyIndex?.ofstedAsAt}

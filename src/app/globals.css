@@ -1271,6 +1271,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .journey-stage .compare-table-frame,
 .journey-stage .compare-board,
 .journey-stage .compare-path-binder,
+.journey-stage .compare-section-binder,
 .journey-stage .decision-guidance,
 .journey-stage .missing-school-panel,
 .journey-stage .save-shortlist-prompt,
@@ -1360,6 +1361,29 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-path-binder {
   margin: 0 0 1.15rem;
   max-width: 36rem;
+}
+
+.compare-section-binder {
+  margin: 1rem 0 0;
+}
+
+.compare-section-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--sea-deep);
+}
+
+.compare-section-body {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.compare-section-note {
+  margin: 0;
+}
+
+.compare-section-empty {
+  margin: 0;
 }
 
 @media (max-width: 560px) {
