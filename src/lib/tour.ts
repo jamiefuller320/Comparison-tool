@@ -114,7 +114,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "year-trend",
     target: "year-trend",
     title: "Expand a row for year-on-year trends",
-    body: "On the KS2 path, click a measure name (or Year trend). A graph opens under that row for each shortlisted school and England across published years. The hatched COVID band marks 2019/20–2021/22, when KS2 tables were unpublished — lines do not connect across that gap.",
+    body: "On the KS2 path, click a measure name (or Year trend). A graph opens under that row for each shortlisted school and England across published years. The hatched COVID band marks 2019/20–2021/22, when KS2 tables were unpublished — lines do not connect across that gap, and those years are not school failures. Small cohorts bounce; blank cells are usually suppression or a new school.",
   },
   {
     id: "how",

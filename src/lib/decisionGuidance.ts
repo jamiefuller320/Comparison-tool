@@ -126,7 +126,7 @@ export const DECISION_GUIDANCE: Record<GuidancePathId, DecisionGuidanceContent> 
     ks2: {
       path: "ks2",
       heading: "How to read Key Stage 2 figures",
-      lead: "End-of-primary tables show how Year 6 cohorts met expected and higher standards. Use them to spot patterns across a shortlist, then visit.",
+      lead: "End-of-primary tables show how Year 6 cohorts met expected and higher standards. Use them to spot patterns across a shortlist, then visit. COVID years and blank cells need a careful reading — see caveats below.",
       sections: [
         {
           id: "telling",
@@ -138,12 +138,22 @@ export const DECISION_GUIDANCE: Record<GuidancePathId, DecisionGuidanceContent> 
             "Inspection themes from the latest usable Ofsted or ISI report.",
           ],
         },
+        {
+          id: "caveats",
+          title: "COVID years and blank cells",
+          items: [
+            "2019/20–2021/22 KS2 performance tables were cancelled or unpublished nationally — year charts leave a hatched gap and do not invent scores.",
+            "A blank cell is usually an unpublished or suppressed table (new school, tiny cohort, or statistical disclosure), not a School Compass join error.",
+            "Independent prep schools rarely have comparable state KS2 RWM columns — that is a sector data gap, not a ranking of “no results”.",
+            "Compare like-for-like years; do not read across the COVID gap as a sudden drop or rise.",
+          ],
+        },
         SHARED_LIMITS,
         {
           id: "conclude",
           title: "Fair conclusions you can draw",
           items: [
-            "Relative strengths and gaps across the schools you are comparing.",
+            "Relative strengths and gaps across the schools you are comparing on published years.",
             "Which schools warrant a visit based on outcomes plus distance.",
             "Questions to ask about reading, writing, maths, and support for SEND.",
           ],
@@ -184,13 +194,14 @@ export const DECISION_GUIDANCE: Record<GuidancePathId, DecisionGuidanceContent> 
     "early-years": {
       path: "early-years",
       heading: "How to read early years Ofsted & EYFSP",
-      lead: "Ofsted grades describe inspection judgements for settings. EYFSP area figures are local context — provider-level EYFSP is not published.",
+      lead: "Ofsted grades describe inspection judgements for settings (nurseries, school early years, and out-of-school / holiday clubs). EYFSP area figures are local context — provider-level EYFSP is not published.",
       sections: [
         {
           id: "telling",
           title: "What this data can tell you",
           items: [
             "Latest overall / early years Ofsted grades and inspection dates where published.",
+            "Out-of-school and holiday clubs often show Met / Not met (safeguarding and welfare focus) rather than Outstanding–Inadequate.",
             "Local EYFSP area context (England / LA) — a different question from Ofsted grades.",
             "Verbatim précis themes from the latest usable report.",
           ],
@@ -201,6 +212,7 @@ export const DECISION_GUIDANCE: Record<GuidancePathId, DecisionGuidanceContent> 
           items: [
             "How any one nursery’s children scored on the EYFSP.",
             "Fees, funded hours practice, or day-to-day ratios you will experience.",
+            "Whether wrap-around hours or holiday dates match your diary — check with the setting.",
             ...SHARED_LIMITS.items,
           ],
         },
@@ -269,9 +281,11 @@ export function guidancePrintLines(
   const content = guidanceForPath(path);
   const telling = content.sections.find((s) => s.id === "telling");
   const limits = content.sections.find((s) => s.id === "limits");
+  const caveats = content.sections.find((s) => s.id === "caveats");
   const use = content.sections.find((s) => s.id === "use");
   const lines: string[] = [];
   if (telling?.items[0]) lines.push(`Can tell you: ${telling.items[0]}`);
+  if (caveats?.items[0]) lines.push(`Caveat: ${caveats.items[0]}`);
   if (limits?.items[0]) lines.push(`Does not tell you: ${limits.items[0]}`);
   if (use?.items[0]) lines.push(`Next step: ${use.items[0]}`);
   lines.push(

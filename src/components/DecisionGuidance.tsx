@@ -55,7 +55,7 @@ export function DecisionGuidancePrintBlock({ path }: { path: GuidancePathId }) {
       <div className="decision-guidance-print-columns">
         {full.sections
           .filter((s) =>
-            ["telling", "limits", "conclude", "use"].includes(s.id),
+            ["telling", "caveats", "limits", "conclude", "use"].includes(s.id),
           )
           .map((section) => (
             <div key={section.id}>
