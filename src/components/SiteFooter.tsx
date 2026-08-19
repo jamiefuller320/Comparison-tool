@@ -80,7 +80,7 @@ export function SiteFooter() {
           </ul>
         </nav>
         <p className="site-footer-meta">
-          <a href={BRAND_HOME_URL}>{BRAND_DOMAIN}</a>
+          <a href={`${BRAND_HOME_URL}/`}>{BRAND_DOMAIN}</a>
           {" · "}
           Not a league table — patterns to visit on, not a final verdict.
         </p>
