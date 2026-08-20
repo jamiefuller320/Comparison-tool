@@ -10,6 +10,10 @@ import {
   CompareSectionTabs,
 } from "@/components/CompareSectionTabs";
 import { CompareSectionTable } from "@/components/CompareSectionTable";
+import {
+  CompareOfstedPanels,
+  CompareWebsitePanels,
+} from "@/components/CompareEvidencePanels";
 import { SchoolColumnHeader } from "@/components/SchoolColumnHeader";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
 import { DataGapFlags } from "@/components/DataGapFlags";
@@ -21,8 +25,6 @@ import {
   schoolGaps,
 } from "@/lib/dataGaps";
 import { CoverageStrip } from "@/components/CoverageStrip";
-import { InspectionPrecisRows } from "@/components/InspectionPrecis";
-import { QualitativeEvidenceRows } from "@/components/QualitativeEvidence";
 import { AdmissionsPlacesRows } from "@/components/AdmissionsPlacesRows";
 import {
   compareSectionHasData,
@@ -97,7 +99,6 @@ export function EarlyYearsComparisonBoard({
     childcareOfstedAsAt,
     stateOfstedAsAt,
   });
-  const hasWebsite = compareSectionHasData("website", providers);
   const hasPlaces = compareSectionHasData("places", providers);
   const providerHeaders = providers.map((provider) => (
     <th key={provider.urn} scope="col">
@@ -203,45 +204,31 @@ export function EarlyYearsComparisonBoard({
     >
       {{
           ofsted: (
-            <CompareSectionTable
-              tableId="early-years-ofsted"
-              headerCells={providerHeaders}
-            >
-              <InspectionPrecisRows schools={providers} />
-              {EY_PROVIDER_METRICS.map((metric) => (
-                <tr key={metric.key}>
-                  <th scope="row">
-                    {metric.label}
-                    <span className="hint">{metric.parentHint}</span>
-                  </th>
-                  {providers.map((provider) => (
-                    <td key={provider.urn} className="metric-cell">
-                      {formatValue(metric.get(provider), metric.unit)}
-                    </td>
+            <CompareOfstedPanels
+              schools={providers}
+              extraRows={
+                <CompareSectionTable
+                  tableId="early-years-ofsted"
+                  headerCells={providerHeaders}
+                >
+                  {EY_PROVIDER_METRICS.map((metric) => (
+                    <tr key={metric.key}>
+                      <th scope="row">
+                        {metric.label}
+                        <span className="hint">{metric.parentHint}</span>
+                      </th>
+                      {providers.map((provider) => (
+                        <td key={provider.urn} className="metric-cell">
+                          {formatValue(metric.get(provider), metric.unit)}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
-            </CompareSectionTable>
+                </CompareSectionTable>
+              }
+            />
           ),
-          website: (
-            <CompareSectionTable
-              tableId="early-years-ofsted"
-              headerCells={providerHeaders}
-            >
-              {hasWebsite ? (
-                <QualitativeEvidenceRows schools={providers} />
-              ) : (
-                <tr>
-                  <td colSpan={providers.length + 1}>
-                    <CompareSectionEmpty>
-                      No website evidence captured for these early-years settings
-                      yet.
-                    </CompareSectionEmpty>
-                  </td>
-                </tr>
-              )}
-            </CompareSectionTable>
-          ),
+          website: <CompareWebsitePanels schools={providers} />,
           places: hasPlaces ? (
             <CompareSectionTable
               tableId="early-years-ofsted"
