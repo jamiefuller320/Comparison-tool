@@ -1271,6 +1271,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .journey-stage .compare-board,
 .journey-stage .compare-path-binder,
 .journey-stage .compare-section-binder .path-summaries,
+.journey-stage .compare-evidence-card,
 .journey-stage .decision-guidance,
 .journey-stage .missing-school-panel,
 .journey-stage .save-shortlist-prompt,
@@ -1401,20 +1402,29 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 /* Tabulated school data + evidence cards stay on foam with dark ink. */
 .compare-section-binder .compare-table-frame,
 .compare-section-binder .compare-board,
-.compare-section-binder .compare-evidence-panels,
 .compare-section-binder .compare-evidence-card,
 .compare-section-binder .chart-wrap,
-.journey-stage .compare-section-binder .compare-evidence-panels,
 .journey-stage .compare-section-binder .compare-evidence-card {
   color: var(--ink);
 }
 
-.compare-section-binder .compare-table-frame .footnote,
+/* Panel chrome sits on harbour — keep lead notes light; cards own dark ink. */
+.compare-section-binder .compare-evidence-panels {
+  color: var(--stage-ink);
+}
+
+.journey-stage .compare-section-binder .compare-evidence-panels .footnote,
+.journey-stage .compare-section-binder .compare-evidence-panels .precis-reading-note,
+.journey-stage .compare-section-binder .compare-evidence-panels .compare-section-note,
 .compare-section-binder .compare-evidence-panels .footnote,
 .compare-section-binder .compare-evidence-panels .precis-reading-note,
-.compare-section-binder .compare-evidence-missing,
-.journey-stage .compare-section-binder .compare-evidence-panels .footnote,
-.journey-stage .compare-section-binder .compare-evidence-missing {
+.compare-section-binder .compare-evidence-panels .compare-section-note {
+  color: var(--stage-ink-muted);
+}
+
+.compare-section-binder .compare-table-frame .footnote,
+.compare-evidence-card .compare-evidence-missing,
+.journey-stage .compare-evidence-card .compare-evidence-missing {
   color: var(--ink-soft);
 }
 
@@ -1440,10 +1450,63 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   color: var(--sea-deep);
 }
 
+/* Website evidence copy inside school cards — never harbour white ink. */
+.compare-evidence-card,
+.compare-evidence-card .qual-evidence-detail,
+.compare-evidence-card .qual-evidence-paragraph,
+.compare-evidence-card .qual-evidence-empty,
+.compare-evidence-card .qual-evidence-source-group,
+.compare-evidence-card .qual-evidence-source-group ul,
+.compare-evidence-card .qual-evidence-source-group li,
+.compare-evidence-card .compare-evidence-card-body,
+.journey-stage .compare-evidence-card,
+.journey-stage .compare-evidence-card .qual-evidence-detail,
+.journey-stage .compare-evidence-card .qual-evidence-paragraph,
+.journey-stage .compare-evidence-card .qual-evidence-empty,
+.journey-stage .compare-evidence-card .qual-evidence-source-group,
+.journey-stage .compare-evidence-card .qual-evidence-source-group ul,
+.journey-stage .compare-evidence-card .qual-evidence-source-group li {
+  color: var(--ink);
+}
+
+.compare-evidence-card .qual-evidence-kicker,
+.compare-evidence-card .qual-evidence-detail-name,
+.compare-evidence-card .qual-evidence-area-header h4,
+.compare-evidence-card .compare-evidence-label,
+.compare-evidence-card-head h4,
+.journey-stage .compare-evidence-card .qual-evidence-kicker,
+.journey-stage .compare-evidence-card .qual-evidence-detail-name,
+.journey-stage .compare-evidence-card .qual-evidence-area-header h4,
+.journey-stage .compare-evidence-card .compare-evidence-label,
+.journey-stage .compare-evidence-card-head h4 {
+  color: var(--sea-deep);
+}
+
+.compare-evidence-card-head p,
+.compare-evidence-card .qual-evidence-method,
+.compare-evidence-card .qual-evidence-note,
+.compare-evidence-card .qual-evidence-source-group h5,
+.compare-evidence-card .qual-evidence-source-meta,
+.journey-stage .compare-evidence-card-head p,
+.journey-stage .compare-evidence-card .qual-evidence-method,
+.journey-stage .compare-evidence-card .qual-evidence-note,
+.journey-stage .compare-evidence-card .qual-evidence-source-group h5,
+.journey-stage .compare-evidence-card .qual-evidence-source-meta {
+  color: var(--ink-soft);
+}
+
+.compare-evidence-card .qual-evidence-footnote,
+.compare-evidence-card .qual-evidence-sources-toggle,
+.compare-evidence-card a,
+.journey-stage .compare-evidence-card .qual-evidence-footnote,
+.journey-stage .compare-evidence-card .qual-evidence-sources-toggle,
+.journey-stage .compare-evidence-card a {
+  color: var(--sea);
+}
+
 .compare-evidence-panels {
   display: grid;
   gap: 0.85rem;
-  color: var(--ink);
 }
 
 .compare-evidence-grid {
@@ -2305,10 +2368,14 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-section-binder .inspection-precis-summary-body,
 .compare-section-binder .qual-evidence-summary,
 .compare-section-binder .qual-evidence-summary-body,
+.compare-section-binder .qual-evidence-detail,
+.compare-section-binder .qual-evidence-paragraph,
 .compare-harbour-cell .inspection-precis-summary,
 .compare-harbour-cell .inspection-precis-summary-body,
 .compare-harbour-cell .qual-evidence-summary,
-.compare-harbour-cell .qual-evidence-summary-body {
+.compare-harbour-cell .qual-evidence-summary-body,
+.compare-harbour-cell .qual-evidence-detail,
+.compare-harbour-cell .qual-evidence-paragraph {
   color: var(--ink);
 }
 
@@ -2600,7 +2667,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .qual-evidence-footnote {
   margin-left: 0.1rem;
-  color: var(--accent);
+  color: var(--sea);
   text-decoration: none;
 }
 
@@ -2614,7 +2681,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   appearance: none;
   border: 0;
   background: transparent;
-  color: var(--accent);
+  color: var(--sea);
   font-size: 0.72rem;
   cursor: pointer;
   text-decoration: underline;
