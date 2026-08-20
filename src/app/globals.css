@@ -1366,25 +1366,24 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-section-binder.hero-binder {
   margin: 0.35rem 0 0;
   /*
-    Nested inside the journey harbour sheet. Keep harbour tabs, but use a
-    light paper panel so table text, Ofsted précis, and website evidence
-    stay readable (dark ink on foam — not light-on-light blanks).
+    Match the journey harbour sheet (same as Setup / Finder / Shortlist),
+    not a beige paper panel. Tabulated frames and evidence cards keep foam.
   */
-  --binder-fill: rgba(255, 252, 247, 0.92);
-  --binder-stroke: rgba(11, 79, 108, 0.18);
-  --binder-head-line: rgba(11, 79, 108, 0.12);
-  --binder-head-color: var(--sea-deep);
-  --binder-head-muted: var(--ink-soft);
-  --binder-shadow: 0 12px 28px rgba(20, 35, 58, 0.06);
+  --binder-fill: var(--stage-sheet-fill);
+  --binder-stroke: var(--stage-sheet-stroke);
+  --binder-head-line: var(--stage-sheet-stroke);
+  --binder-head-color: var(--stage-ink);
+  --binder-head-muted: var(--stage-ink-muted);
+  --binder-shadow: var(--stage-shadow);
 }
 
-/* Nested sheet body must not inherit journey light ink / grid min-height. */
+/* Nested sheet uses harbour light ink; data frames override to dark ink. */
 .journey-stage .compare-section-binder .binder-sheet-body,
 .compare-section-binder .binder-sheet-body,
 .compare-section-binder .binder-sheet-head,
 .compare-section-binder .compare-section-body,
 .compare-section-binder .compare-context-body {
-  color: var(--ink);
+  color: var(--stage-ink);
   display: block;
   min-height: 0;
 }
@@ -1392,9 +1391,27 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .journey-stage .compare-section-binder .empty-compare,
 .journey-stage .compare-section-binder .footnote,
 .journey-stage .compare-section-binder .precis-reading-note,
+.journey-stage .compare-section-binder .compare-section-note,
 .compare-section-binder .empty-compare,
 .compare-section-binder .footnote,
-.compare-section-binder .precis-reading-note {
+.compare-section-binder .precis-reading-note,
+.compare-section-binder .compare-section-note {
+  color: var(--stage-ink-muted);
+}
+
+/* Tabulated school data + evidence cards stay on foam with dark ink. */
+.compare-section-binder .compare-table-frame,
+.compare-section-binder .compare-board,
+.compare-section-binder .compare-evidence-panels,
+.compare-section-binder .compare-evidence-card,
+.compare-section-binder .chart-wrap {
+  color: var(--ink);
+}
+
+.compare-section-binder .compare-table-frame .footnote,
+.compare-section-binder .compare-evidence-panels .footnote,
+.compare-section-binder .compare-evidence-panels .precis-reading-note,
+.compare-section-binder .compare-evidence-missing {
   color: var(--ink-soft);
 }
 
@@ -1477,7 +1494,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--sea);
+  color: var(--sea-deep);
 }
 
 .compare-evidence-block {
@@ -2149,7 +2166,22 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--sea);
+  color: var(--sea-deep);
+}
+
+.inspection-precis-summary {
+  max-width: none;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.55rem;
+  background: rgba(255, 252, 247, 0.92);
+  border: 1px solid rgba(11, 79, 108, 0.12);
+}
+
+.inspection-precis-summary-body {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.84rem;
+  line-height: 1.4;
 }
 
 .inspection-precis-summary {
@@ -2196,7 +2228,8 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   margin: 0 0 0.55rem;
   color: var(--ink);
   font-size: 0.9rem;
-  line-height: 1.4;
+  line-height: 1.45;
+  font-weight: 500;
 }
 
 .inspection-highlight-block {
@@ -2205,15 +2238,15 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .inspection-highlight-block h4 {
   margin: 0 0 0.35rem;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--sea);
+  color: var(--sea-deep);
 }
 
 .inspection-highlight-block.improve h4 {
-  color: #8a3b12;
+  color: var(--ink);
 }
 
 .inspection-precis-quotes {
@@ -2972,14 +3005,25 @@ html:has(.page-chapter-nav) .compare-table-controls {
 
 .school-meta {
   display: grid;
-  gap: 0.25rem;
-  font-size: 0.88rem;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  font-size: 0.84rem;
   font-weight: 500;
+  line-height: 1.35;
   color: var(--ink-soft);
 }
 
+.school-meta > * {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.school-meta > span {
+  display: block;
+}
+
 .school-meta a {
-  color: var(--sea);
+  color: var(--sea-deep);
   font-weight: 600;
   text-decoration: none;
 }
@@ -2991,13 +3035,15 @@ html:has(.page-chapter-nav) .compare-table-controls {
 .school-outbound-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.75rem;
+  gap: 0.3rem 0.65rem;
+  margin: 0;
 }
 
 .school-outbound-link {
-  color: var(--sea);
+  color: var(--sea-deep);
   font-weight: 600;
   text-decoration: none;
+  line-height: 1.35;
 }
 
 .school-outbound-link:hover {
@@ -4369,6 +4415,12 @@ html:has(.page-chapter-nav) .compare-table-controls {
   height: 100%;
   min-height: 380px;
   font: inherit;
+}
+
+/* Brighter parks/roads/labels while keeping Voyager’s decluttered basemap. */
+.nearby-map .leaflet-tile-pane,
+.nearby-map .nearby-map-tiles {
+  filter: saturate(1.28) contrast(1.1) brightness(1.06);
 }
 
 .nearby-map-chrome {
