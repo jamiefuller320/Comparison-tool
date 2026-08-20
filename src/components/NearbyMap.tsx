@@ -171,13 +171,18 @@ export function NearbyMap({
       zoomControl: true,
     }).setView([home.latitude, home.longitude], 12);
 
-    // OpenStreetMap standard — natural land/water/road colours (no stylised yellow cast).
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19,
-      className: "nearby-map-tiles",
-    }).addTo(map);
+    // Carto Voyager — coloured parks/water/roads without OSM peak-height clutter.
+    // CSS on .leaflet-tile-pane boosts brightness/detail without reintroducing peaks.
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        maxZoom: 19,
+        subdomains: "abcd",
+        className: "nearby-map-tiles",
+      },
+    ).addTo(map);
 
     layersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;

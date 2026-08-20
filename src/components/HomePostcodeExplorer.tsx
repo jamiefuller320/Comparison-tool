@@ -76,7 +76,6 @@ import {
   type CatchmentCollection,
   type CatchmentFeature,
 } from "@/lib/catchments";
-import { SelectedChips } from "@/components/SelectedChips";
 
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
@@ -435,13 +434,6 @@ export function HomePostcodeExplorer({
   }, [home, nearbyStraight]);
 
   const atMax = selectedUrns.length >= max;
-
-  const selectedSchools = useMemo(() => {
-    const byUrn = new Map(schools.map((s) => [s.urn, s]));
-    return selectedUrns
-      .map((urn) => byUrn.get(urn))
-      .filter((s): s is SchoolRecord => Boolean(s));
-  }, [schools, selectedUrns]);
 
   const stageSummary = useMemo(() => {
     const labels = formatPhases(stageFilter);
@@ -901,30 +893,22 @@ export function HomePostcodeExplorer({
                   </ul>
                 )}
                 <div className="nearby-list-actions">
-                  {selectedSchools.length > 0 ? (
-                    <SelectedChips
-                      schools={selectedSchools}
-                      onRemove={onToggle}
-                    />
-                  ) : null}
-                  <div className="nearby-list-action-buttons">
-                    <button
-                      type="button"
-                      className="btn btn-ghost"
-                      disabled={selectedUrns.length === 0}
-                      onClick={() => setChapter("compare")}
-                    >
-                      Shortlist
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      disabled={selectedUrns.length === 0}
-                      onClick={() => setChapter("side-by-side")}
-                    >
-                      Compare
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={selectedUrns.length === 0}
+                    onClick={() => setChapter("compare")}
+                  >
+                    Shortlist
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={selectedUrns.length === 0}
+                    onClick={() => setChapter("side-by-side")}
+                  >
+                    Compare
+                  </button>
                 </div>
               </div>
             </div>

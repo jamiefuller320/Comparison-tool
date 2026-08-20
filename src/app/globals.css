@@ -4461,10 +4461,10 @@ html:has(.page-chapter-nav) .compare-table-controls {
   font: inherit;
 }
 
-/* Keep OSM tiles unfiltered — saturation boosts made the basemap look yellow. */
+/* Brighter parks/roads/labels while keeping Voyager’s decluttered basemap. */
 .nearby-map .leaflet-tile-pane,
 .nearby-map .nearby-map-tiles {
-  filter: none;
+  filter: saturate(1.28) contrast(1.1) brightness(1.06);
 }
 
 .nearby-map-chrome {
@@ -4563,21 +4563,12 @@ html:has(.page-chapter-nav) .compare-table-controls {
 }
 
 .nearby-list-actions {
-  display: grid;
-  gap: 0.65rem;
-  padding: 0.75rem 1rem 1rem;
-  border-top: 1px solid rgba(11, 79, 108, 0.1);
-}
-
-.nearby-list-actions .chip-row {
-  margin: 0;
-}
-
-.nearby-list-action-buttons {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.55rem;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px solid rgba(11, 79, 108, 0.1);
 }
 
 .nearby-list ul {
