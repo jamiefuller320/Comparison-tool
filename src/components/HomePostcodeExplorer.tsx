@@ -107,6 +107,7 @@ export function HomePostcodeExplorer({
   showComparableKs4Toggle = false,
   comparableKs4Only = true,
   onComparableKs4OnlyChange,
+  onEnsureAreaCoverage,
   max = 4,
   children,
 }: {
@@ -124,6 +125,8 @@ export function HomePostcodeExplorer({
   showComparableKs4Toggle?: boolean;
   comparableKs4Only?: boolean;
   onComparableKs4OnlyChange?: (next: boolean) => void;
+  /** Pull in a ready LA pack when the home district is missing from the index. */
+  onEnsureAreaCoverage?: (adminDistrict?: string | null) => Promise<void>;
   max?: number;
   children: (parts: {
     setupSheet: ReactNode;
@@ -235,6 +238,7 @@ export function HomePostcodeExplorer({
       // Find nearby always opens Stages — including re-submits after a postcode
       // is already set (completed-flip auto-advance only fires once).
       if (opts?.advanceToStages) setActiveTile("stages");
+      void onEnsureAreaCoverage?.(geo.adminDistrict);
     } catch {
       setError("Postcode lookup is unavailable right now. Try again in a moment.");
     } finally {
@@ -242,13 +246,29 @@ export function HomePostcodeExplorer({
     }
   }
 
-  /** Map pin drag: resolve nearest postcode and rebuild the Finder ring. */
+  /** Map pin drag: move the ring immediately, then label the nearest postcode. */
   async function relocateHomeFromMap(next: {
     latitude: number;
     longitude: number;
   }) {
     setRelocatingHome(true);
     setRelocateError(null);
+    // Refresh the school list at the drop point straight away — waiting on
+    // reverse-geocode left the list on the old lock (worse across pack borders).
+    setHome((prev) =>
+      prev
+        ? {
+            ...prev,
+            latitude: next.latitude,
+            longitude: next.longitude,
+          }
+        : {
+            postcode: "Locating…",
+            latitude: next.latitude,
+            longitude: next.longitude,
+          },
+    );
+    setRoadByUrn({});
     try {
       const geo = await reverseGeocode(next.latitude, next.longitude);
       if (!geo) {
@@ -257,8 +277,6 @@ export function HomePostcodeExplorer({
         );
         return;
       }
-      // Keep the dropped pin position — reverse geocode only labels the nearest
-      // postcode. Using the API centroid snapped short drags back to the old lock.
       setRawPostcode(geo.postcode);
       setHome({
         postcode: geo.postcode,
@@ -266,7 +284,7 @@ export function HomePostcodeExplorer({
         longitude: next.longitude,
         adminDistrict: geo.adminDistrict,
       });
-      setRoadByUrn({});
+      void onEnsureAreaCoverage?.(geo.adminDistrict);
     } catch {
       setRelocateError(
         "Postcode lookup is unavailable right now. Try again in a moment.",
@@ -797,7 +815,7 @@ export function HomePostcodeExplorer({
                   </p>
                 ) : (
                   <ul
-                    key={`nearby-${radiusKm}-${stageFilter.join("-")}-${stageMatch}-${sectorFilter.join("-")}-${provisionFilter}-${comparableKs4Only}`}
+                    key={`nearby-${home.postcode}-${home.latitude.toFixed(5)}-${home.longitude.toFixed(5)}-${radiusKm}-${stageFilter.join("-")}-${stageMatch}-${sectorFilter.join("-")}-${provisionFilter}-${comparableKs4Only}`}
                   >
                     {nearbyListed.map((school) => {
                       const checked = selectedUrns.includes(school.urn);

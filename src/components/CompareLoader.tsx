@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
@@ -11,6 +11,7 @@ import {
   loadSeedIndexes,
   mergePacksIntoIndexes,
 } from "@/lib/collateIndexes";
+import { ensureAreaCoverageForDistrict } from "@/lib/ensureAreaCoverage";
 import { CompareApp } from "@/components/CompareApp";
 import { JourneyChapterProvider } from "@/components/JourneyChapterContext";
 import { HarbourSetupPortal } from "@/components/HarbourBand";
@@ -65,6 +66,16 @@ export function CompareLoader() {
   const [reloadToken, setReloadToken] = useState(0);
   const [packPhase, setPackPhase] = useState<PackPhase>("idle");
   const [packNote, setPackNote] = useState<string | null>(null);
+  const indexesRef = useRef({
+    schools: null as SchoolsIndex | null,
+    ey: null as EyProvidersIndex | null,
+    childminders: null as ChildmindersIndex | null,
+  });
+  indexesRef.current = {
+    schools: index,
+    ey: eyIndex,
+    childminders: childmindersIndex,
+  };
 
   const applySeed = useCallback(
     (seed: {
@@ -124,6 +135,36 @@ export function CompareLoader() {
       throw err;
     }
   }, [applySeed, finishPacks]);
+
+  const ensureAreaCoverage = useCallback(
+    async (adminDistrict?: string | null) => {
+      const current = indexesRef.current;
+      if (!adminDistrict?.trim() || !current.schools) return;
+      try {
+        const result = await ensureAreaCoverageForDistrict(
+          {
+            schools: current.schools,
+            ey: current.ey,
+            childminders: current.childminders,
+          },
+          adminDistrict,
+          fetch,
+          true,
+        );
+        if (!result?.loadedLabel) return;
+        setPackNote(`Added ${result.loadedLabel} schools to the map…`);
+        applySeed(result.next);
+        window.setTimeout(() => {
+          setPackNote((note) =>
+            note?.startsWith("Added ") ? null : note,
+          );
+        }, 2400);
+      } catch {
+        /* Soft-fail — Finder still uses whatever is already collated. */
+      }
+    },
+    [applySeed],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -202,7 +243,7 @@ export function CompareLoader() {
 
   return (
     <>
-      {packPhase === "loading" || packPhase === "partial" ? (
+      {packPhase === "loading" || packPhase === "partial" || packNote ? (
         <div className="data-load-banner" role="status" aria-live="polite">
           <div className="shell data-load-banner-inner">
             <p>
@@ -233,6 +274,7 @@ export function CompareLoader() {
           eyIndex={eyIndex}
           childmindersIndex={childmindersIndex}
           onIndexReload={reloadIndex}
+          onEnsureAreaCoverage={ensureAreaCoverage}
         />
       </JourneyChapterProvider>
     </>

@@ -144,12 +144,15 @@ export function CompareApp({
   eyIndex = null,
   childmindersIndex = null,
   onIndexReload,
+  onEnsureAreaCoverage,
 }: {
   /** Hampshire seed with any ready area packs already merged in. */
   index: SchoolsIndex | SchoolsIndexWithPack;
   eyIndex?: EyProvidersIndex | null;
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
+  /** Fetch + merge a ready LA pack when the home district is not yet in the index. */
+  onEnsureAreaCoverage?: (adminDistrict?: string | null) => Promise<void>;
 }) {
   const { chapter, setChapter } = useJourneyChapter();
   const byUrn = useMemo(() => {
@@ -922,6 +925,7 @@ export function CompareApp({
         showComparableKs4Toggle={showKs4}
         comparableKs4Only={comparableKs4Only}
         onComparableKs4OnlyChange={setComparableKs4Only}
+        onEnsureAreaCoverage={onEnsureAreaCoverage}
       >
         {({ setupSheet, nearbySheet }) => {
           const compareSheet = (
