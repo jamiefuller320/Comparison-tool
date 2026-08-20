@@ -671,7 +671,7 @@ export function HomePostcodeExplorer({
   const nearbySheet = home ? (
                 <>
             <div className="section-head">
-              <h2>Finder · {home.postcode}</h2>
+              <h2>Find · {home.postcode}</h2>
               <p>
                 Showing{" "}
                 {sectorFilter.includes("state") &&
@@ -934,7 +934,7 @@ export function HomePostcodeExplorer({
   ) : (
                 <>
                   <div className="section-head">
-                    <h2>Finder</h2>
+                    <h2>Find</h2>
                     <p>
                       Map schools around your home and tick ones worth
                       shortlisting.

@@ -209,7 +209,7 @@ export function PhonicsComparisonBoard({
             <CompareSectionEmpty>
               Phonics figures are local-authority context, not per-school
               inspection data — switch to a KS2 or early-years path for Ofsted
-              comparison, or open report links from the Finder.
+              comparison, or open report links from the Find chapter.
             </CompareSectionEmpty>
           ),
           website: (

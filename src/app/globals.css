@@ -251,54 +251,6 @@ a {
   color: var(--sea-deep);
 }
 
-.floating-controls {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 28;
-  pointer-events: none;
-  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
-}
-
-.floating-controls-inner {
-  pointer-events: auto;
-  width: min(720px, 100%);
-  margin-inline: auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.55rem 0.85rem;
-  padding: 0.65rem 0.9rem;
-  border: 1px solid var(--line);
-  border-radius: 1rem;
-  background: var(--glass-strong);
-  box-shadow: 0 10px 28px rgba(20, 35, 58, 0.1);
-}
-
-.floating-controls-label {
-  font-size: 0.78rem;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--soft);
-}
-
-.floating-controls-inner a {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--sea-deep);
-  text-decoration: none;
-}
-
-.floating-controls-inner a:hover {
-  color: var(--sea);
-}
-
-body:has(.floating-controls) {
-  padding-bottom: 5.5rem;
-}
-
 .nav-links {
   display: flex;
   gap: 1.1rem;
@@ -489,14 +441,6 @@ body:has(.shortlist-dock) {
   padding-bottom: 5.75rem;
 }
 
-body:has(.floating-controls):has(.shortlist-dock) {
-  padding-bottom: 10.5rem;
-}
-
-body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
-  bottom: 4.75rem;
-}
-
 .hero-tour-launch {
   margin: 0 0 1.25rem;
 }
@@ -595,6 +539,87 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .page-how-grid {
   padding: 0;
   max-width: 52rem;
+}
+
+/* Understand chapter — topic buttons + one foam card at a time. */
+.understand-chapter {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.understand-topic-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.understand-topic-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(7, 58, 80, 0.42);
+  color: rgba(247, 251, 255, 0.88);
+  border-radius: 0.65rem;
+  padding: 0.42rem 0.8rem;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.understand-topic-btn:hover {
+  transform: translateY(-1px);
+  color: #f7fbff;
+  background: rgba(7, 58, 80, 0.55);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.understand-topic-btn.is-active {
+  background: rgba(255, 252, 247, 0.96);
+  border-color: rgba(11, 79, 108, 0.2);
+  color: var(--sea-deep);
+  box-shadow: 0 8px 20px rgba(7, 58, 80, 0.16);
+}
+
+.understand-topic-card {
+  max-width: 40rem;
+}
+
+.understand-topic-body {
+  gap: 0.85rem;
+}
+
+.understand-topic-block ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.understand-topic-block li + li {
+  margin-top: 0.28rem;
+}
+
+.understand-topic-faq-answer,
+.understand-topic-para {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.journey-stage .understand-chapter .section-head h2 {
+  color: var(--stage-ink);
+}
+
+.journey-stage .understand-chapter .section-head p {
+  color: var(--stage-ink-muted);
+}
+
+.journey-stage .understand-topic-card {
+  color: var(--ink);
 }
 
 .decision-guidance-block h3,

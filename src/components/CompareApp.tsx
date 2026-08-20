@@ -25,8 +25,8 @@ import { useAccount } from "@/components/AccountProvider";
 import { HomePostcodeExplorer } from "@/components/HomePostcodeExplorer";
 import { JourneyStageFrame } from "@/components/JourneyStageFrame";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
+import { UnderstandChapter } from "@/components/UnderstandChapter";
 import { RESTORE_SHORTLIST_EVENT } from "@/lib/account";
-import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
 import { KS2_YEAR_TREND_TIP } from "@/lib/covid-gap";
 import { SelectedChips, SuggestAlternatives } from "@/components/SelectedChips";
 import { ShareShortlistButton } from "@/components/ShareShortlistButton";
@@ -1007,31 +1007,7 @@ export function CompareApp({
             </>
           );
 
-          const howSheet = (
-            <>
-              <div className="section-head">
-                <h2>{DECISION_GUIDANCE.general.heading}</h2>
-                <p>{DECISION_GUIDANCE.general.lead}</p>
-              </div>
-              <div className="decision-guidance-grid page-how-grid">
-                {DECISION_GUIDANCE.general.sections
-                  .filter((s) => s.id !== "precis")
-                  .map((section) => (
-                    <section
-                      key={section.id}
-                      className="decision-guidance-block"
-                    >
-                      <h3>{section.title}</h3>
-                      <ul>
-                        {section.items.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </section>
-                  ))}
-              </div>
-            </>
-          );
+          const howSheet = <UnderstandChapter />;
 
           const sheet =
             chapter === "setup"

@@ -18,7 +18,6 @@ export type TableStickyPrefs = {
 };
 
 export type UiPreferences = {
-  floatingControls: boolean;
   tables: Record<CompareTableId, TableStickyPrefs>;
 };
 
@@ -29,7 +28,6 @@ const DEFAULT_TABLE: TableStickyPrefs = {
 
 export function defaultUiPreferences(): UiPreferences {
   return {
-    floatingControls: false,
     tables: {
       ks2: { ...DEFAULT_TABLE },
       ks4: { ...DEFAULT_TABLE },
@@ -64,13 +62,7 @@ export function normalizeUiPreferences(raw: unknown): UiPreferences {
       };
     }
   }
-  return {
-    floatingControls:
-      typeof obj.floatingControls === "boolean"
-        ? obj.floatingControls
-        : defaults.floatingControls,
-    tables,
-  };
+  return { tables };
 }
 
 export function loadUiPreferences(): UiPreferences {

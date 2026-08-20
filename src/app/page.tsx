@@ -97,26 +97,28 @@ export default function HomePage() {
             <h2 id="home-guides-heading">Guides before you shortlist</h2>
             <p>
               Plain-language help for reading published figures and inspection
-              excerpts — also available as a{" "}
+              excerpts — also in the journey{" "}
+              <a href="/#how">Understand</a> chapter as topic cards, or as a{" "}
               <Link href={guidePath("faq")}>FAQ</Link>.
             </p>
           </div>
           <p className="area-home-more">
             <Link href={guidesIndexPath()}>Browse all guides</Link>
             {" · "}
+            <a href="/#how">Open Understand</a>
+            {" · "}
             <Link href={guidePath("how-to-read")}>How to read figures</Link>
             {" · "}
             <Link href={guidePath("primary-ks2")}>Primary KS2</Link>
-            {" · "}
-            <Link href={guidePath("secondary-ks4")}>Secondary KS4</Link>
           </p>
           </div>
         </div>
       </section>
 
       {/*
-        Static How copy for crawlers / no-JS. Hidden when the journey toolbar
-        is present — the interactive How chapter owns #how then.
+        Static How / Understand copy for crawlers / no-JS. Hidden when the
+        journey toolbar is present — the interactive Understand chapter owns
+        #how then.
       */}
       <section
         className="section page-chapter seo-how-fallback"
@@ -126,7 +128,7 @@ export default function HomePage() {
         <div className="shell">
           <div className="page-chapter-sheet">
           <div className="section-head">
-            <h2 id="how-heading">{how.heading}</h2>
+            <h2 id="how-heading">Understand the figures</h2>
             <p>
               {how.lead} New here? Use <strong>How to use</strong> in the header
               for a short walkthrough, or open the{" "}
