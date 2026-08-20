@@ -509,16 +509,15 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .year-trend-tip {
-  margin: 0 0 1rem;
-  padding: 0.85rem 0;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  color: var(--ink-soft);
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(11, 79, 108, 0.14);
+  border-radius: 0.75rem;
+  background: rgba(255, 252, 247, 0.96);
+  color: var(--ink);
   font-size: 0.92rem;
   line-height: 1.45;
-  max-width: 42rem;
+  max-width: 52rem;
 }
 
 .year-trend-tip strong {
@@ -1689,8 +1688,59 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .compare-context-body .decision-guidance,
 .compare-context-body .path-summaries,
-.compare-context-body .year-trend-tip {
+.compare-context-body .year-trend-tip,
+.compare-context-body .coverage-strip,
+.compare-context-body .compare-context-rest,
+.compare-context-body .board-provenance,
+.compare-context-body .compare-context-panel {
   margin: 0;
+}
+
+.compare-context-rest {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.compare-context-panel,
+.compare-context-body .board-provenance {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(11, 79, 108, 0.14);
+  border-radius: 0.75rem;
+  background: rgba(255, 252, 247, 0.96);
+  color: var(--ink);
+}
+
+.compare-context-note {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.compare-context-note strong {
+  color: var(--sea-deep);
+}
+
+.compare-context-note a {
+  color: var(--sea);
+  font-weight: 600;
+}
+
+.journey-stage .compare-context-body .coverage-strip,
+.journey-stage .compare-context-body .compare-context-rest,
+.journey-stage .compare-context-body .board-provenance,
+.journey-stage .compare-context-body .compare-context-panel,
+.journey-stage .compare-context-body .compare-context-note,
+.journey-stage .compare-context-body .year-trend-tip,
+.journey-stage .compare-context-body .empty-compare {
+  color: var(--ink);
+}
+
+.journey-stage .compare-context-body .empty-compare {
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(11, 79, 108, 0.14);
+  background: rgba(255, 252, 247, 0.96);
 }
 
 .compare-section-note {
@@ -3392,7 +3442,7 @@ html:has(.page-chapter-nav) .compare-table-controls {
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem 1rem;
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .board-provenance-main {
@@ -3450,13 +3500,14 @@ html:has(.page-chapter-nav) .compare-table-controls {
 }
 
 .coverage-strip {
-  margin: 0 0 1.15rem;
-  padding: 0.85rem 0;
-  border: 0;
-  border-bottom: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
+  margin: 0;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(11, 79, 108, 0.14);
+  border-radius: 0.85rem;
+  background: rgba(255, 252, 247, 0.96);
   max-width: 52rem;
+  color: var(--ink);
+  box-shadow: 0 8px 22px rgba(20, 35, 58, 0.04);
 }
 
 .coverage-strip-head {
@@ -3530,9 +3581,25 @@ html:has(.page-chapter-nav) .compare-table-controls {
 .coverage-seg-fill {
   height: 100%;
   border-radius: inherit;
-  background: color-mix(in srgb, var(--sea) 70%, #7eb8a2);
   min-width: 0;
   transition: width 0.25s ease;
+  background: var(--sea);
+}
+
+.coverage-seg-fill.is-sea {
+  background: var(--sea);
+}
+
+.coverage-seg-fill.is-pin {
+  background: var(--pin);
+}
+
+.coverage-seg-fill.is-good {
+  background: var(--good);
+}
+
+.coverage-seg-fill.is-harbour {
+  background: #1a6578;
 }
 
 .coverage-legend {

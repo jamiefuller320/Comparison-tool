@@ -164,50 +164,58 @@ export function EarlyYearsComparisonBoard({
       onActiveChange={setActiveSection}
       contextSlot={
         <>
-          {contextSlot}
-          <p className="footnote">
-            Compared on published Ofsted inspection outcomes for early years
-            settings in the directory — Early Years Register day care (full and
-            sessional) and state-funded schools with a nursery or reception
-            intake.
-            {hasChildcare && childcareOfstedAsAt
-              ? ` Childcare MI as at ${childcareOfstedAsAt}.`
-              : null}
-            {hasSchool && stateOfstedAsAt
-              ? ` State school MI as at ${stateOfstedAsAt}.`
-              : null}{" "}
-            {hasChildcare && childcareSourcePage ? (
-              <a href={childcareSourcePage} target="_blank" rel="noreferrer">
-                Ofsted childcare MI ↗
-              </a>
-            ) : null}
-            {hasChildcare && hasSchool && childcareSourcePage && stateSourcePage
-              ? " · "
-              : null}
-            {hasSchool && stateSourcePage ? (
-              <a href={stateSourcePage} target="_blank" rel="noreferrer">
-                Ofsted school inspections MI ↗
-              </a>
-            ) : null}
-          </p>
-          {hasChildcare && childcareStamp ? (
-            <SourceStampLine stamp={childcareStamp} />
-          ) : null}
-          {hasSchool && stateStamp ? <SourceStampLine stamp={stateStamp} /> : null}
-          <DataGapFlags gaps={boardGaps(dataGaps)} />
-          {childcareStamp || stateStamp ? (
-            <div className="board-provenance-actions">
-              <ReportProblemButton
-                board="early-years-ofsted"
-                stamp={(stateStamp || childcareStamp)!}
-              />
-            </div>
-          ) : null}
           <CoverageStrip
             schools={providers}
             board="early-years-ofsted"
             gaps={dataGaps}
           />
+          <div className="compare-context-rest">
+            {contextSlot}
+            <div className="compare-context-panel board-provenance">
+              <p className="compare-context-note">
+                Compared on published Ofsted inspection outcomes for early years
+                settings — Early Years Register day care and state-funded schools
+                with a nursery or reception intake.
+                {hasChildcare && childcareOfstedAsAt
+                  ? ` Childcare MI as at ${childcareOfstedAsAt}.`
+                  : null}
+                {hasSchool && stateOfstedAsAt
+                  ? ` State school MI as at ${stateOfstedAsAt}.`
+                  : null}{" "}
+                {hasChildcare && childcareSourcePage ? (
+                  <a href={childcareSourcePage} target="_blank" rel="noreferrer">
+                    Ofsted childcare MI ↗
+                  </a>
+                ) : null}
+                {hasChildcare &&
+                hasSchool &&
+                childcareSourcePage &&
+                stateSourcePage
+                  ? " · "
+                  : null}
+                {hasSchool && stateSourcePage ? (
+                  <a href={stateSourcePage} target="_blank" rel="noreferrer">
+                    Ofsted school inspections MI ↗
+                  </a>
+                ) : null}
+              </p>
+              {hasChildcare && childcareStamp ? (
+                <SourceStampLine stamp={childcareStamp} />
+              ) : null}
+              {hasSchool && stateStamp ? (
+                <SourceStampLine stamp={stateStamp} />
+              ) : null}
+              <DataGapFlags gaps={boardGaps(dataGaps)} />
+              {childcareStamp || stateStamp ? (
+                <div className="board-provenance-actions">
+                  <ReportProblemButton
+                    board="early-years-ofsted"
+                    stamp={(stateStamp || childcareStamp)!}
+                  />
+                </div>
+              ) : null}
+            </div>
+          </div>
         </>
       }
     >

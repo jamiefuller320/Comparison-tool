@@ -673,18 +673,14 @@ export function CompareApp({
     if (activePath === "early-years") {
       const eyContext = (
         <>
-          <p className="footnote compare-path-intro">
-            Inspection grades and area EYFSP context — not individual provider
-            attainment scores.
-          </p>
+          <PathSummaries schools={eySelected} {...summaryOpts} />
+          <DecisionGuidancePanel path="early-years" />
           {showEarlyNotice ? (
             <div className="empty-compare" role="status">
               Early years data isn’t available in this build yet. Try another
               category, or check back after the next data refresh.
             </div>
           ) : null}
-          <DecisionGuidancePanel path="early-years" />
-          <PathSummaries schools={eySelected} {...summaryOpts} />
           {hasEyData ? (
             <EyfspComparisonBoard
               eyfsp={eyIndex?.benchmarks.eyfsp}
@@ -767,11 +763,8 @@ export function CompareApp({
     if (activePath === "ks1") {
       const ks1Context = (
         <>
-          <p className="footnote compare-path-intro">
-            Local-authority phonics context — not a per-school league table.
-          </p>
-          <DecisionGuidancePanel path="ks1" />
           <PathSummaries schools={ks1Selected} {...summaryOpts} />
+          <DecisionGuidancePanel path="ks1" />
           {!showPhonicsBoard ? (
             <div className="empty-compare" role="status">
               Phonics benchmarks missing. Re-run{" "}
@@ -806,24 +799,18 @@ export function CompareApp({
     if (activePath === "ks2") {
       const ks2Context = (
         <>
-          <p className="footnote compare-path-intro">
-            State Year 6 tables — patterns to visit on, not a final verdict.
-          </p>
+          <PathSummaries schools={ks2Selected} {...summaryOpts} />
           <DecisionGuidancePanel path="ks2" />
           {ks2Selected.length > 0 ? (
             <aside className="year-trend-tip" data-tour="year-trend">
               <strong>Year trends &amp; COVID years:</strong> {KS2_YEAR_TREND_TIP}
             </aside>
           ) : null}
-          <PathSummaries schools={ks2Selected} {...summaryOpts} />
           {ks2Selected.length === 0 ? (
             <div className="empty-compare" role="status">
               Add a state primary or junior with Year 6 tables to compare reading,
               writing and maths. Independent prep schools usually have no
-              comparable KS2 table figures here. When trends appear, 2019/20–2021/22
-              sit in a hatched COVID gap (tables unpublished nationally) — blank
-              cells later are usually suppression or a missing Year 6 table, not a
-              join error.
+              comparable KS2 table figures here.
             </div>
           ) : null}
         </>
@@ -843,23 +830,17 @@ export function CompareApp({
 
     const ks4Context = (
       <>
-        <p className="footnote compare-path-intro">
-          Compared on published Key Stage 4 figures when available — patterns to
-          discuss on visits, not league-table rankings.
-        </p>
-        <DecisionGuidancePanel path="ks4" />
         <PathSummaries
           schools={ks4Selected}
           {...summaryOpts}
           preferKs4
         />
+        <DecisionGuidancePanel path="ks4" />
         {ks4Selected.length === 0 ? (
           <div className="empty-compare" role="status">
             Add a secondary or 16–18 setting for GCSE / A-level tables. Selecting
             KS3 shortlists schools that offer Years 7–9; published school-level
-            attainment still appears at KS4. If the map looks empty, try turning
-            off “Comparable KS4 only” to see special / alternative provision with
-            a reason chip.
+            attainment still appears at KS4.
           </div>
         ) : null}
       </>

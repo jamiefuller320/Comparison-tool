@@ -270,12 +270,6 @@ export function IndependentComparisonBoard({
       onActiveChange={setActiveSection}
       contextSlot={
         <>
-          {contextSlot}
-          {sourceStamp ? (
-            <BoardProvenance stamp={sourceStamp} board="ks4" gaps={dataGaps} />
-          ) : (
-            <DataGapFlags gaps={dataGaps.filter((g) => g.level === "board")} />
-          )}
           <CoverageStrip
             schools={schools}
             board="ks4"
@@ -284,6 +278,14 @@ export function IndependentComparisonBoard({
               <SecondaryContextPane schools={schools} board="ks4" />
             }
           />
+          <div className="compare-context-rest">
+            {contextSlot}
+            {sourceStamp ? (
+              <BoardProvenance stamp={sourceStamp} board="ks4" gaps={dataGaps} />
+            ) : (
+              <DataGapFlags gaps={dataGaps.filter((g) => g.level === "board")} />
+            )}
+          </div>
         </>
       }
     >

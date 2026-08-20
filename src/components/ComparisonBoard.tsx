@@ -332,10 +332,6 @@ export function ComparisonBoard({
       onActiveChange={setActiveSection}
       contextSlot={
         <>
-          {contextSlot}
-          {sourceStamp ? (
-            <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
-          ) : null}
           <CoverageStrip
             schools={schools}
             board="ks2"
@@ -344,6 +340,12 @@ export function ComparisonBoard({
               <SecondaryContextPane schools={schools} board="ks2" />
             }
           />
+          <div className="compare-context-rest">
+            {contextSlot}
+            {sourceStamp ? (
+              <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
+            ) : null}
+          </div>
         </>
       }
     >
