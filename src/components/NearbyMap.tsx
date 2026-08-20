@@ -131,6 +131,15 @@ export function NearbyMap({
     null,
   );
 
+  const schoolsRef = useRef(schools);
+  schoolsRef.current = schools;
+  const catchmentsRef = useRef(catchmentFeatures);
+  catchmentsRef.current = catchmentFeatures;
+  const homeRef = useRef(home);
+  homeRef.current = home;
+  /** True while the user is mid-drag — skip layer rebuilds that would drop the pin. */
+  const isDraggingPinRef = useRef(false);
+
   const selectedSet = useMemo(() => new Set(selectedUrns), [selectedUrns]);
   // Order-independent so a stage-prefer reorder alone does not force a full fitBounds.
   const schoolKey = useMemo(
@@ -163,13 +172,15 @@ export function NearbyMap({
     }).setView([home.latitude, home.longitude], 12);
 
     // Carto Voyager — coloured parks/water/roads without OSM peak-height clutter.
+    // CSS on .leaflet-tile-pane boosts brightness/detail without reintroducing peaks.
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
       {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        maxZoom: 18,
+        maxZoom: 19,
         subdomains: "abcd",
+        className: "nearby-map-tiles",
       },
     ).addTo(map);
 
@@ -192,17 +203,27 @@ export function NearbyMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // School / catchment / range layers — home pin is managed separately so redraws
+  // cannot cancel an in-progress drag or drop.
   useEffect(() => {
     if (!mapReady) return;
     const map = mapRef.current;
     const layers = layersRef.current;
     if (!map || !layers) return;
+    if (isDraggingPinRef.current) return;
+
+    const schoolsNow = schoolsRef.current;
+    const catchmentsNow = catchmentsRef.current;
+    const homeNow = homeRef.current;
+    const pin = pendingPinRef.current ?? {
+      latitude: homeNow.latitude,
+      longitude: homeNow.longitude,
+    };
 
     layers.clearLayers();
-    homeMarkerRef.current = null;
     ringRef.current = null;
 
-    for (const feature of catchmentFeatures) {
+    for (const feature of catchmentsNow) {
       if (!feature.geometry) continue;
       const urn = feature.properties.urn || "";
       const selected = urn ? selectedSet.has(urn) : false;
@@ -218,44 +239,13 @@ export function NearbyMap({
       layer.addTo(layers);
     }
 
-    const pin = pendingPinRef.current ?? home;
     const ring = L.circle([pin.latitude, pin.longitude], {
       radius: radiusMetres,
       ...RING_STYLE,
     }).addTo(layers);
     ringRef.current = ring;
 
-    const homePopup =
-      `<strong>Home</strong><br/>${home.postcode}` +
-      (homeCatchmentNote ? `<br/>${homeCatchmentNote}` : "") +
-      (pinUnlocked
-        ? "<br/><em>Drag this pin, then release to update the map</em>"
-        : "");
-
-    const marker = L.marker([pin.latitude, pin.longitude], {
-      icon: homeIcon(pinUnlocked),
-      title: pinUnlocked
-        ? `Drag to move home · ${home.postcode}`
-        : `Home · ${home.postcode}`,
-      zIndexOffset: 500,
-      draggable: pinUnlocked,
-      autoPan: true,
-    })
-      .bindPopup(homePopup)
-      .addTo(layers);
-
-    if (pinUnlocked) {
-      marker.on("dragend", () => {
-        const { lat, lng } = marker.getLatLng();
-        pendingPinRef.current = { latitude: lat, longitude: lng };
-        onHomeRelocateRef.current?.({ latitude: lat, longitude: lng });
-      });
-      marker.openPopup();
-    }
-
-    homeMarkerRef.current = marker;
-
-    for (const school of schools) {
+    for (const school of schoolsNow) {
       if (school.latitude == null || school.longitude == null) continue;
       const notComparable =
         emphasizeKs4 &&
@@ -285,18 +275,17 @@ export function NearbyMap({
     }
 
     map.invalidateSize();
-    // Keep framing stable while the pin is unlocked for drag.
     if (!pinUnlocked && !pendingPinRef.current) {
       map.fitBounds(ring.getBounds(), {
         animate: true,
         padding: [28, 28],
         maxZoom: 15,
       });
+    } else {
+      ring.setLatLng([pin.latitude, pin.longitude]);
     }
   }, [
     mapReady,
-    home,
-    schools,
     schoolKey,
     radiusMetres,
     selectedSet,
@@ -304,19 +293,91 @@ export function NearbyMap({
     refreshToken,
     emphasizeKs4,
     comparableKs4Only,
-    catchmentFeatures,
     catchmentKey,
-    homeCatchmentNote,
+    home.latitude,
+    home.longitude,
     pinUnlocked,
   ]);
 
+  // Persist the home pin on the map (not the school layer group) so school
+  // redraws never destroy it mid-drag.
   useEffect(() => {
-    const marker = homeMarkerRef.current;
-    const dragging = marker?.dragging;
-    if (!dragging) return;
-    if (pinUnlocked && !relocating) dragging.enable();
-    else dragging.disable();
-  }, [pinUnlocked, relocating, mapReady]);
+    if (!mapReady) return;
+    const map = mapRef.current;
+    if (!map) return;
+
+    const pin = pendingPinRef.current ?? {
+      latitude: home.latitude,
+      longitude: home.longitude,
+    };
+    const homePopup =
+      `<strong>Home</strong><br/>${home.postcode}` +
+      (homeCatchmentNote ? `<br/>${homeCatchmentNote}` : "") +
+      (pinUnlocked
+        ? "<br/><em>Drag this pin, then release to update the map</em>"
+        : "");
+
+    let marker = homeMarkerRef.current;
+    if (!marker) {
+      marker = L.marker([pin.latitude, pin.longitude], {
+        icon: homeIcon(pinUnlocked),
+        title: pinUnlocked
+          ? `Drag to move home · ${home.postcode}`
+          : `Home · ${home.postcode}`,
+        zIndexOffset: 1000,
+        draggable: false,
+        autoPan: true,
+      }).addTo(map);
+      homeMarkerRef.current = marker;
+    } else {
+      if (!isDraggingPinRef.current) {
+        marker.setLatLng([pin.latitude, pin.longitude]);
+      }
+      marker.setIcon(homeIcon(pinUnlocked));
+      marker.options.title = pinUnlocked
+        ? `Drag to move home · ${home.postcode}`
+        : `Home · ${home.postcode}`;
+    }
+
+    marker.unbindPopup();
+    marker.bindPopup(homePopup);
+
+    marker.off("dragstart");
+    marker.off("drag");
+    marker.off("dragend");
+
+    if (pinUnlocked) {
+      marker.on("dragstart", () => {
+        isDraggingPinRef.current = true;
+        marker?.closePopup();
+      });
+      marker.on("drag", () => {
+        const { lat, lng } = marker!.getLatLng();
+        ringRef.current?.setLatLng([lat, lng]);
+      });
+      marker.on("dragend", () => {
+        isDraggingPinRef.current = false;
+        const { lat, lng } = marker!.getLatLng();
+        pendingPinRef.current = { latitude: lat, longitude: lng };
+        ringRef.current?.setLatLng([lat, lng]);
+        onHomeRelocateRef.current?.({ latitude: lat, longitude: lng });
+      });
+    }
+
+    const dragging = marker.dragging;
+    if (dragging) {
+      if (pinUnlocked && !relocating) dragging.enable();
+      else dragging.disable();
+    }
+  }, [
+    mapReady,
+    home.latitude,
+    home.longitude,
+    home.postcode,
+    homeCatchmentNote,
+    pinUnlocked,
+    relocating,
+  ]);
 
   // Parent caught up with the dropped pin — clear pending and re-lock.
   useEffect(() => {
@@ -338,6 +399,7 @@ export function NearbyMap({
   useEffect(() => {
     if (relocating || !relocateError) return;
     pendingPinRef.current = null;
+    isDraggingPinRef.current = false;
     homeMarkerRef.current?.setLatLng([home.latitude, home.longitude]);
     ringRef.current?.setLatLng([home.latitude, home.longitude]);
   }, [relocating, relocateError, home.latitude, home.longitude]);
