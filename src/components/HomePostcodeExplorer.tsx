@@ -911,17 +911,26 @@ export function HomePostcodeExplorer({
                   <div className="section-head">
                     <h2>Finder</h2>
                     <p>
-                      Add a home postcode in Setup to map schools around you and
-                      tick ones worth shortlisting.
+                      Map schools around your home and tick ones worth
+                      shortlisting.
                     </p>
                   </div>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => setChapter("setup")}
-                  >
-                    Go to Setup
-                  </button>
+                  <div className="finder-setup-prompt">
+                    <p className="finder-setup-prompt-copy">
+                      No postcode entered yet.
+                    </p>
+                    <button
+                      type="button"
+                      className="btn btn-primary finder-setup-prompt-btn"
+                      onClick={() => setChapter("setup")}
+                    >
+                      Start setup
+                    </button>
+                    <p className="finder-setup-prompt-hint">
+                      Add a home postcode in Setup, then come back here to
+                      explore the map.
+                    </p>
+                  </div>
                 </>
   );
 

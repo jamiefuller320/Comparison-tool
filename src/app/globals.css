@@ -1365,6 +1365,60 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .compare-section-binder.hero-binder {
   margin: 0.35rem 0 0;
+  /*
+    Nested inside the journey harbour sheet. Keep harbour tabs, but use a
+    light paper panel so table text, Ofsted précis, and website evidence
+    stay readable (dark ink on foam — not light-on-light blanks).
+  */
+  --binder-fill: rgba(255, 252, 247, 0.92);
+  --binder-stroke: rgba(11, 79, 108, 0.18);
+  --binder-head-line: rgba(11, 79, 108, 0.12);
+  --binder-head-color: var(--sea-deep);
+  --binder-head-muted: var(--ink-soft);
+  --binder-shadow: 0 12px 28px rgba(20, 35, 58, 0.06);
+}
+
+/* Nested sheet body must not inherit journey light ink. */
+.compare-section-binder .binder-sheet-body,
+.compare-section-binder .binder-sheet-head,
+.compare-section-binder .compare-section-body,
+.compare-section-binder .compare-context-body {
+  color: var(--ink);
+}
+
+.compare-section-binder .empty-compare,
+.compare-section-binder .footnote,
+.compare-section-binder .precis-reading-note {
+  color: var(--ink-soft);
+}
+
+.finder-setup-prompt {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: start;
+  max-width: 22rem;
+  margin: 0.15rem 0 0.5rem;
+}
+
+.finder-setup-prompt-copy {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--stage-ink);
+}
+
+.finder-setup-prompt-btn {
+  padding: 0.45rem 0.95rem;
+  font-size: 0.88rem;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(7, 58, 80, 0.18);
+}
+
+.finder-setup-prompt-hint {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--stage-ink-muted);
 }
 
 .compare-action-bar {
@@ -2179,6 +2233,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .qual-evidence-summary-body {
   margin: 0;
+  color: var(--ink);
   font-size: 0.82rem;
   font-weight: 500;
   line-height: 1.35;
@@ -2211,6 +2266,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   margin: 0 0 0.35rem;
   font-size: 0.95rem;
   font-weight: 600;
+  color: var(--sea-deep);
 }
 
 .qual-evidence-area {
@@ -2263,6 +2319,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .qual-evidence-paragraph {
   margin: 0.35rem 0 0;
+  color: var(--ink);
   font-size: 0.84rem;
   line-height: 1.45;
   overflow-wrap: anywhere;
