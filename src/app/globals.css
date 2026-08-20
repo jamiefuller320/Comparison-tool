@@ -1054,10 +1054,19 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   padding-bottom: 0.35rem;
   border-bottom: 1px solid var(--binder-stroke);
   border-radius: 0 0 0.55rem 0.55rem;
-  background: color-mix(in srgb, var(--binder-fill) 92%, transparent);
-  box-shadow: 0 12px 28px rgba(7, 58, 80, 0.22);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 28px rgba(7, 58, 80, 0.28);
+  isolation: isolate;
+}
+
+.binder[data-tone="harbour"][data-stuck="true"] > .binder-rail,
+.binder[data-tone="harbour"][data-stuck="true"] > .binder-tabs {
+  /* Solid harbour plate — binder-fill is translucent and bleeds content. */
+  background: #073a50;
+}
+
+.binder[data-tone="paper"][data-stuck="true"] > .binder-rail,
+.binder[data-tone="paper"][data-stuck="true"] > .binder-tabs {
+  background: rgba(244, 247, 249, 0.98);
 }
 
 .binder[data-mode="sheet"][data-stuck="true"] .binder-tab {
@@ -1067,13 +1076,25 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   box-shadow: none;
 }
 
+.binder[data-tone="harbour"][data-stuck="true"] .binder-tab {
+  background: rgba(7, 58, 80, 0.92);
+}
+
 .binder[data-mode="sheet"][data-stuck="true"] .binder-tab:hover {
   background: var(--binder-tab-hover);
+}
+
+.binder[data-tone="harbour"][data-stuck="true"] .binder-tab:hover {
+  background: rgba(7, 58, 80, 0.98);
 }
 
 .binder[data-mode="sheet"][data-stuck="true"] .binder-tab.is-active {
   border-color: var(--binder-stroke);
   background: var(--binder-fill);
+}
+
+.binder[data-tone="harbour"][data-stuck="true"] .binder-tab.is-active {
+  background: rgba(7, 58, 80, 0.72);
 }
 
 /* Full top stroke on the sheet once the seam tab has floated away. */
@@ -1236,7 +1257,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .journey-chapter-binder .binder-rail {
   position: sticky;
   top: var(--sticky-header-offset);
-  z-index: 24;
+  z-index: 26;
   /* Rail stays Setup-wide; margin-left is set from the measured datum in JS. */
   width: min(100%, var(--journey-setup-width, 44rem));
   max-width: var(--journey-setup-width, 44rem);
@@ -1437,7 +1458,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-section-binder > .binder-tabs {
   position: sticky;
   top: calc(var(--sticky-header-offset) + var(--journey-rail-height));
-  z-index: 23;
+  z-index: 25;
 }
 
 /* Nested sheet uses harbour light ink; data frames override to dark ink. */
