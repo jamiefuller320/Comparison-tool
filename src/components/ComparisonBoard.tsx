@@ -30,13 +30,15 @@ import {
   CompareSectionTabs,
 } from "@/components/CompareSectionTabs";
 import { CompareSectionTable } from "@/components/CompareSectionTable";
+import {
+  CompareOfstedPanels,
+  CompareWebsitePanels,
+} from "@/components/CompareEvidencePanels";
 import { SchoolColumnHeader } from "@/components/SchoolColumnHeader";
 import { DataGapFlags } from "@/components/DataGapFlags";
 import { CoverageStrip } from "@/components/CoverageStrip";
 import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import { SecondaryContextPane } from "@/components/SecondaryContextPane";
-import { InspectionPrecisRows } from "@/components/InspectionPrecis";
-import { QualitativeEvidenceRows } from "@/components/QualitativeEvidence";
 import { AdmissionsPlacesRows } from "@/components/AdmissionsPlacesRows";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
@@ -267,8 +269,6 @@ export function ComparisonBoard({
       </div>
     ) : null;
 
-  const hasOfsted = compareSectionHasData("ofsted", schools);
-  const hasWebsite = compareSectionHasData("website", schools);
   const hasPlaces = compareSectionHasData("places", schools);
   const schoolHeaders = schools.map((school) => (
     <th key={school.urn} scope="col">
@@ -350,40 +350,8 @@ export function ComparisonBoard({
       }
     >
       {{
-          ofsted: (
-            <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
-              <InspectionPrecisRows schools={schools} />
-              {!hasOfsted ? (
-                <tr>
-                  <td colSpan={schools.length + 1}>
-                    <CompareSectionEmpty>
-                      No inspection précis or published Ofsted grades for this
-                      shortlist yet — check column links after reports are
-                      processed, or open the official Ofsted site from each
-                      school&apos;s page.
-                    </CompareSectionEmpty>
-                  </td>
-                </tr>
-              ) : null}
-            </CompareSectionTable>
-          ),
-          website: (
-            <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
-              {hasWebsite ? (
-                <QualitativeEvidenceRows schools={schools} />
-              ) : (
-                <tr>
-                  <td colSpan={schools.length + 1}>
-                    <CompareSectionEmpty>
-                      No website evidence captured for these schools yet —
-                      summaries appear when public pages have been processed for
-                      curriculum, clubs, and ethos.
-                    </CompareSectionEmpty>
-                  </td>
-                </tr>
-              )}
-            </CompareSectionTable>
-          ),
+          ofsted: <CompareOfstedPanels schools={schools} />,
+          website: <CompareWebsitePanels schools={schools} />,
           places: hasPlaces ? (
             <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
               <AdmissionsPlacesRows schools={schools} />
