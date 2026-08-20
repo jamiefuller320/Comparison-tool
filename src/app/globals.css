@@ -1064,6 +1064,29 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   background: #073a50;
 }
 
+/*
+  Journey tabs stay Setup-width when pinned; wide chapter content would otherwise
+  scroll up in the side gutters. Paint a full-bleed plate behind the rail.
+*/
+.journey-chapter-binder[data-stuck="true"] > .binder-rail {
+  overflow: visible;
+}
+
+.journey-chapter-binder[data-stuck="true"] > .binder-rail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: #073a50;
+  border-bottom: 1px solid var(--stage-sheet-stroke);
+  box-shadow: 0 12px 28px rgba(7, 58, 80, 0.28);
+  z-index: -1;
+  pointer-events: none;
+}
+
 .binder[data-tone="paper"][data-stuck="true"] > .binder-rail,
 .binder[data-tone="paper"][data-stuck="true"] > .binder-tabs {
   background: rgba(244, 247, 249, 0.98);
