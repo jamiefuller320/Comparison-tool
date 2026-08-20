@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { FloatingControls } from "@/components/FloatingControls";
 import { AccountMenu } from "@/components/AccountMenu";
 import { BrandWordmark } from "@/components/BrandWordmark";
 import { HomeSectionLink } from "@/components/HomeSectionLink";
-import { useUiPreferences } from "@/components/UiPreferencesProvider";
 import { requestTourStart } from "@/lib/tour";
 import { requestOpenFeedback } from "@/lib/productFeedback";
 
@@ -17,19 +15,17 @@ type PrimaryLink =
 const PRIMARY_LINKS: PrimaryLink[] = [
   { kind: "page", href: "/areas/", label: "Areas" },
   { kind: "page", href: "/guides/", label: "Guides" },
-  { kind: "section", hash: "nearby", label: "Finder" },
+  { kind: "section", hash: "nearby", label: "Find" },
   { kind: "section", hash: "compare", label: "Shortlist" },
 ];
 
 const MORE_LINKS: PrimaryLink[] = [
   { kind: "section", hash: "side-by-side", label: "Side by side" },
-  { kind: "section", hash: "how", label: "How to read" },
+  { kind: "section", hash: "how", label: "Understand" },
   { kind: "section", hash: "data", label: "Data" },
 ];
 
 export function SiteHeader() {
-  const { prefs, hydrated, setFloatingControls } = useUiPreferences();
-  const floatingOn = hydrated && prefs.floatingControls;
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
 
@@ -147,18 +143,8 @@ export function SiteHeader() {
           >
             Feedback
           </button>
-          <button
-            type="button"
-            className={floatingOn ? "btn btn-ghost on" : "btn btn-ghost"}
-            aria-pressed={floatingOn}
-            onClick={() => setFloatingControls(!prefs.floatingControls)}
-          >
-            {floatingOn ? "Float jump links on" : "Float jump links off"}
-          </button>
         </div>
       </div>
-
-      <FloatingControls />
     </>
   );
 }

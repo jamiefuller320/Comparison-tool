@@ -11,7 +11,7 @@ import { requestTourStart } from "@/lib/tour";
 
 const CHAPTERS: BinderTabItem<JourneyChapterId>[] = [
   { id: "setup", label: "Setup", shortLabel: "Setup", step: 1 },
-  { id: "nearby", label: "Finder", shortLabel: "Finder", step: 2 },
+  { id: "nearby", label: "Find", shortLabel: "Find", step: 2 },
   { id: "compare", label: "Shortlist", shortLabel: "Shortlist", step: 3 },
   {
     id: "side-by-side",
@@ -19,7 +19,7 @@ const CHAPTERS: BinderTabItem<JourneyChapterId>[] = [
     shortLabel: "Compare",
     step: 4,
   },
-  { id: "how", label: "How to read", shortLabel: "How", step: 5 },
+  { id: "how", label: "Understand", shortLabel: "Understand", step: 5 },
 ];
 
 /**

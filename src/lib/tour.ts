@@ -60,8 +60,8 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "nearby",
     target: "nearby",
-    title: "Finder map and tick list",
-    body: "After a postcode lookup, Finder maps schools in range and the list adds road distance. Unlock postcode to drag the home pin and refresh the map. Tick a school to add it to your shortlist (up to four).",
+    title: "Find map and tick list",
+    body: "After a postcode lookup, Find maps schools in range and the list adds road distance. Unlock postcode to drag the home pin and refresh the map. Tick a school to add it to your shortlist (up to four).",
     optional: true,
   },
   {
@@ -119,8 +119,8 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "how",
     target: "how",
-    title: "How to read the numbers",
-    body: "This section explains what published figures and précis can and cannot support, fair conclusions, and how to use a shortlist for decisions. Take a look whenever you need a refresher.",
+    title: "Understand the figures",
+    body: "Open Understand for topic cards — getting started, each stage guide, FAQ, and where the numbers come from. Take a look whenever you need a refresher before you treat a table as a verdict.",
   },
 ];
 

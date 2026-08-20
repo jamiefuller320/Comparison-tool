@@ -21,7 +21,6 @@ import {
 type UiPreferencesContextValue = {
   prefs: UiPreferences;
   hydrated: boolean;
-  setFloatingControls: (enabled: boolean) => void;
   setTableSticky: (
     tableId: CompareTableId,
     patch: Partial<TableStickyPrefs>,
@@ -46,10 +45,6 @@ export function UiPreferencesProvider({ children }: { children: ReactNode }) {
     saveUiPreferences(prefs);
   }, [prefs, hydrated]);
 
-  const setFloatingControls = useCallback((enabled: boolean) => {
-    setPrefs((prev) => ({ ...prev, floatingControls: enabled }));
-  }, []);
-
   const setTableSticky = useCallback(
     (tableId: CompareTableId, patch: Partial<TableStickyPrefs>) => {
       setPrefs((prev) => ({
@@ -70,10 +65,9 @@ export function UiPreferencesProvider({ children }: { children: ReactNode }) {
     () => ({
       prefs,
       hydrated,
-      setFloatingControls,
       setTableSticky,
     }),
-    [prefs, hydrated, setFloatingControls, setTableSticky],
+    [prefs, hydrated, setTableSticky],
   );
 
   return (
