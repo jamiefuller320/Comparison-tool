@@ -171,18 +171,13 @@ export function NearbyMap({
       zoomControl: true,
     }).setView([home.latitude, home.longitude], 12);
 
-    // Carto Voyager — coloured parks/water/roads without OSM peak-height clutter.
-    // CSS on .leaflet-tile-pane boosts brightness/detail without reintroducing peaks.
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        maxZoom: 19,
-        subdomains: "abcd",
-        className: "nearby-map-tiles",
-      },
-    ).addTo(map);
+    // OpenStreetMap standard — natural land/water/road colours (no stylised yellow cast).
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19,
+      className: "nearby-map-tiles",
+    }).addTo(map);
 
     layersRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
@@ -382,6 +377,13 @@ export function NearbyMap({
   // Parent caught up with the dropped pin — clear pending and re-lock.
   useEffect(() => {
     if (relocating || relocateError || !pendingPinRef.current) return;
+    const pending = pendingPinRef.current;
+    const closeEnough =
+      Math.abs(pending.latitude - home.latitude) < 1e-7 &&
+      Math.abs(pending.longitude - home.longitude) < 1e-7;
+    // Wait until parent home coords match the drop — avoids a one-frame snap
+    // back to the previous lock when postcode label updates first.
+    if (!closeEnough) return;
     pendingPinRef.current = null;
     setPinUnlocked(false);
     const map = mapRef.current;
@@ -395,14 +397,15 @@ export function NearbyMap({
     }
   }, [home.latitude, home.longitude, home.postcode, relocating, relocateError]);
 
-  // Failed reverse-geocode: put the pin back on the current home.
+  // Failed reverse-geocode: keep the dropped pin so the user can nudge again
+  // (snapping back to the old lock felt like the drag “didn’t stick”).
   useEffect(() => {
-    if (relocating || !relocateError) return;
-    pendingPinRef.current = null;
+    if (relocating || !relocateError || !pendingPinRef.current) return;
     isDraggingPinRef.current = false;
-    homeMarkerRef.current?.setLatLng([home.latitude, home.longitude]);
-    ringRef.current?.setLatLng([home.latitude, home.longitude]);
-  }, [relocating, relocateError, home.latitude, home.longitude]);
+    const pending = pendingPinRef.current;
+    homeMarkerRef.current?.setLatLng([pending.latitude, pending.longitude]);
+    ringRef.current?.setLatLng([pending.latitude, pending.longitude]);
+  }, [relocating, relocateError]);
 
   const canRelocate = Boolean(onHomeRelocate);
 
