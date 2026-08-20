@@ -4461,10 +4461,10 @@ html:has(.page-chapter-nav) .compare-table-controls {
   font: inherit;
 }
 
-/* Brighter parks/roads/labels while keeping Voyager’s decluttered basemap. */
+/* Keep OSM tiles unfiltered — saturation boosts made the basemap look yellow. */
 .nearby-map .leaflet-tile-pane,
 .nearby-map .nearby-map-tiles {
-  filter: saturate(1.28) contrast(1.1) brightness(1.06);
+  filter: none;
 }
 
 .nearby-map-chrome {
