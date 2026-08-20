@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { SchoolRecord } from "@/lib/types";
 import { EY_PROVIDER_METRICS, isEyProvider } from "@/lib/eyMetrics";
-import { fmtNum, shortName } from "@/lib/format";
+import { fmtNum } from "@/lib/format";
 import { SourceStampLine } from "@/components/SourceStampLine";
 import {
   CompareSectionEmpty,
