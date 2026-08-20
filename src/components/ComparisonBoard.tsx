@@ -270,62 +270,60 @@ export function ComparisonBoard({
     ) : null;
 
   const hasPlaces = compareSectionHasData("places", schools);
-  const schoolHeaders = schools.map((school) => (
-    <th key={school.urn} scope="col">
-      <SchoolColumnHeader title={school.name}>
-        <span>
-          {[
-            formatSector(resolveSchoolSector(school)),
-            school.town,
-            school.localAuthority,
-          ]
-            .filter(Boolean)
-            .join(" · ")}
-        </span>
-        <span>
-          {school.ageRange ? `Ages ${school.ageRange}` : null}
-          {school.schoolTypeLabel ? ` · ${school.schoolTypeLabel}` : null}
-        </span>
-        {resolveSchoolSector(school) === "independent" &&
-        school.rwmExpected == null ? (
-          <span>
-            Independent schools often do not publish KS2 table figures
-            comparable with state schools.
-          </span>
-        ) : null}
-        {resolveSchoolSector(school) === "state" &&
-        school.rwmExpected == null ? (
-          <span>
-            No Year 6 reading, writing and maths table figure in this release
-            — common for new schools, very small cohorts, or suppressed results.
-            Check the official tables link.
-          </span>
-        ) : null}
-        <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
-        <SchoolOutboundLinks school={school} />
-        {school.ofstedOverall ? (
-          <span>Ofsted overall: {school.ofstedOverall}</span>
-        ) : null}
-        {school.ofstedReportUrl ? (
-          <a href={school.ofstedReportUrl} target="_blank" rel="noreferrer">
-            Ofsted reports ↗
-          </a>
-        ) : null}
-        {sourceStamp ? (
-          <ReportProblemButton
-            compact
-            board="ks2"
-            stamp={{
-              ...sourceStamp,
-              deepLink: schoolDeepLink(school) || sourceStamp.deepLink,
-            }}
-            urn={school.urn}
-            schoolName={school.name}
-          />
-        ) : null}
-      </SchoolColumnHeader>
-    </th>
-  ));
+  const schoolHeaders = schools.map((school) => {
+    const location = [
+      formatSector(resolveSchoolSector(school)),
+      school.town,
+      school.localAuthority,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    const ages = [
+      school.ageRange ? `Ages ${school.ageRange}` : null,
+      school.schoolTypeLabel || null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    const sector = resolveSchoolSector(school);
+    const ks2GapNote =
+      sector === "independent" && school.rwmExpected == null
+        ? "Independent schools often do not publish KS2 table figures comparable with state schools."
+        : sector === "state" && school.rwmExpected == null
+          ? "No Year 6 reading, writing and maths table figure in this release — common for new schools, very small cohorts, or suppressed results. Check the official tables link."
+          : null;
+
+    return (
+      <th key={school.urn} scope="col">
+        <SchoolColumnHeader title={school.name}>
+          {location ? <span>{location}</span> : null}
+          {ages ? <span>{ages}</span> : null}
+          {ks2GapNote ? <span>{ks2GapNote}</span> : null}
+          <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
+          <SchoolOutboundLinks school={school} />
+          {school.ofstedOverall ? (
+            <span>Ofsted overall: {school.ofstedOverall}</span>
+          ) : null}
+          {school.ofstedReportUrl ? (
+            <a href={school.ofstedReportUrl} target="_blank" rel="noreferrer">
+              Ofsted reports ↗
+            </a>
+          ) : null}
+          {sourceStamp ? (
+            <ReportProblemButton
+              compact
+              board="ks2"
+              stamp={{
+                ...sourceStamp,
+                deepLink: schoolDeepLink(school) || sourceStamp.deepLink,
+              }}
+              urn={school.urn}
+              schoolName={school.name}
+            />
+          ) : null}
+        </SchoolColumnHeader>
+      </th>
+    );
+  });
 
   return (
     <CompareSectionTabs

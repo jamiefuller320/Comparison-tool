@@ -191,72 +191,77 @@ export function IndependentComparisonBoard({
   const showInspectionMetrics =
     (hasAnyOfsted || hasIsi || hasIndie) && inspectionMetrics.length > 0;
   const hasPlaces = compareSectionHasData("places", schools);
-  const schoolHeaders = schools.map((school) => (
-    <th key={school.urn} scope="col">
-      <SchoolColumnHeader title={school.name}>
-        <span>
-          {[
-            formatSector(resolveSchoolSector(school)),
-            school.town,
-            school.localAuthority,
-          ]
-            .filter(Boolean)
-            .join(" · ")}
-        </span>
-        <span>
-          {school.ageRange ? `Ages ${school.ageRange}` : null}
-          {school.schoolTypeLabel ? ` · ${school.schoolTypeLabel}` : null}
-        </span>
-        {school.ks4Period ? <span>KS4 {school.ks4Period}</span> : null}
-        {school.ks5Period ? <span>16–18 {school.ks5Period}</span> : null}
-        {school.engMath94IsPillarFallback ? (
-          <span>English &amp; maths 4+ from EBacc pillars</span>
-        ) : school.engMathMeasureUnavailable ? (
-          <span>Combined English &amp; maths GCSE measure not published</span>
-        ) : null}
-        {school.ofstedReportUrl ? (
-          <a href={school.ofstedReportUrl} target="_blank" rel="noreferrer">
-            Ofsted reports ↗
-          </a>
-        ) : null}
-        {school.isiLatestReportUrl ? (
-          <a href={school.isiLatestReportUrl} target="_blank" rel="noreferrer">
-            {school.isiLatestReportTitle || "Latest ISI report"}
-            {school.isiLatestReportDate
-              ? ` (${school.isiLatestReportDate})`
-              : ""}{" "}
-            ↗
-          </a>
-        ) : null}
-        {school.isiProfileUrl || school.isiReportsUrl ? (
-          <a
-            href={school.isiProfileUrl || school.isiReportsUrl!}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {school.isiLatestReportUrl ? "All ISI reports ↗" : "ISI reports ↗"}
-          </a>
-        ) : null}
-        <SchoolOutboundLinks school={school} />
-        <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
-        {sourceStamp ? (
-          <ReportProblemButton
-            compact
-            board="ks4"
-            stamp={{
-              ...sourceStamp,
-              deepLink:
-                school.isiReportsUrl ||
-                schoolDeepLink(school) ||
-                sourceStamp.deepLink,
-            }}
-            urn={school.urn}
-            schoolName={school.name}
-          />
-        ) : null}
-      </SchoolColumnHeader>
-    </th>
-  ));
+  const schoolHeaders = schools.map((school) => {
+    const location = [
+      formatSector(resolveSchoolSector(school)),
+      school.town,
+      school.localAuthority,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+    const ages = [
+      school.ageRange ? `Ages ${school.ageRange}` : null,
+      school.schoolTypeLabel || null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
+    return (
+      <th key={school.urn} scope="col">
+        <SchoolColumnHeader title={school.name}>
+          {location ? <span>{location}</span> : null}
+          {ages ? <span>{ages}</span> : null}
+          {school.ks4Period ? <span>KS4 {school.ks4Period}</span> : null}
+          {school.ks5Period ? <span>16–18 {school.ks5Period}</span> : null}
+          {school.engMath94IsPillarFallback ? (
+            <span>English &amp; maths 4+ from EBacc pillars</span>
+          ) : school.engMathMeasureUnavailable ? (
+            <span>Combined English &amp; maths GCSE measure not published</span>
+          ) : null}
+          {school.ofstedReportUrl ? (
+            <a href={school.ofstedReportUrl} target="_blank" rel="noreferrer">
+              Ofsted reports ↗
+            </a>
+          ) : null}
+          {school.isiLatestReportUrl ? (
+            <a href={school.isiLatestReportUrl} target="_blank" rel="noreferrer">
+              {school.isiLatestReportTitle || "Latest ISI report"}
+              {school.isiLatestReportDate
+                ? ` (${school.isiLatestReportDate})`
+                : ""}{" "}
+              ↗
+            </a>
+          ) : null}
+          {school.isiProfileUrl || school.isiReportsUrl ? (
+            <a
+              href={school.isiProfileUrl || school.isiReportsUrl!}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {school.isiLatestReportUrl ? "All ISI reports ↗" : "ISI reports ↗"}
+            </a>
+          ) : null}
+          <SchoolOutboundLinks school={school} />
+          <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
+          {sourceStamp ? (
+            <ReportProblemButton
+              compact
+              board="ks4"
+              stamp={{
+                ...sourceStamp,
+                deepLink:
+                  school.isiReportsUrl ||
+                  schoolDeepLink(school) ||
+                  sourceStamp.deepLink,
+              }}
+              urn={school.urn}
+              schoolName={school.name}
+            />
+          ) : null}
+        </SchoolColumnHeader>
+      </th>
+    );
+  });
 
   return (
     <CompareSectionTabs

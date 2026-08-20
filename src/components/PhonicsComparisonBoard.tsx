@@ -149,27 +149,31 @@ export function PhonicsComparisonBoard({
           </SchoolColumnHeader>
         </th>
       ) : (
-        schools.map((school) => (
-          <th key={school.urn} scope="col">
-            <SchoolColumnHeader title={school.name}>
-              <span>
-                {[
-                  formatSector(resolveSchoolSector(school)),
-                  school.town,
-                  school.localAuthority,
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </span>
-              <span>
-                {school.ageRange ? `Ages ${school.ageRange}` : null}
-                {" · LA phonics context"}
-              </span>
-              <SchoolOutboundLinks school={school} />
-              <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
-            </SchoolColumnHeader>
-          </th>
-        ))
+        schools.map((school) => {
+          const location = [
+            formatSector(resolveSchoolSector(school)),
+            school.town,
+            school.localAuthority,
+          ]
+            .filter(Boolean)
+            .join(" · ");
+          const ages = [
+            school.ageRange ? `Ages ${school.ageRange}` : null,
+            "LA phonics context",
+          ]
+            .filter(Boolean)
+            .join(" · ");
+          return (
+            <th key={school.urn} scope="col">
+              <SchoolColumnHeader title={school.name}>
+                {location ? <span>{location}</span> : null}
+                {ages ? <span>{ages}</span> : null}
+                <SchoolOutboundLinks school={school} />
+                <DataGapFlags compact gaps={schoolGaps(dataGaps, school.urn)} />
+              </SchoolColumnHeader>
+            </th>
+          );
+        })
       )}
       <th scope="col">England</th>
     </>

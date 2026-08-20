@@ -100,53 +100,62 @@ export function EarlyYearsComparisonBoard({
     stateOfstedAsAt,
   });
   const hasPlaces = compareSectionHasData("places", providers);
-  const providerHeaders = providers.map((provider) => (
-    <th key={provider.urn} scope="col">
-      <SchoolColumnHeader title={provider.name}>
-        <span>
-          {[provider.town, provider.localAuthority, provider.postcode]
-            .filter(Boolean)
-            .join(" · ")}
-        </span>
-        <span>
-          {provider.providerSubtype ||
-            provider.schoolTypeLabel ||
-            provider.phase ||
-            "Early years"}
-          {provider.places != null ? ` · ${provider.places} places` : null}
-          {isEyProvider(provider) ? " · day care" : " · school"}
-        </span>
-        {provider.ofstedReportUrl ? (
-          <span>
-            <a href={provider.ofstedReportUrl} target="_blank" rel="noreferrer">
-              Ofsted report ↗
-            </a>
-          </span>
-        ) : null}
-        {(isEyProvider(provider) ? childcareStamp : stateStamp) ? (
-          <ReportProblemButton
-            compact
-            board="early-years-ofsted"
-            stamp={{
-              ...(isEyProvider(provider) ? childcareStamp! : stateStamp!),
-              deepLink:
-                schoolDeepLink(provider) ||
-                (isEyProvider(provider)
-                  ? childcareStamp?.deepLink
-                  : stateStamp?.deepLink) ||
-                null,
-            }}
-            urn={provider.urn}
-            schoolName={provider.name}
-            field="ofstedOverall"
-            fieldLabel="Ofsted overall"
-            shownValue={provider.ofstedOverall ?? "—"}
-          />
-        ) : null}
-        <DataGapFlags compact gaps={schoolGaps(dataGaps, provider.urn)} />
-      </SchoolColumnHeader>
-    </th>
-  ));
+  const providerHeaders = providers.map((provider) => {
+    const location = [provider.town, provider.localAuthority, provider.postcode]
+      .filter(Boolean)
+      .join(" · ");
+    const ages = [
+      provider.providerSubtype ||
+        provider.schoolTypeLabel ||
+        provider.phase ||
+        "Early years",
+      provider.places != null ? `${provider.places} places` : null,
+      isEyProvider(provider) ? "day care" : "school",
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
+    return (
+      <th key={provider.urn} scope="col">
+        <SchoolColumnHeader title={provider.name}>
+          {location ? <span>{location}</span> : null}
+          {ages ? <span>{ages}</span> : null}
+          {provider.ofstedReportUrl ? (
+            <span>
+              <a
+                href={provider.ofstedReportUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Ofsted report ↗
+              </a>
+            </span>
+          ) : null}
+          {(isEyProvider(provider) ? childcareStamp : stateStamp) ? (
+            <ReportProblemButton
+              compact
+              board="early-years-ofsted"
+              stamp={{
+                ...(isEyProvider(provider) ? childcareStamp! : stateStamp!),
+                deepLink:
+                  schoolDeepLink(provider) ||
+                  (isEyProvider(provider)
+                    ? childcareStamp?.deepLink
+                    : stateStamp?.deepLink) ||
+                  null,
+              }}
+              urn={provider.urn}
+              schoolName={provider.name}
+              field="ofstedOverall"
+              fieldLabel="Ofsted overall"
+              shownValue={provider.ofstedOverall ?? "—"}
+            />
+          ) : null}
+          <DataGapFlags compact gaps={schoolGaps(dataGaps, provider.urn)} />
+        </SchoolColumnHeader>
+      </th>
+    );
+  });
 
   return (
     <CompareSectionTabs

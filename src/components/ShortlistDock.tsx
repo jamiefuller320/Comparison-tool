@@ -43,7 +43,7 @@ export function ShortlistDock({
             className="btn btn-ghost shortlist-dock-edit"
             onClick={() => scrollToHomeSection("compare")}
           >
-            Edit
+            Shortlist
           </button>
         </div>
       </div>
