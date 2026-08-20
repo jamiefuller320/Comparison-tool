@@ -24,10 +24,10 @@ export function SchoolColumnHeader({
 
   if (!stickyHeader) {
     return (
-      <>
-        {title}
+      <div className="school-column-heading">
+        <div className="school-column-title">{title}</div>
         <div className="school-meta">{children}</div>
-      </>
+      </div>
     );
   }
 

@@ -156,7 +156,7 @@ export function InspectionPrecis({
   );
 }
 
-/** Compare-table row: short summaries + expandable detail (like Year trend). */
+/** Compare-table rows: published grades + précis summaries with expandable detail. */
 export function InspectionPrecisRows({
   schools,
 }: {
@@ -164,62 +164,117 @@ export function InspectionPrecisRows({
 }): ReactNode {
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLTableRowElement | null>(null);
-  const any = schools.some(schoolHasInspectionPrecis);
+  const hasPrecis = schools.some(schoolHasInspectionPrecis);
+  const hasGrades = schools.some(
+    (school) =>
+      school.ofstedOverall ||
+      school.ofstedIssCompliance ||
+      school.ofstedReportUrl ||
+      school.isiLatestReportUrl ||
+      school.isiReportsUrl,
+  );
 
   useEffect(() => {
     if (!open || !panelRef.current) return;
     panelRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [open]);
 
-  if (!any) return null;
+  if (!hasGrades && !hasPrecis) return null;
 
   return (
     <>
-      <tr className={open ? "metric-row-active precis-summary-row" : "precis-summary-row"}>
+      <tr className="compare-inspection-grade-row">
         <th scope="row">
-          <button
-            type="button"
-            className={
-              open ? "metric-history-trigger active" : "metric-history-trigger"
-            }
-            aria-expanded={open}
-            aria-controls="inspection-precis-detail"
-            onClick={() => setOpen((v) => !v)}
-          >
-            <span className="metric-history-label">Inspection précis</span>
-            <span className="metric-history-cta">
-              {open ? "Hide detail" : "Show fuller excerpt & highlights"}
-            </span>
-          </button>
+          Published overall grade
           <span className="hint">
-            Short cell summary from the latest Ofsted/ISI report — expand for a
-            longer verbatim excerpt plus strengths and areas to improve, then
-            open the PDF for the full report. Use it to prepare visit questions,
-            not as a final verdict.
+            Latest published outcome from Ofsted or ISI — open the report for
+            full context.
           </span>
         </th>
-        {schools.map((school) => (
-          <td key={school.urn} className="metric-cell precis-summary-cell">
-            <InspectionPrecisSummary school={school} />
-          </td>
-        ))}
-      </tr>
-      {open ? (
-        <tr className="history-row precis-detail-row" ref={panelRef}>
-          <td colSpan={schools.length + 1}>
-            <div
-              className="history-panel history-panel-inline precis-detail-panel"
-              id="inspection-precis-detail"
-            >
-              <PrecisReadingNote />
-              <div className="precis-detail-grid">
-                {schools.map((school) => (
-                  <InspectionPrecisDetail key={school.urn} school={school} />
-                ))}
+        {schools.map((school) => {
+          const grade = school.ofstedOverall || school.ofstedIssCompliance;
+          const reportHref =
+            school.ofstedReportUrl ||
+            school.isiLatestReportUrl ||
+            school.isiReportsUrl;
+          return (
+            <td key={school.urn} className="metric-cell compare-harbour-cell">
+              <div className="compare-inspection-grade">
+                <strong>{grade || "—"}</strong>
+                {school.ofstedInspectionDate ? (
+                  <span className="compare-cell-meta">
+                    Inspected {school.ofstedInspectionDate}
+                  </span>
+                ) : null}
+                {reportHref ? (
+                  <a href={reportHref} target="_blank" rel="noreferrer">
+                    Report ↗
+                  </a>
+                ) : null}
               </div>
-            </div>
-          </td>
-        </tr>
+            </td>
+          );
+        })}
+      </tr>
+      {hasPrecis ? (
+        <>
+          <tr
+            className={
+              open
+                ? "metric-row-active precis-summary-row"
+                : "precis-summary-row"
+            }
+          >
+            <th scope="row">
+              <button
+                type="button"
+                className={
+                  open
+                    ? "metric-history-trigger active"
+                    : "metric-history-trigger"
+                }
+                aria-expanded={open}
+                aria-controls="inspection-precis-detail"
+                onClick={() => setOpen((v) => !v)}
+              >
+                <span className="metric-history-label">Inspection précis</span>
+                <span className="metric-history-cta">
+                  {open ? "Hide detail" : "Show fuller excerpt & highlights"}
+                </span>
+              </button>
+              <span className="hint">
+                Short cell summary from the latest Ofsted/ISI report — expand
+                for a longer verbatim excerpt plus strengths and areas to
+                improve, then open the PDF for the full report.
+              </span>
+            </th>
+            {schools.map((school) => (
+              <td
+                key={school.urn}
+                className="metric-cell precis-summary-cell compare-harbour-cell"
+              >
+                <InspectionPrecisSummary school={school} />
+              </td>
+            ))}
+          </tr>
+          {open ? (
+            <tr className="history-row precis-detail-row" ref={panelRef}>
+              <td colSpan={schools.length + 1}>
+                <div
+                  className="history-panel history-panel-inline precis-detail-panel compare-harbour-panel"
+                  id="inspection-precis-detail"
+                >
+                  <PrecisReadingNote />
+                  <div className="precis-detail-grid">
+                    {schools.map((school) => (
+                      <InspectionPrecisDetail key={school.urn} school={school} />
+                    ))}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          ) : null}
+        </>
       ) : null}
     </>
   );

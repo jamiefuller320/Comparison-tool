@@ -225,7 +225,7 @@ export function QualitativeEvidenceDetail({ school }: { school: SchoolRecord }) 
   );
 }
 
-/** Compare-table row: short summaries + expandable website evidence. */
+/** Compare-table rows: short summaries + expandable website evidence. */
 export function QualitativeEvidenceRows({
   schools,
 }: {
@@ -233,27 +233,29 @@ export function QualitativeEvidenceRows({
 }): ReactNode {
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLTableRowElement | null>(null);
-  const any = schools.some(schoolHasQualitativeCapture);
+  const captured = schools.filter(schoolHasQualitativeCapture).length;
 
   useEffect(() => {
     if (!open || !panelRef.current) return;
     panelRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [open]);
 
-  if (!any) return null;
-
   return (
     <>
       <tr
         className={
-          open ? "metric-row-active qual-evidence-summary-row" : "qual-evidence-summary-row"
+          open
+            ? "metric-row-active qual-evidence-summary-row"
+            : "qual-evidence-summary-row"
         }
       >
         <th scope="row">
           <button
             type="button"
             className={
-              open ? "metric-history-trigger active" : "metric-history-trigger"
+              open
+                ? "metric-history-trigger active"
+                : "metric-history-trigger"
             }
             aria-expanded={open}
             aria-controls="qualitative-evidence-detail"
@@ -267,10 +269,16 @@ export function QualitativeEvidenceRows({
           <span className="hint">
             Paragraph summaries from the school&apos;s own website and documents
             — expand for sources. Complements inspection précis, not a score.
+            {captured > 0 && captured < schools.length
+              ? ` ${captured} of ${schools.length} settings scanned so far.`
+              : null}
           </span>
         </th>
         {schools.map((school) => (
-          <td key={school.urn} className="metric-cell qual-evidence-summary-cell">
+          <td
+            key={school.urn}
+            className="metric-cell qual-evidence-summary-cell compare-harbour-cell"
+          >
             <QualitativeEvidenceSummary school={school} />
           </td>
         ))}
@@ -279,7 +287,7 @@ export function QualitativeEvidenceRows({
         <tr className="history-row qual-evidence-detail-row" ref={panelRef}>
           <td colSpan={schools.length + 1}>
             <div
-              className="history-panel history-panel-inline qual-evidence-detail-panel"
+              className="history-panel history-panel-inline qual-evidence-detail-panel compare-harbour-panel"
               id="qualitative-evidence-detail"
             >
               <div className="qual-evidence-detail-grid">

@@ -1374,10 +1374,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   justify-content: space-between;
   gap: 0.65rem 1rem;
   margin: 0 0 0.85rem;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid rgba(11, 79, 108, 0.14);
-  border-radius: 0.85rem;
-  background: rgba(255, 252, 247, 0.78);
+  padding: 0;
 }
 
 .compare-action-bar-primary {
@@ -1394,30 +1391,68 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   gap: 0.35rem;
 }
 
+.compare-action-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.85rem;
+  border: 1px solid rgba(11, 79, 108, 0.22);
+  border-radius: 999px;
+  background: rgba(232, 238, 242, 0.92);
+  color: var(--sea-deep);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.compare-action-btn:hover:not(:disabled) {
+  border-color: rgba(11, 79, 108, 0.38);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--sea-deep);
+}
+
+.compare-action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .compare-path-chip {
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: 0 0 auto;
   gap: 0.35rem;
-  padding: 0.38rem 0.72rem;
+  padding: 0.42rem 0.85rem;
   border: 1px solid rgba(11, 79, 108, 0.18);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(232, 238, 242, 0.92);
   color: var(--sea-deep);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 650;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .compare-path-chip:hover {
   border-color: rgba(11, 79, 108, 0.32);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .compare-path-chip.active {
-  border-color: rgba(196, 92, 38, 0.45);
-  background: rgba(196, 92, 38, 0.12);
+  border-color: rgba(196, 92, 38, 0.5);
+  background: rgba(196, 92, 38, 0.14);
   color: var(--sea-deep);
+  box-shadow: inset 0 0 0 1px rgba(196, 92, 38, 0.12);
 }
 
 .compare-path-chip-badge {
@@ -1845,19 +1880,29 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   padding-bottom: 0.65rem;
 }
 
+.school-column-heading {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
 .school-column-heading.is-compact {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.4rem;
   position: relative;
-  min-width: 7.5rem;
+  min-width: 0;
 }
 
 .school-column-title {
   font-weight: 650;
-  line-height: 1.25;
+  line-height: 1.3;
   min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .school-column-info {
@@ -1943,14 +1988,18 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .inspection-precis-summary {
-  max-width: 16rem;
+  max-width: none;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.55rem;
+  background: rgba(255, 252, 247, 0.92);
+  border: 1px solid rgba(11, 79, 108, 0.12);
 }
 
 .inspection-precis-summary-body {
   margin: 0;
   color: var(--ink);
   font-size: 0.84rem;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
 .inspection-precis-empty {
@@ -1960,8 +2009,9 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .inspection-precis-detail {
   min-width: 0;
   padding: 0.75rem 0.85rem;
-  border-left: 3px solid var(--sea);
-  background: rgba(11, 79, 108, 0.04);
+  border: 1px solid rgba(11, 79, 108, 0.14);
+  border-left: 3px solid rgba(11, 79, 108, 0.55);
+  background: rgba(232, 238, 242, 0.55);
   border-radius: 0 0.65rem 0.65rem 0;
 }
 
@@ -2056,16 +2106,55 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 }
 
-.precis-summary-cell {
-  vertical-align: top;
-}
-
-.qual-evidence-summary-cell {
+.precis-summary-cell,
+.qual-evidence-summary-cell,
+.compare-harbour-cell {
   vertical-align: top;
   min-width: 0;
-  max-width: 18rem;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.compare-harbour-cell {
+  background: rgba(244, 247, 249, 0.55);
+}
+
+.compare-harbour-panel {
+  border-color: rgba(11, 79, 108, 0.16);
+  background: rgba(232, 238, 242, 0.45);
+}
+
+.compare-inspection-grade {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.compare-inspection-grade strong {
+  font-size: 0.95rem;
+  color: var(--sea-deep);
+}
+
+.compare-inspection-grade a {
+  color: var(--sea);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.compare-inspection-grade a:hover {
+  text-decoration: underline;
+}
+
+.compare-cell-meta {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+
+.compare-inspection-grade-row th {
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .qual-evidence-summary {
@@ -2073,13 +2162,18 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   gap: 0.2rem;
   min-width: 0;
   max-width: 100%;
+  padding: 0.5rem 0.6rem;
+  border-radius: 0.55rem;
+  background: rgba(255, 252, 247, 0.92);
+  border: 1px solid rgba(11, 79, 108, 0.12);
 }
 
 .qual-evidence-kicker {
   margin: 0;
-  color: var(--ink-soft);
+  color: var(--sea);
   font-size: 0.68rem;
-  letter-spacing: 0.02em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 
@@ -2098,10 +2192,11 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 }
 
 .qual-evidence-detail {
-  border: 1px solid var(--line);
-  border-radius: 0.55rem;
-  padding: 0.75rem;
-  background: var(--surface);
+  border: 1px solid rgba(11, 79, 108, 0.14);
+  border-left: 3px solid rgba(11, 79, 108, 0.55);
+  border-radius: 0 0.65rem 0.65rem 0;
+  padding: 0.75rem 0.85rem;
+  background: rgba(232, 238, 242, 0.55);
   min-width: 0;
   max-width: 100%;
   overflow-wrap: anywhere;
@@ -2427,26 +2522,34 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 
 .table-pin-toggle {
   appearance: none;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(11, 79, 108, 0.22);
+  background: rgba(232, 238, 242, 0.92);
+  color: var(--sea-deep);
   font: inherit;
   font-size: 0.82rem;
-  font-weight: 600;
-  padding: 0.35rem 0.7rem;
+  font-weight: 650;
+  padding: 0.38rem 0.75rem;
   border-radius: 999px;
   cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 .table-pin-toggle:hover {
   color: var(--sea-deep);
-  border-color: rgba(11, 79, 108, 0.28);
+  border-color: rgba(11, 79, 108, 0.38);
+  background: rgba(255, 255, 255, 0.96);
 }
 
 .table-pin-toggle.on {
-  background: rgba(11, 79, 108, 0.1);
-  border-color: rgba(11, 79, 108, 0.32);
+  background: rgba(196, 92, 38, 0.14);
+  border-color: rgba(196, 92, 38, 0.5);
   color: var(--sea-deep);
+  box-shadow: inset 0 0 0 1px rgba(196, 92, 38, 0.12);
 }
 
 /* Generic scroll frame: edge fades + short cue when content is clipped. */
@@ -2577,12 +2680,11 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   z-index: 6;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.45rem;
-  padding: 0.35rem 0.1rem;
+  padding: 0.35rem 0;
   margin: 0 0 0.15rem;
-  background: rgba(244, 247, 249, 0.94);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: transparent;
 }
 
 html:has(.journey-toolbar) .compare-table-controls,
@@ -2637,11 +2739,25 @@ html:has(.page-chapter-nav) .compare-table-controls {
 }
 
 .compare-table thead th {
-  background: rgba(11, 79, 108, 0.06);
+  background: rgba(11, 79, 108, 0.08);
   font-family: var(--font-sans);
   font-weight: 650;
-  font-size: 1.02rem;
+  font-size: 0.95rem;
   color: var(--sea-deep);
+  vertical-align: bottom;
+}
+
+.compare-table thead th:first-child {
+  width: 14rem;
+  min-width: 12rem;
+  max-width: 16rem;
+}
+
+.compare-table thead th:not(:first-child) {
+  width: 12rem;
+  min-width: 10rem;
+  max-width: 14rem;
+  white-space: normal;
 }
 
 .compare-table tbody th {
