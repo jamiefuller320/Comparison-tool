@@ -26,6 +26,9 @@ export type BinderTabItem<Id extends string = string> = {
  * Pass `sheet` to render an attached panel; omit for tabs-only navigation.
  * Optional `leading` sits beside the tabs (e.g. How to use) while the sheet
  * spans the full width underneath.
+ *
+ * When a sheet is present, `data-stuck` flips once the tab strip has pinned
+ * and separated from the attached frame so CSS can draw a bottom edge.
  */
 export function BinderTabs<Id extends string>({
   items,
@@ -68,13 +71,21 @@ export function BinderTabs<Id extends string>({
     const binder = binderRef.current;
     let raf = 0;
 
+    function pinStrip(): HTMLElement | null {
+      if (!binder) return null;
+      const rail = binder.querySelector(":scope > .binder-rail");
+      if (rail instanceof HTMLElement) return rail;
+      const tabs = binder.querySelector(":scope > .binder-tabs");
+      return tabs instanceof HTMLElement ? tabs : null;
+    }
+
     function syncSeamGap() {
       const tab = tabRefs.current[activeId];
-      const sheet = binder?.querySelector(".binder-sheet");
-      if (!binder || !tab || !(sheet instanceof HTMLElement)) return;
+      const sheetEl = binder?.querySelector(".binder-sheet");
+      if (!binder || !tab || !(sheetEl instanceof HTMLElement)) return;
       // Measure against the sheet — not the binder — so leading chrome
       // (How to use) cannot offset the gap under the active tab.
-      const sheetBox = sheet.getBoundingClientRect();
+      const sheetBox = sheetEl.getBoundingClientRect();
       const tabBox = tab.getBoundingClientRect();
       const start = Math.round(
         Math.max(0, tabBox.left - sheetBox.left + 1),
@@ -86,27 +97,59 @@ export function BinderTabs<Id extends string>({
       binder.style.setProperty("--seam-gap-end", `${Math.max(start, end)}px`);
     }
 
+    function syncStuckState() {
+      if (!binder) return;
+      const strip = pinStrip();
+      const sheetEl = binder.querySelector(".binder-sheet");
+      if (!strip || !(sheetEl instanceof HTMLElement)) {
+        binder.dataset.stuck = "false";
+        return;
+      }
+      const stripBox = strip.getBoundingClientRect();
+      const sheetBox = sheetEl.getBoundingClientRect();
+      // Attached: sheet top sits flush under the tab strip. Separated: the
+      // sheet has scrolled up under (or past) the pinned strip.
+      const separated = sheetBox.top < stripBox.bottom - 2;
+      binder.dataset.stuck = separated ? "true" : "false";
+
+      if (binder.classList.contains("journey-chapter-binder")) {
+        document.documentElement.style.setProperty(
+          "--journey-rail-height",
+          `${Math.ceil(stripBox.height)}px`,
+        );
+      }
+    }
+
     function syncSoon() {
       syncSeamGap();
+      syncStuckState();
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         syncSeamGap();
-        raf = requestAnimationFrame(syncSeamGap);
+        syncStuckState();
+        raf = requestAnimationFrame(() => {
+          syncSeamGap();
+          syncStuckState();
+        });
       });
     }
 
     syncSoon();
     const observer = new ResizeObserver(syncSoon);
     if (binder) observer.observe(binder);
-    const sheet = binder?.querySelector(".binder-sheet");
-    if (sheet) observer.observe(sheet);
+    const sheetEl = binder?.querySelector(".binder-sheet");
+    if (sheetEl) observer.observe(sheetEl);
+    const strip = pinStrip();
+    if (strip) observer.observe(strip);
     const tab = tabRefs.current[activeId];
     if (tab) observer.observe(tab);
     window.addEventListener("resize", syncSoon);
+    window.addEventListener("scroll", syncStuckState, { passive: true });
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
       window.removeEventListener("resize", syncSoon);
+      window.removeEventListener("scroll", syncStuckState);
     };
   }, [activeId, hasSheet, items.length]);
 
@@ -117,6 +160,7 @@ export function BinderTabs<Id extends string>({
       data-tone={tone}
       data-mode={hasSheet ? "sheet" : "tabs"}
       data-leading={hasLeading ? "true" : "false"}
+      data-stuck="false"
       data-active-index={activeIndex}
       data-tab-count={items.length}
       data-tour={dataTour}

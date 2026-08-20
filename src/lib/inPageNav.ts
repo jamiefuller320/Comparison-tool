@@ -34,9 +34,19 @@ export function stickyChromeOffsetPx(sectionId?: string): number {
     document.querySelector(".journey-toolbar") ||
     document.querySelector(".page-chapter-nav");
   const toolbarH = toolbar?.getBoundingClientRect().height ?? 0;
+  let nestedH = 0;
+  const nestedTabs = document.querySelector(
+    ".compare-section-binder > .binder-tabs",
+  );
+  if (nestedTabs instanceof HTMLElement) {
+    const nestedBinder = nestedTabs.closest(".binder");
+    if (nestedBinder?.getAttribute("data-stuck") === "true") {
+      nestedH = nestedTabs.getBoundingClientRect().height;
+    }
+  }
   // Setup sits under the toolbar; still need both when the toolbar is sticky.
   void sectionId;
-  return Math.ceil(headerH + toolbarH);
+  return Math.ceil(headerH + toolbarH + nestedH);
 }
 
 /**
