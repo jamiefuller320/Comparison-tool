@@ -805,7 +805,7 @@ export function HomePostcodeExplorer({
                   </span>
                 </div>
                 {nearby.length === 0 ? (
-                  <p className="footnote" style={{ padding: "1rem" }}>
+                  <p className="nearby-list-empty">
                     No indexed schools in this ring for the filters you chose.
                     Try a wider range, another stage
                     {showComparableKs4Toggle && comparableKs4Only
