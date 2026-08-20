@@ -1404,15 +1404,41 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-section-binder .compare-board,
 .compare-section-binder .compare-evidence-panels,
 .compare-section-binder .compare-evidence-card,
-.compare-section-binder .chart-wrap {
+.compare-section-binder .chart-wrap,
+.journey-stage .compare-section-binder .compare-evidence-panels,
+.journey-stage .compare-section-binder .compare-evidence-card {
   color: var(--ink);
 }
 
 .compare-section-binder .compare-table-frame .footnote,
 .compare-section-binder .compare-evidence-panels .footnote,
 .compare-section-binder .compare-evidence-panels .precis-reading-note,
-.compare-section-binder .compare-evidence-missing {
+.compare-section-binder .compare-evidence-missing,
+.journey-stage .compare-section-binder .compare-evidence-panels .footnote,
+.journey-stage .compare-section-binder .compare-evidence-missing {
   color: var(--ink-soft);
+}
+
+/* Ofsted/ISI précis copy inside evidence cards — never harbour white ink. */
+.compare-evidence-card .inspection-precis-detail,
+.compare-evidence-card .inspection-precis-body,
+.compare-evidence-card .inspection-precis-note,
+.compare-evidence-card .inspection-precis-quotes blockquote,
+.compare-evidence-card .inspection-precis-empty,
+.compare-evidence-card .inspection-highlight-block,
+.journey-stage .compare-evidence-card .inspection-precis-detail,
+.journey-stage .compare-evidence-card .inspection-precis-body,
+.journey-stage .compare-evidence-card .inspection-precis-note,
+.journey-stage .compare-evidence-card .inspection-precis-quotes blockquote {
+  color: var(--ink);
+}
+
+.compare-evidence-card .inspection-precis-kicker,
+.compare-evidence-card .inspection-precis-detail-name,
+.compare-evidence-card .inspection-highlight-block h4,
+.journey-stage .compare-evidence-card .inspection-precis-kicker,
+.journey-stage .compare-evidence-card .inspection-highlight-block h4 {
+  color: var(--sea-deep);
 }
 
 .compare-evidence-panels {
@@ -2274,6 +2300,13 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   font-size: 0.9rem;
   line-height: 1.45;
   font-weight: 500;
+}
+
+/* Harbour journey ink must not bleach the verbatim précis paragraph. */
+.journey-stage .inspection-precis-body,
+.compare-section-binder .inspection-precis-body,
+.compare-harbour-cell .inspection-precis-body {
+  color: var(--ink);
 }
 
 .inspection-highlight-block {
