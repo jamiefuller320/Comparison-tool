@@ -1425,11 +1425,14 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
   display: grid;
   gap: 0.85rem;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  /* Don't stretch short cards to the tallest sibling — that inflated gaps. */
+  align-items: start;
 }
 
 .compare-evidence-card {
   display: grid;
   gap: 0.65rem;
+  align-content: start;
   padding: 0.85rem 0.95rem;
   border: 1px solid rgba(11, 79, 108, 0.16);
   border-radius: 0.75rem;
@@ -1441,6 +1444,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-evidence-card-head {
   display: grid;
   gap: 0.2rem;
+  align-content: start;
   padding-bottom: 0.55rem;
   border-bottom: 1px solid rgba(11, 79, 108, 0.1);
 }
@@ -1462,12 +1466,14 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-evidence-card-body {
   display: grid;
   gap: 0.75rem;
+  align-content: start;
   min-width: 0;
 }
 
 .compare-evidence-grade {
   display: grid;
   gap: 0.2rem;
+  align-content: start;
 }
 
 .compare-evidence-grade strong {
@@ -1500,6 +1506,7 @@ body:has(.floating-controls):has(.shortlist-dock) .floating-controls {
 .compare-evidence-block {
   display: grid;
   gap: 0.45rem;
+  align-content: start;
   min-width: 0;
 }
 

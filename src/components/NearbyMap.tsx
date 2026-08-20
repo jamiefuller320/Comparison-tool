@@ -397,15 +397,24 @@ export function NearbyMap({
     }
   }, [home.latitude, home.longitude, home.postcode, relocating, relocateError]);
 
-  // Failed reverse-geocode: keep the dropped pin so the user can nudge again
-  // (snapping back to the old lock felt like the drag “didn’t stick”).
+  // Failed reverse-geocode: parent usually already moved home to the drop
+  // (optimistic refresh). Clear pending when coords match; otherwise keep the
+  // pin on the drop so the user can nudge again.
   useEffect(() => {
     if (relocating || !relocateError || !pendingPinRef.current) return;
     isDraggingPinRef.current = false;
     const pending = pendingPinRef.current;
+    const closeEnough =
+      Math.abs(pending.latitude - home.latitude) < 1e-7 &&
+      Math.abs(pending.longitude - home.longitude) < 1e-7;
+    if (closeEnough) {
+      pendingPinRef.current = null;
+      setPinUnlocked(false);
+      return;
+    }
     homeMarkerRef.current?.setLatLng([pending.latitude, pending.longitude]);
     ringRef.current?.setLatLng([pending.latitude, pending.longitude]);
-  }, [relocating, relocateError]);
+  }, [relocating, relocateError, home.latitude, home.longitude]);
 
   const canRelocate = Boolean(onHomeRelocate);
 
