@@ -186,19 +186,21 @@ export function PhonicsComparisonBoard({
       onActiveChange={setActiveSection}
       contextSlot={
         <>
-          {contextSlot}
-          {sourceStamp ? (
-            <BoardProvenance
-              stamp={sourceStamp}
-              board="ks1-phonics"
-              gaps={dataGaps}
-            />
-          ) : null}
-          <p className="footnote">
-            Phonics figures are published for the{" "}
-            <strong>local authority</strong> and <strong>England</strong> only
-            — not for each school. Use this as area context while you shortlist.
-          </p>
+          <div className="compare-context-rest">
+            {contextSlot}
+            {sourceStamp ? (
+              <BoardProvenance
+                stamp={sourceStamp}
+                board="ks1-phonics"
+                gaps={dataGaps}
+              />
+            ) : null}
+            <p className="compare-context-panel compare-context-note">
+              Phonics figures are published for the{" "}
+              <strong>local authority</strong> and <strong>England</strong> only
+              — not for each school. Use this as area context while you shortlist.
+            </p>
+          </div>
         </>
       }
     >

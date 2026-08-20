@@ -13,14 +13,24 @@ import {
 } from "@/lib/coverageStrip";
 import { shortName } from "@/lib/format";
 
+/** Website-scheme tones for each coverage bar (sea / pin / good / foam-deep). */
+const DIMENSION_TONE: Record<CoverageDimensionId, string> = {
+  outcomes: "sea",
+  inspection: "pin",
+  precis: "good",
+  directory: "harbour",
+};
+
 function SegmentBar({
   present,
   total,
   label,
+  tone,
 }: {
   present: number;
   total: number;
   label: string;
+  tone: string;
 }) {
   if (total <= 0) return null;
   const pct = Math.round((present / total) * 100);
@@ -37,7 +47,10 @@ function SegmentBar({
         role="img"
         aria-label={`${label}: ${present} of ${total} shortlisted schools`}
       >
-        <div className="coverage-seg-fill" style={{ width: `${pct}%` }} />
+        <div
+          className={`coverage-seg-fill is-${tone}`}
+          style={{ width: `${pct}%` }}
+        />
       </div>
     </div>
   );
@@ -92,8 +105,8 @@ export function CoverageStrip({
         <div>
           <h3 className="coverage-strip-title">What’s covered on this shortlist</h3>
           <p className="coverage-strip-lead">
-            Filled segments are published joins. Hollow segments are known gaps —
-            not bugs. Open details for plain-English reasons.
+            Filled bars show published joins for these schools. Open gap details
+            for plain-English reasons when a segment is hollow.
           </p>
         </div>
         <button
@@ -113,6 +126,7 @@ export function CoverageStrip({
             label={dim.label}
             present={summary.totals[dim.id].present}
             total={summary.totals[dim.id].total}
+            tone={DIMENSION_TONE[dim.id]}
           />
         ))}
       </div>
