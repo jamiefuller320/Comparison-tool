@@ -17,6 +17,7 @@ async function main() {
   const {
     isAppleMobilePrintHost,
     prepareVisitPackForPrint,
+    resolveVisitPackElement,
     VISIT_PACK_PRINT_CSS,
   } = await import("../src/lib/printVisitPack.ts");
 
@@ -95,6 +96,36 @@ async function main() {
       assert.equal(prepared.querySelectorAll(".no-print").length, 0);
       assert.ok(prepared.firstElementChild?.classList.contains("visit-pack-sheet"));
       assert.equal(prepared.querySelectorAll(".visit-pack-sheet").length, 2);
+    },
+  );
+
+  // Compare action bar prints [data-visit-pack="compare"], which wraps VisitPack.
+  // Must unwrap so questions / graphs / school sheets survive (not blank iPad pages).
+  await withDom(
+    `<div data-visit-pack="compare" class="compare-visit-pack-anchor">
+      <div class="visit-pack">
+        <div class="visit-pack-toolbar no-print">chrome</div>
+        <div class="visit-pack-body" hidden>
+          <div class="visit-pack-sheet visit-pack-guide-sheet" id="guide">questions</div>
+          <div class="visit-pack-page-break"></div>
+          <div class="visit-pack-sheet visit-pack-graphs-sheet" id="graphs">graphs</div>
+          <div class="visit-pack-page-break"></div>
+          <div class="visit-pack-sheet visit-pack-school-sheet" id="school">school</div>
+        </div>
+      </div>
+    </div>`,
+    (document) => {
+      const host = document.querySelector('[data-visit-pack="compare"]');
+      assert.ok(host);
+      const resolved = resolveVisitPackElement(host);
+      assert.ok(resolved.classList.contains("visit-pack"));
+      const prepared = prepareVisitPackForPrint(host);
+      assert.equal(prepared.querySelectorAll(".visit-pack-sheet").length, 3);
+      assert.ok(prepared.firstElementChild?.classList.contains("visit-pack-sheet"));
+      assert.ok(prepared.querySelector("#guide"));
+      assert.ok(prepared.querySelector("#graphs"));
+      assert.ok(prepared.querySelector("#school"));
+      assert.equal(prepared.querySelectorAll(".visit-pack-body").length, 0);
     },
   );
 
