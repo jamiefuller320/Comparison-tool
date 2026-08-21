@@ -3006,7 +3006,68 @@ body:has(.shortlist-dock) {
 }
 
 .history-legend-item.england {
-  order: -1;
+  /* Keep England after school rows in the key (matches chart / year popup order). */
+  order: 1;
+}
+
+.history-tooltip {
+  min-width: 11rem;
+  max-width: 18rem;
+  padding: 0.55rem 0.7rem 0.6rem;
+  background: rgba(255, 252, 247, 0.97);
+  border: 1px solid rgba(20, 35, 58, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(20, 35, 58, 0.1);
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.history-tooltip-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--sea-deep);
+}
+
+.history-tooltip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.28rem;
+}
+
+.history-tooltip-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.history-tooltip-swatch {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  margin-top: 0.15rem;
+}
+
+.history-tooltip-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink-soft);
+}
+
+.history-tooltip-value {
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.history-chart .recharts-tooltip-wrapper {
+  pointer-events: none;
+  outline: none;
 }
 
 .history-legend-swatch {
