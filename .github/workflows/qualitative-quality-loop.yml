@@ -30,8 +30,9 @@ on:
 permissions:
   contents: write
 
+# Share with qualitative-loop so cleanup waits if coverage is still writing.
 concurrency:
-  group: qualitative-quality-loop
+  group: qualitative-data
   cancel-in-progress: false
 
 jobs:
@@ -77,9 +78,6 @@ jobs:
             echo "No qualitative quality loop changes"
           else
             git commit -m "Qualitative quality loop: apply ingest rules to existing records"
-            # Rebase-safe push when coverage loop commits land first
-            for i in 1 2 3 4 5; do
-              git pull --rebase origin main && git push origin HEAD:main && break
-              sleep $((i * 4))
-            done
+            # Rebase-safe push; digest conflicts keep this job's files.
+            bash scripts/ci-rebase-push.sh origin main
           fi

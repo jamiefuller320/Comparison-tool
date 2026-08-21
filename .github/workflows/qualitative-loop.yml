@@ -58,8 +58,10 @@ on:
 permissions:
   contents: write
 
+# Share with qualitative-quality-loop so daily coverage + cleanup never
+# race on the same generated digests / sidecar commits.
 concurrency:
-  group: qualitative-loop
+  group: qualitative-data
   cancel-in-progress: false
 
 jobs:
@@ -124,7 +126,6 @@ jobs:
               MSG="Qualitative loop: daily coverage capture"
             fi
             git commit -m "$MSG"
-            # Rebase onto tip of main so concurrent merges don't reject the push.
-            git pull --rebase origin main
-            git push
+            # Rebase-safe push; digest conflicts keep this job's files.
+            bash scripts/ci-rebase-push.sh origin main
           fi
