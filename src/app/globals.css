@@ -516,6 +516,38 @@ body:has(.shortlist-dock) {
   border-bottom: 1px solid var(--line);
 }
 
+.decision-guidance-stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.75rem 1rem 0.15rem;
+}
+
+.decision-guidance-stage {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--sea-deep);
+  border-radius: 0.55rem;
+  padding: 0.32rem 0.7rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.decision-guidance-stage:hover {
+  border-color: rgba(11, 79, 108, 0.35);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.decision-guidance-stage.active {
+  border-color: rgba(11, 79, 108, 0.45);
+  background: rgba(11, 79, 108, 0.1);
+  color: var(--sea-deep);
+}
+
 .decision-guidance-lead {
   margin: 0.85rem 1rem 0.65rem;
   color: var(--ink-soft);
@@ -1500,6 +1532,24 @@ body:has(.shortlist-dock) {
   color: var(--sea-deep);
 }
 
+.journey-stage .decision-guidance {
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.journey-stage .decision-guidance-lead {
+  max-width: none;
+}
+
+.journey-stage .decision-guidance-stage {
+  color: var(--sea-deep);
+}
+
+.journey-stage .decision-guidance-stage.active {
+  color: var(--sea-deep);
+}
+
 .harbour-setup-slot:empty {
   min-height: 0;
 }
@@ -1971,13 +2021,24 @@ body:has(.shortlist-dock) {
 .compare-context-body .coverage-strip,
 .compare-context-body .compare-context-rest,
 .compare-context-body .board-provenance,
-.compare-context-body .compare-context-panel {
+.compare-context-body .compare-context-panel,
+.compare-context-body .empty-compare {
   margin: 0;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.compare-context-body .coverage-strip-lead,
+.compare-context-body .decision-guidance-lead {
+  max-width: none;
 }
 
 .compare-context-rest {
   display: grid;
   gap: 0.85rem;
+  width: 100%;
+  min-width: 0;
 }
 
 .compare-context-panel,

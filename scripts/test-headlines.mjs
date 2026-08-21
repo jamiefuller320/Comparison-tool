@@ -1,15 +1,51 @@
 async function main() {
-  const { headlineForParents } = await import("../src/lib/compare.ts");
+  const { contextHeadlineForParents, headlineForParents } = await import(
+    "../src/lib/compare.ts"
+  );
 
   const state = {
     urn: "1",
     name: "State Primary",
     sector: "state",
     rwmExpected: 72,
+    inspectionPrecis:
+      "Pupils thrive here. Leaders have high expectations and reading is taught well.",
+    qualitativeCapture: {
+      urn: "1",
+      name: "State Primary",
+      assessedAt: "2024-01-01",
+      engineVersion: "test",
+      sourcesScanned: 2,
+      areas: [
+        {
+          area: "curriculum",
+          confidence: 0.9,
+          narrativeSummary:
+            "The school sets out a broad curriculum with a strong focus on reading.",
+          signals: [
+            {
+              text: "broad curriculum",
+              sourceUrl: "https://example.sch.uk",
+              sourceType: "school-website",
+            },
+          ],
+          offerings: ["Reading"],
+        },
+      ],
+    },
   };
   const stateLine = headlineForParents(state, 61);
   if (!stateLine.includes("72%") || !stateLine.toLowerCase().includes("reading")) {
     console.error("FAIL state headline", stateLine);
+    process.exit(1);
+  }
+  const stateContext = contextHeadlineForParents(state, 61);
+  if (
+    !stateContext.includes("72%") ||
+    !stateContext.toLowerCase().includes("inspection") ||
+    !stateContext.toLowerCase().includes("website")
+  ) {
+    console.error("FAIL state context headline", stateContext);
     process.exit(1);
   }
 

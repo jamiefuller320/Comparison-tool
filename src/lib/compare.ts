@@ -1,6 +1,7 @@
 import type { IndependentBenchmarkSet, SchoolRecord } from "@/lib/types";
 import { ppGap } from "@/lib/format";
 import { isChildminder, isEyProvider } from "@/lib/eyMetrics";
+import { shortInspectionSummary } from "@/lib/inspectionHighlights";
 import {
   phasesFromAgeRange,
   schoolMatchesPhases,
@@ -10,6 +11,7 @@ import {
   type PhaseId,
   type StageMatchMode,
 } from "@/lib/phases";
+import { shortQualitativeSummary } from "@/lib/qualitativeEvidence";
 import {
   resolveSchoolSector,
   schoolMatchesSectors,
@@ -250,4 +252,38 @@ export function headlineForParents(
     return `${rwm}% met the expected standard in reading, writing and maths — ${Math.abs(gap)} percentage points below the England average.`;
   }
   return `${rwm}% met the expected standard in reading, writing and maths — broadly in line with England (${englandRwm}%).`;
+}
+
+function ensureSentence(text: string): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (!clean) return clean;
+  return /[.!?]$/.test(clean) ? clean : `${clean}.`;
+}
+
+/**
+ * Context-tab parent headline: attainment (or care) line plus short Ofsted and
+ * website highlights in one paragraph per school.
+ */
+export function contextHeadlineForParents(
+  school: SchoolRecord,
+  englandRwm?: number | null,
+  indieBench?: IndependentBenchmarkSet | null,
+  opts?: {
+    preferKs4?: boolean;
+    stateKs4Bench?: IndependentBenchmarkSet | null;
+  },
+): string {
+  const parts: string[] = [ensureSentence(headlineForParents(school, englandRwm, indieBench, opts))];
+
+  const inspection = shortInspectionSummary(school, 180);
+  if (inspection) {
+    parts.push(`From the latest inspection: ${ensureSentence(inspection)}`);
+  }
+
+  const website = shortQualitativeSummary(school);
+  if (website) {
+    parts.push(`From the school website: ${ensureSentence(website)}`);
+  }
+
+  return parts.join(" ");
 }

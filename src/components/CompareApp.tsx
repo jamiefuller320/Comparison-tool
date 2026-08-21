@@ -37,7 +37,7 @@ import {
 } from "@/lib/laPacks";
 import { ProductTour } from "@/components/ProductTour";
 import { ProductFeedbackPrompt } from "@/components/ProductFeedbackPrompt";
-import { headlineForParents, suggestAlternatives } from "@/lib/compare";
+import { contextHeadlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   listAvailableComparePaths,
   pathsWithShortlistItems,
@@ -128,7 +128,7 @@ function PathSummaries({
       {schools.map((school, i) => (
         <p className="footnote shortlist-summary" key={school.urn}>
           <strong>{school.name}:</strong>{" "}
-          {headlineForParents(school, englandRwm, indieBench, {
+          {contextHeadlineForParents(school, englandRwm, indieBench, {
             preferKs4,
             stateKs4Bench,
           })}
@@ -361,6 +361,11 @@ export function CompareApp({
       return pickDefaultComparePath(availablePaths, shortlistPaths);
     });
   }, [availablePaths, shortlistPaths]);
+
+  const guidancePanelProps = {
+    paths: shortlistPaths.length > 1 ? shortlistPaths : undefined,
+    defaultOpen: shortlistPaths.length === 1,
+  };
 
   const ks4AllIndie =
     ks4Selected.length > 0 &&
@@ -674,7 +679,7 @@ export function CompareApp({
       const eyContext = (
         <>
           <PathSummaries schools={eySelected} {...summaryOpts} />
-          <DecisionGuidancePanel path="early-years" />
+          <DecisionGuidancePanel path="early-years" {...guidancePanelProps} />
           {showEarlyNotice ? (
             <div className="empty-compare" role="status">
               Early years data isn’t available in this build yet. Try another
@@ -723,7 +728,7 @@ export function CompareApp({
     if (activePath === "childminders") {
       return (
         <div data-tour="childminders">
-          <DecisionGuidancePanel path="childminders" />
+          <DecisionGuidancePanel path="childminders" {...guidancePanelProps} />
           <PathSummaries schools={childminderSelected} {...summaryOpts} />
           <p className="footnote" style={{ marginBottom: "1rem" }}>
             Wrap-around and home-based care — directory and checklist, not the
@@ -764,7 +769,7 @@ export function CompareApp({
       const ks1Context = (
         <>
           <PathSummaries schools={ks1Selected} {...summaryOpts} />
-          <DecisionGuidancePanel path="ks1" />
+          <DecisionGuidancePanel path="ks1" {...guidancePanelProps} />
           {!showPhonicsBoard ? (
             <div className="empty-compare" role="status">
               Phonics benchmarks missing. Re-run{" "}
@@ -800,7 +805,7 @@ export function CompareApp({
       const ks2Context = (
         <>
           <PathSummaries schools={ks2Selected} {...summaryOpts} />
-          <DecisionGuidancePanel path="ks2" />
+          <DecisionGuidancePanel path="ks2" {...guidancePanelProps} />
           {ks2Selected.length > 0 ? (
             <aside className="year-trend-tip" data-tour="year-trend">
               <strong>Year trends &amp; COVID years:</strong> {KS2_YEAR_TREND_TIP}
@@ -835,7 +840,7 @@ export function CompareApp({
           {...summaryOpts}
           preferKs4
         />
-        <DecisionGuidancePanel path="ks4" />
+        <DecisionGuidancePanel path="ks4" {...guidancePanelProps} />
         {ks4Selected.length === 0 ? (
           <div className="empty-compare" role="status">
             Add a secondary or 16–18 setting for GCSE / A-level tables. Selecting
