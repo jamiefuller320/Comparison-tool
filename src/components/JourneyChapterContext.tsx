@@ -50,7 +50,7 @@ export const TOUR_TARGET_CHAPTER: Record<string, JourneyChapterId> = {
   childminders: "side-by-side",
   "decision-guidance": "side-by-side",
   "visit-pack": "side-by-side",
-  year-trend: "side-by-side",
+  "year-trend": "side-by-side",
   how: "how",
   data: "how",
 };
