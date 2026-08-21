@@ -30,6 +30,7 @@ import {
   compareSectionHasData,
   type CompareSectionId,
 } from "@/lib/compareSections";
+import { useCompareView } from "@/components/CompareViewControls";
 
 function formatValue(
   value: string | number | null | undefined,
@@ -49,6 +50,7 @@ export function EarlyYearsComparisonBoard({
   childcareStamp,
   stateStamp,
   contextSlot,
+  summarySlot,
 }: {
   providers: SchoolRecord[];
   childcareOfstedAsAt?: string | null;
@@ -58,9 +60,12 @@ export function EarlyYearsComparisonBoard({
   childcareStamp?: SourceStamp | null;
   stateStamp?: SourceStamp | null;
   contextSlot: ReactNode;
+  summarySlot?: ReactNode;
 }) {
   const [activeSection, setActiveSection] =
     useState<CompareSectionId>("context");
+  const { mode, setMode, focusUrn, setFocusUrn, viewSchools: viewProviders } =
+    useCompareView(providers);
   const urnKey = providers.map((p) => p.urn).join(",");
 
   useEffect(() => {
@@ -74,6 +79,7 @@ export function EarlyYearsComparisonBoard({
         activeId={activeSection}
         onActiveChange={setActiveSection}
         contextSlot={contextSlot}
+        summarySlot={summarySlot}
       >
         {{
           ofsted: (
@@ -100,7 +106,7 @@ export function EarlyYearsComparisonBoard({
     stateOfstedAsAt,
   });
   const hasPlaces = compareSectionHasData("places", providers);
-  const providerHeaders = providers.map((provider) => {
+  const providerHeaders = viewProviders.map((provider) => {
     const location = [provider.town, provider.localAuthority, provider.postcode]
       .filter(Boolean)
       .join(" · ");
@@ -162,6 +168,11 @@ export function EarlyYearsComparisonBoard({
       schools={providers}
       activeId={activeSection}
       onActiveChange={setActiveSection}
+      viewMode={mode}
+      onViewModeChange={setMode}
+      focusUrn={focusUrn}
+      onFocusUrnChange={setFocusUrn}
+      summarySlot={summarySlot}
       contextSlot={
         <>
           <CoverageStrip
@@ -222,7 +233,7 @@ export function EarlyYearsComparisonBoard({
       {{
           ofsted: (
             <CompareOfstedPanels
-              schools={providers}
+              schools={viewProviders}
               extraRows={
                 <CompareSectionTable
                   tableId="early-years-ofsted"
@@ -234,7 +245,7 @@ export function EarlyYearsComparisonBoard({
                         {metric.label}
                         <span className="hint">{metric.parentHint}</span>
                       </th>
-                      {providers.map((provider) => (
+                      {viewProviders.map((provider) => (
                         <td key={provider.urn} className="metric-cell">
                           {formatValue(metric.get(provider), metric.unit)}
                         </td>
@@ -245,13 +256,13 @@ export function EarlyYearsComparisonBoard({
               }
             />
           ),
-          website: <CompareWebsitePanels schools={providers} />,
+          website: <CompareWebsitePanels schools={viewProviders} />,
           places: hasPlaces ? (
             <CompareSectionTable
               tableId="early-years-ofsted"
               headerCells={providerHeaders}
             >
-              <AdmissionsPlacesRows schools={providers} />
+              <AdmissionsPlacesRows schools={viewProviders} />
             </CompareSectionTable>
           ) : (
             <CompareSectionEmpty>

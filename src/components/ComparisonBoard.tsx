@@ -48,6 +48,7 @@ import {
   compareSectionHasData,
   type CompareSectionId,
 } from "@/lib/compareSections";
+import { useCompareView } from "@/components/CompareViewControls";
 
 const SUBJECT_KEYS = [
   "rwmExpected",
@@ -91,11 +92,13 @@ export function ComparisonBoard({
   england,
   sourceStamp,
   contextSlot,
+  summarySlot,
 }: {
   schools: SchoolRecord[];
   england: BenchmarkSet;
   sourceStamp?: SourceStamp | null;
   contextSlot: ReactNode;
+  summarySlot?: ReactNode;
 }) {
   const [activeSection, setActiveSection] =
     useState<CompareSectionId>("context");
@@ -110,6 +113,8 @@ export function ComparisonBoard({
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [historyPending, setHistoryPending] = useState(false);
   const historyPanelRef = useRef<HTMLDivElement | null>(null);
+  const { mode, setMode, focusUrn, setFocusUrn, viewSchools } =
+    useCompareView(schools);
 
   const urnKey = schools.map((s) => s.urn).join(",");
   const dataGaps = gapsForKs2Board(schools);
@@ -171,6 +176,7 @@ export function ComparisonBoard({
         activeId={activeSection}
         onActiveChange={setActiveSection}
         contextSlot={contextSlot}
+        summarySlot={summarySlot}
       >
         {{
           ofsted: (
@@ -212,7 +218,7 @@ export function ComparisonBoard({
       PARENT_METRICS.find((m) => m.key === key)?.label.replace(" (expected)", "") ??
       key;
     const row: Record<string, string | number | null> = { label };
-    for (const school of schools) {
+    for (const school of viewSchools) {
       row[school.urn] = school[key] ?? null;
     }
     row.england = england[key] ?? null;
@@ -224,7 +230,7 @@ export function ComparisonBoard({
   const hasAnyHistoryForActive =
     activeMetric &&
     schoolSeries &&
-    schools.some((s) => seriesHasHistory(schoolSeries[s.urn], activeMetric));
+    viewSchools.some((s) => seriesHasHistory(schoolSeries[s.urn], activeMetric));
 
   const historyBody =
     activeMetric && activeDef ? (
@@ -252,11 +258,11 @@ export function ComparisonBoard({
         {!historyPending && !historyError && meta && schoolSeries ? (
           hasAnyHistoryForActive ? (
             <MetricHistoryChart
-              key={`${activeMetric}-${urnKey}`}
+              key={`${activeMetric}-${viewSchools.map((s) => s.urn).join(",")}`}
               meta={meta}
               metric={activeMetric}
               unit={activeDef.unit}
-              schools={schools.map((s) => ({ urn: s.urn, name: s.name }))}
+              schools={viewSchools.map((s) => ({ urn: s.urn, name: s.name }))}
               schoolSeries={schoolSeries}
             />
           ) : (
@@ -270,7 +276,7 @@ export function ComparisonBoard({
     ) : null;
 
   const hasPlaces = compareSectionHasData("places", schools);
-  const schoolHeaders = schools.map((school) => {
+  const schoolHeaders = viewSchools.map((school) => {
     const location = [
       formatSector(resolveSchoolSector(school)),
       school.town,
@@ -330,6 +336,11 @@ export function ComparisonBoard({
       schools={schools}
       activeId={activeSection}
       onActiveChange={setActiveSection}
+      viewMode={mode}
+      onViewModeChange={setMode}
+      focusUrn={focusUrn}
+      onFocusUrnChange={setFocusUrn}
+      summarySlot={summarySlot}
       contextSlot={
         <>
           <CoverageStrip
@@ -350,11 +361,11 @@ export function ComparisonBoard({
       }
     >
       {{
-          ofsted: <CompareOfstedPanels schools={schools} />,
-          website: <CompareWebsitePanels schools={schools} />,
+          ofsted: <CompareOfstedPanels schools={viewSchools} />,
+          website: <CompareWebsitePanels schools={viewSchools} />,
           places: hasPlaces ? (
             <CompareSectionTable tableId="ks2" headerCells={schoolHeaders}>
-              <AdmissionsPlacesRows schools={schools} />
+              <AdmissionsPlacesRows schools={viewSchools} />
             </CompareSectionTable>
           ) : (
             <CompareSectionEmpty>
@@ -383,7 +394,7 @@ export function ComparisonBoard({
                       key={group}
                       title={groupTitles[group]}
                       metrics={metrics}
-                      schools={schools}
+                      schools={viewSchools}
                       england={england}
                       activeMetric={activeMetric}
                       onToggleMetric={(key) =>
@@ -429,7 +440,7 @@ export function ComparisonBoard({
                       }
                     />
                     <Legend />
-                    {schools.map((school, i) => (
+                    {viewSchools.map((school, i) => (
                       <Bar
                         key={school.urn}
                         dataKey={school.urn}
