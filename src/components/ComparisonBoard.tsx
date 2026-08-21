@@ -500,6 +500,35 @@ function GroupRows({
   );
 }
 
+function YearTrendIcon() {
+  return (
+    <svg
+      className="metric-history-cta-icon"
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M2 12.5V3.5M2 12.5h12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.2 10.2 6.6 7.4l2.1 1.7 3.3-4.3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function MetricFragment({
   metric,
   schools,
@@ -536,6 +565,7 @@ function MetricFragment({
           >
             <span className="metric-history-label">{metric.label}</span>
             <span className="metric-history-cta">
+              <YearTrendIcon />
               {active ? "Hide trend" : "Year trend"}
             </span>
           </button>
