@@ -50,6 +50,7 @@ import {
   compareSectionHasData,
   type CompareSectionId,
 } from "@/lib/compareSections";
+import { useCompareView } from "@/components/CompareViewControls";
 
 const CHART_KEYS = [
   "engMath94Percent",
@@ -90,6 +91,7 @@ export function IndependentComparisonBoard({
   sourceStamp,
   ofstedStateAsAt,
   contextSlot,
+  summarySlot,
 }: {
   schools: SchoolRecord[];
   /** @deprecated Prefer `benchmark` — kept for older call sites. */
@@ -99,10 +101,13 @@ export function IndependentComparisonBoard({
   sourceStamp?: SourceStamp | null;
   ofstedStateAsAt?: string | null;
   contextSlot: ReactNode;
+  summarySlot?: ReactNode;
 }) {
   const activeBench = benchmark ?? independentBench;
   const [activeSection, setActiveSection] =
     useState<CompareSectionId>("context");
+  const { mode, setMode, focusUrn, setFocusUrn, viewSchools } =
+    useCompareView(schools);
   const dataGaps = [
     ...gapsForKs4Board(schools),
     ...gapsForKs4OfstedAsAt(schools, ofstedStateAsAt),
@@ -120,6 +125,7 @@ export function IndependentComparisonBoard({
         activeId={activeSection}
         onActiveChange={setActiveSection}
         contextSlot={contextSlot}
+        summarySlot={summarySlot}
       >
         {{
           ofsted: (
@@ -163,7 +169,7 @@ export function IndependentComparisonBoard({
         "",
       ) ?? key;
     const row: Record<string, string | number | null> = { label };
-    for (const school of schools) {
+    for (const school of viewSchools) {
       const value = school[key];
       row[school.urn] = typeof value === "number" ? value : null;
     }
@@ -172,14 +178,14 @@ export function IndependentComparisonBoard({
   });
 
   const palette = ["#0b4f6c", "#c45c26", "#1f6b4a", "#6b4f8a"];
-  const hasAnyKs4 = schools.some((s) => s.att8Average != null);
-  const hasAnyKs5 = schools.some((s) => s.ks5ApsPerEntry != null);
-  const hasAnyOfsted = schools.some((s) => s.ofstedOverall || s.ofstedIssCompliance);
-  const hasIsi = schools.some(
+  const hasAnyKs4 = viewSchools.some((s) => s.att8Average != null);
+  const hasAnyKs5 = viewSchools.some((s) => s.ks5ApsPerEntry != null);
+  const hasAnyOfsted = viewSchools.some((s) => s.ofstedOverall || s.ofstedIssCompliance);
+  const hasIsi = viewSchools.some(
     (s) => (s.inspectorateName || "").toUpperCase() === "ISI" || s.isiReportsUrl,
   );
-  const hasState = schools.some((s) => resolveSchoolSector(s) === "state");
-  const hasIndie = schools.some((s) => resolveSchoolSector(s) === "independent");
+  const hasState = viewSchools.some((s) => resolveSchoolSector(s) === "state");
+  const hasIndie = viewSchools.some((s) => resolveSchoolSector(s) === "independent");
   const visibleGroups = groups.filter((group) => {
     if (group === "inspection") return false;
     if (group === "ks5") return hasAnyKs5;
@@ -191,7 +197,7 @@ export function IndependentComparisonBoard({
   const showInspectionMetrics =
     (hasAnyOfsted || hasIsi || hasIndie) && inspectionMetrics.length > 0;
   const hasPlaces = compareSectionHasData("places", schools);
-  const schoolHeaders = schools.map((school) => {
+  const schoolHeaders = viewSchools.map((school) => {
     const location = [
       formatSector(resolveSchoolSector(school)),
       school.town,
@@ -268,6 +274,11 @@ export function IndependentComparisonBoard({
       schools={schools}
       activeId={activeSection}
       onActiveChange={setActiveSection}
+      viewMode={mode}
+      onViewModeChange={setMode}
+      focusUrn={focusUrn}
+      onFocusUrnChange={setFocusUrn}
+      summarySlot={summarySlot}
       contextSlot={
         <>
           <CoverageStrip
@@ -292,7 +303,7 @@ export function IndependentComparisonBoard({
       {{
           ofsted: (
             <CompareOfstedPanels
-              schools={schools}
+              schools={viewSchools}
               extraRows={
                 showInspectionMetrics ? (
                   <CompareSectionTable
@@ -302,7 +313,7 @@ export function IndependentComparisonBoard({
                     <GroupRows
                       title={groupTitles.inspection}
                       metrics={inspectionMetrics}
-                      schools={schools}
+                      schools={viewSchools}
                       bench={activeBench}
                       benchmarkLabel={benchmarkLabel}
                     />
@@ -311,10 +322,10 @@ export function IndependentComparisonBoard({
               }
             />
           ),
-          website: <CompareWebsitePanels schools={schools} />,
+          website: <CompareWebsitePanels schools={viewSchools} />,
           places: hasPlaces ? (
             <CompareSectionTable tableId="ks4" headerCells={schoolHeaders}>
-              <AdmissionsPlacesRows schools={schools} />
+              <AdmissionsPlacesRows schools={viewSchools} />
             </CompareSectionTable>
           ) : (
             <CompareSectionEmpty>
@@ -341,7 +352,7 @@ export function IndependentComparisonBoard({
                       key={group}
                       title={groupTitles[group]}
                       metrics={metrics}
-                      schools={schools}
+                      schools={viewSchools}
                       bench={activeBench}
                       benchmarkLabel={benchmarkLabel}
                     />
@@ -379,7 +390,7 @@ export function IndependentComparisonBoard({
                         }
                       />
                       <Legend />
-                      {schools.map((school, i) => (
+                      {viewSchools.map((school, i) => (
                         <Bar
                           key={school.urn}
                           dataKey={school.urn}

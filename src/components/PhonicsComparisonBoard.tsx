@@ -33,6 +33,7 @@ import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { gapsForPhonics, schoolGaps } from "@/lib/dataGaps";
 import type { CompareSectionId } from "@/lib/compareSections";
+import { useCompareView } from "@/components/CompareViewControls";
 
 const CHART_KEYS = [
   "year1Expected",
@@ -54,14 +55,18 @@ export function PhonicsComparisonBoard({
   phonics,
   sourceStamp,
   contextSlot,
+  summarySlot,
 }: {
   schools: SchoolRecord[];
   phonics?: PhonicsBenchmarkSet;
   sourceStamp?: SourceStamp | null;
   contextSlot: ReactNode;
+  summarySlot?: ReactNode;
 }) {
   const [activeSection, setActiveSection] =
     useState<CompareSectionId>("context");
+  const { mode, setMode, focusUrn, setFocusUrn, viewSchools } =
+    useCompareView(schools);
   const urnKey = schools.map((s) => s.urn).join(",");
 
   useEffect(() => {
@@ -74,6 +79,7 @@ export function PhonicsComparisonBoard({
         schools={[]}
         activeId={activeSection}
         onActiveChange={setActiveSection}
+        summarySlot={summarySlot}
         contextSlot={
           <>
             {contextSlot}
@@ -100,11 +106,11 @@ export function PhonicsComparisonBoard({
   }
 
   const england = phonicsEngland(phonics);
-  const sharedLa = sharedPhonicsLaName(schools);
+  const sharedLa = sharedPhonicsLaName(viewSchools);
   const sharedArea = sharedLa
     ? phonics?.localAuthorities?.[sharedLa]
     : undefined;
-  const areas = schools.map((school) => ({
+  const areas = viewSchools.map((school) => ({
     school,
     area: phonicsForSchool(school, phonics),
   }));
@@ -144,12 +150,12 @@ export function PhonicsComparisonBoard({
             <span>Local authority phonics context</span>
             <span>
               Shortlist:{" "}
-              {schools.map((s) => shortName(s.name, 20)).join(" · ")}
+              {viewSchools.map((s) => shortName(s.name, 20)).join(" · ")}
             </span>
           </SchoolColumnHeader>
         </th>
       ) : (
-        schools.map((school) => {
+        viewSchools.map((school) => {
           const location = [
             formatSector(resolveSchoolSector(school)),
             school.town,
@@ -184,6 +190,11 @@ export function PhonicsComparisonBoard({
       schools={schools}
       activeId={activeSection}
       onActiveChange={setActiveSection}
+      viewMode={mode}
+      onViewModeChange={setMode}
+      focusUrn={focusUrn}
+      onFocusUrnChange={setFocusUrn}
+      summarySlot={summarySlot}
       contextSlot={
         <>
           <div className="compare-context-rest">
@@ -231,7 +242,7 @@ export function PhonicsComparisonBoard({
               <p className="footnote compare-section-note">
                 KS1 teacher assessment is no longer collected nationally.
                 {singleLaMode
-                  ? ` Showing ${sharedLa} versus England for your shortlist (${schools.map((s) => shortName(s.name, 24)).join(", ")}).`
+                  ? ` Showing ${sharedLa} versus England for your shortlist (${viewSchools.map((s) => shortName(s.name, 24)).join(", ")}).`
                   : null}
                 {england?.year1Expected != null
                   ? ` England Year 1 expected standard is ${fmtPct(england.year1Expected)} (${period}).`
@@ -349,7 +360,7 @@ export function PhonicsComparisonBoard({
                             maxBarSize={36}
                           />
                         ) : (
-                          schools.map((school, i) => (
+                          viewSchools.map((school, i) => (
                             <Bar
                               key={school.urn}
                               dataKey={school.urn}
