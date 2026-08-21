@@ -2034,6 +2034,7 @@ body:has(.shortlist-dock) {
 }
 
 .compare-context-body,
+.compare-summary-body,
 .compare-section-body {
   display: grid;
   gap: 0.85rem;
@@ -2046,7 +2047,9 @@ body:has(.shortlist-dock) {
 .compare-context-body .compare-context-rest,
 .compare-context-body .board-provenance,
 .compare-context-body .compare-context-panel,
-.compare-context-body .empty-compare {
+.compare-context-body .empty-compare,
+.compare-summary-body .path-summaries,
+.compare-summary-body .empty-compare {
   margin: 0;
   max-width: none;
   width: 100%;
@@ -2103,11 +2106,14 @@ body:has(.shortlist-dock) {
 .journey-stage .compare-context-body .compare-context-panel,
 .journey-stage .compare-context-body .compare-context-note,
 .journey-stage .compare-context-body .year-trend-tip,
-.journey-stage .compare-context-body .empty-compare {
+.journey-stage .compare-context-body .empty-compare,
+.journey-stage .compare-summary-body .path-summaries,
+.journey-stage .compare-summary-body .empty-compare {
   color: var(--ink);
 }
 
-.journey-stage .compare-context-body .empty-compare {
+.journey-stage .compare-context-body .empty-compare,
+.journey-stage .compare-summary-body .empty-compare {
   padding: 0.75rem 0.85rem;
   border-radius: 0.75rem;
   border: 1px solid rgba(11, 79, 108, 0.14);
@@ -2443,9 +2449,11 @@ body:has(.shortlist-dock) {
   margin: 0;
 }
 
-/* Parent headlines on Context: dark ink on foam — never harbour light-on-light. */
+/* Parent headlines on Summary (and legacy Context mounts): dark ink on foam. */
 .compare-context-body .path-summaries,
-.journey-stage .compare-context-body .path-summaries {
+.journey-stage .compare-context-body .path-summaries,
+.compare-summary-body .path-summaries,
+.journey-stage .compare-summary-body .path-summaries {
   display: grid;
   gap: 0.45rem;
   margin: 0;
@@ -2460,15 +2468,78 @@ body:has(.shortlist-dock) {
 .compare-context-body .path-summaries .footnote,
 .journey-stage .compare-context-body .path-summaries .shortlist-summary,
 .journey-stage .compare-context-body .path-summaries .footnote,
-.compare-section-binder .compare-context-body .path-summaries .footnote {
+.compare-section-binder .compare-context-body .path-summaries .footnote,
+.compare-summary-body .path-summaries .shortlist-summary,
+.compare-summary-body .path-summaries .footnote,
+.journey-stage .compare-summary-body .path-summaries .shortlist-summary,
+.journey-stage .compare-summary-body .path-summaries .footnote,
+.compare-section-binder .compare-summary-body .path-summaries .footnote {
   color: var(--ink);
   max-width: none;
   width: 100%;
   box-sizing: border-box;
 }
 
-.compare-context-body .path-summaries .shortlist-summary strong {
+.compare-context-body .path-summaries .shortlist-summary strong,
+.compare-summary-body .path-summaries .shortlist-summary strong {
   color: var(--sea-deep);
+}
+
+.compare-view-controls {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.65rem 0 0;
+  width: 100%;
+}
+
+.compare-view-toggle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.2rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(7, 58, 80, 0.28);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.compare-view-btn,
+.compare-view-school {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(247, 251, 255, 0.82);
+  border-radius: 0.5rem;
+  padding: 0.32rem 0.7rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.compare-view-btn:hover,
+.compare-view-school:hover {
+  color: #f7fbff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.compare-view-btn.active,
+.compare-view-school.active {
+  background: rgba(255, 252, 247, 0.96);
+  border-color: rgba(255, 252, 247, 0.96);
+  color: var(--sea-deep);
+}
+
+.compare-view-schools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.binder-sheet-head .compare-view-controls {
+  margin-top: 0.75rem;
 }
 
 .data-slim-line {

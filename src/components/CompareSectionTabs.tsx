@@ -83,7 +83,8 @@ export function CompareSectionTabs({
   const showViewControls =
     Boolean(viewMode && onViewModeChange && onFocusUrnChange) &&
     schools.length >= 2 &&
-    activeId !== "context";
+    activeId !== "context" &&
+    activeId !== "summary";
 
   let activeBody: ReactNode;
   if (activeId === "context") {

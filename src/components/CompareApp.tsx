@@ -678,7 +678,6 @@ export function CompareApp({
     if (activePath === "early-years") {
       const eyContext = (
         <>
-          <PathSummaries schools={eySelected} {...summaryOpts} />
           <DecisionGuidancePanel path="early-years" {...guidancePanelProps} />
           {showEarlyNotice ? (
             <div className="empty-compare" role="status">
@@ -720,6 +719,9 @@ export function CompareApp({
             childcareStamp={childcareOfstedStamp}
             stateStamp={stateOfstedStamp}
             contextSlot={eyContext}
+            summarySlot={
+              <PathSummaries schools={eySelected} {...summaryOpts} />
+            }
           />
         </div>
       );
@@ -768,7 +770,6 @@ export function CompareApp({
     if (activePath === "ks1") {
       const ks1Context = (
         <>
-          <PathSummaries schools={ks1Selected} {...summaryOpts} />
           <DecisionGuidancePanel path="ks1" {...guidancePanelProps} />
           {!showPhonicsBoard ? (
             <div className="empty-compare" role="status">
@@ -785,6 +786,10 @@ export function CompareApp({
         </>
       );
 
+      const ks1Summary = (
+        <PathSummaries schools={ks1Selected} {...summaryOpts} />
+      );
+
       return (
         <div>
           {showPhonicsBoard ? (
@@ -793,9 +798,13 @@ export function CompareApp({
               phonics={index.benchmarks.phonics}
               sourceStamp={phonicsSourceStamp}
               contextSlot={ks1Context}
+              summarySlot={ks1Summary}
             />
           ) : (
-            ks1Context
+            <>
+              {ks1Summary}
+              {ks1Context}
+            </>
           )}
         </div>
       );
@@ -804,7 +813,6 @@ export function CompareApp({
     if (activePath === "ks2") {
       const ks2Context = (
         <>
-          <PathSummaries schools={ks2Selected} {...summaryOpts} />
           <DecisionGuidancePanel path="ks2" {...guidancePanelProps} />
           {ks2Selected.length > 0 ? (
             <aside className="year-trend-tip" data-tour="year-trend">
@@ -828,6 +836,9 @@ export function CompareApp({
             england={index.benchmarks.england}
             sourceStamp={ks2Stamp}
             contextSlot={ks2Context}
+            summarySlot={
+              <PathSummaries schools={ks2Selected} {...summaryOpts} />
+            }
           />
         </div>
       );
@@ -835,11 +846,6 @@ export function CompareApp({
 
     const ks4Context = (
       <>
-        <PathSummaries
-          schools={ks4Selected}
-          {...summaryOpts}
-          preferKs4
-        />
         <DecisionGuidancePanel path="ks4" {...guidancePanelProps} />
         {ks4Selected.length === 0 ? (
           <div className="empty-compare" role="status">
@@ -860,6 +866,13 @@ export function CompareApp({
           sourceStamp={ks4Stamp}
           ofstedStateAsAt={index.stats.ofstedStateAsAt}
           contextSlot={ks4Context}
+          summarySlot={
+            <PathSummaries
+              schools={ks4Selected}
+              {...summaryOpts}
+              preferKs4
+            />
+          }
         />
       </div>
     );
@@ -983,8 +996,9 @@ export function CompareApp({
                 <h2>Side by side</h2>
                 <p>
                   One path at a time — patterns to visit on, not a final verdict.
-                  Use the tabs below for context, Ofsted, website evidence,
-                  places, and performance figures.
+                  Use the tabs for context, summary, Ofsted, website evidence,
+                  places, and stats. Switch Side by side / By school when you
+                  want to focus on one setting.
                 </p>
               </div>
 
