@@ -10,10 +10,10 @@ export const COVID_GAP_NOTE =
   "Hatched band marks 2019/20–2021/22, when KS2 performance tables were cancelled or unpublished — lines do not connect across that stretch, and those years are not “missing data” for your shortlist.";
 
 /**
- * Board tip above KS2 year trends — fuller layperson context than the chart note.
+ * Context tip for KS2 year trends — graphs live on the Stats tab, not beside this note.
  */
 export const KS2_YEAR_TREND_TIP =
-  "Click a measure name (or Year trend) for a year-by-year graph of shortlisted schools and England. A hatched COVID band covers 2019/20–2021/22 when national KS2 tables were not published — gaps there are calendar cancellations, not school failures. Small cohorts bounce year to year; blank cells are usually suppression, a new school, or no Year 6 table — not a join error.";
+  "On the Stats tab, open Year trend on a measure for a year-by-year graph of shortlisted schools and England. A hatched COVID band covers 2019/20–2021/22 when national KS2 tables were not published — gaps there are calendar cancellations, not school failures. Small cohorts bounce year to year; blank cells are usually suppression, a new school, or no Year 6 table — not a join error.";
 
 /** Shared quantitative honesty lines for decision guidance / empty states. */
 export const KS2_DATA_CAVEATS = [

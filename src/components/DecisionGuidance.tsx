@@ -1,32 +1,82 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   guidanceForPath,
   guidancePrintLines,
   type GuidancePathId,
 } from "@/lib/decisionGuidance";
+import {
+  comparePathLabel,
+  type ComparePathId,
+} from "@/lib/comparePaths";
 
 /** Interactive “how to read this” panel for compare boards. */
 export function DecisionGuidancePanel({
   path,
+  paths,
   defaultOpen = false,
 }: {
   path: GuidancePathId;
+  /** When the shortlist spans multiple stages, offer in-panel stage switching. */
+  paths?: ComparePathId[];
   defaultOpen?: boolean;
 }) {
-  const content = guidanceForPath(path);
+  const multi = (paths?.length ?? 0) > 1;
+  const [activePath, setActivePath] = useState<GuidancePathId>(path);
+  const [open, setOpen] = useState(defaultOpen);
+
+  useEffect(() => {
+    setActivePath(path);
+  }, [path]);
+
+  useEffect(() => {
+    setOpen(defaultOpen);
+  }, [defaultOpen, path]);
+
+  const content = guidanceForPath(activePath);
+
   return (
     <details
       className="decision-guidance"
       data-tour="decision-guidance"
-      open={defaultOpen || undefined}
+      open={open}
+      onToggle={(e) => setOpen(e.currentTarget.open)}
     >
       <summary>
         <span className="decision-guidance-summary-title">{content.heading}</span>
         <span className="decision-guidance-summary-hint">
-          What this tells you · what it doesn’t · how to decide
+          {multi
+            ? "Pick a stage · what this tells you · what it doesn’t · how to decide"
+            : "What this tells you · what it doesn’t · how to decide"}
         </span>
       </summary>
+      {multi && paths ? (
+        <div
+          className="decision-guidance-stages"
+          role="group"
+          aria-label="Guidance stage"
+        >
+          {paths.map((id) => {
+            const selected = activePath === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                className={
+                  selected
+                    ? "decision-guidance-stage active"
+                    : "decision-guidance-stage"
+                }
+                aria-pressed={selected}
+                onClick={() => setActivePath(id)}
+              >
+                {comparePathLabel(id)}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
       <p className="decision-guidance-lead">{content.lead}</p>
       <div className="decision-guidance-grid">
         {content.sections.map((section) => (

@@ -100,7 +100,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "decision-guidance",
     target: "decision-guidance",
     title: "What the data tells you",
-    body: "On each Side by side path, open “What this tells you / doesn’t / how to decide”. Use it before you treat a table or précis as a verdict.",
+    body: "On each Side by side path, use “How to read this as a parent”. It opens automatically when your shortlist is a single stage; with several stages, pick one inside the panel. Use it before you treat a table or précis as a verdict.",
     optional: true,
   },
   {
@@ -113,8 +113,8 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: "year-trend",
     target: "year-trend",
-    title: "Expand a row for year-on-year trends",
-    body: "On the KS2 path, click a measure name (or Year trend). A graph opens under that row for each shortlisted school and England across published years. The hatched COVID band marks 2019/20–2021/22, when KS2 tables were unpublished — lines do not connect across that gap, and those years are not school failures. Small cohorts bounce; blank cells are usually suppression or a new school.",
+    title: "Year-on-year trends on Stats",
+    body: "On the KS2 Context tab you’ll see a short note about year trends; the graphs themselves sit on the Stats tab. Open Year trend on a measure for each shortlisted school and England across published years. The hatched COVID band marks 2019/20–2021/22, when KS2 tables were unpublished — lines do not connect across that gap, and those years are not school failures. Small cohorts bounce; blank cells are usually suppression or a new school.",
   },
   {
     id: "how",
