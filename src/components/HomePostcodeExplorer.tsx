@@ -3,6 +3,7 @@
 import {
   useDeferredValue,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -162,7 +163,18 @@ export function HomePostcodeExplorer({
     sector: false,
     provision: false,
   });
+  const [stageRequiredOpen, setStageRequiredOpen] = useState(false);
+  const stageRequiredTitleId = useId();
   const { setChapter } = useJourneyChapter();
+
+  useEffect(() => {
+    if (!stageRequiredOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setStageRequiredOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [stageRequiredOpen]);
 
   const parsedPreview = useMemo(
     () => parseUkPostcode(deferredRaw),
@@ -602,6 +614,10 @@ export function HomePostcodeExplorer({
                             type="button"
                             className="btn btn-primary"
                             onClick={() => {
+                              if (stageFilter.length === 0) {
+                                setStageRequiredOpen(true);
+                                return;
+                              }
                               markTileTouched("stages");
                               setActiveTile("sector");
                             }}
@@ -609,6 +625,43 @@ export function HomePostcodeExplorer({
                             Continue to school type
                           </button>
                         </div>
+                        {stageRequiredOpen ? (
+                          <div
+                            className="stage-required-root"
+                            role="presentation"
+                          >
+                            <button
+                              type="button"
+                              className="stage-required-backdrop"
+                              aria-label="Dismiss stage reminder"
+                              onClick={() => setStageRequiredOpen(false)}
+                            />
+                            <div
+                              className="stage-required-panel"
+                              role="dialog"
+                              aria-modal="true"
+                              aria-labelledby={stageRequiredTitleId}
+                            >
+                              <h3 id={stageRequiredTitleId}>
+                                Choose a stage
+                              </h3>
+                              <p>
+                                Select at least one school stage or care
+                                category before continuing.
+                              </p>
+                              <div className="stage-required-actions">
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  autoFocus
+                                  onClick={() => setStageRequiredOpen(false)}
+                                >
+                                  OK
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
                       </>
                     ),
                     sector: (

@@ -62,8 +62,7 @@ export function PhaseSelector({
   function toggle(id: PhaseId) {
     setDriveMode("manual");
     if (selected.includes(id)) {
-      // Keep at least one phase selected so the shortlist stays purposeful
-      if (selected.length === 1) return;
+      // Allow a fully empty set — Continue asks for a stage if none remain.
       onChange(selected.filter((p) => p !== id));
       return;
     }
