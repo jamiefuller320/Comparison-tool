@@ -17,6 +17,7 @@ import {
   COVID_GAP_NOTE,
   withHalfWidthCovidGap,
 } from "@/lib/covid-gap";
+import { yDomainFromHistoryData } from "@/lib/historyChartDomain";
 import {
   buildMetricHistoryPoints,
   type HistoryMetricKey,
@@ -115,11 +116,11 @@ export function MetricHistoryChart({
   });
 
   const isPct = unit === "pct";
-  const domain: [number | "auto", number | "auto"] =
-    unit === "pct" ? [0, 100] : unit === "score" ? [80, 120] : ["auto", "auto"];
+  const valueKeys = ["england", ...urns];
+  const domain = yDomainFromHistoryData(rows, valueKeys, unit);
   const xTicks = rows.map((row) => row.x);
-  // Extra bottom room when several school names need a second legend row.
-  const chartHeight = schools.length >= 3 ? 340 : 320;
+  // Cropped Y-band needs less vertical room than a full 0–100 frame.
+  const chartHeight = schools.length >= 3 ? 300 : 280;
 
   return (
     <div className="history-chart">
@@ -136,7 +137,7 @@ export function MetricHistoryChart({
       <ResponsiveContainer width="100%" height={chartHeight} minWidth={0}>
         <LineChart
           data={rows}
-          margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+          margin={{ top: 8, right: 12, left: 4, bottom: 8 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(20,35,58,0.1)" />
           <XAxis
@@ -152,11 +153,12 @@ export function MetricHistoryChart({
           />
           <YAxis
             domain={domain}
+            width={44}
             tick={{ fill: "#3d4f66", fontSize: 12 }}
             axisLine={false}
             tickLine={false}
             tickFormatter={(v) => (isPct ? `${v}%` : String(v))}
-            allowDataOverflow={unit !== "count"}
+            allowDataOverflow={false}
           />
           <Tooltip
             formatter={(value, name) => {
