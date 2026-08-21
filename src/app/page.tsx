@@ -8,10 +8,10 @@ import {
   formatCount,
   listCoverageAreas,
 } from "@/lib/areas";
-import { BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { DECISION_GUIDANCE } from "@/lib/decisionGuidance";
-import { guidePath, guidesIndexPath } from "@/lib/guides";
+import { guidesIndexPath } from "@/lib/guides";
+import { DATA_TOPIC } from "@/lib/understandTopics";
 
 export const metadata: Metadata = {
   alternates: {
@@ -86,39 +86,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section
-        className="section page-chapter"
-        id="guides"
-        aria-labelledby="home-guides-heading"
-      >
-        <div className="shell">
-          <div className="page-chapter-sheet">
-          <div className="section-head">
-            <h2 id="home-guides-heading">Guides before you shortlist</h2>
-            <p>
-              Plain-language help for reading published figures and inspection
-              excerpts — also in the journey{" "}
-              <a href="/#how">Understand</a> chapter as topic cards, or as a{" "}
-              <Link href={guidePath("faq")}>FAQ</Link>.
-            </p>
-          </div>
-          <p className="area-home-more">
-            <Link href={guidesIndexPath()}>Browse all guides</Link>
-            {" · "}
-            <a href="/#how">Open Understand</a>
-            {" · "}
-            <Link href={guidePath("how-to-read")}>How to read figures</Link>
-            {" · "}
-            <Link href={guidePath("primary-ks2")}>Primary KS2</Link>
-          </p>
-          </div>
-        </div>
-      </section>
-
       {/*
-        Static How / Understand copy for crawlers / no-JS. Hidden when the
-        journey toolbar is present — the interactive Understand chapter owns
-        #how then.
+        Static How / Understand + data copy for crawlers / no-JS. Hidden when
+        the journey toolbar is present — the interactive Understand chapter
+        owns #how (and the Data topic) then.
       */}
       <section
         className="section page-chapter seo-how-fallback"
@@ -161,52 +132,28 @@ export default function HomePage() {
               open the full report for context.
             </p>
           </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className="section page-chapter"
-        id="data"
-        aria-labelledby="data-heading"
-        style={{ paddingTop: 0, paddingBottom: "4rem" }}
-      >
-        <div className="shell">
-          <div className="page-chapter-sheet">
-          <div className="section-head">
-            <h2 id="data-heading">Where the numbers come from</h2>
-            <p>
-              {BRAND_NAME} harvests published figures from the DfE Explore
-              Education Statistics API (KS2 and KS4), Ofsted independent-school
-              management information, school coordinates from postcodes.io, and
-              road distances from OSRM — so parents can compare like with like
-              before they visit.
-            </p>
+          <div className="section-head" style={{ marginTop: "1.75rem" }} id="data">
+            <h2 id="data-heading">{DATA_TOPIC.title}</h2>
+            <p>{DATA_TOPIC.lead}</p>
           </div>
           <div className="footnote">
-            <p>
-              Early years: Ofsted childcare day-care inspections; Ofsted grades
-              for state nursery / infant / primary settings with an early-years
-              intake; consented childminder names/addresses (Ofsted quarterly
-              file); plus EYFSP England and local-authority area context
-              (provider-level EYFSP is not published — Ofsted grades and EYFSP
-              area figures answer different questions). State schools:
-              institution-level Key Stage 2 attainment plus local-authority
-              phonics for KS1. Independents: Key Stage 4 tables plus Ofsted
-              non-association inspections. Progress measures are sparse for
-              2024/25 because of missing KS1 baselines.
-            </p>
-            <p>
-              Official school pages:{" "}
-              <a
-                href="https://www.compare-school-performance.service.gov.uk/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                compare-school-performance.service.gov.uk
-              </a>
-              .
-            </p>
+            {DATA_TOPIC.paragraphs?.map((paragraph, index) => (
+              <p key={`seo-data-${index}`}>{paragraph}</p>
+            ))}
+            {DATA_TOPIC.links?.length ? (
+              <p>
+                Official school pages:{" "}
+                {DATA_TOPIC.links.map((link, index) => (
+                  <span key={link.href}>
+                    {index > 0 ? " · " : null}
+                    <a href={link.href} target="_blank" rel="noreferrer">
+                      {link.label}
+                    </a>
+                  </span>
+                ))}
+                .
+              </p>
+            ) : null}
           </div>
           </div>
         </div>

@@ -583,7 +583,8 @@ body:has(.shortlist-dock) {
 }
 
 .understand-topic-card {
-  max-width: 40rem;
+  max-width: none;
+  width: 100%;
 }
 
 .understand-topic-body {
@@ -603,11 +604,22 @@ body:has(.shortlist-dock) {
 }
 
 .understand-topic-faq-answer,
-.understand-topic-para {
+.understand-topic-para,
+.understand-topic-links {
   margin: 0;
   color: var(--ink);
   font-size: 0.9rem;
   line-height: 1.45;
+}
+
+.understand-topic-links a {
+  color: var(--sea);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.understand-topic-links a:hover {
+  text-decoration: underline;
 }
 
 .journey-stage .understand-chapter .section-head h2 {
@@ -618,8 +630,27 @@ body:has(.shortlist-dock) {
   color: var(--stage-ink-muted);
 }
 
-.journey-stage .understand-topic-card {
+.journey-stage .understand-topic-card,
+.journey-stage .understand-topic-card .compare-evidence-card-head h4,
+.journey-stage .understand-topic-card .compare-evidence-card-head p,
+.journey-stage .understand-topic-card .understand-topic-para,
+.journey-stage .understand-topic-card .understand-topic-faq-answer,
+.journey-stage .understand-topic-card .understand-topic-links,
+.journey-stage .understand-topic-card .understand-topic-block ul {
   color: var(--ink);
+}
+
+.journey-stage .understand-topic-card .compare-evidence-card-head h4,
+.journey-stage .understand-topic-card .compare-evidence-label {
+  color: var(--sea-deep);
+}
+
+.journey-stage .understand-topic-card .compare-evidence-card-head p {
+  color: var(--ink-soft);
+}
+
+.journey-stage .understand-topic-card .understand-topic-links a {
+  color: var(--sea);
 }
 
 .decision-guidance-block h3,

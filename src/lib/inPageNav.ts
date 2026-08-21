@@ -65,9 +65,12 @@ export function scrollToHomeSection(hash: string): void {
     new CustomEvent(HOME_SECTION_CHANGE_EVENT, { detail: { id } }),
   );
 
+  // Data lives inside Understand; scroll to the how chapter anchor.
+  const scrollId = id === "data" ? "how" : id;
+
   function tryScroll(attemptsLeft: number) {
     const el =
-      document.getElementById(id) ||
+      document.getElementById(scrollId) ||
       document.getElementById("journey") ||
       document.getElementById("setup");
     if (!el) {
@@ -76,7 +79,7 @@ export function scrollToHomeSection(hash: string): void {
       }
       return;
     }
-    const offset = stickyChromeOffsetPx(id);
+    const offset = stickyChromeOffsetPx(scrollId);
     const y =
       el.getBoundingClientRect().top + window.scrollY - offset - 6;
     window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });

@@ -52,6 +52,7 @@ export const TOUR_TARGET_CHAPTER: Record<string, JourneyChapterId> = {
   "visit-pack": "side-by-side",
   "year-trend": "side-by-side",
   how: "how",
+  data: "how",
 };
 
 type SetChapterOptions = {
@@ -89,11 +90,17 @@ export function JourneyChapterProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     function onSection(event: Event) {
       const id = (event as CustomEvent<{ id?: string }>).detail?.id;
-      if (id && isChapterId(id)) setChapterState(id);
+      if (!id) return;
+      if (id === "data") {
+        setChapterState("how");
+        return;
+      }
+      if (isChapterId(id)) setChapterState(id);
     }
     window.addEventListener(HOME_SECTION_CHANGE_EVENT, onSection);
     const hash = window.location.hash.replace(/^#/, "");
-    if (hash && isChapterId(hash)) setChapterState(hash);
+    if (hash === "data") setChapterState("how");
+    else if (hash && isChapterId(hash)) setChapterState(hash);
     return () => window.removeEventListener(HOME_SECTION_CHANGE_EVENT, onSection);
   }, []);
 
