@@ -516,17 +516,27 @@ body:has(.shortlist-dock) {
   border-bottom: 1px solid var(--line);
 }
 
+.decision-guidance-body {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
 .decision-guidance-stages {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  padding: 0.75rem 1rem 0.15rem;
+  padding: 0;
+  margin: 0;
 }
 
 .decision-guidance-stage {
   appearance: none;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--sea);
+  background: color-mix(in srgb, var(--sea) 16%, #fff);
   color: var(--sea-deep);
   border-radius: 0.55rem;
   padding: 0.32rem 0.7rem;
@@ -538,28 +548,35 @@ body:has(.shortlist-dock) {
 }
 
 .decision-guidance-stage:hover {
-  border-color: rgba(11, 79, 108, 0.35);
-  background: rgba(255, 255, 255, 0.98);
-}
-
-.decision-guidance-stage.active {
-  border-color: rgba(11, 79, 108, 0.45);
-  background: rgba(11, 79, 108, 0.1);
+  border-color: var(--sea);
+  background: color-mix(in srgb, var(--sea) 28%, #fff);
   color: var(--sea-deep);
 }
 
+.decision-guidance-stage.active {
+  border-color: var(--sea);
+  background: var(--sea);
+  color: #f7fbff;
+}
+
 .decision-guidance-lead {
-  margin: 0.85rem 1rem 0.65rem;
+  margin: 0;
+  padding: 0;
   color: var(--ink-soft);
   font-size: 0.95rem;
   line-height: 1.45;
-  max-width: 42rem;
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .decision-guidance-grid {
   display: grid;
   gap: 0.85rem 1.25rem;
-  padding: 0 1rem 1rem;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
 }
 
 @media (min-width: 720px) {
@@ -1538,16 +1555,23 @@ body:has(.shortlist-dock) {
   box-sizing: border-box;
 }
 
-.journey-stage .decision-guidance-lead {
+.journey-stage .decision-guidance-body,
+.journey-stage .decision-guidance-lead,
+.journey-stage .decision-guidance-grid {
   max-width: none;
+  width: 100%;
 }
 
 .journey-stage .decision-guidance-stage {
   color: var(--sea-deep);
 }
 
-.journey-stage .decision-guidance-stage.active {
+.journey-stage .decision-guidance-stage:hover {
   color: var(--sea-deep);
+}
+
+.journey-stage .decision-guidance-stage.active {
+  color: #f7fbff;
 }
 
 .harbour-setup-slot:empty {
@@ -2032,6 +2056,13 @@ body:has(.shortlist-dock) {
 .compare-context-body .coverage-strip-lead,
 .compare-context-body .decision-guidance-lead {
   max-width: none;
+  width: 100%;
+}
+
+.compare-context-body .decision-guidance-body,
+.compare-context-body .decision-guidance-grid {
+  width: 100%;
+  max-width: none;
 }
 
 .compare-context-rest {
@@ -2431,6 +2462,9 @@ body:has(.shortlist-dock) {
 .journey-stage .compare-context-body .path-summaries .footnote,
 .compare-section-binder .compare-context-body .path-summaries .footnote {
   color: var(--ink);
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .compare-context-body .path-summaries .shortlist-summary strong {

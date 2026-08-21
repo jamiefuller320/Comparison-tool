@@ -51,44 +51,46 @@ export function DecisionGuidancePanel({
             : "What this tells you · what it doesn’t · how to decide"}
         </span>
       </summary>
-      {multi && paths ? (
-        <div
-          className="decision-guidance-stages"
-          role="group"
-          aria-label="Guidance stage"
-        >
-          {paths.map((id) => {
-            const selected = activePath === id;
-            return (
-              <button
-                key={id}
-                type="button"
-                className={
-                  selected
-                    ? "decision-guidance-stage active"
-                    : "decision-guidance-stage"
-                }
-                aria-pressed={selected}
-                onClick={() => setActivePath(id)}
-              >
-                {comparePathLabel(id)}
-              </button>
-            );
-          })}
+      <div className="decision-guidance-body">
+        {multi && paths ? (
+          <div
+            className="decision-guidance-stages"
+            role="group"
+            aria-label="Guidance stage"
+          >
+            {paths.map((id) => {
+              const selected = activePath === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className={
+                    selected
+                      ? "decision-guidance-stage active"
+                      : "decision-guidance-stage"
+                  }
+                  aria-pressed={selected}
+                  onClick={() => setActivePath(id)}
+                >
+                  {comparePathLabel(id)}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+        <p className="decision-guidance-lead">{content.lead}</p>
+        <div className="decision-guidance-grid">
+          {content.sections.map((section) => (
+            <section key={section.id} className="decision-guidance-block">
+              <h4>{section.title}</h4>
+              <ul>
+                {section.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </div>
-      ) : null}
-      <p className="decision-guidance-lead">{content.lead}</p>
-      <div className="decision-guidance-grid">
-        {content.sections.map((section) => (
-          <section key={section.id} className="decision-guidance-block">
-            <h4>{section.title}</h4>
-            <ul>
-              {section.items.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </section>
-        ))}
       </div>
     </details>
   );
