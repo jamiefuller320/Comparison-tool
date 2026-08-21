@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -11,6 +12,7 @@ import {
   YAxis,
   type DefaultLegendContentProps,
   type LegendPayload,
+  type TooltipPayloadEntry,
 } from "recharts";
 import {
   COVID_GAP_LABEL,
@@ -30,8 +32,14 @@ import { CovidAwareYearTick, CovidGapBand } from "@/components/CovidGapBand";
 const PALETTE = ["#0b4f6c", "#c45c26", "#1f6b4a", "#6b4f8a"];
 const ENGLAND_COLOR = "rgba(20,35,58,0.55)";
 
-function isEnglandEntry(entry: LegendPayload): boolean {
-  const label = entry.value ?? "";
+type SeriesLike = {
+  dataKey?: LegendPayload["dataKey"] | TooltipPayloadEntry["dataKey"];
+  value?: unknown;
+  name?: unknown;
+};
+
+function isEnglandEntry(entry: SeriesLike): boolean {
+  const label = String(entry.value ?? entry.name ?? "");
   return (
     entry.dataKey === "england" ||
     label === "England" ||
@@ -39,16 +47,16 @@ function isEnglandEntry(entry: LegendPayload): boolean {
   );
 }
 
-/** England first, then schools in shortlist order (payload order). */
-function orderLegendPayload(payload: readonly LegendPayload[]): LegendPayload[] {
+/** Schools first (shortlist order), England fixed last. */
+function orderSeriesEntries<T extends SeriesLike>(payload: readonly T[]): T[] {
   const england = payload.filter(isEnglandEntry);
   const schools = payload.filter((entry) => !isEnglandEntry(entry));
-  return [...england, ...schools];
+  return [...schools, ...england];
 }
 
 function HistoryLegendContent({ payload }: DefaultLegendContentProps) {
   if (!payload?.length) return null;
-  const items = orderLegendPayload(payload);
+  const items = orderSeriesEntries(payload);
 
   return (
     <ul className="history-legend">
@@ -67,7 +75,10 @@ function HistoryLegendContent({ payload }: DefaultLegendContentProps) {
               className={
                 england ? "history-legend-swatch dashed" : "history-legend-swatch"
               }
-              style={{ background: england ? "transparent" : color, borderColor: color }}
+              style={{
+                background: england ? "transparent" : color,
+                borderColor: color,
+              }}
               aria-hidden
             />
             <span className="history-legend-label" style={{ color }}>
@@ -77,6 +88,67 @@ function HistoryLegendContent({ payload }: DefaultLegendContentProps) {
         );
       })}
     </ul>
+  );
+}
+
+function HistoryTooltipContent({
+  active,
+  payload,
+  label,
+  tickLabels,
+  unit,
+}: {
+  active?: boolean;
+  payload?: ReadonlyArray<TooltipPayloadEntry>;
+  label?: string | number;
+  tickLabels: Map<number, string>;
+  unit: "pct" | "score" | "count";
+}) {
+  if (!active || !payload?.length) return null;
+
+  const numeric = typeof label === "number" ? label : Number(label);
+  const yearLabel = tickLabels.get(numeric);
+  const title =
+    yearLabel === COVID_GAP_LABEL
+      ? "COVID gap (2019/20–2021/22)"
+      : (yearLabel ?? String(label ?? ""));
+
+  const items = orderSeriesEntries(payload);
+
+  return (
+    <div className="history-tooltip">
+      <p className="history-tooltip-label">{title}</p>
+      <ul className="history-tooltip-list">
+        {items.map((entry) => {
+          const name = String(entry.name ?? entry.dataKey ?? "");
+          const raw = entry.value;
+          const value =
+            typeof raw === "number"
+              ? raw
+              : raw == null || raw === ""
+                ? null
+                : Number(raw);
+          let display = "—";
+          if (value != null && Number.isFinite(value)) {
+            if (unit === "pct") display = `${value}%`;
+            else if (unit === "count") display = String(Math.round(value));
+            else display = value.toFixed(1);
+          }
+          const color = entry.color || ENGLAND_COLOR;
+          return (
+            <li key={String(entry.dataKey ?? name)}>
+              <span
+                className="history-tooltip-swatch"
+                style={{ background: color }}
+                aria-hidden
+              />
+              <span className="history-tooltip-name">{name}</span>
+              <span className="history-tooltip-value">{display}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
@@ -95,6 +167,16 @@ export function MetricHistoryChart({
 }) {
   const urns = schools.map((s) => s.urn);
   const baseRows = buildMetricHistoryPoints(meta, metric, schoolSeries, urns);
+  // Recharts can leave the year popup stuck after mouse leave; control visibility.
+  const [tooltipActive, setTooltipActive] = useState(false);
+
+  const dismissTooltip = useCallback(() => setTooltipActive(false), []);
+  const onChartMouseMove = useCallback(
+    (state: { isTooltipActive?: boolean } | null) => {
+      setTooltipActive(Boolean(state?.isTooltipActive));
+    },
+    [],
+  );
 
   if (!baseRows.length) {
     return (
@@ -121,9 +203,15 @@ export function MetricHistoryChart({
   const xTicks = rows.map((row) => row.x);
   // Cropped Y-band needs less vertical room than a full 0–100 frame.
   const chartHeight = schools.length >= 3 ? 300 : 280;
+  const englandName =
+    metric === "eligiblePupils" ? "England (avg)" : "England";
 
   return (
-    <div className="history-chart">
+    <div
+      className="history-chart"
+      onMouseLeave={dismissTooltip}
+      onBlur={dismissTooltip}
+    >
       <p className="footnote history-chart-note">
         Multi-year KS2 tables
         {meta.source?.years?.length
@@ -131,13 +219,15 @@ export function MetricHistoryChart({
           : null}
         {metric === "eligiblePupils"
           ? " England (dashed) is the mean Year 6 cohort across KS2 table schools (total ÷ number of records)."
-          : " England is the dashed line (first in the key)."}
+          : " England is the dashed line (last in the key)."}
         {gapRange ? ` ${COVID_GAP_NOTE}` : null}
       </p>
       <ResponsiveContainer width="100%" height={chartHeight} minWidth={0}>
         <LineChart
           data={rows}
           margin={{ top: 8, right: 12, left: 4, bottom: 8 }}
+          onMouseMove={onChartMouseMove}
+          onMouseLeave={dismissTooltip}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(20,35,58,0.1)" />
           <XAxis
@@ -161,26 +251,20 @@ export function MetricHistoryChart({
             allowDataOverflow={false}
           />
           <Tooltip
-            formatter={(value, name) => {
-              if (value == null || value === "") return ["—", String(name)];
-              const n = Number(value);
-              if (unit === "pct") return [`${n}%`, String(name)];
-              if (unit === "count") return [String(Math.round(n)), String(name)];
-              return [n.toFixed(1), String(name)];
-            }}
-            labelFormatter={(label) => {
-              const numeric = typeof label === "number" ? label : Number(label);
-              const name = tickLabels.get(numeric);
-              if (name === COVID_GAP_LABEL) {
-                return "COVID gap (2019/20–2021/22)";
-              }
-              return name ?? String(label);
-            }}
-            contentStyle={{
-              background: "rgba(255,252,247,0.96)",
-              border: "1px solid rgba(20,35,58,0.12)",
-              borderRadius: 8,
-            }}
+            active={tooltipActive}
+            trigger="hover"
+            wrapperStyle={{ pointerEvents: "none", outline: "none" }}
+            content={(props) => (
+              <HistoryTooltipContent
+                active={props.active}
+                payload={props.payload}
+                label={props.label}
+                tickLabels={tickLabels}
+                unit={unit}
+              />
+            )}
+            cursor={{ stroke: "rgba(11, 79, 108, 0.35)", strokeWidth: 1 }}
+            isAnimationActive={false}
           />
           <Legend
             verticalAlign="bottom"
@@ -194,18 +278,6 @@ export function MetricHistoryChart({
             }}
           />
           {gapRange ? <CovidGapBand x0={gapRange.x0} x1={gapRange.x1} /> : null}
-          {/* England first so the key order stays stable with itemSorter={null}. */}
-          <Line
-            type="monotone"
-            dataKey="england"
-            name={metric === "eligiblePupils" ? "England (avg)" : "England"}
-            stroke={ENGLAND_COLOR}
-            strokeWidth={2}
-            strokeDasharray="5 4"
-            dot={{ r: 3, fill: ENGLAND_COLOR }}
-            connectNulls={false}
-            isAnimationActive={false}
-          />
           {schools.map((school, i) => (
             <Line
               key={school.urn}
@@ -217,8 +289,22 @@ export function MetricHistoryChart({
               dot={{ r: 3.5, fill: PALETTE[i % PALETTE.length] }}
               connectNulls={false}
               isAnimationActive={false}
+              activeDot={{ r: 5 }}
             />
           ))}
+          {/* England last so the key and year popup list end with the national line. */}
+          <Line
+            type="monotone"
+            dataKey="england"
+            name={englandName}
+            stroke={ENGLAND_COLOR}
+            strokeWidth={2}
+            strokeDasharray="5 4"
+            dot={{ r: 3, fill: ENGLAND_COLOR }}
+            connectNulls={false}
+            isAnimationActive={false}
+            activeDot={{ r: 4 }}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>
