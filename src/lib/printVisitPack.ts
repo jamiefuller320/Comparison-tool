@@ -204,9 +204,23 @@ html, body {
 }
 `;
 
+/**
+ * Resolve the printable pack root.
+ *
+ * Compare mounts VisitPack inside `[data-visit-pack="compare"]`. Printing that
+ * wrapper without unwrapping would leave sheets nested under `.visit-pack`, and
+ * the leading-empty guard would discard the whole pack → blank iPad pages.
+ */
+export function resolveVisitPackElement(pack: HTMLElement): HTMLElement {
+  if (pack.classList.contains("visit-pack")) return pack;
+  const nested = pack.querySelector<HTMLElement>(".visit-pack");
+  return nested ?? pack;
+}
+
 /** Build a print-only pack node with chrome stripped and no leading break nodes. */
 export function prepareVisitPackForPrint(pack: HTMLElement): HTMLElement {
-  const clone = pack.cloneNode(true) as HTMLElement;
+  const source = resolveVisitPackElement(pack);
+  const clone = source.cloneNode(true) as HTMLElement;
   clone.classList.add("visit-pack-print-root");
   clone.classList.remove("visit-pack-print-clone");
   clone.querySelectorAll(".no-print").forEach((el) => el.remove());
@@ -225,12 +239,15 @@ export function prepareVisitPackForPrint(pack: HTMLElement): HTMLElement {
   // Drop inert break markers — pagination uses sheet ~ sheet break-before.
   clone.querySelectorAll(".visit-pack-page-break").forEach((el) => el.remove());
   // Guard against accidental leading empty nodes.
-  while (
-    clone.firstChild &&
-    (!(clone.firstChild instanceof Element) ||
-      !(clone.firstChild as Element).classList.contains("visit-pack-sheet"))
-  ) {
-    clone.removeChild(clone.firstChild);
+  while (clone.firstChild) {
+    const first = clone.firstChild;
+    if (
+      first.nodeType === 1 &&
+      (first as Element).classList.contains("visit-pack-sheet")
+    ) {
+      break;
+    }
+    clone.removeChild(first);
   }
   return clone;
 }
@@ -334,9 +351,10 @@ export function printVisitPackElement(
   pack: HTMLElement,
   noteHeightPx: number,
 ): void {
+  const resolved = resolveVisitPackElement(pack);
   if (isAppleMobilePrintHost()) {
-    printViaMainWindow(pack, noteHeightPx);
+    printViaMainWindow(resolved, noteHeightPx);
     return;
   }
-  printViaIframe(pack, noteHeightPx);
+  printViaIframe(resolved, noteHeightPx);
 }

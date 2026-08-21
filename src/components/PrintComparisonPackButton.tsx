@@ -1,6 +1,9 @@
 "use client";
 
-import { printVisitPackElement } from "@/lib/printVisitPack";
+import {
+  printVisitPackElement,
+  resolveVisitPackElement,
+} from "@/lib/printVisitPack";
 import { computePrintNoteHeightPx } from "@/lib/visitPack";
 import { FEEDBACK_PRINTED_EVENT } from "@/lib/productFeedback";
 
@@ -20,8 +23,11 @@ export function PrintComparisonPackButton({
       disabled={disabled}
       data-tour="print-comparison-pack"
       onClick={() => {
-        const pack = document.querySelector<HTMLElement>(packSelector);
-        if (!pack) return;
+        const host = document.querySelector<HTMLElement>(packSelector);
+        if (!host) return;
+        // Prefer the nested .visit-pack so prep keeps advice, graphs, and
+        // school-by-school sheets (wrapper-only clones printed blank on iPad).
+        const pack = resolveVisitPackElement(host);
         printVisitPackElement(pack, computePrintNoteHeightPx(1));
         window.dispatchEvent(new Event(FEEDBACK_PRINTED_EVENT));
       }}
