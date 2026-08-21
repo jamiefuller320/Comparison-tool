@@ -3064,6 +3064,17 @@ body:has(.shortlist-dock) {
 
 .history-chart-note {
   margin: 0 0 0.6rem;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+.history-panel .history-chart-note,
+.history-panel-inline .history-chart-note,
+.journey-stage .history-panel .history-chart-note,
+.journey-stage .history-panel-inline .footnote.history-chart-note {
+  max-width: none;
+  width: 100%;
 }
 
 .compare-board {
