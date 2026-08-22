@@ -1,14 +1,139 @@
 {
-  "ranAt": "2026-08-21T10:14:52.382295+00:00",
+  "ranAt": "2026-08-22T08:31:20.902570+00:00",
   "dryRun": false,
   "reviewed": 16,
   "changedSchools": 16,
-  "findingsApplied": 41,
-  "learningAdded": 5,
+  "findingsApplied": 44,
+  "learningAdded": 18,
   "suspects": [
     {
-      "urn": "116030",
-      "name": "Northern Infant School",
+      "urn": "116022",
+      "name": "Purbrook Junior School",
+      "score": 28.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings",
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Frequently Asked Questions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Frequently Asked Questions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Frequently Asked Questions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Frequently Asked Questions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Frequently Asked Questions"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "SEND Information Report 2025: EHCP Educational Health Care Plan",
+            "SEND Information Report 2025: SENCo Special Educational Needs Coordinator"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "137128",
+      "name": "Perins School",
+      "score": 18.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings",
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Additional Support for Families"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "This wonderful local charity works to improve the lives of children and young people with caring responsibilities, providing safe, high-quality support and a holistic approach to helping families thrive."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Additional Support for Families"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Additional Support for Families"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115892",
+      "name": "Redlands Primary School",
       "score": 14.0,
       "flags": [
         "chrome",
@@ -22,119 +147,9 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "\u25cf Stable, caring relationships, which may be of different types, are at the heart of happy families, and are important for children\u2019s security as they grow up.",
-            "\u25cf Others\u2019 families, either in school or in the wider world, sometimes look different from their family, but that they should respect those differences and know that other children\u2019s families are also characterised by love and care for them."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The assessment has been designed to ensure that it is inclusive and accessible to as many children as possible, including those with special educational needs or disability (SEND), or English as an additional language (EAL).",
-            "The government is very clear that they want children with special educational needs (SEN) to be included in these lessons."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Reception Baseline Assessment",
-            "South Farnham Educational Trust"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "2022 information for parents reception baseline assessment: Reception Baseline Assessment",
-            "2022 information for parents reception baseline assessment: South Farnham Educational Trust"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "115935",
-      "name": "Northern Junior School",
-      "score": 14.0,
-      "flags": [
-        "chrome",
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "\u25cf Stable, caring relationships, which may be of different types, are at the heart of happy families, and are important for children\u2019s security as they grow up.",
-            "\u25cf Others\u2019 families, either in school or in the wider world, sometimes look different from their family, but that they should respect those differences and know that other children\u2019s families are also characterised by love and care for them."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The assessment has been designed to ensure that it is inclusive and accessible to as many children as possible, including those with special educational needs or disability (SEND), or English as an additional language (EAL).",
-            "The government is very clear that they want children with special educational needs (SEN) to be included in these lessons."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Reception Baseline Assessment",
-            "South Farnham Educational Trust"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "2022 information for parents reception baseline assessment: Reception Baseline Assessment",
-            "2022 information for parents reception baseline assessment: South Farnham Educational Trust"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116303",
-      "name": "Nursling Church of England Primary School",
-      "score": 14.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "IOX Assessment Associates"
+            "Through strategic guidance, constructive challenge and the cultivation of strong, respectful relationships, we will ensure the school continues to be a safe, nurturing, inclusive, and enriching learning community for all.",
+            "By reviewing behaviour policies, analysing behaviour data, and questioning school leaders about trends, sanctions, and rewards, we help to ensure a respectful and inclusive culture that aligns with the school's values.",
+            "This means overseeing key areas such as behaviour, safeguarding, and academic progress to make sure the school is meeting its strategic aims and upholding its values."
           ],
           "source": "heuristic"
         },
@@ -144,18 +159,19 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Parents Managing Behaviour: IOX Assessment Associates",
-            "This website link has a wealth of up to date information on it for parents: Positive-parenting Parent Responsibility Parents Managing Behaviour Library | The National College Momo Advice for Parents In this section Late / Absence Procedures Wrap Around Care Parent Workshops Parenting Pointers School Nursing Team"
+            "Ensured that safeguarding, health and safety, wellbeing and behaviour are monitored as standard as part of all our visits to school.",
+            "By reviewing behaviour policies, analysing behaviour data, and questioning school leaders about trends, sanctions, and rewards, we help to ensure a respectful and inclusive culture that aligns with the school's values.",
+            "This means overseeing key areas such as behaviour, safeguarding, and academic progress to make sure the school is meeting its strategic aims and upholding its values."
           ],
           "source": "heuristic"
         },
         {
-          "area": "send",
+          "area": "community",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Taking Responsibility\u201d At Nursling Primary School our Christian school values are: Love, Hope and Courage Our Vision that each individual in the school community, regardless of gender, race, culture and background, achieves and excels in an inclusive, Christian environment."
+            "TBC Full Governing Body Training"
           ],
           "source": "heuristic"
         },
@@ -165,15 +181,66 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Resources for Parents and Schools Christmas is coming and for most children, young people and their families, this creates feelings of excitement and joyful anticipation as they recall their memories of Christmas pass; family coming together, the magic, the surprise, the gifts, the food\u2026."
+            "Governors Newsletter April 2022: TBC Full Governing Body Training"
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "151648",
-      "name": "Newlands Primary Academy",
+      "urn": "116154",
+      "name": "Parsonage Farm Nursery and Infant School",
+      "score": 12.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "In Key Stage 1, teachers informally assess children\u2019s progress through a range of strategies which supports them to make a half termly formal assessment as to whether each child has met the objectives of each unit in the subjects taught."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "ACE Kids and After School Clubs Breakfast and After-School Care Services Provided by ACE Kids ACE Kids are Ofsted-registered activity experts and the provider of wraparound care at our school."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "For more information on Hampshire's Local Offer: Family Information and Services Hub | Hampshire's Local Offer for Special Educational Needs and / or Disabilities (hants.gov.uk) Hampshire Parent Carer information SEN Information report March 2026 docx PF SEND Policy March 2026 doc"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "We focus on the whole families' health and wellbeing by looking at eating well, sleeping well, getting active, having healthy teeth and the local community.",
+            "ChatHealth texting services: ChatHealth is a confidential text support service for parents, carers, families and young people in Hampshire."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116175",
+      "name": "Peel Common Primary School",
       "score": 12.0,
       "flags": [
         "chrome"
@@ -185,98 +252,22 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "JC Sports Wraparound Provision Breakfast & After School Club At JC Sports, we\u2019re proud to offer a safe, fun, and active wraparound care service for busy families.",
-            "Educational visits, clubs, visitors and special events further enrich learning and help children discover new interests and talents."
+            "department for education vision for the primary pe and sport premium: To offer swimming to",
+            "department for education vision for the primary pe and sport premium: 14 boys for Football team",
+            "department for education vision for the primary pe and sport premium: 8 children for the Netball",
+            "department for education vision for the primary pe and sport premium: 8 girls for Football team",
+            "department for education vision for the primary pe and sport premium: Football is well managed"
           ],
           "source": "heuristic"
         },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "JC Sports Wraparound Provision Breakfast & After School Club At JC Sports, we\u2019re proud to offer a safe, fun, and active wraparound care service for busy families."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Adjustments may include: Enhanced communication between families and the SEND team."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We are excited to build strong, supportive relationships with parents, carers, and the wider community to ensure every child receives the very best start to their educational journey."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "115998",
-      "name": "North Baddesley Junior School",
-      "score": 9.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Working in partnership with families and the wider community, we are committed to preparing our children to be compassionate, capable, and responsible individuals\u2014ready to thrive, contribute positively to society, and carry our values forward into the world."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "These agencies include: Education, Health and Care Plans Where some children, who have complex and long-term needs, may need more support than SEN support or the school\u2019s own resources can provide, requests for individual assessment for Education, Health and Care Plans can be made to the local authority."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Working in partnership with families and the wider community, we are committed to preparing our children to be compassionate, capable, and responsible individuals\u2014ready to thrive, contribute positively to society, and carry our values forward into the world."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "147021",
-      "name": "Oakfield Academy",
-      "score": 9.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
         {
           "area": "behaviour",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "They are organised under the headings Emotional and Social, Behaviour, Mental Health and wellbeing, Safeguarding, Self/home support, Toileting/sleeping, Additional needs/SEN, Undiagnosed needs, Financial support, Support for parents/carers, Bereavement and Family breakdown."
+            "Wider strategies (for example, related to attendance, behaviour, wellbeing) Budgeted cost: \u00a316,985 Evidence that supports this approach Challenge number(s) addressed Fortnightly monitoring, meetings with families and follow-up actions.",
+            "Impact \u2013 Observations, pupil voice, behaviour records and wellbeing assessments demonstrate improved SEMH skills across the school."
           ],
           "source": "heuristic"
         },
@@ -286,7 +277,8 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Mrs Light-Rowsell is our SENCO (Special Educational Needs Co-ordinator) and works with the team to support the school, pupils, parents and agencies."
+            "Special Educational Needs: Autism Hampshire",
+            "Special Educational Needs: Hampshire Local Offer"
           ],
           "source": "heuristic"
         },
@@ -296,27 +288,29 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "The new provision will offer before and after-school childcare to support families with their childcare needs."
+            "SC000022735: SEN EHC Hub - Guidance Video's for Families Hines, Alistair (Childrens Services) Assistant SEN Service Manager - Developm Please find below, links to four useful videos that you can share with parents and carers."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "116304",
-      "name": "Otterbourne Church of England Primary School",
-      "score": 9.0,
+      "urn": "116158",
+      "name": "Pinewood Infant School",
+      "score": 11.0,
       "flags": [
+        "policy_toc",
+        "implausible_offerings",
         "chrome"
       ],
       "findings": [
         {
-          "area": "ethos",
+          "area": "enrichment",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Willingness to reflect on their experiences British Values At Otterbourne Church of England Primary School, we value the diversity of backgrounds of all pupils, families and the wider school community."
+            "PE assessment is"
           ],
           "source": "heuristic"
         },
@@ -326,7 +320,9 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "If you have any questions regarding Special Educational Needs, please contact the school to speak to your class teacher or the SENDCo, Miss Pascall."
+            "There is a warm, welcoming inclusive culture, which develops a sense of identity and belonging for our children; enabling them to make a positive difference by valuing themselves, each other and the wider community.",
+            "1 Music development plan summary: Pinewood Infant School At Pinewood Infant School we believe music is inclusive and accessible to all by providing a rich, diverse and progressive curriculum.",
+            "Music Curriculum Intent At Pinewood Infant School we believe music is inclusive and accessible to all."
           ],
           "source": "heuristic"
         },
@@ -336,99 +332,43 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Willingness to reflect on their experiences British Values At Otterbourne Church of England Primary School, we value the diversity of backgrounds of all pupils, families and the wider school community."
+            "There is a warm, welcoming inclusive culture, which develops a sense of identity and belonging for our children; enabling them to make a positive difference by valuing themselves, each other and the wider community."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "116378",
-      "name": "Our Lady and St Joseph Catholic Primary School - the Learning Federation Partnership of Schools",
-      "score": 9.0,
+      "urn": "116248",
+      "name": "Queen's Inclosure Primary School",
+      "score": 11.0,
       "flags": [
         "chrome",
-        "boilerplate"
+        "policy_toc",
+        "implausible_offerings"
       ],
       "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "After School Clubs & Activities: Summer Athletics (Year R-6) British Sign Language (Year 1-6) Gymnastics (Year R-6) Team Games (Year 1-6) STEM & Coding - (KS2) Gardening Club (Year R-6) Musical Instrument Lessons - Click to register interest.",
-            "Department for Education Hampshire County Council Superstar Sports - Our Sports Provider Discover the Music Ltd - Our Music Provider Pip and Pap Phonics - Our Phonics Programme Antibullying - a parent guide"
-          ],
-          "source": "heuristic"
-        },
         {
           "area": "ethos",
-          "action": "thin",
-          "reason": "Narrative looks like a mid-sentence fragment.",
-          "junkClass": "boilerplate",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
           "offendingExcerpts": [
-            "olsj remote education provision information for parents: Daily PSHE/Wellbeing sessions"
+            "\uf0b7 that stable, caring relationships, which may be of different types, are at the heart of happy families, and are important for children\u2019s security as they grow up.",
+            "\uf0b7 that others\u2019 families, either in school or in the wider world, sometimes look different from their family, but that they should respect those differences and know that other children\u2019s families are also characterised by love and care."
           ],
           "source": "heuristic"
         },
         {
           "area": "send",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "We recognise that some pupils, for example some pupils with special educational needs and disabilities (SEND), may not be able to access remote education without support from adults at home."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "115929",
-      "name": "New Milton Junior School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SCARF Year 5/6 Additional Needs Drama Club at Ashley Junior School Mondays 5:30-7:00pm For more information, families can contact us at scarf@scarfnewforest.org or visit www.scarfnewforest.org."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The coordination of learning support and special educational needs within New Milton Junior School is undertaken by our SENDCo, who is responsible for the day-to-day operation of the school's SEND policy, co-ordination of provision for pupils and liaison with parents, staff and external agencies."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116080",
-      "name": "Newlands Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "At our school we use the definition for SEN and for disability from the SEND Code of Practice (2015) which states: A child or young person has SEN if they have a learning difficulty or disability which calls for special educational provision to be made for him or her."
+            "Educational Psychologist",
+            "Hampshire Educational Psychologist",
+            "NHS School Nursing Team",
+            "Primary Behaviour Support Team"
           ],
           "source": "heuristic"
         },
@@ -438,138 +378,16 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "We understand the needs of our children and work tirelessly to ensure that, together with families, we provide a holistic and relevant education that will prepare our children for the future."
+            "How ha s the school involved other bodies, including health and social care bodies, local authority support services and voluntary sector organisations, in meeting the needs of learners with SEND and supporting their families?"
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "115875",
-      "name": "North Baddesley Infant School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Admissions Information Our nursery provision offers Early Years education to children aged 2 and over, is open to all families and places are allocated on a first come, first served basis."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We offer INSET days throughout the year to support families having mini breaks at a more reasonable cost, without impacting on school attendance."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116145",
-      "name": "North Farnborough Infant School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our aim is to provide a learning environment that ensures success by offering a safe, caring, supportive and inclusive school."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND information report November 2025 pdf Parent Guide Ordinarily Available Provision pdf Parent Guide SEN Support pdf Hampshire's Early Years Ordinarily Available Provision pdf Special Educational Needs and Disabilities (SEND)"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "151338",
-      "name": "North Waltham Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Underpinning this philosophy is the importance of each child\u2019s wellbeing and our pastoral care which recognises , that for a child to achieve their educational potential, they must feel safe, happy and valued at school.",
-            "Underpinning this philosophy is the importance of each child\u2019s wellbeing and our pastoral care which recognises, that for a child to achieve their educational potential, they must feel safe, happy and valued at school."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Underpinning this philosophy is the importance of each child\u2019s wellbeing and our pastoral care which recognises , that for a child to achieve their educational potential, they must feel safe, happy and valued at school.",
-            "Underpinning this philosophy is the importance of each child\u2019s wellbeing and our pastoral care which recognises, that for a child to achieve their educational potential, they must feel safe, happy and valued at school."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "115903",
-      "name": "Oakwood Infant School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Special Educational Needs and disability (SEND) At Green Oaks, all children are valued equally, regardless of their abilities, aptitudes, interests and behaviour."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Half termly coffee mornings are held for families to get together to share information with professionals and other families."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116305",
-      "name": "Overton Church of England Primary School",
-      "score": 6.0,
+      "urn": "116079",
+      "name": "Red Barn Community Primary School",
+      "score": 9.0,
       "flags": [
         "chrome"
       ],
@@ -580,7 +398,7 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Music: Music Assessment and Tracking Progress YR-Y6"
+            "Each week, CM Sports deliver engaging and inclusive PE lessons as part of our PPA (Planning, Preparation and Assessment) cover for teachers."
           ],
           "source": "heuristic"
         },
@@ -590,17 +408,93 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "She works with children, parents, staff and the Governing Body to ensure that the SEND Code of Practice is followed.",
-            "However, if a targeted approach to the child\u2019s area of weakness has made little or no progress, a child may be placed on the SEND register following a discussion with parents."
+            "Our SENDCo, Mrs Baxter, works closely with teachers, parents and specialist services such as Educational Psychologists, Speech and Language Therapists and the School Nursing Team.",
+            "There are four trained Designated Safeguarding Leads in place and these are the Headteacher, the Deputy Headteacher/SENDCo, an admin assistant and a senior teacher."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Sports Day Our annual Sports Day is a much-loved event in the school calendar, bringing together children, families, and staff for a day filled with fun, energy, and community spirit."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "116336",
-      "name": "Newtown Church of England Voluntary Controlled Primary School",
-      "score": 3.0,
+      "urn": "136407",
+      "name": "Pilgrims' Cross CofE Aided Primary School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Special Educational Needs and Disability"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Special Educational Needs and Disability",
+            "At Pilgrims\u2019 Cross CE Aided Primary School, children are identified as having SEND (Special Educational Needs and Disabilities) through a variety of ways, usually a combination, which may include some of the following: \uf0b7 Liaison with previous school or pre-school setting."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115853",
+      "name": "Portway Junior School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Additional Safeguarding Measures",
+            "Safeguarding Curriculum Offer"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Safeguarding Curriculum Offer: Additional Safeguarding Measures"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116237",
+      "name": "Park View Primary School",
+      "score": 6.0,
       "flags": [
         "chrome"
       ],
@@ -611,8 +505,162 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "From that date, Local Authorities and schools are required to publish and keep under review, information about services they expect to be available for the children and young people with Special Educational Needs (SEND) aged 0-25.",
-            "SEND At Newtown C of E Primary School, we embrace the fact that every child is different, and, therefore, the educational needs of every child are different."
+            "Meet our SENCo: SEND Pathway"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Health Visitors & Local Services (Birth\u20135) Why it matters: Health visitors and community services offer vital checks, advice and reassurance for families in the early years.",
+            "Our staff work closely with families and local support services to make sure every young carer in our school feels recognised, supported, and valued.",
+            "At Park View, SEND provision is the responsibility of everyone, and we work together as a supportive community of staff, families, and children to ensure that every child matters, every child belongs, and every child can achieve."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115909",
+      "name": "Riders Infant School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "As the SENCO, my role is to coordinate and oversee the provision for students with special educational needs and disabilities (SEND), working closely with teachers, families, and professionals to create an inclusive and supportive learning environment."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "As the SENCO, my role is to coordinate and oversee the provision for students with special educational needs and disabilities (SEND), working closely with teachers, families, and professionals to create an inclusive and supportive learning environment."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115908",
+      "name": "Riders Junior School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "As the SENCO, my role is to coordinate and oversee the provision for students with special educational needs and disabilities (SEND), working closely with teachers, families, and professionals to create an inclusive and supportive learning environment."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "As the SENCO, my role is to coordinate and oversee the provision for students with special educational needs and disabilities (SEND), working closely with teachers, families, and professionals to create an inclusive and supportive learning environment."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116309",
+      "name": "Ringwood Church of England Infant School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "If you are not registered with 115 Club, you will first need to complete a Registration Form with all details requested, this form can be obtained from one of our After School Clubs or on our website www.115club.co.uk on the information tab or by contacting the Club Office on 01202 331602.",
+            "The 115 Club is Ofsted registered and run by qualified staff who organise a range of fun activities and play opportunities."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Growing together with Love, Courage and Respect We are delighted to share our latest Ofsted report, which celebrates the many strengths of our wonderful school community.",
+            "Our mission is to provide local families with a quality childcare and play service for their children to attend and to enjoy before and after school."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115943",
+      "name": "Ringwood Junior School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "The school uses a variety of methods to help track progress including Teacher Assessment, National Curriculum assessments, regular reading, arithmetic and spelling tests."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "When activities outside the classroom, such as trips, clubs, sports days etc, are arranged, a full risk assessment of the site, activity and children\u2019s needs is carried out."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116019",
+      "name": "Ranvilles Junior School",
+      "score": 5.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "SATs-Standard Assessment Tests"
           ],
           "source": "heuristic"
         }
@@ -620,8 +668,8 @@
     }
   ],
   "notes": [
-    "Applied QA fixes to 16 school(s) (41 area finding(s)).",
-    "Learned 5 new junk phrase(s) (store size 322).",
+    "Applied QA fixes to 16 school(s) (44 area finding(s)).",
+    "Learned 18 new junk phrase(s) (store size 340).",
     "Reviewed top 16 suspect(s); provider=none."
   ],
   "provider": "none"
