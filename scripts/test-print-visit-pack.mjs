@@ -15,10 +15,17 @@ async function withDom(html, fn) {
 }
 
 async function main() {
+  const source = readFileSync(
+    new URL("../src/lib/printVisitPack.ts", import.meta.url),
+    "utf8",
+  );
+
   const {
     isAppleMobilePrintHost,
     prepareVisitPackForPrint,
     resolveVisitPackElement,
+    buildVisitPackPrintDocument,
+    VISIT_PACK_DOCUMENT_CSS,
     VISIT_PACK_PRINT_CSS,
     VISIT_PACK_PRINT_STYLES,
     PRINT_CLEANUP_SAFETY_MS,
@@ -50,30 +57,35 @@ async function main() {
     false,
   );
 
+  // All platforms print via isolated iframe — no main-window clone path.
+  assert.ok(!source.includes("printViaMainWindow"));
+  assert.ok(!source.includes("visit-pack-printing"));
+  assert.ok(!source.includes("visibility: hidden"));
+  assert.match(source, /printViaIframe/);
+  assert.match(source, /buildVisitPackPrintDocument/);
+
   // Prefer break-before; avoid break-after (WebKit blank-page padding).
   assert.match(VISIT_PACK_PRINT_CSS, /break-before:\s*page/);
   assert.match(
     VISIT_PACK_PRINT_CSS,
-    /\.visit-pack > \.visit-pack-sheet ~ \.visit-pack-sheet/,
+    /\.visit-pack-print-clone > \.visit-pack-sheet ~ \.visit-pack-sheet/,
   );
-  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-page-break[\s\S]*display:\s*none/);
-  assert.match(VISIT_PACK_PRINT_CSS, /color-scheme:\s*light only/);
-  assert.match(VISIT_PACK_PRINT_STYLES, /@media screen[\s\S]*visit-pack-print-root/);
+  assert.match(VISIT_PACK_DOCUMENT_CSS, /color-scheme:\s*light only/);
+  assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-pack-compare-table td[\s\S]*color:\s*#14233a/);
   assert.match(VISIT_PACK_PRINT_STYLES, /@media print/);
   assert.ok(
-    !/page-break-after:\s*always/.test(VISIT_PACK_PRINT_CSS),
+    !/page-break-after:\s*always/.test(VISIT_PACK_PRINT_STYLES),
     "must not use page-break-after:always (WebKit blank pages)",
   );
   assert.ok(
     PRINT_CLEANUP_SAFETY_MS >= 60_000,
-    "cleanup safety timeout must not tear down iPad preview early",
+    "cleanup safety timeout must not tear down preview early",
   );
-  assert.ok(
-    !/setTimeout\(finish,\s*2500\)/.test(
-      readFileSync(new URL("../src/lib/printVisitPack.ts", import.meta.url), "utf8"),
-    ),
-    "must not remove print root after 2.5s while iOS preview is open",
-  );
+
+  const doc = buildVisitPackPrintDocument('<div class="visit-pack-print-clone">pack</div>');
+  assert.match(doc, /color-scheme/);
+  assert.match(doc, /visit-pack-print-clone/);
+  assert.match(doc, /#14233a/);
 
   await withDom(
     `<div class="visit-pack">
@@ -116,7 +128,6 @@ async function main() {
   );
 
   // Compare action bar prints [data-visit-pack="compare"], which wraps VisitPack.
-  // Must unwrap so questions / graphs / school sheets survive (not blank iPad pages).
   await withDom(
     `<div data-visit-pack="compare" class="compare-visit-pack-anchor">
       <div class="visit-pack">
@@ -145,10 +156,10 @@ async function main() {
     },
   );
 
-  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-note-lines\.is-compact/);
+  assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-note-lines\.is-compact/);
   assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-figures-scroll[\s\S]*overflow:\s*visible/);
-  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-chart/);
-  assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-school-website/);
+  assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-pack-chart/);
+  assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-pack-school-website/);
 
   console.log("OK print-visit-pack");
 }
