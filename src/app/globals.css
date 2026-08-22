@@ -2033,6 +2033,76 @@ body:has(.shortlist-dock) {
   margin-top: 1.75rem;
 }
 
+/*
+ * Visit pack preview sits on the dark journey-stage plate. Sheets are printable
+ * paper — force light surfaces and dark ink so advice, stats, and questions read
+ * on screen (not only in print).
+ */
+.journey-stage .visit-pack .visit-pack-body,
+.journey-stage .visit-pack .visit-pack-sheet {
+  color: var(--ink);
+}
+
+.journey-stage .visit-pack .visit-pack-sheet {
+  background: #fff;
+  border: 1px solid rgba(20, 35, 58, 0.14);
+  border-radius: 0.65rem;
+  padding: 1rem 1.05rem 1.15rem;
+  box-shadow: 0 10px 28px rgba(7, 26, 42, 0.14);
+}
+
+.journey-stage .visit-pack .visit-pack-sheet-title p,
+.journey-stage .visit-pack .visit-pack-figures-caption,
+.journey-stage .visit-pack .decision-guidance-print-foot,
+.journey-stage .visit-pack .visit-pack-school-empty,
+.journey-stage .visit-pack .visit-contact-meta,
+.journey-stage .visit-pack .visit-questions p {
+  color: var(--ink-soft);
+}
+
+.journey-stage .visit-pack .visit-pack-brand,
+.journey-stage .visit-pack .compare-subhead,
+.journey-stage .visit-pack .decision-guidance-print h4,
+.journey-stage .visit-pack .visit-questions h4,
+.journey-stage .visit-pack .visit-questions strong,
+.journey-stage .visit-pack .visit-pack-compare-table thead th,
+.journey-stage .visit-pack .visit-pack-compare-table tbody th,
+.journey-stage .visit-pack .visit-pack-school-head h4,
+.journey-stage .visit-pack .visit-pack-school-precis h5,
+.journey-stage .visit-pack .visit-pack-school-website h5,
+.journey-stage .visit-pack .visit-pack-school-notes h5 {
+  color: var(--sea-deep);
+}
+
+.journey-stage .visit-pack .visit-pack-compare-table,
+.journey-stage .visit-pack .visit-pack-compare-table th,
+.journey-stage .visit-pack .visit-pack-compare-table td,
+.journey-stage .visit-pack .decision-guidance-print,
+.journey-stage .visit-pack .visit-pack-school,
+.journey-stage .visit-pack .visit-pack-chart {
+  background: #fff;
+  color: var(--ink);
+}
+
+.journey-stage .visit-pack .visit-pack-compare-table td {
+  color: var(--ink);
+  -webkit-text-fill-color: var(--ink);
+}
+
+.journey-stage .visit-pack .visit-pack-compare-table thead th {
+  background: rgba(232, 243, 247, 0.9);
+}
+
+.journey-stage .visit-pack .visit-pack-toolbar,
+.journey-stage .visit-pack .visit-pack-toolbar .compare-subhead,
+.journey-stage .visit-pack .visit-pack-toolbar .footnote {
+  color: var(--stage-ink);
+}
+
+.journey-stage .visit-pack .visit-pack-toolbar .footnote {
+  color: var(--stage-ink-muted);
+}
+
 .compare-context-body,
 .compare-summary-body,
 .compare-section-body {
@@ -6083,6 +6153,7 @@ html.tour-running .hero-inner > * {
   text-align: right;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  color: var(--ink);
 }
 
 .visit-pack-school-sheet {
@@ -6339,19 +6410,6 @@ html.tour-running .hero-inner > * {
 /* Screen: page-break markers are inert. */
 .visit-pack-page-break {
   display: none;
-}
-
-/* Screen: cloned pack stays off-screen while iOS print sheet is open. */
-@media screen {
-  html.visit-pack-printing .visit-pack-print-root {
-    position: fixed !important;
-    left: -10000px !important;
-    top: 0 !important;
-    width: 210mm;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    opacity: 0 !important;
-  }
 }
 
 @media print {

@@ -1,11 +1,9 @@
 /**
- * Print only the visit pack.
+ * Print only the visit pack in an isolated iframe.
  *
- * iPhone / iPad (WebKit): print a clean clone from the main document.
- * Zero-size iframes ignore print CSS; WebKit also inserts blank sheets for
- * `page-break-after: always`, so we use `break-before` on sheets after the first.
- *
- * Desktop: isolated iframe with the same break-before rules inlined.
+ * All platforms (including iPhone / iPad) use a non-zero off-screen iframe with
+ * self-contained light document CSS. The previous main-window path hid the
+ * clone with visibility:hidden, which WebKit treats as blank in print preview.
  */
 
 export function isAppleMobilePrintHost(
@@ -20,31 +18,9 @@ export function isAppleMobilePrintHost(
   return false;
 }
 
-/**
- * Critical print rules. Prefer break-before on later sheets — WebKit pads a
- * blank page when it sees trailing break-after on the previous sheet.
- *
- * Screen rules keep the cloned pack off-screen while the iOS print sheet is open.
- * Print rules force light ink so dark-mode Safari previews stay readable.
- */
-export const VISIT_PACK_PRINT_SCREEN_CSS = `
-@media screen {
-  .visit-pack-print-root {
-    position: fixed !important;
-    left: -10000px !important;
-    top: 0 !important;
-    width: 210mm;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    opacity: 0 !important;
-  }
-}
-`;
-
-export const VISIT_PACK_PRINT_CSS = `
-@media print {
-@page { margin: 12mm; }
-html.visit-pack-printing {
+/** Base document styles — always applied inside the print iframe. */
+export const VISIT_PACK_DOCUMENT_CSS = `
+html {
   color-scheme: light only;
 }
 html, body {
@@ -58,6 +34,8 @@ html, body {
   font-family: Figtree, system-ui, sans-serif;
   font-size: 11pt;
   line-height: 1.4;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 .no-print { display: none !important; }
 .visit-pack-page-break {
@@ -66,10 +44,6 @@ html, body {
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
-  page-break-after: auto !important;
-  break-after: auto !important;
-  page-break-before: auto !important;
-  break-before: auto !important;
 }
 .visit-pack, .visit-pack-print-clone, .visit-pack-print-root {
   display: block !important;
@@ -85,10 +59,8 @@ html, body {
   color-scheme: light only;
   background: #fff !important;
   color: #14233a !important;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
 }
-.visit-pack-print-root :where(
+.visit-pack-print-clone :where(
   h1, h2, h3, h4, h5, h6,
   p, li, dt, dd, th, td,
   blockquote, strong, em, small,
@@ -97,15 +69,10 @@ html, body {
   color: #14233a !important;
   -webkit-text-fill-color: #14233a !important;
 }
-.visit-pack-print-root a,
 .visit-pack-print-clone a {
   color: #0b4f6c !important;
   -webkit-text-fill-color: #0b4f6c !important;
 }
-.visit-pack-print-root .visit-contact-meta,
-.visit-pack-print-root .visit-pack-figures-caption,
-.visit-pack-print-root .decision-guidance-print-foot,
-.visit-pack-print-root .visit-pack-school-empty,
 .visit-pack-print-clone .visit-contact-meta,
 .visit-pack-print-clone .visit-pack-figures-caption,
 .visit-pack-print-clone .decision-guidance-print-foot,
@@ -126,13 +93,6 @@ html, body {
   page-break-after: auto !important;
   break-after: auto !important;
   background: #fff !important;
-}
-/* New page starts at each sheet after the first — avoids WebKit blank padding. */
-.visit-pack > .visit-pack-sheet ~ .visit-pack-sheet,
-.visit-pack-print-clone > .visit-pack-sheet ~ .visit-pack-sheet,
-.visit-pack-print-root > .visit-pack-sheet ~ .visit-pack-sheet {
-  break-before: page !important;
-  page-break-before: always !important;
 }
 .visit-pack-school-sheet,
 .visit-pack-school,
@@ -160,7 +120,7 @@ html, body {
   margin: 0 0 0.2rem;
   color: #14233a !important;
 }
-.visit-pack-sheet-title p { margin: 0 0 0.4rem; }
+.visit-pack-sheet-title p { margin: 0 0 0.4rem; color: #3d4f66 !important; }
 .visit-note-lines {
   display: block !important;
   width: 100% !important;
@@ -189,6 +149,7 @@ html, body {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8rem;
+  background: #fff !important;
 }
 .visit-pack-compare-table th,
 .visit-pack-compare-table td {
@@ -197,6 +158,11 @@ html, body {
   text-align: left;
   background: #fff !important;
   color: #14233a !important;
+  -webkit-text-fill-color: #14233a !important;
+}
+.visit-pack-compare-table thead th {
+  color: #0b4f6c !important;
+  -webkit-text-fill-color: #0b4f6c !important;
 }
 .visit-pack-school-website,
 .visit-pack-quote-block,
@@ -207,6 +173,15 @@ html, body {
   page-break-inside: avoid;
   break-inside: avoid;
   background: #fff !important;
+}
+.decision-guidance-print h4,
+.compare-subhead {
+  color: #0b4f6c !important;
+  -webkit-text-fill-color: #0b4f6c !important;
+}
+.visit-questions h4 {
+  color: #0b4f6c !important;
+  -webkit-text-fill-color: #0b4f6c !important;
 }
 .visit-pack-quotes {
   margin: 0.25rem 0 0.5rem;
@@ -257,44 +232,66 @@ html, body {
 }
 .decision-guidance-print-columns {
   display: block !important;
+  color: #14233a !important;
 }
 .decision-guidance-print-columns > * {
   display: block !important;
   margin-bottom: 0.6rem;
 }
+`;
+
+/** Print-media pagination rules — break-before on later sheets. */
+export const VISIT_PACK_PRINT_CSS = `
+@media print {
+@page { margin: 12mm; }
+html {
+  color-scheme: light only;
+}
+.visit-pack > .visit-pack-sheet ~ .visit-pack-sheet,
+.visit-pack-print-clone > .visit-pack-sheet ~ .visit-pack-sheet,
+.visit-pack-print-root > .visit-pack-sheet ~ .visit-pack-sheet {
+  break-before: page !important;
+  page-break-before: always !important;
+}
+.visit-pack-page-break {
+  display: none !important;
+  page-break-after: auto !important;
+  break-after: auto !important;
+  page-break-before: auto !important;
+  break-before: auto !important;
+}
+.visit-note-lines.is-compact {
+  min-height: 42mm !important;
+  height: 42mm !important;
+}
+.visit-pack-figures-scroll {
+  overflow: visible !important;
+}
 }
 `;
 
-/** Injected into main window (iOS) and print iframes (desktop). */
+/** Injected into every print iframe. */
 export const VISIT_PACK_PRINT_STYLES =
-  VISIT_PACK_PRINT_SCREEN_CSS + VISIT_PACK_PRINT_CSS;
+  VISIT_PACK_DOCUMENT_CSS + VISIT_PACK_PRINT_CSS;
 
-/** iOS afterprint often fires when the sheet opens — wait for print mode to end. */
 export const PRINT_CLEANUP_SAFETY_MS = 10 * 60 * 1000;
 
-export function attachPrintCleanup(onDone: () => void): void {
-  let finished = false;
-  const finish = () => {
-    if (finished) return;
-    finished = true;
-    mql.removeEventListener("change", onPrintChange);
-    window.removeEventListener("afterprint", finish);
-    window.clearTimeout(safetyTimer);
-    onDone();
-  };
-
-  const mql = window.matchMedia("print");
-  const onPrintChange = () => {
-    if (!mql.matches) finish();
-  };
-
-  mql.addEventListener("change", onPrintChange);
-
-  if (!isAppleMobilePrintHost()) {
-    window.addEventListener("afterprint", finish);
-  }
-
-  const safetyTimer = window.setTimeout(finish, PRINT_CLEANUP_SAFETY_MS);
+/** Build a standalone HTML document for the print iframe. */
+export function buildVisitPackPrintDocument(
+  cloneHtml: string,
+  baseHref = "/",
+): string {
+  return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<base href="${baseHref}" />
+<style>${VISIT_PACK_PRINT_STYLES}</style>
+</head>
+<body>${cloneHtml}</body>
+</html>`;
 }
 
 /**
@@ -345,39 +342,6 @@ export function prepareVisitPackForPrint(pack: HTMLElement): HTMLElement {
   return clone;
 }
 
-function printViaMainWindow(pack: HTMLElement, noteHeightPx: number): void {
-  const printRoot = prepareVisitPackForPrint(pack);
-  printRoot.style.setProperty("--visit-print-note-height", `${noteHeightPx}px`);
-  printRoot.setAttribute("data-visit-pack-print-root", "1");
-
-  const style = document.createElement("style");
-  style.setAttribute("data-visit-pack-print-style", "1");
-  style.textContent = VISIT_PACK_PRINT_STYLES;
-
-  const scrollY = window.scrollY;
-  document.head.appendChild(style);
-  document.body.appendChild(printRoot);
-  document.documentElement.classList.add("visit-pack-printing");
-  document.body.classList.add("visit-pack-printing");
-
-  const finish = () => {
-    document.documentElement.classList.remove("visit-pack-printing");
-    document.body.classList.remove("visit-pack-printing");
-    printRoot.remove();
-    style.remove();
-    window.scrollTo(0, scrollY);
-  };
-
-  attachPrintCleanup(finish);
-
-  window.requestAnimationFrame(() => {
-    window.setTimeout(() => {
-      window.focus();
-      window.print();
-    }, 60);
-  });
-}
-
 function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
   const clone = prepareVisitPackForPrint(pack);
   clone.classList.add("visit-pack-print-clone");
@@ -386,49 +350,44 @@ function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
   const iframe = document.createElement("iframe");
   iframe.setAttribute("title", "Print visit pack");
   iframe.setAttribute("aria-hidden", "true");
-  // Non-zero size: some engines skip layout/print CSS for 0×0 frames.
+  // Non-zero, off-screen — visible to the print engine but not on screen.
+  // Do not use visibility:hidden or opacity:0 (WebKit prints blank pages).
   iframe.style.cssText =
-    "position:fixed;right:0;bottom:0;width:210mm;height:297mm;border:0;opacity:0;pointer-events:none;z-index:-1;";
+    "position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;pointer-events:none;z-index:-1;";
+
   document.body.appendChild(iframe);
 
   const idoc = iframe.contentDocument;
   const iwin = iframe.contentWindow;
   if (!idoc || !iwin) {
     iframe.remove();
-    printViaMainWindow(pack, noteHeightPx);
     return;
   }
 
   idoc.open();
-  idoc.write(`<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<base href="${document.baseURI}" />
-<style>${VISIT_PACK_PRINT_STYLES}</style>
-</head>
-<body>${clone.outerHTML}</body>
-</html>`);
+  idoc.write(buildVisitPackPrintDocument(clone.outerHTML, document.baseURI));
   idoc.close();
 
-  let printed = false;
+  let cleaned = false;
   const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
     iframe.remove();
   };
 
+  iwin.addEventListener("afterprint", cleanup);
+  window.setTimeout(cleanup, PRINT_CLEANUP_SAFETY_MS);
+
   const triggerPrint = () => {
-    if (printed) return;
-    printed = true;
     try {
       iwin.focus();
       iwin.print();
-    } finally {
-      window.setTimeout(cleanup, 2000);
+    } catch {
+      cleanup();
     }
   };
 
-  window.setTimeout(triggerPrint, 200);
+  window.setTimeout(triggerPrint, 250);
 }
 
 export function printVisitPackElement(
@@ -436,9 +395,5 @@ export function printVisitPackElement(
   noteHeightPx: number,
 ): void {
   const resolved = resolveVisitPackElement(pack);
-  if (isAppleMobilePrintHost()) {
-    printViaMainWindow(resolved, noteHeightPx);
-    return;
-  }
   printViaIframe(resolved, noteHeightPx);
 }
