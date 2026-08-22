@@ -24,8 +24,8 @@ on:
         type: boolean
         default: false
   schedule:
-    # Daily 08:00 UTC — after coverage loop (07:00); apply rules to existing records
-    - cron: "0 8 * * *"
+    # Daily 10:00 UTC — after coverage loop (07:00, often ~1h); shared concurrency as backstop
+    - cron: "0 10 * * *"
 
 permissions:
   contents: write
