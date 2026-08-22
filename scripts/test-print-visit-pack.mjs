@@ -1,6 +1,7 @@
 /** Unit checks for iOS-aware visit pack printing helpers. */
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 async function withDom(html, fn) {
   try {
@@ -19,6 +20,8 @@ async function main() {
     prepareVisitPackForPrint,
     resolveVisitPackElement,
     VISIT_PACK_PRINT_CSS,
+    VISIT_PACK_PRINT_STYLES,
+    PRINT_CLEANUP_SAFETY_MS,
   } = await import("../src/lib/printVisitPack.ts");
 
   assert.equal(
@@ -54,9 +57,22 @@ async function main() {
     /\.visit-pack > \.visit-pack-sheet ~ \.visit-pack-sheet/,
   );
   assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-page-break[\s\S]*display:\s*none/);
+  assert.match(VISIT_PACK_PRINT_CSS, /color-scheme:\s*light only/);
+  assert.match(VISIT_PACK_PRINT_STYLES, /@media screen[\s\S]*visit-pack-print-root/);
+  assert.match(VISIT_PACK_PRINT_STYLES, /@media print/);
   assert.ok(
     !/page-break-after:\s*always/.test(VISIT_PACK_PRINT_CSS),
     "must not use page-break-after:always (WebKit blank pages)",
+  );
+  assert.ok(
+    PRINT_CLEANUP_SAFETY_MS >= 60_000,
+    "cleanup safety timeout must not tear down iPad preview early",
+  );
+  assert.ok(
+    !/setTimeout\(finish,\s*2500\)/.test(
+      readFileSync(new URL("../src/lib/printVisitPack.ts", import.meta.url), "utf8"),
+    ),
+    "must not remove print root after 2.5s while iOS preview is open",
   );
 
   await withDom(

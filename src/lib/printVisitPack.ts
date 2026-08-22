@@ -23,9 +23,30 @@ export function isAppleMobilePrintHost(
 /**
  * Critical print rules. Prefer break-before on later sheets — WebKit pads a
  * blank page when it sees trailing break-after on the previous sheet.
+ *
+ * Screen rules keep the cloned pack off-screen while the iOS print sheet is open.
+ * Print rules force light ink so dark-mode Safari previews stay readable.
  */
+export const VISIT_PACK_PRINT_SCREEN_CSS = `
+@media screen {
+  .visit-pack-print-root {
+    position: fixed !important;
+    left: -10000px !important;
+    top: 0 !important;
+    width: 210mm;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+}
+`;
+
 export const VISIT_PACK_PRINT_CSS = `
+@media print {
 @page { margin: 12mm; }
+html.visit-pack-printing {
+  color-scheme: light only;
+}
 html, body {
   margin: 0 !important;
   padding: 0 !important;
@@ -33,7 +54,7 @@ html, body {
   height: auto !important;
   min-height: 0 !important;
   overflow: visible !important;
-  color: #14233a;
+  color: #14233a !important;
   font-family: Figtree, system-ui, sans-serif;
   font-size: 11pt;
   line-height: 1.4;
@@ -61,6 +82,36 @@ html, body {
   overflow: visible !important;
   min-height: 0 !important;
   height: auto !important;
+  color-scheme: light only;
+  background: #fff !important;
+  color: #14233a !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.visit-pack-print-root :where(
+  h1, h2, h3, h4, h5, h6,
+  p, li, dt, dd, th, td,
+  blockquote, strong, em, small,
+  span, div, label, figcaption
+) {
+  color: #14233a !important;
+  -webkit-text-fill-color: #14233a !important;
+}
+.visit-pack-print-root a,
+.visit-pack-print-clone a {
+  color: #0b4f6c !important;
+  -webkit-text-fill-color: #0b4f6c !important;
+}
+.visit-pack-print-root .visit-contact-meta,
+.visit-pack-print-root .visit-pack-figures-caption,
+.visit-pack-print-root .decision-guidance-print-foot,
+.visit-pack-print-root .visit-pack-school-empty,
+.visit-pack-print-clone .visit-contact-meta,
+.visit-pack-print-clone .visit-pack-figures-caption,
+.visit-pack-print-clone .decision-guidance-print-foot,
+.visit-pack-print-clone .visit-pack-school-empty {
+  color: #3d4f66 !important;
+  -webkit-text-fill-color: #3d4f66 !important;
 }
 .visit-pack-sheet {
   display: block !important;
@@ -74,6 +125,7 @@ html, body {
   page-break-inside: auto !important;
   page-break-after: auto !important;
   break-after: auto !important;
+  background: #fff !important;
 }
 /* New page starts at each sheet after the first — avoids WebKit blank padding. */
 .visit-pack > .visit-pack-sheet ~ .visit-pack-sheet,
@@ -99,13 +151,14 @@ html, body {
   border: 1px solid rgba(20,35,58,0.18);
   padding: 3mm;
   border-radius: 0;
-  background: #fff;
+  background: #fff !important;
 }
 .visit-pack-brand {
   font-family: Fraunces, Georgia, serif;
   font-size: 1.35rem;
   font-weight: 700;
   margin: 0 0 0.2rem;
+  color: #14233a !important;
 }
 .visit-pack-sheet-title p { margin: 0 0 0.4rem; }
 .visit-note-lines {
@@ -114,6 +167,7 @@ html, body {
   min-height: var(--visit-print-note-height, 120mm) !important;
   height: var(--visit-print-note-height, 120mm) !important;
   flex: none !important;
+  background-color: #fff !important;
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0,
@@ -141,14 +195,18 @@ html, body {
   border: 1px solid rgba(20,35,58,0.18);
   padding: 0.28rem 0.35rem;
   text-align: left;
+  background: #fff !important;
+  color: #14233a !important;
 }
 .visit-pack-school-website,
 .visit-pack-quote-block,
-.visit-pack-website-area {
+.visit-pack-website-area,
+.decision-guidance-print {
   display: block !important;
   overflow: visible !important;
   page-break-inside: avoid;
   break-inside: avoid;
+  background: #fff !important;
 }
 .visit-pack-quotes {
   margin: 0.25rem 0 0.5rem;
@@ -164,6 +222,7 @@ html, body {
   margin: 0 0 0.75rem;
   page-break-inside: avoid;
   break-inside: avoid;
+  background: #fff !important;
 }
 .visit-pack-chart-svg {
   display: block;
@@ -186,6 +245,7 @@ html, body {
   margin: 0.35rem 0 0;
   padding: 0;
   font-size: 0.78rem;
+  color: #14233a !important;
 }
 .visit-pack-chart-swatch {
   display: inline-block;
@@ -202,7 +262,40 @@ html, body {
   display: block !important;
   margin-bottom: 0.6rem;
 }
+}
 `;
+
+/** Injected into main window (iOS) and print iframes (desktop). */
+export const VISIT_PACK_PRINT_STYLES =
+  VISIT_PACK_PRINT_SCREEN_CSS + VISIT_PACK_PRINT_CSS;
+
+/** iOS afterprint often fires when the sheet opens — wait for print mode to end. */
+export const PRINT_CLEANUP_SAFETY_MS = 10 * 60 * 1000;
+
+export function attachPrintCleanup(onDone: () => void): void {
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    mql.removeEventListener("change", onPrintChange);
+    window.removeEventListener("afterprint", finish);
+    window.clearTimeout(safetyTimer);
+    onDone();
+  };
+
+  const mql = window.matchMedia("print");
+  const onPrintChange = () => {
+    if (!mql.matches) finish();
+  };
+
+  mql.addEventListener("change", onPrintChange);
+
+  if (!isAppleMobilePrintHost()) {
+    window.addEventListener("afterprint", finish);
+  }
+
+  const safetyTimer = window.setTimeout(finish, PRINT_CLEANUP_SAFETY_MS);
+}
 
 /**
  * Resolve the printable pack root.
@@ -259,7 +352,7 @@ function printViaMainWindow(pack: HTMLElement, noteHeightPx: number): void {
 
   const style = document.createElement("style");
   style.setAttribute("data-visit-pack-print-style", "1");
-  style.textContent = VISIT_PACK_PRINT_CSS;
+  style.textContent = VISIT_PACK_PRINT_STYLES;
 
   const scrollY = window.scrollY;
   document.head.appendChild(style);
@@ -267,29 +360,20 @@ function printViaMainWindow(pack: HTMLElement, noteHeightPx: number): void {
   document.documentElement.classList.add("visit-pack-printing");
   document.body.classList.add("visit-pack-printing");
 
-  let done = false;
   const finish = () => {
-    if (done) return;
-    done = true;
     document.documentElement.classList.remove("visit-pack-printing");
     document.body.classList.remove("visit-pack-printing");
     printRoot.remove();
     style.remove();
-    window.removeEventListener("afterprint", finish);
     window.scrollTo(0, scrollY);
   };
 
-  window.addEventListener("afterprint", finish);
+  attachPrintCleanup(finish);
 
   window.requestAnimationFrame(() => {
     window.setTimeout(() => {
-      try {
-        window.focus();
-        window.print();
-      } finally {
-        // iOS Safari sometimes skips afterprint.
-        window.setTimeout(finish, 2500);
-      }
+      window.focus();
+      window.print();
     }, 60);
   });
 }
@@ -322,7 +406,7 @@ function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <base href="${document.baseURI}" />
-<style>${VISIT_PACK_PRINT_CSS}</style>
+<style>${VISIT_PACK_PRINT_STYLES}</style>
 </head>
 <body>${clone.outerHTML}</body>
 </html>`);

@@ -6341,9 +6341,26 @@ html.tour-running .hero-inner > * {
   display: none;
 }
 
+/* Screen: cloned pack stays off-screen while iOS print sheet is open. */
+@media screen {
+  html.visit-pack-printing .visit-pack-print-root {
+    position: fixed !important;
+    left: -10000px !important;
+    top: 0 !important;
+    width: 210mm;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+}
+
 @media print {
   @page {
     margin: 12mm;
+  }
+
+  html.visit-pack-printing {
+    color-scheme: light only;
   }
 
   html,
@@ -6353,6 +6370,7 @@ html.tour-running .hero-inner > * {
     margin: 0 !important;
     padding: 0 !important;
     background: white !important;
+    color: #14233a !important;
     overflow: visible !important;
   }
 
@@ -6375,8 +6393,35 @@ html.tour-running .hero-inner > * {
     padding: 0 !important;
     overflow: visible !important;
     background: white !important;
+    color: #14233a !important;
     min-height: 0 !important;
     height: auto !important;
+    color-scheme: light only;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  html.visit-pack-printing .visit-pack-print-root :where(
+    h1, h2, h3, h4, h5, h6,
+    p, li, dt, dd, th, td,
+    blockquote, strong, em, small,
+    span, div, label, figcaption
+  ) {
+    color: #14233a !important;
+    -webkit-text-fill-color: #14233a !important;
+  }
+
+  html.visit-pack-printing .visit-pack-print-root a {
+    color: #0b4f6c !important;
+    -webkit-text-fill-color: #0b4f6c !important;
+  }
+
+  html.visit-pack-printing .visit-pack-print-root .visit-contact-meta,
+  html.visit-pack-printing .visit-pack-print-root .visit-pack-figures-caption,
+  html.visit-pack-printing .visit-pack-print-root .decision-guidance-print-foot,
+  html.visit-pack-printing .visit-pack-print-root .visit-pack-school-empty {
+    color: #3d4f66 !important;
+    -webkit-text-fill-color: #3d4f66 !important;
   }
 
   /* Fallback for browser print while a pack is on screen (non-iOS Ctrl/Cmd+P). */
