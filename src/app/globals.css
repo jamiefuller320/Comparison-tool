@@ -1527,6 +1527,8 @@ body:has(.shortlist-dock) {
 .journey-stage .compare-board,
 .journey-stage .compare-path-binder,
 .journey-stage .compare-section-binder .path-summaries,
+.journey-stage .compare-section-binder .board-provenance,
+.journey-stage .compare-section-binder .coverage-strip,
 .journey-stage .compare-evidence-card,
 .journey-stage .decision-guidance,
 .journey-stage .missing-school-panel,
@@ -2483,6 +2485,48 @@ body:has(.shortlist-dock) {
 .compare-context-body .path-summaries .shortlist-summary strong,
 .compare-summary-body .path-summaries .shortlist-summary strong {
   color: var(--sea-deep);
+}
+
+/* Context foam: source stamp + provenance — harbour parent uses light stage-ink. */
+.compare-context-body .board-provenance .source-stamp,
+.compare-context-body .compare-context-panel .source-stamp,
+.journey-stage .compare-context-body .board-provenance .source-stamp,
+.journey-stage .compare-context-body .compare-context-panel .source-stamp,
+.journey-stage .compare-section-binder .compare-context-body .source-stamp {
+  color: var(--ink-soft);
+  background: rgba(11, 79, 108, 0.06);
+}
+
+.compare-context-body .board-provenance .source-stamp-label,
+.compare-context-body .compare-context-panel .source-stamp-label,
+.journey-stage .compare-context-body .source-stamp-label {
+  color: var(--sea-deep);
+}
+
+.compare-context-body .board-provenance .source-stamp-note,
+.compare-context-body .compare-context-panel .source-stamp-note,
+.journey-stage .compare-context-body .source-stamp-note {
+  color: var(--ink-soft);
+}
+
+.compare-context-body .board-provenance .source-stamp a,
+.compare-context-body .compare-context-panel .source-stamp a,
+.journey-stage .compare-context-body .source-stamp a {
+  color: var(--sea);
+  font-weight: 600;
+}
+
+.compare-context-body .board-provenance .report-problem-trigger.btn-ghost,
+.compare-context-body .compare-context-panel .report-problem-trigger.btn-ghost {
+  color: var(--sea-deep);
+  border-color: rgba(11, 79, 108, 0.28);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.compare-context-body .board-provenance .report-problem-trigger.btn-ghost:hover,
+.compare-context-body .compare-context-panel .report-problem-trigger.btn-ghost:hover {
+  border-color: rgba(11, 79, 108, 0.45);
+  background: #fff;
 }
 
 .compare-view-controls {
