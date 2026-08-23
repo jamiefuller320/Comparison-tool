@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-22",
+  "generatedAt": "2026-08-23",
   "dryRun": false,
-  "count": 74,
+  "count": 16,
   "schools": [
     {
-      "urn": "115968",
-      "name": "Fryern Infant School",
-      "score": 13.0,
+      "urn": "138437",
+      "name": "Bridgemary School",
+      "score": 21.0,
       "flags": [
         "policy_toc",
-        "implausible_offerings",
-        "chrome"
+        "chrome",
+        "implausible_offerings"
       ],
       "findings": [
         {
@@ -19,118 +19,37 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Impact Statement"
+            "citizenship"
           ],
           "source": "heuristic"
         },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Evidencing the Impact of the Primary PE and Sport Premium Fryern Infant 2023: cricket, football, basketball, netball.",
-            "Evidencing the Impact of the Primary PE and Sport Premium Fryern Infant 2023: Include PSHE lessons to talk about",
-            "Evidencing the Impact of the Primary PE and Sport Premium Fryern Infant 2023: Cricket day, access to extracurricular"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Impact Statement"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 3
-    },
-    {
-      "urn": "115884",
-      "name": "Fryern Junior School",
-      "score": 13.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings",
-        "chrome"
-      ],
-      "findings": [
         {
           "area": "curriculum",
           "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Impact Statement"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Evidencing the Impact of the Primary PE and Sport Premium Fryern Infant 2023: cricket, football, basketball, netball.",
-            "Evidencing the Impact of the Primary PE and Sport Premium Fryern Infant 2023: Include PSHE lessons to talk about",
-            "Evidencing the Impact of the Primary PE and Sport Premium Fryern Infant 2023: Cricket day, access to extracurricular"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Impact Statement"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 3
-    },
-    {
-      "urn": "115931",
-      "name": "Newtown Soberton Infant School",
-      "score": 12.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our aim is to provide a stimulating, supportive and inclusive environment where children can explore, create, and innovate, laying the foundation for lifelong learning and curiosity.",
-            "Our aim is to provide a stimulating, supportive and inclusive environment where children can explore, create, and innovate, laying the foundation for lifelong learning and curiosity."
+            "Citizenship"
           ],
           "source": "heuristic"
         },
         {
           "area": "behaviour",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Our PE provision aims to develop children\u2019s confidence, motivation and ability to being physically active, while teaching the positive impact that physical activity can have on mental health and emotional well-being."
+            "citizenship"
           ],
           "source": "heuristic"
         },
         {
-          "area": "send",
+          "area": "community",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Citizenship \u2013 Pupils will consider how art impacts others, how it makes others feel and how art can send messages."
+            "citizenship"
           ],
           "source": "heuristic"
         },
@@ -140,7 +59,176 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Through activities such as community projects, charity events, and environmental initiatives, children learn the importance of contributing to society and making a positive impact."
+            "Citizenship Studies has been designed to enable learners to understand and appreciate key citizenship issues at home, in school and as young citizens in their wider community."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 3
+    },
+    {
+      "urn": "116360",
+      "name": "Andrews' Endowed Church of England Primary School",
+      "score": 16.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "PSHE and Citizenship",
+            "PSHE and Citizenship",
+            "PSHE and Citizenship",
+            "PSHE and Citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "PSHE and Citizenship",
+            "PSHE and Citizenship",
+            "PSHE and Citizenship",
+            "PSHE and Citizenship",
+            "PSHE and Citizenship"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "116419",
+      "name": "Brookfield Community School",
+      "score": 16.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Subjects and Qualifications: Citizenship (GCSE)"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "ENRICHMENT OPPORTUNITIES Physical Education, Religious Studies and Citizenship, Computer Studies, Music, Dance and Drama do not set any formal Home Learning tasks in Year 7 & 8."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "152109",
+      "name": "Rowhill School",
+      "score": 16.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings",
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Appendix U: Assessment"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Inspection findings \uf06e During this visit, inspectors evaluated: pupils\u2019 progress in mathematics; the impact leaders have had on pupils\u2019 behaviour; pupils\u2019 spiritual, moral, social and cultural development; and Rowhill\u2019s impact on pupils\u2019 engagement in learning."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Hampshire Educational Psychology"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Pupil Premium The Pupil Premium is money allocated to the school by the Government to support students who are eligible for Free School Meals, are in the Care of the Local Authority, have been Adopted from Care or are from Service Families."
           ],
           "source": "heuristic"
         }
@@ -149,9 +237,9 @@
       "changes": 4
     },
     {
-      "urn": "133292",
-      "name": "Micheldever CofE Primary School",
-      "score": 11.0,
+      "urn": "116337",
+      "name": "Rowledge Church of England Controlled Primary School",
+      "score": 16.0,
       "flags": [
         "policy_toc",
         "chrome",
@@ -159,58 +247,32 @@
       ],
       "findings": [
         {
-          "area": "enrichment",
+          "area": "curriculum",
           "action": "strip",
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Intent Implementation Impact"
+            "citizenship"
           ],
           "source": "heuristic"
         },
         {
-          "area": "enrichment",
+          "area": "curriculum",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "MPS   Evidencing the Impact of the Primary PE and Sport Premium July 2022 Final  3 : gymnastics, football and dance",
-            "MPS   Evidencing the Impact of the Primary PE and Sport Premium July 2022 Final  3 : Maths on the move/English on",
-            "MPS   Evidencing the Impact of the Primary PE and Sport Premium July 2022 Final  3 : in football matches and dance",
-            "MPS   Evidencing the Impact of the Primary PE and Sport Premium July 2022 Final  3 : PE, Whole school competition,",
-            "MPS   Evidencing the Impact of the Primary PE and Sport Premium July 2022 Final  3 : Active 360 to provide Maths on"
+            "nationalcurriculum(10): Citizenship \uf050 \uf050"
           ],
           "source": "heuristic"
         },
         {
-          "area": "ethos",
+          "area": "send",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Impact on health, attitude and social skills, team ethic and community Total Expenditure \u00a38650 Remaining Budget CF \u00a39074 Meeting national curriculum requirements for swimming and water safety."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 3
-    },
-    {
-      "urn": "116301",
-      "name": "Meonstoke Church of England Infant School",
-      "score": 9.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our PE provision aims to develop children\u2019s confidence, motivation and ability to being physically active, while teaching the positive impact that physical activity can have on mental health and emotional well-being."
+            "Children and Families"
           ],
           "source": "heuristic"
         },
@@ -220,7 +282,171 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Citizenship \u2013 Pupils will consider how art impacts others, how it makes others feel and how art can send messages."
+            "send code of practice january 2015 20260108173352780: Children and Families"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 3
+    },
+    {
+      "urn": "116012",
+      "name": "Sarisbury Infant School",
+      "score": 16.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Safeguarding and Harri Heart"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Safeguarding and Harri Heart: Safeguarding and Harri Heart"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Primary Behaviour Support Services"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Special Educational Needs & Disabilities: Maths Support Programmes",
+            "Special Educational Needs & Disabilities: Cognition and Learning",
+            "Special Educational Needs & Disabilities: Communication and Interaction",
+            "Special Educational Needs & Disabilities: Family Links School Service",
+            "Special Educational Needs & Disabilities: Health and Children\u2019s Services"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 3
+    },
+    {
+      "urn": "116042",
+      "name": "Scantabout Primary School",
+      "score": 16.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "By subject Personal, Social, Citizenship and Health Education (PSHCE) Learning PSHCE at Scantabout PHSCE Curriculum Map PSHCE Progression RSE Parents Leaflet NSPCC Speak Out, Stay Safe Certificate"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Educational Visits & Visitors"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Educational Visits & Visitors: Educational Visits & Visitors"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "115947",
+      "name": "Shipton Bellinger Primary School",
+      "score": 15.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Learners take part in daily small group reading that are guided by half-termly assessments to ensure children are accessing texts appropriate to their phonics ability."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "All teachers at Shipton Bellinger Primary School deliver Quality First Inclusive teaching, personalising provision when needed and adapting the learning environment to suit the needs of all pupils."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our approach includes: If you are worried about your child\u2019s wellbeing, please speak to your child\u2019s class teacher or contact our Designated Safeguarding Lead."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Special Educational Needs and Disabilities (SEND) At Shipton Bellinger Primary school, we strive to be as inclusive as possible, with the needs of pupils' with Special Educational Needs and Disabilities being met in a mainstream setting wherever possible."
           ],
           "source": "heuristic"
         },
@@ -230,18 +456,19 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Through activities such as community projects, charity events, and environmental initiatives, children learn the importance of contributing to society and making a positive impact."
+            "We accept payment by cash, cheque, bank transfer, government tax free childcare and various types of vouchers (please ask for more details) Our Facebook page is closed to families of the preschool, we welcome parents to join just before their child starts with us.",
+            "Further Guidance for Parents and Families Below is a curated set of guidance, practical tools, and trusted information drawn directly from reputable UK organisations that specialise in supporting parents, carers, and families with mental health and wellbeing."
           ],
           "source": "heuristic"
         }
       ],
       "status": "auto_fixed",
-      "changes": 3
+      "changes": 5
     },
     {
-      "urn": "116005",
-      "name": "Castle Hill Primary School",
-      "score": 8.0,
+      "urn": "116446",
+      "name": "Cove School",
+      "score": 13.0,
       "flags": [
         "policy_toc",
         "chrome",
@@ -254,7 +481,7 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Intent, Implementation and Impact"
+            "citizenship"
           ],
           "source": "heuristic"
         },
@@ -264,44 +491,18 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Curriculum: Intent, Implementation and Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116293",
-      "name": "Hurstbourne Tarrant Church of England Primary School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Aim Action Cost Impact Action",
-            "Cost Impact Action"
+            "Citizenship/PSHE",
+            "Curriculum Intent: Taking Citizenship action"
           ],
           "source": "heuristic"
         },
         {
           "area": "enrichment",
           "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "primary school pe and sport funding 2023 24 impact: country, athletics, netball and",
-            "primary school pe and sport funding 2023 24 impact: Netball club will incur",
-            "primary school pe and sport funding 2023 24 impact: RG netball club well-attended. A"
+            "citizenship"
           ],
           "source": "heuristic"
         }
@@ -310,9 +511,291 @@
       "changes": 2
     },
     {
-      "urn": "146244",
-      "name": "King's Academy Rowner",
-      "score": 8.0,
+      "urn": "116045",
+      "name": "Hook Junior School",
+      "score": 13.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings",
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Personal, Social and Health Education (PSHE) Relationships and Sex Education (RHSE) Citizenship Curriculum Enrichment At Hook Junior School, the curriculum is enriched and enhanced throughout the year through a range of visits such as to: In addition, we host visitors, theatre groups and curriculum workshops."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "116301",
+      "name": "Meonstoke Church of England Infant School",
+      "score": 13.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings",
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Citizenship Our music curriculum promotes active citizenship by encouraging students to contribute positively to their school and wider community.",
+            "Citizenship Our music curriculum promotes active citizenship by encouraging students to contribute positively to their school and wider community."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "115931",
+      "name": "Newtown Soberton Infant School",
+      "score": 13.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings",
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Citizenship Our music curriculum promotes active citizenship by encouraging students to contribute positively to their school and wider community.",
+            "Citizenship Our music curriculum promotes active citizenship by encouraging students to contribute positively to their school and wider community."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "137345",
+      "name": "Oaklands Catholic School",
+      "score": 13.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Curriculum Implementation: Citizenship"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "citizenship"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "115939",
+      "name": "Springwood Infant School",
+      "score": 12.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our curriculum is designed to support all children, including those with special educational needs and disabilities (SEND) and those eligible for pupil premium (PP), ensuring they make strong progress from their individual starting points."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Together, we create a positive and inclusive school community where every child feels valued, safe, and proud of their achievements."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our curriculum is designed to support all children, including those with special educational needs and disabilities (SEND) and those eligible for pupil premium (PP), ensuring they make strong progress from their individual starting points."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Together, we create a positive and inclusive school community where every child feels valued, safe, and proud of their achievements."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 4
+    },
+    {
+      "urn": "116067",
+      "name": "Springwood Junior School",
+      "score": 12.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our curriculum is designed to support all children, including those with special educational needs and disabilities (SEND) and those eligible for pupil premium (PP), ensuring they make strong progress from their individual starting points."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Together, we create a positive and inclusive school community where every child feels valued, safe, and proud of their achievements."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our curriculum is designed to support all children, including those with special educational needs and disabilities (SEND) and those eligible for pupil premium (PP), ensuring they make strong progress from their individual starting points."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Together, we create a positive and inclusive school community where every child feels valued, safe, and proud of their achievements."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 4
+    },
+    {
+      "urn": "134945",
+      "name": "Romsey Primary School & Nursery",
+      "score": 11.0,
       "flags": [
         "policy_toc",
         "implausible_offerings",
@@ -325,248 +808,17 @@
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Activity/Action Impact Comments"
+            "Actions Intended Impact"
           ],
           "source": "heuristic"
         },
         {
-          "area": "behaviour",
+          "area": "send",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "At King\u2019s Academy Rowner, we have a school uniform because we recognise that a consistent uniform approach increases children\u2019s identity and self-esteem, impacting positively on behaviour."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "116265",
-      "name": "Morelands Primary School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Intent Implementation Impact"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Evidencing the Impact of the Primary PE and Sport Premium July 2022 Alison Syred Paul: Purbrook, Havant Hawks Rugby,",
-            "Evidencing the Impact of the Primary PE and Sport Premium July 2022 Alison Syred Paul: Swimming provision effectively",
-            "Evidencing the Impact of the Primary PE and Sport Premium July 2022 Alison Syred Paul: Work alongside after school club provider",
-            "Evidencing the Impact of the Primary PE and Sport Premium July 2022 Alison Syred Paul: Dance Ideas Workshop)",
-            "Evidencing the Impact of the Primary PE and Sport Premium July 2022 Alison Syred Paul: Further CPD in Gymnastics and"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "116175",
-      "name": "Peel Common Primary School",
-      "score": 8.0,
-      "flags": [
-        "chrome",
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The impact of our curriculum on learning is systematically monitored, evaluated and reviewed through planned activities linked to the School Improvement plan ( e.g pupil progress meetings, book and planning scrutiny, lesson observations and pupil conferencing)."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Intent Implementation Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "136407",
-      "name": "Pilgrims' Cross CofE Aided Primary School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "2023 - 2024 Evidencing-the-Impact-of-the-Primary-PE-and-sport-premium pdf"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our focus for Sports Premium this year:: 2023 - 2024 Evidencing-the-Impact-of-the-Primary-PE-and-sport-premium pdf"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116260",
-      "name": "Emsworth Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We measure the impact of our curriculum by talking to pupils, assessing their outcomes, engagement and application of skills and knowledge and by regularly reviewing our content and progression models."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Inc Sports prem opportunites and impacts: Swimming and water safety",
-            "Inc Sports prem opportunites and impacts: PE and school sport?",
-            "Inc Sports prem opportunites and impacts: Reporting PE and sport premium grant",
-            "Inc Sports prem opportunites and impacts: Sustainability",
-            "Inc Sports prem opportunites and impacts: providing or improving opportunities in PE,"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "116026",
-      "name": "Knights Enham Nursery and Infant School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "\u2022 All leaders, including governors of the school, will understand and be able to articulate the impact of the well-planned curriculum on children\u2019s achievements and rates of progression."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Impact of the Sports Premium Funding: The funding has allowed us to offer more children the opportunity to participate in after school clubs by subsidising the cost."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "116298",
-      "name": "Long Sutton Church of England Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Curriculum+Intent,+Implementation+and+Impact+2025 26: Computing Design Technology Geography History",
-            "Curriculum+Intent,+Implementation+and+Impact+2025 26: Discover, Explore, Care",
-            "Curriculum+Intent,+Implementation+and+Impact+2025 26: English Mathematics RE Science",
-            "Curriculum+Intent,+Implementation+and+Impact+2025 26: French in Key Stage 2"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "CURRICULUM INTENT, IMPLEMENTATION & IMPACT OUR SCHOOL VISION Through our core Christian values of Love, Courage & Hope, we nurture, encourage and challenge each unique child to be kind, be respectful and be the best they can be."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "115859",
-      "name": "Oakridge Infant School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "An increase in the number of children selecting to take part in the extracurricular sports clubs/competitions Impact on pupils\u2019 attainment Participation in both curriculum and extracurricular sports activities has had a positive and noticeable impact on many pupils\u2019 behaviour, self-esteem and confidence."
+            "At Romsey Primary School, we ensure that our curriculum is inclusive and accessible for all children, including those with SEND."
           ],
           "source": "heuristic"
         },
@@ -576,1313 +828,13 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Hampshire County Council's Ethnic Minority Traveller Achievement Service (EMTAS) offers a wide range of resources and services to support families new to English including leaflets in many different languages, links to external websites and information videos.",
-            "Parents and carers can find out what is on offer locally through the Family Information and Services Hub directory: https://www.connecttosupporthampshire.org.uk/family-information-and-services-hub- fish/holiday-activities-and-food-programme-haf/ Time for a new career?",
-            "Hampshire Family Information and Services Hub Directory and SEND Local Offer, benefits and financial support for families"
+            "If you are concerned about your child\u2019s development, learning, or well-being, you are encouraged to speak directly to: \u2022 Your child\u2019s class teacher \u2022 The Special Educational Needs and Disabilities Co-ordinator (SENDCo) \u2022 The Headteacher We highly value strong partnerships with parents and carers."
           ],
           "source": "heuristic"
         }
       ],
       "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "115974",
-      "name": "Oakridge Junior School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "An increase in the number of children selecting to take part in the extracurricular sports clubs/competitions Impact on pupils\u2019 attainment Participation in both curriculum and extracurricular sports activities has had a positive and noticeable impact on many pupils\u2019 behaviour, self-esteem and confidence."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Hampshire County Council's Ethnic Minority Traveller Achievement Service (EMTAS) offers a wide range of resources and services to support families new to English including leaflets in many different languages, links to external websites and information videos.",
-            "Parents and carers can find out what is on offer locally through the Family Information and Services Hub directory: https://www.connecttosupporthampshire.org.uk/family-information-and-services-hub- fish/holiday-activities-and-food-programme-haf/ Time for a new career?",
-            "Hampshire Family Information and Services Hub Directory and SEND Local Offer, benefits and financial support for families"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "116589",
-      "name": "The Loddon School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We are part of the Food for Life Schools Award to show how our school provides healthy school meals, involves the children in doing brilliant work to grow produce, offers great choices and food education that has a positive impact on the health and wellbeing of our children."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We are part of the Food for Life Schools Award to show how our school provides healthy school meals, involves the children in doing brilliant work to grow produce, offers great choices and food education that has a positive impact on the health and wellbeing of our children."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "136643",
-      "name": "Bohunt School",
-      "score": 5.0,
-      "flags": [
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Furthermore, the DfE\u2019s evidence review emphasises the positive impact of PSHE education on the well-being of children and young people."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116177",
-      "name": "Brockhurst Primary School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Intent Implementation Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "131516",
-      "name": "Burnham Copse Primary School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Intent Implementation Impact",
-            "Sports Premium Statement and Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "132802",
-      "name": "Cherrywood Community Primary School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Intent, Implementation & Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116140",
-      "name": "Cove Junior School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Development Cost Impact",
-            "Evidence Actual Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116446",
-      "name": "Cove School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "germany curriculum impact history is"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115944",
-      "name": "Cupernham Junior School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Impact and Evaluation"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116180",
-      "name": "Lee-On-the-Solent Infant and Nursery School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Evidencing-the-Impact-of-Primary-PE-and-Sport-Premium"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116070",
-      "name": "Netley Abbey Infant School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Intent Implementation Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116061",
-      "name": "Netley Abbey Junior School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Intent Implementation Impact"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115999",
-      "name": "Poulner Junior School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Evidencing-the-impact-24-25 PDF File"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116248",
-      "name": "Queen's Inclosure Primary School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Impact of Spending"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115892",
-      "name": "Redlands Primary School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Activity/Action Impact Comments"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "138135",
-      "name": "Robert May's School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Parent/Carer Consultations, Reporting and Assessment"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115850",
-      "name": "Alton Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Details of our Curriculum and SEND: Art intent, implementation and impact pdf",
-            "Details of our Curriculum and SEND: Computing intent, implementation and impact pdf",
-            "Curriculum, useful information & SEND Details of our intent, implementation and impact of each curriculum subject can be found within 'Details of our Curriculum'."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116174",
-      "name": "Alver Valley Infant and Nursery School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The impact on respectful behaviour was so significant, with children, staff and parents all focused and using the language related to the strand after only one term, that we now also use this approach for an additional strand each half term."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116172",
-      "name": "Alver Valley Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The impact on respectful behaviour was so significant, with children, staff and parents all focused and using the language related to the strand after only one term, that we now also use this approach for an additional strand each half term."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116084",
-      "name": "Bidbury Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Feedback to children is prompt and they are encouraged to be reflective learners, aware of their goals and responsibilities as writers and how their writing, reading or communication choices might impact or influence others."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116271",
-      "name": "Binsted Church of England Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Key areas of expenditure this year are: Across the school we have an increased rate of attendance at Sporting clubs: The impact of these clubs contributes to the school's low exclusion rate and help improve the mental wellbeing and physical health of the children in our school."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116013",
-      "name": "Bishopswood Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Wider approaches: Support for non-academic issues that impact success in school, such as attendance, behaviour and social and emotional challenges."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116041",
-      "name": "Castle Hill Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "It provides music opportunities for all as we believe that music is a powerful, unique form of communication that can support mental health and impact on how pupils\u2019 feel, think and act."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116058",
-      "name": "Crofton Hammond Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "These interventions may include targeted academic support such as small-group tuition, tutoring, or structured intervention programmes, along with pastoral support aimed at improving wellbeing, attendance, or social and emotional learning\u2014each supported by strong evidence for impact when implemented well."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116285",
-      "name": "Ecchinswell and Sydmonton Church of England Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Core Christian values of respect, responsibility, inspiration and courage are explicitly taught and often referred to during the school day, impacting positively on pupils\u2019 academic, spiritual and moral development."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116176",
-      "name": "Gomer Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Sports funding impact and allocation: Opportunities, Impacts, and Sustainability Details"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115897",
-      "name": "Grateley Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Sports Premium Impact Statement 2025 2026: Athletics"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116157",
-      "name": "Guillemont Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The class teacher, with the support of the SENDCO, will be responsible for working with your child and making sure the support we put in place is having the impact we intended."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115990",
-      "name": "Harrison Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Evidencing the impact of the Primary PE and Sport Premium 2023 2024: Enter football, cricket, netball, hockey and",
-            "Evidencing the impact of the Primary PE and Sport Premium 2023 2024: Football, tennis, netball running,",
-            "Evidencing the impact of the Primary PE and Sport Premium 2023 2024: athletics, cricket, multi-sport clubs have all",
-            "Evidencing the impact of the Primary PE and Sport Premium 2023 2024: football, tennis, hockey, ball games and",
-            "Evidencing the impact of the Primary PE and Sport Premium 2023 2024: gymnastics, dancing, cheerleading,"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116137",
-      "name": "Hatch Warren Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The impact of our PSHE curriculum and our values will teach the children to respect both their peers and adults in school and the wider community."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115940",
-      "name": "Herne Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Children will understand and value the positive impact that art and creativity can have on personal well-being and leave with a love and appreciation of art, inspiring them to become life-long learners."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115920",
-      "name": "Itchen Abbas Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Funding allocated for Impact Staffing: Trained LSAs used for specific intervention programmes Maximising pupil outcomes Targeted support for identified pupils in reading, writing and Mathematics."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "140732",
-      "name": "King's Academy Lord Wilson",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We believe this policy will positively impacts on our school community by promoting a more focused learning environment, stronger social connections, and a safer online space for all students."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116468",
-      "name": "Kings' School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This refurbishment will directly impact pupil engagement, STEM achievement, our ability to enhance our extra-curricular and club activities on offer and stimulate and prepare for future careers."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "149858",
-      "name": "Napier School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Governors and the proprietor body should ensure that their systems and processes include checks on the impact of the curriculum."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116256",
-      "name": "Nightingale Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Special Educational Needs and Disability Leaflet for Parents: Reading, writing or maths,",
-            "Special Educational Needs and Disability Leaflet for Parents: Cognition and Learning",
-            "Special Educational Needs and Disability Leaflet for Parents: Communication and Interaction",
-            "Special Educational Needs and Disability Leaflet for Parents: Leaflet for Parents and Carers"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116030",
-      "name": "Northern Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Safety and the changing body Gaining an introduction to Parliament and the justice system, the children learn about rights and responsibilities, pressure groups, the impact of energy on the planet and how to contribute to the community."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115935",
-      "name": "Northern Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Safety and the changing body Gaining an introduction to Parliament and the justice system, the children learn about rights and responsibilities, pressure groups, the impact of energy on the planet and how to contribute to the community."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116637",
-      "name": "Oak Lodge School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Art Art at Oak Lodge School Art at Oak Lodge School provides pupils with a creative and expressive outlet, allowing them to develop confidence, fine motor skills, and self-expression in a supportive and inclusive environment.",
-            "By creating a supportive and inclusive learning environment, we aim to make maths meaningful, enjoyable, and relevant to everyday life, helping every pupil achieve their full potential.",
-            "Science at Oak Lodge encourages exploration and discovery, helping pupils develop an awareness of the world around them in a supportive and inclusive environment."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116039",
-      "name": "Old Basing Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "After School Clubs and After School Care Club Covid-19 - Risk Assessments for SCL After School Care Club After School Care - SCL Here at Old Basing Infant School we work with SCL to provide after school care on site from 3.15pm-6.00pm every school day."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116046",
-      "name": "Oliver's Battery Primary and Nursery School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "They must also include detail about the impact this funding has on pupils\u2019 PE and sport participation and attainment."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116511",
-      "name": "Osborne School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "\uf06e The 'Pulse' initiative, which has encouraged joint working between therapists, staff and home , has had a positive impact on students who have more challenging aspects of behaviour."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115934",
-      "name": "Owslebury Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Support for Families including those with SEND: Family Link Support"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115965",
-      "name": "Padnell Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Special Educational Needs (SEN) A child or young person has SEN if they have a learning difficulty or disability which calls for special educational provision to be made for them."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115964",
-      "name": "Padnell Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Special Educational Needs (SEND): SEN Local Offer",
-            "SEN Local Offer Special Educational Needs (SEND)"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116033",
-      "name": "Park Gate Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our commitment to fostering a safe, inclusive environment ensures that all children feel valued and confident to speak out, ask questions, and seek help when needed."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115936",
-      "name": "Petersfield Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "In the music education we offer, we ensure that there is support for all our children includ- ing those pupils with special educational needs (SEND) Our school overview and progression of skills for music is published on our website and shows a clear progression of skills and knowledge."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116059",
-      "name": "Potley Hill Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "It is of vital importance that all of us \u2013 the local authority, families, schools and children \u2013 do all we can to ensure children achieve the highest levels of attendance."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116031",
-      "name": "Poulner Infant School and Nursery",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Governors: Governor Secure Area"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116308",
-      "name": "Preston Candover Church of England Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We demonstrate love through the offer of entitlement, which we make to all children to support their educational, emotional, social, moral, cultural and spiritual development."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116506",
-      "name": "Purbrook Park School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Purbrook Park School pupils help Home-Start Havant and Motiv8 Christmas Hamper Appeal 2025 This year, pupils from Purbrook Park School have shown their support for the Home-Start Havant charity (part of Home-Start Hampshire) and to Motiv8, who support local families in need throughout the year.",
-            "At Purbrook Park we really invest in this process and, as a result, build strong partnerships with families from the start."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116028",
-      "name": "Ranvilles Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Useful Links (Safeguarding, E-Safety and Wellbeing resources): E-Safety Parent Workshop",
-            "Useful Links (Safeguarding, E-Safety and Wellbeing resources): Home Internet Controls",
-            "Useful Links (Safeguarding, E-Safety and Wellbeing resources): Internet Matters Checklist",
-            "Useful Links (Safeguarding, E-Safety and Wellbeing resources): NSPCC Pantosaurus Story",
-            "Useful Links (Safeguarding, E-Safety and Wellbeing resources): Parental Controls-Internet Matters"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "136657",
-      "name": "Ringwood School Academy",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Parents who would like to find out more about the school\u2019s curriculum are encouraged to contact Michelle Barker-Garrod, Assistant Headteacher, via email at mbarkergarrod@ringwood.hants.sch.uk Curriculum Overview Curriculum Maps Assessment Options Academically More Able SEND PSHE Literacy Careers Main School"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116525",
-      "name": "Walhampton School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "There are a variety of activities including Coding Club, BBC Microbit, Lego League STEM Competition which celebrates discovery, impact, inclusion, innovation, teamwork and above all fun!"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116277",
-      "name": "Bursledon Church of England Infant School",
-      "score": 2.0,
-      "flags": [
-        "implausible_offerings"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "116027",
-      "name": "Bursledon Junior School(CA)",
-      "score": 2.0,
-      "flags": [
-        "implausible_offerings"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "134734",
-      "name": "Cadland Primary School",
-      "score": 2.0,
-      "flags": [
-        "implausible_offerings"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "116357",
-      "name": "Charles Kingsley's Church of England Primary School",
-      "score": 2.0,
-      "flags": [
-        "implausible_offerings"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "116431",
-      "name": "Harrow Way Community School",
-      "score": 2.0,
-      "flags": [
-        "implausible_offerings"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
+      "changes": 3
     }
   ]
 }
