@@ -1,11 +1,76 @@
 {
-  "ranAt": "2026-08-19T06:53:36Z",
+  "ranAt": "2026-08-24T07:09:47Z",
   "dryRun": false,
   "maxPacks": 6,
   "isiResolveCap": 80,
   "precisLimit": 60,
   "upgradeHighlights": false,
-  "elapsedSeconds": 724.7,
+  "interestWeighting": true,
+  "elapsedSeconds": 803.8,
+  "interestBySlug": {
+    "isle-of-wight": 0.665,
+    "southampton": 0.693,
+    "portsmouth": 0.693,
+    "dorset": 0.693,
+    "bournemouth-christchurch-and-poole": 0.693,
+    "surrey": 0.693,
+    "west-sussex": 0.696,
+    "east-sussex": 0.696,
+    "brighton-and-hove": 0.696,
+    "kent": 0.697,
+    "medway": 0.697,
+    "west-berkshire": 0.697,
+    "reading": 0.697,
+    "wokingham": 0.697,
+    "bracknell-forest": 0.697,
+    "windsor-and-maidenhead": 0.697,
+    "slough": 0.697,
+    "buckinghamshire": 0.697,
+    "milton-keynes": 0.697,
+    "oxfordshire": 0.697
+  },
+  "topInterest": [
+    {
+      "slug": "bracknell-forest",
+      "score": 0.697,
+      "boostPct": 2.8
+    },
+    {
+      "slug": "buckinghamshire",
+      "score": 0.697,
+      "boostPct": 2.8
+    },
+    {
+      "slug": "kent",
+      "score": 0.697,
+      "boostPct": 2.8
+    },
+    {
+      "slug": "medway",
+      "score": 0.697,
+      "boostPct": 2.8
+    },
+    {
+      "slug": "milton-keynes",
+      "score": 0.697,
+      "boostPct": 2.8
+    },
+    {
+      "slug": "oxfordshire",
+      "score": 0.697,
+      "boostPct": 2.8
+    },
+    {
+      "slug": "reading",
+      "score": 0.697,
+      "boostPct": 2.8
+    },
+    {
+      "slug": "slough",
+      "score": 0.697,
+      "boostPct": 2.8
+    }
+  ],
   "targets": [
     {
       "localAuthority": "Bournemouth, Christchurch and Poole",
@@ -17,7 +82,9 @@
       "schoolPrecisPct": 92.8,
       "eyPct": 88.2,
       "childminderPct": 74.4,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.693,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Southampton",
@@ -29,19 +96,9 @@
       "schoolPrecisPct": 96.4,
       "eyPct": 88.3,
       "childminderPct": 77.8,
-      "softLaunchPass": true
-    },
-    {
-      "localAuthority": "Brighton and Hove",
-      "slug": "brighton-and-hove",
-      "independentPrecisPct": 61.5,
-      "independentPrecis": "8/13",
-      "isiUrls": "7/13",
-      "isiGap": 6,
-      "schoolPrecisPct": 92.2,
-      "eyPct": 86.8,
-      "childminderPct": 79.2,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.693,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Wokingham",
@@ -53,7 +110,23 @@
       "schoolPrecisPct": 90.4,
       "eyPct": 90.9,
       "childminderPct": 78.9,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.697,
+      "interestBoostPct": 2.8
+    },
+    {
+      "localAuthority": "Brighton and Hove",
+      "slug": "brighton-and-hove",
+      "independentPrecisPct": 61.5,
+      "independentPrecis": "8/13",
+      "isiUrls": "7/13",
+      "isiGap": 6,
+      "schoolPrecisPct": 92.2,
+      "eyPct": 86.8,
+      "childminderPct": 79.2,
+      "softLaunchPass": true,
+      "interestScore": 0.696,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "East Sussex",
@@ -65,7 +138,9 @@
       "schoolPrecisPct": 90.5,
       "eyPct": 88.0,
       "childminderPct": 71.4,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.696,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Milton Keynes",
@@ -77,7 +152,9 @@
       "schoolPrecisPct": 95.3,
       "eyPct": 90.1,
       "childminderPct": 66.7,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.697,
+      "interestBoostPct": 2.8
     }
   ],
   "after": [
@@ -91,7 +168,9 @@
       "schoolPrecisPct": 92.8,
       "eyPct": 88.2,
       "childminderPct": 74.4,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.693,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Southampton",
@@ -103,19 +182,9 @@
       "schoolPrecisPct": 96.4,
       "eyPct": 88.3,
       "childminderPct": 77.8,
-      "softLaunchPass": true
-    },
-    {
-      "localAuthority": "Brighton and Hove",
-      "slug": "brighton-and-hove",
-      "independentPrecisPct": 61.5,
-      "independentPrecis": "8/13",
-      "isiUrls": "7/13",
-      "isiGap": 6,
-      "schoolPrecisPct": 92.2,
-      "eyPct": 86.8,
-      "childminderPct": 79.2,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.693,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Wokingham",
@@ -127,7 +196,23 @@
       "schoolPrecisPct": 90.4,
       "eyPct": 90.9,
       "childminderPct": 78.9,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.697,
+      "interestBoostPct": 2.8
+    },
+    {
+      "localAuthority": "Brighton and Hove",
+      "slug": "brighton-and-hove",
+      "independentPrecisPct": 61.5,
+      "independentPrecis": "8/13",
+      "isiUrls": "7/13",
+      "isiGap": 6,
+      "schoolPrecisPct": 92.2,
+      "eyPct": 86.8,
+      "childminderPct": 79.2,
+      "softLaunchPass": true,
+      "interestScore": 0.696,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "East Sussex",
@@ -139,7 +224,9 @@
       "schoolPrecisPct": 90.5,
       "eyPct": 88.0,
       "childminderPct": 71.4,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.696,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Milton Keynes",
@@ -151,14 +238,16 @@
       "schoolPrecisPct": 95.3,
       "eyPct": 90.1,
       "childminderPct": 66.7,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.697,
+      "interestBoostPct": 2.8
     }
   ],
   "stuck": [
     "Bournemouth, Christchurch and Poole",
     "Southampton",
-    "Brighton and Hove",
     "Wokingham",
+    "Brighton and Hove",
     "East Sussex",
     "Milton Keynes"
   ],
@@ -174,7 +263,9 @@
       "schoolPrecisPct": 92.8,
       "eyPct": 88.2,
       "childminderPct": 74.4,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.693,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Southampton",
@@ -186,7 +277,9 @@
       "schoolPrecisPct": 96.4,
       "eyPct": 88.3,
       "childminderPct": 77.8,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.693,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Wokingham",
@@ -198,7 +291,9 @@
       "schoolPrecisPct": 90.4,
       "eyPct": 90.9,
       "childminderPct": 78.9,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.697,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "Brighton and Hove",
@@ -210,7 +305,9 @@
       "schoolPrecisPct": 92.2,
       "eyPct": 86.8,
       "childminderPct": 79.2,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.696,
+      "interestBoostPct": 2.8
     },
     {
       "localAuthority": "East Sussex",
@@ -222,7 +319,9 @@
       "schoolPrecisPct": 90.5,
       "eyPct": 88.0,
       "childminderPct": 71.4,
-      "softLaunchPass": true
+      "softLaunchPass": true,
+      "interestScore": 0.696,
+      "interestBoostPct": 2.8
     }
   ]
 }
