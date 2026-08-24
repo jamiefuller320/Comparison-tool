@@ -1,34 +1,32 @@
 # Qualitative QA loop
 
-- Ran at: `2026-08-24T08:51:42.864884+00:00`
+- Ran at: `2026-08-24T10:32:08.570159+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `45`
-- New learned phrases: `34`
+- Reviewed: `14`
+- Schools changed: `8`
+- Findings applied: `8`
+- New learned phrases: `4`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (45 area finding(s)).
-- Learned 34 new junk phrase(s) (store size 400).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 8 school(s) (8 area finding(s)).
+- Learned 4 new junk phrase(s) (store size 400).
+- Reviewed top 14 suspect(s); provider=none.
 
 ## Suspects
 
-- `115949` Stockbridge Primary & Pre-School — score 20.0 flags=chrome,policy_toc,implausible_offerings
-- `116388` St Peter's Church of England Aided Junior School — score 19.0 flags=policy_toc,chrome,implausible_offerings
-- `115962` Stanmore Primary School — score 19.0 flags=chrome,policy_toc,implausible_offerings
-- `116318` St Luke's Church of England Primary School — score 17.0 flags=chrome,policy_toc,implausible_offerings
-- `151949` St Mark's Church of England Primary School — score 17.0 flags=chrome,policy_toc,implausible_offerings
-- `116383` St Swithun Wells Catholic Primary School, Chandlers Ford — score 16.0 flags=chrome,policy_toc,implausible_offerings
-- `116314` St John the Baptist Church of England Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
-- `131450` St Mark's Church of England Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `116380` St Bede's Catholic Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `116400` St John's Church of England Voluntary Aided Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `116352` St Matthew's Church of England Aided Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `116319` Steep Church of England Voluntary Controlled Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `116329` St Bede Church of England Primary School — score 6.0 flags=chrome
-- `116393` St John's, Gosport Church of England Voluntary Aided Primary School — score 6.0 flags=chrome
-- `116332` St Michael's Church of England Controlled Infant School — score 6.0 flags=chrome
-- `116377` St Thomas More's Catholic Primary School, Havant — score 6.0 flags=chrome
+- `116376` St Jude's Catholic Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `116333` St Michael's Church of England Controlled Junior School — score 5.0 flags=policy_toc,implausible_offerings
+- `137403` St Anthony's Catholic Primary School — score 3.0 flags=chrome
+- `147701` St Columba CE Primary School — score 3.0 flags=chrome
+- `116382` St John the Baptist Catholic Primary School, Andover — score 3.0 flags=chrome
+- `137422` St Joseph's Catholic Primary School — score 3.0 flags=chrome
+- `116489` St Peter's Catholic Primary School, Waterlooville — score 3.0 flags=chrome
+- `151930` St Peter's Catholic Primary School, Waterlooville — score 3.0 flags=chrome
+- `136643` Bohunt School — score 2.0 flags=implausible_offerings
+- `116277` Bursledon Church of England Infant School — score 2.0 flags=implausible_offerings
+- `116027` Bursledon Junior School(CA) — score 2.0 flags=implausible_offerings
+- `134734` Cadland Primary School — score 2.0 flags=implausible_offerings
+- `116357` Charles Kingsley's Church of England Primary School — score 2.0 flags=implausible_offerings
+- `116431` Harrow Way Community School — score 2.0 flags=implausible_offerings
