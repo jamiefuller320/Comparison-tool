@@ -5534,6 +5534,15 @@ html.tour-running .hero-inner > * {
   color: var(--ink-soft);
   font-size: 0.98rem;
   line-height: 1.45;
+  max-height: min(36vh, 220px);
+  overflow-y: auto;
+}
+
+.tour-demo-status {
+  margin-top: -0.5rem;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--sea-deep);
 }
 
 .tour-actions {

@@ -4,8 +4,9 @@ import { AREA_STAGE_LANDINGS, areaStagePath } from "@/lib/areaStages";
 import { BRAND_HOME_URL } from "@/lib/brand";
 import { GUIDE_PAGES, guidePath, guidesIndexPath } from "@/lib/guides";
 import {
-  listSeoHampshireSchools,
-  listSeoHampshireTowns,
+  listSeoAreasWithTowns,
+  listSeoSchools,
+  listSeoTowns,
   schoolPath,
   townPath,
   townsIndexPath,
@@ -16,9 +17,10 @@ export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   const areas = listCoverageAreas();
-  const hampshire = areas.find((area) => area.isSeed);
-  const towns = listSeoHampshireTowns();
-  const schools = listSeoHampshireSchools();
+  const areaBySlug = new Map(areas.map((area) => [area.slug, area]));
+  const towns = listSeoTowns();
+  const schools = listSeoSchools();
+  const townHubSlugs = listSeoAreasWithTowns();
 
   return [
     {
@@ -64,33 +66,38 @@ export default function sitemap(): MetadataRoute.Sitemap {
         })),
       ];
     }),
-    ...(hampshire
-      ? [
-          {
-            url: `${BRAND_HOME_URL}${townsIndexPath(hampshire.slug)}`,
-            lastModified: hampshire.lastModified
-              ? new Date(hampshire.lastModified)
-              : lastModified,
-            changeFrequency: "weekly" as const,
-            priority: 0.82,
-          },
-          ...towns.map((town) => ({
-            url: `${BRAND_HOME_URL}${townPath(town.slug, town.areaSlug)}`,
-            lastModified: hampshire.lastModified
-              ? new Date(hampshire.lastModified)
-              : lastModified,
-            changeFrequency: "weekly" as const,
-            priority: 0.78,
-          })),
-          ...schools.map((school) => ({
-            url: `${BRAND_HOME_URL}${schoolPath(school.urn)}`,
-            lastModified: hampshire.lastModified
-              ? new Date(hampshire.lastModified)
-              : lastModified,
-            changeFrequency: "weekly" as const,
-            priority: 0.65,
-          })),
-        ]
-      : []),
+    ...townHubSlugs.map((slug) => {
+      const area = areaBySlug.get(slug);
+      return {
+        url: `${BRAND_HOME_URL}${townsIndexPath(slug)}`,
+        lastModified: area?.lastModified
+          ? new Date(area.lastModified)
+          : lastModified,
+        changeFrequency: "weekly" as const,
+        priority: area?.isSeed ? 0.82 : 0.8,
+      };
+    }),
+    ...towns.map((town) => {
+      const area = areaBySlug.get(town.areaSlug);
+      return {
+        url: `${BRAND_HOME_URL}${townPath(town.slug, town.areaSlug)}`,
+        lastModified: area?.lastModified
+          ? new Date(area.lastModified)
+          : lastModified,
+        changeFrequency: "weekly" as const,
+        priority: area?.isSeed ? 0.78 : 0.74,
+      };
+    }),
+    ...schools.map((school) => {
+      const area = areaBySlug.get(school.areaSlug);
+      return {
+        url: `${BRAND_HOME_URL}${schoolPath(school.urn)}`,
+        lastModified: area?.lastModified
+          ? new Date(area.lastModified)
+          : lastModified,
+        changeFrequency: "weekly" as const,
+        priority: area?.isSeed ? 0.65 : 0.6,
+      };
+    }),
   ];
 }

@@ -1,10 +1,17 @@
 /** Interactive “How to use” walkthrough — steps, cache, and localStorage helpers. */
 
+import type { TourDemoId } from "@/lib/tourDemo";
+import { TOUR_DEMO_POSTCODE } from "@/lib/tourDemo";
+
 export const TOUR_STORAGE_KEY = "schoolside.tourSeen";
 export const TOUR_START_EVENT = "schoolside:start-tour";
+/** Ask Setup to open a binder tile (postcode / stages / sector / provision). */
+export const TOUR_SETUP_TILE_EVENT = "schoolside:tour-setup-tile";
 export const TOUR_PAD = 10;
 /** Sticky header clearance when centering a target. */
 export const TOUR_HEADER_OFFSET = 72;
+
+export type TourSetupTileId = "postcode" | "stages" | "sector" | "provision";
 
 export interface TourStep {
   id: string;
@@ -12,8 +19,15 @@ export interface TourStep {
   target: string;
   title: string;
   body: string;
-  /** Skip when the target is missing or not laid out (e.g. nearby before postcode). */
+  /** Skip when the target is missing or not laid out (e.g. radius before postcode). */
   optional?: boolean;
+  /**
+   * Keep optional steps in the script when their journey chapter isn’t mounted
+   * yet (Setup / Find / Shortlist / Side by side / Understand peer pages).
+   */
+  retainIfMissing?: boolean;
+  /** Live demo to run when this step becomes active (fills UI, picks schools…). */
+  demo?: TourDemoId;
 }
 
 /** Document-space box for a tour target, captured once when the tour starts. */
@@ -32,95 +46,139 @@ export type ViewportRect = {
   height: number;
 };
 
+/** Setup binder tile to open before spotlighting a control inside it. */
+export const TOUR_TARGET_SETUP_TILE: Partial<
+  Record<string, TourSetupTileId>
+> = {
+  postcode: "postcode",
+  stages: "stages",
+  sector: "sector",
+  provision: "provision",
+};
+
+/**
+ * Live journey walkthrough — fills a sample postcode, shortlists KS2 + KS3
+ * schools, then walks Side by side data tabs, charts, and print.
+ */
 export const TOUR_STEPS: TourStep[] = [
   {
     id: "welcome",
     target: "hero",
     title: "Welcome to School Compass",
-    body: "This walkthrough points out the main controls. You can leave anytime with Skip, or restart later from How to use in the header.",
+    body: "This walkthrough runs a live example with a Hampshire postcode, shortlists schools, then opens the comparison boards. Skip anytime, or restart from How to use beside the chapter tabs.",
+  },
+  {
+    id: "chapters",
+    target: "page-chapters",
+    title: "Five chapters, one journey",
+    body: "Setup → Find → Shortlist → Side by side → Understand. We’ll drive each chapter with sample data so you can see how the pieces connect.",
   },
   {
     id: "postcode",
     target: "postcode",
-    title: "Start with your home postcode",
-    body: "Enter a full UK postcode (spaces or hyphens are fine). Find nearby maps schools around home so you can tick ones worth comparing.",
+    title: "Start with a home postcode",
+    body: `We’ll look up ${TOUR_DEMO_POSTCODE} (Totton, Hampshire — a real sample near codes like SO40 1AA). Enter your own postcode the same way — spaces or hyphens are fine.`,
+    demo: "fill-postcode",
   },
   {
     id: "stages",
     target: "stages",
-    title: "Choose by age or key stage",
-    body: "Drag the child’s age range if key stages are unfamiliar — matching stages turn on automatically. Or press the stage chips (ages shown on each) to override. Childminders stay a separate care category. Several school stages use OR by default (Any stage); choose Every stage (AND) when you want only schools that cover all of them.",
+    title: "Turn on KS2 and KS3",
+    body: "For this demo we select Key Stage 2 and Key Stage 3 so the Find list includes juniors/primaries and secondaries. OR matching is the default (any selected stage).",
+    demo: "set-stages-ks2-ks3",
   },
   {
     id: "sector",
     target: "sector",
     title: "State, independent, or both",
-    body: "School type filters the list and map. State defaults to KS2 tables; independent defaults to secondary GCSE measures. You can switch anytime.",
+    body: "School type filters the map and list. We’ll keep State & independent for the sample shortlist.",
   },
   {
     id: "nearby",
     target: "nearby",
-    title: "Find map and tick list",
-    body: "After a postcode lookup, Find maps schools in range and the list adds road distance. Unlock postcode to drag the home pin and refresh the map. Tick a school to add it to your shortlist (up to four).",
+    title: "Find map around home",
+    body: "Find opens with schools in the range ring and road distances in the list. Unlock postcode later if you want to drag the home pin.",
     optional: true,
+    retainIfMissing: true,
   },
   {
     id: "radius",
     target: "radius",
-    title: "Widen or tighten the range ring",
-    body: "Use the kilometre chips to grow or shrink the search ring. The map and list update together.",
+    title: "Widen the range ring",
+    body: "Watch the kilometre chips — we’ll move the ring to 8 km so juniors and secondaries near Totton appear together.",
     optional: true,
+    retainIfMissing: true,
+    demo: "set-radius-8km",
   },
   {
-    id: "search",
-    target: "search",
-    title: "Search by name or place",
-    body: "Below the map you can search by name, town, postcode or URN. Results respect your stage and school-type filters.",
+    id: "pick-shortlist",
+    target: "nearby",
+    title: "Tick two KS2 and two KS3 schools",
+    body: "We’ll shortlist two junior/primary settings and two secondaries from the Find list (four is the maximum). Tick or untick anytime yourself.",
+    optional: true,
+    retainIfMissing: true,
+    demo: "pick-shortlist",
   },
   {
     id: "shortlist",
     target: "shortlist",
-    title: "Your shortlist (up to four)",
-    body: "Selected schools appear as chips here. Use Compare or Share when you’re ready — your shortlist stays in the page URL so a co-parent can open the same view.",
+    title: "Your shortlist chips",
+    body: "Selected schools appear here on Shortlist. Share keeps the same schools in the URL for a co-parent.",
   },
   {
     id: "boards",
     target: "boards",
-    title: "Side-by-side comparison",
-    body: "Comparison shows one path at a time (Early years, Childminders, KS1, KS2, or KS4). If several categories are on, use the tabs. Gaps versus England or a sector mean help you spot patterns — not a final verdict.",
-  },
-  {
-    id: "childminders",
-    target: "childminders",
-    title: "Childminders path",
-    body: "Open the Childminders tab after shortlisting a consented provider. You’ll get the directory card, vetting checklist, and visit pack — separate from the nursery Ofsted table.",
-    optional: true,
+    title: "Side by side — KS2 path",
+    body: "Comparison opens one path at a time. We’ll start on Key Stage 2 for the primary shortlist — gaps versus England are patterns to discuss, not a verdict.",
+    demo: "open-path-ks2",
   },
   {
     id: "decision-guidance",
     target: "decision-guidance",
-    title: "What the data tells you",
-    body: "On each Side by side path, use “How to read this as a parent”. It opens automatically when your shortlist is a single stage; with several stages, pick one inside the panel. Use it before you treat a table or précis as a verdict.",
+    title: "How to read this as a parent",
+    body: "Context opens with guidance for the active path. Use it before you treat a table or précis as a final answer.",
     optional: true,
+    retainIfMissing: true,
+    demo: "open-section-context",
   },
   {
-    id: "visit-pack",
-    target: "visit-pack",
-    title: "Print a shortlist or visit pack",
-    body: "Every path with a shortlist can print a pack: how to read the data, contact cards, inspection précis, and visit or interview prompts. Use Print / save as PDF before open days or calls.",
+    id: "compare-ofsted",
+    target: "compare-sections",
+    title: "Browse Ofsted / inspection",
+    body: "Section tabs mirror Setup’s binder. We’ll open Ofsted for précis and grades — useful visit questions, not rankings.",
     optional: true,
+    retainIfMissing: true,
+    demo: "open-section-ofsted",
   },
   {
     id: "year-trend",
     target: "year-trend",
-    title: "Year-on-year trends on Stats",
-    body: "On the KS2 Context tab you’ll see a short note about year trends; the graphs themselves sit on the Stats tab. Open Year trend on a measure for each shortlisted school and England across published years. The hatched COVID band marks 2019/20–2021/22, when KS2 tables were unpublished — lines do not connect across that gap, and those years are not school failures. Small cohorts bounce; blank cells are usually suppression or a new school.",
+    title: "Year-trend charts on Stats",
+    body: "On Stats, open Year trend on a measure. Lines show each shortlisted school and England; the hatched COVID band marks unpublished KS2 years.",
+    optional: true,
+    retainIfMissing: true,
+    demo: "expand-year-trend",
+  },
+  {
+    id: "boards-ks4",
+    target: "boards",
+    title: "Switch to the KS3–4 path",
+    body: "Path chips move between stages. We’ll open KS3–4 / 16–18 for the secondary shortlist — same Side by side frame, different tables.",
+    demo: "open-path-ks4",
+  },
+  {
+    id: "visit-pack",
+    target: "print-comparison-pack",
+    title: "Print a comparison pack",
+    body: "Print comparison pack builds a PDF-ready shortlist: reading guide, contacts, précis, and visit prompts for open days.",
+    optional: true,
+    retainIfMissing: true,
   },
   {
     id: "how",
     target: "how",
     title: "Understand the figures",
-    body: "Open Understand for topic cards — getting started, each stage guide, FAQ, and where the numbers come from. Take a look whenever you need a refresher before you treat a table as a verdict.",
+    body: "Topic cards cover getting started, stage guides, FAQ, and data sources. Restart this tour anytime from How to use — try it next with your own postcode.",
   },
 ];
 
@@ -144,6 +202,12 @@ export function requestTourStart(): void {
   window.dispatchEvent(new CustomEvent(TOUR_START_EVENT));
 }
 
+export function requestTourSetupTile(tile: TourSetupTileId): void {
+  window.dispatchEvent(
+    new CustomEvent(TOUR_SETUP_TILE_EVENT, { detail: { tile } }),
+  );
+}
+
 export function tourTargetSelector(target: string): string {
   return `[data-tour="${target}"]`;
 }
@@ -159,7 +223,11 @@ export function resolveActiveTourSteps(
 ): TourStep[] {
   return steps.filter((step) => {
     const el = doc.querySelector(tourTargetSelector(step.target));
-    if (!el) return !step.optional;
+    if (!el) {
+      if (!step.optional) return true;
+      // Peer journey pages aren’t mounted yet — keep deferred optionals.
+      return Boolean(step.retainIfMissing);
+    }
 
     const measure =
       "getBoundingClientRect" in el &&
@@ -167,8 +235,10 @@ export function resolveActiveTourSteps(
         ? (el as HTMLElement).getBoundingClientRect()
         : null;
 
-    // Zero-size optional targets (hidden / not laid out) are skipped.
+    // Zero-size optional targets (hidden / not laid out) are skipped,
+    // unless they belong to another chapter that remounts later.
     if (step.optional) {
+      if (step.retainIfMissing) return true;
       if (!measure) return false;
       return measure.width > 0 && measure.height > 0;
     }
@@ -237,18 +307,19 @@ export function placeTourCard(
   viewportWidth: number,
   viewportHeight: number,
   cardWidth = Math.min(360, viewportWidth - 32),
-  cardHeight = 210,
+  cardHeight = 280,
 ): { top: number; left: number } {
   const narrow = viewportWidth < 720;
+  const maxTop = Math.max(16, viewportHeight - cardHeight - 12);
   if (narrow) {
     return {
-      top: Math.max(16, viewportHeight - cardHeight - 20),
+      top: maxTop,
       left: 16,
     };
   }
   if (!rect) {
     return {
-      top: Math.max(16, viewportHeight / 2 - cardHeight / 2),
+      top: Math.min(maxTop, Math.max(16, viewportHeight / 2 - cardHeight / 2)),
       left: Math.max(16, viewportWidth / 2 - cardWidth / 2),
     };
   }
@@ -256,6 +327,7 @@ export function placeTourCard(
   if (top + cardHeight > viewportHeight - 12) {
     top = Math.max(16, rect.top - cardHeight - 14);
   }
+  top = Math.min(maxTop, Math.max(16, top));
   let left = rect.left;
   if (left + cardWidth > viewportWidth - 16) {
     left = viewportWidth - cardWidth - 16;

@@ -9,6 +9,8 @@ Policy: coverage first, quality at minimum cost.
   - Default provider is none (free deterministic narratives).
   - Auto scope: GIAS website enrich, then pick the LA (Hampshire seed or a
     ready pack) with the most remaining website-bearing schools.
+  - Parallel streams: Hampshire seed + Dorset + East Sussex by default when
+    --parallel-las is set (separate partial sidecars, then merge).
   - Skip-existing is the default (pass --no-skip-existing to recapture).
   - Stale re-screens use ETag / Last-Modified / content-hash and reuse
     unchanged pages (default: 28-day TTL, daily refresh budget).
@@ -18,7 +20,9 @@ Policy: coverage first, quality at minimum cost.
 
 Usage:
   python3 scripts/run-qualitative-loop.py --dry-run
-  python3 scripts/run-qualitative-loop.py --limit 40 --scope auto
+  python3 scripts/run-qualitative-loop.py --limit 60 --scope auto
+  python3 scripts/run-qualitative-loop.py --parallel-las "Dorset|East Sussex" \\
+    --include-seed --limit 60
   # Paid polish (richest schools first; higher evidence gate):
   CURSOR_API_KEY=… python3 scripts/run-qualitative-loop.py --limit 0 \\
     --synthesize-provider cursor --synthesize-limit 5
@@ -29,10 +33,13 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 CAPTURE_ROOT = ROOT / "tools" / "school-capture"
@@ -41,6 +48,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from seed_scope import (  # noqa: E402
+    DEFAULT_PARALLEL_QUALITATIVE_LAS,
     PACKS_ROOT_REL,
     SEED_LOCAL_AUTHORITY,
     la_slug,
@@ -57,6 +65,10 @@ DIGEST_MD = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.md"
 QA_DIGEST_JSON = ROOT / "public" / "data" / "packs" / "qualitative-qa-latest.json"
 PACKS_ROOT = ROOT / PACKS_ROOT_REL
 MANIFEST = PACKS_ROOT / "manifest.json"
+PARTIAL_DIR = ROOT / "output" / "qualitative-partials"
+
+# Raised from 40 → 60 per stream to accelerate region website coverage.
+DEFAULT_CAPTURE_LIMIT = 60
 
 
 def run(cmd: list[str], *, env: dict[str, str] | None = None) -> None:
@@ -134,11 +146,19 @@ def list_targets() -> list[tuple[str, Path]]:
         # Never double-count Hampshire as a pack.
         if normalize_la_name(la) == normalize_la_name(SEED_LOCAL_AUTHORITY):
             continue
-        if la_slug(la) != str(slug) and path.parent.name != la_slug(la):
-            # Still allow; pack dir is source of truth.
-            pass
         targets.append((str(la), path))
     return targets
+
+
+def resolve_la_index(la_arg: str) -> tuple[str, Path]:
+    """Map an LA label to (canonical la, index path)."""
+    if normalize_la_name(la_arg) == normalize_la_name(SEED_LOCAL_AUTHORITY):
+        return SEED_LOCAL_AUTHORITY, DEFAULT_INDEX
+    slug = la_slug(la_arg)
+    pack_index = PACKS_ROOT / slug / "schools-index.json"
+    if pack_index.is_file():
+        return la_arg, pack_index
+    return la_arg, DEFAULT_INDEX
 
 
 def pick_target(
@@ -155,19 +175,9 @@ def pick_target(
         return SEED_LOCAL_AUTHORITY, DEFAULT_INDEX, remaining
 
     if scope == "la":
-        # Explicit --la: seed index unless a matching ready pack exists.
-        if normalize_la_name(la_arg) == normalize_la_name(SEED_LOCAL_AUTHORITY):
-            remaining = remaining_with_website(
-                DEFAULT_INDEX, la=SEED_LOCAL_AUTHORITY, known=known
-            )
-            return SEED_LOCAL_AUTHORITY, DEFAULT_INDEX, remaining
-        slug = la_slug(la_arg)
-        pack_index = PACKS_ROOT / slug / "schools-index.json"
-        if pack_index.is_file():
-            remaining = remaining_with_website(pack_index, la=la_arg, known=known)
-            return la_arg, pack_index, remaining
-        remaining = remaining_with_website(DEFAULT_INDEX, la=la_arg, known=known)
-        return la_arg, DEFAULT_INDEX, remaining
+        la, index_path = resolve_la_index(la_arg)
+        remaining = remaining_with_website(index_path, la=la, known=known)
+        return la, index_path, remaining
 
     # scope == auto (or region): prefer Hampshire while it has website work,
     # otherwise the ready pack with the largest remaining website pool.
@@ -182,6 +192,25 @@ def pick_target(
             return la, path, n
     best = scored[0] if scored else (0, SEED_LOCAL_AUTHORITY, DEFAULT_INDEX)
     return best[1], best[2], best[0]
+
+
+def parse_parallel_las(raw: str) -> list[str]:
+    text = (raw or "").strip()
+    if not text:
+        return []
+    sep = "|" if "|" in text else ","
+    out: list[str] = []
+    seen: set[str] = set()
+    for part in text.split(sep):
+        la = normalize_la_name(part)
+        if not la:
+            continue
+        key = la.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(la)
+    return out
 
 
 def enrich_websites() -> None:
@@ -231,20 +260,148 @@ def rebuild_learned_terms() -> dict:
     }
 
 
+def merge_capture_partials(partial_paths: list[Path], dest: Path) -> int:
+    """Union records from partial sidecars into dest (URN-keyed)."""
+    sys.path.insert(0, str(CAPTURE_ROOT))
+    from school_capture.sidecar import load_capture_index, upsert_records
+
+    by_urn: dict[str, Any] = {}
+    # Seed from current dest so we never drop prior LAs.
+    existing = load_capture_index(dest)
+    if existing:
+        for record in existing.records:
+            by_urn[record.urn] = record
+    for path in partial_paths:
+        index = load_capture_index(path)
+        if not index:
+            continue
+        for record in index.records:
+            prior = by_urn.get(record.urn)
+            if prior is None:
+                by_urn[record.urn] = record
+                continue
+            # Prefer the newer assessment when both exist.
+            prior_at = getattr(prior, "assessedAt", None) or ""
+            new_at = getattr(record, "assessedAt", None) or ""
+            if new_at >= prior_at:
+                by_urn[record.urn] = record
+    records = list(by_urn.values())
+    if not records and not dest.is_file():
+        return 0
+    upsert_records(dest, records, stats={"mergedPartials": len(partial_paths)})
+    return len(records)
+
+
+def capture_one_stream(
+    *,
+    la: str,
+    index_path: Path,
+    limit: int,
+    offset: int,
+    skip_existing: bool,
+    refresh_stale_days: int,
+    refresh_limit: int,
+    no_merge: bool,
+    env: dict[str, str],
+    partial_output: Path,
+    progress_path: Path,
+) -> dict[str, Any]:
+    """Run one LA capture into a partial sidecar (seeded from the main file)."""
+    PARTIAL_DIR.mkdir(parents=True, exist_ok=True)
+    if DEFAULT_CAPTURE.is_file():
+        shutil.copy2(DEFAULT_CAPTURE, partial_output)
+    elif partial_output.is_file():
+        partial_output.unlink()
+
+    remaining = remaining_with_website(
+        index_path, la=la, known=processed_urns() | _urns_in_capture(partial_output)
+    )
+
+    capture_cmd = [
+        sys.executable,
+        str(SCRIPTS / "enrich-qualitative.py"),
+        "--index",
+        str(index_path),
+        "--la",
+        la,
+        "--limit",
+        str(limit),
+        "--offset",
+        str(offset),
+        "--output",
+        str(partial_output),
+        "--progress",
+        str(progress_path),
+        "--require-website",
+        "--allow-empty",
+        "--no-learned-terms",
+    ]
+    if skip_existing:
+        capture_cmd.append("--skip-existing")
+        if refresh_stale_days > 0 and refresh_limit > 0:
+            capture_cmd.extend(
+                [
+                    "--refresh-stale-days",
+                    str(refresh_stale_days),
+                    "--refresh-limit",
+                    str(refresh_limit),
+                ]
+            )
+    if no_merge:
+        capture_cmd.append("--no-merge")
+
+    before = capture_count(partial_output)
+    try:
+        run(capture_cmd, env=env)
+        status = "ok"
+        error = None
+    except subprocess.CalledProcessError as exc:
+        status = "failed"
+        error = str(exc)
+    after = capture_count(partial_output)
+    return {
+        "la": la,
+        "index": str(index_path.relative_to(ROOT)),
+        "remainingWithWebsite": remaining,
+        "partial": str(partial_output.relative_to(ROOT)),
+        "progress": str(progress_path.relative_to(ROOT)),
+        "before": before,
+        "after": after,
+        "added": max(0, after - before),
+        "status": status,
+        "error": error,
+    }
+
+
+def _urns_in_capture(path: Path) -> set[str]:
+    if not path.is_file():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    return {str(r.get("urn")) for r in (payload.get("records") or []) if r.get("urn")}
+
+
 def write_digest(payload: dict) -> None:
     DIGEST_JSON.parent.mkdir(parents=True, exist_ok=True)
     DIGEST_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    streams = payload.get("streams") or []
+    la_label = payload.get("la")
+    if streams:
+        la_label = ", ".join(str(s.get("la")) for s in streams)
     lines = [
         "# Qualitative capture loop",
         "",
         f"- Ran at: `{payload.get('ranAt')}`",
         f"- Scope: `{payload.get('scope')}`",
-        f"- LA: `{payload.get('la')}`",
+        f"- LA: `{la_label}`",
         f"- Index: `{payload.get('index')}`",
         f"- Remaining with website (pre-capture): `{payload.get('remainingWithWebsite')}`",
-        f"- Batch limit: `{payload.get('limit')}`",
+        f"- Batch limit (per stream): `{payload.get('limit')}`",
         f"- Sidecar records before → after: "
         f"`{payload.get('sidecarBefore')}` → `{payload.get('sidecarAfter')}`",
+        f"- Parallel streams: `{len(streams)}`",
         f"- Synthesize provider: `{payload.get('synthesizeProvider')}`",
         f"- QA provider: `{payload.get('qaProvider')}`",
         f"- QA reviewed / changed: "
@@ -255,6 +412,17 @@ def write_digest(payload: dict) -> None:
         f"- Dry run: `{payload.get('dryRun')}`",
         "",
     ]
+    if streams:
+        lines.append("## Streams")
+        lines.append("")
+        for stream in streams:
+            lines.append(
+                f"- `{stream.get('la')}`: status={stream.get('status')} "
+                f"added={stream.get('added')} "
+                f"remaining={stream.get('remainingWithWebsite')} "
+                f"index=`{stream.get('index')}`"
+            )
+        lines.append("")
     if payload.get("notes"):
         lines.append("## Notes")
         lines.append("")
@@ -264,21 +432,57 @@ def write_digest(payload: dict) -> None:
     DIGEST_MD.write_text("\n".join(lines), encoding="utf-8")
 
 
+def merge_indexes(index_paths: list[Path], *, env: dict[str, str]) -> None:
+    """Re-merge the shared sidecar into each affected schools index."""
+    seen: set[Path] = set()
+    for index_path in index_paths:
+        resolved = index_path.resolve()
+        if resolved in seen or not index_path.is_file():
+            continue
+        seen.add(resolved)
+        run(
+            [
+                sys.executable,
+                str(CAPTURE_ROOT / "scripts" / "merge-qualitative.py"),
+                "--index",
+                str(index_path),
+                "--capture",
+                str(DEFAULT_CAPTURE),
+            ],
+            env=env,
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Qualitative capture continuous loop")
     parser.add_argument(
         "--scope",
-        choices=("auto", "seed", "la"),
+        choices=("auto", "seed", "la", "parallel"),
         default="auto",
         help="auto = Hampshire then widest ready pack; seed = Hampshire only; "
-        "la = honour --la",
+        "la = honour --la; parallel = seed + --parallel-las streams",
     )
     parser.add_argument("--la", default=SEED_LOCAL_AUTHORITY)
     parser.add_argument(
+        "--parallel-las",
+        default="",
+        help=(
+            "Pipe-separated pack LAs to capture in parallel with the seed "
+            f'(e.g. "Dorset|East Sussex"). Empty with --scope parallel uses '
+            f"{'|'.join(DEFAULT_PARALLEL_QUALITATIVE_LAS)}."
+        ),
+    )
+    parser.add_argument(
+        "--include-seed",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="When using parallel streams, also capture the Hampshire seed (default: true)",
+    )
+    parser.add_argument(
         "--limit",
         type=int,
-        default=40,
-        help="Max new schools to capture (free crawl; default 40)",
+        default=DEFAULT_CAPTURE_LIMIT,
+        help=f"Max new schools to capture per stream (default {DEFAULT_CAPTURE_LIMIT})",
     )
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument(
@@ -296,7 +500,7 @@ def main(argv: list[str] | None = None) -> int:
         "--refresh-limit",
         type=int,
         default=15,
-        help="Max stale schools to change-detect re-screen per run (default 15)",
+        help="Max stale schools to change-detect re-screen per stream (default 15)",
     )
     parser.add_argument(
         "--synthesize-provider",
@@ -347,6 +551,32 @@ def main(argv: list[str] | None = None) -> int:
     before = capture_count(DEFAULT_CAPTURE)
     notes: list[str] = []
 
+    parallel_las = parse_parallel_las(args.parallel_las)
+    if args.scope == "parallel" and not parallel_las:
+        parallel_las = list(DEFAULT_PARALLEL_QUALITATIVE_LAS)
+    # Honour --parallel-las even when scope was left at auto (workflow convenience).
+    use_parallel = args.scope == "parallel" or bool(parallel_las)
+
+    known = processed_urns()
+    stream_targets: list[tuple[str, Path, int]] = []
+    if use_parallel:
+        ordered: list[str] = []
+        if args.include_seed:
+            ordered.append(SEED_LOCAL_AUTHORITY)
+        for la in parallel_las:
+            if normalize_la_name(la) == normalize_la_name(SEED_LOCAL_AUTHORITY):
+                continue
+            ordered.append(la)
+        for la in ordered:
+            resolved_la, index_path = resolve_la_index(la)
+            remaining = remaining_with_website(index_path, la=resolved_la, known=known)
+            stream_targets.append((resolved_la, index_path, remaining))
+    else:
+        la, index_path, remaining = pick_target(
+            scope=args.scope, la_arg=args.la, known=known
+        )
+        stream_targets.append((la, index_path, remaining))
+
     if args.dry_run:
         notes.append("Dry run — capture/synth/merge skipped; digest only.")
         term_count = 0
@@ -355,16 +585,27 @@ def main(argv: list[str] | None = None) -> int:
                 json.loads(DEFAULT_LEARNED.read_text(encoding="utf-8")).get("terms")
                 or {}
             )
-        known = processed_urns()
-        la, index_path, remaining = pick_target(
-            scope=args.scope, la_arg=args.la, known=known
+        streams = [
+            {
+                "la": la,
+                "index": str(index_path.relative_to(ROOT)),
+                "remainingWithWebsite": remaining,
+                "status": "dry-run",
+                "added": 0,
+            }
+            for la, index_path, remaining in stream_targets
+        ]
+        primary = stream_targets[0] if stream_targets else (
+            SEED_LOCAL_AUTHORITY,
+            DEFAULT_INDEX,
+            0,
         )
         digest = {
             "ranAt": datetime.now(timezone.utc).isoformat(),
-            "scope": args.scope,
-            "la": la,
-            "index": str(index_path.relative_to(ROOT)),
-            "remainingWithWebsite": remaining,
+            "scope": "parallel" if use_parallel else args.scope,
+            "la": primary[0],
+            "index": str(primary[1].relative_to(ROOT)),
+            "remainingWithWebsite": primary[2],
             "limit": args.limit,
             "offset": args.offset,
             "skipExisting": skip_existing,
@@ -372,6 +613,7 @@ def main(argv: list[str] | None = None) -> int:
             "refreshLimit": args.refresh_limit,
             "sidecarBefore": before,
             "sidecarAfter": before,
+            "streams": streams,
             "synthesizeProvider": args.synthesize_provider,
             "qaProvider": args.qa_provider,
             "qaLimit": args.qa_limit,
@@ -393,65 +635,138 @@ def main(argv: list[str] | None = None) -> int:
         notes.append("Enriched schoolWebsite from GIAS (seed + ready packs).")
         enrich_websites()
 
+    # Recompute remaining after website enrich.
+    refreshed_targets: list[tuple[str, Path, int]] = []
     known = processed_urns()
-    la, index_path, remaining = pick_target(
-        scope=args.scope, la_arg=args.la, known=known
-    )
-    notes.append(
-        f"Selected LA={la} index={index_path.relative_to(ROOT)} "
-        f"remainingWithWebsite={remaining}."
+    for la, index_path, _ in stream_targets:
+        remaining = remaining_with_website(index_path, la=la, known=known)
+        refreshed_targets.append((la, index_path, remaining))
+        notes.append(
+            f"Stream LA={la} index={index_path.relative_to(ROOT)} "
+            f"remainingWithWebsite={remaining}."
+        )
+    stream_targets = refreshed_targets
+
+    stream_results: list[dict[str, Any]] = []
+    partial_paths: list[Path] = []
+
+    def _run_stream(item: tuple[str, Path, int]) -> dict[str, Any]:
+        la, index_path, _remaining = item
+        slug = la_slug(la)
+        partial = PARTIAL_DIR / f"{slug}.json"
+        progress = ROOT / "output" / f"qualitative-progress-{slug}.json"
+        return capture_one_stream(
+            la=la,
+            index_path=index_path,
+            limit=args.limit,
+            offset=args.offset,
+            skip_existing=skip_existing,
+            refresh_stale_days=args.refresh_stale_days,
+            refresh_limit=args.refresh_limit,
+            no_merge=True,  # merge once after all streams land
+            env=env,
+            partial_output=partial,
+            progress_path=progress,
+        )
+
+    if len(stream_targets) == 1:
+        result = _run_stream(stream_targets[0])
+        stream_results.append(result)
+        partial_paths.append(ROOT / result["partial"])
+    else:
+        notes.append(
+            f"Running {len(stream_targets)} capture streams in parallel "
+            f"(limit {args.limit} each)."
+        )
+        with ThreadPoolExecutor(max_workers=len(stream_targets)) as pool:
+            futures = {
+                pool.submit(_run_stream, item): item[0] for item in stream_targets
+            }
+            for fut in as_completed(futures):
+                result = fut.result()
+                stream_results.append(result)
+                partial_paths.append(ROOT / result["partial"])
+                if result.get("status") == "failed":
+                    notes.append(
+                        f"Stream {result.get('la')} failed: {result.get('error')}"
+                    )
+
+    # Stable digest order: seed first, then alpha.
+    stream_results.sort(
+        key=lambda s: (
+            normalize_la_name(s.get("la")) != normalize_la_name(SEED_LOCAL_AUTHORITY),
+            str(s.get("la") or ""),
+        )
     )
 
-    capture_cmd = [
-        sys.executable,
-        str(SCRIPTS / "enrich-qualitative.py"),
-        "--index",
-        str(index_path),
-        "--la",
-        la,
-        "--limit",
-        str(args.limit),
-        "--offset",
-        str(args.offset),
-        "--require-website",
-        "--allow-empty",
-    ]
-    if skip_existing:
-        capture_cmd.append("--skip-existing")
-        if args.refresh_stale_days > 0 and args.refresh_limit > 0:
-            capture_cmd.extend(
-                [
-                    "--refresh-stale-days",
-                    str(args.refresh_stale_days),
-                    "--refresh-limit",
-                    str(args.refresh_limit),
-                ]
-            )
-    if args.no_merge:
-        capture_cmd.append("--no-merge")
-    # Capture without inline LLM; selective synth is a separate step.
-    run(capture_cmd, env=env)
-
+    merged_count = merge_capture_partials(partial_paths, DEFAULT_CAPTURE)
     after_capture = capture_count(DEFAULT_CAPTURE)
+    notes.append(
+        f"Merged {len(partial_paths)} partial sidecar(s) → "
+        f"{after_capture} records (union size {merged_count})."
+    )
+
+    # Refresh shared progress from the merged sidecar.
+    if DEFAULT_CAPTURE.is_file():
+        try:
+            payload = json.loads(DEFAULT_CAPTURE.read_text(encoding="utf-8"))
+            urns = sorted(
+                str(r.get("urn"))
+                for r in (payload.get("records") or [])
+                if r.get("urn")
+            )
+            DEFAULT_PROGRESS.write_text(
+                json.dumps(
+                    {
+                        "la": ", ".join(s["la"] for s in stream_results),
+                        "las": [s["la"] for s in stream_results],
+                        "updatedAt": datetime.now(timezone.utc).date().isoformat(),
+                        "sidecarRecords": len(urns),
+                        "lastBatchSize": sum(int(s.get("added") or 0) for s in stream_results),
+                        "failures": sum(
+                            1 for s in stream_results if s.get("status") == "failed"
+                        ),
+                        "processedUrns": urns,
+                        "processedCount": len(urns),
+                        "streams": stream_results,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+        except (OSError, json.JSONDecodeError, TypeError):
+            pass
+
     learned = rebuild_learned_terms()
     notes.append(
         f"Captured batch (sidecar {before} → {after_capture}); "
         f"learned terms now {learned.get('termCount', 0)}."
     )
-    if after_capture == before and remaining == 0:
+    if after_capture == before and all(
+        int(s.get("remainingWithWebsite") or 0) == 0 for s in stream_results
+    ):
         notes.append(
-            "No new captures — website pool exhausted for selected LA "
+            "No new captures — website pools exhausted for selected streams "
             "(allow-empty no-op); still running synth/QA/refresh budget."
         )
 
+    # Merge into each affected index before synth so boards see new evidence.
+    if not args.no_merge:
+        merge_indexes([index for _la, index, _n in stream_targets], env=env)
+        notes.append(
+            f"Merged sidecar into {len(stream_targets)} schools-index file(s)."
+        )
+
     synth_provider = args.synthesize_provider
+    # Synthesize against the seed index path for schema; records are URN-global.
+    primary_index = stream_targets[0][1] if stream_targets else DEFAULT_INDEX
     synth_cmd = [
         sys.executable,
         str(SCRIPTS / "synthesize-qualitative.py"),
         "--capture",
         str(DEFAULT_CAPTURE),
         "--index",
-        str(index_path),
+        str(primary_index),
         "--provider",
         synth_provider if synth_provider != "none" else "none",
         "--only-missing",
@@ -464,12 +779,9 @@ def main(argv: list[str] | None = None) -> int:
         synth_cmd.extend(["--limit", str(args.synthesize_limit)])
     if args.no_merge:
         synth_cmd.append("--no-merge")
-    # When provider is none, still attach deterministic narratives for new areas.
-    # synthesize-qualitative also merges citation-validated URL terms into the lexicon.
     run(synth_cmd, env=env)
 
     after = capture_count(DEFAULT_CAPTURE)
-    # Re-read lexicon after citation learning for an accurate digest.
     term_count = learned.get("termCount", 0)
     if DEFAULT_LEARNED.is_file():
         try:
@@ -526,34 +838,28 @@ def main(argv: list[str] | None = None) -> int:
             f"changed {qa_stats.get('changedSchools', 0)}, "
             f"learned phrases +{qa_stats.get('learningAdded', 0)}."
         )
-        # Re-merge so stripped junk does not linger on the public index.
         if (
             not args.no_merge
             and int(qa_stats.get("changedSchools") or 0) > 0
             and DEFAULT_CAPTURE.is_file()
         ):
-            merge_cmd = [
-                sys.executable,
-                str(CAPTURE_ROOT / "scripts" / "merge-qualitative.py"),
-                "--index",
-                str(index_path),
-                "--capture",
-                str(DEFAULT_CAPTURE),
-            ]
-            run(merge_cmd, env=env)
-            notes.append(
-                f"Re-merged {index_path.relative_to(ROOT)} after QA fixes."
-            )
+            merge_indexes([index for _la, index, _n in stream_targets], env=env)
+            notes.append("Re-merged affected schools-index files after QA fixes.")
     else:
         notes.append("QA skipped (--qa-limit 0).")
 
     after = capture_count(DEFAULT_CAPTURE)
+    primary = stream_targets[0] if stream_targets else (
+        SEED_LOCAL_AUTHORITY,
+        DEFAULT_INDEX,
+        0,
+    )
     digest = {
         "ranAt": datetime.now(timezone.utc).isoformat(),
-        "scope": args.scope,
-        "la": la,
-        "index": str(index_path.relative_to(ROOT)),
-        "remainingWithWebsite": remaining,
+        "scope": "parallel" if use_parallel else args.scope,
+        "la": primary[0],
+        "index": str(primary[1].relative_to(ROOT)),
+        "remainingWithWebsite": primary[2],
         "limit": args.limit,
         "offset": args.offset,
         "skipExisting": skip_existing,
@@ -561,6 +867,7 @@ def main(argv: list[str] | None = None) -> int:
         "refreshLimit": args.refresh_limit,
         "sidecarBefore": before,
         "sidecarAfter": after,
+        "streams": stream_results,
         "synthesizeProvider": synth_provider,
         "qaProvider": args.qa_provider,
         "qaLimit": args.qa_limit,
@@ -572,6 +879,10 @@ def main(argv: list[str] | None = None) -> int:
     }
     write_digest(digest)
     print(json.dumps(digest, indent=2))
+
+    # Fail the job if every parallel stream failed.
+    if stream_results and all(s.get("status") == "failed" for s in stream_results):
+        return 1
     return 0
 
 

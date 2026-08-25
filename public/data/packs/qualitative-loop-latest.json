@@ -1,30 +1,68 @@
 {
-  "ranAt": "2026-08-24T08:51:43.689230+00:00",
-  "scope": "auto",
+  "ranAt": "2026-08-25T09:19:11.252834+00:00",
+  "scope": "parallel",
   "la": "Hampshire",
   "index": "public/data/schools-index.json",
-  "remainingWithWebsite": 134,
-  "limit": 40,
+  "remainingWithWebsite": 94,
+  "limit": 60,
   "offset": 0,
   "skipExisting": true,
   "refreshStaleDays": 28,
   "refreshLimit": 15,
-  "sidecarBefore": 451,
-  "sidecarAfter": 491,
+  "sidecarBefore": 491,
+  "sidecarAfter": 671,
+  "streams": [
+    {
+      "la": "Hampshire",
+      "index": "public/data/schools-index.json",
+      "remainingWithWebsite": 94,
+      "partial": "output/qualitative-partials/hampshire.json",
+      "progress": "output/qualitative-progress-hampshire.json",
+      "before": 491,
+      "after": 551,
+      "added": 60,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "la": "Dorset",
+      "index": "public/data/packs/dorset/schools-index.json",
+      "remainingWithWebsite": 178,
+      "partial": "output/qualitative-partials/dorset.json",
+      "progress": "output/qualitative-progress-dorset.json",
+      "before": 491,
+      "after": 551,
+      "added": 60,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "la": "East Sussex",
+      "index": "public/data/packs/east-sussex/schools-index.json",
+      "remainingWithWebsite": 208,
+      "partial": "output/qualitative-partials/east-sussex.json",
+      "progress": "output/qualitative-progress-east-sussex.json",
+      "before": 491,
+      "after": 551,
+      "added": 60,
+      "status": "ok",
+      "error": null
+    }
+  ],
   "synthesizeProvider": "none",
   "qaProvider": "none",
   "qaLimit": 16,
   "qa": {
     "reviewed": 16,
     "changedSchools": 16,
-    "findingsApplied": 45,
-    "learningAdded": 34,
+    "findingsApplied": 75,
+    "learningAdded": 42,
     "provider": "none"
   },
   "learnedTerms": {
     "termCount": 500,
-    "boostTermCount": 301,
-    "schoolCount": 491,
+    "boostTermCount": 285,
+    "schoolCount": 671,
     "rebuilt": true,
     "fromCapture": 500,
     "citationLearning": true
@@ -32,11 +70,16 @@
   "dryRun": false,
   "notes": [
     "Enriched schoolWebsite from GIAS (seed + ready packs).",
-    "Selected LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=134.",
-    "Captured batch (sidecar 451 \u2192 491); learned terms now 500.",
+    "Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=94.",
+    "Stream LA=Dorset index=public/data/packs/dorset/schools-index.json remainingWithWebsite=178.",
+    "Stream LA=East Sussex index=public/data/packs/east-sussex/schools-index.json remainingWithWebsite=208.",
+    "Running 3 capture streams in parallel (limit 60 each).",
+    "Merged 3 partial sidecar(s) \u2192 671 records (union size 671).",
+    "Captured batch (sidecar 491 \u2192 671); learned terms now 601.",
+    "Merged sidecar into 3 schools-index file(s).",
     "Selective synth provider=none; learned terms after citation merge=500.",
-    "QA provider=none: reviewed 16, changed 16, learned phrases +34.",
-    "Re-merged public/data/schools-index.json after QA fixes."
+    "QA provider=none: reviewed 16, changed 16, learned phrases +42.",
+    "Re-merged affected schools-index files after QA fixes."
   ],
   "progressPath": "output/qualitative-progress.json"
 }

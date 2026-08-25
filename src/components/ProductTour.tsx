@@ -4,17 +4,18 @@ import {
   useCallback,
   useEffect,
   useId,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
 import {
   TOUR_START_EVENT,
   TOUR_STEPS,
+  TOUR_TARGET_SETUP_TILE,
   cacheTourTargets,
   hasSeenTour,
   markTourSeen,
   placeTourCard,
+  requestTourSetupTile,
   resolveActiveTourSteps,
   scrollToCachedTarget,
   viewportRectFromCache,
@@ -23,6 +24,15 @@ import {
   type TourTargetCache,
   type ViewportRect,
 } from "@/lib/tour";
+import {
+  expandFirstYearTrend,
+  clickCompareSectionTab,
+  completeTourDemo,
+  requestTourDemo,
+  TOUR_DEMO_EVENT,
+  type TourDemoId,
+  type TourDemoRequestDetail,
+} from "@/lib/tourDemo";
 import {
   TOUR_TARGET_CHAPTER,
   useJourneyChapter,
@@ -43,6 +53,14 @@ function waitFrames(count: number): Promise<void> {
   });
 }
 
+/** Demos handled in the tour shell (DOM clicks) rather than page state. */
+const TOUR_SHELL_DEMOS = new Set<TourDemoId>([
+  "open-section-context",
+  "open-section-ofsted",
+  "open-section-stats",
+  "expand-year-trend",
+]);
+
 export function ProductTour() {
   const titleId = useId();
   const { setChapter } = useJourneyChapter();
@@ -52,9 +70,11 @@ export function ProductTour() {
   const demoTriggerRef = useRef<HTMLButtonElement | null>(null);
   const openedTrendByTourRef = useRef(false);
   const demoTimerRef = useRef<number | null>(null);
+  const demoRunIdRef = useRef(0);
   const [open, setOpen] = useState(false);
   const [steps, setSteps] = useState<TourStep[]>([]);
   const [index, setIndex] = useState(0);
+  const [busy, setBusy] = useState(false);
   const [rect, setRect] = useState<ViewportRect | null>(null);
   const [cardPos, setCardPos] = useState<{ top: number; left: number }>({
     top: 24,
@@ -98,9 +118,17 @@ export function ProductTour() {
   const ensureChapterForTarget = useCallback(
     async (target: string) => {
       const chapter = TOUR_TARGET_CHAPTER[target];
-      if (!chapter) return;
-      setChapter(chapter, { scroll: false });
-      await waitFrames(2);
+      if (chapter) {
+        setChapter(chapter, { scroll: false });
+        await waitFrames(2);
+      }
+      // Setup only mounts the active binder tile — open the right sheet
+      // before measuring postcode / stages / sector / provision.
+      const tile = TOUR_TARGET_SETUP_TILE[target];
+      if (tile) {
+        requestTourSetupTile(tile);
+        await waitFrames(2);
+      }
     },
     [setChapter],
   );
@@ -122,6 +150,28 @@ export function ProductTour() {
     demoTriggerRef.current = null;
   }, []);
 
+  const runShellDemo = useCallback(async (demo: TourDemoId) => {
+    switch (demo) {
+      case "open-section-context":
+        return clickCompareSectionTab(/context/i);
+      case "open-section-ofsted":
+        return clickCompareSectionTab(/ofsted/i);
+      case "open-section-stats":
+        return clickCompareSectionTab(/stats/i);
+      case "expand-year-trend": {
+        const trigger = await expandFirstYearTrend();
+        if (trigger) {
+          openedTrendByTourRef.current = true;
+          demoTriggerRef.current = trigger;
+          return true;
+        }
+        return false;
+      }
+      default:
+        return false;
+    }
+  }, []);
+
   const close = useCallback(
     (markSeen: boolean) => {
       if (rafRef.current != null) {
@@ -134,6 +184,7 @@ export function ProductTour() {
       setOpen(false);
       setSteps([]);
       setIndex(0);
+      setBusy(false);
       setRect(null);
       if (markSeen) markTourSeen();
     },
@@ -173,70 +224,95 @@ export function ProductTour() {
     return () => window.clearTimeout(timer);
   }, [start]);
 
+  // Shell-owned demos answer TOUR_DEMO_EVENT so requestTourDemo stays uniform.
+  useEffect(() => {
+    function onDemo(event: Event) {
+      const detail = (event as CustomEvent<TourDemoRequestDetail>).detail;
+      if (!detail?.requestId || !TOUR_SHELL_DEMOS.has(detail.demo)) return;
+      void (async () => {
+        const ok = await runShellDemo(detail.demo);
+        completeTourDemo(detail.requestId, ok);
+      })();
+    }
+    window.addEventListener(TOUR_DEMO_EVENT, onDemo);
+    return () => window.removeEventListener(TOUR_DEMO_EVENT, onDemo);
+  }, [runShellDemo]);
+
   const step = steps[index] ?? null;
 
-  useLayoutEffect(() => {
-    if (!open || !step) return;
-    let cancelled = false;
-    void (async () => {
-      await ensureChapterForTarget(step.target);
-      if (cancelled) return;
-      // Peer pages remount — refresh boxes before spotlighting.
-      rebuildCache(steps);
-      if (cancelled) return;
-      paintFromCache(step.target, true);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [open, step, steps, ensureChapterForTarget, rebuildCache, paintFromCache]);
-
-  // On the year-trend step, expand the first KS2 measure when a live table is
-  // present so parents see the graph as well as the control.
   useEffect(() => {
     if (!open || !step) return;
+    const runId = ++demoRunIdRef.current;
+    let cancelled = false;
 
-    if (step.id !== "year-trend") {
-      collapseTourTrendDemo();
-      return;
-    }
+    void (async () => {
+      setBusy(Boolean(step.demo));
+      try {
+        await ensureChapterForTarget(step.target);
+        if (cancelled || runId !== demoRunIdRef.current) return;
 
-    const el = document.querySelector(tourTargetSelector("year-trend"));
-    if (
-      !(el instanceof HTMLButtonElement) ||
-      !el.classList.contains("metric-history-trigger")
-    ) {
-      return;
-    }
+        if (step.demo) {
+          await requestTourDemo(step.demo, 12000);
+          if (cancelled || runId !== demoRunIdRef.current) return;
+          await waitFrames(3);
+        }
 
-    if (el.getAttribute("aria-expanded") !== "true") {
-      el.click();
-      openedTrendByTourRef.current = true;
-      demoTriggerRef.current = el;
-    } else {
-      demoTriggerRef.current = el;
-    }
+        if (cancelled || runId !== demoRunIdRef.current) return;
+        rebuildCache(steps);
 
-    if (demoTimerRef.current != null) {
-      window.clearTimeout(demoTimerRef.current);
-    }
-    demoTimerRef.current = window.setTimeout(() => {
-      rebuildCache(steps);
-      paintFromCache("year-trend", true);
-      const panel = document.querySelector(".history-panel-inline");
-      if (panel instanceof HTMLElement) {
-        panel.scrollIntoView({ behavior: "auto", block: "nearest" });
-        paintFromCache("year-trend", false);
+        if (
+          step.optional &&
+          !cacheRef.current.has(step.target) &&
+          index < steps.length - 1
+        ) {
+          setIndex((i) => Math.min(i + 1, steps.length - 1));
+          return;
+        }
+
+        paintFromCache(step.target, true);
+
+        if (step.demo === "expand-year-trend") {
+          if (demoTimerRef.current != null) {
+            window.clearTimeout(demoTimerRef.current);
+          }
+          demoTimerRef.current = window.setTimeout(() => {
+            if (cancelled || runId !== demoRunIdRef.current) return;
+            rebuildCache(steps);
+            paintFromCache("year-trend", true);
+            const panel = document.querySelector(".history-panel-inline");
+            if (panel instanceof HTMLElement) {
+              panel.scrollIntoView({ behavior: "auto", block: "nearest" });
+              paintFromCache("year-trend", false);
+            }
+          }, 420);
+        }
+      } finally {
+        if (runId === demoRunIdRef.current) setBusy(false);
       }
-    }, 420);
+    })();
 
     return () => {
+      cancelled = true;
       if (demoTimerRef.current != null) {
         window.clearTimeout(demoTimerRef.current);
         demoTimerRef.current = null;
       }
     };
-  }, [open, step, steps, collapseTourTrendDemo, rebuildCache, paintFromCache]);
+  }, [
+    open,
+    step,
+    steps,
+    index,
+    ensureChapterForTarget,
+    rebuildCache,
+    paintFromCache,
+  ]);
+
+  useEffect(() => {
+    if (!open || !step) return;
+    if (step.id === "year-trend" || step.demo === "expand-year-trend") return;
+    collapseTourTrendDemo();
+  }, [open, step, collapseTourTrendDemo]);
 
   useEffect(() => {
     if (!open) return;
@@ -271,6 +347,7 @@ export function ProductTour() {
   useEffect(() => {
     if (!open) return;
     function onKey(event: KeyboardEvent) {
+      if (busy) return;
       if (event.key === "Escape") {
         event.preventDefault();
         close(true);
@@ -284,7 +361,7 @@ export function ProductTour() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, close, steps.length]);
+  }, [open, close, steps.length, busy]);
 
   if (!open || !step) return null;
 
@@ -293,11 +370,7 @@ export function ProductTour() {
 
   return (
     <div className="tour-root" role="presentation">
-      <div
-        className="tour-backdrop"
-        onClick={() => close(true)}
-        aria-hidden
-      />
+      <div className="tour-backdrop" aria-hidden />
       {rect ? (
         <div
           className="tour-spotlight"
@@ -316,6 +389,7 @@ export function ProductTour() {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        aria-busy={busy || undefined}
         style={{
           top: cardPos.top,
           left: cardPos.left,
@@ -336,11 +410,16 @@ export function ProductTour() {
           {step.title}
         </h2>
         <p className="tour-body">{step.body}</p>
+        {busy ? (
+          <p className="tour-body tour-demo-status" role="status">
+            Updating the page…
+          </p>
+        ) : null}
         <div className="tour-actions">
           <button
             type="button"
             className="btn btn-ghost"
-            disabled={index === 0}
+            disabled={index === 0 || busy}
             onClick={() => setIndex((i) => Math.max(0, i - 1))}
           >
             Back
@@ -350,6 +429,7 @@ export function ProductTour() {
               type="button"
               className="btn btn-primary"
               autoFocus
+              disabled={busy}
               onClick={() => close(true)}
             >
               Got it
@@ -359,6 +439,7 @@ export function ProductTour() {
               type="button"
               className="btn btn-primary"
               autoFocus
+              disabled={busy}
               onClick={() =>
                 setIndex((i) => Math.min(i + 1, steps.length - 1))
               }

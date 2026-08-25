@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build silent-merge packs for the South East + Dorset coverage region.
+"""Build silent-merge packs for the coverage region (SE + Dorset + London).
 
 Hampshire stays the maintained root (`npm run harvest:hampshire`). Every other
 LA in the region is an on-demand pack under `public/data/packs/{slug}/`.
@@ -7,6 +7,7 @@ LA in the region is an on-demand pack under `public/data/packs/{slug}/`.
 Usage:
   python3 scripts/build-region-packs.py
   python3 scripts/build-region-packs.py --only "Southampton|Portsmouth|Dorset"
+  python3 scripts/build-region-packs.py --london-only --skip-ready --limit 4
   python3 scripts/build-region-packs.py --skip-ready --limit 3
   python3 scripts/build-region-packs.py --skip-ey   # schools depth only
 """
@@ -26,12 +27,13 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from seed_scope import (  # noqa: E402
+    COVERAGE_REGION_PACK_BUILD_ORDER,
     SEED_LOCAL_AUTHORITY,
-    SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER,
+    coverage_region_pack_targets,
     is_seed_local_authority,
     la_slug,
+    london_borough_pack_targets,
     normalize_la_name,
-    southeast_plus_dorset_pack_targets,
 )
 
 MANIFEST = ROOT / "public" / "data" / "packs" / "manifest.json"
@@ -55,10 +57,15 @@ def main() -> int:
         "--only",
         default="",
         help=(
-            "Pipe-separated LA labels to build (default: full SE+Dorset order). "
+            "Pipe-separated LA labels to build (default: full coverage-region order). "
             "Use | not commas — some LA names contain commas "
             "(e.g. Bournemouth, Christchurch and Poole)."
         ),
+    )
+    parser.add_argument(
+        "--london-only",
+        action="store_true",
+        help="Build only London borough packs (ignores --only)",
     )
     parser.add_argument(
         "--skip-ready",
@@ -81,7 +88,9 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    if args.only.strip():
+    if args.london_only:
+        targets = london_borough_pack_targets()
+    elif args.only.strip():
         # Prefer | so names like "Bournemouth, Christchurch and Poole" survive.
         sep = "|" if "|" in args.only else ","
         targets = [
@@ -90,11 +99,11 @@ def main() -> int:
             if normalize_la_name(part)
         ]
     else:
-        targets = southeast_plus_dorset_pack_targets()
+        targets = coverage_region_pack_targets()
 
-    # Preserve documented build order when using --only.
+    # Preserve documented build order when using --only / --london-only.
     order_index = {
-        la: i for i, la in enumerate(SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER)
+        la: i for i, la in enumerate(COVERAGE_REGION_PACK_BUILD_ORDER)
     }
     targets.sort(key=lambda la: order_index.get(la, 999))
 

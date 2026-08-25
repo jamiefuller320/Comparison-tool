@@ -26,7 +26,7 @@ if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 from seed_scope import (  # noqa: E402
-    SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER,
+    COVERAGE_REGION_PACK_BUILD_ORDER,
     is_seed_local_authority,
     la_slug,
 )
@@ -46,7 +46,11 @@ def load_manifest() -> dict:
 
 
 def pack_targets() -> list[str]:
-    return [la for la in SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER if not is_seed_local_authority(la)]
+    return [
+        la
+        for la in COVERAGE_REGION_PACK_BUILD_ORDER
+        if not is_seed_local_authority(la)
+    ]
 
 
 def is_ready(la: str, manifest: dict) -> bool:

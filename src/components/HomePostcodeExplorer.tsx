@@ -34,9 +34,21 @@ import {
 } from "@/components/HeroSetupTiles";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import {
+  TOUR_SETUP_TILE_EVENT,
+  type TourSetupTileId,
+} from "@/lib/tour";
+import {
+  TOUR_DEMO_EVENT,
+  TOUR_DEMO_POSTCODE,
+  completeTourDemo,
+  pickDemoShortlistUrns,
+  type TourDemoRequestDetail,
+} from "@/lib/tourDemo";
+import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
+  schoolOffersKs2,
   schoolOffersSecondary,
   schoolStageIds,
   wantsChildminders,
@@ -166,6 +178,23 @@ export function HomePostcodeExplorer({
   const [stageRequiredOpen, setStageRequiredOpen] = useState(false);
   const stageRequiredTitleId = useId();
   const { setChapter } = useJourneyChapter();
+
+  useEffect(() => {
+    function onTourTile(event: Event) {
+      const tile = (event as CustomEvent<{ tile?: TourSetupTileId }>).detail
+        ?.tile;
+      if (
+        tile === "postcode" ||
+        tile === "stages" ||
+        tile === "sector" ||
+        tile === "provision"
+      ) {
+        setActiveTile(tile);
+      }
+    }
+    window.addEventListener(TOUR_SETUP_TILE_EVENT, onTourTile);
+    return () => window.removeEventListener(TOUR_SETUP_TILE_EVENT, onTourTile);
+  }, []);
 
   useEffect(() => {
     if (!stageRequiredOpen) return;
@@ -378,6 +407,99 @@ export function HomePostcodeExplorer({
       }),
     [nearbyList, roadByUrn],
   );
+
+  const nearbyRef = useRef(nearby);
+  const selectedUrnsRef = useRef(selectedUrns);
+  nearbyRef.current = nearby;
+  selectedUrnsRef.current = selectedUrns;
+
+  useEffect(() => {
+    function onTourDemo(event: Event) {
+      const detail = (event as CustomEvent<TourDemoRequestDetail>).detail;
+      if (!detail?.requestId) return;
+      const { requestId, demo } = detail;
+
+      if (demo === "fill-postcode") {
+        void (async () => {
+          try {
+            setActiveTile("postcode");
+            setRawPostcode(TOUR_DEMO_POSTCODE);
+            await Promise.race([
+              lookup(TOUR_DEMO_POSTCODE, { advanceToStages: true }),
+              new Promise((_, reject) =>
+                window.setTimeout(
+                  () => reject(new Error("postcode lookup timeout")),
+                  9000,
+                ),
+              ),
+            ]);
+            completeTourDemo(requestId, true);
+          } catch {
+            completeTourDemo(requestId, false);
+          }
+        })();
+        return;
+      }
+
+      if (demo === "set-radius-5km" || demo === "set-radius-8km") {
+        setRadiusKm(demo === "set-radius-8km" ? 8 : 5);
+        setRoadByUrn({});
+        completeTourDemo(requestId, true);
+        return;
+      }
+
+      if (demo === "set-stages-ks2-ks3") {
+        // Stage chips live in CompareApp; just open/mark the Setup tile here.
+        setActiveTile("stages");
+        setTouchedTiles((prev) =>
+          prev.stages ? prev : { ...prev, stages: true },
+        );
+        return;
+      }
+    }
+    window.addEventListener(TOUR_DEMO_EVENT, onTourDemo);
+    return () => window.removeEventListener(TOUR_DEMO_EVENT, onTourDemo);
+  }, []);
+
+  useEffect(() => {
+    function onTourDemo(event: Event) {
+      const detail = (event as CustomEvent<TourDemoRequestDetail>).detail;
+      if (!detail?.requestId) return;
+      const { requestId, demo } = detail;
+
+      if (demo !== "pick-shortlist") return;
+
+      void (async () => {
+        // Prefer the full in-radius set (not the nearest-N list cap). Radius /
+        // stage demos may land a tick before nearby recomputes — poll the ref.
+        const ready = () => {
+          const pool = nearbyRef.current;
+          const ks2 = pool.some(
+            (s) => schoolOffersKs2(s) && !schoolOffersSecondary(s),
+          );
+          const secondary = pool.some((s) => schoolOffersSecondary(s));
+          return ks2 && secondary;
+        };
+        for (let attempt = 0; attempt < 12 && !ready(); attempt++) {
+          await new Promise((r) => window.setTimeout(r, 150));
+        }
+        const already = selectedUrnsRef.current;
+        const urns = pickDemoShortlistUrns(nearbyRef.current, {
+          ks2: 2,
+          ks3: 2,
+          alreadySelected: already,
+          isKs2: (school) => schoolOffersKs2(school),
+          isSecondary: (school) => schoolOffersSecondary(school),
+        });
+        for (const urn of urns) {
+          if (!already.includes(urn)) onToggle(urn);
+        }
+        completeTourDemo(requestId, urns.length > 0);
+      })();
+    }
+    window.addEventListener(TOUR_DEMO_EVENT, onTourDemo);
+    return () => window.removeEventListener(TOUR_DEMO_EVENT, onTourDemo);
+  }, [onToggle]);
 
   const catchmentBands = useMemo(
     () => bandsForStages(stageFilter),
@@ -721,7 +843,9 @@ export function HomePostcodeExplorer({
                 </HeroSetupTiles>
   );
 
-  const nearbySheet = home ? (
+  const nearbySheet = (
+    <div data-tour="nearby">
+      {home ? (
                 <>
             <div className="section-head">
               <h2>Find · {home.postcode}</h2>
@@ -984,7 +1108,7 @@ export function HomePostcodeExplorer({
               </div>
             </div>
                 </>
-  ) : (
+      ) : (
                 <>
                   <div className="section-head">
                     <h2>Find</h2>
@@ -1010,6 +1134,8 @@ export function HomePostcodeExplorer({
                     </p>
                   </div>
                 </>
+      )}
+    </div>
   );
 
   return children({ setupSheet, nearbySheet });

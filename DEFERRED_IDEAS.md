@@ -43,13 +43,26 @@ Goal: close the loop from **assess → prioritise → bounded re-fetch → diges
 
 **Explicitly out of this automation track** (different problems): interim/material-change ISI précis extraction; ISI grade harvest; second maintained seed LA; formal OKRs; full national précis.
 
+#### Continuous SEO coverage automation
+
+Goal: grow crawlable school/town landings as ready packs increase **without** publishing every URN at once (static Pages HTML/CI cost). Mirrors the pack-quality loop: assess → expand within budget → digest.
+
+| Phase | Scope | Status | Notes / entry points |
+| --- | --- | --- | --- |
+| **1. Coverage manifest + budgeted landings** | `public/data/seo-coverage.json` gates which LAs get `/schools/{urn}/` and `/areas/{la}/towns/` pages; Hampshire always included; build reads the manifest | **Shipped** | `src/lib/seoSchools.ts`; sitemap + town hubs follow included slugs |
+| **2. Scheduled expansion loop** | Weekly assess ready packs → add whole LAs that fit school/town page budgets (signal floor + interest weighting) → commit coverage + digest | **Shipped** | `npm run loop:seo-coverage`; `.github/workflows/seo-coverage-loop.yml` (Fri 07:00 UTC + dispatch); `npm run report:seo-coverage` |
+| **3. Raise / tune page budget** | Lift `maxSchoolPages` / `maxTownPages` once Pages build time and artifact size stay healthy after several expansion waves | Not started | Watch deploy job duration + `out/` size after loop adds packs |
+| **4. Finder → school SEO deep link** | Optional directory/list link from Finder into `/schools/{urn}/` when that URN is in coverage | Not started | Product polish; not required for crawl growth |
+
+**Out of this track:** rewriting area/stage/guide landings (already region-wide); GSC manual validation; national full-URN dump.
+
 ### Product path / scope
 
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
 | **Hampshire catchment overlay + places/offers context** | Map polygons (HCC open data) with home in/out; DfE capacity fill + school-level applications/offers demand ratio on compare boards. True LA catchment participation rates (&gt;100% ⇒ out-of-catchment on roll) remain unpublished school-level nationally — do not invent them. | Partial (**multi-LA catchment loader + manifest** ready; Hampshire polygons live. Pack LAs still need each LA’s open GIS — Southampton/Portsmouth/etc. do not publish reusable catchment FeatureServers today. Participation rates still blocked.) | User |
 | **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
-| **Second geography** | Widen beyond Hampshire via silent-merge packs. **South East + Dorset** is now the coverage region (`pack:southeast`); Hampshire stays the sole maintained root. Promoting a second maintained seed still deferred. | Partial (packs shipped; second maintained seed still deferred) | User |
+| **Second geography** | Widen beyond Hampshire via silent-merge packs. **South East + Dorset + London** is the coverage region (`pack:southeast` / `pack:london`); Hampshire stays the sole maintained root. Promoting a second maintained seed still deferred. London borough packs are in the build order but not all harvested yet. | Partial (SE+Dorset packs shipped; London queued) | User |
 | **Optional parent accounts** | Soft “Save shortlist” after engagement (never a login wall). Browser-local by default; Supabase magic-link when env secrets set. | Shipped (soft-prompt module) | User |
 | **Governing-board interface (Bartley-for-all)** | Once the **parent-facing** product is mature, offer a **separate** board-oriented surface that reuses Schoolside’s generalised harvest (school records, LA/England benches, KS2 history shards, Ofsted/KS4 where present) to deliver what [Bartley Insight](https://github.com/jamiefuller320/Bartley) does for URN 116338 — peer overlays, evaluation findings, meeting-pack / strategic-question framing — **to any school**. Keep Schoolside’s North Star parental (shortlists and fit, not SIP targets); do **not** fold board language into the parent UI. Likely shapes: URN-deep-link board mode, sibling app/repo that consumes the same `public/data` packs, or generalising Bartley’s `/analysis` layer onto Schoolside’s index. Prerequisites: stable multi-school data quality + pack coverage; Bartley-specific logic (auto findings, progress emphasis, briefing copy) still to port or rebuild. Auth/privacy for governors can stay open-data first (same public DfE sources) unless schools later need private overlays. | Deferred (after parent path mature) | User |
 

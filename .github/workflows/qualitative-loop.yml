@@ -1,8 +1,8 @@
 name: Qualitative capture loop
 
 # Coverage-first, min-cost quality (region expansion):
-# - Daily: GIAS website enrich → auto-pick Hampshire or widest ready pack
-# - 40 new website-bearing schools + free deterministic narratives (no Cursor spend)
+# - Daily: GIAS website enrich → parallel streams (Hampshire + Dorset + East Sussex)
+# - 60 new website-bearing schools per stream + free deterministic narratives
 # - Stale re-screens: larger daily budget via ETag / Last-Modified / content-hash
 # - Heuristic QA on worst suspects (default; optional Cursor/OpenAI via dispatch)
 # - Empty website pools are a successful no-op (allow-empty) so CI stays green
@@ -11,23 +11,27 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: Max new schools to capture this run (free crawl)
+        description: Max new schools to capture per stream (free crawl)
         required: false
-        default: "40"
+        default: "60"
       scope:
-        description: auto | seed | la (honour --la via LA input)
+        description: auto | seed | la | parallel (default parallel = Hampshire + Dorset + East Sussex)
         required: false
-        default: "auto"
+        default: "parallel"
       la:
         description: LA label when scope=la (default Hampshire)
         required: false
         default: "Hampshire"
+      parallel_las:
+        description: Pipe-separated pack LAs for parallel streams (with seed)
+        required: false
+        default: "Dorset|East Sussex"
       refresh_stale_days:
         description: Re-screen captures older than N days (0 = off)
         required: false
         default: "28"
       refresh_limit:
-        description: Max stale schools to change-detect this run
+        description: Max stale schools to change-detect per stream
         required: false
         default: "15"
       synthesize_provider:
@@ -52,7 +56,7 @@ on:
         type: boolean
         default: false
   schedule:
-    # Daily 07:00 UTC — region website coverage expansion
+    # Daily 07:00 UTC — region website coverage expansion (parallel streams)
     - cron: "0 7 * * *"
 
 permissions:
@@ -67,7 +71,7 @@ concurrency:
 jobs:
   qualitative-loop:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
 
@@ -80,9 +84,10 @@ jobs:
 
       - name: Run qualitative loop
         env:
-          LIMIT: ${{ github.event.inputs.limit || '40' }}
-          SCOPE: ${{ github.event.inputs.scope || 'auto' }}
+          LIMIT: ${{ github.event.inputs.limit || '60' }}
+          SCOPE: ${{ github.event.inputs.scope || 'parallel' }}
           LA: ${{ github.event.inputs.la || 'Hampshire' }}
+          PARALLEL_LAS: ${{ github.event.inputs.parallel_las || 'Dorset|East Sussex' }}
           REFRESH_DAYS: ${{ github.event.inputs.refresh_stale_days || '28' }}
           REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '15' }}
           SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
@@ -104,6 +109,9 @@ jobs:
             --qa-limit "$QA_LIMIT"
             --qa-provider "$QA_PROVIDER"
           )
+          if [ -n "$PARALLEL_LAS" ]; then
+            ARGS+=(--parallel-las "$PARALLEL_LAS")
+          fi
           if [ "$SYNTH_LIMIT" != "0" ]; then
             ARGS+=(--synthesize-limit "$SYNTH_LIMIT")
           fi
@@ -123,7 +131,7 @@ jobs:
             if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
               MSG="Qualitative loop dry-run digest"
             else
-              MSG="Qualitative loop: daily coverage capture"
+              MSG="Qualitative loop: parallel coverage capture"
             fi
             git commit -m "$MSG"
             # Rebase-safe push; digest conflicts keep this job's files.
