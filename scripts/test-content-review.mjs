@@ -85,6 +85,26 @@ async function main() {
     process.exit(1);
   }
 
+  const pointerOnly = {
+    urn: "4",
+    name: "Pointer Primary",
+    qualitativeCaptureEnrichedAt: "2026-08-06",
+  };
+  const websitePointer = filterAndSortReviewSchools(
+    [older, newer, junk, pointerOnly],
+    { filter: "website" },
+  );
+  if (
+    websitePointer.length !== 2 ||
+    !websitePointer.some((s) => s.urn === "4")
+  ) {
+    console.error(
+      "FAIL website pointer filter",
+      websitePointer.map((s) => s.urn),
+    );
+    process.exit(1);
+  }
+
   const q = filterAndSortReviewSchools([older, newer, junk], {
     filter: "any",
     query: "beta",

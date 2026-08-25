@@ -249,6 +249,17 @@ def main() -> int:
         if canon_slug != slug:
             packs[canon_slug] = packs.pop(slug)
         save_manifest(manifest)
+        # Refresh geo-lazy share-link URN → pack map.
+        try:
+            run(
+                [
+                    sys.executable,
+                    str(SCRIPTS / "publish-qualitative-shards.py"),
+                    "--skip-qualitative",
+                ]
+            )
+        except Exception as exc:  # noqa: BLE001
+            print(f"URN lookup refresh skipped: {exc}", flush=True)
         print(json.dumps(packs.get(canon_slug, packs.get(slug)), indent=2))
         return 0
     except Exception as exc:  # noqa: BLE001

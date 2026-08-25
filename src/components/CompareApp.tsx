@@ -4,9 +4,15 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
+  QualitativeCaptureRecord,
   SchoolRecord,
   SchoolsIndex,
 } from "@/lib/types";
+import {
+  loadQualitativeCaptures,
+  schoolHasQualitativePointer,
+  withQualitativeCaptures,
+} from "@/lib/qualitativeLoad";
 import { SchoolSearch } from "@/components/SchoolSearch";
 import { ComparisonBoard } from "@/components/ComparisonBoard";
 import { IndependentComparisonBoard } from "@/components/IndependentComparisonBoard";
@@ -150,14 +156,17 @@ export function CompareApp({
   childmindersIndex = null,
   onIndexReload,
   onEnsureAreaCoverage,
+  onEnsureUrnCoverage,
 }: {
-  /** Hampshire seed with any ready area packs already merged in. */
+  /** Hampshire seed with any geo-lazy area packs already merged in. */
   index: SchoolsIndex | SchoolsIndexWithPack;
   eyIndex?: EyProvidersIndex | null;
   childmindersIndex?: ChildmindersIndex | null;
   onIndexReload: () => Promise<void>;
-  /** Fetch + merge a ready LA pack when the home district is not yet in the index. */
+  /** Fetch + merge ready LA packs for the home district (+ neighbours). */
   onEnsureAreaCoverage?: (adminDistrict?: string | null) => Promise<void>;
+  /** Fetch packs needed to resolve shared shortlist URNs. */
+  onEnsureUrnCoverage?: (urns: string[]) => Promise<void>;
 }) {
   const { chapter, setChapter } = useJourneyChapter();
   const byUrn = useMemo(() => {
@@ -185,6 +194,11 @@ export function CompareApp({
   const [activePath, setActivePath] = useState<ComparePathId | null>(null);
   /** When KS3/KS4 selected: hide secondaries without published Att8 from discovery. */
   const [comparableKs4Only, setComparableKs4Only] = useState(true);
+  /** On-demand qualitative shards keyed by URN. */
+  const [qualByUrn, setQualByUrn] = useState<
+    Record<string, QualitativeCaptureRecord | null>
+  >({});
+  const [pendingShareUrns, setPendingShareUrns] = useState<string[]>([]);
 
   function applyRestoredShortlist(
     schools: string[],
@@ -219,12 +233,18 @@ export function CompareApp({
     const params = new URLSearchParams(window.location.search);
     const raw = params.get("schools") || params.get("urns");
     if (raw) {
-      const urns = raw
+      const requested = raw
         .split(",")
         .map((u) => u.trim())
-        .filter((u) => byUrn.has(u))
+        .filter(Boolean)
         .slice(0, 4);
-      if (urns.length) setSelected(urns);
+      const known = requested.filter((u) => byUrn.has(u));
+      const missing = requested.filter((u) => !byUrn.has(u));
+      if (known.length) setSelected(known);
+      if (missing.length) {
+        setPendingShareUrns(missing);
+        void onEnsureUrnCoverage?.(missing);
+      }
     }
     const baseStages = parseStagesParam(
       params.get("stages") || params.get("phase"),
@@ -249,7 +269,38 @@ export function CompareApp({
       ),
     );
     setHydrated(true);
+    // Re-run when collated index gains pack schools for share-link URNs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- onEnsureUrnCoverage stable from loader
   }, [byUrn]);
+
+  useEffect(() => {
+    if (!pendingShareUrns.length) return;
+    const resolved = pendingShareUrns.filter((urn) => byUrn.has(urn));
+    if (!resolved.length) return;
+    setSelected((prev) =>
+      [...new Set([...prev, ...resolved])].slice(0, 4),
+    );
+    setPendingShareUrns((prev) => prev.filter((urn) => !byUrn.has(urn)));
+  }, [byUrn, pendingShareUrns]);
+
+  useEffect(() => {
+    const need = selected.filter((urn) => {
+      const school = byUrn.get(urn);
+      if (!school) return false;
+      if (school.qualitativeCapture?.areas?.length) return false;
+      if (qualByUrn[urn] !== undefined) return false;
+      return schoolHasQualitativePointer(school);
+    });
+    if (!need.length) return;
+    let cancelled = false;
+    void loadQualitativeCaptures(need, fetch, false).then((loaded) => {
+      if (cancelled) return;
+      setQualByUrn((prev) => ({ ...prev, ...loaded }));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selected, byUrn, qualByUrn]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -287,9 +338,12 @@ export function CompareApp({
     }
   }, [selected, stages, sectors, stageMatch, provision, hydrated]);
 
-  const selectedSchools: SchoolRecord[] = selected
-    .map((urn) => byUrn.get(urn))
-    .filter((s): s is SchoolRecord => Boolean(s));
+  const selectedSchools: SchoolRecord[] = withQualitativeCaptures(
+    selected
+      .map((urn) => byUrn.get(urn))
+      .filter((s): s is SchoolRecord => Boolean(s)),
+    qualByUrn,
+  );
 
   const showEy = wantsEyMetrics(stages);
   const showChildminderCategory = wantsChildminders(stages);

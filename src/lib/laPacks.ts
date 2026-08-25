@@ -93,8 +93,125 @@ export const COVERAGE_REGION_LOCAL_AUTHORITIES =
 export const COVERAGE_REGION_LABEL =
   "South East England, London, and Dorset";
 
+/**
+ * Contiguous neighbours within the coverage region (DfE LA labels).
+ * Used for geo-lazy pack fetch: load the postcode LA plus these packs.
+ * Hampshire is the seed (not a pack) but still lists neighbours to pull.
+ */
+export const COVERAGE_LA_NEIGHBOURS: Record<string, readonly string[]> = {
+  Hampshire: [
+    "Southampton",
+    "Portsmouth",
+    "Isle of Wight",
+    "Surrey",
+    "West Sussex",
+    "West Berkshire",
+    "Wokingham",
+    "Dorset",
+    "Bournemouth, Christchurch and Poole",
+  ],
+  Southampton: ["Hampshire", "Portsmouth", "Wiltshire"],
+  Portsmouth: ["Hampshire", "Southampton", "Isle of Wight", "West Sussex"],
+  "Isle of Wight": ["Hampshire", "Portsmouth"],
+  Surrey: [
+    "Hampshire",
+    "West Sussex",
+    "East Sussex",
+    "Kent",
+    "Wokingham",
+    "Bracknell Forest",
+    "Windsor and Maidenhead",
+    "Slough",
+    "Buckinghamshire",
+  ],
+  "West Sussex": [
+    "Hampshire",
+    "Surrey",
+    "East Sussex",
+    "Brighton and Hove",
+    "Portsmouth",
+  ],
+  "East Sussex": ["West Sussex", "Brighton and Hove", "Kent", "Surrey"],
+  "Brighton and Hove": ["East Sussex", "West Sussex"],
+  Kent: ["Medway", "East Sussex", "Surrey", "London"],
+  Medway: ["Kent"],
+  Dorset: [
+    "Hampshire",
+    "Bournemouth, Christchurch and Poole",
+    "Wiltshire",
+  ],
+  "Bournemouth, Christchurch and Poole": ["Dorset", "Hampshire"],
+  "West Berkshire": [
+    "Hampshire",
+    "Reading",
+    "Wokingham",
+    "Windsor and Maidenhead",
+    "Oxfordshire",
+  ],
+  Reading: [
+    "West Berkshire",
+    "Wokingham",
+    "Windsor and Maidenhead",
+    "Oxfordshire",
+  ],
+  Wokingham: [
+    "Hampshire",
+    "West Berkshire",
+    "Reading",
+    "Bracknell Forest",
+    "Windsor and Maidenhead",
+    "Surrey",
+  ],
+  "Bracknell Forest": [
+    "Wokingham",
+    "Windsor and Maidenhead",
+    "Surrey",
+    "Buckinghamshire",
+  ],
+  "Windsor and Maidenhead": [
+    "Slough",
+    "Buckinghamshire",
+    "Bracknell Forest",
+    "Wokingham",
+    "Reading",
+    "West Berkshire",
+    "Surrey",
+  ],
+  Slough: ["Windsor and Maidenhead", "Buckinghamshire", "Surrey"],
+  Buckinghamshire: [
+    "Slough",
+    "Windsor and Maidenhead",
+    "Bracknell Forest",
+    "Oxfordshire",
+    "Milton Keynes",
+    "Surrey",
+  ],
+  "Milton Keynes": ["Buckinghamshire", "Oxfordshire"],
+  Oxfordshire: [
+    "Buckinghamshire",
+    "Milton Keynes",
+    "West Berkshire",
+    "Reading",
+    "Wokingham",
+  ],
+};
+
 /** @deprecated Packs are no longer a user-facing mode; kept for clearing legacy storage. */
 export const ACTIVE_PACK_STORAGE_KEY = "schoolside.activeLaPack";
+
+/** Neighbour LA labels for a district (coverage region only). */
+export function neighbourLocalAuthorities(
+  localAuthority?: string | null,
+): string[] {
+  if (!localAuthority?.trim()) return [];
+  const norm = normalizeLaName(localAuthority).toLowerCase();
+  for (const [la, neighbours] of Object.entries(COVERAGE_LA_NEIGHBOURS)) {
+    if (normalizeLaName(la).toLowerCase() === norm) {
+      return [...neighbours];
+    }
+  }
+  return [];
+}
 
 export function normalizeLaName(name?: string | null): string {
   if (!name) return "";

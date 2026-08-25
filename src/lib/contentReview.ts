@@ -1,6 +1,7 @@
 import type { SchoolRecord } from "@/lib/types";
 import { schoolHasInspectionPrecis } from "@/lib/inspectionHighlights";
 import { schoolHasQualitativeCapture } from "@/lib/qualitativeEvidence";
+import { schoolHasQualitativePointer } from "@/lib/qualitativeLoad";
 
 export type ContentReviewFilter =
   | "any"
@@ -79,7 +80,7 @@ export function schoolHasPrecisForReview(school: SchoolRecord): boolean {
 
 export function schoolHasReviewContent(school: SchoolRecord): boolean {
   return (
-    schoolHasPrecisForReview(school) || schoolHasQualitativeCapture(school)
+    schoolHasPrecisForReview(school) || schoolHasQualitativePointer(school)
   );
 }
 
@@ -88,7 +89,8 @@ export function matchesContentReviewFilter(
   filter: ContentReviewFilter,
 ): boolean {
   const hasPrecis = schoolHasPrecisForReview(school);
-  const hasWebsite = schoolHasQualitativeCapture(school);
+  const hasWebsite =
+    schoolHasQualitativePointer(school) || schoolHasQualitativeCapture(school);
   const junk = looksLikePrecisJunk(school.inspectionPrecis);
   switch (filter) {
     case "both":

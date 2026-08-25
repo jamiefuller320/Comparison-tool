@@ -6,18 +6,21 @@ import type {
   EyProvidersIndex,
   SchoolsIndex,
 } from "@/lib/types";
+import { loadSeedIndexes } from "@/lib/collateIndexes";
 import {
-  loadReadyPackEntries,
-  loadSeedIndexes,
-  mergePacksIntoIndexes,
-} from "@/lib/collateIndexes";
-import { ensureAreaCoverageForDistrict } from "@/lib/ensureAreaCoverage";
+  ensureAreaCoverageForDistrict,
+  ensureAreaCoverageForUrns,
+} from "@/lib/ensureAreaCoverage";
 import { CompareApp } from "@/components/CompareApp";
 import { JourneyChapterProvider } from "@/components/JourneyChapterContext";
 import { HarbourSetupPortal } from "@/components/HarbourBand";
 
 type PackPhase = "idle" | "loading" | "ready" | "partial";
 
+/**
+ * Seed-first load only. Wider LA packs arrive geo-lazily via
+ * ensureAreaCoverage (postcode district + neighbours, or share-link URNs).
+ */
 async function progressiveLoad(
   fetchImpl: typeof fetch,
   cacheBust: boolean,
@@ -31,30 +34,8 @@ async function progressiveLoad(
   onNote("Loading Hampshire seed…");
   const seed = await loadSeedIndexes(fetchImpl, cacheBust);
   onSeed(seed);
-  onNote("Loading wider South East coverage…");
-
-  const ready = await loadReadyPackEntries(fetchImpl, cacheBust);
-  if (!ready.length) {
-    onNote(null);
-    return { packsFailed: 0, packsLoaded: 0, readyCount: 0 };
-  }
-
-  const merged = await mergePacksIntoIndexes(
-    seed,
-    ready,
-    fetchImpl,
-    cacheBust,
-  );
-  onSeed({
-    schools: merged.schools,
-    ey: merged.ey,
-    childminders: merged.childminders,
-  });
-  return {
-    packsFailed: merged.packsFailed,
-    packsLoaded: merged.packsLoaded,
-    readyCount: ready.length,
-  };
+  onNote(null);
+  return { packsFailed: 0, packsLoaded: 0, readyCount: 0 };
 }
 
 export function CompareLoader() {
@@ -141,6 +122,7 @@ export function CompareLoader() {
       const current = indexesRef.current;
       if (!adminDistrict?.trim() || !current.schools) return;
       try {
+        setPackPhase("loading");
         const result = await ensureAreaCoverageForDistrict(
           {
             schools: current.schools,
@@ -151,16 +133,62 @@ export function CompareLoader() {
           fetch,
           true,
         );
-        if (!result?.loadedLabel) return;
-        setPackNote(`Added ${result.loadedLabel} schools to the map…`);
+        if (!result?.loadedLabels?.length) {
+          setPackPhase("ready");
+          return;
+        }
+        const label =
+          result.loadedLabels.length === 1
+            ? result.loadedLabels[0]
+            : `${result.loadedLabels.length} nearby areas`;
+        setPackNote(`Added ${label} to the map…`);
         applySeed(result.next);
+        setPackPhase("ready");
         window.setTimeout(() => {
           setPackNote((note) =>
             note?.startsWith("Added ") ? null : note,
           );
         }, 2400);
       } catch {
+        setPackPhase("ready");
         /* Soft-fail — Finder still uses whatever is already collated. */
+      }
+    },
+    [applySeed],
+  );
+
+  const ensureUrnCoverage = useCallback(
+    async (urns: string[]) => {
+      const current = indexesRef.current;
+      if (!urns.length || !current.schools) return;
+      try {
+        setPackPhase("loading");
+        const result = await ensureAreaCoverageForUrns(
+          {
+            schools: current.schools,
+            ey: current.ey,
+            childminders: current.childminders,
+          },
+          urns,
+          fetch,
+          true,
+        );
+        if (!result?.loadedLabels?.length) {
+          setPackPhase("ready");
+          return;
+        }
+        setPackNote(
+          `Loaded ${result.loadedLabels.join(", ")} for your shortlist…`,
+        );
+        applySeed(result.next);
+        setPackPhase("ready");
+        window.setTimeout(() => {
+          setPackNote((note) =>
+            note?.startsWith("Loaded ") ? null : note,
+          );
+        }, 2400);
+      } catch {
+        setPackPhase("ready");
       }
     },
     [applySeed],
@@ -233,7 +261,8 @@ export function CompareLoader() {
           <div className="shell hero-inner">
             <p>Loading school and early-years data…</p>
             <p className="hint">
-              First load brings Hampshire; other areas follow in the background.
+              First load brings Hampshire; nearby area packs load when you set a
+              home postcode.
             </p>
           </div>
         </div>
@@ -249,7 +278,7 @@ export function CompareLoader() {
             <p>
               {packNote ||
                 (packPhase === "loading"
-                  ? "Loading wider area coverage…"
+                  ? "Loading nearby area coverage…"
                   : "Some area packs did not finish loading.")}
             </p>
             {packPhase === "partial" ? (
@@ -275,6 +304,7 @@ export function CompareLoader() {
           childmindersIndex={childmindersIndex}
           onIndexReload={reloadIndex}
           onEnsureAreaCoverage={ensureAreaCoverage}
+          onEnsureUrnCoverage={ensureUrnCoverage}
         />
       </JourneyChapterProvider>
     </>
