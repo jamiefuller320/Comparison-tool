@@ -11,7 +11,7 @@ import {
   formatOutcomePercent,
   getSeoSchool,
   getSeoTown,
-  listSeoHampshireSchools,
+  listSeoSchools,
   listSeoSchoolsInTown,
   schoolCompareHref,
   schoolJsonLd,
@@ -29,7 +29,7 @@ type PageProps = {
 };
 
 export function generateStaticParams() {
-  return listSeoHampshireSchools().map((school) => ({ urn: school.urn }));
+  return listSeoSchools().map((school) => ({ urn: school.urn }));
 }
 
 export async function generateMetadata({
@@ -80,7 +80,9 @@ export default async function SchoolLandingPage({ params }: PageProps) {
   if (!school) notFound();
 
   const townSlug = school.town ? slugifyTown(school.town) : null;
-  const town = townSlug ? getSeoTown(townSlug) : undefined;
+  const town = townSlug
+    ? getSeoTown(townSlug, school.areaSlug)
+    : undefined;
   const neighbours = town
     ? listSeoSchoolsInTown(town)
         .filter((row) => row.urn !== school.urn)
@@ -110,7 +112,9 @@ export default async function SchoolLandingPage({ params }: PageProps) {
             {town ? (
               <>
                 <span aria-hidden="true">/</span>
-                <Link href={townPath(town.slug)}>{town.name}</Link>
+                <Link href={townPath(town.slug, town.areaSlug)}>
+                  {town.name}
+                </Link>
               </>
             ) : null}
             <span aria-hidden="true">/</span>
@@ -149,9 +153,9 @@ export default async function SchoolLandingPage({ params }: PageProps) {
           <div className="section-head">
             <h2 id="school-facts-heading">Published snapshot</h2>
             <p>
-              Figures come from the same Hampshire index as the compare tool.
-              Gaps are common — treat blanks as prompts to dig deeper, not as a
-              verdict.
+              Figures come from the same {school.localAuthority} index as the
+              compare tool. Gaps are common — treat blanks as prompts to dig
+              deeper, not as a verdict.
             </p>
           </div>
           <dl className="area-stats">
@@ -304,9 +308,13 @@ export default async function SchoolLandingPage({ params }: PageProps) {
               ))}
             </ul>
             <p className="area-home-more">
-              <Link href={townPath(town.slug)}>All schools in {town.name}</Link>
+              <Link href={townPath(town.slug, town.areaSlug)}>
+                All schools in {town.name}
+              </Link>
               {" · "}
-              <Link href={townsIndexPath()}>Hampshire towns</Link>
+              <Link href={townsIndexPath(town.areaSlug)}>
+                {school.localAuthority} towns
+              </Link>
             </p>
           </div>
         </section>

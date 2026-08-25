@@ -42,6 +42,19 @@ Goal: close the loop from **assess → prioritise → bounded re-fetch → diges
 
 **Explicitly out of this automation track** (different problems): interim/material-change ISI précis extraction; ISI grade harvest; second maintained seed LA; formal OKRs; full national précis.
 
+#### Continuous SEO coverage automation
+
+Goal: grow crawlable school/town landings as ready packs increase **without** publishing every URN at once (static Pages HTML/CI cost). Mirrors the pack-quality loop: assess → expand within budget → digest.
+
+| Phase | Scope | Status | Notes / entry points |
+| --- | --- | --- | --- |
+| **1. Coverage manifest + budgeted landings** | `public/data/seo-coverage.json` gates which LAs get `/schools/{urn}/` and `/areas/{la}/towns/` pages; Hampshire always included; build reads the manifest | **Shipped** | `src/lib/seoSchools.ts`; sitemap + town hubs follow included slugs |
+| **2. Scheduled expansion loop** | Weekly assess ready packs → add whole LAs that fit school/town page budgets (signal floor + interest weighting) → commit coverage + digest | **Shipped** | `npm run loop:seo-coverage`; `.github/workflows/seo-coverage-loop.yml` (Fri 07:00 UTC + dispatch); `npm run report:seo-coverage` |
+| **3. Raise / tune page budget** | Lift `maxSchoolPages` / `maxTownPages` once Pages build time and artifact size stay healthy after several expansion waves | Not started | Watch deploy job duration + `out/` size after loop adds packs |
+| **4. Finder → school SEO deep link** | Optional directory/list link from Finder into `/schools/{urn}/` when that URN is in coverage | Not started | Product polish; not required for crawl growth |
+
+**Out of this track:** rewriting area/stage/guide landings (already region-wide); GSC manual validation; national full-URN dump.
+
 ### Product path / scope
 
 | Idea | Notes | Status | Source |

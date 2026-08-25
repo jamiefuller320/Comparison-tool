@@ -10,12 +10,12 @@ import {
 } from "@/lib/areas";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { guidePath } from "@/lib/guides";
-import { laSlug, SEED_LOCAL_AUTHORITY } from "@/lib/laPacks";
 import {
   formatAtt8,
   formatOutcomePercent,
   getSeoTown,
-  listSeoHampshireTowns,
+  isSeoAreaIncluded,
+  listSeoTowns,
   listSeoSchoolsInTown,
   schoolCompareHref,
   schoolPath,
@@ -26,15 +26,13 @@ import {
   townsIndexPath,
 } from "@/lib/seoSchools";
 
-const AREA_SLUG = laSlug(SEED_LOCAL_AUTHORITY);
-
 type PageProps = {
   params: Promise<{ slug: string; town: string }>;
 };
 
 export function generateStaticParams() {
-  return listSeoHampshireTowns().map((town) => ({
-    slug: AREA_SLUG,
+  return listSeoTowns().map((town) => ({
+    slug: town.areaSlug,
     town: town.slug,
   }));
 }
@@ -43,8 +41,8 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug, town: townSlug } = await params;
-  if (slug !== AREA_SLUG) return {};
-  const town = getSeoTown(townSlug);
+  if (!isSeoAreaIncluded(slug)) return {};
+  const town = getSeoTown(townSlug, slug);
   if (!town) return {};
 
   const title = townPageTitle(town);
@@ -74,13 +72,13 @@ export async function generateMetadata({
 
 export default async function TownLandingPage({ params }: PageProps) {
   const { slug, town: townSlug } = await params;
-  if (slug !== AREA_SLUG) notFound();
+  if (!isSeoAreaIncluded(slug)) notFound();
   const area = getCoverageArea(slug);
-  const town = getSeoTown(townSlug);
+  const town = getSeoTown(townSlug, slug);
   if (!area || !town) notFound();
 
   const schools = listSeoSchoolsInTown(town);
-  const siblingTowns = listSeoHampshireTowns()
+  const siblingTowns = listSeoTowns(slug)
     .filter((row) => row.slug !== town.slug)
     .slice(0, 8);
 
@@ -104,9 +102,9 @@ export default async function TownLandingPage({ params }: PageProps) {
           <h1>Schools in {town.name}</h1>
           <p className="area-lead">
             {formatCount(town.schoolCount)} schools with a {town.name} postal
-            town in the Hampshire set. Open a school snapshot for Ofsted and
-            published outcomes, or shortlist a few in the compare tool — not a
-            league table.
+            town in the {town.localAuthority} set. Open a school snapshot for
+            Ofsted and published outcomes, or shortlist a few in the compare
+            tool — not a league table.
           </p>
           <p className="area-actions">
             <Link href="/#top" className="btn btn-primary">
@@ -127,8 +125,9 @@ export default async function TownLandingPage({ params }: PageProps) {
           <div className="section-head">
             <h2 id="town-counts-heading">What is listed for {town.name}</h2>
             <p>
-              Counts are from the live Hampshire index. Postal town is taken
-              from school addresses — some settings sit near LA borders.
+              Counts are from the live {town.localAuthority} index. Postal town
+              is taken from school addresses — some settings sit near LA
+              borders.
             </p>
           </div>
           <dl className="area-stats">
@@ -169,11 +168,7 @@ export default async function TownLandingPage({ params }: PageProps) {
                   : school.att8Average != null
                     ? `Att8 ${formatAtt8(school.att8Average)}`
                     : null;
-              const meta = [
-                school.phase,
-                school.ofstedOverall,
-                outcome,
-              ]
+              const meta = [school.phase, school.ofstedOverall, outcome]
                 .filter(Boolean)
                 .join(" · ");
               return (
@@ -209,17 +204,24 @@ export default async function TownLandingPage({ params }: PageProps) {
       >
         <div className="shell">
           <div className="section-head">
-            <h2 id="town-siblings-heading">Other Hampshire towns</h2>
+            <h2 id="town-siblings-heading">
+              Other {area.localAuthority} towns
+            </h2>
             <p>
               <Link href={townsIndexPath(area.slug)}>See every town page</Link>
               {" · "}
-              <Link href={areaPath(area.slug)}>{area.localAuthority} overview</Link>
+              <Link href={areaPath(area.slug)}>
+                {area.localAuthority} overview
+              </Link>
             </p>
           </div>
           <ul className="area-list">
             {siblingTowns.map((row) => (
               <li key={row.slug}>
-                <Link className="area-list-link" href={townPath(row.slug)}>
+                <Link
+                  className="area-list-link"
+                  href={townPath(row.slug, row.areaSlug)}
+                >
                   <strong>{row.name}</strong>
                   <span className="area-list-meta">
                     {formatCount(row.schoolCount)} schools
