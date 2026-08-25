@@ -9,34 +9,36 @@ import {
   getCoverageArea,
 } from "@/lib/areas";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
-import { COVERAGE_REGION_LABEL, laSlug, SEED_LOCAL_AUTHORITY } from "@/lib/laPacks";
+import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import {
-  listSeoHampshireTowns,
+  isSeoAreaIncluded,
+  listSeoAreasWithTowns,
+  listSeoTowns,
   townPath,
   townsIndexPath,
 } from "@/lib/seoSchools";
-
-const AREA_SLUG = laSlug(SEED_LOCAL_AUTHORITY);
 
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return [{ slug: AREA_SLUG }];
+  return listSeoAreasWithTowns().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  if (slug !== AREA_SLUG) return {};
+  if (!isSeoAreaIncluded(slug)) return {};
   const area = getCoverageArea(slug);
   if (!area) return {};
 
-  const towns = listSeoHampshireTowns();
+  const towns = listSeoTowns(slug);
+  if (towns.length === 0) return {};
+
   const title = `Towns in ${area.localAuthority}`;
-  const description = `Browse ${formatCount(towns.length)} Hampshire towns with school shortlists — Ofsted and published outcomes, then compare nearby settings on School Compass.`;
+  const description = `Browse ${formatCount(towns.length)} ${area.localAuthority} towns with school shortlists — Ofsted and published outcomes, then compare nearby settings on School Compass.`;
   const url = townsIndexPath(slug);
 
   return {
@@ -46,8 +48,7 @@ export async function generateMetadata({
     keywords: [
       `${area.localAuthority} towns`,
       `${area.localAuthority} schools by town`,
-      "Winchester schools",
-      "Basingstoke schools",
+      "compare schools",
       BRAND_NAME,
     ],
     openGraph: {
@@ -61,11 +62,12 @@ export async function generateMetadata({
 
 export default async function TownsIndexPage({ params }: PageProps) {
   const { slug } = await params;
-  if (slug !== AREA_SLUG) notFound();
+  if (!isSeoAreaIncluded(slug)) notFound();
   const area = getCoverageArea(slug);
   if (!area) notFound();
 
-  const towns = listSeoHampshireTowns();
+  const towns = listSeoTowns(slug);
+  if (towns.length === 0) notFound();
 
   return (
     <main id="main" className="area-page">
@@ -119,7 +121,10 @@ export default async function TownsIndexPage({ params }: PageProps) {
           <ul className="area-list">
             {towns.map((town) => (
               <li key={town.slug}>
-                <Link className="area-list-link" href={townPath(town.slug)}>
+                <Link
+                  className="area-list-link"
+                  href={townPath(town.slug, town.areaSlug)}
+                >
                   <strong>{town.name}</strong>
                   <span className="area-list-meta">
                     {formatCount(town.schoolCount)} schools

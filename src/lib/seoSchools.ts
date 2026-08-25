@@ -1,22 +1,54 @@
 /**
- * Build-time school + Hampshire town landings for SEO.
+ * Build-time school + town landings for SEO.
+ * Hampshire seed is always included; ready packs join via seo-coverage.json
+ * so static Pages HTML grows under a page budget as data volumes increase.
  * Thin summaries only — do not embed full qualitative capture into HTML.
  */
 
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { areaPath, formatCount } from "@/lib/areas";
 import { BRAND_HOME_URL } from "@/lib/brand";
-import { SEED_LOCAL_AUTHORITY, laSlug } from "@/lib/laPacks";
+import {
+  SEED_LOCAL_AUTHORITY,
+  laSlug,
+  listReadyPacks,
+  packDataPathBySlug,
+  type LaPackManifest,
+} from "@/lib/laPacks";
 import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 
-/** Minimum schools in a postal town before we publish a town landing. */
+/** Fallback when seo-coverage.json is missing or incomplete. */
 export const SEO_TOWN_MIN_SCHOOLS = 8;
+
+/** Default static-export budget (school HTML pages). */
+export const SEO_DEFAULT_MAX_SCHOOL_PAGES = 1500;
+
+/** Default town-page budget across all included areas. */
+export const SEO_DEFAULT_MAX_TOWN_PAGES = 80;
+
+export type SeoCoveragePolicy = {
+  seedAlwaysIncluded: boolean;
+  townMinSchools: number;
+};
+
+export type SeoCoverage = {
+  version: number;
+  generatedAt: string | null;
+  pageBudget: {
+    maxSchoolPages: number;
+    maxTownPages: number;
+  };
+  policy: SeoCoveragePolicy;
+  includedAreaSlugs: string[];
+  stats?: Record<string, unknown>;
+};
 
 export type SeoSchoolSummary = {
   urn: string;
   name: string;
   localAuthority: string;
+  areaSlug: string;
   town: string | null;
   postcode: string | null;
   address: string | null;
@@ -56,6 +88,10 @@ function readPublicJson<T>(relativePath: string): T {
   return JSON.parse(readFileSync(full, "utf8")) as T;
 }
 
+function publicPath(relativePath: string): string {
+  return join(process.cwd(), "public", relativePath.replace(/^\//, ""));
+}
+
 function truncatePrecis(text: string | null | undefined, max = 420): string | null {
   const t = text?.trim();
   if (!t) return null;
@@ -66,7 +102,10 @@ function truncatePrecis(text: string | null | undefined, max = 420): string | nu
   return `${cut.replace(/\s+\S*$/, "").trim()}…`;
 }
 
-function toSummary(school: SchoolRecord): SeoSchoolSummary | null {
+function toSummary(
+  school: SchoolRecord,
+  areaSlug: string,
+): SeoSchoolSummary | null {
   if (school.closed) return null;
   const urn = String(school.urn ?? "").trim();
   const name = school.name?.trim();
@@ -76,6 +115,7 @@ function toSummary(school: SchoolRecord): SeoSchoolSummary | null {
     urn,
     name,
     localAuthority: school.localAuthority?.trim() || SEED_LOCAL_AUTHORITY,
+    areaSlug,
     town: school.town?.trim() || null,
     postcode: school.postcode?.trim() || null,
     address: school.address?.trim() || null,
@@ -99,26 +139,130 @@ function toSummary(school: SchoolRecord): SeoSchoolSummary | null {
   };
 }
 
-let cachedHampshire: SeoSchoolSummary[] | null = null;
+let cachedCoverage: SeoCoverage | null = null;
+let cachedSchools: SeoSchoolSummary[] | null = null;
 let cachedByUrn: Map<string, SeoSchoolSummary> | null = null;
 let cachedTowns: SeoTown[] | null = null;
+let cachedTownsByArea: Map<string, SeoTown[]> | null = null;
 
-/** Hampshire maintained-root schools for SEO landings. */
+function defaultCoverage(): SeoCoverage {
+  return {
+    version: 1,
+    generatedAt: null,
+    pageBudget: {
+      maxSchoolPages: SEO_DEFAULT_MAX_SCHOOL_PAGES,
+      maxTownPages: SEO_DEFAULT_MAX_TOWN_PAGES,
+    },
+    policy: {
+      seedAlwaysIncluded: true,
+      townMinSchools: SEO_TOWN_MIN_SCHOOLS,
+    },
+    includedAreaSlugs: [laSlug(SEED_LOCAL_AUTHORITY)],
+  };
+}
+
+/** Load the SEO coverage manifest (which LAs get school/town landings). */
+export function readSeoCoverage(): SeoCoverage {
+  if (cachedCoverage) return cachedCoverage;
+  const path = publicPath("data/seo-coverage.json");
+  if (!existsSync(path)) {
+    cachedCoverage = defaultCoverage();
+    return cachedCoverage;
+  }
+  try {
+    const raw = JSON.parse(readFileSync(path, "utf8")) as Partial<SeoCoverage>;
+    const seedSlug = laSlug(SEED_LOCAL_AUTHORITY);
+    const slugs = Array.isArray(raw.includedAreaSlugs)
+      ? [...raw.includedAreaSlugs]
+      : [seedSlug];
+    if (
+      (raw.policy?.seedAlwaysIncluded ?? true) &&
+      !slugs.includes(seedSlug)
+    ) {
+      slugs.unshift(seedSlug);
+    }
+    cachedCoverage = {
+      version: typeof raw.version === "number" ? raw.version : 1,
+      generatedAt: raw.generatedAt ?? null,
+      pageBudget: {
+        maxSchoolPages:
+          raw.pageBudget?.maxSchoolPages ?? SEO_DEFAULT_MAX_SCHOOL_PAGES,
+        maxTownPages:
+          raw.pageBudget?.maxTownPages ?? SEO_DEFAULT_MAX_TOWN_PAGES,
+      },
+      policy: {
+        seedAlwaysIncluded: raw.policy?.seedAlwaysIncluded ?? true,
+        townMinSchools:
+          raw.policy?.townMinSchools ?? SEO_TOWN_MIN_SCHOOLS,
+      },
+      includedAreaSlugs: [...new Set(slugs.map((s) => String(s).trim()).filter(Boolean))],
+      stats: raw.stats,
+    };
+  } catch {
+    cachedCoverage = defaultCoverage();
+  }
+  return cachedCoverage;
+}
+
+export function listSeoCoverageAreaSlugs(): string[] {
+  return readSeoCoverage().includedAreaSlugs;
+}
+
+export function isSeoAreaIncluded(areaSlug: string): boolean {
+  return listSeoCoverageAreaSlugs().includes(areaSlug);
+}
+
+export function seoTownMinSchools(): number {
+  return readSeoCoverage().policy.townMinSchools;
+}
+
+function loadAreaSchools(areaSlug: string): SeoSchoolSummary[] {
+  const seedSlug = laSlug(SEED_LOCAL_AUTHORITY);
+  if (areaSlug === seedSlug) {
+    const index = readPublicJson<SchoolsIndex>("data/schools-index.json");
+    return index.schools
+      .map((school) => toSummary(school, seedSlug))
+      .filter((row): row is SeoSchoolSummary => row != null);
+  }
+
+  const rel = packDataPathBySlug(areaSlug, "schools-index.json").replace(
+    /^\//,
+    "",
+  );
+  if (!existsSync(publicPath(rel))) return [];
+  const index = readPublicJson<SchoolsIndex>(rel);
+  return index.schools
+    .map((school) => toSummary(school, areaSlug))
+    .filter((row): row is SeoSchoolSummary => row != null);
+}
+
+/**
+ * Schools with SEO landing pages for every included coverage area.
+ * Dedupes by URN (seed wins over pack if both somehow appear).
+ */
+export function listSeoSchools(): SeoSchoolSummary[] {
+  if (cachedSchools) return cachedSchools;
+  const byUrn = new Map<string, SeoSchoolSummary>();
+  for (const areaSlug of listSeoCoverageAreaSlugs()) {
+    for (const school of loadAreaSchools(areaSlug)) {
+      if (!byUrn.has(school.urn)) byUrn.set(school.urn, school);
+    }
+  }
+  cachedSchools = [...byUrn.values()].sort((a, b) =>
+    a.name.localeCompare(b.name, "en-GB"),
+  );
+  return cachedSchools;
+}
+
+/** @deprecated Prefer listSeoSchools — kept for older call sites. */
 export function listSeoHampshireSchools(): SeoSchoolSummary[] {
-  if (cachedHampshire) return cachedHampshire;
-  const index = readPublicJson<SchoolsIndex>("data/schools-index.json");
-  cachedHampshire = index.schools
-    .map(toSummary)
-    .filter((row): row is SeoSchoolSummary => row != null)
-    .sort((a, b) => a.name.localeCompare(b.name, "en-GB"));
-  return cachedHampshire;
+  const seed = laSlug(SEED_LOCAL_AUTHORITY);
+  return listSeoSchools().filter((s) => s.areaSlug === seed);
 }
 
 export function getSeoSchool(urn: string): SeoSchoolSummary | undefined {
   if (!cachedByUrn) {
-    cachedByUrn = new Map(
-      listSeoHampshireSchools().map((school) => [school.urn, school]),
-    );
+    cachedByUrn = new Map(listSeoSchools().map((school) => [school.urn, school]));
   }
   return cachedByUrn.get(String(urn));
 }
@@ -148,59 +292,100 @@ export function townPath(
   return `${townsIndexPath(areaSlug)}${encodeURIComponent(townSlug)}/`;
 }
 
-/** Hampshire postal towns with enough schools for a useful landing. */
-export function listSeoHampshireTowns(): SeoTown[] {
-  if (cachedTowns) return cachedTowns;
-  const areaSlug = laSlug(SEED_LOCAL_AUTHORITY);
-  const byTown = new Map<string, SeoSchoolSummary[]>();
-
-  for (const school of listSeoHampshireSchools()) {
+function buildTowns(schools: SeoSchoolSummary[], minSchools: number): SeoTown[] {
+  const byKey = new Map<string, SeoSchoolSummary[]>();
+  for (const school of schools) {
     const town = school.town?.trim();
     if (!town) continue;
-    const list = byTown.get(town) ?? [];
+    const key = `${school.areaSlug}::${town}`;
+    const list = byKey.get(key) ?? [];
     list.push(school);
-    byTown.set(town, list);
+    byKey.set(key, list);
   }
 
-  cachedTowns = [...byTown.entries()]
-    .map(([name, schools]): SeoTown => ({
-      slug: slugifyTown(name),
-      name,
-      localAuthority: SEED_LOCAL_AUTHORITY,
-      areaSlug,
-      schoolCount: schools.length,
-      withOfsted: schools.filter((s) => s.ofstedOverall).length,
-      withRwm: schools.filter((s) => s.rwmExpected != null).length,
-      withKs4: schools.filter((s) => s.att8Average != null).length,
-    }))
-    .filter((town) => town.schoolCount >= SEO_TOWN_MIN_SCHOOLS && town.slug)
+  const towns = [...byKey.entries()]
+    .map(([, list]): SeoTown => {
+      const first = list[0];
+      return {
+        slug: slugifyTown(first.town!),
+        name: first.town!,
+        localAuthority: first.localAuthority,
+        areaSlug: first.areaSlug,
+        schoolCount: list.length,
+        withOfsted: list.filter((s) => s.ofstedOverall).length,
+        withRwm: list.filter((s) => s.rwmExpected != null).length,
+        withKs4: list.filter((s) => s.att8Average != null).length,
+      };
+    })
+    .filter((town) => town.schoolCount >= minSchools && town.slug)
     .sort(
       (a, b) =>
         b.schoolCount - a.schoolCount ||
         a.name.localeCompare(b.name, "en-GB"),
     );
 
-  // Guard against slug collisions (rare with postal towns).
+  // Guard against slug collisions within the same area.
   const seen = new Set<string>();
-  cachedTowns = cachedTowns.filter((town) => {
-    if (seen.has(town.slug)) return false;
-    seen.add(town.slug);
+  return towns.filter((town) => {
+    const key = `${town.areaSlug}::${town.slug}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
     return true;
   });
-
-  return cachedTowns;
 }
 
-export function getSeoTown(townSlug: string): SeoTown | undefined {
-  return listSeoHampshireTowns().find((town) => town.slug === townSlug);
+/** Town landings for included areas (optional filter by area slug). */
+export function listSeoTowns(areaSlug?: string): SeoTown[] {
+  if (!cachedTowns) {
+    const min = seoTownMinSchools();
+    cachedTowns = buildTowns(listSeoSchools(), min);
+    cachedTownsByArea = new Map();
+    for (const town of cachedTowns) {
+      const list = cachedTownsByArea.get(town.areaSlug) ?? [];
+      list.push(town);
+      cachedTownsByArea.set(town.areaSlug, list);
+    }
+  }
+  if (!areaSlug) return cachedTowns;
+  return cachedTownsByArea?.get(areaSlug) ?? [];
+}
+
+/** @deprecated Prefer listSeoTowns(areaSlug) */
+export function listSeoHampshireTowns(): SeoTown[] {
+  return listSeoTowns(laSlug(SEED_LOCAL_AUTHORITY));
+}
+
+export function getSeoTown(
+  townSlug: string,
+  areaSlug = laSlug(SEED_LOCAL_AUTHORITY),
+): SeoTown | undefined {
+  return listSeoTowns(areaSlug).find((town) => town.slug === townSlug);
 }
 
 export function listSeoSchoolsInTown(town: SeoTown): SeoSchoolSummary[] {
-  return listSeoHampshireSchools().filter(
+  return listSeoSchools().filter(
     (school) =>
-      school.town?.trim() === town.name &&
-      school.localAuthority === town.localAuthority,
+      school.areaSlug === town.areaSlug &&
+      school.town?.trim() === town.name,
   );
+}
+
+/** Areas that have at least one town landing under current coverage. */
+export function listSeoAreasWithTowns(): string[] {
+  return [...new Set(listSeoTowns().map((t) => t.areaSlug))];
+}
+
+/**
+ * Ready pack slugs that could be added to SEO coverage (excludes seed).
+ * Used by docs / tooling; the Python loop owns selection.
+ */
+export function listSeoCandidatePackSlugs(): string[] {
+  const included = new Set(listSeoCoverageAreaSlugs());
+  const seed = laSlug(SEED_LOCAL_AUTHORITY);
+  const manifest = readPublicJson<LaPackManifest>("data/packs/manifest.json");
+  return listReadyPacks(manifest)
+    .map((p) => p.slug)
+    .filter((slug) => slug !== seed && !included.has(slug));
 }
 
 export function stagesQueryForSchool(school: SeoSchoolSummary): string | null {
@@ -279,6 +464,12 @@ export function schoolJsonLd(school: SeoSchoolSummary): Record<string, unknown> 
   if (school.town) address.addressLocality = school.town;
   if (school.postcode) address.postalCode = school.postcode;
 
+  const townSlug = school.town ? slugifyTown(school.town) : null;
+  const townLanding =
+    townSlug && getSeoTown(townSlug, school.areaSlug)
+      ? townPath(townSlug, school.areaSlug)
+      : null;
+
   const graph: Record<string, unknown>[] = [
     {
       "@type": "School",
@@ -321,15 +512,15 @@ export function schoolJsonLd(school: SeoSchoolSummary): Record<string, unknown> 
           "@type": "ListItem",
           position: 3,
           name: school.localAuthority,
-          item: `${BRAND_HOME_URL}${areaPath(laSlug(school.localAuthority))}`,
+          item: `${BRAND_HOME_URL}${areaPath(school.areaSlug)}`,
         },
-        ...(school.town
+        ...(townLanding
           ? [
               {
                 "@type": "ListItem",
                 position: 4,
                 name: school.town,
-                item: `${BRAND_HOME_URL}${townPath(slugifyTown(school.town))}`,
+                item: `${BRAND_HOME_URL}${townLanding}`,
               },
               {
                 "@type": "ListItem",

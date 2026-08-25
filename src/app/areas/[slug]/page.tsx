@@ -17,7 +17,7 @@ import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { guidesIndexPath } from "@/lib/guides";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { areaLandingJsonLd } from "@/lib/seo";
-import { townsIndexPath } from "@/lib/seoSchools";
+import { isSeoAreaIncluded, listSeoTowns, townsIndexPath } from "@/lib/seoSchools";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -69,6 +69,9 @@ export default async function AreaLandingPage({ params }: PageProps) {
 
   const areas = listCoverageAreas();
   const neighbours = areas.filter((row) => row.slug !== area.slug);
+  const townCount = isSeoAreaIncluded(area.slug)
+    ? listSeoTowns(area.slug).length
+    : 0;
 
   return (
     <main id="main" className="area-page">
@@ -114,19 +117,23 @@ export default async function AreaLandingPage({ params }: PageProps) {
         </div>
       </section>
 
-      {area.isSeed ? (
+      {townCount > 0 ? (
         <section className="section" aria-labelledby="area-towns-heading">
           <div className="shell">
             <div className="section-head">
               <h2 id="area-towns-heading">Browse {area.localAuthority} by town</h2>
               <p>
-                Postal-town pages with school snapshots — Winchester,
-                Basingstoke, Farnborough, and more — then shortlist in the
-                compare tool.
+                Postal-town pages with school snapshots
+                {area.isSeed
+                  ? " — Winchester, Basingstoke, Farnborough, and more —"
+                  : " —"}{" "}
+                then shortlist in the compare tool.
               </p>
             </div>
             <p className="area-home-more">
-              <Link href={townsIndexPath(area.slug)}>See Hampshire towns</Link>
+              <Link href={townsIndexPath(area.slug)}>
+                See {area.localAuthority} towns
+              </Link>
             </p>
           </div>
         </section>

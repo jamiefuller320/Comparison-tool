@@ -1,0 +1,71 @@
+name: SEO coverage loop
+
+# Weekly assess → expand seo-coverage.json within page budget → commit digest.
+# Keeps school/town SEO landings growing with ready packs without dumping every URN.
+on:
+  workflow_dispatch:
+    inputs:
+      max_new_areas:
+        description: Max ready packs to add this run
+        required: false
+        default: "4"
+      dry_run:
+        description: Digest only (do not update seo-coverage.json)
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Fridays 07:00 UTC — after mid-week pack polish waves
+    - cron: "0 7 * * 5"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seo-coverage-loop
+  cancel-in-progress: false
+
+jobs:
+  seo-coverage-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run SEO coverage loop
+        env:
+          MAX_NEW: ${{ github.event.inputs.max_new_areas || '4' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          CHALLENGE_INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO }}
+          GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          ARGS=(--max-new-areas "$MAX_NEW")
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          python3 scripts/run-seo-coverage-loop.py "${ARGS[@]}"
+
+      - name: Commit coverage + digest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/seo-coverage.json \
+            public/data/seo-coverage-loop-latest.json \
+            public/data/seo-coverage-loop-latest.md
+          if git diff --staged --quiet; then
+            echo "No SEO coverage changes"
+          else
+            if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
+              MSG="SEO coverage loop dry-run digest"
+            else
+              MSG="SEO coverage loop: expand landings within page budget"
+            fi
+            git commit -m "$MSG"
+            git pull --rebase origin main
+            git push
+          fi

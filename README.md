@@ -43,13 +43,17 @@ The static export is rooted at `/` (see `public/CNAME`). The old project URL
 `https://jamiefuller320.github.io/Comparison-tool/` is not used once the custom
 domain is active.
 
-### SEO landings (Hampshire first)
+### SEO landings (budgeted expansion)
 
-- **Town hub:** `/areas/hampshire/towns/` — postal towns with ≥8 schools
-- **Town page:** `/areas/hampshire/towns/{town}/` — school list + compare deep links
+- **Town hub:** `/areas/{la}/towns/` — postal towns with ≥8 schools (per included LA)
+- **Town page:** `/areas/{la}/towns/{town}/` — school list + compare deep links
 - **School page:** `/schools/{urn}/` — Ofsted/outcomes snapshot, inspection excerpt,
   CTA `/?schools={urn}#side-by-side`
-- All of the above are in `sitemap.xml` (Hampshire seed only for now; packs later)
+- All of the above are in `sitemap.xml` for LAs listed in `public/data/seo-coverage.json`
+- Hampshire is always included. Ready packs are added by the weekly
+  **SEO coverage loop** (`npm run loop:seo-coverage`) within a school/town page
+  budget so static Pages HTML does not jump to every URN as pack volume grows.
+  Inspect with `npm run report:seo-coverage`.
 
 ### Enable GitHub Pages + schoolcompass.uk (one-time)
 

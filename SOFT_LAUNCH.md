@@ -73,6 +73,23 @@ npm run loop:pack-quality -- --max-packs 6 --isi-resolve-cap 80 --precis-limit 6
 
 Future phases (pack TTL, SCH-batched KS2) are logged under **Continuous data-quality automation** in `DEFERRED_IDEAS.md` — return there rather than re-deriving from chat. Interest weighting (phase 2) ships with `scripts/pack_interest.py` and biases `loop:pack-quality` target selection.
 
+### Automated SEO coverage loop
+
+Weekly GitHub Action (Fri 07:00 UTC) + `workflow_dispatch` expands school/town SEO landings as ready packs grow, without dumping every URN into the static export:
+
+1. **Assess** — `report:seo-coverage` (pages used vs `pageBudget`)
+2. **Select** — ready packs with signal floor that fit remaining school/town budget (interest-weighted)
+3. **Expand** — append LA slugs to `public/data/seo-coverage.json`
+4. **Digest** — `public/data/seo-coverage-loop-latest.{json,md}`
+
+```bash
+npm run report:seo-coverage
+npm run loop:seo-coverage -- --dry-run
+npm run loop:seo-coverage -- --max-new-areas 4
+```
+
+Phases and budget-tuning notes live under **Continuous SEO coverage automation** in `DEFERRED_IDEAS.md`.
+
 Soft-launch qualitative target (guideline, not a hard CI gate):
 
 - Mainstream state primaries with precis ≳ 70%
