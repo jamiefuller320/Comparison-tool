@@ -1,5 +1,8 @@
 /** Interactive “How to use” walkthrough — steps, cache, and localStorage helpers. */
 
+import type { TourDemoId } from "@/lib/tourDemo";
+import { TOUR_DEMO_POSTCODE } from "@/lib/tourDemo";
+
 export const TOUR_STORAGE_KEY = "schoolside.tourSeen";
 export const TOUR_START_EVENT = "schoolside:start-tour";
 /** Ask Setup to open a binder tile (postcode / stages / sector / provision). */
@@ -23,6 +26,8 @@ export interface TourStep {
    * yet (Setup / Find / Shortlist / Side by side / Understand peer pages).
    */
   retainIfMissing?: boolean;
+  /** Live demo to run when this step becomes active (fills UI, picks schools…). */
+  demo?: TourDemoId;
 }
 
 /** Document-space box for a tour target, captured once when the tour starts. */
@@ -52,111 +57,120 @@ export const TOUR_TARGET_SETUP_TILE: Partial<
 };
 
 /**
- * Journey walkthrough — one beat per chapter control, matching
- * Setup → Find → Shortlist → Side by side → Understand.
+ * Live journey walkthrough — fills a sample postcode, shortlists KS2 + KS3
+ * schools, then walks Side by side data tabs, charts, and print.
  */
 export const TOUR_STEPS: TourStep[] = [
   {
     id: "welcome",
     target: "hero",
     title: "Welcome to School Compass",
-    body: "This walkthrough points out the main controls. You can leave anytime with Skip, or restart later from How to use beside the chapter tabs.",
+    body: "This walkthrough runs a live example with a Hampshire postcode, shortlists schools, then opens the comparison boards. Skip anytime, or restart from How to use beside the chapter tabs.",
   },
   {
     id: "chapters",
     target: "page-chapters",
     title: "Five chapters, one journey",
-    body: "Use the tabs for Setup, Find, Shortlist, Side by side, and Understand. The walkthrough follows that order — jump ahead anytime with a tab.",
+    body: "Setup → Find → Shortlist → Side by side → Understand. We’ll drive each chapter with sample data so you can see how the pieces connect.",
   },
   {
     id: "postcode",
     target: "postcode",
-    title: "Start with your home postcode",
-    body: "On Setup, enter a full UK postcode (spaces or hyphens are fine). Find nearby maps schools around home so you can tick ones worth comparing.",
+    title: "Start with a home postcode",
+    body: `We’ll look up ${TOUR_DEMO_POSTCODE} (Totton, Hampshire — a real sample near codes like SO40 1AA). Enter your own postcode the same way — spaces or hyphens are fine.`,
+    demo: "fill-postcode",
   },
   {
     id: "stages",
     target: "stages",
-    title: "Choose by age or key stage",
-    body: "Still on Setup: drag the age range or press stage chips (ages on each). Childminders stay a separate care category. Several school stages use OR by default (Any stage); choose Every stage (AND) for schools that cover all of them.",
+    title: "Turn on KS2 and KS3",
+    body: "For this demo we select Key Stage 2 and Key Stage 3 so the Find list includes juniors/primaries and secondaries. OR matching is the default (any selected stage).",
+    demo: "set-stages-ks2-ks3",
   },
   {
     id: "sector",
     target: "sector",
     title: "State, independent, or both",
-    body: "School type filters the map, Find list, and Shortlist search. State defaults to KS2 tables; independent defaults to secondary GCSE measures.",
-  },
-  {
-    id: "provision",
-    target: "provision",
-    title: "Mainstream or specialist",
-    body: "The last Setup tile narrows mainstream versus specialist / alternative provision. Leave it on Any unless you need specialist settings.",
-    optional: true,
-    retainIfMissing: true,
+    body: "School type filters the map and list. We’ll keep State & independent for the sample shortlist.",
   },
   {
     id: "nearby",
     target: "nearby",
-    title: "Find map and tick list",
-    body: "Open Find after a postcode lookup. The map shows schools in range; the list adds road distance. Unlock postcode to drag the home pin. Tick up to four schools for your shortlist.",
+    title: "Find map around home",
+    body: "Find opens with schools in the range ring and road distances in the list. Unlock postcode later if you want to drag the home pin.",
     optional: true,
     retainIfMissing: true,
   },
   {
     id: "radius",
     target: "radius",
-    title: "Widen or tighten the range ring",
-    body: "On Find, use the kilometre chips to grow or shrink the search ring. The map and list update together.",
+    title: "Widen the range ring",
+    body: "Watch the kilometre chips — we’ll move the ring to 8 km so juniors and secondaries near Totton appear together.",
     optional: true,
     retainIfMissing: true,
+    demo: "set-radius-8km",
   },
   {
-    id: "search",
-    target: "search",
-    title: "Search by name or place",
-    body: "On Shortlist, search by name, town, postcode or URN. Results respect your Setup filters — handy when a school sits outside the range ring.",
+    id: "pick-shortlist",
+    target: "nearby",
+    title: "Tick two KS2 and two KS3 schools",
+    body: "We’ll shortlist two junior/primary settings and two secondaries from the Find list (four is the maximum). Tick or untick anytime yourself.",
+    optional: true,
+    retainIfMissing: true,
+    demo: "pick-shortlist",
   },
   {
     id: "shortlist",
     target: "shortlist",
-    title: "Your shortlist (up to four)",
-    body: "Selected schools appear as chips on Shortlist. Use Compare side by side or Share when you’re ready — the shortlist stays in the URL for a co-parent.",
+    title: "Your shortlist chips",
+    body: "Selected schools appear here on Shortlist. Share keeps the same schools in the URL for a co-parent.",
   },
   {
     id: "boards",
     target: "boards",
-    title: "Side-by-side comparison",
-    body: "One path at a time (Early years, Childminders, KS1, KS2, or KS4). Path chips switch categories; section tabs cover Context through Stats. Gaps versus England help you spot patterns — not a final verdict.",
-  },
-  {
-    id: "childminders",
-    target: "childminders",
-    title: "Childminders path",
-    body: "After shortlisting a consented provider, open Childminders for the directory card, vetting checklist, and visit pack — separate from the nursery Ofsted table.",
-    optional: true,
-    retainIfMissing: true,
+    title: "Side by side — KS2 path",
+    body: "Comparison opens one path at a time. We’ll start on Key Stage 2 for the primary shortlist — gaps versus England are patterns to discuss, not a verdict.",
+    demo: "open-path-ks2",
   },
   {
     id: "decision-guidance",
     target: "decision-guidance",
-    title: "What the data tells you",
-    body: "On each Side by side path, open Context for “How to read this as a parent”. Use it before you treat a table or précis as a verdict.",
+    title: "How to read this as a parent",
+    body: "Context opens with guidance for the active path. Use it before you treat a table or précis as a final answer.",
     optional: true,
     retainIfMissing: true,
+    demo: "open-section-context",
   },
   {
-    id: "visit-pack",
-    target: "print-comparison-pack",
-    title: "Print a shortlist or visit pack",
-    body: "On Side by side, use Print comparison pack for a reading guide, contact cards, inspection précis, and visit prompts. Save as PDF before open days.",
+    id: "compare-ofsted",
+    target: "compare-sections",
+    title: "Browse Ofsted / inspection",
+    body: "Section tabs mirror Setup’s binder. We’ll open Ofsted for précis and grades — useful visit questions, not rankings.",
     optional: true,
     retainIfMissing: true,
+    demo: "open-section-ofsted",
   },
   {
     id: "year-trend",
     target: "year-trend",
-    title: "Year-on-year trends on Stats",
-    body: "On KS2, Context notes year trends; graphs sit on Stats. Open Year trend on a measure for shortlisted schools and England. The hatched COVID band marks 2019/20–2021/22 — lines do not connect across that gap. Small cohorts bounce; blank cells are usually suppression.",
+    title: "Year-trend charts on Stats",
+    body: "On Stats, open Year trend on a measure. Lines show each shortlisted school and England; the hatched COVID band marks unpublished KS2 years.",
+    optional: true,
+    retainIfMissing: true,
+    demo: "expand-year-trend",
+  },
+  {
+    id: "boards-ks4",
+    target: "boards",
+    title: "Switch to the KS3–4 path",
+    body: "Path chips move between stages. We’ll open KS3–4 / 16–18 for the secondary shortlist — same Side by side frame, different tables.",
+    demo: "open-path-ks4",
+  },
+  {
+    id: "visit-pack",
+    target: "print-comparison-pack",
+    title: "Print a comparison pack",
+    body: "Print comparison pack builds a PDF-ready shortlist: reading guide, contacts, précis, and visit prompts for open days.",
     optional: true,
     retainIfMissing: true,
   },
@@ -164,7 +178,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "how",
     target: "how",
     title: "Understand the figures",
-    body: "Open Understand for topic cards — getting started, stage guides, FAQ, and where the numbers come from. Use it whenever you need a refresher.",
+    body: "Topic cards cover getting started, stage guides, FAQ, and data sources. Restart this tour anytime from How to use — try it next with your own postcode.",
   },
 ];
 
