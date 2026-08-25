@@ -34,6 +34,10 @@ import {
 } from "@/components/HeroSetupTiles";
 import { useJourneyChapter } from "@/components/JourneyChapterContext";
 import {
+  TOUR_SETUP_TILE_EVENT,
+  type TourSetupTileId,
+} from "@/lib/tour";
+import {
   formatPhases,
   phasesFromAgeRange,
   schoolMatchesPhases,
@@ -166,6 +170,23 @@ export function HomePostcodeExplorer({
   const [stageRequiredOpen, setStageRequiredOpen] = useState(false);
   const stageRequiredTitleId = useId();
   const { setChapter } = useJourneyChapter();
+
+  useEffect(() => {
+    function onTourTile(event: Event) {
+      const tile = (event as CustomEvent<{ tile?: TourSetupTileId }>).detail
+        ?.tile;
+      if (
+        tile === "postcode" ||
+        tile === "stages" ||
+        tile === "sector" ||
+        tile === "provision"
+      ) {
+        setActiveTile(tile);
+      }
+    }
+    window.addEventListener(TOUR_SETUP_TILE_EVENT, onTourTile);
+    return () => window.removeEventListener(TOUR_SETUP_TILE_EVENT, onTourTile);
+  }, []);
 
   useEffect(() => {
     if (!stageRequiredOpen) return;
@@ -721,7 +742,9 @@ export function HomePostcodeExplorer({
                 </HeroSetupTiles>
   );
 
-  const nearbySheet = home ? (
+  const nearbySheet = (
+    <div data-tour="nearby">
+      {home ? (
                 <>
             <div className="section-head">
               <h2>Find · {home.postcode}</h2>
@@ -984,7 +1007,7 @@ export function HomePostcodeExplorer({
               </div>
             </div>
                 </>
-  ) : (
+      ) : (
                 <>
                   <div className="section-head">
                     <h2>Find</h2>
@@ -1010,6 +1033,8 @@ export function HomePostcodeExplorer({
                     </p>
                   </div>
                 </>
+      )}
+    </div>
   );
 
   return children({ setupSheet, nearbySheet });

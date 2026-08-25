@@ -815,7 +815,7 @@ export function CompareApp({
         <>
           <DecisionGuidancePanel path="ks2" {...guidancePanelProps} />
           {ks2Selected.length > 0 ? (
-            <aside className="year-trend-tip" data-tour="year-trend">
+            <aside className="year-trend-tip">
               <strong>Year trends &amp; COVID years:</strong> {KS2_YEAR_TREND_TIP}
             </aside>
           ) : null}
@@ -991,7 +991,7 @@ export function CompareApp({
           );
 
           const sideBySideSheet = (
-            <>
+            <div data-tour="boards">
               <div className="section-head">
                 <h2>Side by side</h2>
                 <p>
@@ -1023,7 +1023,7 @@ export function CompareApp({
                 stages={stages}
                 sectors={sectors}
               />
-            </>
+            </div>
           );
 
           const howSheet = <UnderstandChapter />;
