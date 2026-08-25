@@ -5534,6 +5534,8 @@ html.tour-running .hero-inner > * {
   color: var(--ink-soft);
   font-size: 0.98rem;
   line-height: 1.45;
+  max-height: min(36vh, 220px);
+  overflow-y: auto;
 }
 
 .tour-actions {

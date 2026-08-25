@@ -11,10 +11,12 @@ import {
 import {
   TOUR_START_EVENT,
   TOUR_STEPS,
+  TOUR_TARGET_SETUP_TILE,
   cacheTourTargets,
   hasSeenTour,
   markTourSeen,
   placeTourCard,
+  requestTourSetupTile,
   resolveActiveTourSteps,
   scrollToCachedTarget,
   viewportRectFromCache,
@@ -98,9 +100,17 @@ export function ProductTour() {
   const ensureChapterForTarget = useCallback(
     async (target: string) => {
       const chapter = TOUR_TARGET_CHAPTER[target];
-      if (!chapter) return;
-      setChapter(chapter, { scroll: false });
-      await waitFrames(2);
+      if (chapter) {
+        setChapter(chapter, { scroll: false });
+        await waitFrames(2);
+      }
+      // Setup only mounts the active binder tile — open the right sheet
+      // before measuring postcode / stages / sector / provision.
+      const tile = TOUR_TARGET_SETUP_TILE[target];
+      if (tile) {
+        requestTourSetupTile(tile);
+        await waitFrames(2);
+      }
     },
     [setChapter],
   );
@@ -184,15 +194,35 @@ export function ProductTour() {
       // Peer pages remount — refresh boxes before spotlighting.
       rebuildCache(steps);
       if (cancelled) return;
+
+      // Optional beats whose control isn’t on this chapter (e.g. radius
+      // before a postcode, Year trend without a KS2 shortlist) skip ahead.
+      if (
+        step.optional &&
+        !cacheRef.current.has(step.target) &&
+        index < steps.length - 1
+      ) {
+        setIndex((i) => Math.min(i + 1, steps.length - 1));
+        return;
+      }
+
       paintFromCache(step.target, true);
     })();
     return () => {
       cancelled = true;
     };
-  }, [open, step, steps, ensureChapterForTarget, rebuildCache, paintFromCache]);
+  }, [
+    open,
+    step,
+    steps,
+    index,
+    ensureChapterForTarget,
+    rebuildCache,
+    paintFromCache,
+  ]);
 
-  // On the year-trend step, expand the first KS2 measure when a live table is
-  // present so parents see the graph as well as the control.
+  // On the year-trend step, open Stats and expand the first KS2 measure when
+  // a live table is present so parents see the graph as well as the control.
   useEffect(() => {
     if (!open || !step) return;
 
@@ -201,36 +231,61 @@ export function ProductTour() {
       return;
     }
 
-    const el = document.querySelector(tourTargetSelector("year-trend"));
-    if (
-      !(el instanceof HTMLButtonElement) ||
-      !el.classList.contains("metric-history-trigger")
-    ) {
-      return;
-    }
+    let cancelled = false;
 
-    if (el.getAttribute("aria-expanded") !== "true") {
-      el.click();
-      openedTrendByTourRef.current = true;
-      demoTriggerRef.current = el;
-    } else {
-      demoTriggerRef.current = el;
-    }
-
-    if (demoTimerRef.current != null) {
-      window.clearTimeout(demoTimerRef.current);
-    }
-    demoTimerRef.current = window.setTimeout(() => {
-      rebuildCache(steps);
-      paintFromCache("year-trend", true);
-      const panel = document.querySelector(".history-panel-inline");
-      if (panel instanceof HTMLElement) {
-        panel.scrollIntoView({ behavior: "auto", block: "nearest" });
-        paintFromCache("year-trend", false);
+    void (async () => {
+      // Graphs live on Stats — Context only has the tip note.
+      const statsTab = Array.from(
+        document.querySelectorAll(".compare-section-binder [role='tab']"),
+      ).find(
+        (tab) =>
+          tab instanceof HTMLElement &&
+          /stats/i.test(tab.textContent || ""),
+      );
+      if (
+        statsTab instanceof HTMLElement &&
+        statsTab.getAttribute("aria-selected") !== "true"
+      ) {
+        statsTab.click();
+        await waitFrames(2);
       }
-    }, 420);
+      if (cancelled) return;
+
+      const el = document.querySelector(tourTargetSelector("year-trend"));
+      if (
+        !(el instanceof HTMLButtonElement) ||
+        !el.classList.contains("metric-history-trigger")
+      ) {
+        rebuildCache(steps);
+        paintFromCache("year-trend", true);
+        return;
+      }
+
+      if (el.getAttribute("aria-expanded") !== "true") {
+        el.click();
+        openedTrendByTourRef.current = true;
+        demoTriggerRef.current = el;
+      } else {
+        demoTriggerRef.current = el;
+      }
+
+      if (demoTimerRef.current != null) {
+        window.clearTimeout(demoTimerRef.current);
+      }
+      demoTimerRef.current = window.setTimeout(() => {
+        if (cancelled) return;
+        rebuildCache(steps);
+        paintFromCache("year-trend", true);
+        const panel = document.querySelector(".history-panel-inline");
+        if (panel instanceof HTMLElement) {
+          panel.scrollIntoView({ behavior: "auto", block: "nearest" });
+          paintFromCache("year-trend", false);
+        }
+      }, 420);
+    })();
 
     return () => {
+      cancelled = true;
       if (demoTimerRef.current != null) {
         window.clearTimeout(demoTimerRef.current);
         demoTimerRef.current = null;
