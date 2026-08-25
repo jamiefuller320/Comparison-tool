@@ -1,125 +1,176 @@
 {
-  "ranAt": "2026-08-24T10:32:13.465455+00:00",
+  "ranAt": "2026-08-25T10:25:45.850573+00:00",
   "dryRun": false,
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 491,
-    "suspectCount": 14,
+    "recordCount": 671,
+    "suspectCount": 121,
     "flagCounts": {
-      "implausible_offerings": 8,
-      "chrome": 6,
-      "policy_toc": 2
+      "chrome": 109,
+      "implausible_offerings": 31,
+      "policy_toc": 25,
+      "admissions": 4,
+      "boilerplate": 3,
+      "admissions_in_enrichment": 2
     },
     "topSuspects": [
       {
-        "urn": "116376",
-        "name": "St Jude's Catholic Primary School",
-        "score": 5.0,
+        "urn": "116413",
+        "name": "The Hamble School",
+        "score": 16.0,
         "flags": [
+          "chrome",
           "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "116333",
-        "name": "St Michael's Church of England Controlled Junior School",
-        "score": 5.0,
+        "urn": "139920",
+        "name": "The Holme Church of England Primary School",
+        "score": 16.0,
         "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "116321",
+        "name": "Vernham Dean Gillum's Church of England Primary School",
+        "score": 16.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "140311",
+        "name": "Dudley Infant Academy",
+        "score": 15.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "146690",
+        "name": "Hillside Community First School",
+        "score": 15.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "115893",
+        "name": "Wallisdean Infant School",
+        "score": 15.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "115889",
+        "name": "Wallisdean Junior School",
+        "score": 15.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "114494",
+        "name": "Catsfield Church of England Primary School",
+        "score": 14.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "114584",
+        "name": "Claverham Community College",
+        "score": 14.0,
+        "flags": [
+          "chrome",
           "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "137403",
-        "name": "St Anthony's Catholic Primary School",
-        "score": 3.0,
+        "urn": "114434",
+        "name": "Cradle Hill Community Primary School",
+        "score": 14.0,
         "flags": [
+          "policy_toc",
+          "implausible_offerings",
           "chrome"
         ]
       },
       {
-        "urn": "147701",
-        "name": "St Columba CE Primary School",
-        "score": 3.0,
+        "urn": "147128",
+        "name": "The Ferns Primary Academy",
+        "score": 13.0,
         "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "116382",
-        "name": "St John the Baptist Catholic Primary School, Andover",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "137422",
-        "name": "St Joseph's Catholic Primary School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "116489",
-        "name": "St Peter's Catholic Primary School, Waterlooville",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "151930",
-        "name": "St Peter's Catholic Primary School, Waterlooville",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "136643",
-        "name": "Bohunt School",
-        "score": 2.0,
-        "flags": [
+          "admissions",
+          "admissions_in_enrichment",
+          "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "116277",
-        "name": "Bursledon Church of England Infant School",
-        "score": 2.0,
+        "urn": "116320",
+        "name": "Twyford St Mary's Church of England Primary School",
+        "score": 13.0,
         "flags": [
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "116027",
-        "name": "Bursledon Junior School(CA)",
-        "score": 2.0,
-        "flags": [
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "134734",
-        "name": "Cadland Primary School",
-        "score": 2.0,
-        "flags": [
-          "implausible_offerings"
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 491,
-    "suspectCount": 6,
+    "recordCount": 671,
+    "suspectCount": 10,
     "flagCounts": {
-      "implausible_offerings": 6
+      "implausible_offerings": 6,
+      "admissions": 4
     },
     "topSuspects": [
+      {
+        "urn": "147128",
+        "name": "The Ferns Primary Academy",
+        "score": 6.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "116423",
+        "name": "The Hayling College",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "137239",
+        "name": "The Romsey School",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "116411",
+        "name": "The Toynbee School",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
       {
         "urn": "136643",
         "name": "Bohunt School",
@@ -171,19 +222,19 @@
     ]
   },
   "qa": {
-    "reviewed": 14,
-    "changedSchools": 8,
-    "findingsApplied": 8,
-    "learningAdded": 4,
+    "reviewed": 121,
+    "changedSchools": 114,
+    "findingsApplied": 223,
+    "learningAdded": 54,
     "provider": "none"
   },
   "merged": true,
   "notes": [
-    "Before: 14 suspects across 491 records.",
-    "Applied QA fixes to 8 school(s) (8 area finding(s)).",
-    "Learned 4 new junk phrase(s) (store size 400).",
-    "Reviewed top 14 suspect(s); provider=none.",
+    "Before: 121 suspects across 671 records.",
+    "Applied QA fixes to 114 school(s) (223 area finding(s)).",
+    "Learned 54 new junk phrase(s) (store size 400).",
+    "Reviewed top 121 suspect(s); provider=none.",
     "Merged cleaned sidecar into schools-index.",
-    "After: 6 suspects across 491 records."
+    "After: 10 suspects across 671 records."
   ]
 }
