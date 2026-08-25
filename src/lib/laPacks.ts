@@ -19,8 +19,45 @@ export const SEED_LOCAL_AUTHORITY = "Hampshire";
 /** Human label for UI / docs (maintained root). */
 export const SEED_GEOGRAPHY_LABEL = "Hampshire";
 
+/** London boroughs (GIAS / DfE LA labels) — silent-merge packs. */
+export const LONDON_BOROUGH_LOCAL_AUTHORITIES = [
+  "City of London",
+  "Barking and Dagenham",
+  "Barnet",
+  "Bexley",
+  "Brent",
+  "Bromley",
+  "Camden",
+  "Croydon",
+  "Ealing",
+  "Enfield",
+  "Greenwich",
+  "Hackney",
+  "Hammersmith and Fulham",
+  "Haringey",
+  "Harrow",
+  "Havering",
+  "Hillingdon",
+  "Hounslow",
+  "Islington",
+  "Kensington and Chelsea",
+  "Kingston upon Thames",
+  "Lambeth",
+  "Lewisham",
+  "Merton",
+  "Newham",
+  "Redbridge",
+  "Richmond upon Thames",
+  "Southwark",
+  "Sutton",
+  "Tower Hamlets",
+  "Waltham Forest",
+  "Wandsworth",
+  "Westminster",
+] as const;
+
 /**
- * Coverage region: ONS South East LAs + Dorset / BCP (contiguous ask).
+ * Coverage region: ONS South East LAs + Dorset / BCP + London boroughs.
  * Hampshire is the maintained root; other members ship as silent-merge packs.
  */
 export const SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES = [
@@ -45,10 +82,16 @@ export const SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES = [
   "Wokingham",
   "Dorset",
   "Bournemouth, Christchurch and Poole",
+  ...LONDON_BOROUGH_LOCAL_AUTHORITIES,
 ] as const;
 
+/** Canonical alias for full coverage-region membership. */
+export const COVERAGE_REGION_LOCAL_AUTHORITIES =
+  SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES;
+
 /** Human label for the wider coverage region. */
-export const COVERAGE_REGION_LABEL = "South East England (including Dorset)";
+export const COVERAGE_REGION_LABEL =
+  "South East England, London, and Dorset";
 
 /** @deprecated Packs are no longer a user-facing mode; kept for clearing legacy storage. */
 export const ACTIVE_PACK_STORAGE_KEY = "schoolside.activeLaPack";
@@ -75,9 +118,25 @@ export function isSeedLocalAuthority(
 export function isSoutheastPlusDorsetLocalAuthority(
   localAuthority?: string | null,
 ): boolean {
+  return isCoverageRegionLocalAuthority(localAuthority);
+}
+
+export function isCoverageRegionLocalAuthority(
+  localAuthority?: string | null,
+): boolean {
   if (!localAuthority) return false;
   const target = normalizeLaName(localAuthority).toLowerCase();
-  return SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES.some(
+  return COVERAGE_REGION_LOCAL_AUTHORITIES.some(
+    (la) => normalizeLaName(la).toLowerCase() === target,
+  );
+}
+
+export function isLondonBoroughLocalAuthority(
+  localAuthority?: string | null,
+): boolean {
+  if (!localAuthority) return false;
+  const target = normalizeLaName(localAuthority).toLowerCase();
+  return LONDON_BOROUGH_LOCAL_AUTHORITIES.some(
     (la) => normalizeLaName(la).toLowerCase() === target,
   );
 }

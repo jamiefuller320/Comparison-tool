@@ -17,7 +17,44 @@ SEED_LOCAL_AUTHORITY = "Hampshire"
 
 PACKS_ROOT_REL = "public/data/packs"
 
-# Product coverage region: ONS South East LAs (packs) + Dorset / BCP by request.
+# London boroughs (GIAS / DfE LA labels). Packs under public/data/packs/{slug}/.
+LONDON_BOROUGH_LOCAL_AUTHORITIES: tuple[str, ...] = (
+    "City of London",
+    "Barking and Dagenham",
+    "Barnet",
+    "Bexley",
+    "Brent",
+    "Bromley",
+    "Camden",
+    "Croydon",
+    "Ealing",
+    "Enfield",
+    "Greenwich",
+    "Hackney",
+    "Hammersmith and Fulham",
+    "Haringey",
+    "Harrow",
+    "Havering",
+    "Hillingdon",
+    "Hounslow",
+    "Islington",
+    "Kensington and Chelsea",
+    "Kingston upon Thames",
+    "Lambeth",
+    "Lewisham",
+    "Merton",
+    "Newham",
+    "Redbridge",
+    "Richmond upon Thames",
+    "Southwark",
+    "Sutton",
+    "Tower Hamlets",
+    "Waltham Forest",
+    "Wandsworth",
+    "Westminster",
+)
+
+# Product coverage region: ONS South East LAs + Dorset / BCP + London boroughs.
 # Hampshire remains the maintained root — it is listed for membership checks only
 # and must not be built as an on-demand pack.
 SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES: tuple[str, ...] = (
@@ -43,9 +80,17 @@ SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES: tuple[str, ...] = (
     # ONS South West — included for contiguous coastal coverage with Hampshire.
     "Dorset",
     "Bournemouth, Christchurch and Poole",
+    *LONDON_BOROUGH_LOCAL_AUTHORITIES,
+)
+
+# Canonical alias for the full coverage region membership list.
+COVERAGE_REGION_LOCAL_AUTHORITIES: tuple[str, ...] = (
+    SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES
 )
 
 # Build order for batch pack harvest (Hampshire omitted — maintained root).
+# Neighbours first, then London boroughs (A–Z by borough name, City of London last
+# among central authorities — keep City near the start of the London wave).
 SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER: tuple[str, ...] = (
     "Southampton",
     "Portsmouth",
@@ -67,6 +112,50 @@ SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER: tuple[str, ...] = (
     "Buckinghamshire",
     "Milton Keynes",
     "Oxfordshire",
+    # London wave — after SE+Dorset soft-launch packs.
+    "City of London",
+    "Barking and Dagenham",
+    "Barnet",
+    "Bexley",
+    "Brent",
+    "Bromley",
+    "Camden",
+    "Croydon",
+    "Ealing",
+    "Enfield",
+    "Greenwich",
+    "Hackney",
+    "Hammersmith and Fulham",
+    "Haringey",
+    "Harrow",
+    "Havering",
+    "Hillingdon",
+    "Hounslow",
+    "Islington",
+    "Kensington and Chelsea",
+    "Kingston upon Thames",
+    "Lambeth",
+    "Lewisham",
+    "Merton",
+    "Newham",
+    "Redbridge",
+    "Richmond upon Thames",
+    "Southwark",
+    "Sutton",
+    "Tower Hamlets",
+    "Waltham Forest",
+    "Wandsworth",
+    "Westminster",
+)
+
+COVERAGE_REGION_PACK_BUILD_ORDER: tuple[str, ...] = (
+    SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER
+)
+
+# Default parallel qualitative ingest streams (packs) — run alongside the seed.
+DEFAULT_PARALLEL_QUALITATIVE_LAS: tuple[str, ...] = (
+    "Dorset",
+    "East Sussex",
 )
 
 
@@ -88,22 +177,48 @@ def is_seed_local_authority(name: str | None) -> bool:
 
 
 def is_southeast_plus_dorset_local_authority(name: str | None) -> bool:
+    """True when the LA is in the product coverage region (SE + Dorset + London)."""
+    return is_coverage_region_local_authority(name)
+
+
+def is_coverage_region_local_authority(name: str | None) -> bool:
     if not name:
         return False
     target = normalize_la_name(name).lower()
     return any(
         normalize_la_name(la).lower() == target
-        for la in SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES
+        for la in COVERAGE_REGION_LOCAL_AUTHORITIES
+    )
+
+
+def is_london_borough_local_authority(name: str | None) -> bool:
+    if not name:
+        return False
+    target = normalize_la_name(name).lower()
+    return any(
+        normalize_la_name(la).lower() == target
+        for la in LONDON_BOROUGH_LOCAL_AUTHORITIES
     )
 
 
 def southeast_plus_dorset_pack_targets(*, include_ready: bool = False) -> list[str]:
     """LA labels to build as packs (excludes Hampshire maintained root)."""
+    return coverage_region_pack_targets(include_ready=include_ready)
+
+
+def coverage_region_pack_targets(*, include_ready: bool = False) -> list[str]:
+    """LA labels to build as packs (excludes Hampshire maintained root)."""
+    del include_ready  # reserved for callers that filter on manifest readiness
     return [
         la
-        for la in SOUTHEAST_PLUS_DORSET_PACK_BUILD_ORDER
+        for la in COVERAGE_REGION_PACK_BUILD_ORDER
         if not is_seed_local_authority(la)
     ]
+
+
+def london_borough_pack_targets() -> list[str]:
+    """London borough pack labels only (all are packs; none are the seed root)."""
+    return list(LONDON_BOROUGH_LOCAL_AUTHORITIES)
 
 
 # Ofsted childcare MI sometimes uses "&" where DfE/EES uses "and".
@@ -111,6 +226,22 @@ _LA_NAME_ALIASES: dict[str, tuple[str, ...]] = {
     "bournemouth, christchurch and poole": (
         "Bournemouth, Christchurch and Poole",
         "Bournemouth, Christchurch & Poole",
+    ),
+    "hammersmith and fulham": (
+        "Hammersmith and Fulham",
+        "Hammersmith & Fulham",
+    ),
+    "kensington and chelsea": (
+        "Kensington and Chelsea",
+        "Kensington & Chelsea",
+    ),
+    "kingston upon thames": (
+        "Kingston upon Thames",
+        "Kingston-upon-Thames",
+    ),
+    "richmond upon thames": (
+        "Richmond upon Thames",
+        "Richmond-upon-Thames",
     ),
 }
 

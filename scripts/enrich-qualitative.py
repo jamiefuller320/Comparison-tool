@@ -27,6 +27,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Capture qualitative school evidence.")
     parser.add_argument("--index", type=Path, default=DEFAULT_INDEX)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--progress",
+        type=Path,
+        default=ROOT / "output" / "qualitative-progress.json",
+        help="Batch progress sidecar (URN cursor)",
+    )
     parser.add_argument("--la", default="Hampshire")
     parser.add_argument("--urn")
     parser.add_argument("--limit", type=int, default=12)
@@ -82,7 +88,7 @@ def main(argv: list[str] | None = None) -> int:
         "--learned-terms",
         str(ROOT / "output" / "learned-url-terms.json"),
         "--progress",
-        str(ROOT / "output" / "qualitative-progress.json"),
+        str(args.progress),
         *extra,
     ]
     if args.urn:

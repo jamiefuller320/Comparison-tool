@@ -1,8 +1,8 @@
 # School Compass
 
-**Parental school compare** for Hampshire and the wider South East (**including Dorset**) — shortlist nearby schools and early-years settings, then compare published outcomes with Ofsted/ISI evidence. Spoken brand: **School Compass**; home domain: [schoolcompass.uk](https://schoolcompass.uk).
+**Parental school compare** for Hampshire and the wider South East (**including Dorset and London**) — shortlist nearby schools and early-years settings, then compare published outcomes with Ofsted/ISI evidence. Spoken brand: **School Compass**; home domain: [schoolcompass.uk](https://schoolcompass.uk).
 
-Side-by-side boards for the shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), framed for parents choosing a school rather than governors monitoring one. Soft-launch bar: [`SOFT_LAUNCH.md`](./SOFT_LAUNCH.md). Coverage region constants: `SOUTHEAST_PLUS_DORSET_*` in `src/lib/laPacks.ts` / `scripts/seed_scope.py`.
+Side-by-side boards for the shortlist you choose — expanding the data collation explored in [Bartley Insight](https://github.com/jamiefuller320/Bartley), framed for parents choosing a school rather than governors monitoring one. Soft-launch bar: [`SOFT_LAUNCH.md`](./SOFT_LAUNCH.md). Coverage region constants: `SOUTHEAST_PLUS_DORSET_*` / `LONDON_BOROUGH_*` in `src/lib/laPacks.ts` / `scripts/seed_scope.py`.
 
 ## North Star
 
@@ -20,7 +20,7 @@ Until uptake is clearer, prefer **depth in a bounded slice** over a full nationa
 
 1. **Age progression** — **early years is live**; the maintained climb is now **Hampshire KS1 → KS2 → secondary** on the same geography.
 2. **One maintained geography** — seed local authority is **Hampshire** (county council LA in DfE data; not the Southampton or Portsmouth unitaries). Keep deepest refresh cadence there.
-3. **South East (+ Dorset) via packs** — other LAs in the coverage region build into `public/data/packs/{slug}/` and **merge silently** into map/search. Batch with `npm run pack:southeast`. Areas outside the region stay on-demand via “Request area coverage”.
+3. **South East + Dorset + London via packs** — other LAs in the coverage region build into `public/data/packs/{slug}/` and **merge silently** into map/search. Batch with `npm run pack:southeast` (full region) or `npm run pack:london` (boroughs only). Areas outside the region stay on-demand via “Request area coverage”.
 
 Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHORITY = "Hampshire"`).
 
@@ -29,7 +29,7 @@ Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHO
 - **Early years / childminders** — Ofsted day care (full/sessional + out-of-school / holiday clubs) + school nursery Ofsted join + EYFSP area benches; consented childminder directory + vetting checklist + visit pack (`npm run harvest:ey`)
 - **School stages** — Hampshire KS1 phonics context, KS2 tables + year trends, and KS4/16–18 where published, via `npm run harvest:hampshire` (seed-LA trim of the school index + history)
 
-Scheduled refresh uses the Hampshire maintained harvest. A **twice-weekly pack quality loop** (`npm run loop:pack-quality`, workflow `pack-quality-loop.yml`) assesses ready packs, polishes the weakest indie/ISI gaps under caps, and commits a digest. The daily **qualitative coverage loop** (`npm run loop:qualitative`) GIAS-enriches websites, then auto-picks Hampshire or the ready pack with the most remaining website-bearing schools (40/day + stale refresh + light QA). A separate daily **qualitative quality loop** (`npm run loop:qualitative-quality`, workflow `qualitative-quality-loop.yml`) re-applies ingest/QA rules across the existing sidecar without recrawl. `npm run harvest` remains the **full England scaffold** for capability / escape hatch.
+Scheduled refresh uses the Hampshire maintained harvest. A **twice-weekly pack quality loop** (`npm run loop:pack-quality`, workflow `pack-quality-loop.yml`) assesses ready packs, polishes the weakest indie/ISI gaps under caps, and commits a digest. The daily **qualitative coverage loop** (`npm run loop:qualitative`) GIAS-enriches websites, then runs **parallel streams** for Hampshire + Dorset + East Sussex (60 schools/stream + stale refresh + light QA). A separate daily **qualitative quality loop** (`npm run loop:qualitative-quality`, workflow `qualitative-quality-loop.yml`) re-applies ingest/QA rules across the existing sidecar without recrawl. `npm run harvest` remains the **full England scaffold** for capability / escape hatch.
 
 **On-demand area packs (backend collation):** outside Hampshire, parents can **Request area coverage** (exact DfE LA label) from **A school is missing**. That queues `repository_dispatch` `la-pack` → `scripts/build-la-pack.py`, which writes under `public/data/packs/{slug}/` without overwriting the Hampshire root. Pack builds include **GIAS coverage, KS4/KS5 outcomes, LA phonics benches, Ofsted day care / school EY enrich, consented childminders, and LA EYFSP benches**. Ready packs in `public/data/packs/manifest.json` are **merged silently** into the map and search (schools, nurseries, and childminders) — there is no pack picker or `?pack=` mode. Packs remain the unit for deciding which LAs to harvest. Further depth and an interest-weighted ingest→assess→improve loop are tracked in `DEFERRED_IDEAS.md`.
 
@@ -142,9 +142,11 @@ npm run harvest:hampshire  # maintained set: Hampshire schools + EY pack + KS2 h
 # or: npm run harvest:catchments    # Hampshire catchment polygons for map overlay
 # or: npm run history:ks2           # multi-year CSP KS2 archive only
 # or: npm run pack:la -- --la Surrey   # one on-demand LA pack under public/data/packs/
-# or: npm run pack:southeast           # batch SE + Dorset packs (skips ready)
+# or: npm run pack:southeast           # batch SE + Dorset + London packs (skips ready)
+# or: npm run pack:london              # London borough packs only (skips ready)
 # or: npm run report:pack-quality      # précis / ISI coverage table
 # or: npm run loop:pack-quality -- --dry-run   # assess weakest packs (no polish)
+# or: npm run loop:qualitative -- --dry-run    # parallel Hampshire + Dorset + East Sussex
 npm run dev
 ```
 
