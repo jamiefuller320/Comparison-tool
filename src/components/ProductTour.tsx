@@ -194,12 +194,32 @@ export function ProductTour() {
       // Peer pages remount — refresh boxes before spotlighting.
       rebuildCache(steps);
       if (cancelled) return;
+
+      // Optional beats whose control isn’t on this chapter (e.g. radius
+      // before a postcode, Year trend without a KS2 shortlist) skip ahead.
+      if (
+        step.optional &&
+        !cacheRef.current.has(step.target) &&
+        index < steps.length - 1
+      ) {
+        setIndex((i) => Math.min(i + 1, steps.length - 1));
+        return;
+      }
+
       paintFromCache(step.target, true);
     })();
     return () => {
       cancelled = true;
     };
-  }, [open, step, steps, ensureChapterForTarget, rebuildCache, paintFromCache]);
+  }, [
+    open,
+    step,
+    steps,
+    index,
+    ensureChapterForTarget,
+    rebuildCache,
+    paintFromCache,
+  ]);
 
   // On the year-trend step, open Stats and expand the first KS2 measure when
   // a live table is present so parents see the graph as well as the control.

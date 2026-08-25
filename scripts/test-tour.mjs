@@ -61,8 +61,12 @@ async function main() {
     console.error("FAIL nested ey-settings tour step should be removed");
     process.exit(1);
   }
-  if (!optional.includes("visit-pack")) {
-    console.error("FAIL visit-pack tour step should be optional");
+  if (!optional.includes("visit-pack") && !TOUR_STEPS.some((s) => s.id === "visit-pack" && s.target === "print-comparison-pack")) {
+    console.error("FAIL visit-pack tour step should target print-comparison-pack");
+    process.exit(1);
+  }
+  if (!TOUR_STEPS.some((s) => s.id === "visit-pack" && s.target === "print-comparison-pack")) {
+    console.error("FAIL visit-pack should spotlight print-comparison-pack");
     process.exit(1);
   }
   if (!optional.includes("decision-guidance")) {

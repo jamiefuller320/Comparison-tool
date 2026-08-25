@@ -146,9 +146,9 @@ export const TOUR_STEPS: TourStep[] = [
   },
   {
     id: "visit-pack",
-    target: "visit-pack",
+    target: "print-comparison-pack",
     title: "Print a shortlist or visit pack",
-    body: "Every path with a shortlist can print a pack: reading guide, contact cards, inspection précis, and visit prompts. Use Print / save as PDF before open days.",
+    body: "On Side by side, use Print comparison pack for a reading guide, contact cards, inspection précis, and visit prompts. Save as PDF before open days.",
     optional: true,
     retainIfMissing: true,
   },
