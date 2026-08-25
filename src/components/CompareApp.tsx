@@ -86,6 +86,11 @@ import {
 } from "@/lib/provisionFilter";
 import { scrollToHomeSection } from "@/lib/inPageNav";
 import {
+  TOUR_DEMO_EVENT,
+  completeTourDemo,
+  type TourDemoRequestDetail,
+} from "@/lib/tourDemo";
+import {
   childminderConsentStamp,
   eyfspStamp,
   ks2TablesStamp,
@@ -458,6 +463,54 @@ export function CompareApp({
       return kept;
     });
   }
+
+  useEffect(() => {
+    function collapseExpandedYearTrend() {
+      const open = document.querySelector<HTMLButtonElement>(
+        ".metric-history-trigger[aria-expanded='true']",
+      );
+      open?.click();
+    }
+
+    function onTourDemo(event: Event) {
+      const detail = (event as CustomEvent<TourDemoRequestDetail>).detail;
+      if (!detail?.requestId) return;
+      const { requestId, demo } = detail;
+
+      if (demo === "set-stages-ks2-ks3") {
+        startTransition(() => {
+          setStages(["ks2", "ks3"]);
+          // Show secondaries without published Att8 so the live demo can
+          // shortlist KS3 settings near the sample postcode.
+          setComparableKs4Only(false);
+        });
+        completeTourDemo(requestId, true);
+        return;
+      }
+
+      if (demo === "open-path-ks2") {
+        collapseExpandedYearTrend();
+        window.setTimeout(() => {
+          setChapter("side-by-side", { scroll: false });
+          setActivePath("ks2");
+          completeTourDemo(requestId, true);
+        }, 80);
+        return;
+      }
+
+      if (demo === "open-path-ks4") {
+        collapseExpandedYearTrend();
+        window.setTimeout(() => {
+          setChapter("side-by-side", { scroll: false });
+          setActivePath("ks4");
+          completeTourDemo(requestId, true);
+        }, 80);
+        return;
+      }
+    }
+    window.addEventListener(TOUR_DEMO_EVENT, onTourDemo);
+    return () => window.removeEventListener(TOUR_DEMO_EVENT, onTourDemo);
+  }, [setChapter]);
 
   function changeStageMatch(next: StageMatchMode) {
     startTransition(() => setStageMatch(next));

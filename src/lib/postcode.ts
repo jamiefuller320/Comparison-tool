@@ -65,6 +65,7 @@ export async function geocodePostcode(
   if (!normalised) return null;
   const res = await fetch(
     `https://api.postcodes.io/postcodes/${encodeURIComponent(normalised)}`,
+    { signal: AbortSignal.timeout(8000) },
   );
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Postcode lookup failed (${res.status})`);

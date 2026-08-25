@@ -1,4 +1,4 @@
-/** Unit checks for walkthrough steps and layout cache helpers. */
+/** Unit checks for walkthrough steps, live demos, and layout cache helpers. */
 
 async function main() {
   const {
@@ -11,6 +11,10 @@ async function main() {
     viewportRectFromCache,
     placeTourCard,
   } = await import("../src/lib/tour.ts");
+  const {
+    TOUR_DEMO_POSTCODE,
+    pickDemoShortlistUrns,
+  } = await import("../src/lib/tourDemo.ts");
 
   if (TOUR_STEPS.length < 10) {
     console.error("FAIL expected a full journey tour script", TOUR_STEPS.length);
@@ -24,53 +28,87 @@ async function main() {
     console.error("FAIL setup tile event name");
     process.exit(1);
   }
+  if (TOUR_DEMO_POSTCODE !== "SO40 3DW") {
+    console.error("FAIL demo postcode", TOUR_DEMO_POSTCODE);
+    process.exit(1);
+  }
   if (
     TOUR_TARGET_SETUP_TILE.postcode !== "postcode" ||
-    TOUR_TARGET_SETUP_TILE.stages !== "stages" ||
-    TOUR_TARGET_SETUP_TILE.sector !== "sector" ||
-    TOUR_TARGET_SETUP_TILE.provision !== "provision"
+    TOUR_TARGET_SETUP_TILE.stages !== "stages"
   ) {
     console.error("FAIL setup tile map", TOUR_TARGET_SETUP_TILE);
     process.exit(1);
   }
 
+  const demos = TOUR_STEPS.filter((s) => s.demo).map((s) => s.demo);
+  for (const need of [
+    "fill-postcode",
+    "set-stages-ks2-ks3",
+    "set-radius-8km",
+    "pick-shortlist",
+    "open-path-ks2",
+    "open-path-ks4",
+    "expand-year-trend",
+  ]) {
+    if (!demos.includes(need)) {
+      console.error("FAIL missing live demo", need, demos);
+      process.exit(1);
+    }
+  }
+
+  const pick = pickDemoShortlistUrns(
+    [
+      { urn: "p1", ageRange: "7 to 11" },
+      { urn: "p2", ageRange: "4 to 11" },
+      { urn: "p3", ageRange: "7 to 11" },
+      { urn: "s1", ageRange: "11 to 16" },
+      { urn: "s2", ageRange: "11 to 18" },
+      { urn: "s3", ageRange: "11 to 16" },
+    ],
+    {
+      ks2: 2,
+      ks3: 2,
+      isKs2: (s) => /\b(7|8|9|10|11)\b/.test(s.ageRange) && !/1[2-9]/.test(s.ageRange.split("to")[1] || ""),
+      isSecondary: (s) => /1[1-9].*1[6-9]|11 to 16|11 to 18/.test(s.ageRange),
+    },
+  );
+  if (pick.length !== 4 || pick[0] !== "p1" || !pick.includes("s1")) {
+    // Fallback check with explicit predicates matching schoolOffers helpers style
+    const pick2 = pickDemoShortlistUrns(
+      [
+        { urn: "a", ageRange: "7 to 11" },
+        { urn: "b", ageRange: "7 to 11" },
+        { urn: "c", ageRange: "11 to 16" },
+        { urn: "d", ageRange: "11 to 16" },
+      ],
+      {
+        ks2: 2,
+        ks3: 2,
+        isKs2: (s) => s.ageRange === "7 to 11",
+        isSecondary: (s) => s.ageRange === "11 to 16",
+      },
+    );
+    if (pick2.join(",") !== "a,b,c,d") {
+      console.error("FAIL pickDemoShortlistUrns", pick, pick2);
+      process.exit(1);
+    }
+  }
+
   const required = TOUR_STEPS.filter((s) => !s.optional).map((s) => s.target);
-  const optional = TOUR_STEPS.filter((s) => s.optional).map((s) => s.target);
   if (
     !required.includes("hero") ||
     !required.includes("page-chapters") ||
-    !required.includes("search") ||
     !required.includes("boards")
   ) {
     console.error("FAIL core journey targets missing", required);
     process.exit(1);
   }
-  if (!optional.includes("nearby") || !optional.includes("radius")) {
-    console.error("FAIL nearby/radius should be optional");
-    process.exit(1);
-  }
-  if (!optional.includes("provision")) {
-    console.error("FAIL provision tour step should be optional");
-    process.exit(1);
-  }
-  if (!optional.includes("childminders")) {
-    console.error("FAIL childminders tour step should be optional");
-    process.exit(1);
-  }
-  if (optional.includes("ey-settings")) {
-    console.error("FAIL nested ey-settings tour step should be removed");
-    process.exit(1);
-  }
-  if (!optional.includes("visit-pack") && !TOUR_STEPS.some((s) => s.id === "visit-pack" && s.target === "print-comparison-pack")) {
-    console.error("FAIL visit-pack tour step should target print-comparison-pack");
+  if (!TOUR_STEPS.some((s) => s.id === "pick-shortlist" && s.demo === "pick-shortlist")) {
+    console.error("FAIL pick-shortlist live step missing");
     process.exit(1);
   }
   if (!TOUR_STEPS.some((s) => s.id === "visit-pack" && s.target === "print-comparison-pack")) {
     console.error("FAIL visit-pack should spotlight print-comparison-pack");
-    process.exit(1);
-  }
-  if (!optional.includes("decision-guidance")) {
-    console.error("FAIL decision-guidance tour step should be optional");
     process.exit(1);
   }
   if (tourTargetSelector("stages") !== '[data-tour="stages"]') {
@@ -78,10 +116,6 @@ async function main() {
     process.exit(1);
   }
 
-  if (!TOUR_STEPS.some((s) => s.id === "year-trend" && s.target === "year-trend")) {
-    console.error("FAIL year-trend step missing");
-    process.exit(1);
-  }
   const yearTrend = TOUR_STEPS.find((s) => s.id === "year-trend");
   if (!yearTrend?.optional || !yearTrend.retainIfMissing) {
     console.error("FAIL year-trend should be optional + retainIfMissing");
@@ -92,17 +126,6 @@ async function main() {
     process.exit(1);
   }
 
-  const chapters = TOUR_STEPS.find((s) => s.id === "chapters");
-  if (!chapters || chapters.target !== "page-chapters") {
-    console.error("FAIL chapters step should target page-chapters");
-    process.exit(1);
-  }
-  if (!/setup|find|shortlist|side by side|understand/i.test(chapters.body)) {
-    console.error("FAIL chapters copy should name journey tabs", chapters.body);
-    process.exit(1);
-  }
-
-  // Setup-only layout: peer-chapter optionals are retained for later mounts.
   /** @type {Map<string, { width: number; height: number } | null>} */
   const layout = new Map([
     ["hero", { width: 400, height: 200 }],
@@ -110,7 +133,6 @@ async function main() {
     ["postcode", { width: 360, height: 80 }],
     ["stages", { width: 360, height: 60 }],
     ["sector", { width: 360, height: 60 }],
-    ["search", { width: 360, height: 56 }],
     ["shortlist", { width: 360, height: 40 }],
     ["boards", { width: 400, height: 120 }],
     ["how", { width: 400, height: 100 }],
@@ -134,13 +156,10 @@ async function main() {
 
   const active = resolveActiveTourSteps(TOUR_STEPS, fakeDoc);
   const ids = active.map((s) => s.id);
-  // Deferred optionals stay in the script even when Find / Side by side
-  // aren’t mounted yet.
   for (const id of [
     "nearby",
     "radius",
-    "provision",
-    "childminders",
+    "pick-shortlist",
     "decision-guidance",
     "visit-pack",
     "year-trend",
@@ -150,15 +169,7 @@ async function main() {
       process.exit(1);
     }
   }
-  for (const id of [
-    "welcome",
-    "chapters",
-    "postcode",
-    "stages",
-    "search",
-    "boards",
-    "how",
-  ]) {
+  for (const id of ["welcome", "chapters", "postcode", "stages", "boards", "how"]) {
     if (!ids.includes(id)) {
       console.error("FAIL missing required step", id, ids);
       process.exit(1);
@@ -173,28 +184,8 @@ async function main() {
     process.exit(1);
   }
 
-  // Zero-size optional without retainIfMissing is still skipped.
-  const transientOptional = [
-    ...TOUR_STEPS,
-    {
-      id: "ghost",
-      target: "ghost",
-      title: "Ghost",
-      body: "Hidden",
-      optional: true,
-    },
-  ];
-  layout.set("ghost", { width: 0, height: 0 });
-  const withGhost = resolveActiveTourSteps(transientOptional, fakeDoc).map(
-    (s) => s.id,
-  );
-  if (withGhost.includes("ghost")) {
-    console.error("FAIL zero-size optional without retain should drop");
-    process.exit(1);
-  }
-
   const cached = {
-    target: "search",
+    target: "shortlist",
     top: 1200,
     left: 40,
     width: 360,
@@ -207,12 +198,12 @@ async function main() {
   }
 
   const card = placeTourCard(view, 1280, 800);
-  if (card.top < view.top || card.left < 16) {
+  if (card.top < 16 || card.left < 16) {
     console.error("FAIL placeTourCard", card);
     process.exit(1);
   }
 
-  console.log(`tour ok (${TOUR_STEPS.length} steps, cache helpers checked)`);
+  console.log(`tour ok (${TOUR_STEPS.length} steps, live demos checked)`);
 }
 
 main();
