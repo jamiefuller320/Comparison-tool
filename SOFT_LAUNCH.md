@@ -2,9 +2,9 @@
 
 Finite deployable standard before showing School Compass to the world.
 Not a commitment to finish the whole roadmap — a **parental product** bar with
-**Hampshire maintained depth** and **South East (+ Dorset) pack coverage**.
+**Hampshire maintained depth** and **South East + Dorset + London pack coverage**.
 
-Last reviewed: 2026-08-03.
+Last reviewed: 2026-08-25.
 
 ## Ship bar
 
@@ -15,8 +15,8 @@ Last reviewed: 2026-08-03.
 | **3. Qualitative enough** | Precis/quotes on **most comparable shortlist-likely** settings | Mainstream state primaries & secondaries mostly covered; solid EY + childminder slice — not 100% special/AP |
 | **4. Provenance** | Numbers and quotes sourced; report-a-problem available on compare boards | Footnotes to DfE/Ofsted/ISI; challenge button wired |
 | **5. Ops** | Hampshire refresh runnable end-to-end without wiping qualitative fields | `harvest:hampshire` includes precis; scheduled refresh installs `pypdf` and re-enriches |
-| **6. Positioning** | One clear line everywhere that matters | South East parental compare (Hampshire depth + regional packs) — not a national league table |
-| **7. Regional packs** | South East + Dorset LAs available via silent-merge packs | Ready packs listed in `public/data/packs/manifest.json`; batch via `npm run pack:southeast` |
+| **6. Positioning** | One clear line everywhere that matters | South East + London parental compare (Hampshire depth + regional packs) — not a national league table |
+| **7. Regional packs** | South East + Dorset + London LAs available via silent-merge packs | Ready packs listed in `public/data/packs/manifest.json`; batch via `npm run pack:southeast` / `pack:london` |
 
 ## Explicitly out of scope for first showing
 
@@ -35,17 +35,17 @@ Last reviewed: 2026-08-03.
 | 2 Quantitative honesty | **Pass** | Gap chips on KS4/EY/KS2 (incl. missing Ofsted grade on KS2) |
 | 3 Qualitative enough | **Pass (guideline)** | Hampshire mainstream ~91% / EY ~43% / CM ~51%. Region packs: schools ~88%+ précis, EY ~87%, CM ~74%; mainstream primary/secondary ≫70%. Independent ISI/précis polish waves + weekly automated loop — measure with `npm run report:pack-quality` |
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
-| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; twice-weekly `pack-quality-loop` + daily auto-scope `qualitative-loop` + daily `qualitative-quality-loop` (`npm run loop:pack-quality` / `loop:qualitative` / `loop:qualitative-quality`) |
-| 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East parental compare; soft-launch feedback prompt + structured intake for improvement cycle |
-| 7 Regional packs | **Pass** | All 20 South East + Dorset pack LAs `ready` in `public/data/packs/manifest.json` (Hampshire remains maintained root) |
+| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; twice-weekly `pack-quality-loop` + daily parallel `qualitative-loop` (Hampshire + Dorset + East Sussex, 60/stream) + daily `qualitative-quality-loop` |
+| 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East + London parental compare; soft-launch feedback prompt + structured intake for improvement cycle |
+| 7 Regional packs | **Partial** | All 20 South East + Dorset pack LAs `ready`; **33 London boroughs** are in the coverage region / build order (`npm run pack:london`) but not yet harvested into `manifest.json` |
 
 Re-check guideline rates after each major harvest; flip a row back to Partial if coverage regresses.
 
-### South East + Dorset pack targets
+### South East + Dorset + London pack targets
 
-Hampshire is **not** a pack (maintained root). Build order (neighbours first):
+Hampshire is **not** a pack (maintained root). Build order (neighbours first, then London):
 
-Southampton → Portsmouth → Dorset → Bournemouth, Christchurch and Poole → Surrey → West Sussex → East Sussex → Brighton and Hove → Kent → Medway → Isle of Wight → Berkshire unitaries → Buckinghamshire → Milton Keynes → Oxfordshire.
+Southampton → Portsmouth → Dorset → Bournemouth, Christchurch and Poole → Surrey → West Sussex → East Sussex → Brighton and Hove → Kent → Medway → Isle of Wight → Berkshire unitaries → Buckinghamshire → Milton Keynes → Oxfordshire → **London boroughs** (City of London + 32 boroughs).
 
 ## How to re-check coverage
 
