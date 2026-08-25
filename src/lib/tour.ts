@@ -78,19 +78,19 @@ export const TOUR_STEPS: TourStep[] = [
     id: "stages",
     target: "stages",
     title: "Choose by age or key stage",
-    body: "Still on Setup: drag the child’s age range if key stages are unfamiliar — matching stages turn on automatically. Or press the stage chips (ages shown on each) to override. Childminders stay a separate care category. Several school stages use OR by default (Any stage); choose Every stage (AND) when you want only schools that cover all of them.",
+    body: "Still on Setup: drag the age range or press stage chips (ages on each). Childminders stay a separate care category. Several school stages use OR by default (Any stage); choose Every stage (AND) for schools that cover all of them.",
   },
   {
     id: "sector",
     target: "sector",
     title: "State, independent, or both",
-    body: "School type filters the map, Find list, and Shortlist search. State defaults to KS2 tables; independent defaults to secondary GCSE measures. You can switch anytime under Setup.",
+    body: "School type filters the map, Find list, and Shortlist search. State defaults to KS2 tables; independent defaults to secondary GCSE measures.",
   },
   {
     id: "provision",
     target: "provision",
     title: "Mainstream or specialist",
-    body: "The last Setup tile narrows mainstream versus specialist / alternative provision. Leave it on Any unless you are specifically looking for specialist settings.",
+    body: "The last Setup tile narrows mainstream versus specialist / alternative provision. Leave it on Any unless you need specialist settings.",
     optional: true,
     retainIfMissing: true,
   },
@@ -98,7 +98,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "nearby",
     target: "nearby",
     title: "Find map and tick list",
-    body: "Open Find after a postcode lookup. The map shows schools in range and the list adds road distance. Unlock postcode to drag the home pin and refresh the map. Tick a school to add it to your shortlist (up to four).",
+    body: "Open Find after a postcode lookup. The map shows schools in range; the list adds road distance. Unlock postcode to drag the home pin. Tick up to four schools for your shortlist.",
     optional: true,
     retainIfMissing: true,
   },
@@ -114,25 +114,25 @@ export const TOUR_STEPS: TourStep[] = [
     id: "search",
     target: "search",
     title: "Search by name or place",
-    body: "On Shortlist, search by name, town, postcode or URN. Results respect your Setup stage and school-type filters — handy when a school sits outside the range ring.",
+    body: "On Shortlist, search by name, town, postcode or URN. Results respect your Setup filters — handy when a school sits outside the range ring.",
   },
   {
     id: "shortlist",
     target: "shortlist",
     title: "Your shortlist (up to four)",
-    body: "Selected schools appear as chips on Shortlist. Use Compare side by side or Share when you’re ready — your shortlist stays in the page URL so a co-parent can open the same view.",
+    body: "Selected schools appear as chips on Shortlist. Use Compare side by side or Share when you’re ready — the shortlist stays in the URL for a co-parent.",
   },
   {
     id: "boards",
     target: "boards",
     title: "Side-by-side comparison",
-    body: "Side by side shows one path at a time (Early years, Childminders, KS1, KS2, or KS4). If several categories are on, use the path chips. Context, Summary, Ofsted, Website, Places, and Stats sit in the section tabs — gaps versus England or a sector mean help you spot patterns, not a final verdict.",
+    body: "One path at a time (Early years, Childminders, KS1, KS2, or KS4). Path chips switch categories; section tabs cover Context through Stats. Gaps versus England help you spot patterns — not a final verdict.",
   },
   {
     id: "childminders",
     target: "childminders",
     title: "Childminders path",
-    body: "Open the Childminders path after shortlisting a consented provider. You’ll get the directory card, vetting checklist, and visit pack — separate from the nursery Ofsted table.",
+    body: "After shortlisting a consented provider, open Childminders for the directory card, vetting checklist, and visit pack — separate from the nursery Ofsted table.",
     optional: true,
     retainIfMissing: true,
   },
@@ -140,7 +140,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "decision-guidance",
     target: "decision-guidance",
     title: "What the data tells you",
-    body: "On each Side by side path, open Context for “How to read this as a parent”. It opens automatically when your shortlist is a single stage; with several stages, pick one inside the panel. Use it before you treat a table or précis as a verdict.",
+    body: "On each Side by side path, open Context for “How to read this as a parent”. Use it before you treat a table or précis as a verdict.",
     optional: true,
     retainIfMissing: true,
   },
@@ -148,7 +148,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "visit-pack",
     target: "visit-pack",
     title: "Print a shortlist or visit pack",
-    body: "Every path with a shortlist can print a pack: how to read the data, contact cards, inspection précis, and visit or interview prompts. Use Print / save as PDF before open days or calls.",
+    body: "Every path with a shortlist can print a pack: reading guide, contact cards, inspection précis, and visit prompts. Use Print / save as PDF before open days.",
     optional: true,
     retainIfMissing: true,
   },
@@ -156,7 +156,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "year-trend",
     target: "year-trend",
     title: "Year-on-year trends on Stats",
-    body: "On the KS2 Context tab you’ll see a short note about year trends; the graphs themselves sit on the Stats tab. Open Year trend on a measure for each shortlisted school and England across published years. The hatched COVID band marks 2019/20–2021/22, when KS2 tables were unpublished — lines do not connect across that gap, and those years are not school failures. Small cohorts bounce; blank cells are usually suppression or a new school.",
+    body: "On KS2, Context notes year trends; graphs sit on Stats. Open Year trend on a measure for shortlisted schools and England. The hatched COVID band marks 2019/20–2021/22 — lines do not connect across that gap. Small cohorts bounce; blank cells are usually suppression.",
     optional: true,
     retainIfMissing: true,
   },
@@ -164,7 +164,7 @@ export const TOUR_STEPS: TourStep[] = [
     id: "how",
     target: "how",
     title: "Understand the figures",
-    body: "Open Understand for topic cards — getting started, each stage guide, FAQ, and where the numbers come from. Take a look whenever you need a refresher before you treat a table as a verdict.",
+    body: "Open Understand for topic cards — getting started, stage guides, FAQ, and where the numbers come from. Use it whenever you need a refresher.",
   },
 ];
 
@@ -293,18 +293,19 @@ export function placeTourCard(
   viewportWidth: number,
   viewportHeight: number,
   cardWidth = Math.min(360, viewportWidth - 32),
-  cardHeight = 210,
+  cardHeight = 280,
 ): { top: number; left: number } {
   const narrow = viewportWidth < 720;
+  const maxTop = Math.max(16, viewportHeight - cardHeight - 12);
   if (narrow) {
     return {
-      top: Math.max(16, viewportHeight - cardHeight - 20),
+      top: maxTop,
       left: 16,
     };
   }
   if (!rect) {
     return {
-      top: Math.max(16, viewportHeight / 2 - cardHeight / 2),
+      top: Math.min(maxTop, Math.max(16, viewportHeight / 2 - cardHeight / 2)),
       left: Math.max(16, viewportWidth / 2 - cardWidth / 2),
     };
   }
@@ -312,6 +313,7 @@ export function placeTourCard(
   if (top + cardHeight > viewportHeight - 12) {
     top = Math.max(16, rect.top - cardHeight - 14);
   }
+  top = Math.min(maxTop, Math.max(16, top));
   let left = rect.left;
   if (left + cardWidth > viewportWidth - 16) {
     left = viewportWidth - cardWidth - 16;
