@@ -27,6 +27,10 @@ import {
   schoolHasQualitativeCapture,
   shortQualitativeSummary,
 } from "@/lib/qualitativeEvidence";
+import {
+  loadQualitativeCapture,
+  schoolHasQualitativePointer,
+} from "@/lib/qualitativeLoad";
 
 function PrecisPanel({ school }: { school: SchoolRecord }) {
   const has = schoolHasInspectionPrecis(school);
@@ -114,8 +118,36 @@ function PrecisPanel({ school }: { school: SchoolRecord }) {
 
 function WebsitePanel({ school }: { school: SchoolRecord }) {
   const [openAreas, setOpenAreas] = useState<Set<string>>(new Set());
+  const [loaded, setLoaded] = useState(school);
+  const [loadingCapture, setLoadingCapture] = useState(false);
 
-  if (!schoolHasQualitativeCapture(school)) {
+  useEffect(() => {
+    setLoaded(school);
+    if (
+      schoolHasQualitativeCapture(school) ||
+      !schoolHasQualitativePointer(school)
+    ) {
+      return;
+    }
+    let cancelled = false;
+    setLoadingCapture(true);
+    void loadQualitativeCapture(school.urn, fetch, false).then((capture) => {
+      if (cancelled) return;
+      setLoadingCapture(false);
+      if (!capture) return;
+      setLoaded({
+        ...school,
+        qualitativeCapture: capture,
+        qualitativeCaptureEnrichedAt:
+          school.qualitativeCaptureEnrichedAt ?? capture.assessedAt ?? null,
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [school]);
+
+  if (!schoolHasQualitativePointer(loaded) && !schoolHasQualitativeCapture(loaded)) {
     return (
       <section className="content-review-panel">
         <h3>Website evidence</h3>
@@ -124,8 +156,19 @@ function WebsitePanel({ school }: { school: SchoolRecord }) {
     );
   }
 
-  const capture = school.qualitativeCapture;
-  const summary = shortQualitativeSummary(school);
+  if (!schoolHasQualitativeCapture(loaded)) {
+    return (
+      <section className="content-review-panel">
+        <h3>Website evidence</h3>
+        <p className="content-review-empty">
+          {loadingCapture ? "Loading website scan…" : "Website scan unavailable."}
+        </p>
+      </section>
+    );
+  }
+
+  const capture = loaded.qualitativeCapture;
+  const summary = shortQualitativeSummary(loaded);
 
   return (
     <section className="content-review-panel">
@@ -137,8 +180,8 @@ function WebsitePanel({ school }: { school: SchoolRecord }) {
           {capture.assessedAt
             ? ` · assessed ${formatIngestLabel(capture.assessedAt)}`
             : ""}
-          {school.qualitativeCaptureEnrichedAt
-            ? ` · merged ${formatIngestLabel(school.qualitativeCaptureEnrichedAt)}`
+          {loaded.qualitativeCaptureEnrichedAt
+            ? ` · merged ${formatIngestLabel(loaded.qualitativeCaptureEnrichedAt)}`
             : ""}
         </p>
       </header>
@@ -300,7 +343,7 @@ export function ContentReviewApp() {
     return <p className="content-review-loading">Loading schools index…</p>;
   }
 
-  const withWebsite = index.schools.filter(schoolHasQualitativeCapture).length;
+  const withWebsite = index.schools.filter(schoolHasQualitativePointer).length;
   const withPrecis = index.schools.filter(schoolHasInspectionPrecis).length;
 
   return (

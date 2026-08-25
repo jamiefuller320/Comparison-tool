@@ -914,11 +914,12 @@ def main() -> int:
                 if row.get("urn")
             }
             sidecar_keys = (
-                "qualitativeCapture",
                 "qualitativeCaptureEnrichedAt",
                 "contactCapture",
                 "contactCaptureEnrichedAt",
             )
+            # Full qualitativeCapture blobs live in /data/qualitative/{urn}.json
+            # shards — do not re-embed them into the bulk schools-index.
             restored_sidecars = 0
             for row in schools:
                 old = prev_by_urn.get(str(row.get("urn") or ""))

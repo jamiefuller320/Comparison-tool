@@ -47,6 +47,30 @@ export async function loadLaPackManifest(
   }
 }
 
+export interface PackUrnLookup {
+  generatedAt?: string;
+  urnCount?: number;
+  byUrn: Record<string, string>;
+}
+
+/** URN → pack slug map for geo-lazy share-link resolution. */
+export async function loadPackUrnLookup(
+  fetchImpl: typeof fetch = fetch,
+  cacheBust = false,
+): Promise<PackUrnLookup | null> {
+  const url = bust(dataUrl("/data/packs/urn-lookup.json"), cacheBust);
+  try {
+    const res = await fetchWithRetry(url, cacheInit(cacheBust), fetchImpl);
+    if (res.status === 404) return null;
+    if (!res.ok) return null;
+    const data = (await res.json()) as PackUrnLookup;
+    if (!data?.byUrn || typeof data.byUrn !== "object") return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Soft-fail pack loaders: a missing or flaky pack must never blank the app.
  * Retries transient errors, then returns null.

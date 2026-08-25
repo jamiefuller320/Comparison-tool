@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Summarise qualitativeCapture coverage in a schools-index (or sidecar)."""
+"""Summarise qualitative coverage via index pointers and/or shard files."""
 
 from __future__ import annotations
 
@@ -25,19 +25,43 @@ def main(argv: list[str] | None = None) -> int:
         default=ROOT / "output" / "qualitative-capture.json",
         help="Optional sidecar for record count cross-check",
     )
+    parser.add_argument(
+        "--shards-dir",
+        type=Path,
+        default=ROOT / "public" / "data" / "qualitative",
+        help="On-demand URN shard directory",
+    )
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
     payload = json.loads(args.index.read_text(encoding="utf-8"))
     schools = payload.get("schools") or []
     with_web = [s for s in schools if (s.get("schoolWebsite") or "").strip()]
-    with_q = [s for s in schools if s.get("qualitativeCapture")]
+
+    shard_urns: set[str] = set()
+    if args.shards_dir.is_dir():
+        shard_urns = {p.stem for p in args.shards_dir.glob("*.json")}
+
+    with_pointer = [
+        s
+        for s in schools
+        if s.get("qualitativeCapture")
+        or s.get("qualitativeCaptureEnrichedAt")
+        or str(s.get("urn") or "") in shard_urns
+    ]
 
     methods: Counter[str] = Counter()
     documented_areas = 0
     rich_schools = 0
-    for school in with_q:
+    for school in with_pointer:
         areas = (school.get("qualitativeCapture") or {}).get("areas") or []
+        if not areas:
+            urn = str(school.get("urn") or "")
+            shard = args.shards_dir / f"{urn}.json"
+            if shard.is_file():
+                areas = (
+                    json.loads(shard.read_text(encoding="utf-8")).get("areas") or []
+                )
         documented = 0
         for area in areas:
             method = area.get("synthesisMethod") or "none"
@@ -57,15 +81,16 @@ def main(argv: list[str] | None = None) -> int:
     report = {
         "indexSchools": len(schools),
         "withWebsite": len(with_web),
-        "withQualitativeCapture": len(with_q),
+        "withQualitativeCapture": len(with_pointer),
+        "shardFiles": len(shard_urns),
         "coverageOfWebsitesPct": round(
-            100.0 * len(with_q) / max(1, len(with_web)), 1
+            100.0 * len(with_pointer) / max(1, len(with_web)), 1
         ),
         "richSchools": rich_schools,
         "documentedAreas": documented_areas,
         "synthesisMethods": dict(methods),
         "sidecarRecords": sidecar_n,
-        "remainingWithWebsite": max(0, len(with_web) - len(with_q)),
+        "remainingWithWebsite": max(0, len(with_web) - len(with_pointer)),
     }
 
     if args.json:
@@ -76,6 +101,7 @@ def main(argv: list[str] | None = None) -> int:
             f"{report['withWebsite']} websites "
             f"({report['coverageOfWebsitesPct']}%)"
         )
+        print(f"  Shard files: {report['shardFiles']}")
         print(f"  Rich (≥2 evidenced areas): {report['richSchools']}")
         print(f"  Remaining with website: {report['remainingWithWebsite']}")
         print(f"  Synthesis methods: {report['synthesisMethods']}")
