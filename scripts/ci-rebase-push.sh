@@ -12,7 +12,7 @@ MAX_ATTEMPTS="${3:-5}"
 is_qualitative_data_path() {
   local path="$1"
   case "$path" in
-    output/qualitative-*|output/learned-qa-patterns.json|output/learned-url-terms.json|public/data/schools-index.json|public/data/packs/qualitative-*)
+    output/qualitative-*|output/learned-qa-patterns.json|output/learned-url-terms.json|public/data/schools-index.json|public/data/packs/qualitative-*|public/data/qualitative/*)
       return 0
     ;;
   esac
@@ -48,7 +48,21 @@ resolve_digest_conflicts() {
   GIT_EDITOR=true git rebase --continue
 }
 
+# Merge may rewrite URN shards after git add; amend them onto the loop commit.
+ensure_clean_for_rebase() {
+  git add -A output public/data/schools-index.json public/data/packs public/data/qualitative
+  if ! git diff --cached --quiet; then
+    git commit --amend --no-edit
+  fi
+  if ! git diff --quiet; then
+    echo "Unstaged changes remain before rebase:" >&2
+    git diff --name-only >&2
+    git stash push -u -m "ci-rebase-push autostash"
+  fi
+}
+
 for i in $(seq 1 "$MAX_ATTEMPTS"); do
+  ensure_clean_for_rebase
   if git pull --rebase "$REMOTE" "$BRANCH"; then
     if git push "$REMOTE" "HEAD:${BRANCH}"; then
       exit 0
