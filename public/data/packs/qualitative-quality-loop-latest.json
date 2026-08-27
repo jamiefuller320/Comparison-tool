@@ -1,45 +1,100 @@
 {
-  "ranAt": "2026-08-26T11:00:27.824029+00:00",
+  "ranAt": "2026-08-27T20:06:42.151989+00:00",
   "dryRun": false,
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 825,
-    "suspectCount": 98,
+    "recordCount": 943,
+    "suspectCount": 71,
     "flagCounts": {
-      "chrome": 86,
-      "implausible_offerings": 31,
-      "policy_toc": 26,
+      "chrome": 56,
+      "implausible_offerings": 18,
+      "policy_toc": 12,
       "admissions": 4,
-      "boilerplate": 3,
-      "cms_chrome": 2
+      "cms_chrome": 1
     },
     "topSuspects": [
       {
-        "urn": "144417",
-        "name": "Sherborne Primary School",
-        "score": 14.0,
+        "urn": "114553",
+        "name": "St Mary the Virgin Church of England Primary School",
+        "score": 11.0,
         "flags": [
+          "policy_toc",
           "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "148707",
+        "name": "Roselands Infants' School",
+        "score": 10.0,
+        "flags": [
           "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "116433",
-        "name": "Yateley School",
-        "score": 14.0,
+        "urn": "114531",
+        "name": "Staplecross Methodist Primary School",
+        "score": 10.0,
         "flags": [
-          "chrome",
           "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "150267",
-        "name": "Hollington Primary School",
-        "score": 13.0,
+        "urn": "147712",
+        "name": "St John's Meads Church of England Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "150247",
+        "name": "Stoborough Church of England Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "113927",
+        "name": "Sunninghill Preparatory School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "131827",
+        "name": "The Forum Centre",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "142963",
+        "name": "Trent Young's CofE Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "146720",
+        "name": "Verwood Church of England First School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "148961",
+        "name": "Peacehaven Heights Academy",
+        "score": 8.0,
         "flags": [
           "policy_toc",
           "implausible_offerings",
@@ -47,59 +102,9 @@
         ]
       },
       {
-        "urn": "138400",
-        "name": "King Offa Primary Academy",
-        "score": 12.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "113807",
-        "name": "Parrett and Axe Church of England Voluntary Aided Primary School",
-        "score": 12.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "150882",
-        "name": "Pimperne Church of England VC Primary School",
-        "score": 12.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "141810",
-        "name": "Shaftesbury Church of England Primary School",
-        "score": 12.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "150360",
-        "name": "St Gregory's Church of England Primary School, Marnhull",
-        "score": 12.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "139521",
-        "name": "Glyne Gap School",
-        "score": 11.0,
-        "flags": [
-          "chrome",
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "114527",
-        "name": "Icklesham Church of England Primary School and Nursery",
-        "score": 11.0,
+        "urn": "138473",
+        "name": "Seaford Head School",
+        "score": 8.0,
         "flags": [
           "policy_toc",
           "implausible_offerings",
@@ -107,34 +112,23 @@
         ]
       },
       {
-        "urn": "141524",
-        "name": "Marshwood CofE Primary Academy",
-        "score": 11.0,
+        "urn": "151251",
+        "name": "St Mary Star of the Sea Catholic Primary School",
+        "score": 8.0,
         "flags": [
+          "policy_toc",
           "chrome",
-          "policy_toc",
           "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "114645",
-        "name": "Northease Manor School",
-        "score": 11.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings",
-          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 825,
+    "recordCount": 943,
     "suspectCount": 10,
     "flagCounts": {
-      "implausible_offerings": 5,
-      "admissions": 4,
-      "cms_chrome": 1
+      "implausible_offerings": 6,
+      "admissions": 4
     },
     "topSuspects": [
       {
@@ -143,14 +137,6 @@
         "score": 6.0,
         "flags": [
           "admissions"
-        ]
-      },
-      {
-        "urn": "114625",
-        "name": "Michael Hall School",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
         ]
       },
       {
@@ -216,23 +202,31 @@
         "flags": [
           "implausible_offerings"
         ]
+      },
+      {
+        "urn": "114414",
+        "name": "Punnetts Town Community Primary and Nursery School",
+        "score": 2.0,
+        "flags": [
+          "implausible_offerings"
+        ]
       }
     ]
   },
   "qa": {
-    "reviewed": 98,
-    "changedSchools": 90,
-    "findingsApplied": 166,
-    "learningAdded": 50,
+    "reviewed": 71,
+    "changedSchools": 62,
+    "findingsApplied": 99,
+    "learningAdded": 22,
     "provider": "none"
   },
   "merged": true,
   "notes": [
-    "Before: 98 suspects across 825 records.",
-    "Applied QA fixes to 90 school(s) (166 area finding(s)).",
-    "Learned 50 new junk phrase(s) (store size 400).",
-    "Reviewed top 98 suspect(s); provider=none.",
+    "Before: 71 suspects across 943 records.",
+    "Applied QA fixes to 62 school(s) (99 area finding(s)).",
+    "Learned 22 new junk phrase(s) (store size 400).",
+    "Reviewed top 71 suspect(s); provider=none.",
     "Merged cleaned sidecar into schools-index.",
-    "After: 10 suspects across 825 records."
+    "After: 10 suspects across 943 records."
   ]
 }
