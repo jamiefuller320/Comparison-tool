@@ -1,130 +1,118 @@
 {
-  "ranAt": "2026-08-27T20:06:42.151989+00:00",
+  "ranAt": "2026-08-28T21:03:44.361350+00:00",
   "dryRun": false,
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 943,
-    "suspectCount": 71,
+    "recordCount": 971,
+    "suspectCount": 18,
     "flagCounts": {
-      "chrome": 56,
-      "implausible_offerings": 18,
-      "policy_toc": 12,
-      "admissions": 4,
-      "cms_chrome": 1
+      "chrome": 8,
+      "implausible_offerings": 6,
+      "admissions": 4
     },
     "topSuspects": [
       {
-        "urn": "114553",
-        "name": "St Mary the Virgin Church of England Primary School",
-        "score": 11.0,
+        "urn": "147128",
+        "name": "The Ferns Primary Academy",
+        "score": 6.0,
         "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
+          "admissions"
         ]
       },
       {
-        "urn": "148707",
-        "name": "Roselands Infants' School",
-        "score": 10.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "114531",
-        "name": "Staplecross Methodist Primary School",
-        "score": 10.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "147712",
-        "name": "St John's Meads Church of England Primary School",
-        "score": 9.0,
+        "urn": "149523",
+        "name": "The Haven Church of England Methodist Primary School",
+        "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "150247",
-        "name": "Stoborough Church of England Primary School",
-        "score": 9.0,
+        "urn": "116423",
+        "name": "The Hayling College",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "142744",
+        "name": "The Lindfield School",
+        "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "113927",
-        "name": "Sunninghill Preparatory School",
-        "score": 9.0,
+        "urn": "137239",
+        "name": "The Romsey School",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "148035",
+        "name": "The Ropemakers' Academy",
+        "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "131827",
-        "name": "The Forum Centre",
-        "score": 9.0,
+        "urn": "142745",
+        "name": "The South Downs School",
+        "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "142963",
-        "name": "Trent Young's CofE Primary School",
-        "score": 9.0,
+        "urn": "116411",
+        "name": "The Toynbee School",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "148179",
+        "name": "The Turing School",
+        "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "146720",
-        "name": "Verwood Church of England First School",
-        "score": 9.0,
+        "urn": "152103",
+        "name": "Thornton Grove Academy",
+        "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "148961",
-        "name": "Peacehaven Heights Academy",
-        "score": 8.0,
+        "urn": "148945",
+        "name": "Uplands Academy",
+        "score": 3.0,
         "flags": [
-          "policy_toc",
-          "implausible_offerings",
           "chrome"
         ]
       },
       {
-        "urn": "138473",
-        "name": "Seaford Head School",
-        "score": 8.0,
+        "urn": "114424",
+        "name": "Wivelsfield Primary School",
+        "score": 3.0,
         "flags": [
-          "policy_toc",
-          "implausible_offerings",
           "chrome"
-        ]
-      },
-      {
-        "urn": "151251",
-        "name": "St Mary Star of the Sea Catholic Primary School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 943,
+    "recordCount": 971,
     "suspectCount": 10,
     "flagCounts": {
       "implausible_offerings": 6,
@@ -214,19 +202,19 @@
     ]
   },
   "qa": {
-    "reviewed": 71,
-    "changedSchools": 62,
-    "findingsApplied": 99,
-    "learningAdded": 22,
+    "reviewed": 18,
+    "changedSchools": 8,
+    "findingsApplied": 8,
+    "learningAdded": 0,
     "provider": "none"
   },
   "merged": true,
   "notes": [
-    "Before: 71 suspects across 943 records.",
-    "Applied QA fixes to 62 school(s) (99 area finding(s)).",
-    "Learned 22 new junk phrase(s) (store size 400).",
-    "Reviewed top 71 suspect(s); provider=none.",
+    "Before: 18 suspects across 971 records.",
+    "Applied QA fixes to 8 school(s) (8 area finding(s)).",
+    "Learned 0 new junk phrase(s) (store size 400).",
+    "Reviewed top 18 suspect(s); provider=none.",
     "Merged cleaned sidecar into schools-index.",
-    "After: 10 suspects across 943 records."
+    "After: 10 suspects across 971 records."
   ]
 }

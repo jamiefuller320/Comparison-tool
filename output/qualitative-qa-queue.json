@@ -1,363 +1,8 @@
 {
   "generatedAt": "2026-08-28",
   "dryRun": false,
-  "count": 16,
+  "count": 18,
   "schools": [
-    {
-      "urn": "114590",
-      "name": "Uckfield College",
-      "score": 16.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings",
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Educational Trips and Visits"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Corporate and Community Partnerships Music and Inclusion Partnerships We are actively seeking to amplify our community impact through inclusive, music-based programmes."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Corporate and Community Partnerships Music and Inclusion Partnerships We are actively seeking to amplify our community impact through inclusive, music-based programmes."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Educational Trips and Visits"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 4
-    },
-    {
-      "urn": "114592",
-      "name": "Willingdon Community School",
-      "score": 16.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings",
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "McDonald\u2019s Educational Resources."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This role includes; responsibility for whole school behaviour and attendance strategy, admissions and transition, pastoral leadership of all 5 year groups and Inclusion, including Special Educational Needs.",
-            "This role includes; responsibility for whole school behaviour and attendance strategy, admissions and transition, pastoral leadership of all 5 year groups and Inclusion, including Special Educational Needs."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "MA Inclusive Education"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND information report: MA Inclusive Education",
-            "This role includes; responsibility for whole school behaviour and attendance strategy, admissions and transition, pastoral leadership of all 5 year groups and Inclusion, including Special Educational Needs."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 4
-    },
-    {
-      "urn": "149695",
-      "name": "The Flagship School",
-      "score": 12.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Review: We use a range of approaches to ensure that we are delivering our curriculum and enabling progression, including teacher-led assessment strategies, the Beckmead Trust Continuum of Skill Development, annual reviews of their EHCPs and, where appropriate, national tests."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We aim to create a nurturing and inclusive learning environment that supports the emotional well-being of our students while also challenging and stretching their abilities in English."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "As a special school we can only accept pupils who are in receipt of an Education Health and Care Plan (EHCP) and the East Sussex Inclusion, Special Educational Needs and Disabilities (ISEND) team are responsible for allocating pupils to us, rather than direct applications.",
-            "If you would like to access independent support for your child\u2019s special educational needs then you can access details of the local authority\u2019s commissioned parent and child support service, Amaze SENDIASS, here."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "R12, R13, R24, R25, R26, R27, R33 University of Exeter - Modern Families Freedom Charity - Forced marriage and FGM",
-            "As the school develops, we will work closely with families and the community to deliver a special school that provides the excellent environment, opportunities and support that our pupils deserve."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 4
-    },
-    {
-      "urn": "114524",
-      "name": "Ticehurst and Flimwell Church of England Primary School",
-      "score": 11.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "INTENT, IMPLEMENTATION AND IMPACT STATEMENT"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "music intentimplementationandimpactstatements 20240814125229668: The history of music"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "As a Church of England school, our aspiration is to shape individuals, families and communities so that the individual worth of each person is nurtured and celebrated as we strive together to \"Love, Learn and Thrive\"."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 3
-    },
-    {
-      "urn": "114466",
-      "name": "West Rise Primary School",
-      "score": 9.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Over this time, I\u2019ve witnessed many changes, the most significant being the amalgamation of the former Infant and Junior Schools into what is now West Rise Primary School\u2014a happy and thriving community of children, families, and staff."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Currently, I work as a Special Educational Needs and Disabilities Coordinator (SENDCo), where I am committed to championing inclusive practice and ensuring that every student has access to the support required to thrive academically and personally.",
-            "My background includes leading system change, strategic planning, and inclusive service delivery for children and young people with SEND."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Over this time, I\u2019ve witnessed many changes, the most significant being the amalgamation of the former Infant and Junior Schools into what is now West Rise Primary School\u2014a happy and thriving community of children, families, and staff."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 3
-    },
-    {
-      "urn": "148927",
-      "name": "Telscombe Cliffs Academy",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings",
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "citizenship"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "In this section Curriculum Overview Subjects Remote Learning Curriculum Timetables and Newsletters Reporting and Assessment Pupil Parliament Extra-Curricular, Trips & Activities Pastoral Care Useful Links Pastoral Care Share on FacebookShare on Facebook Share on TwitterShare on Twitter",
-            "This approach demands that 'pupils develop the creative, technical and practical expertise needed to perform everyday tasks confidently and to participate successfully in an increasingly technological world.' (Department for Education, 2013)."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "114532",
-      "name": "Wadhurst CofE Primary School and Nursery",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings",
-        "boilerplate"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Special Educational Needs Information Report",
-            "Assessments: EYFS PD",
-            "York Assessment of"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "thin",
-          "reason": "Narrative looks like a mid-sentence fragment.",
-          "junkClass": "boilerplate",
-          "offendingExcerpts": [
-            "dferse primary schools guide for parents 20260514142412005: The science curriculum in all maintained"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "114523",
-      "name": "Stonegate Church of England Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "https://amazesussex.org.uk/parent-carers/services-and-support/sendiass-helpline/ The Local Offer is what\u2019s available for children and young adults with special educational needs and disabilities up to the age of 25, and their families."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The Local Offer is what\u2019s available for children and young adults with special educational needs and disabilities up to the age of 25, and their families.",
-            "https://amazesussex.org.uk/parent-carers/services-and-support/sendiass-helpline/ The Local Offer is what\u2019s available for children and young adults with special educational needs and disabilities up to the age of 25, and their families."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
     {
       "urn": "147128",
       "name": "The Ferns Primary Academy",
@@ -390,9 +35,9 @@
       "status": "no_change"
     },
     {
-      "urn": "149964",
-      "name": "Tollgate Community Junior School",
-      "score": 6.0,
+      "urn": "149523",
+      "name": "The Haven Church of England Methodist Primary School",
+      "score": 3.0,
       "flags": [
         "chrome"
       ],
@@ -403,105 +48,8 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Amaze Sussex: for families with disabled children and young people in Sussex ISEND have developed a page to provide links to the Local Offer and Facebook pages."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Amaze Sussex: for families with disabled children and young people in Sussex ISEND have developed a page to provide links to the Local Offer and Facebook pages."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "114405",
-      "name": "Wallands Community Primary and Nursery School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We have a clear vision for our school which unites children, staff, families and governors and shares a determination that all children will achieve the very best that they can through high quality teaching and learning in our welcoming, and inclusive community."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We have a clear vision for our school which unites children, staff, families and governors and shares a determination that all children will achieve the very best that they can through high quality teaching and learning in our welcoming, and inclusive community."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "145015",
-      "name": "White House Academy",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "In this section Curriculum Overview Subjects Remote Learning Reporting and Assessment Pupil Representation Extra-Curricular, Trips & Activities Pastoral Care Pastoral Care Share on FacebookShare on Facebook Share on TwitterShare on Twitter",
-            "In this section Curriculum Overview Subjects Remote Learning Reporting and Assessment Pupil Representation Extra-Curricular, Trips & Activities Pastoral Care Pupil Representation Share on FacebookShare on Facebook Share on TwitterShare on Twitter"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Pupil Representation At White House Academy, we believe that students should have a voice in shaping their educational experience, and that's why we have established a vibrant and inclusive Pupil Representation program."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "114422",
-      "name": "Willingdon Primary School",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Educational Needs and Disabilities?"
+            "Lessons are inclusive, differentiated, and designed to challenge and inspire all learners.",
+            "Lessons are inclusive, differentiated, and designed to stretch and support all learners."
           ],
           "source": "heuristic"
         }
@@ -510,8 +58,29 @@
       "changes": 1
     },
     {
-      "urn": "149138",
-      "name": "Summerdown School",
+      "urn": "116423",
+      "name": "The Hayling College",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists ASPIRING TO DO, Careers Learning Journey, College Federation Day, Green Careers Week, HSDC College Taster Days, Happy, Healthy and High Performing and 4 mo"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "142744",
+      "name": "The Lindfield School",
       "score": 3.0,
       "flags": [
         "chrome"
@@ -532,20 +101,43 @@
       "changes": 1
     },
     {
-      "urn": "138475",
-      "name": "The Cavendish School",
+      "urn": "137239",
+      "name": "The Romsey School",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists Academic Curriculum, Assemblies, Enterprise Project, Further Education Taster Days, Personal Development Tutor Programme, Whole School Curriculum and 6 mor"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "148035",
+      "name": "The Ropemakers' Academy",
       "score": 3.0,
       "flags": [
         "chrome"
       ],
       "findings": [
         {
-          "area": "ethos",
+          "area": "curriculum",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "With over 20 years of experience in education and teacher development, he brings a strong commitment to inclusive teaching, student support and safeguarding."
+            "Review: We use a range of approaches to ensure that we are delivering our curriculum and enabling progression, including teacher-led assessment strategies, the Beckmead Trust Continuum of Skill Development, annual reviews of their EHCPs and, where appropriate, national tests.",
+            "In addition, the EHCP annual reviews, Pupil Information Passports, our own monitoring systems and our pupil and parent voice surveys provide additional understanding of the impact of our curriculum on the learning experience of our children.",
+            "We use baseline assessments in reading levels, phonics (where appropriate), speech and language and emotional development alongside early teacher judgements, in order to understand where to pitch our students\u2019 work in class."
           ],
           "source": "heuristic"
         }
@@ -554,8 +146,51 @@
       "changes": 1
     },
     {
-      "urn": "136106",
-      "name": "The Eastbourne Academy",
+      "urn": "142745",
+      "name": "The South Downs School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "By working towards this award, we are making a clear promise to our students and families: Ensuring every student receives impartial, up-to-date guidance about the full range of opportunities available after school."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "116411",
+      "name": "The Toynbee School",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists choir, music, College Taster Day, Hampshire Book Awards, Mental Health Roadshow, Mental Health Workshop and 1 more. Information appears across 2 pages."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "148179",
+      "name": "The Turing School",
       "score": 3.0,
       "flags": [
         "chrome"
@@ -567,13 +202,145 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Our Vision & Values At The Eastbourne Academy, our vision is to create an exceptional, inclusive and nurturing learning organisation that fosters academic excellence, social-emotional growth, and student well-being."
+            "Our vision is to offer a varied and inclusive curriculum that fosters friendships, self-discipline, and collaboration, and provides students with the determination and social skills to excel in their musical aspirations."
           ],
           "source": "heuristic"
         }
       ],
       "status": "auto_fixed",
       "changes": 1
+    },
+    {
+      "urn": "152103",
+      "name": "Thornton Grove Academy",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "In this section Curriculum Overview Subjects Remote Learning Assessment and Reporting Pupil Representation Curriculum Enrichment Pastoral Care Pupil Representation Share on FacebookShare on Facebook Share on TwitterShare on Twitter"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "148945",
+      "name": "Uplands Academy",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Families commented on how welcoming the students were, how clearly they answered questions, and how reassuring they made the experience for both parents and children."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "114424",
+      "name": "Wivelsfield Primary School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our whole school approach to the teaching and learning of maths involves the following: The impact of our mathematics curriculum is that children understand the relevance of what they are learning in relation to real-world concepts."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "136643",
+      "name": "Bohunt School",
+      "score": 2.0,
+      "flags": [
+        "implausible_offerings"
+      ],
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
+    },
+    {
+      "urn": "116277",
+      "name": "Bursledon Church of England Infant School",
+      "score": 2.0,
+      "flags": [
+        "implausible_offerings"
+      ],
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
+    },
+    {
+      "urn": "116027",
+      "name": "Bursledon Junior School(CA)",
+      "score": 2.0,
+      "flags": [
+        "implausible_offerings"
+      ],
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
+    },
+    {
+      "urn": "116357",
+      "name": "Charles Kingsley's Church of England Primary School",
+      "score": 2.0,
+      "flags": [
+        "implausible_offerings"
+      ],
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
+    },
+    {
+      "urn": "114408",
+      "name": "Park Mead Primary School",
+      "score": 2.0,
+      "flags": [
+        "implausible_offerings"
+      ],
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
+    },
+    {
+      "urn": "114414",
+      "name": "Punnetts Town Community Primary and Nursery School",
+      "score": 2.0,
+      "flags": [
+        "implausible_offerings"
+      ],
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     }
   ]
 }
