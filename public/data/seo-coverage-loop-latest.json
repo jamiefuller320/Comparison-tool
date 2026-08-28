@@ -1,15 +1,7 @@
 {
-  "generatedAt": "2026-08-25T07:13:35Z",
+  "generatedAt": "2026-08-28T19:17:19Z",
   "dryRun": false,
   "before": {
-    "schoolPages": 608,
-    "townPages": 21,
-    "townHubs": 1,
-    "schoolBudgetRemaining": 892,
-    "townBudgetRemaining": 59,
-    "schoolBudgetUsedPct": 40.5
-  },
-  "after": {
     "schoolPages": 963,
     "townPages": 33,
     "townHubs": 5,
@@ -17,38 +9,46 @@
     "townBudgetRemaining": 47,
     "schoolBudgetUsedPct": 64.2
   },
+  "after": {
+    "schoolPages": 1486,
+    "townPages": 49,
+    "townHubs": 9,
+    "schoolBudgetRemaining": 14,
+    "townBudgetRemaining": 31,
+    "schoolBudgetUsedPct": 99.1
+  },
   "added": [
     {
-      "slug": "isle-of-wight",
-      "localAuthority": "Isle of Wight",
-      "schoolCount": 51,
+      "slug": "windsor-and-maidenhead",
+      "localAuthority": "Windsor and Maidenhead",
+      "schoolCount": 84,
+      "townCount": 3,
+      "signalPct": 97.6,
+      "interestScore": 0.65
+    },
+    {
+      "slug": "medway",
+      "localAuthority": "Medway",
+      "schoolCount": 119,
+      "townCount": 3,
+      "signalPct": 97.5,
+      "interestScore": 0.65
+    },
+    {
+      "slug": "buckinghamshire",
+      "localAuthority": "Buckinghamshire",
+      "schoolCount": 272,
+      "townCount": 8,
+      "signalPct": 97.8,
+      "interestScore": 0.65
+    },
+    {
+      "slug": "bracknell-forest",
+      "localAuthority": "Bracknell Forest",
+      "schoolCount": 48,
       "townCount": 2,
-      "signalPct": 100.0,
-      "interestScore": 0.0
-    },
-    {
-      "slug": "portsmouth",
-      "localAuthority": "Portsmouth",
-      "schoolCount": 65,
-      "townCount": 2,
-      "signalPct": 100.0,
-      "interestScore": 0.0
-    },
-    {
-      "slug": "dorset",
-      "localAuthority": "Dorset",
-      "schoolCount": 180,
-      "townCount": 7,
-      "signalPct": 99.4,
-      "interestScore": 0.0
-    },
-    {
-      "slug": "slough",
-      "localAuthority": "Slough",
-      "schoolCount": 59,
-      "townCount": 1,
-      "signalPct": 98.3,
-      "interestScore": 0.0
+      "signalPct": 95.8,
+      "interestScore": 0.65
     }
   ],
   "includedAreaSlugs": [
@@ -56,7 +56,11 @@
     "isle-of-wight",
     "portsmouth",
     "dorset",
-    "slough"
+    "slough",
+    "windsor-and-maidenhead",
+    "medway",
+    "buckinghamshire",
+    "bracknell-forest"
   ],
   "pageBudget": {
     "maxSchoolPages": 1500,
