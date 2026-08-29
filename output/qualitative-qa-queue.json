@@ -1,230 +1,8 @@
 {
   "generatedAt": "2026-08-29",
   "dryRun": false,
-  "count": 16,
+  "count": 20,
   "schools": [
-    {
-      "urn": "114592",
-      "name": "Willingdon Community School",
-      "score": 14.0,
-      "flags": [
-        "chrome",
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "All East Sussex schools, including Willingdon Community School, follow the East Sussex Safeguarding Children Partnership procedures."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Taking action to enable all children and young people to have the best outcome Safeguarding includes child protection, health care plans, health and safety, site security, safety on school trips, anti-bullying work and so much more."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Student Passports SEN Register"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND information report: Student Passports SEN Register"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 3
-    },
-    {
-      "urn": "144661",
-      "name": "Peacehaven Community School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Safeguarding & Wellbeing"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Safeguarding & Wellbeing: Safeguarding & Wellbeing",
-            "Safeguarding & Wellbeing: Support for Parents/Carers"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "114509",
-      "name": "South Malling CofE Primary and Nursery School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings",
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Safeguarding and Behaviour"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our clubs follow the school\u2019s Safeguarding and Behaviour Policies, maintaining the same high expectations as the school day."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "114484",
-      "name": "Stone Cross School",
-      "score": 8.0,
-      "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Register of Business Interests"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "About Us: Register of Business Interests"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "114482",
-      "name": "Parkside Community Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Drop off and Pick Up It is extremely important, for safeguarding reasons, that no children are dropped at the school before 7:30am as the school will not be open to children and there will be no adult supervision."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Parkside PTA A warm welcome to Friends of Parkside The School's Friends of Parkside (PTA) is a registered charity (1164184) consisting of a friendly voluntary team of parents and teachers."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
-    {
-      "urn": "143035",
-      "name": "St Catherine's College",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "You may find the following Personal Wellbeing, Welfare and Safeguarding Contact information also useful: \"Pupils are happy and optimistic and pupils feel safe.\" Ofsted Inspection, November 2019 \"Pupils feel safe at St Catherine\u2019s."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Safeguarding our Students during the Holidays: Operation EncompassPDF File",
-            "You may find the following Personal Wellbeing, Welfare and Safeguarding Contact information also useful: \"Pupils are happy and optimistic and pupils feel safe.\" Ofsted Inspection, November 2019 \"Pupils feel safe at St Catherine\u2019s."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
-    },
     {
       "urn": "147128",
       "name": "The Ferns Primary Academy",
@@ -257,8 +35,203 @@
       "status": "no_change"
     },
     {
-      "urn": "116519",
-      "name": "Forres Sandle Manor School",
+      "urn": "151679",
+      "name": "St Thomas A Becket Catholic Primary School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Children in Reception and KS1 are automatically entitled to a free school lunch; however, registering your child for free meals will entitle them to additional support with the cost of school visits, PTFA events and extra-curricular clubs, as well as raising additional funds for our school."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "113799",
+      "name": "Sticklands Church of England Voluntary Aided Primary School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "The School Nursing team can help Parents with Healthy eating, weight management, day/night time wetting, toileting, sleep, hearing, behaviour, emotional health and wellbeing and more."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "149657",
+      "name": "Sturminster Newton High School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "To view the policy statement on Careers Guidance, please visit the school policies page The school\u2019s named career leader is Paul Dodman who can facilitate impartial information advice and guidance for students, supported by the Heads of Year."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "150246",
+      "name": "Swanage Primary School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Some children may require support that is 'different from or additional to' most of their peers and, if there are significant concerns around a child's progress, they may be added to our SEND register so that we can more closely monitor their progress and provide a more specialist package of support."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "149695",
+      "name": "The Flagship School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "\uf06e To evaluate the effectiveness of safeguarding, the inspectors reviewed the single central record; took account of the views of leaders, staff and pupils; and considered the extent to which the school has created an open and positive culture around safeguarding that puts pupils\u2019 interests first."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "116423",
+      "name": "The Hayling College",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists ASPIRING TO DO, Careers Learning Journey, College Federation Day, Green Careers Week, HSDC College Taster Days, Happy, Healthy and High Performing and 4 mo"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "137239",
+      "name": "The Romsey School",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists Academic Curriculum, Assemblies, Enterprise Project, Further Education Taster Days, Personal Development Tutor Programme, Whole School Curriculum and 6 mor"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "137163",
+      "name": "The Thomas Hardye School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "The sixth form also has a Wellbeing and Learning Mentor, deputy safeguarding lead, The role is to support students throughout their journey in Sixth Form and offer a place to come and speak about anything that is on their mind."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "116411",
+      "name": "The Toynbee School",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists choir, music, College Taster Day, Hampshire Book Awards, Mental Health Roadshow, Mental Health Workshop and 1 more. Information appears across 2 pages."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "114466",
+      "name": "West Rise Primary School",
       "score": 3.0,
       "flags": [
         "chrome"
@@ -270,7 +243,7 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "PART 3 \u2013 Welfare, health and safety of pupils 2.8 Good behaviour is promoted; bullying is prevented so far as reasonably practicable; health and safety requirements are met, including those relating to fire safety; provision is made for first aid."
+            "Complementing this role, I also bring significant experience as a former Safeguarding Lead, demonstrating an unwavering commitment to student welfare and the maintenance of a safe and supportive school environment."
           ],
           "source": "heuristic"
         }
@@ -279,8 +252,30 @@
       "changes": 1
     },
     {
-      "urn": "114435",
-      "name": "Polegate Primary School",
+      "urn": "116635",
+      "name": "Wolverdene Special School",
+      "score": 3.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "(Information for the school and appropriate authority) \u25fc In subjects other than English and mathematics, some staff do not have sufficient subject knowledge to teach the precise next steps needed to help pupils make Inspection report: Wolverdene Special School 2 and 3 March 2022 4 progress."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "138716",
+      "name": "Wyvern Academy",
       "score": 3.0,
       "flags": [
         "chrome"
@@ -292,7 +287,7 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "We also keep an eye on the school budget, the state of the building, the curriculum, outcomes, attendance and safeguarding."
+            "\uf06e To evaluate the effectiveness of safeguarding, the inspectors: reviewed the single central record; took account of the views of leaders, staff and pupils; considered the extent to which the school has created an open and positive culture around safeguarding that puts pupils\u2019 interests first."
           ],
           "source": "heuristic"
         }
@@ -301,162 +296,81 @@
       "changes": 1
     },
     {
-      "urn": "114636",
-      "name": "Sacred Heart School",
-      "score": 3.0,
+      "urn": "136643",
+      "name": "Bohunt School",
+      "score": 2.0,
       "flags": [
-        "chrome"
+        "implausible_offerings"
       ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Child Protection and Safeguarding Policy: Newsletters",
-            "Child Protection and Safeguarding Policy: Parent & Toddler Mornings"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     },
     {
-      "urn": "114521",
-      "name": "Salehurst Church of England Primary School",
-      "score": 3.0,
+      "urn": "116027",
+      "name": "Bursledon Junior School(CA)",
+      "score": 2.0,
       "flags": [
-        "chrome"
+        "implausible_offerings"
       ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Safeguarding, Mental Health & Parenting Resources: Activities & Resources for Children",
-            "Safeguarding, Mental Health & Parenting Resources: Anxiety, Health & Parenting Support",
-            "Safeguarding, Mental Health & Parenting Resources: Staying Safe Online",
-            "Safeguarding, Mental Health & Parenting Resources: Sussex CAMHS"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     },
     {
-      "urn": "114549",
-      "name": "St John's Church of England Primary School",
-      "score": 3.0,
+      "urn": "134734",
+      "name": "Cadland Primary School",
+      "score": 2.0,
       "flags": [
-        "chrome"
+        "implausible_offerings"
       ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "St John\u2019s is committed to safeguarding and promoting the welfare of children and expects all staff, parents, governors and volunteers to share this commitment so that our pupils can thrive in a safe and caring environment."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     },
     {
-      "urn": "151251",
-      "name": "St Mary Star of the Sea Catholic Primary School",
-      "score": 3.0,
+      "urn": "116357",
+      "name": "Charles Kingsley's Church of England Primary School",
+      "score": 2.0,
       "flags": [
-        "chrome"
+        "implausible_offerings"
       ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This report refers to areas that some other school policies, namely the Child Protection and Safeguarding Policy, Equal Opportunities Policy, Anti-bullying policy, the School Equality Policy, Behaviour Policy, Positive Handling Policy and the Children with Medical Conditions Policy 2018 also cover."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     },
     {
-      "urn": "144299",
-      "name": "St Mary's Church of England Primary School, Bradford Abbas",
-      "score": 3.0,
+      "urn": "116431",
+      "name": "Harrow Way Community School",
+      "score": 2.0,
       "flags": [
-        "chrome"
+        "implausible_offerings"
       ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Equally, we are also committed to policies that promote equality of opportunity, positive attitudes to cultural diversity, the elimination of racial discrimination and safeguarding children."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     },
     {
-      "urn": "142514",
-      "name": "St Mary's CofE First School & Nursery",
-      "score": 3.0,
+      "urn": "114408",
+      "name": "Park Mead Primary School",
+      "score": 2.0,
       "flags": [
-        "chrome"
+        "implausible_offerings"
       ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We believe it is essential to personal development, behaviour, welfare and safeguarding."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     },
     {
-      "urn": "149164",
-      "name": "St Nicholas and St Laurence Church of England Primary School",
-      "score": 3.0,
+      "urn": "114414",
+      "name": "Punnetts Town Community Primary and Nursery School",
+      "score": 2.0,
       "flags": [
-        "chrome"
+        "implausible_offerings"
       ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Where appropriate, school policies support the growth and development of spirituality for every child, particularly through the positive approach to behaviour that is key to every school within the Trust."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
+      "findings": [],
+      "status": "watch",
+      "note": "Suspicious but no auto-actionable findings"
     }
   ]
 }
