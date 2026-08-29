@@ -100,7 +100,7 @@ Recommended scale-up (technical order, not a schedule):
 
 After Cursor/OpenAI narratives pass the citation gate, **cited source URLs** get an extra boost into the same lexicon — so paths that survived parent-facing synthesis are preferred on later crawls. This is still discovery learning, not a self-tuning LLM. Narratives themselves improve when you re-run synthesis with better evidence.
 
-`output/learned-qa-patterns.json` stores **confirmed junk phrases** from QA strip/thin actions (site chrome, policy TOC labels, parenting tips, admissions marketing). Those phrases feed ingest filters on later captures so the same junk is less likely to reappear.
+`output/learned-qa-patterns.json` stores **confirmed junk phrases** from QA strip/thin actions (site chrome, policy TOC labels, parenting tips, admissions marketing). Those phrases feed ingest filters on later captures so the same junk is less likely to reappear. The active matching set is capped (**600**); a larger archive keeps demoted phrases with hit/recency stats, and selection uses **per-class floors** so chrome-heavy learning does not starve rarer junk classes. Legacy `byClass` orphans are merged back into the candidate pool on load.
 
 `synthesize-qualitative.py --only-missing` fills **missing areas only** and will not replace an accepted `cursor`/`openai` paragraph with deterministic filler on a partial failure.
 
@@ -143,4 +143,4 @@ Sort by ingest date, filter to précis + website / junk flags, and open source l
 
 ## Engine version
 
-Current `ENGINE_VERSION` is **0.7.4** (named-person + CMS chrome filters, heuristic QA loop with learned junk phrases, dedicated quality-apply loop, optional Cursor/OpenAI narrative synthesis).
+Current `ENGINE_VERSION` is **0.7.5** (named-person + CMS chrome filters, heuristic QA loop with learned junk phrases + hit/recency/class-quota eviction, dedicated quality-apply loop, optional Cursor/OpenAI narrative synthesis).
