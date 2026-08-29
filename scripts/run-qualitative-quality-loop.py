@@ -132,6 +132,21 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     notes: list[str] = []
+    if DEFAULT_LEARNED.is_file() and not args.dry_run:
+        try:
+            from school_capture.learned_qa_patterns import (  # noqa: E402
+                rebalance_learned_qa_patterns,
+            )
+
+            balanced = rebalance_learned_qa_patterns(DEFAULT_LEARNED)
+            notes.append(
+                "Rebalanced learned QA phrases: "
+                f"active={balanced.get('phraseCount', 0)} "
+                f"candidates={balanced.get('candidateCount', 0)}."
+            )
+        except Exception as exc:  # noqa: BLE001 — never block quality apply
+            notes.append(f"Learned QA rebalance skipped: {exc}")
+
     before = analyse_corpus(min_score=args.min_score)
     notes.append(
         f"Before: {before['suspectCount']} suspects across "
