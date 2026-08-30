@@ -7,9 +7,36 @@ export const TOUR_STORAGE_KEY = "schoolside.tourSeen";
 export const TOUR_START_EVENT = "schoolside:start-tour";
 /** Ask Setup to open a binder tile (postcode / stages / sector / provision). */
 export const TOUR_SETUP_TILE_EVENT = "schoolside:tour-setup-tile";
+/**
+ * Ask the journey shell to keep a chapter mounted (hidden) so the next
+ * walkthrough step can flip to it without a cold remount.
+ */
+export const TOUR_WARM_CHAPTER_EVENT = "schoolside:tour-warm-chapter";
 export const TOUR_PAD = 10;
 /** Sticky header clearance when centering a target. */
 export const TOUR_HEADER_OFFSET = 72;
+
+export type TourWarmChapterId =
+  | "setup"
+  | "nearby"
+  | "compare"
+  | "side-by-side"
+  | "how";
+
+export type TourWarmChapterDetail = {
+  chapter: TourWarmChapterId | null;
+};
+
+/** Prefetch-mount a journey chapter (or clear with null). */
+export function requestTourWarmChapter(
+  chapter: TourWarmChapterId | null,
+): void {
+  window.dispatchEvent(
+    new CustomEvent<TourWarmChapterDetail>(TOUR_WARM_CHAPTER_EVENT, {
+      detail: { chapter },
+    }),
+  );
+}
 
 export type TourSetupTileId = "postcode" | "stages" | "sector" | "provision";
 
@@ -282,11 +309,32 @@ export function viewportRectFromCache(
   viewportHeight: number,
   pad = TOUR_PAD,
 ): ViewportRect {
+  const rawTop = cached.top - scrollY;
+  const rawLeft = cached.left - scrollX;
+  let top = rawTop - pad;
+  let left = rawLeft - pad;
+  let width = cached.width + pad * 2;
+  let height = cached.height + pad * 2;
+
+  // Cap huge chapter targets so the dialog always has undimmed room beside
+  // or below a readable focus band (Find map / Side by side wrappers).
+  const maxHeight = Math.max(160, Math.round(viewportHeight * 0.44));
+  const maxWidth = Math.max(280, Math.round(viewportWidth * 0.7));
+  if (height > maxHeight) {
+    const focusOffset = Math.round((cached.height - (maxHeight - pad * 2)) * 0.12);
+    top = rawTop + focusOffset - pad;
+    height = maxHeight;
+  }
+  if (width > maxWidth) {
+    left = rawLeft - pad;
+    width = maxWidth;
+  }
+
   return {
-    top: Math.max(8, cached.top - scrollY - pad),
-    left: Math.max(8, cached.left - scrollX - pad),
-    width: Math.min(viewportWidth - 16, cached.width + pad * 2),
-    height: Math.min(viewportHeight - 16, cached.height + pad * 2),
+    top: Math.max(8, top),
+    left: Math.max(8, left),
+    width: Math.min(viewportWidth - 16, width),
+    height: Math.min(viewportHeight - 16, height),
   };
 }
 
@@ -302,36 +350,126 @@ export function scrollToCachedTarget(
   return top;
 }
 
+function clamp(n: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, n));
+}
+
+/** Axis-aligned overlap area in CSS pixels (0 when separated). */
+export function rectOverlapArea(
+  a: ViewportRect,
+  b: ViewportRect,
+): number {
+  const x = Math.max(
+    0,
+    Math.min(a.left + a.width, b.left + b.width) - Math.max(a.left, b.left),
+  );
+  const y = Math.max(
+    0,
+    Math.min(a.top + a.height, b.top + b.height) - Math.max(a.top, b.top),
+  );
+  return x * y;
+}
+
+/**
+ * Place the dialog away from the spotlight. Prefers side slots for tall/wide
+ * targets so the card doesn’t cover the feature being explained.
+ */
 export function placeTourCard(
   rect: ViewportRect | null,
   viewportWidth: number,
   viewportHeight: number,
   cardWidth = Math.min(360, viewportWidth - 32),
   cardHeight = 280,
+  gap = 16,
 ): { top: number; left: number } {
+  const margin = 16;
+  const maxTop = Math.max(margin, viewportHeight - cardHeight - 12);
+  const maxLeft = Math.max(margin, viewportWidth - cardWidth - margin);
   const narrow = viewportWidth < 720;
-  const maxTop = Math.max(16, viewportHeight - cardHeight - 12);
+
   if (narrow) {
-    return {
-      top: maxTop,
-      left: 16,
-    };
+    if (rect) {
+      const below = rect.top + rect.height + gap;
+      if (below + cardHeight <= viewportHeight - 12) {
+        return { top: below, left: margin };
+      }
+      const above = rect.top - cardHeight - gap;
+      if (above >= margin) {
+        return { top: Math.min(maxTop, above), left: margin };
+      }
+    }
+    return { top: maxTop, left: margin };
   }
+
   if (!rect) {
     return {
-      top: Math.min(maxTop, Math.max(16, viewportHeight / 2 - cardHeight / 2)),
-      left: Math.max(16, viewportWidth / 2 - cardWidth / 2),
+      top: clamp(viewportHeight / 2 - cardHeight / 2, margin, maxTop),
+      left: clamp(viewportWidth / 2 - cardWidth / 2, margin, maxLeft),
     };
   }
-  let top = rect.top + rect.height + 14;
-  if (top + cardHeight > viewportHeight - 12) {
-    top = Math.max(16, rect.top - cardHeight - 14);
+
+  const preferSide =
+    rect.height > viewportHeight * 0.38 || rect.width > viewportWidth * 0.52;
+
+  type Candidate = { top: number; left: number; rank: number };
+  const raw: Candidate[] = [
+    {
+      top: rect.top,
+      left: rect.left + rect.width + gap,
+      rank: preferSide ? 0 : 2,
+    },
+    {
+      top: rect.top,
+      left: rect.left - cardWidth - gap,
+      rank: preferSide ? 1 : 3,
+    },
+    {
+      top: rect.top + rect.height + gap,
+      left: rect.left,
+      rank: preferSide ? 4 : 0,
+    },
+    {
+      top: rect.top - cardHeight - gap,
+      left: rect.left,
+      rank: preferSide ? 5 : 1,
+    },
+    // Viewport corners — last resort for near-full-screen targets.
+    { top: margin, left: margin, rank: 12 },
+    { top: margin, left: maxLeft, rank: 12 },
+    { top: maxTop, left: margin, rank: 13 },
+    { top: maxTop, left: maxLeft, rank: 11 },
+  ];
+
+  let bestTop = margin;
+  let bestLeft = margin;
+  let bestScore = -Infinity;
+
+  for (const c of raw) {
+    const top = clamp(c.top, margin, maxTop);
+    const left = clamp(c.left, margin, maxLeft);
+    const card: ViewportRect = {
+      top,
+      left,
+      width: cardWidth,
+      height: cardHeight,
+    };
+    const overlap = rectOverlapArea(card, rect);
+    const fullyOnScreen =
+      c.top >= margin - 0.5 &&
+      c.left >= margin - 0.5 &&
+      c.top + cardHeight <= viewportHeight - 11 &&
+      c.left + cardWidth <= viewportWidth - 15;
+    const score =
+      -overlap * 12 +
+      (fullyOnScreen ? 8000 : 0) -
+      c.rank * 40 -
+      (Math.abs(top - rect.top) + Math.abs(left - rect.left)) * 0.02;
+    if (score > bestScore) {
+      bestScore = score;
+      bestTop = top;
+      bestLeft = left;
+    }
   }
-  top = Math.min(maxTop, Math.max(16, top));
-  let left = rect.left;
-  if (left + cardWidth > viewportWidth - 16) {
-    left = viewportWidth - cardWidth - 16;
-  }
-  if (left < 16) left = 16;
-  return { top, left };
+
+  return { top: bestTop, left: bestLeft };
 }

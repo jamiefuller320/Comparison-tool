@@ -8,8 +8,10 @@ async function main() {
     TOUR_STORAGE_KEY,
     TOUR_TARGET_SETUP_TILE,
     TOUR_SETUP_TILE_EVENT,
+    TOUR_WARM_CHAPTER_EVENT,
     viewportRectFromCache,
     placeTourCard,
+    rectOverlapArea,
   } = await import("../src/lib/tour.ts");
   const {
     TOUR_DEMO_POSTCODE,
@@ -26,6 +28,10 @@ async function main() {
   }
   if (TOUR_SETUP_TILE_EVENT !== "schoolside:tour-setup-tile") {
     console.error("FAIL setup tile event name");
+    process.exit(1);
+  }
+  if (TOUR_WARM_CHAPTER_EVENT !== "schoolside:tour-warm-chapter") {
+    console.error("FAIL warm chapter event name");
     process.exit(1);
   }
   if (TOUR_DEMO_POSTCODE !== "SO40 3DW") {
@@ -197,9 +203,61 @@ async function main() {
     process.exit(1);
   }
 
+  // Huge chapter wrapper — spotlight should clamp so a dialog can sit clear.
+  const hugeCached = {
+    target: "nearby",
+    top: 200,
+    left: 40,
+    width: 1200,
+    height: 900,
+  };
+  const capped = viewportRectFromCache(hugeCached, 0, 0, 1280, 800, 10);
+  if (capped.height > 800 * 0.5) {
+    console.error("FAIL viewportRectFromCache should clamp tall targets", capped);
+    process.exit(1);
+  }
+  const cappedCard = placeTourCard(capped, 1280, 800, 360, 260);
+  const cappedOverlap = rectOverlapArea(
+    {
+      top: cappedCard.top,
+      left: cappedCard.left,
+      width: 360,
+      height: 260,
+    },
+    capped,
+  );
+  if (cappedOverlap > 8000) {
+    console.error("FAIL capped spotlight still heavily covered", {
+      capped,
+      cappedCard,
+      cappedOverlap,
+    });
+    process.exit(1);
+  }
+
   const card = placeTourCard(view, 1280, 800);
   if (card.top < 16 || card.left < 16) {
     console.error("FAIL placeTourCard", card);
+    process.exit(1);
+  }
+
+  // Tall spotlight (Find map) — card should sit beside, not over, the target.
+  const tall = { top: 80, left: 40, width: 720, height: 520 };
+  const beside = placeTourCard(tall, 1280, 800, 360, 260);
+  const overlap = rectOverlapArea(
+    { top: beside.top, left: beside.left, width: 360, height: 260 },
+    tall,
+  );
+  if (overlap > 4000) {
+    console.error("FAIL placeTourCard should avoid covering tall targets", {
+      beside,
+      overlap,
+    });
+    process.exit(1);
+  }
+  const cardCentre = beside.left + 180;
+  if (cardCentre > tall.left + 40 && cardCentre < tall.left + tall.width - 40) {
+    console.error("FAIL placeTourCard expected a side slot", beside);
     process.exit(1);
   }
 

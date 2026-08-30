@@ -5438,21 +5438,51 @@ html:has(.page-chapter-nav) .compare-table-controls {
 .tour-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(20, 35, 58, 0.42);
+  /* Soft fallback dim — used only before a spotlight cutout exists. */
+  background: rgba(20, 35, 58, 0.22);
   pointer-events: auto;
+}
+
+.tour-backdrop.tour-backdrop-clear {
+  /* Spotlight box-shadow provides the shade; keep this layer for click catch. */
+  background: transparent;
 }
 
 .tour-spotlight {
   position: fixed;
   border-radius: 14px;
+  /* Hole is undimmed page; light outer shade keeps surrounding context readable. */
+  background: transparent;
   box-shadow:
-    0 0 0 2px rgba(255, 247, 239, 0.95),
-    0 0 0 9999px rgba(20, 35, 58, 0.48);
+    0 0 0 3px rgba(255, 247, 239, 0.98),
+    0 0 0 9999px rgba(20, 35, 58, 0.26);
   pointer-events: none;
   /* Instant updates — animated transitions fought scroll and felt laggy. */
   transition: none;
   z-index: 81;
   will-change: top, left, width, height;
+}
+
+/* Prefetch-mounted next chapter — same slot size, invisible until flipped. */
+.tour-sheet-stack {
+  position: relative;
+  display: block;
+}
+
+.tour-sheet-slot.is-warm {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tour-sheet-slot.is-active {
+  position: relative;
+  visibility: visible;
+  z-index: 1;
 }
 
 /* While the walkthrough runs, prefer paint stability over decorative motion. */

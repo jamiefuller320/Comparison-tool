@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -16,6 +17,7 @@ import {
   markTourSeen,
   placeTourCard,
   requestTourSetupTile,
+  requestTourWarmChapter,
   resolveActiveTourSteps,
   scrollToCachedTarget,
   viewportRectFromCache,
@@ -39,6 +41,7 @@ import {
 } from "@/components/JourneyChapterContext";
 
 const AUTO_START_DELAY_MS = 900;
+const DEFAULT_CARD_SIZE = { width: 360, height: 280 };
 
 function waitFrames(count: number): Promise<void> {
   return new Promise((resolve) => {
@@ -63,10 +66,14 @@ const TOUR_SHELL_DEMOS = new Set<TourDemoId>([
 
 export function ProductTour() {
   const titleId = useId();
-  const { setChapter } = useJourneyChapter();
+  const { chapter, setChapter } = useJourneyChapter();
+  const chapterRef = useRef(chapter);
+  chapterRef.current = chapter;
   const cacheRef = useRef<Map<string, TourTargetCache>>(new Map());
   const scrollingRef = useRef(false);
   const rafRef = useRef<number | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const cardSizeRef = useRef(DEFAULT_CARD_SIZE);
   const demoTriggerRef = useRef<HTMLButtonElement | null>(null);
   const openedTrendByTourRef = useRef(false);
   const demoTimerRef = useRef<number | null>(null);
@@ -76,40 +83,55 @@ export function ProductTour() {
   const [index, setIndex] = useState(0);
   const [busy, setBusy] = useState(false);
   const [rect, setRect] = useState<ViewportRect | null>(null);
+  const [cardSize, setCardSize] = useState(DEFAULT_CARD_SIZE);
   const [cardPos, setCardPos] = useState<{ top: number; left: number }>({
     top: 24,
     left: 24,
   });
 
-  const paintFromCache = useCallback((target: string, scrollToTarget: boolean) => {
-    const cached = cacheRef.current.get(target);
-    if (!cached) {
-      setRect(null);
-      setCardPos(
-        placeTourCard(null, window.innerWidth, window.innerHeight),
-      );
-      return;
-    }
+  cardSizeRef.current = cardSize;
 
-    if (scrollToTarget) {
-      scrollingRef.current = true;
-      scrollToCachedTarget(cached, window.innerHeight);
-      // Instant scroll — release the guard on the next frame.
-      requestAnimationFrame(() => {
-        scrollingRef.current = false;
-      });
-    }
-
-    const next = viewportRectFromCache(
-      cached,
-      window.scrollX,
-      window.scrollY,
+  const placeCard = useCallback((spotlight: ViewportRect | null) => {
+    const size = cardSizeRef.current;
+    return placeTourCard(
+      spotlight,
       window.innerWidth,
       window.innerHeight,
+      Math.min(size.width, window.innerWidth - 32),
+      size.height,
     );
-    setRect(next);
-    setCardPos(placeTourCard(next, window.innerWidth, window.innerHeight));
   }, []);
+
+  const paintFromCache = useCallback(
+    (target: string, scrollToTarget: boolean) => {
+      const cached = cacheRef.current.get(target);
+      if (!cached) {
+        setRect(null);
+        setCardPos(placeCard(null));
+        return;
+      }
+
+      if (scrollToTarget) {
+        scrollingRef.current = true;
+        scrollToCachedTarget(cached, window.innerHeight);
+        // Instant scroll — release the guard on the next frame.
+        requestAnimationFrame(() => {
+          scrollingRef.current = false;
+        });
+      }
+
+      const next = viewportRectFromCache(
+        cached,
+        window.scrollX,
+        window.scrollY,
+        window.innerWidth,
+        window.innerHeight,
+      );
+      setRect(next);
+      setCardPos(placeCard(next));
+    },
+    [placeCard],
+  );
 
   const rebuildCache = useCallback((active: TourStep[]) => {
     cacheRef.current = cacheTourTargets(active);
@@ -117,9 +139,10 @@ export function ProductTour() {
 
   const ensureChapterForTarget = useCallback(
     async (target: string) => {
-      const chapter = TOUR_TARGET_CHAPTER[target];
-      if (chapter) {
-        setChapter(chapter, { scroll: false });
+      const needed = TOUR_TARGET_CHAPTER[target];
+      if (needed && needed !== chapterRef.current) {
+        setChapter(needed, { scroll: false });
+        // Warm-mounted chapters flip class only — a couple of frames is enough.
         await waitFrames(2);
       }
       // Setup only mounts the active binder tile — open the right sheet
@@ -179,6 +202,7 @@ export function ProductTour() {
         rafRef.current = null;
       }
       collapseTourTrendDemo();
+      requestTourWarmChapter(null);
       document.documentElement.classList.remove("tour-running");
       cacheRef.current = new Map();
       setOpen(false);
@@ -239,6 +263,20 @@ export function ProductTour() {
   }, [runShellDemo]);
 
   const step = steps[index] ?? null;
+
+  // Prefetch-mount the next *different* journey chapter while this step is idle.
+  useEffect(() => {
+    if (!open || busy) return;
+    let warm: (typeof TOUR_TARGET_CHAPTER)[string] | null = null;
+    for (let i = index + 1; i < steps.length; i++) {
+      const ch = TOUR_TARGET_CHAPTER[steps[i].target];
+      if (ch && ch !== chapterRef.current) {
+        warm = ch;
+        break;
+      }
+    }
+    requestTourWarmChapter(warm);
+  }, [open, busy, steps, index]);
 
   useEffect(() => {
     if (!open || !step) return;
@@ -314,6 +352,34 @@ export function ProductTour() {
     collapseTourTrendDemo();
   }, [open, step, collapseTourTrendDemo]);
 
+  // Re-place the card when its real height changes (copy / busy line).
+  useLayoutEffect(() => {
+    const el = cardRef.current;
+    if (!open || !el) return;
+
+    function measure() {
+      if (!cardRef.current) return;
+      const box = cardRef.current.getBoundingClientRect();
+      const next = {
+        width: Math.max(280, Math.round(box.width)),
+        height: Math.max(160, Math.round(box.height)),
+      };
+      setCardSize((prev) =>
+        prev.width === next.width && prev.height === next.height ? prev : next,
+      );
+    }
+
+    measure();
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [open, step, busy]);
+
+  useEffect(() => {
+    if (!open || !rect) return;
+    setCardPos(placeCard(rect));
+  }, [open, rect, cardSize, placeCard]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -370,7 +436,11 @@ export function ProductTour() {
 
   return (
     <div className="tour-root" role="presentation">
-      <div className="tour-backdrop" aria-hidden />
+      {/* Catches clicks; visual dim comes from the spotlight ring when present. */}
+      <div
+        className={rect ? "tour-backdrop tour-backdrop-clear" : "tour-backdrop"}
+        aria-hidden
+      />
       {rect ? (
         <div
           className="tour-spotlight"
@@ -385,6 +455,7 @@ export function ProductTour() {
       ) : null}
 
       <div
+        ref={cardRef}
         className="tour-card"
         role="dialog"
         aria-modal="true"
