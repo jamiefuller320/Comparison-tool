@@ -309,11 +309,32 @@ export function viewportRectFromCache(
   viewportHeight: number,
   pad = TOUR_PAD,
 ): ViewportRect {
+  const rawTop = cached.top - scrollY;
+  const rawLeft = cached.left - scrollX;
+  let top = rawTop - pad;
+  let left = rawLeft - pad;
+  let width = cached.width + pad * 2;
+  let height = cached.height + pad * 2;
+
+  // Cap huge chapter targets so the dialog always has undimmed room beside
+  // or below a readable focus band (Find map / Side by side wrappers).
+  const maxHeight = Math.max(160, Math.round(viewportHeight * 0.44));
+  const maxWidth = Math.max(280, Math.round(viewportWidth * 0.7));
+  if (height > maxHeight) {
+    const focusOffset = Math.round((cached.height - (maxHeight - pad * 2)) * 0.12);
+    top = rawTop + focusOffset - pad;
+    height = maxHeight;
+  }
+  if (width > maxWidth) {
+    left = rawLeft - pad;
+    width = maxWidth;
+  }
+
   return {
-    top: Math.max(8, cached.top - scrollY - pad),
-    left: Math.max(8, cached.left - scrollX - pad),
-    width: Math.min(viewportWidth - 16, cached.width + pad * 2),
-    height: Math.min(viewportHeight - 16, cached.height + pad * 2),
+    top: Math.max(8, top),
+    left: Math.max(8, left),
+    width: Math.min(viewportWidth - 16, width),
+    height: Math.min(viewportHeight - 16, height),
   };
 }
 

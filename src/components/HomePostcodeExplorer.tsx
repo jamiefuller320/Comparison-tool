@@ -425,7 +425,7 @@ export function HomePostcodeExplorer({
             setActiveTile("postcode");
             setRawPostcode(TOUR_DEMO_POSTCODE);
             await Promise.race([
-              lookup(TOUR_DEMO_POSTCODE, { advanceToStages: true }),
+              lookup(TOUR_DEMO_POSTCODE, { advanceToStages: false }),
               new Promise((_, reject) =>
                 window.setTimeout(
                   () => reject(new Error("postcode lookup timeout")),
@@ -433,6 +433,8 @@ export function HomePostcodeExplorer({
                 ),
               ),
             ]);
+            // Keep the postcode tile open so the walkthrough can spotlight it.
+            setActiveTile("postcode");
             completeTourDemo(requestId, true);
           } catch {
             completeTourDemo(requestId, false);

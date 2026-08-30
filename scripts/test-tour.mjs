@@ -203,6 +203,38 @@ async function main() {
     process.exit(1);
   }
 
+  // Huge chapter wrapper — spotlight should clamp so a dialog can sit clear.
+  const hugeCached = {
+    target: "nearby",
+    top: 200,
+    left: 40,
+    width: 1200,
+    height: 900,
+  };
+  const capped = viewportRectFromCache(hugeCached, 0, 0, 1280, 800, 10);
+  if (capped.height > 800 * 0.5) {
+    console.error("FAIL viewportRectFromCache should clamp tall targets", capped);
+    process.exit(1);
+  }
+  const cappedCard = placeTourCard(capped, 1280, 800, 360, 260);
+  const cappedOverlap = rectOverlapArea(
+    {
+      top: cappedCard.top,
+      left: cappedCard.left,
+      width: 360,
+      height: 260,
+    },
+    capped,
+  );
+  if (cappedOverlap > 8000) {
+    console.error("FAIL capped spotlight still heavily covered", {
+      capped,
+      cappedCard,
+      cappedOverlap,
+    });
+    process.exit(1);
+  }
+
   const card = placeTourCard(view, 1280, 800);
   if (card.top < 16 || card.left < 16) {
     console.error("FAIL placeTourCard", card);

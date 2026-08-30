@@ -264,16 +264,18 @@ export function ProductTour() {
 
   const step = steps[index] ?? null;
 
-  // Prefetch-mount the next journey chapter while this step is idle.
+  // Prefetch-mount the next *different* journey chapter while this step is idle.
   useEffect(() => {
     if (!open || busy) return;
-    const next = steps[index + 1];
-    if (!next) {
-      requestTourWarmChapter(null);
-      return;
+    let warm: (typeof TOUR_TARGET_CHAPTER)[string] | null = null;
+    for (let i = index + 1; i < steps.length; i++) {
+      const ch = TOUR_TARGET_CHAPTER[steps[i].target];
+      if (ch && ch !== chapterRef.current) {
+        warm = ch;
+        break;
+      }
     }
-    const nextChapter = TOUR_TARGET_CHAPTER[next.target] ?? null;
-    requestTourWarmChapter(nextChapter);
+    requestTourWarmChapter(warm);
   }, [open, busy, steps, index]);
 
   useEffect(() => {
