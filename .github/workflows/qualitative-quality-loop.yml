@@ -1,13 +1,14 @@
 name: Qualitative quality loop
 
 # Corpus cleanup separate from coverage ingest:
-# analyse → heuristic QA over the full sidecar → merge → digest.
-# Rule improvements (filters / learned phrases) re-apply here without recrawl.
+# analyse → full apply when the learned-QA library changed significantly
+# (or weekly max-age / --force) → merge → digest.
+# Unchanged learning days write an analyse-only digest (no sidecar churn).
 on:
   workflow_dispatch:
     inputs:
       limit:
-        description: Max suspect schools to review (default full sidecar)
+        description: Max suspect schools to review (raised to all suspects on learning-triggered apply)
         required: false
         default: "250"
       min_score:
@@ -18,6 +19,11 @@ on:
         description: QA reviewer — none (free) or cursor/auto/openai
         required: false
         default: "none"
+      force:
+        description: Force full apply even when learning library unchanged
+        required: false
+        type: boolean
+        default: false
       dry_run:
         description: Analyse + digest only (no apply)
         required: false
@@ -54,6 +60,7 @@ jobs:
           LIMIT: ${{ github.event.inputs.limit || '250' }}
           MIN_SCORE: ${{ github.event.inputs.min_score || '1.5' }}
           QA_PROVIDER: ${{ github.event.inputs.qa_provider || 'none' }}
+          FORCE: ${{ github.event.inputs.force || 'false' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -64,6 +71,9 @@ jobs:
             --min-score "$MIN_SCORE"
             --provider "$QA_PROVIDER"
           )
+          if [ "$FORCE" = "true" ]; then
+            ARGS+=(--force)
+          fi
           if [ "$DRY_RUN" = "true" ]; then
             ARGS+=(--dry-run)
           fi

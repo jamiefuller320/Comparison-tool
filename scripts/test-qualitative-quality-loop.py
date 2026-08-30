@@ -28,6 +28,10 @@ def main() -> int:
     assert payload.get("provider") == "none"
     assert "before" in payload
     assert "suspectCount" in payload["before"]
+    trigger = payload.get("trigger") or {}
+    assert "shouldApply" in trigger
+    assert "reason" in trigger
+    assert "fingerprint" in trigger
     digest = ROOT / "public" / "data" / "packs" / "qualitative-quality-loop-latest.json"
     assert digest.is_file()
     print("OK qualitative-quality-loop dry-run")

@@ -9,8 +9,10 @@ Policy: coverage first, quality at minimum cost.
   - Default provider is none (free deterministic narratives).
   - Auto scope: GIAS website enrich, then pick the LA (Hampshire seed or a
     ready pack) with the most remaining website-bearing schools.
-  - Parallel streams: Hampshire seed + Dorset + East Sussex by default when
-    --parallel-las is set (separate partial sidecars, then merge).
+  - Parallel streams: Hampshire seed + preferred pack LAs (Dorset / East Sussex
+    by default). When a stream's website pool is exhausted, that slot advances
+    to the ready pack with the largest remaining website pool (not already
+    claimed by another stream).
   - Skip-existing is the default (pass --no-skip-existing to recapture).
   - Stale re-screens use ETag / Last-Modified / content-hash and reuse
     unchanged pages (default: 28-day TTL, daily refresh budget).
@@ -211,6 +213,94 @@ def parse_parallel_las(raw: str) -> list[str]:
         seen.add(key)
         out.append(la)
     return out
+
+
+def _la_key(la: str) -> str:
+    return normalize_la_name(la).lower()
+
+
+def select_parallel_stream_targets(
+    preferred: list[str],
+    *,
+    known: set[str],
+    advance: bool = True,
+    resolve_index=None,
+    remaining_fn=None,
+    all_targets: list[tuple[str, Path]] | None = None,
+) -> tuple[list[tuple[str, Path, int]], list[str]]:
+    """Resolve parallel stream slots, advancing exhausted preferred LAs.
+
+    Each preferred LA keeps its slot while it still has website work. When a
+    slot is exhausted and ``advance`` is true, replace it with the ready pack
+    (or seed) that has the largest remaining website pool and is not already
+    claimed by another stream. Exhausted preferred LAs are retained only when
+    nothing else remains (stale-refresh / allow-empty fallback).
+
+    Returns ``(stream_targets, notes)``.
+    """
+    resolve = resolve_index or resolve_la_index
+    remaining = remaining_fn or (
+        lambda path, la, known_urns: remaining_with_website(
+            path, la=la, known=known_urns
+        )
+    )
+    notes: list[str] = []
+    ordered = [normalize_la_name(la) for la in preferred if normalize_la_name(la)]
+    if not ordered:
+        return [], notes
+
+    claimed: set[str] = set()
+    streams: list[tuple[str, Path, int]] = []
+
+    catalog = all_targets if all_targets is not None else list_targets()
+    scored = []
+    for la, path in catalog:
+        n = remaining(path, la, known)
+        scored.append((n, la, path))
+    scored.sort(
+        key=lambda t: (
+            -t[0],
+            normalize_la_name(t[1]) != normalize_la_name(SEED_LOCAL_AUTHORITY),
+            t[1],
+        )
+    )
+
+    def _pick_next() -> tuple[str, Path, int] | None:
+        for n, la, path in scored:
+            if n <= 0:
+                continue
+            if _la_key(la) in claimed:
+                continue
+            return la, path, n
+        return None
+
+    for preferred_la in ordered:
+        la, index_path = resolve(preferred_la)
+        rem = remaining(index_path, la, known)
+        if rem > 0 or not advance:
+            streams.append((la, index_path, rem))
+            claimed.add(_la_key(la))
+            continue
+
+        replacement = _pick_next()
+        if replacement is None:
+            streams.append((la, index_path, rem))
+            claimed.add(_la_key(la))
+            notes.append(
+                f"Stream preferred={preferred_la} exhausted "
+                f"(remaining=0); no replacement LA with website work."
+            )
+            continue
+
+        next_la, next_path, next_rem = replacement
+        streams.append((next_la, next_path, next_rem))
+        claimed.add(_la_key(next_la))
+        notes.append(
+            f"Stream preferred={preferred_la} exhausted (remaining=0); "
+            f"advanced to {next_la} (remaining={next_rem})."
+        )
+
+    return streams, notes
 
 
 def enrich_websites() -> None:
@@ -479,6 +569,16 @@ def main(argv: list[str] | None = None) -> int:
         help="When using parallel streams, also capture the Hampshire seed (default: true)",
     )
     parser.add_argument(
+        "--advance-streams",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "When a preferred parallel-stream LA has no remaining website work, "
+            "advance that slot to the ready pack with the largest remaining pool "
+            "(default: true)"
+        ),
+    )
+    parser.add_argument(
         "--limit",
         type=int,
         default=DEFAULT_CAPTURE_LIMIT,
@@ -567,10 +667,12 @@ def main(argv: list[str] | None = None) -> int:
             if normalize_la_name(la) == normalize_la_name(SEED_LOCAL_AUTHORITY):
                 continue
             ordered.append(la)
-        for la in ordered:
-            resolved_la, index_path = resolve_la_index(la)
-            remaining = remaining_with_website(index_path, la=resolved_la, known=known)
-            stream_targets.append((resolved_la, index_path, remaining))
+        stream_targets, advance_notes = select_parallel_stream_targets(
+            ordered,
+            known=known,
+            advance=bool(args.advance_streams),
+        )
+        notes.extend(advance_notes)
     else:
         la, index_path, remaining = pick_target(
             scope=args.scope, la_arg=args.la, known=known
@@ -611,6 +713,7 @@ def main(argv: list[str] | None = None) -> int:
             "skipExisting": skip_existing,
             "refreshStaleDays": args.refresh_stale_days,
             "refreshLimit": args.refresh_limit,
+            "advanceStreams": bool(args.advance_streams) if use_parallel else False,
             "sidecarBefore": before,
             "sidecarAfter": before,
             "streams": streams,
@@ -635,17 +738,37 @@ def main(argv: list[str] | None = None) -> int:
         notes.append("Enriched schoolWebsite from GIAS (seed + ready packs).")
         enrich_websites()
 
-    # Recompute remaining after website enrich.
-    refreshed_targets: list[tuple[str, Path, int]] = []
+    # Re-resolve streams after website enrich (new websites may unlock pools,
+    # and advance decisions should use the freshest remaining counts).
     known = processed_urns()
-    for la, index_path, _ in stream_targets:
-        remaining = remaining_with_website(index_path, la=la, known=known)
-        refreshed_targets.append((la, index_path, remaining))
+    if use_parallel:
+        ordered = []
+        if args.include_seed:
+            ordered.append(SEED_LOCAL_AUTHORITY)
+        for la in parallel_las:
+            if normalize_la_name(la) == normalize_la_name(SEED_LOCAL_AUTHORITY):
+                continue
+            ordered.append(la)
+        stream_targets, advance_notes = select_parallel_stream_targets(
+            ordered,
+            known=known,
+            advance=bool(args.advance_streams),
+        )
+        for note in advance_notes:
+            if note not in notes:
+                notes.append(note)
+    else:
+        refreshed: list[tuple[str, Path, int]] = []
+        for la, index_path, _ in stream_targets:
+            remaining = remaining_with_website(index_path, la=la, known=known)
+            refreshed.append((la, index_path, remaining))
+        stream_targets = refreshed
+
+    for la, index_path, remaining in stream_targets:
         notes.append(
             f"Stream LA={la} index={index_path.relative_to(ROOT)} "
             f"remainingWithWebsite={remaining}."
         )
-    stream_targets = refreshed_targets
 
     stream_results: list[dict[str, Any]] = []
     partial_paths: list[Path] = []
@@ -865,6 +988,7 @@ def main(argv: list[str] | None = None) -> int:
         "skipExisting": skip_existing,
         "refreshStaleDays": args.refresh_stale_days,
         "refreshLimit": args.refresh_limit,
+        "advanceStreams": bool(args.advance_streams) if use_parallel else False,
         "sidecarBefore": before,
         "sidecarAfter": after,
         "streams": stream_results,
