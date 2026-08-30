@@ -1,27 +1,28 @@
-# Qualitative quality loop — 2026-08-29T14:54:55.187367+00:00
+# Qualitative quality loop — 2026-08-30T14:38:42.827824+00:00
 
 - Mode: `apply`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
 - Records: `971`
-- Suspects before → after: `20` → `11`
-- QA reviewed / changed: `20` / `9`
-- Findings applied: `9`
+- Suspects before → after: `11` → `11`
+- QA reviewed / changed: `11` / `0`
+- Findings applied: `0`
 - Learned phrases added: `0`
-- Merged to index: `True`
+- Merged to index: `False`
+- Apply trigger: `no prior apply fingerprint (first full apply)`
 
 ## Top flag counts (before)
 
-- `chrome`: 9
 - `implausible_offerings`: 7
 - `admissions`: 4
 
 ## Notes
 
 - Rebalanced learned QA phrases: active=600 candidates=703.
-- Before: 20 suspects across 971 records.
-- Applied QA fixes to 9 school(s) (9 area finding(s)).
-- Learned 0 new junk phrase(s) (store size 600).
-- Reviewed top 20 suspect(s); provider=none.
-- Merged cleaned sidecar into schools-index.
+- Learning fingerprint: {'phraseHash': '964b6592c16faab8e4b9', 'phraseCount': 600, 'candidateCount': 703, 'eventCount': 2931, 'updatedAt': '2026-08-30'}
+- Apply decision: no prior apply fingerprint (first full apply)
+- Before: 11 suspects across 971 records.
+- Reviewed top 11 suspect(s); provider=none.
+- No schools changed — merge skipped.
 - After: 11 suspects across 971 records.
+- Updated output/learned-qa-apply-state.json
