@@ -53,6 +53,8 @@ export function HeroSetupTiles({
     const now = completed[activeId];
     prevCompleted.current = { ...prevCompleted.current, ...completed };
     if (!now || was) return;
+    // Live walkthrough drives tiles itself — don't steal the spotlight.
+    if (document.documentElement.classList.contains("tour-running")) return;
     const order = TILE_ORDER.filter((id) => children[id] != null);
     const idx = order.indexOf(activeId);
     const next = order[idx + 1];
