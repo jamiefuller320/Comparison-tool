@@ -45,6 +45,16 @@ import { ProductTour } from "@/components/ProductTour";
 import { ProductFeedbackPrompt } from "@/components/ProductFeedbackPrompt";
 import { contextHeadlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
+  TOUR_DEMO_EVENT,
+  completeTourDemo,
+  type TourDemoRequestDetail,
+} from "@/lib/tourDemo";
+import {
+  TOUR_WARM_CHAPTER_EVENT,
+  type TourWarmChapterDetail,
+} from "@/lib/tour";
+import type { JourneyChapterId } from "@/components/JourneyChapterContext";
+import {
   listAvailableComparePaths,
   pathsWithShortlistItems,
   pickDefaultComparePath,
@@ -91,11 +101,6 @@ import {
   type ProvisionFilterId,
 } from "@/lib/provisionFilter";
 import { scrollToHomeSection } from "@/lib/inPageNav";
-import {
-  TOUR_DEMO_EVENT,
-  completeTourDemo,
-  type TourDemoRequestDetail,
-} from "@/lib/tourDemo";
 import {
   childminderConsentStamp,
   eyfspStamp,
@@ -169,6 +174,25 @@ export function CompareApp({
   onEnsureUrnCoverage?: (urns: string[]) => Promise<void>;
 }) {
   const { chapter, setChapter } = useJourneyChapter();
+  const [warmChapter, setWarmChapter] = useState<JourneyChapterId | null>(null);
+
+  useEffect(() => {
+    function onWarm(event: Event) {
+      const detail = (event as CustomEvent<TourWarmChapterDetail>).detail;
+      const next = detail?.chapter ?? null;
+      setWarmChapter(
+        next && next !== chapter ? (next as JourneyChapterId) : null,
+      );
+    }
+    window.addEventListener(TOUR_WARM_CHAPTER_EVENT, onWarm);
+    return () => window.removeEventListener(TOUR_WARM_CHAPTER_EVENT, onWarm);
+  }, [chapter]);
+
+  // Drop a warm sheet once it becomes the live chapter.
+  useEffect(() => {
+    setWarmChapter((prev) => (prev && prev === chapter ? null : prev));
+  }, [chapter]);
+
   const byUrn = useMemo(() => {
     const map = new Map(index.schools.map((s) => [s.urn, s]));
     for (const provider of eyIndex?.providers ?? []) {
@@ -1135,16 +1159,49 @@ export function CompareApp({
 
           const howSheet = <UnderstandChapter />;
 
-          const sheet =
-            chapter === "setup"
-              ? setupSheet
-              : chapter === "nearby"
-                ? nearbySheet
-                : chapter === "compare"
-                  ? compareSheet
-                  : chapter === "side-by-side"
-                    ? sideBySideSheet
-                    : howSheet;
+          const sheetFor = (id: JourneyChapterId) => {
+            switch (id) {
+              case "setup":
+                return setupSheet;
+              case "nearby":
+                return nearbySheet;
+              case "compare":
+                return compareSheet;
+              case "side-by-side":
+                return sideBySideSheet;
+              case "how":
+                return howSheet;
+            }
+          };
+
+          const warm =
+            warmChapter && warmChapter !== chapter ? warmChapter : null;
+          const mounted: JourneyChapterId[] = warm
+            ? [chapter, warm]
+            : [chapter];
+
+          const sheet = (
+            <div className="tour-sheet-stack">
+              {mounted.map((id) => {
+                const isActive = id === chapter;
+                return (
+                  <div
+                    key={id}
+                    className={
+                      isActive
+                        ? "tour-sheet-slot is-active"
+                        : "tour-sheet-slot is-warm"
+                    }
+                    data-tour-sheet={id}
+                    aria-hidden={isActive ? undefined : true}
+                    inert={isActive ? undefined : true}
+                  >
+                    {sheetFor(id)}
+                  </div>
+                );
+              })}
+            </div>
+          );
 
           return <JourneyStageFrame sheet={sheet} />;
         }}
