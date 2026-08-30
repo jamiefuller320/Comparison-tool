@@ -1,7 +1,9 @@
 name: Qualitative capture loop
 
 # Coverage-first, min-cost quality (region expansion):
-# - Daily: GIAS website enrich → parallel streams (Hampshire + Dorset + East Sussex)
+# - Daily: GIAS website enrich → parallel streams (Hampshire + preferred packs)
+# - Exhausted stream slots advance to the ready pack with the largest remaining
+#   website pool (default --advance-streams)
 # - 60 new website-bearing schools per stream + free deterministic narratives
 # - Stale re-screens: larger daily budget via ETag / Last-Modified / content-hash
 # - Heuristic QA on worst suspects (default; optional Cursor/OpenAI via dispatch)
@@ -15,7 +17,7 @@ on:
         required: false
         default: "60"
       scope:
-        description: auto | seed | la | parallel (default parallel = Hampshire + Dorset + East Sussex)
+        description: auto | seed | la | parallel (default parallel = seed + preferred packs, advancing when exhausted)
         required: false
         default: "parallel"
       la:
@@ -23,7 +25,7 @@ on:
         required: false
         default: "Hampshire"
       parallel_las:
-        description: Pipe-separated pack LAs for parallel streams (with seed)
+        description: Preferred pack LAs for parallel streams (with seed); exhausted slots advance
         required: false
         default: "Dorset|East Sussex"
       refresh_stale_days:
@@ -108,6 +110,7 @@ jobs:
             --synthesize-provider "$SYNTH"
             --qa-limit "$QA_LIMIT"
             --qa-provider "$QA_PROVIDER"
+            --advance-streams
           )
           if [ -n "$PARALLEL_LAS" ]; then
             ARGS+=(--parallel-las "$PARALLEL_LAS")

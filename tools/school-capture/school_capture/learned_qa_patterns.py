@@ -409,6 +409,67 @@ def phrase_matches_learned(text: str, path: Path | None = None) -> bool:
     return False
 
 
+def learning_library_fingerprint(path: Path | None = None) -> dict[str, Any]:
+    """Stable fingerprint of the active learned-QA phrase set + event count."""
+    import hashlib
+
+    store = load_learned_qa_patterns(path)
+    phrases = sorted(str(p) for p in (store.get("phrases") or []) if p)
+    digest = hashlib.sha256("\n".join(phrases).encode("utf-8")).hexdigest()[:20]
+    return {
+        "phraseHash": digest,
+        "phraseCount": len(phrases),
+        "candidateCount": int(store.get("candidateCount") or len(phrases)),
+        "eventCount": int(store.get("eventCount") or 0),
+        "updatedAt": store.get("updatedAt"),
+    }
+
+
+def learning_change_is_significant(
+    previous: dict[str, Any] | None,
+    current: dict[str, Any],
+    *,
+    min_event_delta: int = 15,
+    min_phrase_delta: int = 5,
+) -> tuple[bool, str]:
+    """Decide whether the learning library changed enough to warrant full re-apply.
+
+    Significant when:
+    - no prior apply state (first run)
+    - active phrase set hash changed and |phraseCount delta| >= min_phrase_delta
+      (or any hash change when prior phraseCount was 0)
+    - eventCount grew by at least min_event_delta
+    """
+    if not previous:
+        return True, "no prior apply fingerprint (first full apply)"
+
+    prev_events = int(previous.get("eventCount") or 0)
+    curr_events = int(current.get("eventCount") or 0)
+    event_delta = curr_events - prev_events
+    if event_delta >= min_event_delta:
+        return True, f"eventCount +{event_delta} (>= {min_event_delta})"
+
+    prev_hash = str(previous.get("phraseHash") or "")
+    curr_hash = str(current.get("phraseHash") or "")
+    prev_phrases = int(previous.get("phraseCount") or 0)
+    curr_phrases = int(current.get("phraseCount") or 0)
+    phrase_delta = abs(curr_phrases - prev_phrases)
+    if prev_hash != curr_hash:
+        if prev_phrases == 0 or phrase_delta >= min_phrase_delta:
+            return (
+                True,
+                f"active phrase set changed (hash {prev_hash[:8]}→{curr_hash[:8]}, "
+                f"phraseCount {prev_phrases}→{curr_phrases})",
+            )
+        return (
+            False,
+            f"active phrase hash changed but phraseCount delta {phrase_delta} "
+            f"< {min_phrase_delta} (treat as minor rebalance)",
+        )
+
+    return False, "learning library unchanged since last apply"
+
+
 def rebalance_learned_qa_patterns(path: Path | None = None) -> dict[str, Any]:
     """Rewrite store with current selection rules (unlocks orphaned byClass)."""
     store = load_learned_qa_patterns(path)
