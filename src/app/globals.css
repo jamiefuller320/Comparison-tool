@@ -5438,8 +5438,8 @@ html:has(.page-chapter-nav) .compare-table-controls {
 .tour-backdrop {
   position: absolute;
   inset: 0;
-  /* Lighter fallback dim — used only before a spotlight cutout exists. */
-  background: rgba(20, 35, 58, 0.28);
+  /* Soft fallback dim — used only before a spotlight cutout exists. */
+  background: rgba(20, 35, 58, 0.22);
   pointer-events: auto;
 }
 
@@ -5451,11 +5451,11 @@ html:has(.page-chapter-nav) .compare-table-controls {
 .tour-spotlight {
   position: fixed;
   border-radius: 14px;
-  /* Hole is undimmed page; ring + outer shade explain the feature clearly. */
+  /* Hole is undimmed page; light outer shade keeps surrounding context readable. */
   background: transparent;
   box-shadow:
     0 0 0 3px rgba(255, 247, 239, 0.98),
-    0 0 0 9999px rgba(20, 35, 58, 0.34);
+    0 0 0 9999px rgba(20, 35, 58, 0.26);
   pointer-events: none;
   /* Instant updates — animated transitions fought scroll and felt laggy. */
   transition: none;
