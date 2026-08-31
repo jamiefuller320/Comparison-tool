@@ -1,7 +1,7 @@
 {
-  "ranAt": "2026-08-30T14:38:42.827824+00:00",
+  "ranAt": "2026-08-31T17:21:36.134930+00:00",
   "dryRun": false,
-  "mode": "apply",
+  "mode": "skip",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
@@ -202,39 +202,36 @@
     ]
   },
   "qa": {
-    "reviewed": 11,
+    "reviewed": 0,
     "changedSchools": 0,
     "findingsApplied": 0,
-    "learningAdded": 0,
-    "provider": "none"
+    "learningAdded": 0
   },
   "merged": false,
   "trigger": {
-    "shouldApply": true,
-    "reason": "no prior apply fingerprint (first full apply)",
-    "fingerprintBefore": {
+    "shouldApply": false,
+    "reason": "learning library unchanged since last apply",
+    "fingerprint": {
+      "phraseHash": "964b6592c16faab8e4b9",
+      "phraseCount": 600,
+      "candidateCount": 703,
+      "eventCount": 2931,
+      "updatedAt": "2026-08-31"
+    },
+    "prior": {
       "phraseHash": "964b6592c16faab8e4b9",
       "phraseCount": 600,
       "candidateCount": 703,
       "eventCount": 2931,
       "updatedAt": "2026-08-30"
     },
-    "fingerprintAfter": {
-      "phraseHash": "964b6592c16faab8e4b9",
-      "phraseCount": 600,
-      "candidateCount": 703,
-      "eventCount": 2931,
-      "updatedAt": "2026-08-30"
-    }
+    "priorAppliedAt": "2026-08-30T14:38:42.827538+00:00"
   },
   "notes": [
     "Rebalanced learned QA phrases: active=600 candidates=703.",
-    "Learning fingerprint: {'phraseHash': '964b6592c16faab8e4b9', 'phraseCount': 600, 'candidateCount': 703, 'eventCount': 2931, 'updatedAt': '2026-08-30'}",
-    "Apply decision: no prior apply fingerprint (first full apply)",
+    "Learning fingerprint: {'phraseHash': '964b6592c16faab8e4b9', 'phraseCount': 600, 'candidateCount': 703, 'eventCount': 2931, 'updatedAt': '2026-08-31'}",
+    "Apply decision: learning library unchanged since last apply",
     "Before: 11 suspects across 971 records.",
-    "Reviewed top 11 suspect(s); provider=none.",
-    "No schools changed — merge skipped.",
-    "After: 11 suspects across 971 records.",
-    "Updated output/learned-qa-apply-state.json"
+    "Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest."
   ]
 }
