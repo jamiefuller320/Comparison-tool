@@ -8,6 +8,7 @@ import io
 import json
 import os
 import subprocess
+import sys
 import tarfile
 import tempfile
 from datetime import UTC, datetime
@@ -22,6 +23,7 @@ def load_mod():
     spec = importlib.util.spec_from_file_location("code_data_backup", path)
     assert spec and spec.loader
     mod = importlib.util.module_from_spec(spec)
+    sys.modules["code_data_backup"] = mod
     spec.loader.exec_module(mod)
     return mod
 
@@ -195,16 +197,17 @@ def test_deliver_cli_updates_json_with_upload(tmp_path: Path) -> None:
     with patch.object(backup.shutil, "which", lambda name: "/usr/bin/aws"):
         with patch.object(backup.subprocess, "run", lambda cmd, check=True: None):
             with patch.dict(os.environ, {"BACKUP_S3_URI": "s3://bucket/prefix/"}):
-                rc = backup.main(
-                    [
-                        "deliver",
-                        "--from-json",
-                        str(payload_path),
-                        "--upload",
-                        "--upload-monthly",
-                        "--json",
-                    ]
-                )
+                with patch("sys.stdout", new_callable=__import__("io").StringIO):
+                    rc = backup.main(
+                        [
+                            "deliver",
+                            "--from-json",
+                            str(payload_path),
+                            "--upload",
+                            "--upload-monthly",
+                            "--json",
+                        ]
+                    )
     assert rc == 0
     saved = json.loads(payload_path.read_text(encoding="utf-8"))
     assert saved["upload"]["uploaded"] is True
@@ -216,16 +219,17 @@ def test_deliver_cli_updates_json_with_upload(tmp_path: Path) -> None:
 def test_snapshot_cli_json(tmp_path: Path) -> None:
     backup = load_mod()
     repo = _mini_repo(tmp_path)
-    rc = backup.main(
-        [
-            "snapshot",
-            "--json",
-            "--repo-root",
-            str(repo),
-            "--backup-dir",
-            str(tmp_path / "backups"),
-        ]
-    )
+    with patch("sys.stdout", new_callable=__import__("io").StringIO):
+        rc = backup.main(
+            [
+                "snapshot",
+                "--json",
+                "--repo-root",
+                str(repo),
+                "--backup-dir",
+                str(tmp_path / "backups"),
+            ]
+        )
     assert rc == 0
     listed = backup.list_local_snapshots(tmp_path / "backups")
     assert listed
