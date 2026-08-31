@@ -90,6 +90,10 @@ npm run loop:seo-coverage -- --max-new-areas 4
 
 Phases and budget-tuning notes live under **Continuous SEO coverage automation** in `DEFERRED_IDEAS.md`.
 
+### Weekly code + data backup
+
+Sunday 13:00 UTC (`code-data-backup.yml`) snapshots `src` / `scripts` / `tools` / `.github` plus `public/` and `output/` (excluding `output/backups` and qualitative partials), embeds a git bundle, keeps a 90-day Actions artifact, and uploads to `{BACKUP_S3_URI}/school-compass/` using the same AWS secrets as Value Investor. S3 is optional; the artifact is the guaranteed off-repo copy. `npm run backup:weekly` / `npm run test:backup` locally.
+
 Soft-launch qualitative target (guideline, not a hard CI gate):
 
 - Mainstream state primaries with precis ≳ 70%

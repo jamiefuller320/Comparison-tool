@@ -246,6 +246,25 @@ Writes:
 - `public/data/harvest-summary.json` — run stats
 - `public/data/ks2-history/` — multi-year KS2 archive (`meta.json` + `uXX.json` shards), from the same Compare school performance CSV downloads used by Bartley
 
+## Weekly code and data backup
+
+Sunday **13:00 UTC** (`code-data-backup.yml`) snapshots application code plus harvested datasets into `output/backups/` (gitignored), stores a 90-day GitHub Actions artifact, and uploads to S3 when the same secrets as [Value Investor](https://github.com/jamiefuller320/value_investor) are set on this repo:
+
+| Secret | Role |
+| --- | --- |
+| `BACKUP_S3_URI` | Bucket prefix (e.g. `s3://my-bucket/backups/`) |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | Existing IAM user |
+| `AWS_DEFAULT_REGION` | e.g. `eu-west-2` |
+
+Objects land under `{BACKUP_S3_URI}/school-compass/` (weekly timestamped archives) and `{BACKUP_S3_URI}/school-compass/monthly/` (one pin per calendar month). Missing S3 secrets skip upload; the Actions artifact still lands. Manual run: Actions → **Weekly code and data backup**.
+
+```bash
+npm run backup:weekly          # local tarball + git bundle
+npm run test:backup
+python3 scripts/code_data_backup.py verify output/backups/school-compass-….tar.gz
+python3 scripts/code_data_backup.py restore output/backups/school-compass-….tar.gz --dry-run
+```
+
 ## Stack
 
 Next.js (static export) · TypeScript · Tailwind CSS · Recharts · GitHub Pages · DfE EES API · CSP KS2 downloads
