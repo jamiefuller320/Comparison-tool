@@ -90,6 +90,8 @@
     "test:share-comparison": "npx --yes tsx scripts/test-share-comparison.mjs",
     "test:provision-nav": "npx --yes tsx scripts/test-provision-nav.mjs",
     "test:product-feedback": "npx --yes tsx scripts/test-product-feedback.mjs",
+    "backup:weekly": "python3 scripts/code_data_backup.py snapshot --include-git",
+    "test:backup": "python3 scripts/test-code-data-backup.py",
     "digest:feedback": "python3 scripts/digest-product-feedback.py",
     "qa:human-flags": "python3 scripts/record-human-qa-flags.py"
   },
