@@ -1,4 +1,4 @@
-# Qualitative quality loop — 2026-08-31T17:21:36.134930+00:00
+# Qualitative quality loop — 2026-09-01T14:28:00.470897+00:00
 
 - Mode: `skip`
 - Provider: `none`
@@ -19,7 +19,7 @@
 ## Notes
 
 - Rebalanced learned QA phrases: active=600 candidates=703.
-- Learning fingerprint: {'phraseHash': '964b6592c16faab8e4b9', 'phraseCount': 600, 'candidateCount': 703, 'eventCount': 2931, 'updatedAt': '2026-08-31'}
+- Learning fingerprint: {'phraseHash': '964b6592c16faab8e4b9', 'phraseCount': 600, 'candidateCount': 703, 'eventCount': 2931, 'updatedAt': '2026-09-01'}
 - Apply decision: learning library unchanged since last apply
 - Before: 11 suspects across 971 records.
 - Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest.
