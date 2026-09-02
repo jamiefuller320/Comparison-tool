@@ -51,6 +51,8 @@ resolve_digest_conflicts() {
 # Merge may rewrite URN shards after git add; amend them onto the loop commit.
 ensure_clean_for_rebase() {
   git add -A output public/data/schools-index.json public/data/packs public/data/qualitative
+  # Never re-stage the working monolith sidecar (gitignored; >100MB risk).
+  git reset -q HEAD -- output/qualitative-capture.json 2>/dev/null || true
   if ! git diff --cached --quiet; then
     git commit --amend --no-edit
   fi

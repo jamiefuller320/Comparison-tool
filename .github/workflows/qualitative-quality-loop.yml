@@ -83,7 +83,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Shards under public/data/qualitative are the source of truth;
+          # output/qualitative-capture.json is a working copy (gitignored) and
+          # must not be committed (it exceeds GitHub's 100MB limit).
           git add -A output public/data/schools-index.json public/data/packs public/data/qualitative
+          git reset -q HEAD -- output/qualitative-capture.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No qualitative quality loop changes"
           else

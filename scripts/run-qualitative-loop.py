@@ -59,6 +59,7 @@ from seed_scope import (  # noqa: E402
 
 DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 DEFAULT_CAPTURE = ROOT / "output" / "qualitative-capture.json"
+DEFAULT_SHARDS = ROOT / "public" / "data" / "qualitative"
 DEFAULT_LEARNED = ROOT / "output" / "learned-url-terms.json"
 DEFAULT_QA_LEARNED = ROOT / "output" / "learned-qa-patterns.json"
 DEFAULT_PROGRESS = ROOT / "output" / "qualitative-progress.json"
@@ -648,8 +649,22 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     skip_existing = not args.no_skip_existing
-    before = capture_count(DEFAULT_CAPTURE)
     notes: list[str] = []
+    sys.path.insert(0, str(CAPTURE_ROOT))
+    from school_capture.sidecar import ensure_capture_sidecar
+
+    hydrate = ensure_capture_sidecar(DEFAULT_CAPTURE, DEFAULT_SHARDS)
+    if hydrate.get("hydrated"):
+        notes.append(
+            "Hydrated working sidecar from "
+            f"{hydrate.get('shardCount', 0)} published URN shards "
+            f"(prior={hydrate.get('priorSchoolCount', 0)} → "
+            f"{hydrate.get('schoolCount', 0)})."
+        )
+    elif hydrate.get("reason") == "no-shards" and not DEFAULT_CAPTURE.is_file():
+        notes.append("No published shards or working sidecar yet — starting empty.")
+
+    before = capture_count(DEFAULT_CAPTURE)
 
     parallel_las = parse_parallel_las(args.parallel_las)
     if args.scope == "parallel" and not parallel_las:

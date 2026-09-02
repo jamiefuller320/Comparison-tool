@@ -39,11 +39,15 @@ from school_capture.learned_qa_patterns import (  # noqa: E402
     rebalance_learned_qa_patterns,
 )
 from school_capture.qa_heuristics import rank_suspects  # noqa: E402
-from school_capture.sidecar import load_capture_index  # noqa: E402
+from school_capture.sidecar import (  # noqa: E402
+    ensure_capture_sidecar,
+    load_capture_index,
+)
 from seed_scope import PACKS_ROOT_REL  # noqa: E402
 
 DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 DEFAULT_CAPTURE = ROOT / "output" / "qualitative-capture.json"
+DEFAULT_SHARDS = ROOT / "public" / "data" / "qualitative"
 DEFAULT_LEARNED = ROOT / "output" / "learned-qa-patterns.json"
 APPLY_STATE = ROOT / "output" / "learned-qa-apply-state.json"
 QA_DIGEST_JSON = ROOT / "public" / "data" / "packs" / "qualitative-qa-latest.json"
@@ -267,6 +271,17 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     notes: list[str] = []
+    hydrate = ensure_capture_sidecar(DEFAULT_CAPTURE, DEFAULT_SHARDS)
+    if hydrate.get("hydrated"):
+        notes.append(
+            "Hydrated working sidecar from "
+            f"{hydrate.get('shardCount', 0)} published URN shards "
+            f"(prior={hydrate.get('priorSchoolCount', 0)} → "
+            f"{hydrate.get('schoolCount', 0)})."
+        )
+    elif not DEFAULT_CAPTURE.is_file():
+        notes.append("No working sidecar and no shards to hydrate — nothing to clean.")
+
     if DEFAULT_LEARNED.is_file() and not args.dry_run:
         try:
             balanced = rebalance_learned_qa_patterns(DEFAULT_LEARNED)
