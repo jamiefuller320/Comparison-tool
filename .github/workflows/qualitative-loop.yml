@@ -124,6 +124,8 @@ jobs:
           python3 scripts/run-qualitative-loop.py "${ARGS[@]}"
 
       - name: Commit qualitative data + digest
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -131,7 +133,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No qualitative loop changes"
           else
-            if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
+            if [ "$DRY_RUN" = "true" ]; then
               MSG="Qualitative loop dry-run digest"
             else
               MSG="Qualitative loop: parallel coverage capture"

@@ -70,10 +70,12 @@ jobs:
 
       - name: Build LA pack
         if: steps.gate.outputs.allowed == 'true'
+        env:
+          LA: ${{ steps.la.outputs.la }}
+          SAMPLE: ${{ steps.la.outputs.sample }}
         run: |
           set -euo pipefail
-          ARGS=(python3 scripts/build-la-pack.py --la "${{ steps.la.outputs.la }}")
-          SAMPLE="${{ steps.la.outputs.sample }}"
+          ARGS=(python3 scripts/build-la-pack.py --la "$LA")
           if [ "$SAMPLE" != "0" ] && [ -n "$SAMPLE" ]; then
             ARGS+=(--sample "$SAMPLE")
           fi
@@ -81,15 +83,17 @@ jobs:
 
       - name: Record build stamp + interest signal
         if: steps.gate.outputs.allowed == 'true'
+        env:
+          LA: ${{ steps.la.outputs.la }}
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, time, sys
+          import json, os, time, sys
           from pathlib import Path
           sys.path.insert(0, "scripts")
           from pack_interest import append_interest_event
 
-          la = """${{ steps.la.outputs.la }}"""
+          la = os.environ["LA"]
           path = Path("public/data/packs/build-state.json")
           path.parent.mkdir(parents=True, exist_ok=True)
           path.write_text(
@@ -115,6 +119,8 @@ jobs:
 
       - name: Commit pack
         if: steps.gate.outputs.allowed == 'true'
+        env:
+          LA: ${{ steps.la.outputs.la }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -124,5 +130,5 @@ jobs:
             echo "No pack files to commit"
             exit 0
           fi
-          git commit -m "Build on-demand LA pack (${{ steps.la.outputs.la }})"
+          git commit -m "Build on-demand LA pack ($LA)"
           git push

@@ -90,6 +90,7 @@
     "test:share-comparison": "npx --yes tsx scripts/test-share-comparison.mjs",
     "test:provision-nav": "npx --yes tsx scripts/test-provision-nav.mjs",
     "test:product-feedback": "npx --yes tsx scripts/test-product-feedback.mjs",
+    "test:gha-secret-hygiene": "python3 scripts/test_gha_secret_hygiene.py",
     "digest:feedback": "python3 scripts/digest-product-feedback.py",
     "qa:human-flags": "python3 scripts/record-human-qa-flags.py"
   },
