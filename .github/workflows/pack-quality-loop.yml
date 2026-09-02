@@ -78,6 +78,8 @@ jobs:
           python3 scripts/run-pack-quality-loop.py "${ARGS[@]}"
 
       - name: Commit pack polish + digest
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -85,7 +87,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No pack quality changes"
           else
-            if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
+            if [ "$DRY_RUN" = "true" ]; then
               MSG="Pack quality loop dry-run digest"
             else
               MSG="Pack quality loop: polish weakest ready packs"

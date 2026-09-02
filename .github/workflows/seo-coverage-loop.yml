@@ -51,6 +51,8 @@ jobs:
           python3 scripts/run-seo-coverage-loop.py "${ARGS[@]}"
 
       - name: Commit coverage + digest
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -60,7 +62,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No SEO coverage changes"
           else
-            if [ "${{ github.event.inputs.dry_run || 'false' }}" = "true" ]; then
+            if [ "$DRY_RUN" = "true" ]; then
               MSG="SEO coverage loop dry-run digest"
             else
               MSG="SEO coverage loop: expand landings within page budget"
