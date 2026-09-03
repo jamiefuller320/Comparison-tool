@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-03T13:40:51.642818+00:00`
+- Ran at: `2026-09-03T14:04:19.174432+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `62`
-- New learned phrases: `25`
+- Reviewed: `117`
+- Schools changed: `105`
+- Findings applied: `184`
+- New learned phrases: `53`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (62 area finding(s)).
-- Learned 25 new junk phrase(s) (store size 600).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 105 school(s) (184 area finding(s)).
+- Learned 53 new junk phrase(s) (store size 600).
+- Reviewed top 117 suspect(s); provider=none.
 
 ## Suspects
 
-- `147911` Atelier21 Future School — score 19.0 flags=policy_toc,implausible_offerings,chrome
-- `138764` Danetree Primary School — score 18.0 flags=policy_toc,implausible_offerings,chrome
-- `118991` Cobham Hall — score 17.0 flags=admissions,chrome,admissions_in_enrichment
-- `135371` Cornwallis Academy — score 17.0 flags=chrome,policy_toc,implausible_offerings
-- `118615` Crockham Hill Church of England Voluntary Controlled Primary School — score 15.0 flags=chrome
-- `118858` Ditton Infant School — score 15.0 flags=chrome
-- `151772` Amberley Court School — score 14.0 flags=policy_toc,implausible_offerings,chrome
-- `124911` Chertsey Nursery School — score 14.0 flags=chrome,policy_toc,implausible_offerings
-- `125838` Barns Green Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
-- `125968` Bramber Primary School — score 13.0 flags=policy_toc,chrome,implausible_offerings
-- `141659` Charlton Church of England Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
-- `141766` Chilton Primary School — score 12.0 flags=chrome
-- `135510` Compass Community School Coastal Park — score 12.0 flags=chrome
-- `118254` Crockenhill Primary School — score 12.0 flags=chrome
-- `118869` Brookfield Junior School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `140012` Cliftonville Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `142345` Cross Farm Infant Academy — score 11.0 flags=policy_toc,implausible_offerings,chrome
+- `124912` Dorking Nursery School — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `140650` Esher Church of England High School — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `144520` Farnham Heath End — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `126019` Arundel CofE Primary School — score 9.0 flags=chrome
+- `150705` Billingshurst Primary Academy — score 9.0 flags=chrome
+- `126050` Bishop Tufnell CofE Primary School, Felpham — score 9.0 flags=chrome
+- `118297` Brunswick House Primary School — score 9.0 flags=chrome
+- `134791` Buckingham Park Primary School — score 9.0 flags=chrome
+- `118715` Chevening, St Botolph's Church of England Voluntary Aided Primary School — score 9.0 flags=chrome
+- `125167` Chilworth CofE (Aided) Infant School — score 9.0 flags=chrome
+- `125394` Chinthurst School — score 9.0 flags=chrome
+- `118456` Claremont Primary School — score 9.0 flags=chrome
+- `136338` Cleves School — score 9.0 flags=chrome
+- `118716` Colliers Green Church of England Primary School — score 9.0 flags=chrome
+- `136828` Collingwood College — score 9.0 flags=chrome
+- `146114` Coxheath Primary School — score 9.0 flags=boilerplate,chrome
+- `125389` Danes Hill School — score 9.0 flags=chrome
+- `144100` Dartford Grammar School for Girls — score 9.0 flags=chrome,boilerplate
+- `118785` Dartford Science & Technology College — score 9.0 flags=chrome

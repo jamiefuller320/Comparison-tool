@@ -1,80 +1,24 @@
 {
-  "ranAt": "2026-09-02T14:02:00.998706+00:00",
+  "ranAt": "2026-09-03T14:05:12.635427+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 1151,
-    "suspectCount": 116,
+    "recordCount": 1331,
+    "suspectCount": 117,
     "flagCounts": {
-      "chrome": 101,
-      "implausible_offerings": 21,
-      "policy_toc": 14,
-      "admissions": 4,
-      "boilerplate": 1
+      "chrome": 102,
+      "implausible_offerings": 20,
+      "policy_toc": 12,
+      "boilerplate": 5,
+      "admissions": 4
     },
     "topSuspects": [
       {
-        "urn": "131064",
-        "name": "Chilworth House School",
-        "score": 12.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "137334",
-        "name": "Chilworth House Upper School",
-        "score": 12.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "146950",
-        "name": "All Soul's Church of England Primary School",
-        "score": 11.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "123219",
-        "name": "Appleton Church of England (A) Primary School",
-        "score": 11.0,
-        "flags": [
-          "chrome",
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "140508",
-        "name": "Beaufort Primary School",
-        "score": 11.0,
-        "flags": [
-          "chrome",
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "118597",
-        "name": "Benenden Church of England Primary School",
-        "score": 11.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "147507",
-        "name": "Benson Church of England Primary School",
+        "urn": "142345",
+        "name": "Cross Farm Infant Academy",
         "score": 11.0,
         "flags": [
           "policy_toc",
@@ -83,8 +27,8 @@
         ]
       },
       {
-        "urn": "144867",
-        "name": "Borden Church of England Primary School",
+        "urn": "124912",
+        "name": "Dorking Nursery School",
         "score": 11.0,
         "flags": [
           "chrome",
@@ -93,36 +37,84 @@
         ]
       },
       {
-        "urn": "118484",
-        "name": "Brookfield Infant School",
+        "urn": "140650",
+        "name": "Esher Church of England High School",
         "score": 11.0,
         "flags": [
-          "policy_toc",
           "chrome",
+          "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "140279",
-        "name": "Cholsey Primary School",
+        "urn": "144520",
+        "name": "Farnham Heath End",
         "score": 11.0,
         "flags": [
+          "chrome",
           "policy_toc",
-          "implausible_offerings",
-          "chrome"
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "123312",
-        "name": "Abingdon School",
+        "urn": "126019",
+        "name": "Arundel CofE Primary School",
         "score": 9.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "141308",
-        "name": "Adisham Church of England Primary School",
+        "urn": "150705",
+        "name": "Billingshurst Primary Academy",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "126050",
+        "name": "Bishop Tufnell CofE Primary School, Felpham",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "118297",
+        "name": "Brunswick House Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "134791",
+        "name": "Buckingham Park Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "118715",
+        "name": "Chevening, St Botolph's Church of England Voluntary Aided Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "125167",
+        "name": "Chilworth CofE (Aided) Infant School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "125394",
+        "name": "Chinthurst School",
         "score": 9.0,
         "flags": [
           "chrome"
@@ -131,11 +123,13 @@
     ]
   },
   "after": {
-    "recordCount": 1151,
-    "suspectCount": 12,
+    "recordCount": 1331,
+    "suspectCount": 14,
     "flagCounts": {
       "implausible_offerings": 8,
-      "admissions": 4
+      "admissions": 4,
+      "boilerplate": 1,
+      "cms_chrome": 1
     },
     "topSuspects": [
       {
@@ -144,6 +138,22 @@
         "score": 6.0,
         "flags": [
           "admissions"
+        ]
+      },
+      {
+        "urn": "145394",
+        "name": "Brantridge School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "149354",
+        "name": "Egham Park School Ltd",
+        "score": 3.0,
+        "flags": [
+          "boilerplate"
         ]
       },
       {
@@ -217,62 +227,46 @@
         "flags": [
           "implausible_offerings"
         ]
-      },
-      {
-        "urn": "114408",
-        "name": "Park Mead Primary School",
-        "score": 2.0,
-        "flags": [
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "114414",
-        "name": "Punnetts Town Community Primary and Nursery School",
-        "score": 2.0,
-        "flags": [
-          "implausible_offerings"
-        ]
       }
     ]
   },
   "qa": {
-    "reviewed": 116,
+    "reviewed": 117,
     "changedSchools": 105,
-    "findingsApplied": 180,
-    "learningAdded": 46,
+    "findingsApplied": 184,
+    "learningAdded": 53,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +106 (>= 15)",
+    "reason": "eventCount +102 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "363f85bd68999d7a56b5",
+      "phraseHash": "c43ee828a4ac31661fb1",
       "phraseCount": 600,
-      "candidateCount": 721,
-      "eventCount": 3037,
-      "updatedAt": "2026-09-02"
+      "candidateCount": 792,
+      "eventCount": 3414,
+      "updatedAt": "2026-09-03"
     },
     "fingerprintAfter": {
-      "phraseHash": "c55a432132aa1164ee3e",
+      "phraseHash": "19d298515877b223d989",
       "phraseCount": 600,
-      "candidateCount": 767,
-      "eventCount": 3312,
-      "updatedAt": "2026-09-02"
+      "candidateCount": 845,
+      "eventCount": 3684,
+      "updatedAt": "2026-09-03"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 1151 published URN shards (prior=0 → 1151).",
-    "Rebalanced learned QA phrases: active=600 candidates=721.",
-    "Learning fingerprint: {'phraseHash': '363f85bd68999d7a56b5', 'phraseCount': 600, 'candidateCount': 721, 'eventCount': 3037, 'updatedAt': '2026-09-02'}",
-    "Apply decision: eventCount +106 (>= 15)",
-    "Before: 116 suspects across 1151 records.",
-    "Applied QA fixes to 105 school(s) (180 area finding(s)).",
-    "Learned 46 new junk phrase(s) (store size 600).",
-    "Reviewed top 116 suspect(s); provider=none.",
+    "Hydrated working sidecar from 1331 published URN shards (prior=0 → 1331).",
+    "Rebalanced learned QA phrases: active=600 candidates=792.",
+    "Learning fingerprint: {'phraseHash': 'c43ee828a4ac31661fb1', 'phraseCount': 600, 'candidateCount': 792, 'eventCount': 3414, 'updatedAt': '2026-09-03'}",
+    "Apply decision: eventCount +102 (>= 15)",
+    "Before: 117 suspects across 1331 records.",
+    "Applied QA fixes to 105 school(s) (184 area finding(s)).",
+    "Learned 53 new junk phrase(s) (store size 600).",
+    "Reviewed top 117 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 12 suspects across 1151 records.",
+    "After: 14 suspects across 1331 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
