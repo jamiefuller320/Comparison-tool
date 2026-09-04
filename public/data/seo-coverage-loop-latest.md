@@ -1,16 +1,16 @@
 # SEO coverage loop
 
-- Generated: `2026-08-28T19:17:19Z`
+- Generated: `2026-09-04T11:59:43Z`
 - Dry run: **False**
-- Added areas: **4** (Windsor and Maidenhead, Medway, Buckinghamshire, Bracknell Forest)
+- Added areas: **0** (none — budget full or no ready candidates)
 
 ## Totals
 
 | Metric | Before | After | Budget |
 | --- | ---: | ---: | ---: |
-| School pages | 963 | 1486 | 1500 |
-| Town pages | 33 | 49 | 80 |
-| Town hubs | 5 | 9 | — |
+| School pages | 1486 | 1486 | 1500 |
+| Town pages | 49 | 49 | 80 |
+| Town hubs | 9 | 9 | — |
 
 # SEO coverage report
 
