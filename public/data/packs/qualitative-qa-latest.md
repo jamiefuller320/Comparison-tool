@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-04T13:43:34.385273+00:00`
+- Ran at: `2026-09-04T13:57:15.695302+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `56`
-- New learned phrases: `18`
+- Reviewed: `92`
+- Schools changed: `80`
+- Findings applied: `107`
+- New learned phrases: `35`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (56 area finding(s)).
-- Learned 18 new junk phrase(s) (store size 600).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 80 school(s) (107 area finding(s)).
+- Learned 35 new junk phrase(s) (store size 600).
+- Reviewed top 92 suspect(s); provider=none.
 
 ## Suspects
 
-- `143373` Guildford Grove Primary School — score 21.0 flags=policy_toc,chrome,implausible_offerings
-- `118685` Eastry Church of England Primary School — score 19.0 flags=policy_toc,chrome,implausible_offerings
-- `119042` Goldwyn School — score 16.0 flags=policy_toc,implausible_offerings,chrome
-- `123105` Clanfield CofE Primary School — score 14.0 flags=policy_toc,chrome,implausible_offerings
-- `119055` Five Acre Wood School — score 14.0 flags=policy_toc,chrome,implausible_offerings
-- `146975` Hale Nursery & Primary Academy — score 14.0 flags=policy_toc,implausible_offerings,boilerplate,chrome
-- `123127` Clifton Hampden Church of England Primary School — score 13.0 flags=policy_toc,chrome,implausible_offerings
-- `123133` Crowmarsh Gifford Church of England School — score 12.0 flags=chrome
-- `144530` Deddington Church of England Primary School — score 12.0 flags=chrome
-- `140688` Didcot Primary Academy — score 12.0 flags=chrome
-- `152328` Earley Springs — score 12.0 flags=chrome
-- `150688` Hagbourne Church of England Primary School — score 12.0 flags=boilerplate,chrome
-- `123006` Five Acres Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
-- `119041` Foreland Fields School — score 11.0 flags=policy_toc,implausible_offerings,chrome
-- `135212` Garlinge Primary School and Nursery — score 11.0 flags=policy_toc,implausible_offerings,chrome
-- `118748` Dover, St Mary's Church of England Primary School — score 9.0 flags=chrome
+- `124983` Fetcham Village Infant School — score 9.0 flags=chrome
+- `118686` Goodnestone Church of England Primary School — score 9.0 flags=chrome
+- `123059` Drayton Community Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `150064` Fritwell Church of England Primary School — score 8.0 flags=cms_chrome,chrome
+- `136324` Fulston Manor School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `125386` Hazelwood School — score 8.0 flags=boilerplate,policy_toc,implausible_offerings
+- `149900` Hurst Park Primary Academy — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `134515` Downsview Community Primary School — score 6.0 flags=chrome
+- `142347` Dymchurch Primary School — score 6.0 flags=boilerplate,chrome
+- `118702` Egerton Church of England Primary School — score 6.0 flags=chrome
+- `135466` Enterprise Learning Alliance — score 6.0 flags=chrome
+- `118337` Ethelbert Road Primary School — score 6.0 flags=chrome
+- `123197` Ewelme CofE Primary School — score 6.0 flags=chrome
+- `125359` Feltonfleet — score 6.0 flags=chrome
+- `148631` Fernways School — score 6.0 flags=chrome
+- `147753` Finmere Church of England Primary School — score 6.0 flags=chrome
+- `125477` Freemantles School — score 6.0 flags=boilerplate,chrome
+- `141201` Gagle Brook Primary School — score 6.0 flags=chrome
+- `123016` Gateway Primary School — score 6.0 flags=chrome
+- `125377` Glenesk School — score 6.0 flags=chrome
