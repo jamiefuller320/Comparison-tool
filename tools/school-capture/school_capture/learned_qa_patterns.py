@@ -3,6 +3,10 @@
 Active matching phrases are capped. Selection prefers hit count, recency, and
 per-class quotas so chrome-heavy learning does not starve rarer junk classes,
 and so phrases that only lived under ``byClass`` can re-enter the active set.
+
+A phrase enters the active set only when it has been reconfirmed (``hits >= 2``)
+or is long enough to be a specific label. Short one-off nav tokens stay in the
+archive until they recur.
 """
 
 from __future__ import annotations
@@ -15,13 +19,16 @@ from typing import Any
 
 DEFAULT_PATH = Path("output/learned-qa-patterns.json")
 # Active matching set used by ingest/QA filters.
-MAX_PHRASES = 600
+MAX_PHRASES = 900
 # Retained archive (stats/byClass) so eviction can reshuffle without losing
 # recently demoted phrases; also absorbs legacy byClass orphans.
 MAX_CANDIDATES = 2000
 MIN_PHRASE_LEN = 4
 # Soft floor so minority junk classes keep representation under the cap.
 MIN_PER_CLASS = 12
+# Short one-hit labels stay archived; long specific labels may activate once.
+MIN_HITS_FOR_SHORT_ACTIVE = 2
+MIN_LEN_FOR_SINGLE_HIT_ACTIVE = 24
 
 _CACHE: dict[str, Any] | None = None
 
@@ -146,11 +153,35 @@ def _collect_candidates(raw: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return candidates
 
 
+def is_active_eligible(
+    phrase: str,
+    meta: dict[str, Any] | None = None,
+    *,
+    min_hits: int | None = None,
+    min_len: int | None = None,
+) -> bool:
+    """True when a candidate may occupy an active matching slot.
+
+    Short one-off labels stay in the archive until they are reconfirmed.
+    Longer phrases (typical CMS/policy labels) may activate on first sighting.
+    """
+    hits = int((meta or {}).get("hits") or 0)
+    hit_floor = MIN_HITS_FOR_SHORT_ACTIVE if min_hits is None else int(min_hits)
+    len_floor = (
+        MIN_LEN_FOR_SINGLE_HIT_ACTIVE if min_len is None else int(min_len)
+    )
+    if hits >= hit_floor:
+        return True
+    return len(phrase) >= len_floor
+
+
 def select_active_phrases(
     candidates: dict[str, dict[str, Any]],
     *,
     max_phrases: int | None = None,
     min_per_class: int | None = None,
+    min_hits: int | None = None,
+    min_len: int | None = None,
     today: date | None = None,
 ) -> list[str]:
     """Pick an active matching set with per-class floors + score fill."""
@@ -161,8 +192,18 @@ def select_active_phrases(
     if limit == 0:
         return []
 
+    eligible = {
+        phrase: meta
+        for phrase, meta in candidates.items()
+        if is_active_eligible(
+            phrase, meta, min_hits=min_hits, min_len=min_len
+        )
+    }
+    if not eligible:
+        return []
+
     by_class: dict[str, list[str]] = {}
-    for phrase, meta in candidates.items():
+    for phrase, meta in eligible.items():
         junk_class = str(meta.get("junkClass") or "other")
         by_class.setdefault(junk_class, []).append(phrase)
 
@@ -198,7 +239,7 @@ def select_active_phrases(
         if len(selected) >= limit:
             break
 
-    leftovers = [p for p in candidates if p not in selected_set]
+    leftovers = [p for p in eligible if p not in selected_set]
     leftovers.sort(key=sort_key, reverse=True)
     for phrase in leftovers:
         if len(selected) >= limit:
