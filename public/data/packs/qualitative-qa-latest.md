@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-04T13:57:15.695302+00:00`
+- Ran at: `2026-09-05T12:53:30.480557+00:00`
 - Provider: `none`
-- Reviewed: `92`
-- Schools changed: `80`
-- Findings applied: `107`
-- New learned phrases: `35`
+- Reviewed: `16`
+- Schools changed: `16`
+- Findings applied: `42`
+- New learned phrases: `22`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 80 school(s) (107 area finding(s)).
-- Learned 35 new junk phrase(s) (store size 600).
-- Reviewed top 92 suspect(s); provider=none.
+- Applied QA fixes to 16 school(s) (42 area finding(s)).
+- Learned 22 new junk phrase(s) (store size 751).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `124983` Fetcham Village Infant School — score 9.0 flags=chrome
-- `118686` Goodnestone Church of England Primary School — score 9.0 flags=chrome
-- `123059` Drayton Community Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `150064` Fritwell Church of England Primary School — score 8.0 flags=cms_chrome,chrome
-- `136324` Fulston Manor School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `125386` Hazelwood School — score 8.0 flags=boilerplate,policy_toc,implausible_offerings
-- `149900` Hurst Park Primary Academy — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `134515` Downsview Community Primary School — score 6.0 flags=chrome
-- `142347` Dymchurch Primary School — score 6.0 flags=boilerplate,chrome
-- `118702` Egerton Church of England Primary School — score 6.0 flags=chrome
-- `135466` Enterprise Learning Alliance — score 6.0 flags=chrome
-- `118337` Ethelbert Road Primary School — score 6.0 flags=chrome
-- `123197` Ewelme CofE Primary School — score 6.0 flags=chrome
-- `125359` Feltonfleet — score 6.0 flags=chrome
-- `148631` Fernways School — score 6.0 flags=chrome
-- `147753` Finmere Church of England Primary School — score 6.0 flags=chrome
-- `125477` Freemantles School — score 6.0 flags=boilerplate,chrome
-- `141201` Gagle Brook Primary School — score 6.0 flags=chrome
-- `123016` Gateway Primary School — score 6.0 flags=chrome
-- `125377` Glenesk School — score 6.0 flags=chrome
+- `139146` Cheney School — score 32.0 flags=policy_toc,chrome,implausible_offerings
+- `150773` Hopescourt School — score 26.0 flags=policy_toc,implausible_offerings,chrome
+- `138897` Gosford Hill School — score 20.0 flags=policy_toc,implausible_offerings
+- `137484` Homewood School and Sixth Form Centre — score 20.0 flags=policy_toc,implausible_offerings
+- `118710` Herne Church of England Infant and Nursery School — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `110291` Butlers Court School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `118687` Guston Church of England Primary School — score 9.0 flags=chrome
+- `152387` Guston Church of England Primary School — score 9.0 flags=chrome
+- `149146` Haven Nook — score 9.0 flags=chrome
+- `125403` More House School — score 9.0 flags=chrome
+- `125968` Bramber Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `140323` Hamstreet Primary Academy — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `125104` Langshott Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `125083` Meath Green Infant School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `139434` Aylesbury UTC — score 6.0 flags=chrome
+- `110314` Burford School — score 6.0 flags=chrome
