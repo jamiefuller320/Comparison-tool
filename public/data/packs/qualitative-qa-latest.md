@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-05T12:53:30.480557+00:00`
+- Ran at: `2026-09-05T13:13:00.324646+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `42`
-- New learned phrases: `22`
+- Reviewed: `63`
+- Schools changed: `52`
+- Findings applied: `59`
+- New learned phrases: `10`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (42 area finding(s)).
-- Learned 22 new junk phrase(s) (store size 751).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 52 school(s) (59 area finding(s)).
+- Learned 10 new junk phrase(s) (store size 761).
+- Reviewed top 63 suspect(s); provider=none.
 
 ## Suspects
 
-- `139146` Cheney School — score 32.0 flags=policy_toc,chrome,implausible_offerings
-- `150773` Hopescourt School — score 26.0 flags=policy_toc,implausible_offerings,chrome
-- `138897` Gosford Hill School — score 20.0 flags=policy_toc,implausible_offerings
-- `137484` Homewood School and Sixth Form Centre — score 20.0 flags=policy_toc,implausible_offerings
-- `118710` Herne Church of England Infant and Nursery School — score 14.0 flags=chrome,policy_toc,implausible_offerings
-- `110291` Butlers Court School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `118687` Guston Church of England Primary School — score 9.0 flags=chrome
-- `152387` Guston Church of England Primary School — score 9.0 flags=chrome
-- `149146` Haven Nook — score 9.0 flags=chrome
-- `125403` More House School — score 9.0 flags=chrome
-- `125968` Bramber Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `140323` Hamstreet Primary Academy — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `125104` Langshott Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `125083` Meath Green Infant School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `139434` Aylesbury UTC — score 6.0 flags=chrome
-- `110314` Burford School — score 6.0 flags=chrome
+- `152402` Burford School — score 6.0 flags=chrome
+- `137091` Chesham Grammar School — score 6.0 flags=chrome
+- `118993` Helen Allison School — score 6.0 flags=chrome
+- `118974` Hilden Oaks Preparatory School and Nursery — score 6.0 flags=chrome
+- `118726` Hunton Church of England Primary School — score 6.0 flags=chrome
+- `148557` ISP School Whitstable — score 6.0 flags=chrome
+- `147428` Knaphill Infant School and Nursery — score 6.0 flags=boilerplate,chrome
+- `147427` Knaphill School — score 6.0 flags=boilerplate,chrome
+- `151489` Minerva May School — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
+- `151367` Ashmead Combined School — score 5.0 flags=policy_toc,implausible_offerings
+- `110260` Booker Hill Primary School & Nursery — score 5.0 flags=policy_toc,implausible_offerings
+- `124986` Dormansland Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `125351` Downsend School — score 5.0 flags=policy_toc,implausible_offerings
+- `125420` Essendene Lodge School — score 5.0 flags=policy_toc,implausible_offerings
+- `148876` Halstead Community Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `118385` Hawkinge Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `118647` Hernhill Church of England Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `135118` Hextable Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `125405` Little Downsend Leatherhead — score 5.0 flags=policy_toc,implausible_offerings
