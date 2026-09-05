@@ -43,6 +43,19 @@ Goal: close the loop from **assess → prioritise → bounded re-fetch → diges
 
 **Explicitly out of this automation track** (different problems): interim/material-change ISI précis extraction; ISI grade harvest; second maintained seed LA; formal OKRs; full national précis.
 
+#### Qualitative learned-QA phrase store (return-to log)
+
+Shipped: active matching cap **900** with a confirmation gate (`hits >= 2` **or** phrase length ≥ 24). Archive cap `MAX_CANDIDATES` stays **2000**. Selection still uses hit/recency scoring and per-class floors (`tools/school-capture/school_capture/learned_qa_patterns.py`).
+
+Parked options — reopen only if the archive nears 2000, false-positives rise, or daily-loop runtime hurts:
+
+| Option | When to consider | Notes / entry points |
+| --- | --- | --- |
+| **CLI / env cap knob** | Need to try 750 vs 900 on one quality-loop dispatch without a revert | `--max-phrases` / `QUALITATIVE_MAX_PHRASES` on `run-qualitative-quality-loop.py` and `select_active_phrases` |
+| **Indexed matcher (Aho-Corasick / compiled regex)** | Want the whole archive to match without a linear scan over every sentence | Replace `phrase_matches_learned`; lets an active set of ~2k stay cheap |
+| **Tighten `is_learnable_phrase`** | Over-broad actives (`https://www`, person names, 1–2 word tokens) survive the hit/length gate | Complementary; can land independently of the cap |
+| **Raise `MAX_CANDIDATES`** | Archive approaches 2000 and useful 1-hit labels are being dropped | Leave at 2000 until then; minority classes are already fully represented |
+
 #### Continuous SEO coverage automation
 
 Goal: grow crawlable school/town landings as ready packs increase **without** publishing every URN at once (static Pages HTML/CI cost). Mirrors the pack-quality loop: assess → expand within budget → digest.
