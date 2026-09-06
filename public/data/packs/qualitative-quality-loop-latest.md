@@ -1,34 +1,34 @@
-# Qualitative quality loop — 2026-09-05T13:14:12.830541+00:00
+# Qualitative quality loop — 2026-09-06T13:23:29.002704+00:00
 
 - Mode: `apply`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
-- Records: `1691`
-- Suspects before → after: `63` → `11`
-- QA reviewed / changed: `63` / `52`
-- Findings applied: `59`
-- Learned phrases added: `10`
+- Records: `1871`
+- Suspects before → after: `57` → `13`
+- QA reviewed / changed: `57` / `44`
+- Findings applied: `47`
+- Learned phrases added: `9`
 - Merged to index: `True`
-- Apply trigger: `eventCount +72 (>= 15)`
+- Apply trigger: `eventCount +67 (>= 15)`
 
 ## Top flag counts (before)
 
-- `chrome`: 42
-- `implausible_offerings`: 17
-- `policy_toc`: 10
-- `admissions`: 4
-- `boilerplate`: 2
+- `chrome`: 41
+- `implausible_offerings`: 10
+- `admissions`: 5
+- `policy_toc`: 2
+- `boilerplate`: 1
 
 ## Notes
 
-- Hydrated working sidecar from 1691 published URN shards (prior=0 → 1691).
-- Rebalanced learned QA phrases: active=751 candidates=920.
-- Learning fingerprint: {'phraseHash': '4258a03c02ab27b26494', 'phraseCount': 751, 'candidateCount': 920, 'eventCount': 3998, 'updatedAt': '2026-09-05'}
-- Apply decision: eventCount +72 (>= 15)
-- Before: 63 suspects across 1691 records.
-- Applied QA fixes to 52 school(s) (59 area finding(s)).
-- Learned 10 new junk phrase(s) (store size 761).
-- Reviewed top 63 suspect(s); provider=none.
+- Hydrated working sidecar from 1871 published URN shards (prior=0 → 1871).
+- Rebalanced learned QA phrases: active=768 candidates=937.
+- Learning fingerprint: {'phraseHash': '6df8ae7468fa826d4f04', 'phraseCount': 768, 'candidateCount': 937, 'eventCount': 4144, 'updatedAt': '2026-09-06'}
+- Apply decision: eventCount +67 (>= 15)
+- Before: 57 suspects across 1871 records.
+- Applied QA fixes to 44 school(s) (47 area finding(s)).
+- Learned 9 new junk phrase(s) (store size 777).
+- Reviewed top 57 suspect(s); provider=none.
 - Merged cleaned sidecar into 21 schools-index file(s).
-- After: 11 suspects across 1691 records.
+- After: 13 suspects across 1871 records.
 - Updated output/learned-qa-apply-state.json

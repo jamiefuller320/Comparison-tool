@@ -1,90 +1,40 @@
 {
-  "ranAt": "2026-09-05T13:14:12.830541+00:00",
+  "ranAt": "2026-09-06T13:23:29.002704+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 1691,
-    "suspectCount": 63,
+    "recordCount": 1871,
+    "suspectCount": 57,
     "flagCounts": {
-      "chrome": 42,
-      "implausible_offerings": 17,
-      "policy_toc": 10,
-      "admissions": 4,
-      "boilerplate": 2
+      "chrome": 41,
+      "implausible_offerings": 10,
+      "admissions": 5,
+      "policy_toc": 2,
+      "boilerplate": 1
     },
     "topSuspects": [
       {
-        "urn": "152402",
-        "name": "Burford School",
+        "urn": "146025",
+        "name": "Northmead Junior School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "137091",
-        "name": "Chesham Grammar School",
+        "urn": "136755",
+        "name": "Pewley Down Infant School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "118993",
-        "name": "Helen Allison School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118974",
-        "name": "Hilden Oaks Preparatory School and Nursery",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118726",
-        "name": "Hunton Church of England Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "148557",
-        "name": "ISP School Whitstable",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "147428",
-        "name": "Knaphill Infant School and Nursery",
-        "score": 6.0,
-        "flags": [
-          "boilerplate",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "147427",
-        "name": "Knaphill School",
-        "score": 6.0,
-        "flags": [
-          "boilerplate",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "151489",
-        "name": "Minerva May School",
+        "urn": "125424",
+        "name": "Royal Grammar School Guildford",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -99,8 +49,8 @@
         ]
       },
       {
-        "urn": "151367",
-        "name": "Ashmead Combined School",
+        "urn": "118398",
+        "name": "Langdon Primary School",
         "score": 5.0,
         "flags": [
           "policy_toc",
@@ -108,28 +58,84 @@
         ]
       },
       {
-        "urn": "110260",
-        "name": "Booker Hill Primary School & Nursery",
+        "urn": "148129",
+        "name": "Reigate Valley College",
         "score": 5.0,
         "flags": [
           "policy_toc",
           "implausible_offerings"
         ]
+      },
+      {
+        "urn": "149890",
+        "name": "Courtlands Independent Special School",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "126093",
+        "name": "Davison Church of England High School for Girls, Worthing",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "126109",
+        "name": "Dorset House School",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "144244",
+        "name": "East Preston Junior School",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "139674",
+        "name": "Eastbrook Primary Academy",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "147546",
+        "name": "Educate U",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
       }
     ]
   },
   "after": {
-    "recordCount": 1691,
-    "suspectCount": 11,
+    "recordCount": 1871,
+    "suspectCount": 13,
     "flagCounts": {
-      "implausible_offerings": 7,
-      "admissions": 4
+      "implausible_offerings": 8,
+      "admissions": 5
     },
     "topSuspects": [
       {
         "urn": "147128",
         "name": "The Ferns Primary Academy",
         "score": 6.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "125344",
+        "name": "Rydes Hill Preparatory School",
+        "score": 3.0,
         "flags": [
           "admissions"
         ]
@@ -199,16 +205,16 @@
         ]
       },
       {
-        "urn": "114408",
-        "name": "Park Mead Primary School",
+        "urn": "125933",
+        "name": "Hassocks Infant School",
         "score": 2.0,
         "flags": [
           "implausible_offerings"
         ]
       },
       {
-        "urn": "114414",
-        "name": "Punnetts Town Community Primary and Nursery School",
+        "urn": "114408",
+        "name": "Park Mead Primary School",
         "score": 2.0,
         "flags": [
           "implausible_offerings"
@@ -217,42 +223,42 @@
     ]
   },
   "qa": {
-    "reviewed": 63,
-    "changedSchools": 52,
-    "findingsApplied": 59,
-    "learningAdded": 10,
+    "reviewed": 57,
+    "changedSchools": 44,
+    "findingsApplied": 47,
+    "learningAdded": 9,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +72 (>= 15)",
+    "reason": "eventCount +67 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "4258a03c02ab27b26494",
-      "phraseCount": 751,
-      "candidateCount": 920,
-      "eventCount": 3998,
-      "updatedAt": "2026-09-05"
+      "phraseHash": "6df8ae7468fa826d4f04",
+      "phraseCount": 768,
+      "candidateCount": 937,
+      "eventCount": 4144,
+      "updatedAt": "2026-09-06"
     },
     "fingerprintAfter": {
-      "phraseHash": "8e346662ac27d60d4d37",
-      "phraseCount": 761,
-      "candidateCount": 930,
-      "eventCount": 4077,
-      "updatedAt": "2026-09-05"
+      "phraseHash": "700c610bc3b662453e4c",
+      "phraseCount": 777,
+      "candidateCount": 946,
+      "eventCount": 4200,
+      "updatedAt": "2026-09-06"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 1691 published URN shards (prior=0 → 1691).",
-    "Rebalanced learned QA phrases: active=751 candidates=920.",
-    "Learning fingerprint: {'phraseHash': '4258a03c02ab27b26494', 'phraseCount': 751, 'candidateCount': 920, 'eventCount': 3998, 'updatedAt': '2026-09-05'}",
-    "Apply decision: eventCount +72 (>= 15)",
-    "Before: 63 suspects across 1691 records.",
-    "Applied QA fixes to 52 school(s) (59 area finding(s)).",
-    "Learned 10 new junk phrase(s) (store size 761).",
-    "Reviewed top 63 suspect(s); provider=none.",
+    "Hydrated working sidecar from 1871 published URN shards (prior=0 → 1871).",
+    "Rebalanced learned QA phrases: active=768 candidates=937.",
+    "Learning fingerprint: {'phraseHash': '6df8ae7468fa826d4f04', 'phraseCount': 768, 'candidateCount': 937, 'eventCount': 4144, 'updatedAt': '2026-09-06'}",
+    "Apply decision: eventCount +67 (>= 15)",
+    "Before: 57 suspects across 1871 records.",
+    "Applied QA fixes to 44 school(s) (47 area finding(s)).",
+    "Learned 9 new junk phrase(s) (store size 777).",
+    "Reviewed top 57 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 11 suspects across 1691 records.",
+    "After: 13 suspects across 1871 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
