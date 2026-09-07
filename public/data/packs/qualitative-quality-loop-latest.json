@@ -1,15 +1,15 @@
 {
-  "ranAt": "2026-09-06T13:23:29.002704+00:00",
+  "ranAt": "2026-09-07T15:29:41.736662+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 1871,
-    "suspectCount": 57,
+    "recordCount": 2051,
+    "suspectCount": 50,
     "flagCounts": {
-      "chrome": 41,
+      "chrome": 34,
       "implausible_offerings": 10,
       "admissions": 5,
       "policy_toc": 2,
@@ -17,24 +17,16 @@
     },
     "topSuspects": [
       {
-        "urn": "146025",
-        "name": "Northmead Junior School",
+        "urn": "118836",
+        "name": "Maidstone Grammar School for Girls",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "136755",
-        "name": "Pewley Down Infant School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "125424",
-        "name": "Royal Grammar School Guildford",
+        "urn": "150599",
+        "name": "Newington Community Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -49,8 +41,8 @@
         ]
       },
       {
-        "urn": "118398",
-        "name": "Langdon Primary School",
+        "urn": "144869",
+        "name": "Minterne Junior School",
         "score": 5.0,
         "flags": [
           "policy_toc",
@@ -58,8 +50,8 @@
         ]
       },
       {
-        "urn": "148129",
-        "name": "Reigate Valley College",
+        "urn": "141472",
+        "name": "More Park Catholic Primary School",
         "score": 5.0,
         "flags": [
           "policy_toc",
@@ -67,48 +59,56 @@
         ]
       },
       {
-        "urn": "149890",
-        "name": "Courtlands Independent Special School",
+        "urn": "110500",
+        "name": "Cressex Community School",
         "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "126093",
-        "name": "Davison Church of England High School for Girls, Worthing",
+        "urn": "110537",
+        "name": "Davenies School",
         "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "126109",
-        "name": "Dorset House School",
+        "urn": "139679",
+        "name": "Denham Green E-ACT Primary Academy",
         "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "144244",
-        "name": "East Preston Junior School",
+        "urn": "136419",
+        "name": "Dr Challoner's Grammar School",
         "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "139674",
-        "name": "Eastbrook Primary Academy",
+        "urn": "146518",
+        "name": "E-Act Bourne End Academy",
         "score": 3.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "147546",
-        "name": "Educate U",
+        "urn": "145298",
+        "name": "Eton Dorney Independent Therapeutic School",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "110461",
+        "name": "Frieth Church of England Combined School",
         "score": 3.0,
         "flags": [
           "chrome"
@@ -117,7 +117,7 @@
     ]
   },
   "after": {
-    "recordCount": 1871,
+    "recordCount": 2051,
     "suspectCount": 13,
     "flagCounts": {
       "implausible_offerings": 8,
@@ -223,42 +223,42 @@
     ]
   },
   "qa": {
-    "reviewed": 57,
-    "changedSchools": 44,
-    "findingsApplied": 47,
+    "reviewed": 50,
+    "changedSchools": 37,
+    "findingsApplied": 39,
     "learningAdded": 9,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +67 (>= 15)",
+    "reason": "eventCount +47 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "6df8ae7468fa826d4f04",
-      "phraseCount": 768,
-      "candidateCount": 937,
-      "eventCount": 4144,
-      "updatedAt": "2026-09-06"
+      "phraseHash": "9b7d223c046aa7dce75c",
+      "phraseCount": 784,
+      "candidateCount": 953,
+      "eventCount": 4247,
+      "updatedAt": "2026-09-07"
     },
     "fingerprintAfter": {
-      "phraseHash": "700c610bc3b662453e4c",
-      "phraseCount": 777,
-      "candidateCount": 946,
-      "eventCount": 4200,
-      "updatedAt": "2026-09-06"
+      "phraseHash": "d1095c8d4ca178673973",
+      "phraseCount": 792,
+      "candidateCount": 962,
+      "eventCount": 4300,
+      "updatedAt": "2026-09-07"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 1871 published URN shards (prior=0 → 1871).",
-    "Rebalanced learned QA phrases: active=768 candidates=937.",
-    "Learning fingerprint: {'phraseHash': '6df8ae7468fa826d4f04', 'phraseCount': 768, 'candidateCount': 937, 'eventCount': 4144, 'updatedAt': '2026-09-06'}",
-    "Apply decision: eventCount +67 (>= 15)",
-    "Before: 57 suspects across 1871 records.",
-    "Applied QA fixes to 44 school(s) (47 area finding(s)).",
-    "Learned 9 new junk phrase(s) (store size 777).",
-    "Reviewed top 57 suspect(s); provider=none.",
+    "Hydrated working sidecar from 2051 published URN shards (prior=0 → 2051).",
+    "Rebalanced learned QA phrases: active=784 candidates=953.",
+    "Learning fingerprint: {'phraseHash': '9b7d223c046aa7dce75c', 'phraseCount': 784, 'candidateCount': 953, 'eventCount': 4247, 'updatedAt': '2026-09-07'}",
+    "Apply decision: eventCount +47 (>= 15)",
+    "Before: 50 suspects across 2051 records.",
+    "Applied QA fixes to 37 school(s) (39 area finding(s)).",
+    "Learned 9 new junk phrase(s) (store size 792).",
+    "Reviewed top 50 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 13 suspects across 1871 records.",
+    "After: 13 suspects across 2051 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }

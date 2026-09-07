@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-07T15:00:02.702801+00:00`
+- Ran at: `2026-09-07T15:28:14.619095+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `33`
-- New learned phrases: `7`
+- Reviewed: `50`
+- Schools changed: `37`
+- Findings applied: `39`
+- New learned phrases: `9`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (33 area finding(s)).
-- Learned 7 new junk phrase(s) (store size 784).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 37 school(s) (39 area finding(s)).
+- Learned 9 new junk phrase(s) (store size 792).
+- Reviewed top 50 suspect(s); provider=none.
 
 ## Suspects
 
-- `138667` Lord Williams's School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `148353` Heyford Park School — score 10.0 flags=policy_toc,implausible_offerings
-- `144432` Horspath Church of England Primary School — score 10.0 flags=policy_toc,implausible_offerings
-- `110229` Haddenham Community Infant School — score 9.0 flags=chrome
-- `118400` Lydden Primary School — score 9.0 flags=chrome
-- `118229` Northfleet Nursery School — score 9.0 flags=boilerplate,chrome
-- `110539` Heatherton School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `142591` Manor Community Primary School — score 8.0 flags=chrome,policy_toc,implausible_offerings
-- `123291` New College School — score 8.0 flags=chrome,cms_chrome
-- `147156` Elmhurst School — score 6.0 flags=chrome
-- `131523` Foxes Piece School — score 6.0 flags=chrome
-- `110541` Gayhurst School — score 6.0 flags=chrome
-- `150283` Hannah Ball Academy — score 6.0 flags=chrome
-- `148625` Huckleberry Therapeutic School — score 6.0 flags=chrome
-- `123187` Kirtlington Church of England Primary School — score 6.0 flags=chrome
-- `146815` Larkrise Primary School — score 6.0 flags=chrome
+- `118836` Maidstone Grammar School for Girls — score 6.0 flags=chrome
+- `150599` Newington Community Primary School — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
+- `144869` Minterne Junior School — score 5.0 flags=policy_toc,implausible_offerings
+- `141472` More Park Catholic Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `110500` Cressex Community School — score 3.0 flags=chrome
+- `110537` Davenies School — score 3.0 flags=chrome
+- `139679` Denham Green E-ACT Primary Academy — score 3.0 flags=chrome
+- `136419` Dr Challoner's Grammar School — score 3.0 flags=chrome
+- `146518` E-Act Bourne End Academy — score 3.0 flags=chrome
+- `145298` Eton Dorney Independent Therapeutic School — score 3.0 flags=chrome
+- `110461` Frieth Church of England Combined School — score 3.0 flags=chrome
+- `136964` Great Marlow School — score 3.0 flags=chrome
+- `110347` Haddenham Community Junior School — score 3.0 flags=chrome
+- `110445` Hawridge and Cholesbury Church of England School — score 3.0 flags=chrome
+- `141150` Holy Trinity Catholic School, Chipping Norton — score 3.0 flags=chrome
+- `139079` Kingfisher School — score 3.0 flags=chrome
+- `123003` Kingham Primary School — score 3.0 flags=chrome
+- `143890` Larkmead School — score 3.0 flags=chrome
+- `143986` Leafield Church of England Primary School — score 3.0 flags=chrome
