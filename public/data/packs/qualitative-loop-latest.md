@@ -1,12 +1,12 @@
 # Qualitative capture loop
 
-- Ran at: `2026-09-06T13:09:38.472631+00:00`
+- Ran at: `2026-09-07T15:00:24.315532+00:00`
 - Scope: `parallel`
-- LA: `Kent, Surrey, West Sussex`
+- LA: `Buckinghamshire, Kent, Oxfordshire`
 - Index: `public/data/packs/kent/schools-index.json`
-- Remaining with website (pre-capture): `450`
+- Remaining with website (pre-capture): `390`
 - Batch limit (per stream): `60`
-- Sidecar records before → after: `1691` → `1871`
+- Sidecar records before → after: `1871` → `2051`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
@@ -17,23 +17,23 @@
 
 ## Streams
 
-- `Kent`: status=ok added=60 remaining=450 index=`public/data/packs/kent/schools-index.json`
-- `Surrey`: status=ok added=60 remaining=267 index=`public/data/packs/surrey/schools-index.json`
-- `West Sussex`: status=ok added=60 remaining=268 index=`public/data/packs/west-sussex/schools-index.json`
+- `Buckinghamshire`: status=ok added=60 remaining=209 index=`public/data/packs/buckinghamshire/schools-index.json`
+- `Kent`: status=ok added=60 remaining=390 index=`public/data/packs/kent/schools-index.json`
+- `Oxfordshire`: status=ok added=60 remaining=229 index=`public/data/packs/oxfordshire/schools-index.json`
 
 ## Notes
 
-- Hydrated working sidecar from 1691 published URN shards (prior=0 → 1691).
-- Stream preferred=Hampshire exhausted (remaining=0); advanced to Kent (remaining=450).
-- Stream preferred=Dorset exhausted (remaining=0); advanced to West Sussex (remaining=268).
-- Stream preferred=East Sussex exhausted (remaining=0); advanced to Surrey (remaining=267).
+- Hydrated working sidecar from 1871 published URN shards (prior=0 → 1871).
+- Stream preferred=Hampshire exhausted (remaining=0); advanced to Kent (remaining=390).
+- Stream preferred=Dorset exhausted (remaining=0); advanced to Oxfordshire (remaining=229).
+- Stream preferred=East Sussex exhausted (remaining=0); advanced to Buckinghamshire (remaining=209).
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Kent index=public/data/packs/kent/schools-index.json remainingWithWebsite=450.
-- Stream LA=West Sussex index=public/data/packs/west-sussex/schools-index.json remainingWithWebsite=268.
-- Stream LA=Surrey index=public/data/packs/surrey/schools-index.json remainingWithWebsite=267.
+- Stream LA=Kent index=public/data/packs/kent/schools-index.json remainingWithWebsite=390.
+- Stream LA=Oxfordshire index=public/data/packs/oxfordshire/schools-index.json remainingWithWebsite=229.
+- Stream LA=Buckinghamshire index=public/data/packs/buckinghamshire/schools-index.json remainingWithWebsite=209.
 - Running 3 capture streams in parallel (limit 60 each).
-- Merged 3 partial sidecar(s) → 1871 records (union size 1871).
-- Captured batch (sidecar 1691 → 1871); learned terms now 632.
+- Merged 3 partial sidecar(s) → 2051 records (union size 2051).
+- Captured batch (sidecar 1871 → 2051); learned terms now 636.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
 - QA provider=none: reviewed 16, changed 16, learned phrases +7.
