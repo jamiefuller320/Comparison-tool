@@ -1,32 +1,97 @@
 {
-  "ranAt": "2026-09-07T15:29:41.736662+00:00",
+  "ranAt": "2026-09-08T14:06:58.106026+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 2051,
-    "suspectCount": 50,
+    "recordCount": 2231,
+    "suspectCount": 57,
     "flagCounts": {
-      "chrome": 34,
-      "implausible_offerings": 10,
+      "chrome": 38,
+      "implausible_offerings": 14,
       "admissions": 5,
-      "policy_toc": 2,
+      "policy_toc": 5,
       "boilerplate": 1
     },
     "topSuspects": [
       {
-        "urn": "118836",
-        "name": "Maidstone Grammar School for Girls",
+        "urn": "118646",
+        "name": "Ospringe Church of England Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "150599",
-        "name": "Newington Community Primary School",
+        "urn": "118728",
+        "name": "Platt Church of England Voluntary Aided Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "118751",
+        "name": "Ramsgate, Holy Trinity Church of England Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "118849",
+        "name": "Roseacre Junior School",
+        "score": 6.0,
+        "flags": [
+          "boilerplate",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "125219",
+        "name": "St Anne's Catholic Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "143365",
+        "name": "St Anne's Catholic Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "143372",
+        "name": "St Charles Borromeo Catholic Primary School, Weybridge",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "125331",
+        "name": "St Christopher's School Trust (Epsom) Ltd",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "146573",
+        "name": "St Cuthbert Mayne Catholic Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "100528",
+        "name": "St James Senior Boys' School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -41,86 +106,21 @@
         ]
       },
       {
-        "urn": "144869",
-        "name": "Minterne Junior School",
+        "urn": "126066",
+        "name": "Millais School",
         "score": 5.0,
         "flags": [
           "policy_toc",
           "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "141472",
-        "name": "More Park Catholic Primary School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "110500",
-        "name": "Cressex Community School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "110537",
-        "name": "Davenies School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "139679",
-        "name": "Denham Green E-ACT Primary Academy",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "136419",
-        "name": "Dr Challoner's Grammar School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "146518",
-        "name": "E-Act Bourne End Academy",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "145298",
-        "name": "Eton Dorney Independent Therapeutic School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "110461",
-        "name": "Frieth Church of England Combined School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 2051,
-    "suspectCount": 13,
+    "recordCount": 2231,
+    "suspectCount": 14,
     "flagCounts": {
-      "implausible_offerings": 8,
+      "implausible_offerings": 9,
       "admissions": 5
     },
     "topSuspects": [
@@ -223,42 +223,42 @@
     ]
   },
   "qa": {
-    "reviewed": 50,
-    "changedSchools": 37,
-    "findingsApplied": 39,
-    "learningAdded": 9,
+    "reviewed": 57,
+    "changedSchools": 43,
+    "findingsApplied": 52,
+    "learningAdded": 13,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +47 (>= 15)",
+    "reason": "eventCount +45 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "9b7d223c046aa7dce75c",
-      "phraseCount": 784,
-      "candidateCount": 953,
-      "eventCount": 4247,
-      "updatedAt": "2026-09-07"
+      "phraseHash": "19db6370971fd3a18d15",
+      "phraseCount": 803,
+      "candidateCount": 973,
+      "eventCount": 4345,
+      "updatedAt": "2026-09-08"
     },
     "fingerprintAfter": {
-      "phraseHash": "d1095c8d4ca178673973",
-      "phraseCount": 792,
-      "candidateCount": 962,
-      "eventCount": 4300,
-      "updatedAt": "2026-09-07"
+      "phraseHash": "c208bf0ca4914951f09c",
+      "phraseCount": 815,
+      "candidateCount": 986,
+      "eventCount": 4420,
+      "updatedAt": "2026-09-08"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 2051 published URN shards (prior=0 → 2051).",
-    "Rebalanced learned QA phrases: active=784 candidates=953.",
-    "Learning fingerprint: {'phraseHash': '9b7d223c046aa7dce75c', 'phraseCount': 784, 'candidateCount': 953, 'eventCount': 4247, 'updatedAt': '2026-09-07'}",
-    "Apply decision: eventCount +47 (>= 15)",
-    "Before: 50 suspects across 2051 records.",
-    "Applied QA fixes to 37 school(s) (39 area finding(s)).",
-    "Learned 9 new junk phrase(s) (store size 792).",
-    "Reviewed top 50 suspect(s); provider=none.",
+    "Hydrated working sidecar from 2231 published URN shards (prior=0 → 2231).",
+    "Rebalanced learned QA phrases: active=803 candidates=973.",
+    "Learning fingerprint: {'phraseHash': '19db6370971fd3a18d15', 'phraseCount': 803, 'candidateCount': 973, 'eventCount': 4345, 'updatedAt': '2026-09-08'}",
+    "Apply decision: eventCount +45 (>= 15)",
+    "Before: 57 suspects across 2231 records.",
+    "Applied QA fixes to 43 school(s) (52 area finding(s)).",
+    "Learned 13 new junk phrase(s) (store size 815).",
+    "Reviewed top 57 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 13 suspects across 2051 records.",
+    "After: 14 suspects across 2231 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }

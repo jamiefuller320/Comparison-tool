@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-08T13:50:21.749476+00:00`
+- Ran at: `2026-09-08T14:05:22.091410+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `32`
-- New learned phrases: `11`
+- Reviewed: `57`
+- Schools changed: `43`
+- Findings applied: `52`
+- New learned phrases: `13`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (32 area finding(s)).
-- Learned 11 new junk phrase(s) (store size 803).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 43 school(s) (52 area finding(s)).
+- Learned 13 new junk phrase(s) (store size 815).
+- Reviewed top 57 suspect(s); provider=none.
 
 ## Suspects
 
-- `136570` Queen Elizabeth's Grammar School — score 16.0 flags=policy_toc,implausible_offerings,boilerplate,chrome
-- `118768` Our Lady's Catholic Primary School, Dartford — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `124979` Shottermill Junior School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `148992` Palm Bay Primary School — score 9.0 flags=chrome
-- `118393` River Primary School — score 9.0 flags=chrome
-- `125985` Jolesfield CofE Primary School — score 8.0 flags=cms_chrome,chrome
-- `126108` Lancing College — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `126114` Lancing College Preparatory School at Worthing — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `126141` Philpots Manor School — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `118401` Preston Primary School — score 8.0 flags=chrome,policy_toc,implausible_offerings
-- `118453` Riverhead Infants' School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `141197` Sandfield Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `143370` St Hugh of Lincoln Catholic Primary School — score 8.0 flags=chrome,implausible_offerings
-- `126136` Hurstpierpoint College — score 6.0 flags=chrome
-- `126157` Manor Green College — score 6.0 flags=chrome
-- `133973` Northgate Primary School — score 6.0 flags=chrome
+- `118646` Ospringe Church of England Primary School — score 6.0 flags=chrome
+- `118728` Platt Church of England Voluntary Aided Primary School — score 6.0 flags=chrome
+- `118751` Ramsgate, Holy Trinity Church of England Primary School — score 6.0 flags=chrome
+- `118849` Roseacre Junior School — score 6.0 flags=boilerplate,chrome
+- `125219` St Anne's Catholic Primary School — score 6.0 flags=chrome
+- `143365` St Anne's Catholic Primary School — score 6.0 flags=chrome
+- `143372` St Charles Borromeo Catholic Primary School, Weybridge — score 6.0 flags=chrome
+- `125331` St Christopher's School Trust (Epsom) Ltd — score 6.0 flags=chrome
+- `146573` St Cuthbert Mayne Catholic Primary School — score 6.0 flags=chrome
+- `100528` St James Senior Boys' School — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
+- `126066` Millais School — score 5.0 flags=policy_toc,implausible_offerings
+- `125841` North Lancing Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `150711` Oak Tree Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `148882` Shawley Community Primary Academy & Nursery — score 5.0 flags=policy_toc,implausible_offerings
+- `143374` St Augustine's Catholic Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `150990` Hove Micro-School — score 3.0 flags=chrome
+- `135814` Ingfield Manor School — score 3.0 flags=chrome
+- `141181` Kingsham Primary School — score 3.0 flags=chrome
+- `133967` Langley Green Primary — score 3.0 flags=chrome
