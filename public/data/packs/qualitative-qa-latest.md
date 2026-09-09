@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-09T14:02:53.935692+00:00`
+- Ran at: `2026-09-09T14:07:38.426049+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `33`
-- New learned phrases: `11`
+- Reviewed: `54`
+- Schools changed: `40`
+- Findings applied: `44`
+- New learned phrases: `16`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (33 area finding(s)).
-- Learned 11 new junk phrase(s) (store size 825).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 40 school(s) (44 area finding(s)).
+- Learned 16 new junk phrase(s) (store size 841).
+- Reviewed top 54 suspect(s); provider=none.
 
 ## Suspects
 
-- `142847` Ickford School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `110206` Oak Green School — score 11.0 flags=policy_toc,implausible_offerings,chrome
-- `146377` Princes Risborough School — score 11.0 flags=policy_toc,implausible_offerings,chrome
-- `123300` Radley College — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `147057` Sholden Church of England Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `151495` Shoreham Village School — score 8.0 flags=policy_toc,implausible_offerings,boilerplate
-- `140293` Shrivenham Church of England School — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `123178` St Blaise CofE Primary School — score 8.0 flags=chrome,policy_toc,implausible_offerings
-- `148576` Kingsbrook View Primary Academy — score 6.0 flags=chrome
-- `140207` Lace Hill Academy — score 6.0 flags=chrome
-- `110564` Macintyre School — score 6.0 flags=chrome
-- `110438` Maids Moreton Church of England School — score 6.0 flags=chrome
-- `110297` Manor Farm Community Infant School — score 6.0 flags=chrome
-- `144688` Northbourne Church of England Primary School — score 6.0 flags=chrome
-- `123286` Oratory Preparatory School — score 6.0 flags=chrome
-- `123326` Park School — score 6.0 flags=chrome
+- `118505` Sandgate Primary School — score 6.0 flags=boilerplate,chrome
+- `147056` Sandown School — score 6.0 flags=chrome
+- `118387` Sellindge Primary School — score 6.0 flags=chrome
+- `118285` Slade Primary School and Attached Unit for Children with Hearing Impairment — score 6.0 flags=chrome
+- `142728` Southwold Primary School — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
+- `110428` Lee Common Church of England School — score 5.0 flags=admissions,admissions_in_enrichment
+- `110338` Long Crendon School — score 5.0 flags=policy_toc,implausible_offerings
+- `118744` Saltwood CofE Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `118551` Sevenoaks Primary School — score 5.0 flags=admissions,admissions_in_enrichment
+- `118436` Shears Green Junior School — score 5.0 flags=policy_toc,implausible_offerings
+- `123038` Sonning Common Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `123218` St Aloysius' Catholic Primary School — score 5.0 flags=policy_toc,implausible_offerings
+- `119037` St Anthony's School — score 5.0 flags=policy_toc,implausible_offerings
+- `110471` Holy Trinity Church of England (Aided) School — score 3.0 flags=boilerplate
+- `110299` Juniper Hill School — score 3.0 flags=chrome
+- `140207` Lace Hill Academy — score 3.0 flags=chrome
+- `110543` Maltman's Green School — score 3.0 flags=chrome
+- `131815` Millbrook Combined School — score 3.0 flags=chrome
+- `110393` Naphill and Walters Ash School — score 3.0 flags=chrome

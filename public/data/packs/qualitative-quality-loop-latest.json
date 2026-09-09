@@ -1,48 +1,25 @@
 {
-  "ranAt": "2026-09-08T14:06:58.106026+00:00",
+  "ranAt": "2026-09-09T14:09:22.550937+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 2231,
-    "suspectCount": 57,
+    "recordCount": 2411,
+    "suspectCount": 54,
     "flagCounts": {
-      "chrome": 38,
-      "implausible_offerings": 14,
-      "admissions": 5,
-      "policy_toc": 5,
-      "boilerplate": 1
+      "chrome": 30,
+      "implausible_offerings": 15,
+      "admissions": 8,
+      "policy_toc": 6,
+      "admissions_in_enrichment": 2,
+      "boilerplate": 2
     },
     "topSuspects": [
       {
-        "urn": "118646",
-        "name": "Ospringe Church of England Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118728",
-        "name": "Platt Church of England Voluntary Aided Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118751",
-        "name": "Ramsgate, Holy Trinity Church of England Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118849",
-        "name": "Roseacre Junior School",
+        "urn": "118505",
+        "name": "Sandgate Primary School",
         "score": 6.0,
         "flags": [
           "boilerplate",
@@ -50,48 +27,32 @@
         ]
       },
       {
-        "urn": "125219",
-        "name": "St Anne's Catholic Primary School",
+        "urn": "147056",
+        "name": "Sandown School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "143365",
-        "name": "St Anne's Catholic Primary School",
+        "urn": "118387",
+        "name": "Sellindge Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "143372",
-        "name": "St Charles Borromeo Catholic Primary School, Weybridge",
+        "urn": "118285",
+        "name": "Slade Primary School and Attached Unit for Children with Hearing Impairment",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "125331",
-        "name": "St Christopher's School Trust (Epsom) Ltd",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "146573",
-        "name": "St Cuthbert Mayne Catholic Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "100528",
-        "name": "St James Senior Boys' School",
+        "urn": "142728",
+        "name": "Southwold Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -106,8 +67,53 @@
         ]
       },
       {
-        "urn": "126066",
-        "name": "Millais School",
+        "urn": "110428",
+        "name": "Lee Common Church of England School",
+        "score": 5.0,
+        "flags": [
+          "admissions",
+          "admissions_in_enrichment"
+        ]
+      },
+      {
+        "urn": "110338",
+        "name": "Long Crendon School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "118744",
+        "name": "Saltwood CofE Primary School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "118551",
+        "name": "Sevenoaks Primary School",
+        "score": 5.0,
+        "flags": [
+          "admissions",
+          "admissions_in_enrichment"
+        ]
+      },
+      {
+        "urn": "118436",
+        "name": "Shears Green Junior School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "123038",
+        "name": "Sonning Common Primary School",
         "score": 5.0,
         "flags": [
           "policy_toc",
@@ -117,17 +123,25 @@
     ]
   },
   "after": {
-    "recordCount": 2231,
-    "suspectCount": 14,
+    "recordCount": 2411,
+    "suspectCount": 15,
     "flagCounts": {
       "implausible_offerings": 9,
-      "admissions": 5
+      "admissions": 6
     },
     "topSuspects": [
       {
         "urn": "147128",
         "name": "The Ferns Primary Academy",
         "score": 6.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "110428",
+        "name": "Lee Common Church of England School",
+        "score": 3.0,
         "flags": [
           "admissions"
         ]
@@ -211,54 +225,46 @@
         "flags": [
           "implausible_offerings"
         ]
-      },
-      {
-        "urn": "114408",
-        "name": "Park Mead Primary School",
-        "score": 2.0,
-        "flags": [
-          "implausible_offerings"
-        ]
       }
     ]
   },
   "qa": {
-    "reviewed": 57,
-    "changedSchools": 43,
-    "findingsApplied": 52,
-    "learningAdded": 13,
+    "reviewed": 54,
+    "changedSchools": 40,
+    "findingsApplied": 44,
+    "learningAdded": 16,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +45 (>= 15)",
+    "reason": "eventCount +41 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "19db6370971fd3a18d15",
-      "phraseCount": 803,
-      "candidateCount": 973,
-      "eventCount": 4345,
-      "updatedAt": "2026-09-08"
+      "phraseHash": "285925cd36d9177e5a85",
+      "phraseCount": 825,
+      "candidateCount": 997,
+      "eventCount": 4461,
+      "updatedAt": "2026-09-09"
     },
     "fingerprintAfter": {
-      "phraseHash": "c208bf0ca4914951f09c",
-      "phraseCount": 815,
-      "candidateCount": 986,
-      "eventCount": 4420,
-      "updatedAt": "2026-09-08"
+      "phraseHash": "303d75d0e50342519d0e",
+      "phraseCount": 841,
+      "candidateCount": 1013,
+      "eventCount": 4530,
+      "updatedAt": "2026-09-09"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 2231 published URN shards (prior=0 → 2231).",
-    "Rebalanced learned QA phrases: active=803 candidates=973.",
-    "Learning fingerprint: {'phraseHash': '19db6370971fd3a18d15', 'phraseCount': 803, 'candidateCount': 973, 'eventCount': 4345, 'updatedAt': '2026-09-08'}",
-    "Apply decision: eventCount +45 (>= 15)",
-    "Before: 57 suspects across 2231 records.",
-    "Applied QA fixes to 43 school(s) (52 area finding(s)).",
-    "Learned 13 new junk phrase(s) (store size 815).",
-    "Reviewed top 57 suspect(s); provider=none.",
+    "Hydrated working sidecar from 2411 published URN shards (prior=0 → 2411).",
+    "Rebalanced learned QA phrases: active=825 candidates=997.",
+    "Learning fingerprint: {'phraseHash': '285925cd36d9177e5a85', 'phraseCount': 825, 'candidateCount': 997, 'eventCount': 4461, 'updatedAt': '2026-09-09'}",
+    "Apply decision: eventCount +41 (>= 15)",
+    "Before: 54 suspects across 2411 records.",
+    "Applied QA fixes to 40 school(s) (44 area finding(s)).",
+    "Learned 16 new junk phrase(s) (store size 841).",
+    "Reviewed top 54 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 14 suspects across 2231 records.",
+    "After: 15 suspects across 2411 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
