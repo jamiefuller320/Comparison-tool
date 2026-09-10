@@ -1,58 +1,104 @@
 {
-  "ranAt": "2026-09-09T14:09:22.550937+00:00",
+  "ranAt": "2026-09-10T14:03:45.933130+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 2411,
-    "suspectCount": 54,
+    "recordCount": 2591,
+    "suspectCount": 67,
     "flagCounts": {
-      "chrome": 30,
-      "implausible_offerings": 15,
-      "admissions": 8,
-      "policy_toc": 6,
-      "admissions_in_enrichment": 2,
-      "boilerplate": 2
+      "chrome": 45,
+      "implausible_offerings": 13,
+      "admissions": 6,
+      "policy_toc": 4,
+      "boilerplate": 3
     },
     "topSuspects": [
       {
-        "urn": "118505",
-        "name": "Sandgate Primary School",
-        "score": 6.0,
-        "flags": [
-          "boilerplate",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "147056",
-        "name": "Sandown School",
+        "urn": "140873",
+        "name": "St Gregory's Catholic Primary School, Margate",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "118387",
-        "name": "Sellindge Primary School",
+        "urn": "137071",
+        "name": "St Johns Church of England Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "118285",
-        "name": "Slade Primary School and Attached Unit for Children with Hearing Impairment",
+        "urn": "151192",
+        "name": "St Margaret's Church of England Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "142728",
-        "name": "Southwold Primary School",
+        "urn": "145081",
+        "name": "St Mark's Church of England Primary School, Eccles",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "118698",
+        "name": "St Nicholas At Wade Church of England Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "142814",
+        "name": "St Nicholas Church of England Primary Academy",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "151817",
+        "name": "St Nicolas' Church of England Infant School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "118750",
+        "name": "St Peter-in-Thanet CofE Junior School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "125066",
+        "name": "Stamford Green Primary School and Nursery",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "146259",
+        "name": "Stoughton Infant School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "144231",
+        "name": "Tatsfield Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -65,65 +111,11 @@
         "flags": [
           "admissions"
         ]
-      },
-      {
-        "urn": "110428",
-        "name": "Lee Common Church of England School",
-        "score": 5.0,
-        "flags": [
-          "admissions",
-          "admissions_in_enrichment"
-        ]
-      },
-      {
-        "urn": "110338",
-        "name": "Long Crendon School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "118744",
-        "name": "Saltwood CofE Primary School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "118551",
-        "name": "Sevenoaks Primary School",
-        "score": 5.0,
-        "flags": [
-          "admissions",
-          "admissions_in_enrichment"
-        ]
-      },
-      {
-        "urn": "118436",
-        "name": "Shears Green Junior School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "123038",
-        "name": "Sonning Common Primary School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
       }
     ]
   },
   "after": {
-    "recordCount": 2411,
+    "recordCount": 2591,
     "suspectCount": 15,
     "flagCounts": {
       "implausible_offerings": 9,
@@ -229,42 +221,42 @@
     ]
   },
   "qa": {
-    "reviewed": 54,
-    "changedSchools": 40,
-    "findingsApplied": 44,
-    "learningAdded": 16,
+    "reviewed": 67,
+    "changedSchools": 52,
+    "findingsApplied": 63,
+    "learningAdded": 4,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +41 (>= 15)",
+    "reason": "eventCount +56 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "285925cd36d9177e5a85",
-      "phraseCount": 825,
-      "candidateCount": 997,
-      "eventCount": 4461,
-      "updatedAt": "2026-09-09"
+      "phraseHash": "a03ea93f22147a35e795",
+      "phraseCount": 855,
+      "candidateCount": 1027,
+      "eventCount": 4586,
+      "updatedAt": "2026-09-10"
     },
     "fingerprintAfter": {
-      "phraseHash": "303d75d0e50342519d0e",
-      "phraseCount": 841,
-      "candidateCount": 1013,
-      "eventCount": 4530,
-      "updatedAt": "2026-09-09"
+      "phraseHash": "9dffab5d70981a733e38",
+      "phraseCount": 859,
+      "candidateCount": 1031,
+      "eventCount": 4661,
+      "updatedAt": "2026-09-10"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 2411 published URN shards (prior=0 → 2411).",
-    "Rebalanced learned QA phrases: active=825 candidates=997.",
-    "Learning fingerprint: {'phraseHash': '285925cd36d9177e5a85', 'phraseCount': 825, 'candidateCount': 997, 'eventCount': 4461, 'updatedAt': '2026-09-09'}",
-    "Apply decision: eventCount +41 (>= 15)",
-    "Before: 54 suspects across 2411 records.",
-    "Applied QA fixes to 40 school(s) (44 area finding(s)).",
-    "Learned 16 new junk phrase(s) (store size 841).",
-    "Reviewed top 54 suspect(s); provider=none.",
+    "Hydrated working sidecar from 2591 published URN shards (prior=0 → 2591).",
+    "Rebalanced learned QA phrases: active=855 candidates=1027.",
+    "Learning fingerprint: {'phraseHash': 'a03ea93f22147a35e795', 'phraseCount': 855, 'candidateCount': 1027, 'eventCount': 4586, 'updatedAt': '2026-09-10'}",
+    "Apply decision: eventCount +56 (>= 15)",
+    "Before: 67 suspects across 2591 records.",
+    "Applied QA fixes to 52 school(s) (63 area finding(s)).",
+    "Learned 4 new junk phrase(s) (store size 859).",
+    "Reviewed top 67 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 15 suspects across 2411 records.",
+    "After: 15 suspects across 2591 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
