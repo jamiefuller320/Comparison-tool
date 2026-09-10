@@ -26,6 +26,7 @@ if str(SCRIPTS) not in sys.path:
 from seed_scope import SEED_LOCAL_AUTHORITY, la_slug  # noqa: E402
 
 COVERAGE_PATH = ROOT / "public" / "data" / "seo-coverage.json"
+AEO_READINESS_PATH = ROOT / "public" / "data" / "aeo-readiness.json"
 MANIFEST_PATH = ROOT / "public" / "data" / "packs" / "manifest.json"
 SEED_INDEX = ROOT / "public" / "data" / "schools-index.json"
 
@@ -154,6 +155,15 @@ def list_ready_pack_rows(manifest: dict) -> list[dict]:
     return rows
 
 
+def read_aeo_readiness() -> dict | None:
+    if not AEO_READINESS_PATH.exists():
+        return None
+    try:
+        return _load_json(AEO_READINESS_PATH)
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
 def collect_report(coverage: dict | None = None) -> dict:
     coverage = coverage or read_coverage()
     min_schools = coverage["policy"]["townMinSchools"]
@@ -185,6 +195,8 @@ def collect_report(coverage: dict | None = None) -> dict:
     max_schools = coverage["pageBudget"]["maxSchoolPages"]
     max_towns = coverage["pageBudget"]["maxTownPages"]
 
+    aeo = read_aeo_readiness()
+
     return {
         "generatedFromCoverageAt": coverage.get("generatedAt"),
         "pageBudget": coverage["pageBudget"],
@@ -192,6 +204,7 @@ def collect_report(coverage: dict | None = None) -> dict:
         "includedAreaSlugs": included,
         "included": included_rows,
         "candidates": candidate_rows,
+        "aeoReadiness": aeo,
         "totals": {
             "schoolPages": school_pages,
             "townPages": town_pages,
@@ -227,6 +240,20 @@ def format_markdown(report: dict) -> str:
         lines.append(
             f"| {row['localAuthority']} | {row['schoolCount']} | {row['townCount']} "
             f"| {row['signalPct']} | {row['precisPct']} |"
+        )
+    aeo = report.get("aeoReadiness")
+    if aeo and aeo.get("totals"):
+        t = aeo["totals"]
+        lines.extend(
+            [
+                "",
+                "## AEO / GEO readiness",
+                "",
+                f"- llms.txt: `{aeo.get('llmsTxt', '/llms.txt')}` (generated {aeo.get('generatedAt', '—')})",
+                f"- School pages with Ofsted Q&A: **{t.get('ofstedPct', 0)}%**",
+                f"- School pages with inspection précis: **{t.get('precisPct', 0)}%**",
+                f"- School pages with website evidence (quality-gated): **{t.get('qualitativePct', 0)}%**",
+            ]
         )
     lines.extend(["", "## Candidate packs (not yet in coverage)", ""])
     if not report["candidates"]:

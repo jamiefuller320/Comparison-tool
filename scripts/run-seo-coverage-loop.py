@@ -243,6 +243,15 @@ def run(
         interest_by_slug=interest_by_slug,
     )
 
+    if not dry_run:
+        import subprocess
+
+        subprocess.run(
+            ["npm", "run", "generate:aeo-manifests"],
+            cwd=ROOT,
+            check=True,
+        )
+
     print(
         f"SEO coverage loop: added {len(added)} area(s); "
         f"schools {before['totals']['schoolPages']} → {after['totals']['schoolPages']} "

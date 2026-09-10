@@ -16,6 +16,7 @@ import {
   packDataPathBySlug,
   type LaPackManifest,
 } from "@/lib/laPacks";
+import { loadSeoQualitativeThemes, type SeoQualitativeTheme } from "@/lib/seoQualitative";
 import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 
 /** Fallback when seo-coverage.json is missing or incomplete. */
@@ -70,6 +71,12 @@ export type SeoSchoolSummary = {
   inspectionPrecis: string | null;
   inspectionReportFileUrl: string | null;
   inspectionReportLabel: string | null;
+  /** DfE index harvest date for this school's pack. */
+  dataGeneratedAt: string | null;
+  /** DfE tables period label, e.g. 2024/2025. */
+  dataPeriod: string | null;
+  /** Bounded qualitative themes (build-time, quality-gated). */
+  qualitativeThemes: SeoQualitativeTheme[];
 };
 
 export type SeoTown = {
@@ -105,6 +112,7 @@ function truncatePrecis(text: string | null | undefined, max = 420): string | nu
 function toSummary(
   school: SchoolRecord,
   areaSlug: string,
+  indexMeta: { generatedAt: string | null; period: string | null },
 ): SeoSchoolSummary | null {
   if (school.closed) return null;
   const urn = String(school.urn ?? "").trim();
@@ -136,6 +144,9 @@ function toSummary(
     inspectionPrecis: truncatePrecis(school.inspectionPrecis),
     inspectionReportFileUrl: school.inspectionReportFileUrl?.trim() || null,
     inspectionReportLabel: school.inspectionReportLabel?.trim() || null,
+    dataGeneratedAt: indexMeta.generatedAt,
+    dataPeriod: indexMeta.period,
+    qualitativeThemes: loadSeoQualitativeThemes(urn),
   };
 }
 
@@ -216,12 +227,23 @@ export function seoTownMinSchools(): number {
   return readSeoCoverage().policy.townMinSchools;
 }
 
+function indexMeta(index: SchoolsIndex): {
+  generatedAt: string | null;
+  period: string | null;
+} {
+  return {
+    generatedAt: index.generatedAt?.trim() || null,
+    period: index.period?.trim() || null,
+  };
+}
+
 function loadAreaSchools(areaSlug: string): SeoSchoolSummary[] {
   const seedSlug = laSlug(SEED_LOCAL_AUTHORITY);
   if (areaSlug === seedSlug) {
     const index = readPublicJson<SchoolsIndex>("data/schools-index.json");
+    const meta = indexMeta(index);
     return index.schools
-      .map((school) => toSummary(school, seedSlug))
+      .map((school) => toSummary(school, seedSlug, meta))
       .filter((row): row is SeoSchoolSummary => row != null);
   }
 
@@ -231,8 +253,9 @@ function loadAreaSchools(areaSlug: string): SeoSchoolSummary[] {
   );
   if (!existsSync(publicPath(rel))) return [];
   const index = readPublicJson<SchoolsIndex>(rel);
+  const meta = indexMeta(index);
   return index.schools
-    .map((school) => toSummary(school, areaSlug))
+    .map((school) => toSummary(school, areaSlug, meta))
     .filter((row): row is SeoSchoolSummary => row != null);
 }
 
@@ -453,7 +476,35 @@ export function townPageDescription(town: SeoTown): string {
   return `Browse ${formatCount(town.schoolCount)} schools in ${town.name} (${town.localAuthority}): Ofsted grades and published outcomes, then shortlist in School Compass — parental compare, not a league table.`;
 }
 
-export function schoolJsonLd(school: SeoSchoolSummary): Record<string, unknown> {
+export function schoolCitationLines(school: SeoSchoolSummary): string[] {
+  const lines = [
+    `${school.name}`,
+    `URN: ${school.urn}`,
+    `Local authority: ${school.localAuthority}`,
+  ];
+  if (school.town) lines.push(`Town: ${school.town}`);
+  if (school.postcode) lines.push(`Postcode: ${school.postcode}`);
+  if (school.ofstedOverall) {
+    const date = school.ofstedPublicationDate
+      ? ` (${school.ofstedPublicationDate})`
+      : "";
+    lines.push(`Ofsted overall: ${school.ofstedOverall}${date}`);
+  }
+  if (school.dataPeriod) lines.push(`DfE data period: ${school.dataPeriod}`);
+  if (school.dataGeneratedAt) {
+    lines.push(`Index updated: ${school.dataGeneratedAt}`);
+  }
+  lines.push(`Canonical: ${BRAND_HOME_URL}${schoolPath(school.urn)}`);
+  lines.push(
+    "Positioning: School Compass parental compare — not a league table.",
+  );
+  return lines;
+}
+
+export function schoolJsonLd(
+  school: SeoSchoolSummary,
+  faqs?: { question: string; answer: string }[],
+): Record<string, unknown> {
   const url = `${BRAND_HOME_URL}${schoolPath(school.urn)}`;
   const address: Record<string, unknown> = {
     "@type": "PostalAddress",
@@ -491,6 +542,9 @@ export function schoolJsonLd(school: SeoSchoolSummary): Record<string, unknown> 
       isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
       inLanguage: "en-GB",
       breadcrumb: { "@id": `${url}#breadcrumb` },
+      ...(school.dataGeneratedAt
+        ? { dateModified: school.dataGeneratedAt }
+        : {}),
     },
     {
       "@type": "BreadcrumbList",
@@ -540,6 +594,22 @@ export function schoolJsonLd(school: SeoSchoolSummary): Record<string, unknown> 
       ],
     },
   ];
+
+  if (faqs?.length) {
+    graph.push({
+      "@type": "FAQPage",
+      "@id": `${url}#faq`,
+      url,
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    });
+  }
 
   return { "@context": "https://schema.org", "@graph": graph };
 }
