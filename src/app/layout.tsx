@@ -89,6 +89,11 @@ export const metadata: Metadata = {
   other: {
     "geo.region": "GB",
   },
+  alternates: {
+    types: {
+      "text/plain": [{ url: "/llms.txt", title: "LLM site summary" }],
+    },
+  },
   ...(googleVerification
     ? { verification: { google: googleVerification } }
     : {}),

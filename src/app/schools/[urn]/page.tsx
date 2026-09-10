@@ -6,6 +6,7 @@ import { areaPath, areasIndexPath, formatCount } from "@/lib/areas";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { guidePath } from "@/lib/guides";
 import { laSlug } from "@/lib/laPacks";
+import { schoolPageFaqs } from "@/lib/seoFaqs";
 import {
   formatAtt8,
   formatOutcomePercent,
@@ -13,6 +14,7 @@ import {
   getSeoTown,
   listSeoSchools,
   listSeoSchoolsInTown,
+  schoolCitationLines,
   schoolCompareHref,
   schoolJsonLd,
   schoolPageDescription,
@@ -88,6 +90,8 @@ export default async function SchoolLandingPage({ params }: PageProps) {
         .filter((row) => row.urn !== school.urn)
         .slice(0, 8)
     : [];
+  const faqs = schoolPageFaqs(school);
+  const citationLines = schoolCitationLines(school);
 
   const website = school.schoolWebsite?.trim();
   const websiteHref = website
@@ -98,7 +102,7 @@ export default async function SchoolLandingPage({ params }: PageProps) {
 
   return (
     <main id="main" className="area-page school-seo-page">
-      <JsonLd data={schoolJsonLd(school)} />
+      <JsonLd data={schoolJsonLd(school, faqs)} />
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
@@ -191,6 +195,28 @@ export default async function SchoolLandingPage({ params }: PageProps) {
         </div>
       </section>
 
+      {faqs.length > 0 ? (
+        <section className="section" aria-labelledby="school-qa-heading">
+          <div className="shell">
+            <div className="section-head">
+              <h2 id="school-qa-heading">Common questions</h2>
+              <p>
+                Short factual answers from published data — use the compare tool
+                and a visit for fit, not tables alone.
+              </p>
+            </div>
+            <div className="guide-faq">
+              {faqs.map((faq) => (
+                <details key={faq.question} className="guide-faq-item">
+                  <summary>{faq.question}</summary>
+                  <p>{faq.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {school.inspectionPrecis ? (
         <section className="section" aria-labelledby="school-precis-heading">
           <div className="shell">
@@ -218,6 +244,43 @@ export default async function SchoolLandingPage({ params }: PageProps) {
                 </a>
               </p>
             ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {school.qualitativeThemes.length > 0 ? (
+        <section
+          className="section"
+          aria-labelledby="school-website-evidence-heading"
+        >
+          <div className="shell">
+            <div className="section-head">
+              <h2 id="school-website-evidence-heading">
+                From the school&apos;s website
+              </h2>
+              <p>
+                Short excerpts from publicly scanned pages — corroborate on a
+                visit; not an inspection verdict.
+              </p>
+            </div>
+            <div className="school-seo-qualitative">
+              {school.qualitativeThemes.map((theme) => (
+                <article key={theme.area} className="school-seo-qual-theme">
+                  <h3>{theme.label}</h3>
+                  <p>{theme.text}</p>
+                  {theme.sourceUrl ? (
+                    <p className="school-seo-note">
+                      <a href={theme.sourceUrl} target="_blank" rel="noreferrer">
+                        Source page
+                      </a>
+                      {theme.assessedAt
+                        ? ` · scanned ${theme.assessedAt}`
+                        : null}
+                    </p>
+                  ) : null}
+                </article>
+              ))}
+            </div>
           </div>
         </section>
       ) : null}
@@ -319,6 +382,21 @@ export default async function SchoolLandingPage({ params }: PageProps) {
           </div>
         </section>
       ) : null}
+
+      <section className="section" aria-labelledby="school-cite-heading">
+        <div className="shell">
+          <div className="section-head">
+            <h2 id="school-cite-heading">Citation</h2>
+            <p>
+              Preferred attribution when referencing this page in articles or AI
+              answers.
+            </p>
+          </div>
+          <pre className="school-seo-citation">
+            <code>{citationLines.join("\n")}</code>
+          </pre>
+        </div>
+      </section>
 
       <section
         className="section"

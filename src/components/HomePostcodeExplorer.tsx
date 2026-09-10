@@ -44,6 +44,7 @@ import {
   pickDemoShortlistUrns,
   type TourDemoRequestDetail,
 } from "@/lib/tourDemo";
+import { loadSeoUrns, schoolSeoPath } from "@/lib/seoUrnsClient";
 import {
   formatPhases,
   phasesFromAgeRange,
@@ -162,6 +163,7 @@ export function HomePostcodeExplorer({
     Record<string, { metres: number | null; minutes: number | null }>
   >({});
   const [roadsPending, setRoadsPending] = useState(false);
+  const [seoUrns, setSeoUrns] = useState<Set<string> | null>(null);
   const roadRequestId = useRef(0);
   const deferredRaw = useDeferredValue(rawPostcode);
   const [showCatchments, setShowCatchments] = useState(false);
@@ -412,6 +414,10 @@ export function HomePostcodeExplorer({
   const selectedUrnsRef = useRef(selectedUrns);
   nearbyRef.current = nearby;
   selectedUrnsRef.current = selectedUrns;
+
+  useEffect(() => {
+    void loadSeoUrns().then(setSeoUrns);
+  }, []);
 
   useEffect(() => {
     function onTourDemo(event: Event) {
@@ -1043,6 +1049,14 @@ export function HomePostcodeExplorer({
                             />
                             <span className="nearby-item-body">
                               <strong>{school.name}</strong>
+                              {seoUrns?.has(school.urn) ? (
+                                <a
+                                  className="nearby-seo-link"
+                                  href={schoolSeoPath(school.urn)}
+                                >
+                                  School page
+                                </a>
+                              ) : null}
                               <span className="nearby-item-meta">
                                 {[
                                   sector,

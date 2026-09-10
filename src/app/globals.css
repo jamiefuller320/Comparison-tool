@@ -5427,6 +5427,21 @@ html:has(.page-chapter-nav) .compare-table-controls {
   line-height: 1.35;
 }
 
+.nearby-seo-link {
+  display: inline-block;
+  width: fit-content;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--sea);
+  text-decoration: none;
+}
+
+.nearby-seo-link:hover {
+  color: var(--coral);
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
 /* Product tour / how-to-use walkthrough */
 .tour-root {
   position: fixed;
@@ -7082,6 +7097,39 @@ a.area-list-link:hover .area-list-meta {
   margin: 0;
   line-height: 1.55;
   color: var(--ink);
+}
+
+.school-seo-qualitative {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 44rem;
+}
+
+.school-seo-qual-theme h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: var(--sea-deep);
+}
+
+.school-seo-qual-theme p {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.school-seo-citation {
+  margin: 0;
+  max-width: 44rem;
+  padding: 1rem 1.15rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--sea) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sea) 18%, transparent);
+  border-radius: 0.65rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
 }
 
 .school-seo-town-row {

@@ -82,6 +82,8 @@ export function SiteFooter() {
         <p className="site-footer-meta">
           <a href={`${BRAND_HOME_URL}/`}>{BRAND_DOMAIN}</a>
           {" · "}
+          <a href="/llms.txt">LLM summary</a>
+          {" · "}
           Not a league table — patterns to visit on, not a final verdict.
         </p>
       </div>

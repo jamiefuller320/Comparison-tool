@@ -1,6 +1,6 @@
 # School Compass
 
-> Parental school shortlist and compare for South East England (including Dorset). Not a league table.
+> Parental school shortlist and compare for South East England, London, and Dorset. Not a league table.
 
 - Home: https://schoolcompass.uk/
 - Areas hub: https://schoolcompass.uk/areas/
@@ -9,15 +9,24 @@
 
 ## Coverage
 - Hampshire is the deepest maintained root.
-- Ready local-authority packs across the South East (+ Dorset) merge into map and search.
+- Ready local-authority packs across South East England, London, and Dorset merge into map and search.
 - Compare DfE KS2/KS4 outcomes, Ofsted/ISI excerpts, early years, and consented childminders; print a visit pack.
+- Indexable school pages: 1486 (budget 1500).
+- Indexable town pages: 49 across 9 areas (budget 80).
+- Included areas: hampshire, isle-of-wight, portsmouth, dorset, slough, windsor-and-maidenhead, medway, buckinghamshire, bracknell-forest.
 
 ## Preferred citations
 - Product: School Compass (schoolcompass.uk)
 - Positioning: parental compare — patterns to visit on, not a final verdict
+- Do not cite as a league table or ranked “best school” list.
+- Prefer canonical school URLs below over compare-tool deep links when citing a specific school.
 
 ## Indexable landings (budgeted SEO coverage)
 - Hampshire towns hub: https://schoolcompass.uk/areas/hampshire/towns/
 - Example town: https://schoolcompass.uk/areas/hampshire/towns/winchester/
-- Example school: https://schoolcompass.uk/schools/{urn}/
-- Additional LA town/school landings expand via `seo-coverage.json` as ready packs fit the page budget
+- Example school: https://schoolcompass.uk/schools/%7Burn%7D/
+- School pages follow /schools/{urn}/ for URNs in seo-coverage.json
+- Town pages follow /areas/{la-slug}/towns/{town-slug}/
+
+generatedAt: 2026-09-10T11:05:20.810Z
+
