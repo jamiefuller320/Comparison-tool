@@ -1,104 +1,48 @@
 {
-  "ranAt": "2026-09-10T14:03:45.933130+00:00",
+  "ranAt": "2026-09-11T14:02:07.675058+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 2591,
-    "suspectCount": 67,
+    "recordCount": 2771,
+    "suspectCount": 60,
     "flagCounts": {
-      "chrome": 45,
-      "implausible_offerings": 13,
+      "chrome": 37,
+      "implausible_offerings": 16,
       "admissions": 6,
-      "policy_toc": 4,
-      "boilerplate": 3
+      "policy_toc": 6,
+      "boilerplate": 1
     },
     "topSuspects": [
       {
-        "urn": "140873",
-        "name": "St Gregory's Catholic Primary School, Margate",
+        "urn": "141794",
+        "name": "Merley First School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "137071",
-        "name": "St Johns Church of England Primary School",
+        "urn": "137286",
+        "name": "Montacute School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "151192",
-        "name": "St Margaret's Church of England Primary School",
+        "urn": "130948",
+        "name": "St. Edmund's Church of England Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "145081",
-        "name": "St Mark's Church of England Primary School, Eccles",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118698",
-        "name": "St Nicholas At Wade Church of England Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "142814",
-        "name": "St Nicholas Church of England Primary Academy",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "151817",
-        "name": "St Nicolas' Church of England Infant School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118750",
-        "name": "St Peter-in-Thanet CofE Junior School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "125066",
-        "name": "Stamford Green Primary School and Nursery",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "146259",
-        "name": "Stoughton Infant School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "144231",
-        "name": "Tatsfield Primary School",
+        "urn": "118501",
+        "name": "Stocks Green Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -111,14 +55,76 @@
         "flags": [
           "admissions"
         ]
+      },
+      {
+        "urn": "143265",
+        "name": "Chestnuts Primary School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "138990",
+        "name": "Elm Academy",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "141271",
+        "name": "Heronshill School and Nursery",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "150335",
+        "name": "Lavendon School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "141745",
+        "name": "Manorside Academy",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "142436",
+        "name": "Muscliff Primary School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "147467",
+        "name": "Avonbourne Boys' Academy",
+        "score": 3.0,
+        "flags": [
+          "chrome"
+        ]
       }
     ]
   },
   "after": {
-    "recordCount": 2591,
-    "suspectCount": 15,
+    "recordCount": 2771,
+    "suspectCount": 17,
     "flagCounts": {
-      "implausible_offerings": 9,
+      "implausible_offerings": 11,
       "admissions": 6
     },
     "topSuspects": [
@@ -203,16 +209,16 @@
         ]
       },
       {
-        "urn": "116431",
-        "name": "Harrow Way Community School",
+        "urn": "150991",
+        "name": "Christchurch Infant School",
         "score": 2.0,
         "flags": [
           "implausible_offerings"
         ]
       },
       {
-        "urn": "125933",
-        "name": "Hassocks Infant School",
+        "urn": "116431",
+        "name": "Harrow Way Community School",
         "score": 2.0,
         "flags": [
           "implausible_offerings"
@@ -221,42 +227,42 @@
     ]
   },
   "qa": {
-    "reviewed": 67,
-    "changedSchools": 52,
-    "findingsApplied": 63,
-    "learningAdded": 4,
+    "reviewed": 60,
+    "changedSchools": 44,
+    "findingsApplied": 48,
+    "learningAdded": 21,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +56 (>= 15)",
+    "reason": "eventCount +45 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "a03ea93f22147a35e795",
-      "phraseCount": 855,
-      "candidateCount": 1027,
-      "eventCount": 4586,
-      "updatedAt": "2026-09-10"
+      "phraseHash": "e302fba09c795a6c919a",
+      "phraseCount": 864,
+      "candidateCount": 1039,
+      "eventCount": 4706,
+      "updatedAt": "2026-09-11"
     },
     "fingerprintAfter": {
-      "phraseHash": "9dffab5d70981a733e38",
-      "phraseCount": 859,
-      "candidateCount": 1031,
-      "eventCount": 4661,
-      "updatedAt": "2026-09-10"
+      "phraseHash": "87110988676b58d2e418",
+      "phraseCount": 885,
+      "candidateCount": 1060,
+      "eventCount": 4776,
+      "updatedAt": "2026-09-11"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 2591 published URN shards (prior=0 → 2591).",
-    "Rebalanced learned QA phrases: active=855 candidates=1027.",
-    "Learning fingerprint: {'phraseHash': 'a03ea93f22147a35e795', 'phraseCount': 855, 'candidateCount': 1027, 'eventCount': 4586, 'updatedAt': '2026-09-10'}",
-    "Apply decision: eventCount +56 (>= 15)",
-    "Before: 67 suspects across 2591 records.",
-    "Applied QA fixes to 52 school(s) (63 area finding(s)).",
-    "Learned 4 new junk phrase(s) (store size 859).",
-    "Reviewed top 67 suspect(s); provider=none.",
+    "Hydrated working sidecar from 2771 published URN shards (prior=0 → 2771).",
+    "Rebalanced learned QA phrases: active=864 candidates=1039.",
+    "Learning fingerprint: {'phraseHash': 'e302fba09c795a6c919a', 'phraseCount': 864, 'candidateCount': 1039, 'eventCount': 4706, 'updatedAt': '2026-09-11'}",
+    "Apply decision: eventCount +45 (>= 15)",
+    "Before: 60 suspects across 2771 records.",
+    "Applied QA fixes to 44 school(s) (48 area finding(s)).",
+    "Learned 21 new junk phrase(s) (store size 885).",
+    "Reviewed top 60 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 15 suspects across 2591 records.",
+    "After: 17 suspects across 2771 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
