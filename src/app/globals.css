@@ -2144,6 +2144,12 @@ body:has(.shortlist-dock) {
   width: 100%;
 }
 
+/* Guidance cards use foam/paper — harbour stage ink is unreadable here. */
+.compare-section-binder .decision-guidance-summary-hint,
+.journey-stage .compare-section-binder .decision-guidance-summary-hint {
+  color: var(--ink-soft);
+}
+
 .compare-context-body .decision-guidance-body,
 .compare-context-body .decision-guidance-grid {
   width: 100%;
