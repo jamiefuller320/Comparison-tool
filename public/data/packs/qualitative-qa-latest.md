@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-11T14:00:37.707476+00:00`
+- Ran at: `2026-09-12T12:57:46.911022+00:00`
 - Provider: `none`
-- Reviewed: `60`
-- Schools changed: `44`
-- Findings applied: `48`
-- New learned phrases: `21`
+- Reviewed: `16`
+- Schools changed: `16`
+- Findings applied: `31`
+- New learned phrases: `6`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 44 school(s) (48 area finding(s)).
-- Learned 21 new junk phrase(s) (store size 885).
-- Reviewed top 60 suspect(s); provider=none.
+- Applied QA fixes to 16 school(s) (31 area finding(s)).
+- Learned 6 new junk phrase(s) (store size 891).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `141794` Merley First School — score 6.0 flags=chrome
-- `137286` Montacute School — score 6.0 flags=chrome
-- `130948` St. Edmund's Church of England Primary School — score 6.0 flags=chrome
-- `118501` Stocks Green Primary School — score 6.0 flags=chrome
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `143265` Chestnuts Primary School — score 5.0 flags=policy_toc,implausible_offerings
-- `138990` Elm Academy — score 5.0 flags=policy_toc,implausible_offerings
-- `141271` Heronshill School and Nursery — score 5.0 flags=policy_toc,implausible_offerings
-- `150335` Lavendon School — score 5.0 flags=policy_toc,implausible_offerings
-- `141745` Manorside Academy — score 5.0 flags=policy_toc,implausible_offerings
-- `142436` Muscliff Primary School — score 5.0 flags=policy_toc,implausible_offerings
-- `147467` Avonbourne Boys' Academy — score 3.0 flags=chrome
-- `142974` Baden-Powell and St Peter's Church of England Junior School — score 3.0 flags=chrome
-- `143477` Bearwood Primary and Nursery School — score 3.0 flags=chrome
-- `142100` Bethany Church of England Junior School — score 3.0 flags=chrome
-- `144873` Bishop Aldhelm's Church of England Primary School — score 3.0 flags=chrome
-- `137452` Bournemouth School — score 3.0 flags=chrome
-- `140705` Christ The King Catholic Primary School — score 3.0 flags=boilerplate
-- `110404` Cold Harbour Church of England School — score 3.0 flags=chrome
-- `151579` Cold Harbour Church of England School — score 3.0 flags=chrome
+- `138182` All Faiths Children's Academy — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `118317` Greenvale Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `141005` INSPIRE Free Special School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `109950` Beedon C.E. (Controlled) Primary School — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `109954` Brimpton C.E. Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `118330` Crest Infant School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `109964` Hampstead Norreys C.E. Primary School — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `118555` Hempstead Infant School — score 8.0 flags=chrome,implausible_offerings
+- `151182` St Mary's Catholic Primary School, Bicester — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `123161` Sunningwell Church of England Primary School — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `135576` Blue Skies School — score 6.0 flags=chrome
+- `109931` Calcot Infant School and Nursery — score 6.0 flags=chrome
+- `109932` Calcot Junior School — score 6.0 flags=chrome
+- `139927` Kingfisher Community Primary School — score 6.0 flags=chrome
+- `149075` Maritime Academy — score 6.0 flags=boilerplate,chrome
+- `149435` Park House School — score 6.0 flags=boilerplate,chrome
