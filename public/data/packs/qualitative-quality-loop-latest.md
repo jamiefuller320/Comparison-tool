@@ -1,34 +1,34 @@
-# Qualitative quality loop — 2026-09-11T14:02:07.675058+00:00
+# Qualitative quality loop — 2026-09-12T13:21:54.062603+00:00
 
 - Mode: `apply`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
-- Records: `2771`
-- Suspects before → after: `60` → `17`
-- QA reviewed / changed: `60` / `44`
-- Findings applied: `48`
-- Learned phrases added: `21`
+- Records: `2951`
+- Suspects before → after: `67` → `18`
+- QA reviewed / changed: `67` / `49`
+- Findings applied: `50`
+- Learned phrases added: `18`
 - Merged to index: `True`
-- Apply trigger: `eventCount +45 (>= 15)`
+- Apply trigger: `eventCount +41 (>= 15)`
 
 ## Top flag counts (before)
 
-- `chrome`: 37
-- `implausible_offerings`: 16
+- `chrome`: 41
+- `implausible_offerings`: 17
 - `admissions`: 6
 - `policy_toc`: 6
-- `boilerplate`: 1
+- `boilerplate`: 2
 
 ## Notes
 
-- Hydrated working sidecar from 2771 published URN shards (prior=0 → 2771).
-- Rebalanced learned QA phrases: active=864 candidates=1039.
-- Learning fingerprint: {'phraseHash': 'e302fba09c795a6c919a', 'phraseCount': 864, 'candidateCount': 1039, 'eventCount': 4706, 'updatedAt': '2026-09-11'}
-- Apply decision: eventCount +45 (>= 15)
-- Before: 60 suspects across 2771 records.
-- Applied QA fixes to 44 school(s) (48 area finding(s)).
-- Learned 21 new junk phrase(s) (store size 885).
-- Reviewed top 60 suspect(s); provider=none.
+- Hydrated working sidecar from 2951 published URN shards (prior=0 → 2951).
+- Rebalanced learned QA phrases: active=891 candidates=1066.
+- Learning fingerprint: {'phraseHash': '82e80991a793de749743', 'phraseCount': 891, 'candidateCount': 1066, 'eventCount': 4817, 'updatedAt': '2026-09-12'}
+- Apply decision: eventCount +41 (>= 15)
+- Before: 67 suspects across 2951 records.
+- Applied QA fixes to 49 school(s) (50 area finding(s)).
+- Learned 18 new junk phrase(s) (store size 900).
+- Reviewed top 67 suspect(s); provider=none.
 - Merged cleaned sidecar into 21 schools-index file(s).
-- After: 17 suspects across 2771 records.
+- After: 18 suspects across 2951 records.
 - Updated output/learned-qa-apply-state.json
