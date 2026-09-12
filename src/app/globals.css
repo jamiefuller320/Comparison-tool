@@ -2018,10 +2018,16 @@ body:has(.shortlist-dock) {
 }
 
 .compare-path-chip.active {
-  border-color: rgba(196, 92, 38, 0.5);
-  background: rgba(196, 92, 38, 0.14);
-  color: var(--sea-deep);
-  box-shadow: inset 0 0 0 1px rgba(196, 92, 38, 0.12);
+  background: var(--sea);
+  border-color: var(--sea);
+  color: #f7fbff;
+  box-shadow: none;
+}
+
+.compare-path-chip.active:hover {
+  background: var(--sea-deep);
+  border-color: var(--sea-deep);
+  color: #f7fbff;
 }
 
 .compare-path-chip-badge {
@@ -2029,6 +2035,10 @@ body:has(.shortlist-dock) {
   height: 0.42rem;
   border-radius: 50%;
   background: #c45c26;
+}
+
+.compare-path-chip.active .compare-path-chip-badge {
+  background: var(--pin-bright);
 }
 
 .compare-visit-pack-anchor {
@@ -2132,6 +2142,12 @@ body:has(.shortlist-dock) {
 .compare-context-body .decision-guidance-lead {
   max-width: none;
   width: 100%;
+}
+
+/* Guidance cards use foam/paper — harbour stage ink is unreadable here. */
+.compare-section-binder .decision-guidance-summary-hint,
+.journey-stage .compare-section-binder .decision-guidance-summary-hint {
+  color: var(--ink-soft);
 }
 
 .compare-context-body .decision-guidance-body,
@@ -3540,10 +3556,16 @@ body:has(.shortlist-dock) {
 }
 
 .table-pin-toggle.on {
-  background: rgba(196, 92, 38, 0.14);
-  border-color: rgba(196, 92, 38, 0.5);
-  color: var(--sea-deep);
-  box-shadow: inset 0 0 0 1px rgba(196, 92, 38, 0.12);
+  background: var(--sea);
+  border-color: var(--sea);
+  color: #f7fbff;
+  box-shadow: none;
+}
+
+.table-pin-toggle.on:hover {
+  background: var(--sea-deep);
+  border-color: var(--sea-deep);
+  color: #f7fbff;
 }
 
 /* Generic scroll frame: edge fades + short cue when content is clipped. */
@@ -3629,15 +3651,23 @@ body:has(.shortlist-dock) {
   margin: 0;
   padding: 0.18rem 0.5rem;
   border-radius: 999px;
-  border: 1px solid rgba(11, 79, 108, 0.16);
-  background: rgba(255, 252, 247, 0.94);
-  color: var(--sea-deep, #0b4f6c);
+  border: 1px solid rgba(11, 79, 108, 0.32);
+  background: #fff;
+  color: var(--ink);
   font-size: 0.68rem;
   font-weight: 650;
   letter-spacing: 0.01em;
   line-height: 1.2;
   pointer-events: none;
-  box-shadow: 0 1px 4px rgba(7, 58, 80, 0.1);
+  box-shadow: 0 1px 4px rgba(7, 58, 80, 0.14);
+}
+
+/* Compare tables sit on harbour sheets — keep hint dark on foam scrollports. */
+.journey-stage .compare-table-frame .scroll-region-hint,
+.compare-section-binder .compare-table-frame .scroll-region-hint {
+  color: var(--ink);
+  background: #fff;
+  border-color: rgba(11, 79, 108, 0.35);
 }
 
 /* Scrollport lives on ScrollRegion so fade/hint cues track overflow.
