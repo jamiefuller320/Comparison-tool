@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-12T13:20:01.561485+00:00`
+- Ran at: `2026-09-13T14:16:34.304444+00:00`
 - Provider: `none`
-- Reviewed: `67`
-- Schools changed: `49`
-- Findings applied: `50`
-- New learned phrases: `18`
+- Reviewed: `16`
+- Schools changed: `16`
+- Findings applied: `55`
+- New learned phrases: `17`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 49 school(s) (50 area finding(s)).
-- Learned 18 new junk phrase(s) (store size 900).
-- Reviewed top 67 suspect(s); provider=none.
+- Applied QA fixes to 16 school(s) (55 area finding(s)).
+- Learned 17 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `122997` The Grange Community Primary School — score 6.0 flags=chrome
-- `136107` Brompton Academy — score 5.0 flags=policy_toc,implausible_offerings
-- `136859` Cliffe Woods Primary School — score 5.0 flags=policy_toc,implausible_offerings
-- `109977` Mortimer St Mary's C.E. Junior School — score 5.0 flags=policy_toc,implausible_offerings
-- `109978` Mortimer St. John's C.E. Infant School — score 5.0 flags=policy_toc,implausible_offerings
-- `140215` New Horizons Children's Academy — score 5.0 flags=policy_toc,implausible_offerings
-- `119052` Abbey Court Foundation Special School — score 3.0 flags=boilerplate
-- `109802` Beenham Primary School — score 3.0 flags=chrome
-- `109844` Birch Copse Primary School — score 3.0 flags=chrome
-- `110007` Bradfield C.E. Primary School — score 3.0 flags=chrome
-- `110127` Brockhurst and Marlston House Schools — score 3.0 flags=chrome
-- `109956` Burghfield St Mary's C.E. Primary School — score 3.0 flags=chrome
-- `142817` Cedar Children's Academy — score 3.0 flags=chrome
-- `109810` Chieveley Primary School — score 3.0 flags=chrome
-- `142266` Danecourt School — score 3.0 flags=chrome
-- `109896` Downsway Primary School — score 3.0 flags=chrome
-- `134904` Fairview Community Primary School — score 3.0 flags=chrome
-- `147273` Francis Baily Primary School — score 3.0 flags=chrome
-- `109858` Garland Junior School — score 3.0 flags=chrome
+- `125862` Durrington Infant School — score 29.0 flags=policy_toc,chrome,implausible_offerings
+- `125952` Durrington Junior School — score 29.0 flags=policy_toc,chrome,implausible_offerings
+- `110239` The Iver Village Junior School — score 28.0 flags=policy_toc,implausible_offerings,chrome
+- `125273` Oakwood School — score 20.0 flags=policy_toc,implausible_offerings
+- `125278` St Bede's School — score 18.0 flags=policy_toc,implausible_offerings,chrome
+- `110398` Holtspur School & Pre-School — score 16.0 flags=policy_toc,chrome,implausible_offerings
+- `148625` Huckleberry Therapeutic School — score 16.0 flags=policy_toc,chrome,implausible_offerings
+- `110546` Godstowe Preparatory School — score 15.0 flags=policy_toc,implausible_offerings
+- `145014` Knockhall Primary School — score 15.0 flags=policy_toc,implausible_offerings
+- `149388` Scott-Broadwood CofE Infant School — score 15.0 flags=policy_toc,implausible_offerings
+- `148851` The Mandeville School — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `146236` Middle Barton Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
+- `150983` St Wilfrid's Catholic Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
+- `148557` ISP School Whitstable — score 12.0 flags=chrome
+- `149884` Maypole School — score 12.0 flags=chrome
+- `137344` Royal Latin School — score 12.0 flags=chrome
