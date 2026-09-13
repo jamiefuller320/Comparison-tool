@@ -1,118 +1,128 @@
 {
-  "ranAt": "2026-09-12T13:21:54.062603+00:00",
+  "ranAt": "2026-09-13T14:18:14.488932+00:00",
   "dryRun": false,
-  "mode": "apply",
+  "mode": "skip",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
     "recordCount": 2951,
-    "suspectCount": 67,
+    "suspectCount": 228,
     "flagCounts": {
-      "chrome": 41,
-      "implausible_offerings": 17,
-      "admissions": 6,
-      "policy_toc": 6,
-      "boilerplate": 2
+      "chrome": 191,
+      "implausible_offerings": 57,
+      "policy_toc": 45,
+      "admissions": 6
     },
     "topSuspects": [
       {
-        "urn": "147128",
-        "name": "The Ferns Primary Academy",
-        "score": 6.0,
+        "urn": "125862",
+        "name": "Durrington Infant School",
+        "score": 29.0,
         "flags": [
-          "admissions"
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "122997",
-        "name": "The Grange Community Primary School",
-        "score": 6.0,
+        "urn": "125952",
+        "name": "Durrington Junior School",
+        "score": 29.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "125273",
+        "name": "Oakwood School",
+        "score": 20.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "125278",
+        "name": "St Bede's School",
+        "score": 18.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "110398",
+        "name": "Holtspur School & Pre-School",
+        "score": 16.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "148625",
+        "name": "Huckleberry Therapeutic School",
+        "score": 16.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "110546",
+        "name": "Godstowe Preparatory School",
+        "score": 15.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "145014",
+        "name": "Knockhall Primary School",
+        "score": 15.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "149388",
+        "name": "Scott-Broadwood CofE Infant School",
+        "score": 15.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "146236",
+        "name": "Middle Barton Primary School",
+        "score": 13.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "148557",
+        "name": "ISP School Whitstable",
+        "score": 12.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "136107",
-        "name": "Brompton Academy",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "136859",
-        "name": "Cliffe Woods Primary School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "109977",
-        "name": "Mortimer St Mary's C.E. Junior School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "109978",
-        "name": "Mortimer St. John's C.E. Infant School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "140215",
-        "name": "New Horizons Children's Academy",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "119052",
-        "name": "Abbey Court Foundation Special School",
-        "score": 3.0,
-        "flags": [
-          "boilerplate"
-        ]
-      },
-      {
-        "urn": "109802",
-        "name": "Beenham Primary School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "109844",
-        "name": "Birch Copse Primary School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "110007",
-        "name": "Bradfield C.E. Primary School",
-        "score": 3.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "110127",
-        "name": "Brockhurst and Marlston House Schools",
-        "score": 3.0,
+        "urn": "149884",
+        "name": "Maypole School",
+        "score": 12.0,
         "flags": [
           "chrome"
         ]
@@ -121,147 +131,160 @@
   },
   "after": {
     "recordCount": 2951,
-    "suspectCount": 18,
+    "suspectCount": 228,
     "flagCounts": {
-      "implausible_offerings": 12,
+      "chrome": 191,
+      "implausible_offerings": 57,
+      "policy_toc": 45,
       "admissions": 6
     },
     "topSuspects": [
       {
-        "urn": "147128",
-        "name": "The Ferns Primary Academy",
-        "score": 6.0,
+        "urn": "125862",
+        "name": "Durrington Infant School",
+        "score": 29.0,
         "flags": [
-          "admissions"
-        ]
-      },
-      {
-        "urn": "110428",
-        "name": "Lee Common Church of England School",
-        "score": 3.0,
-        "flags": [
-          "admissions"
-        ]
-      },
-      {
-        "urn": "125344",
-        "name": "Rydes Hill Preparatory School",
-        "score": 3.0,
-        "flags": [
-          "admissions"
-        ]
-      },
-      {
-        "urn": "116423",
-        "name": "The Hayling College",
-        "score": 3.0,
-        "flags": [
-          "admissions"
-        ]
-      },
-      {
-        "urn": "137239",
-        "name": "The Romsey School",
-        "score": 3.0,
-        "flags": [
-          "admissions"
-        ]
-      },
-      {
-        "urn": "116411",
-        "name": "The Toynbee School",
-        "score": 3.0,
-        "flags": [
-          "admissions"
-        ]
-      },
-      {
-        "urn": "136643",
-        "name": "Bohunt School",
-        "score": 2.0,
-        "flags": [
+          "policy_toc",
+          "chrome",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "116027",
-        "name": "Bursledon Junior School(CA)",
-        "score": 2.0,
+        "urn": "125952",
+        "name": "Durrington Junior School",
+        "score": 29.0,
         "flags": [
+          "policy_toc",
+          "chrome",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "134734",
-        "name": "Cadland Primary School",
-        "score": 2.0,
+        "urn": "125273",
+        "name": "Oakwood School",
+        "score": 20.0,
         "flags": [
+          "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "116357",
-        "name": "Charles Kingsley's Church of England Primary School",
-        "score": 2.0,
+        "urn": "125278",
+        "name": "St Bede's School",
+        "score": 18.0,
         "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "110398",
+        "name": "Holtspur School & Pre-School",
+        "score": 16.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "150991",
-        "name": "Christchurch Infant School",
-        "score": 2.0,
+        "urn": "148625",
+        "name": "Huckleberry Therapeutic School",
+        "score": 16.0,
         "flags": [
+          "policy_toc",
+          "chrome",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "116431",
-        "name": "Harrow Way Community School",
-        "score": 2.0,
+        "urn": "110546",
+        "name": "Godstowe Preparatory School",
+        "score": 15.0,
         "flags": [
+          "policy_toc",
           "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "145014",
+        "name": "Knockhall Primary School",
+        "score": 15.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "149388",
+        "name": "Scott-Broadwood CofE Infant School",
+        "score": 15.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "146236",
+        "name": "Middle Barton Primary School",
+        "score": 13.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "148557",
+        "name": "ISP School Whitstable",
+        "score": 12.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "149884",
+        "name": "Maypole School",
+        "score": 12.0,
+        "flags": [
+          "chrome"
         ]
       }
     ]
   },
   "qa": {
-    "reviewed": 67,
-    "changedSchools": 49,
-    "findingsApplied": 50,
-    "learningAdded": 18,
-    "provider": "none"
+    "reviewed": 0,
+    "changedSchools": 0,
+    "findingsApplied": 0,
+    "learningAdded": 0
   },
-  "merged": true,
+  "merged": false,
   "trigger": {
-    "shouldApply": true,
-    "reason": "eventCount +41 (>= 15)",
-    "fingerprintBefore": {
-      "phraseHash": "82e80991a793de749743",
-      "phraseCount": 891,
-      "candidateCount": 1066,
-      "eventCount": 4817,
-      "updatedAt": "2026-09-12"
+    "shouldApply": false,
+    "reason": "learning library unchanged since last apply",
+    "fingerprint": {
+      "phraseHash": "8f4ed1dbf17191e78d38",
+      "phraseCount": 900,
+      "candidateCount": 1084,
+      "eventCount": 4883,
+      "updatedAt": "2026-09-13"
     },
-    "fingerprintAfter": {
+    "prior": {
       "phraseHash": "8f4ed1dbf17191e78d38",
       "phraseCount": 900,
       "candidateCount": 1084,
       "eventCount": 4883,
       "updatedAt": "2026-09-12"
-    }
+    },
+    "priorAppliedAt": "2026-09-12T13:21:54.062253+00:00"
   },
   "notes": [
     "Hydrated working sidecar from 2951 published URN shards (prior=0 → 2951).",
-    "Rebalanced learned QA phrases: active=891 candidates=1066.",
-    "Learning fingerprint: {'phraseHash': '82e80991a793de749743', 'phraseCount': 891, 'candidateCount': 1066, 'eventCount': 4817, 'updatedAt': '2026-09-12'}",
-    "Apply decision: eventCount +41 (>= 15)",
-    "Before: 67 suspects across 2951 records.",
-    "Applied QA fixes to 49 school(s) (50 area finding(s)).",
-    "Learned 18 new junk phrase(s) (store size 900).",
-    "Reviewed top 67 suspect(s); provider=none.",
-    "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 18 suspects across 2951 records.",
-    "Updated output/learned-qa-apply-state.json"
+    "Rebalanced learned QA phrases: active=900 candidates=1084.",
+    "Learning fingerprint: {'phraseHash': '8f4ed1dbf17191e78d38', 'phraseCount': 900, 'candidateCount': 1084, 'eventCount': 4883, 'updatedAt': '2026-09-13'}",
+    "Apply decision: learning library unchanged since last apply",
+    "Before: 228 suspects across 2951 records.",
+    "Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest."
   ]
 }
