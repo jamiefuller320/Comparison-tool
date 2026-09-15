@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-14T16:09:00.685482+00:00`
+- Ran at: `2026-09-15T14:05:10.750466+00:00`
 - Provider: `none`
-- Reviewed: `324`
-- Schools changed: `305`
-- Findings applied: `409`
-- New learned phrases: `127`
+- Reviewed: `16`
+- Schools changed: `16`
+- Findings applied: `46`
+- New learned phrases: `17`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 305 school(s) (409 area finding(s)).
-- Learned 127 new junk phrase(s) (store size 900).
-- Reviewed top 324 suspect(s); provider=none.
+- Applied QA fixes to 16 school(s) (46 area finding(s)).
+- Learned 17 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `130948` St. Edmund's Church of England Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `141348` The Globe Primary Academy — score 11.0 flags=policy_toc,chrome,implausible_offerings,boilerplate
-- `139557` Lime Tree Primary School — score 10.0 flags=policy_toc,implausible_offerings
-- `145282` Oaklands Junior School — score 10.0 flags=admissions,admissions_in_enrichment,policy_toc,implausible_offerings
-- `125914` Swiss Gardens Primary School — score 10.0 flags=policy_toc,implausible_offerings
-- `142083` The Weald CofE Primary School — score 10.0 flags=policy_toc,implausible_offerings
-- `136465` Herne Bay High School — score 9.0 flags=chrome
-- `119013` Learning Opportunities Centre Secondary — score 9.0 flags=chrome
-- `110457` Little Missenden Church of England School — score 9.0 flags=chrome
-- `138667` Lord Williams's School — score 9.0 flags=chrome
-- `149435` Park House School — score 9.0 flags=chrome
-- `118951` Rose Hill School — score 9.0 flags=chrome
-- `109976` Shinfield St Mary's CofE Junior School — score 9.0 flags=chrome
-- `152260` Shinfield St Mary's CofE Junior School — score 9.0 flags=chrome
-- `123280` St Mary's Preparatory — score 9.0 flags=chrome
-- `110450` St Peter's Church of England Primary School — score 9.0 flags=chrome
-- `149292` St Wilfrids Catholic Primary School — score 9.0 flags=chrome
-- `125458` Sunnydown School — score 9.0 flags=chrome
-- `110533` The Cottesloe School — score 9.0 flags=chrome
-- `149426` The Mead Infant and Nursery School — score 9.0 flags=chrome
+- `109884` Alexander First School — score 16.0 flags=policy_toc,chrome,implausible_offerings
+- `114351` Royal Spa Nursery School — score 16.0 flags=policy_toc,chrome,implausible_offerings
+- `142735` St John's Church of England Primary School — score 14.0 flags=policy_toc,implausible_offerings,chrome
+- `147675` Hamilton School — score 12.0 flags=chrome,boilerplate
+- `110124` Herries Preparatory School — score 12.0 flags=chrome
+- `147379` Sonning Church of England Primary School — score 12.0 flags=chrome
+- `109960` Cookham Dean CofE Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `141886` Maiden Erlegh School in Reading — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `114478` Queen's Park Primary School — score 11.0 flags=policy_toc,implausible_offerings,boilerplate,chrome
+- `109842` Furze Platt Junior School — score 9.0 flags=chrome
+- `123135` Peppard Church of England Primary School — score 9.0 flags=chrome
+- `138645` Seymour Primary School — score 9.0 flags=chrome
+- `114539` St Martin's CofE Primary School — score 9.0 flags=chrome
+- `116423` The Hayling College — score 9.0 flags=admissions,chrome
+- `110298` Chartridge Combined School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `125377` Glenesk School — score 8.0 flags=policy_toc,chrome,implausible_offerings
