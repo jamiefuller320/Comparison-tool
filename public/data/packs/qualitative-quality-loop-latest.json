@@ -1,44 +1,24 @@
 {
-  "ranAt": "2026-09-15T14:39:13.600358+00:00",
+  "ranAt": "2026-09-16T14:36:56.023774+00:00",
   "dryRun": false,
   "mode": "apply",
-  "limit": 417,
+  "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 3491,
-    "suspectCount": 417,
+    "recordCount": 3668,
+    "suspectCount": 71,
     "flagCounts": {
-      "chrome": 395,
-      "implausible_offerings": 20,
+      "chrome": 40,
+      "implausible_offerings": 24,
+      "policy_toc": 10,
       "admissions": 7,
-      "policy_toc": 7,
-      "boilerplate": 2
+      "boilerplate": 5
     },
     "topSuspects": [
       {
-        "urn": "142847",
-        "name": "Ickford School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "141818",
-        "name": "St Francis Catholic Primary School, South Ascot",
-        "score": 8.0,
-        "flags": [
-          "boilerplate",
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "136417",
-        "name": "Tonbridge Grammar School",
+        "urn": "136730",
+        "name": "Shenley Brook End School",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -47,72 +27,95 @@
         ]
       },
       {
-        "urn": "114385",
-        "name": "Alfriston School",
+        "urn": "116346",
+        "name": "St George's Beneficial Church of England (Voluntary Controlled) Primary School",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "147891",
+        "name": "St Mary and St Giles Church of England School",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "149336",
+        "name": "The Wymering School",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "141020",
+        "name": "Ark Dickens Primary Academy",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "109945",
-        "name": "All Saints Church of England Aided Infant School",
+        "urn": "109761",
+        "name": "Baylis Court Nursery School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "109818",
-        "name": "Alwyn Infant School",
+        "urn": "138013",
+        "name": "Cippenham School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "141043",
-        "name": "Archbishop Wake Church of England Primary School",
+        "urn": "148709",
+        "name": "Cottage Grove Primary School and Nursery",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "125113",
-        "name": "Ashford Park Primary School",
+        "urn": "137726",
+        "name": "Herschel Grammar School",
+        "score": 6.0,
+        "flags": [
+          "boilerplate"
+        ]
+      },
+      {
+        "urn": "110162",
+        "name": "Long Close School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "136846",
-        "name": "Aylesbury High School",
+        "urn": "140605",
+        "name": "Miltoncross Academy",
         "score": 6.0,
         "flags": [
-          "chrome"
+          "chrome",
+          "boilerplate"
         ]
       },
       {
-        "urn": "118329",
-        "name": "Balfour Infant School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "125366",
-        "name": "Barrow Hills School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "144298",
-        "name": "Beechcroft St Paul's CofE Primary School",
+        "urn": "136792",
+        "name": "Olney Infant Academy",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -121,10 +124,10 @@
     ]
   },
   "after": {
-    "recordCount": 3491,
-    "suspectCount": 20,
+    "recordCount": 3668,
+    "suspectCount": 22,
     "flagCounts": {
-      "implausible_offerings": 13,
+      "implausible_offerings": 15,
       "admissions": 7
     },
     "topSuspects": [
@@ -227,43 +230,42 @@
     ]
   },
   "qa": {
-    "reviewed": 417,
-    "changedSchools": 400,
-    "findingsApplied": 489,
-    "learningAdded": 37,
+    "reviewed": 71,
+    "changedSchools": 50,
+    "findingsApplied": 68,
+    "learningAdded": 18,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +62 (>= 15)",
+    "reason": "eventCount +67 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "0669ec11714bc198e1c4",
+      "phraseHash": "a95cf0f88e941ab1e32f",
       "phraseCount": 900,
-      "candidateCount": 1255,
-      "eventCount": 5567,
-      "updatedAt": "2026-09-15"
+      "candidateCount": 1319,
+      "eventCount": 6223,
+      "updatedAt": "2026-09-16"
     },
     "fingerprintAfter": {
-      "phraseHash": "bae13fe375335f89d0f9",
+      "phraseHash": "e33217dfcbbc65525c9a",
       "phraseCount": 900,
-      "candidateCount": 1292,
-      "eventCount": 6156,
-      "updatedAt": "2026-09-15"
+      "candidateCount": 1337,
+      "eventCount": 6306,
+      "updatedAt": "2026-09-16"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 3491 published URN shards (prior=0 → 3491).",
-    "Rebalanced learned QA phrases: active=900 candidates=1255.",
-    "Learning fingerprint: {'phraseHash': '0669ec11714bc198e1c4', 'phraseCount': 900, 'candidateCount': 1255, 'eventCount': 5567, 'updatedAt': '2026-09-15'}",
-    "Apply decision: eventCount +62 (>= 15)",
-    "Before: 417 suspects across 3491 records.",
-    "Raised review limit 250 → 417 to cover all suspects for full learning apply.",
-    "Applied QA fixes to 400 school(s) (489 area finding(s)).",
-    "Learned 37 new junk phrase(s) (store size 900).",
-    "Reviewed top 417 suspect(s); provider=none.",
+    "Hydrated working sidecar from 3668 published URN shards (prior=0 → 3668).",
+    "Rebalanced learned QA phrases: active=900 candidates=1319.",
+    "Learning fingerprint: {'phraseHash': 'a95cf0f88e941ab1e32f', 'phraseCount': 900, 'candidateCount': 1319, 'eventCount': 6223, 'updatedAt': '2026-09-16'}",
+    "Apply decision: eventCount +67 (>= 15)",
+    "Before: 71 suspects across 3668 records.",
+    "Applied QA fixes to 50 school(s) (68 area finding(s)).",
+    "Learned 18 new junk phrase(s) (store size 900).",
+    "Reviewed top 71 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 20 suspects across 3491 records.",
+    "After: 22 suspects across 3668 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
