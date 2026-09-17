@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-17T13:56:09.242818+00:00`
+- Ran at: `2026-09-17T14:38:19.033034+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `16`
-- Findings applied: `41`
-- New learned phrases: `14`
+- Reviewed: `82`
+- Schools changed: `59`
+- Findings applied: `77`
+- New learned phrases: `26`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (41 area finding(s)).
-- Learned 14 new junk phrase(s) (store size 900).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 59 school(s) (77 area finding(s)).
+- Learned 26 new junk phrase(s) (store size 900).
+- Reviewed top 82 suspect(s); provider=none.
 
 ## Suspects
 
-- `143261` Walderslade Primary School — score 16.0 flags=policy_toc,chrome,implausible_offerings
-- `118908` St John Fisher Catholic Comprehensive School — score 14.0 flags=chrome,policy_toc,implausible_offerings
-- `118162` Newchurch Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
-- `142445` St Mark's Church of England Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `150466` St Thomas of Canterbury RC Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `118178` Summerfields Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
-- `142453` Winton Primary School — score 11.0 flags=policy_toc,implausible_offerings,chrome
-- `118179` Dover Park Primary School — score 9.0 flags=chrome
-- `133744` Lionheart School — score 9.0 flags=chrome
-- `118228` Medina House School — score 9.0 flags=chrome
-- `142394` Temple Mill Primary School — score 9.0 flags=chrome
-- `139493` The Academy of Woodlands — score 9.0 flags=chrome
-- `118158` Gatten and Lake Primary School — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `118193` Oakfield Church of England Aided Primary School, Ryde — score 8.0 flags=chrome,implausible_offerings
-- `136013` The Bay Church of England School — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `138040` The Epiphany School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `144134` The Rowans — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `149536` The White House School — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `118173` Wroxall Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `118182` Brading Church of England Controlled Primary School — score 6.0 flags=chrome
+- `150100` Carisbrooke College — score 6.0 flags=chrome
+- `114381` Carlton Hill Primary School — score 6.0 flags=chrome
+- `139453` Pokesdown Community Primary School — score 6.0 flags=chrome
+- `113942` Portfield School — score 6.0 flags=chrome
+- `144135` Riverside Primary School — score 6.0 flags=chrome
+- `118223` Ryde School with Upper Chine — score 6.0 flags=chrome
+- `139928` Saxon Way Primary School — score 6.0 flags=chrome
+- `113736` Somerford Primary School — score 6.0 flags=chrome
+- `118985` St Andrew's School (Rochester) — score 6.0 flags=chrome
+- `118227` St George's School — score 6.0 flags=chrome
+- `118199` St Thomas of Canterbury Catholic Primary School — score 6.0 flags=chrome
+- `136120` The Bishop of Winchester Academy — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
+- `141466` The Howard School — score 6.0 flags=chrome
+- `148031` The Lion Works School — score 6.0 flags=chrome
+- `142393` Twydall Primary School and Nursery — score 6.0 flags=chrome
