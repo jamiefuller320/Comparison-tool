@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-16T14:34:14.043665+00:00`
+- Ran at: `2026-09-17T13:56:09.242818+00:00`
 - Provider: `none`
-- Reviewed: `71`
-- Schools changed: `50`
-- Findings applied: `68`
-- New learned phrases: `18`
+- Reviewed: `16`
+- Schools changed: `16`
+- Findings applied: `41`
+- New learned phrases: `14`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 50 school(s) (68 area finding(s)).
-- Learned 18 new junk phrase(s) (store size 900).
-- Reviewed top 71 suspect(s); provider=none.
+- Applied QA fixes to 16 school(s) (41 area finding(s)).
+- Learned 14 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `136730` Shenley Brook End School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `116346` St George's Beneficial Church of England (Voluntary Controlled) Primary School — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `147891` St Mary and St Giles Church of England School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `149336` The Wymering School — score 8.0 flags=policy_toc,implausible_offerings,chrome
-- `141020` Ark Dickens Primary Academy — score 6.0 flags=chrome
-- `109761` Baylis Court Nursery School — score 6.0 flags=chrome
-- `138013` Cippenham School — score 6.0 flags=chrome
-- `148709` Cottage Grove Primary School and Nursery — score 6.0 flags=chrome
-- `137726` Herschel Grammar School — score 6.0 flags=boilerplate
-- `110162` Long Close School — score 6.0 flags=chrome
-- `140605` Miltoncross Academy — score 6.0 flags=chrome,boilerplate
-- `136792` Olney Infant Academy — score 6.0 flags=chrome
-- `152321` Redwood Park School — score 6.0 flags=chrome
-- `109760` Slough Centre Nursery School — score 6.0 flags=chrome
-- `143804` St Anthony's Catholic Primary School — score 6.0 flags=chrome
-- `143802` St Ethelbert's Catholic Primary School — score 6.0 flags=chrome
-- `146888` Stamshaw Infant Academy — score 6.0 flags=chrome
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `136275` The Premier Academy — score 6.0 flags=chrome
-- `110532` The Radcliffe School — score 6.0 flags=chrome
+- `143261` Walderslade Primary School — score 16.0 flags=policy_toc,chrome,implausible_offerings
+- `118908` St John Fisher Catholic Comprehensive School — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `118162` Newchurch Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
+- `142445` St Mark's Church of England Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `150466` St Thomas of Canterbury RC Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `118178` Summerfields Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `142453` Winton Primary School — score 11.0 flags=policy_toc,implausible_offerings,chrome
+- `118179` Dover Park Primary School — score 9.0 flags=chrome
+- `133744` Lionheart School — score 9.0 flags=chrome
+- `118228` Medina House School — score 9.0 flags=chrome
+- `142394` Temple Mill Primary School — score 9.0 flags=chrome
+- `139493` The Academy of Woodlands — score 9.0 flags=chrome
+- `118158` Gatten and Lake Primary School — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `118193` Oakfield Church of England Aided Primary School, Ryde — score 8.0 flags=chrome,implausible_offerings
+- `136013` The Bay Church of England School — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `138040` The Epiphany School — score 8.0 flags=policy_toc,chrome,implausible_offerings
