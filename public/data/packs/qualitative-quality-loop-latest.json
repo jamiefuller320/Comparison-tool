@@ -1,119 +1,114 @@
 {
-  "ranAt": "2026-09-17T14:41:16.233560+00:00",
+  "ranAt": "2026-09-18T14:07:34.827444+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 3819,
-    "suspectCount": 82,
+    "recordCount": 3948,
+    "suspectCount": 70,
     "flagCounts": {
-      "chrome": 53,
-      "implausible_offerings": 25,
-      "policy_toc": 8,
+      "chrome": 44,
+      "implausible_offerings": 19,
       "admissions": 7,
-      "boilerplate": 1
+      "policy_toc": 2
     },
     "topSuspects": [
       {
-        "urn": "144134",
-        "name": "The Rowans",
-        "score": 8.0,
+        "urn": "109807",
+        "name": "Holly Spring Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "110037",
+        "name": "St Finian's Catholic Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "147128",
+        "name": "The Ferns Primary Academy",
+        "score": 6.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "123308",
+        "name": "The Manor Preparatory School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "134740",
+        "name": "The Pines School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "138525",
+        "name": "Trinity School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "123274",
+        "name": "Tudor Hall School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "140301",
+        "name": "Watchfield Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "109864",
+        "name": "Westwood Farm Infant School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "110017",
+        "name": "Stockcross C.E. School",
+        "score": 5.0,
         "flags": [
           "policy_toc",
-          "chrome",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "149536",
-        "name": "The White House School",
-        "score": 8.0,
+        "urn": "109984",
+        "name": "Welford and Wickham C.E. Primary School",
+        "score": 5.0,
         "flags": [
           "policy_toc",
-          "implausible_offerings",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118173",
-        "name": "Wroxall Primary School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "118182",
-        "name": "Brading Church of England Controlled Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "150100",
-        "name": "Carisbrooke College",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "114381",
-        "name": "Carlton Hill Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "139453",
-        "name": "Pokesdown Community Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "113942",
-        "name": "Portfield School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "144135",
-        "name": "Riverside Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118223",
-        "name": "Ryde School with Upper Chine",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "139928",
-        "name": "Saxon Way Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "113736",
-        "name": "Somerford Primary School",
-        "score": 6.0,
+        "urn": "109828",
+        "name": "College Town Primary School",
+        "score": 3.0,
         "flags": [
           "chrome"
         ]
@@ -121,7 +116,7 @@
     ]
   },
   "after": {
-    "recordCount": 3819,
+    "recordCount": 3948,
     "suspectCount": 24,
     "flagCounts": {
       "implausible_offerings": 17,
@@ -227,42 +222,42 @@
     ]
   },
   "qa": {
-    "reviewed": 82,
-    "changedSchools": 59,
-    "findingsApplied": 77,
-    "learningAdded": 26,
+    "reviewed": 70,
+    "changedSchools": 46,
+    "findingsApplied": 54,
+    "learningAdded": 8,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +50 (>= 15)",
+    "reason": "eventCount +63 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "c2e833e3747587051932",
+      "phraseHash": "3077990c33d1b0de7e96",
       "phraseCount": 900,
-      "candidateCount": 1351,
-      "eventCount": 6356,
-      "updatedAt": "2026-09-17"
+      "candidateCount": 1396,
+      "eventCount": 6520,
+      "updatedAt": "2026-09-18"
     },
     "fingerprintAfter": {
-      "phraseHash": "4d83e95b93f5eaa85bdf",
+      "phraseHash": "b518a125f17d12280b85",
       "phraseCount": 900,
-      "candidateCount": 1377,
-      "eventCount": 6457,
-      "updatedAt": "2026-09-17"
+      "candidateCount": 1404,
+      "eventCount": 6592,
+      "updatedAt": "2026-09-18"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 3819 published URN shards (prior=0 → 3819).",
-    "Rebalanced learned QA phrases: active=900 candidates=1351.",
-    "Learning fingerprint: {'phraseHash': 'c2e833e3747587051932', 'phraseCount': 900, 'candidateCount': 1351, 'eventCount': 6356, 'updatedAt': '2026-09-17'}",
-    "Apply decision: eventCount +50 (>= 15)",
-    "Before: 82 suspects across 3819 records.",
-    "Applied QA fixes to 59 school(s) (77 area finding(s)).",
-    "Learned 26 new junk phrase(s) (store size 900).",
-    "Reviewed top 82 suspect(s); provider=none.",
+    "Hydrated working sidecar from 3948 published URN shards (prior=0 → 3948).",
+    "Rebalanced learned QA phrases: active=900 candidates=1396.",
+    "Learning fingerprint: {'phraseHash': '3077990c33d1b0de7e96', 'phraseCount': 900, 'candidateCount': 1396, 'eventCount': 6520, 'updatedAt': '2026-09-18'}",
+    "Apply decision: eventCount +63 (>= 15)",
+    "Before: 70 suspects across 3948 records.",
+    "Applied QA fixes to 46 school(s) (54 area finding(s)).",
+    "Learned 8 new junk phrase(s) (store size 900).",
+    "Reviewed top 70 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 24 suspects across 3819 records.",
+    "After: 24 suspects across 3948 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
