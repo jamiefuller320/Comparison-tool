@@ -1,36 +1,21 @@
 {
-  "ranAt": "2026-09-18T14:07:34.827444+00:00",
+  "ranAt": "2026-09-19T13:44:25.015741+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 3948,
-    "suspectCount": 70,
+    "recordCount": 4035,
+    "suspectCount": 46,
     "flagCounts": {
-      "chrome": 44,
-      "implausible_offerings": 19,
+      "chrome": 21,
+      "implausible_offerings": 18,
       "admissions": 7,
-      "policy_toc": 2
+      "boilerplate": 1,
+      "policy_toc": 1
     },
     "topSuspects": [
-      {
-        "urn": "109807",
-        "name": "Holly Spring Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "110037",
-        "name": "St Finian's Catholic Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
       {
         "urn": "147128",
         "name": "The Ferns Primary Academy",
@@ -40,56 +25,49 @@
         ]
       },
       {
-        "urn": "123308",
-        "name": "The Manor Preparatory School",
+        "urn": "110358",
+        "name": "William Harding School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "134740",
-        "name": "The Pines School",
+        "urn": "126002",
+        "name": "William Penn School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "138525",
-        "name": "Trinity School",
+        "urn": "126113",
+        "name": "Windlesham House School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "123274",
-        "name": "Tudor Hall School",
+        "urn": "118740",
+        "name": "Wittersham Church of England Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "140301",
-        "name": "Watchfield Primary School",
+        "urn": "139664",
+        "name": "Wye School",
         "score": 6.0,
         "flags": [
+          "boilerplate",
           "chrome"
         ]
       },
       {
-        "urn": "109864",
-        "name": "Westwood Farm Infant School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "110017",
-        "name": "Stockcross C.E. School",
+        "urn": "118371",
+        "name": "Willesborough Junior School",
         "score": 5.0,
         "flags": [
           "policy_toc",
@@ -97,26 +75,49 @@
         ]
       },
       {
-        "urn": "109984",
-        "name": "Welford and Wickham C.E. Primary School",
-        "score": 5.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "109828",
-        "name": "College Town Primary School",
+        "urn": "110428",
+        "name": "Lee Common Church of England School",
         "score": 3.0,
         "flags": [
-          "chrome"
+          "admissions"
+        ]
+      },
+      {
+        "urn": "125344",
+        "name": "Rydes Hill Preparatory School",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "116423",
+        "name": "The Hayling College",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "137239",
+        "name": "The Romsey School",
+        "score": 3.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "116411",
+        "name": "The Toynbee School",
+        "score": 3.0,
+        "flags": [
+          "admissions"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 3948,
+    "recordCount": 4035,
     "suspectCount": 24,
     "flagCounts": {
       "implausible_offerings": 17,
@@ -222,42 +223,42 @@
     ]
   },
   "qa": {
-    "reviewed": 70,
-    "changedSchools": 46,
-    "findingsApplied": 54,
-    "learningAdded": 8,
+    "reviewed": 46,
+    "changedSchools": 22,
+    "findingsApplied": 26,
+    "learningAdded": 5,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +63 (>= 15)",
+    "reason": "eventCount +50 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "3077990c33d1b0de7e96",
+      "phraseHash": "e91b4d6515f0752a046c",
       "phraseCount": 900,
-      "candidateCount": 1396,
-      "eventCount": 6520,
-      "updatedAt": "2026-09-18"
+      "candidateCount": 1410,
+      "eventCount": 6642,
+      "updatedAt": "2026-09-19"
     },
     "fingerprintAfter": {
-      "phraseHash": "b518a125f17d12280b85",
+      "phraseHash": "3cc555976ab21d8eea4c",
       "phraseCount": 900,
-      "candidateCount": 1404,
-      "eventCount": 6592,
-      "updatedAt": "2026-09-18"
+      "candidateCount": 1415,
+      "eventCount": 6676,
+      "updatedAt": "2026-09-19"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 3948 published URN shards (prior=0 → 3948).",
-    "Rebalanced learned QA phrases: active=900 candidates=1396.",
-    "Learning fingerprint: {'phraseHash': '3077990c33d1b0de7e96', 'phraseCount': 900, 'candidateCount': 1396, 'eventCount': 6520, 'updatedAt': '2026-09-18'}",
-    "Apply decision: eventCount +63 (>= 15)",
-    "Before: 70 suspects across 3948 records.",
-    "Applied QA fixes to 46 school(s) (54 area finding(s)).",
-    "Learned 8 new junk phrase(s) (store size 900).",
-    "Reviewed top 70 suspect(s); provider=none.",
+    "Hydrated working sidecar from 4035 published URN shards (prior=0 → 4035).",
+    "Rebalanced learned QA phrases: active=900 candidates=1410.",
+    "Learning fingerprint: {'phraseHash': 'e91b4d6515f0752a046c', 'phraseCount': 900, 'candidateCount': 1410, 'eventCount': 6642, 'updatedAt': '2026-09-19'}",
+    "Apply decision: eventCount +50 (>= 15)",
+    "Before: 46 suspects across 4035 records.",
+    "Applied QA fixes to 22 school(s) (26 area finding(s)).",
+    "Learned 5 new junk phrase(s) (store size 900).",
+    "Reviewed top 46 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 24 suspects across 3948 records.",
+    "After: 24 suspects across 4035 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
