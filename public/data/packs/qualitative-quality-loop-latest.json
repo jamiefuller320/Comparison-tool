@@ -1,19 +1,18 @@
 {
-  "ranAt": "2026-09-19T13:44:25.015741+00:00",
+  "ranAt": "2026-09-20T13:58:17.307225+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 4035,
-    "suspectCount": 46,
+    "recordCount": 4107,
+    "suspectCount": 42,
     "flagCounts": {
-      "chrome": 21,
-      "implausible_offerings": 18,
+      "chrome": 17,
+      "implausible_offerings": 17,
       "admissions": 7,
-      "boilerplate": 1,
-      "policy_toc": 1
+      "cms_chrome": 1
     },
     "topSuspects": [
       {
@@ -25,53 +24,43 @@
         ]
       },
       {
-        "urn": "110358",
-        "name": "William Harding School",
+        "urn": "152372",
+        "name": "William Cobbett Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "126002",
-        "name": "William Penn School",
+        "urn": "149954",
+        "name": "Willow Bank Junior School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "126113",
-        "name": "Windlesham House School",
+        "urn": "139899",
+        "name": "Windmill Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "118740",
-        "name": "Wittersham Church of England Primary School",
+        "urn": "141494",
+        "name": "Wordsworth Primary and Nursery School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "139664",
-        "name": "Wye School",
-        "score": 6.0,
-        "flags": [
-          "boilerplate",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "118371",
-        "name": "Willesborough Junior School",
+        "urn": "140478",
+        "name": "Townhill Infant School",
         "score": 5.0,
         "flags": [
-          "policy_toc",
-          "implausible_offerings"
+          "cms_chrome"
         ]
       },
       {
@@ -91,33 +80,41 @@
         ]
       },
       {
-        "urn": "116423",
-        "name": "The Hayling College",
+        "urn": "148453",
+        "name": "The Emmbrook School",
         "score": 3.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "137239",
-        "name": "The Romsey School",
+        "urn": "139853",
+        "name": "The Forest School",
         "score": 3.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "116411",
-        "name": "The Toynbee School",
+        "urn": "116569",
+        "name": "The Gregg Preparatory School",
         "score": 3.0,
         "flags": [
-          "admissions"
+          "chrome"
+        ]
+      },
+      {
+        "urn": "116568",
+        "name": "The Gregg School",
+        "score": 3.0,
+        "flags": [
+          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 4035,
+    "recordCount": 4107,
     "suspectCount": 24,
     "flagCounts": {
       "implausible_offerings": 17,
@@ -223,42 +220,42 @@
     ]
   },
   "qa": {
-    "reviewed": 46,
-    "changedSchools": 22,
-    "findingsApplied": 26,
-    "learningAdded": 5,
+    "reviewed": 42,
+    "changedSchools": 18,
+    "findingsApplied": 22,
+    "learningAdded": 6,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +50 (>= 15)",
+    "reason": "eventCount +54 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "e91b4d6515f0752a046c",
+      "phraseHash": "ff7daa2cc44aea18e22c",
       "phraseCount": 900,
-      "candidateCount": 1410,
-      "eventCount": 6642,
-      "updatedAt": "2026-09-19"
+      "candidateCount": 1424,
+      "eventCount": 6730,
+      "updatedAt": "2026-09-20"
     },
     "fingerprintAfter": {
-      "phraseHash": "3cc555976ab21d8eea4c",
+      "phraseHash": "b4c2562b088f9e75b9b9",
       "phraseCount": 900,
-      "candidateCount": 1415,
-      "eventCount": 6676,
-      "updatedAt": "2026-09-19"
+      "candidateCount": 1430,
+      "eventCount": 6758,
+      "updatedAt": "2026-09-20"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 4035 published URN shards (prior=0 → 4035).",
-    "Rebalanced learned QA phrases: active=900 candidates=1410.",
-    "Learning fingerprint: {'phraseHash': 'e91b4d6515f0752a046c', 'phraseCount': 900, 'candidateCount': 1410, 'eventCount': 6642, 'updatedAt': '2026-09-19'}",
-    "Apply decision: eventCount +50 (>= 15)",
-    "Before: 46 suspects across 4035 records.",
-    "Applied QA fixes to 22 school(s) (26 area finding(s)).",
-    "Learned 5 new junk phrase(s) (store size 900).",
-    "Reviewed top 46 suspect(s); provider=none.",
+    "Hydrated working sidecar from 4107 published URN shards (prior=0 → 4107).",
+    "Rebalanced learned QA phrases: active=900 candidates=1424.",
+    "Learning fingerprint: {'phraseHash': 'ff7daa2cc44aea18e22c', 'phraseCount': 900, 'candidateCount': 1424, 'eventCount': 6730, 'updatedAt': '2026-09-20'}",
+    "Apply decision: eventCount +54 (>= 15)",
+    "Before: 42 suspects across 4107 records.",
+    "Applied QA fixes to 18 school(s) (22 area finding(s)).",
+    "Learned 6 new junk phrase(s) (store size 900).",
+    "Reviewed top 42 suspect(s); provider=none.",
     "Merged cleaned sidecar into 21 schools-index file(s).",
-    "After: 24 suspects across 4035 records.",
+    "After: 24 suspects across 4107 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
