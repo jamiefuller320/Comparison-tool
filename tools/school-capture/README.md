@@ -84,7 +84,7 @@ Recommended scale-up (technical order, not a schedule):
    python3 scripts/synthesize-qualitative.py --only-missing --min-documented-areas 2 \
      --provider auto --limit 25
    ```
-3. **Daily loop** — `npm run loop:qualitative` / workflow `qualitative-loop.yml` (Hampshire: **25 new schools/day**, provider `none`; set `CURSOR_API_KEY` / `OPENAI_API_KEY` secrets only for paid polish).
+3. **Daily loop** — `npm run loop:qualitative` / workflow `qualitative-loop.yml` (`--ingest-policy auto`: SE tail → London → maintenance; provider `none`; set `CURSOR_API_KEY` / `OPENAI_API_KEY` secrets only for paid polish).
 4. **QA loop** — after synth, rank the worst suspects and strip clear junk:
    ```bash
    npm run qa:qualitative -- --limit 8
