@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-19T13:41:30.404407+00:00`
+- Ran at: `2026-09-20T12:44:02.048060+00:00`
 - Provider: `none`
-- Reviewed: `46`
-- Schools changed: `22`
-- Findings applied: `26`
-- New learned phrases: `5`
+- Reviewed: `16`
+- Schools changed: `15`
+- Findings applied: `40`
+- New learned phrases: `9`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 22 school(s) (26 area finding(s)).
-- Learned 5 new junk phrase(s) (store size 900).
-- Reviewed top 46 suspect(s); provider=none.
+- Applied QA fixes to 15 school(s) (40 area finding(s)).
+- Learned 9 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
+- `109878` The Colleton Primary School — score 18.0 flags=policy_toc,implausible_offerings,chrome
+- `144637` The Coombes Church of England Primary School — score 16.0 flags=policy_toc,chrome,implausible_offerings
+- `144228` West Hill School — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `125202` Wonersh and Shamley Green CofE Aided Primary School — score 12.0 flags=chrome
+- `116625` Vermont School — score 9.0 flags=chrome
+- `147676` Weston Secondary School — score 9.0 flags=chrome
+- `147856` Westvale Park Primary Academy — score 9.0 flags=chrome
+- `125369` Woldingham School — score 9.0 flags=chrome
+- `148113` Woolston Infant School — score 9.0 flags=chrome
+- `116465` Woodlands Community College — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `142076` Tanners Brook Primary School — score 6.0 flags=chrome,boilerplate
 - `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `110358` William Harding School — score 6.0 flags=chrome
-- `126002` William Penn School — score 6.0 flags=chrome
-- `126113` Windlesham House School — score 6.0 flags=chrome
-- `118740` Wittersham Church of England Primary School — score 6.0 flags=chrome
-- `139664` Wye School — score 6.0 flags=boilerplate,chrome
-- `118371` Willesborough Junior School — score 5.0 flags=policy_toc,implausible_offerings
-- `110428` Lee Common Church of England School — score 3.0 flags=admissions
-- `125344` Rydes Hill Preparatory School — score 3.0 flags=admissions
-- `116423` The Hayling College — score 3.0 flags=admissions
-- `137239` The Romsey School — score 3.0 flags=admissions
-- `116411` The Toynbee School — score 3.0 flags=admissions
-- `110437` Twyford C of E School — score 3.0 flags=chrome
-- `125857` Upper Beeding Primary School — score 3.0 flags=chrome
-- `125865` Vale School, Worthing — score 3.0 flags=chrome
-- `137211` Warden Park Primary Academy — score 3.0 flags=chrome
-- `139916` Warlingham Village Primary School — score 3.0 flags=admissions
-- `125998` Warnham CofE Primary School — score 3.0 flags=chrome
-- `149097` Waterside Primary Academy — score 3.0 flags=chrome
-- `151586` West Dean CofE Primary School — score 3.0 flags=chrome
+- `131556` The Serendipity School — score 6.0 flags=chrome
+- `137037` Upper Shirley High School — score 6.0 flags=chrome
+- `148124` Wey Valley College — score 6.0 flags=chrome
+- `125077` William Cobbett Primary School — score 6.0 flags=chrome
