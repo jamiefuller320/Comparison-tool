@@ -158,6 +158,13 @@ DEFAULT_PARALLEL_QUALITATIVE_LAS: tuple[str, ...] = (
     "East Sussex",
 )
 
+# Preferred parallel stream anchors during the London website-coverage wave.
+# Exhausted slots still advance to the largest remaining ready borough pool.
+DEFAULT_PARALLEL_QUALITATIVE_LAS_LONDON: tuple[str, ...] = (
+    "Lambeth",
+    "Tower Hamlets",
+)
+
 
 def normalize_la_name(name: str | None) -> str:
     if not name:

@@ -69,6 +69,24 @@ Goal: grow crawlable school/town landings as ready packs increase **without** pu
 
 **Out of this track:** rewriting area/stage/guide landings (already region-wide); GSC manual validation; national full-URN dump.
 
+#### Qualitative website ingest roadmap
+
+Goal: finish **website qualitative capture** for the product coverage region (South East + Dorset + London) at minimum cost, then **maintain** freshness and depth without chasing national breadth.
+
+| Phase | When | Scheduled defaults | Status |
+| --- | --- | --- | --- |
+| **1. SE + Dorset tail** | Any ready non-London pack (incl. Hampshire seed slot) still has website-bearing schools without a shard | `--ingest-policy auto` → `se_tail`: parallel Dorset + East Sussex anchors, **60** new/stream, **15** stale refresh/stream | **In progress** (~100 schools left on ready packs as of Sep 2026) |
+| **2. London wave** | Non-London pools exhausted; London borough packs in `manifest.json` or still to build | `auto` → `london`: parallel **Lambeth + Tower Hamlets** anchors, **60** new/stream, **12** stale refresh; run `npm run pack:london` when borough packs are missing | **Queued** (33 boroughs not yet in manifest) |
+| **3. Maintenance** | No remaining website work in any ready coverage-region pack and all London borough packs built | `auto` → `maintenance`: **15** new/stream (late GIAS websites only), **30** stale refresh; parallel anchors kept for stragglers | **Not started** |
+
+**After London (phase 3) — explicit direction (not automated expansion):**
+
+- **In region:** stale re-screens (`refresh_stale_days`), daily **qualitative-quality-loop**, weekly **pack-quality-loop** (précis / ISI), heuristic QA + human junk flags (`npm run qa:human-flags`), optional **Cursor** on rich shortlist-likely schools via manual dispatch — not blanket re-synthesis.
+- **Out of region:** on-demand **`la-pack`** builds from “Request area coverage”; no scheduled national website crawl.
+- **Explicitly not next:** full national qualitative website ingest, second maintained seed LA, or dynamic API/CDN unless pack/shard weight forces it (see step **9** above).
+
+Entry points: `scripts/qualitative_ingest_policy.py`, `npm run loop:qualitative`, `.github/workflows/qualitative-loop.yml` (`ingest_policy` input).
+
 ### Product path / scope
 
 | Idea | Notes | Status | Source |
@@ -95,7 +113,7 @@ Only after durable parent and (separately) board audiences exist. Not a near-ter
 | Idea | Notes | Status | Source |
 | --- | --- | --- | --- |
 | **Out-of-school / holiday day care** | Include EYR out-of-school and holiday day-care providers in Hampshire EY coverage. | **Shipped** (Hampshire harvest + OOSC Met/Not met grades; pack LAs pick up on next `build-la-pack` / EY pack refresh) | Agent (“still to do” after EY MVP) |
-| **Richer qualitative evidence layer** | Deeper researched qualitative context with user-accessible evidence (beyond current Ofsted/EYFSP footnotes); optional key phrases from Ofsted reports. | Partial (coverage-first free crawl + deterministic narratives; Cursor reserved for rich-school polish; citation→URL learning; change-aware re-screens; heuristic QA loop + learned junk phrases; **parallel streams advance** to next LA when exhausted; **quality full-apply on significant learned-QA library change** / weekly ceiling. **Citation footnotes now use synthesis numbering** (not regrouped source lists); **human junk flags** via `npm run qa:human-flags` → `learned-qa-patterns.json`. Still open: finish pack-wide website qualitative roll-out beyond Hants/Dorset/East Sussex; content-review UI write-back) | North Star #2 |
+| **Richer qualitative evidence layer** | Deeper researched qualitative context with user-accessible evidence (beyond current Ofsted/EYFSP footnotes); optional key phrases from Ofsted reports. | Partial (coverage-first free crawl + deterministic narratives; **`--ingest-policy auto`** phases se_tail → london → maintenance — see **Qualitative website ingest roadmap**; Cursor reserved for rich-school polish; citation→URL learning; change-aware re-screens; heuristic QA loop + learned junk phrases; **parallel streams advance** to next LA when exhausted; **quality full-apply on significant learned-QA library change** / weekly ceiling. **Citation footnotes now use synthesis numbering** (not regrouped source lists); **human junk flags** via `npm run qa:human-flags` → `learned-qa-patterns.json`. Still open: London borough website roll-out; content-review UI write-back) | North Star #2 |
 | **Ofsted report précis engine** | Second-pass item: generate a short, parent-facing précis of each setting’s latest Ofsted report (verifiable quotes / footnote back to the report). | Partial (engine + UI shipped; **Hampshire soft-launch** requires majority mainstream primary/secondary coverage — see `SOFT_LAUNCH.md`) | User |
 | **Layperson empty-state polish** | Clearer empty states (e.g. schools-only shortlist under EY); fuller COVID/data caveats; prove full North Star loop on the EY vertical. | Partial (EY schools-only / KS1–KS4 empty copy + KS4 gap chips shipped; **COVID / blank-cell caveats thickened** on KS2 tip, chart note, guidance, tour) | North Star #3 / agent |
 | **Hampshire FIS contact enrichment** | Optionally link Hampshire Family Information Service (or a public FIS feed) for contacts beyond address + Ofsted report. | Not started | Agent recommendation |

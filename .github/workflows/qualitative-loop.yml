@@ -2,10 +2,10 @@ name: Qualitative capture loop
 
 # Coverage-first, min-cost quality (region expansion):
 # - Daily: GIAS website enrich → parallel streams (Hampshire + preferred packs)
+# - --ingest-policy auto: se_tail → london → maintenance (see qualitative_ingest_policy.py)
 # - Exhausted stream slots advance to the ready pack with the largest remaining
 #   website pool (default --advance-streams)
-# - 60 new website-bearing schools per stream + free deterministic narratives
-# - Stale re-screens: larger daily budget via ETag / Last-Modified / content-hash
+# - Phase presets tune new-capture limit + stale refresh budget per stream
 # - Heuristic QA on worst suspects (default; optional Cursor/OpenAI via dispatch)
 # - Empty website pools are a successful no-op (allow-empty) so CI stays green
 # - Manual dispatch: optional Cursor/auto polish on rich schools only
@@ -13,9 +13,9 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: Max new schools to capture per stream (free crawl)
+        description: Max new schools to capture per stream (empty = phase default)
         required: false
-        default: "60"
+        default: ""
       scope:
         description: auto | seed | la | parallel (default parallel = seed + preferred packs, advancing when exhausted)
         required: false
@@ -24,18 +24,22 @@ on:
         description: LA label when scope=la (default Hampshire)
         required: false
         default: "Hampshire"
-      parallel_las:
-        description: Preferred pack LAs for parallel streams (with seed); exhausted slots advance
+      ingest_policy:
+        description: auto | se_tail | london | maintenance (auto selects phase from remaining pools)
         required: false
-        default: "Dorset|East Sussex"
+        default: "auto"
+      parallel_las:
+        description: Override preferred pack LAs (empty = phase default from ingest_policy)
+        required: false
+        default: ""
       refresh_stale_days:
         description: Re-screen captures older than N days (0 = off)
         required: false
         default: "28"
       refresh_limit:
-        description: Max stale schools to change-detect per stream
+        description: Max stale schools to change-detect per stream (empty = phase default)
         required: false
-        default: "15"
+        default: ""
       synthesize_provider:
         description: Narrative provider — prefer none for coverage; cursor/auto for paid polish
         required: false
@@ -86,12 +90,13 @@ jobs:
 
       - name: Run qualitative loop
         env:
-          LIMIT: ${{ github.event.inputs.limit || '60' }}
+          INGEST_POLICY: ${{ github.event.inputs.ingest_policy || 'auto' }}
+          LIMIT: ${{ github.event.inputs.limit || '' }}
           SCOPE: ${{ github.event.inputs.scope || 'parallel' }}
           LA: ${{ github.event.inputs.la || 'Hampshire' }}
-          PARALLEL_LAS: ${{ github.event.inputs.parallel_las || 'Dorset|East Sussex' }}
+          PARALLEL_LAS: ${{ github.event.inputs.parallel_las || '' }}
           REFRESH_DAYS: ${{ github.event.inputs.refresh_stale_days || '28' }}
-          REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '15' }}
+          REFRESH_LIMIT: ${{ github.event.inputs.refresh_limit || '' }}
           SYNTH: ${{ github.event.inputs.synthesize_provider || 'none' }}
           SYNTH_LIMIT: ${{ github.event.inputs.synthesize_limit || '0' }}
           QA_LIMIT: ${{ github.event.inputs.qa_limit || '16' }}
@@ -102,16 +107,21 @@ jobs:
         run: |
           set -euo pipefail
           ARGS=(
+            --ingest-policy "$INGEST_POLICY"
             --scope "$SCOPE"
             --la "$LA"
-            --limit "$LIMIT"
             --refresh-stale-days "$REFRESH_DAYS"
-            --refresh-limit "$REFRESH_LIMIT"
             --synthesize-provider "$SYNTH"
             --qa-limit "$QA_LIMIT"
             --qa-provider "$QA_PROVIDER"
             --advance-streams
           )
+          if [ -n "$LIMIT" ]; then
+            ARGS+=(--limit "$LIMIT")
+          fi
+          if [ -n "$REFRESH_LIMIT" ]; then
+            ARGS+=(--refresh-limit "$REFRESH_LIMIT")
+          fi
           if [ -n "$PARALLEL_LAS" ]; then
             ARGS+=(--parallel-las "$PARALLEL_LAS")
           fi

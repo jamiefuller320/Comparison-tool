@@ -13,6 +13,8 @@ Policy: coverage first, quality at minimum cost.
     by default). When a stream's website pool is exhausted, that slot advances
     to the ready pack with the largest remaining website pool (not already
     claimed by another stream).
+  - ``--ingest-policy auto`` selects se_tail → london → maintenance presets
+    (see ``scripts/qualitative_ingest_policy.py`` and DEFERRED_IDEAS.md).
   - Skip-existing is the default (pass --no-skip-existing to recapture).
   - Stale re-screens use ETag / Last-Modified / content-hash and reuse
     unchanged pages (default: 28-day TTL, daily refresh budget).
@@ -49,6 +51,10 @@ SCRIPTS = Path(__file__).resolve().parent
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
+from qualitative_ingest_policy import (  # noqa: E402
+    apply_ingest_policy_defaults,
+    assess_qualitative_ingest_phase,
+)
 from seed_scope import (  # noqa: E402
     DEFAULT_PARALLEL_QUALITATIVE_LAS,
     PACKS_ROOT_REL,
@@ -485,6 +491,8 @@ def write_digest(payload: dict) -> None:
         "# Qualitative capture loop",
         "",
         f"- Ran at: `{payload.get('ranAt')}`",
+        f"- Ingest policy / phase: `{payload.get('ingestPolicy')}` / "
+        f"`{payload.get('ingestPhase')}`",
         f"- Scope: `{payload.get('scope')}`",
         f"- LA: `{la_label}`",
         f"- Index: `{payload.get('index')}`",
@@ -547,9 +555,16 @@ def merge_indexes(index_paths: list[Path], *, env: dict[str, str]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Qualitative capture continuous loop")
     parser.add_argument(
+        "--ingest-policy",
+        choices=("auto", "se_tail", "london", "maintenance"),
+        default="auto",
+        help="Phase presets for limit, refresh budget, and parallel LAs "
+        "(default auto = assess remaining SE vs London vs maintenance)",
+    )
+    parser.add_argument(
         "--scope",
         choices=("auto", "seed", "la", "parallel"),
-        default="auto",
+        default="parallel",
         help="auto = Hampshire then widest ready pack; seed = Hampshire only; "
         "la = honour --la; parallel = seed + --parallel-las streams",
     )
@@ -582,8 +597,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--limit",
         type=int,
-        default=DEFAULT_CAPTURE_LIMIT,
-        help=f"Max new schools to capture per stream (default {DEFAULT_CAPTURE_LIMIT})",
+        default=None,
+        help=f"Max new schools to capture per stream (default from --ingest-policy; "
+        f"se_tail/london {DEFAULT_CAPTURE_LIMIT}, maintenance 15)",
     )
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument(
@@ -600,8 +616,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--refresh-limit",
         type=int,
-        default=15,
-        help="Max stale schools to change-detect re-screen per stream (default 15)",
+        default=None,
+        help="Max stale schools to change-detect re-screen per stream "
+        "(default from --ingest-policy)",
     )
     parser.add_argument(
         "--synthesize-provider",
@@ -666,13 +683,22 @@ def main(argv: list[str] | None = None) -> int:
 
     before = capture_count(DEFAULT_CAPTURE)
 
+    known = processed_urns()
+    ingest_assessment = assess_qualitative_ingest_phase(known=known)
+    parallel_las_explicit = bool((args.parallel_las or "").strip())
+    ingest_phase, policy_notes = apply_ingest_policy_defaults(
+        args,
+        assessment=ingest_assessment,
+        parallel_las_explicit=parallel_las_explicit,
+    )
+    notes.extend(policy_notes)
+
     parallel_las = parse_parallel_las(args.parallel_las)
     if args.scope == "parallel" and not parallel_las:
         parallel_las = list(DEFAULT_PARALLEL_QUALITATIVE_LAS)
     # Honour --parallel-las even when scope was left at auto (workflow convenience).
     use_parallel = args.scope == "parallel" or bool(parallel_las)
 
-    known = processed_urns()
     stream_targets: list[tuple[str, Path, int]] = []
     if use_parallel:
         ordered: list[str] = []
@@ -719,6 +745,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         digest = {
             "ranAt": datetime.now(timezone.utc).isoformat(),
+            "ingestPolicy": args.ingest_policy,
+            "ingestPhase": ingest_phase,
+            "ingestAssessment": ingest_assessment,
             "scope": "parallel" if use_parallel else args.scope,
             "la": primary[0],
             "index": str(primary[1].relative_to(ROOT)),
@@ -994,6 +1023,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     digest = {
         "ranAt": datetime.now(timezone.utc).isoformat(),
+        "ingestPolicy": args.ingest_policy,
+        "ingestPhase": ingest_phase,
+        "ingestAssessment": ingest_assessment,
         "scope": "parallel" if use_parallel else args.scope,
         "la": primary[0],
         "index": str(primary[1].relative_to(ROOT)),
