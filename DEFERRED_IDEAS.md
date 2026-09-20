@@ -71,21 +71,24 @@ Goal: grow crawlable school/town landings as ready packs increase **without** pu
 
 #### Qualitative website ingest roadmap
 
-Goal: finish **website qualitative capture** for the product coverage region (South East + Dorset + London) at minimum cost, then **maintain** freshness and depth without chasing national breadth.
+Goal: finish **website qualitative capture** for the core coverage region (South East + Dorset + London), then **maintain** that corpus and **progressively** widen packs in **contiguous rings** toward a coherent national product — better search for **edge-of-map postcodes** without sacrificing quality or running a big-bang national crawl.
 
 | Phase | When | Scheduled defaults | Status |
 | --- | --- | --- | --- |
 | **1. SE + Dorset tail** | Any ready non-London pack (incl. Hampshire seed slot) still has website-bearing schools without a shard | `--ingest-policy auto` → `se_tail`: parallel Dorset + East Sussex anchors, **60** new/stream, **15** stale refresh/stream | **In progress** (~100 schools left on ready packs as of Sep 2026) |
 | **2. London wave** | Non-London pools exhausted; London borough packs in `manifest.json` or still to build | `auto` → `london`: parallel **Lambeth + Tower Hamlets** anchors, **60** new/stream, **12** stale refresh; run `npm run pack:london` when borough packs are missing | **Queued** (33 boroughs not yet in manifest) |
-| **3. Maintenance** | No remaining website work in any ready coverage-region pack and all London borough packs built | `auto` → `maintenance`: **15** new/stream (late GIAS websites only), **30** stale refresh; parallel anchors kept for stragglers | **Not started** |
+| **3. Maintain + expand** | No remaining website work in any ready **core** coverage-region pack and all London borough packs built | `auto` → `maintenance`: **15** new/stream, **30** stale refresh — **maintenance first**; spare capacity ingests any **ready** adjacent-ring pack | **Not started** |
 
-**After London (phase 3) — explicit direction (not automated expansion):**
+**After core region + London (phase 3) — product direction (user, Sep 2026):**
 
-- **In region:** stale re-screens (`refresh_stale_days`), daily **qualitative-quality-loop**, weekly **pack-quality-loop** (précis / ISI), heuristic QA + human junk flags (`npm run qa:human-flags`), optional **Cursor** on rich shortlist-likely schools via manual dispatch — not blanket re-synthesis.
-- **Out of region:** on-demand **`la-pack`** builds from “Request area coverage”; no scheduled national website crawl.
-- **Explicitly not next:** full national qualitative website ingest, second maintained seed LA, or dynamic API/CDN unless pack/shard weight forces it (see step **9** above).
+1. **Primary — maintain the shipped footprint:** stale re-screens (`refresh_stale_days`), daily **qualitative-quality-loop**, weekly **pack-quality-loop** (précis / ISI), heuristic QA + human junk flags (`npm run qa:human-flags`), optional **Cursor** on rich shortlist-likely schools (manual dispatch). Do not let ring expansion displace these budgets.
+2. **Secondary — adjacent rings where capacity permits:** build the next LAs from `PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER` in `scripts/seed_scope.py` (contiguous to SE + Dorset + London — e.g. Wiltshire, Somerset, Hertfordshire, Essex first). Same **pack** unit as today (`build-la-pack.py` / batch). Qualitative ingest already includes **every ready pack** in `manifest.json`; advance-streams picks largest remaining pools under maintenance-tier limits.
+3. **Edge postcodes:** extend `COVERAGE_LA_NEIGHBOURS` in `src/lib/laPacks.ts` (and keep in sync with harvest scope) as each ring ships so geo-lazy load pulls the new neighbour pack — parents on the boundary see more schools without downloading the whole country.
+4. **SEO / discoverability:** keep **SEO coverage loop** budget-aware when opening school/town landings for new ring LAs (same signal floor as today — quality gate before crawl growth).
+5. **Still on-demand:** “Request area coverage” for non-ring LAs that jump the queue; no second maintained seed LA yet.
+6. **Explicitly not the path:** simultaneous full-England website qualitative ingest, default public league-table ranking, or dynamic API/CDN unless pack/shard weight forces it (step **9** above).
 
-Entry points: `scripts/qualitative_ingest_policy.py`, `npm run loop:qualitative`, `.github/workflows/qualitative-loop.yml` (`ingest_policy` input).
+Entry points: `scripts/qualitative_ingest_policy.py`, `scripts/seed_scope.py` (`PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER`), `npm run loop:qualitative`, `.github/workflows/qualitative-loop.yml` (`ingest_policy` input).
 
 ### Product path / scope
 
@@ -93,7 +96,7 @@ Entry points: `scripts/qualitative_ingest_policy.py`, `npm run loop:qualitative`
 | --- | --- | --- | --- |
 | **Hampshire catchment overlay + places/offers context** | Map polygons (HCC open data) with home in/out; DfE capacity fill + school-level applications/offers demand ratio on compare boards. True LA catchment participation rates (&gt;100% ⇒ out-of-catchment on roll) remain unpublished school-level nationally — do not invent them. | Partial (**multi-LA catchment loader + manifest** ready; Hampshire polygons live. Pack LAs still need each LA’s open GIS — Southampton/Portsmouth/etc. do not publish reusable catchment FeatureServers today. Participation rates still blocked.) | User |
 | **Hampshire age climb as maintained set** | After EY: treat Hampshire KS1 → KS2 (then secondary) as the *maintained* depth set; national harvest becomes scaffold / on-demand fallback. | Partial (trim + harvest path shipped; depth pass recomputes Hampshire KS4 benches / phonics UX / Ofsted honesty) | User + README |
-| **Second geography** | Widen beyond Hampshire via silent-merge packs. **South East + Dorset + London** is the coverage region (`pack:southeast` / `pack:london`); Hampshire stays the sole maintained root. Promoting a second maintained seed still deferred. London borough packs are in the build order but not all harvested yet. | Partial (SE+Dorset packs shipped; London queued) | User |
+| **Second geography** | Widen beyond Hampshire via silent-merge packs. **South East + Dorset + London** is the **core** coverage region (`pack:southeast` / `pack:london`); Hampshire stays the sole maintained root. After core + London: **maintain + progressive adjacent rings** toward national search (`PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER`) — not a second maintained seed. | Partial (SE+Dorset packs shipped; London queued; ring order documented) | User |
 | **Optional parent accounts** | Soft “Save shortlist” after engagement (never a login wall). Browser-local by default; Supabase magic-link when env secrets set. | Shipped (soft-prompt module) | User |
 | **Governing-board interface (Bartley-for-all)** | Once the **parent-facing** product is mature, offer a **separate** board-oriented surface that reuses Schoolside’s generalised harvest (school records, LA/England benches, KS2 history shards, Ofsted/KS4 where present) to deliver what [Bartley Insight](https://github.com/jamiefuller320/Bartley) does for URN 116338 — peer overlays, evaluation findings, meeting-pack / strategic-question framing — **to any school**. Keep Schoolside’s North Star parental (shortlists and fit, not SIP targets); do **not** fold board language into the parent UI. Likely shapes: URN-deep-link board mode, sibling app/repo that consumes the same `public/data` packs, or generalising Bartley’s `/analysis` layer onto Schoolside’s index. Prerequisites: stable multi-school data quality + pack coverage; Bartley-specific logic (auto findings, progress emphasis, briefing copy) still to port or rebuild. Auth/privacy for governors can stay open-data first (same public DfE sources) unless schools later need private overlays. | Deferred (after parent path mature) | User |
 

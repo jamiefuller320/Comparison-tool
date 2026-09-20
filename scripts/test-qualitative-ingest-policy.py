@@ -14,6 +14,9 @@ from qualitative_ingest_policy import (  # noqa: E402
     assess_qualitative_ingest_phase,
     resolve_effective_phase,
 )
+from seed_scope import (  # noqa: E402
+    progressive_national_pack_targets,
+)
 
 
 def main() -> int:
@@ -29,6 +32,8 @@ def main() -> int:
     for phase in ("se_tail", "london", "maintenance"):
         assert phase in INGEST_POLICY_PRESETS
         assert INGEST_POLICY_PRESETS[phase]["limit"] > 0
+    ring = progressive_national_pack_targets()
+    assert "Wiltshire" in ring and ring[0] == "Wiltshire"
     print(f"OK ingest phase={assessment['phase']} assessment={assessment}")
     return 0
 

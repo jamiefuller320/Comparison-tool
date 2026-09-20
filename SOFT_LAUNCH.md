@@ -15,7 +15,7 @@ Last reviewed: 2026-08-25.
 | **3. Qualitative enough** | Precis/quotes on **most comparable shortlist-likely** settings | Mainstream state primaries & secondaries mostly covered; solid EY + childminder slice — not 100% special/AP |
 | **4. Provenance** | Numbers and quotes sourced; report-a-problem available on compare boards | Footnotes to DfE/Ofsted/ISI; challenge button wired |
 | **5. Ops** | Hampshire refresh runnable end-to-end without wiping qualitative fields | `harvest:hampshire` includes precis; scheduled refresh installs `pypdf` and re-enriches |
-| **6. Positioning** | One clear line everywhere that matters | South East + London parental compare (Hampshire depth + regional packs) — not a national league table |
+| **6. Positioning** | One clear line everywhere that matters | South East + London parental compare today (Hampshire depth + regional packs); progressive ring expansion toward wider national search — not a national league table |
 | **7. Regional packs** | South East + Dorset + London LAs available via silent-merge packs | Ready packs listed in `public/data/packs/manifest.json`; batch via `npm run pack:southeast` / `pack:london` |
 
 ## Explicitly out of scope for first showing

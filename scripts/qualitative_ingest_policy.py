@@ -7,8 +7,10 @@ Phases (see DEFERRED_IDEAS.md — Qualitative website ingest roadmap):
 - **london** — Same parallel capture policy on London borough packs as they
   land in ``manifest.json`` (run ``npm run pack:london`` first when pools are
   empty but boroughs are not yet built).
-- **maintenance** — Coverage region complete: favour stale re-screens and
-  light catch-up capture; no automated expansion beyond the product region.
+- **maintenance** — Core region (SE + Dorset + London) complete: **maintain**
+  freshness and depth first; use spare daily capacity for **contiguous ring**
+  packs (`PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER` in ``seed_scope.py``) so
+  edge-of-map postcodes gain search/compare without a big-bang national crawl.
 """
 
 from __future__ import annotations
@@ -198,9 +200,11 @@ def apply_ingest_policy_defaults(
         )
     if effective == "maintenance":
         notes.append(
-            "Maintenance phase: coverage-region website ingest complete — "
+            "Maintenance phase: core region website ingest complete — "
             "prioritise stale re-screens, qualitative-quality-loop, and "
-            "pack-quality / selective Cursor polish (no automated national expansion)."
+            "pack-quality / selective Cursor polish; expand into adjacent LAs "
+            "only when ready packs exist and maintenance budgets allow "
+            "(see PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER)."
         )
 
     return effective, notes

@@ -165,6 +165,29 @@ DEFAULT_PARALLEL_QUALITATIVE_LAS_LONDON: tuple[str, ...] = (
     "Tower Hamlets",
 )
 
+# After the coverage region (SE + Dorset + London) is complete: expand in contiguous
+# rings so edge-of-map postcodes gain neighbours without a big-bang national harvest.
+# Order is west→north→east around the current footprint; refine as packs ship.
+# Build via `build-la-pack.py` / batch scripts; qualitative ingest picks up any
+# ready pack through advance-streams (maintenance-tier daily limits).
+PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER: tuple[str, ...] = (
+    "Wiltshire",
+    "Somerset",
+    "Gloucestershire",
+    "Hertfordshire",
+    "Essex",
+    "Bedfordshire",
+    "Northamptonshire",
+    "Warwickshire",
+    "Worcestershire",
+    "Herefordshire",
+    "Swindon",
+    "Peterborough",
+    "Luton",
+    "Southend-on-Sea",
+    "Thurrock",
+)
+
 
 def normalize_la_name(name: str | None) -> str:
     if not name:
@@ -226,6 +249,11 @@ def coverage_region_pack_targets(*, include_ready: bool = False) -> list[str]:
 def london_borough_pack_targets() -> list[str]:
     """London borough pack labels only (all are packs; none are the seed root)."""
     return list(LONDON_BOROUGH_LOCAL_AUTHORITIES)
+
+
+def progressive_national_pack_targets() -> list[str]:
+    """LA labels for ring expansion after the core coverage region is complete."""
+    return list(PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER)
 
 
 # Ofsted childcare MI sometimes uses "&" where DfE/EES uses "and".
