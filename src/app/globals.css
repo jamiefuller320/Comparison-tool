@@ -1520,6 +1520,7 @@ body:has(.shortlist-dock) {
 
 /* Nested light cards keep dark ink on foam/paper surfaces. */
 .journey-stage .nearby-list,
+.journey-stage .find-name-search,
 .journey-stage .nearby-list-head strong,
 .journey-stage .search-panel,
 .journey-stage .selected-chips,
@@ -1934,6 +1935,151 @@ body:has(.shortlist-dock) {
   font-size: 0.82rem;
   line-height: 1.4;
   color: var(--stage-ink-muted);
+}
+
+.find-name-search {
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: rgba(255, 252, 247, 0.94);
+  color: var(--ink);
+  padding: 1rem 1rem 0.9rem;
+  display: grid;
+  gap: 0.7rem;
+  box-shadow: 0 12px 32px rgba(7, 58, 80, 0.12);
+}
+
+.find-name-search-head h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--sea-deep);
+}
+
+.find-name-search-head p,
+.find-name-filter-note,
+.find-name-status {
+  margin: 0.2rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.find-name-filter-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.85rem;
+}
+
+.find-name-filter-summary p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.find-name-filter-kicker {
+  display: block;
+  margin-bottom: 0.12rem;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.find-name-text-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--sea);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 650;
+  padding: 0.15rem 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+.find-name-text-btn:hover,
+.find-name-text-btn:focus-visible {
+  color: var(--sea-deep);
+}
+
+.find-name-filters {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.75rem 0.8rem;
+  border-radius: 0.9rem;
+  background: rgba(11, 79, 108, 0.05);
+}
+
+.find-name-filter-note {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.find-name-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.find-name-filter-label {
+  flex: 0 0 5.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.find-name-search .phase-chip {
+  padding: 0.32rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+.find-name-search-bar input {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  font-size: 1.02rem;
+  color: var(--ink);
+  outline: none;
+  box-shadow: 0 8px 24px rgba(11, 79, 108, 0.05);
+}
+
+.find-name-search-bar input:focus {
+  border-color: rgba(11, 79, 108, 0.45);
+  box-shadow: 0 8px 24px rgba(11, 79, 108, 0.12);
+}
+
+.find-name-status {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.find-name-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(20, 35, 58, 0.08);
+  border-radius: 1rem;
+  overflow: auto;
+  max-height: 22rem;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.find-name-results .nearby-item:last-child {
+  border-bottom: none;
 }
 
 .compare-action-bar {
