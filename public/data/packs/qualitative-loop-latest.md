@@ -1,42 +1,42 @@
 # Qualitative capture loop
 
-- Ran at: `2026-09-20T12:44:20.010710+00:00`
+- Ran at: `2026-09-21T14:23:34.658150+00:00`
 - Ingest policy / phase: `auto` / `se_tail`
 - Scope: `parallel`
-- LA: `Southampton, Surrey, Wokingham`
-- Index: `public/data/packs/surrey/schools-index.json`
-- Remaining with website (pre-capture): `27`
+- LA: `Brighton and Hove, Reading, Windsor and Maidenhead`
+- Index: `public/data/packs/windsor-and-maidenhead/schools-index.json`
+- Remaining with website (pre-capture): `22`
 - Batch limit (per stream): `60`
-- Sidecar records before → after: `4035` → `4107`
+- Sidecar records before → after: `4107` → `4151`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `15`
+- QA reviewed / changed: `16` / `12`
 - Learned terms: `500`
-- Learned QA phrases: `9`
+- Learned QA phrases: `10`
 - Dry run: `False`
 
 ## Streams
 
-- `Southampton`: status=ok added=22 remaining=22 index=`public/data/packs/southampton/schools-index.json`
-- `Surrey`: status=ok added=27 remaining=27 index=`public/data/packs/surrey/schools-index.json`
-- `Wokingham`: status=ok added=23 remaining=23 index=`public/data/packs/wokingham/schools-index.json`
+- `Brighton and Hove`: status=ok added=14 remaining=14 index=`public/data/packs/brighton-and-hove/schools-index.json`
+- `Reading`: status=ok added=8 remaining=8 index=`public/data/packs/reading/schools-index.json`
+- `Windsor and Maidenhead`: status=ok added=22 remaining=22 index=`public/data/packs/windsor-and-maidenhead/schools-index.json`
 
 ## Notes
 
-- Hydrated working sidecar from 4035 published URN shards (prior=0 → 4035).
-- Ingest policy=auto phase=se_tail (non-London remaining=118, London remaining=0, pending London packs=33).
-- Stream preferred=Hampshire exhausted (remaining=0); advanced to Surrey (remaining=27).
-- Stream preferred=Dorset exhausted (remaining=0); advanced to Wokingham (remaining=23).
-- Stream preferred=East Sussex exhausted (remaining=0); advanced to Southampton (remaining=22).
+- Hydrated working sidecar from 4107 published URN shards (prior=0 → 4107).
+- Ingest policy=auto phase=se_tail (non-London remaining=46, London remaining=0, pending London packs=33).
+- Stream preferred=Hampshire exhausted (remaining=0); advanced to Windsor and Maidenhead (remaining=22).
+- Stream preferred=Dorset exhausted (remaining=0); advanced to Brighton and Hove (remaining=14).
+- Stream preferred=East Sussex exhausted (remaining=0); advanced to Reading (remaining=8).
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Surrey index=public/data/packs/surrey/schools-index.json remainingWithWebsite=27.
-- Stream LA=Wokingham index=public/data/packs/wokingham/schools-index.json remainingWithWebsite=23.
-- Stream LA=Southampton index=public/data/packs/southampton/schools-index.json remainingWithWebsite=22.
+- Stream LA=Windsor and Maidenhead index=public/data/packs/windsor-and-maidenhead/schools-index.json remainingWithWebsite=22.
+- Stream LA=Brighton and Hove index=public/data/packs/brighton-and-hove/schools-index.json remainingWithWebsite=14.
+- Stream LA=Reading index=public/data/packs/reading/schools-index.json remainingWithWebsite=8.
 - Running 3 capture streams in parallel (limit 60 each).
-- Merged 3 partial sidecar(s) → 4107 records (union size 4107).
-- Captured batch (sidecar 4035 → 4107); learned terms now 557.
+- Merged 3 partial sidecar(s) → 4151 records (union size 4151).
+- Captured batch (sidecar 4107 → 4151); learned terms now 554.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 15, learned phrases +9.
+- QA provider=none: reviewed 16, changed 12, learned phrases +10.
 - Re-merged affected schools-index files after QA fixes.
