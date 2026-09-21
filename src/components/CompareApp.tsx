@@ -721,6 +721,21 @@ export function CompareApp({
     });
   }, [discoveryPool, provision]);
 
+  const nameSearchCatalogue = useMemo(() => {
+    const seen = new Set<string>();
+    const combined: SchoolRecord[] = [];
+    for (const school of [
+      ...index.schools,
+      ...(eyIndex?.providers ?? []),
+      ...(childmindersIndex?.providers ?? []),
+    ]) {
+      if (seen.has(school.urn)) continue;
+      seen.add(school.urn);
+      combined.push(school);
+    }
+    return combined;
+  }, [index.schools, eyIndex, childmindersIndex]);
+
   const summaryOpts = {
     englandRwm: index.benchmarks.england.rwmExpected,
     indieBench: index.benchmarks.independent,
@@ -1042,6 +1057,7 @@ export function CompareApp({
       />
       <HomePostcodeExplorer
         schools={discoveryPool}
+        catalogue={nameSearchCatalogue}
         selectedUrns={selected}
         onToggle={toggleSchool}
         stageFilter={stages}

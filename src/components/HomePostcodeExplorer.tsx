@@ -24,6 +24,7 @@ import {
   type NearbySchool,
 } from "@/lib/nearby";
 import { fmtPct } from "@/lib/format";
+import { FindNameSearch } from "@/components/FindNameSearch";
 import { PhaseSelector } from "@/components/PhaseSelector";
 import { SectorSelector } from "@/components/SectorSelector";
 import { StageMatchSelector } from "@/components/StageMatchSelector";
@@ -108,6 +109,7 @@ function listDisplayLimit(radiusKm: number): number {
 
 export function HomePostcodeExplorer({
   schools,
+  catalogue,
   selectedUrns,
   onToggle,
   stageFilter,
@@ -126,6 +128,8 @@ export function HomePostcodeExplorer({
   children,
 }: {
   schools: SchoolRecord[];
+  /** Unfiltered index used when name search widens past Setup filters. */
+  catalogue?: SchoolRecord[];
   selectedUrns: string[];
   onToggle: (urn: string) => void;
   stageFilter: PhaseId[];
@@ -852,6 +856,7 @@ export function HomePostcodeExplorer({
   );
 
   const nearbySheet = (
+    <>
     <div data-tour="nearby">
       {home ? (
                 <>
@@ -877,7 +882,8 @@ export function HomePostcodeExplorer({
                     ? " (any selected stage)"
                     : ""}
                 . Range ring on the map, door-to-door road distance in the list —
-                tick to shortlist.
+                tick to shortlist. To add a named school, search at the bottom
+                of this tab.
               </p>
             </div>
 
@@ -1146,12 +1152,27 @@ export function HomePostcodeExplorer({
                     </button>
                     <p className="finder-setup-prompt-hint">
                       Add a home postcode in Setup, then come back here to
-                      explore the map.
+                      explore the map. You can still search by name below.
                     </p>
                   </div>
                 </>
       )}
     </div>
+    <FindNameSearch
+      schools={schools}
+      catalogue={catalogue}
+      selectedUrns={selectedUrns}
+      onToggle={onToggle}
+      stageFilter={stageFilter}
+      stageMatch={stageMatch}
+      sectorFilter={sectorFilter}
+      provisionFilter={provisionFilter}
+      comparableKs4Only={comparableKs4Only}
+      home={home}
+      radiusKm={home ? radiusKm : undefined}
+      max={max}
+    />
+    </>
   );
 
   return children({ setupSheet, nearbySheet });
