@@ -1473,6 +1473,31 @@ body:has(.shortlist-dock) {
   min-height: 0;
 }
 
+/* Find chapter: map/list fill the sheet; name search hugs its content.
+   Vertical gap under the map row matches .nearby-layout’s 1rem. */
+.find-chapter {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  min-height: inherit;
+}
+
+.find-chapter:has(.nearby-layout) {
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.find-chapter > [data-tour="nearby"] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 0;
+}
+
+.find-chapter:has(.nearby-layout) > [data-tour="nearby"] > .nearby-layout {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 /* Empty Find (no postcode): collapse workspace height and stop grid stretch
    from inserting blank bands between the copy and Start setup. */
 .journey-stage[data-chapter="nearby"]
@@ -1486,6 +1511,14 @@ body:has(.shortlist-dock) {
   .binder-sheet-body:has(.finder-setup-prompt) {
   min-height: 0;
   align-content: start;
+  gap: 0.55rem;
+}
+
+.journey-stage[data-chapter="nearby"]
+  .journey-chapter-binder
+  .binder-sheet-body:has(.finder-setup-prompt)
+  .find-chapter {
+  min-height: 0;
   gap: 0.55rem;
 }
 
@@ -1945,6 +1978,9 @@ body:has(.shortlist-dock) {
   padding: 1rem 1rem 0.9rem;
   display: grid;
   gap: 0.7rem;
+  align-content: start;
+  align-self: start;
+  height: fit-content;
   box-shadow: 0 12px 32px rgba(7, 58, 80, 0.12);
 }
 
@@ -5658,6 +5694,7 @@ html:has(.page-chapter-nav) .compare-table-controls {
 .tour-sheet-stack {
   position: relative;
   display: block;
+  min-height: inherit;
 }
 
 .tour-sheet-slot.is-warm {
@@ -5674,6 +5711,7 @@ html:has(.page-chapter-nav) .compare-table-controls {
   position: relative;
   visibility: visible;
   z-index: 1;
+  min-height: inherit;
 }
 
 /* While the walkthrough runs, prefer paint stability over decorative motion. */
