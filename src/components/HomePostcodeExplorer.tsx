@@ -856,7 +856,7 @@ export function HomePostcodeExplorer({
   );
 
   const nearbySheet = (
-    <>
+    <div className="find-chapter">
     <div data-tour="nearby">
       {home ? (
                 <>
@@ -1172,7 +1172,7 @@ export function HomePostcodeExplorer({
       radiusKm={home ? radiusKm : undefined}
       max={max}
     />
-    </>
+    </div>
   );
 
   return children({ setupSheet, nearbySheet });
