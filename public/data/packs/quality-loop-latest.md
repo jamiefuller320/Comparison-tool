@@ -1,4 +1,4 @@
-# Pack quality loop — 2026-09-21T12:17:34Z
+# Pack quality loop — 2026-09-23T11:03:06Z
 
 - Mode: `polish`
 - Max packs: 6
@@ -11,23 +11,23 @@
 
 | LA | Interest | Boost | Before indie% | After indie% | Before ISI | After ISI |
 |---|---:|---:|---:|---:|---|---|
-| Bournemouth, Christchurch and Poole | 0.449 | 1.8 | 42.9 | 42.9 | 10/14 | 10/14 |
-| Southampton | 0.449 | 1.8 | 57.1 | 57.1 | 4/7 | 4/7 |
-| Brighton and Hove | 0.451 | 1.8 | 61.5 | 61.5 | 7/13 | 7/13 |
-| Wokingham | 0.451 | 1.8 | 61.5 | 69.2 | 9/13 | 9/13 |
-| East Sussex | 0.451 | 1.8 | 62.1 | 62.1 | 18/29 | 18/29 |
-| Milton Keynes | 0.451 | 1.8 | 62.5 | 62.5 | 5/8 | 5/8 |
+| Bournemouth, Christchurch and Poole | 0.436 | 1.7 | 42.9 | 42.9 | 10/14 | 10/14 |
+| Southampton | 0.436 | 1.7 | 57.1 | 57.1 | 4/7 | 4/7 |
+| Brighton and Hove | 0.438 | 1.8 | 61.5 | 61.5 | 7/13 | 7/13 |
+| East Sussex | 0.438 | 1.8 | 62.1 | 62.1 | 18/29 | 18/29 |
+| Milton Keynes | 0.438 | 1.8 | 62.5 | 62.5 | 5/8 | 5/8 |
+| Wokingham | 0.438 | 1.8 | 69.2 | 69.2 | 9/13 | 9/13 |
 
 ## Top interest signals
 
-- `bracknell-forest`: score 0.451 (boost 1.8%)
-- `brighton-and-hove`: score 0.451 (boost 1.8%)
-- `buckinghamshire`: score 0.451 (boost 1.8%)
-- `east-sussex`: score 0.451 (boost 1.8%)
-- `kent`: score 0.451 (boost 1.8%)
-- `medway`: score 0.451 (boost 1.8%)
-- `milton-keynes`: score 0.451 (boost 1.8%)
-- `oxfordshire`: score 0.451 (boost 1.8%)
+- `bracknell-forest`: score 0.438 (boost 1.8%)
+- `brighton-and-hove`: score 0.438 (boost 1.8%)
+- `buckinghamshire`: score 0.438 (boost 1.8%)
+- `east-sussex`: score 0.438 (boost 1.8%)
+- `kent`: score 0.438 (boost 1.8%)
+- `medway`: score 0.438 (boost 1.8%)
+- `milton-keynes`: score 0.438 (boost 1.8%)
+- `oxfordshire`: score 0.438 (boost 1.8%)
 
 ## Weakest packs (after)
 
@@ -44,3 +44,4 @@
 - Brighton and Hove
 - East Sussex
 - Milton Keynes
+- Wokingham
