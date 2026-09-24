@@ -85,14 +85,16 @@ Recommended scale-up (technical order, not a schedule):
      --provider auto --limit 25
    ```
 3. **Daily loop** — `npm run loop:qualitative` / workflow `qualitative-loop.yml` (`--ingest-policy auto`: SE tail → London → maintenance; provider `none`; set `CURSOR_API_KEY` / `OPENAI_API_KEY` secrets only for paid polish).
-4. **QA loop** — after synth, rank the worst suspects and strip clear junk:
+4. **Daily quality** — `npm run loop:qualitative-quality` applies learned junk when the library moved enough.
+5. **Daily source spot-check** — `npm run loop:qualitative-spotcheck` samples ~7 shards vs live HTML; digests fidelity flags; optional `qa:human-flags` candidates (does not mutate extractors).
+6. **QA loop** — after synth, rank the worst suspects and strip clear junk:
    ```bash
    npm run qa:qualitative -- --limit 8
    # Optional agent on top suspects only:
    CURSOR_API_KEY=… npm run qa:qualitative -- --limit 5 --provider cursor
    ```
    Digests → `public/data/packs/qualitative-qa-latest.{json,md}`; queue → `output/qualitative-qa-queue.json`.
-5. **Other LAs** — point `--index` at `public/data/packs/{slug}/schools-index.json` (and matching `--la`), merge into that pack index, then deploy.
+7. **Other LAs** — point `--index` at `public/data/packs/{slug}/schools-index.json` (and matching `--la`), merge into that pack index, then deploy.
 
 ### Learning mechanism (what it can / cannot do)
 

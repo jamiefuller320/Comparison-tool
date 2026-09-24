@@ -1,0 +1,106 @@
+name: Qualitative source spot-check loop
+
+# Small-sample source-vs-site fidelity check against live school websites.
+# Complements coverage (qualitative-loop) and heuristic cleanup
+# (qualitative-quality-loop). Does not mutate extractor code — digests +
+# optional chrome flag candidates only.
+on:
+  workflow_dispatch:
+    inputs:
+      sample_size:
+        description: Schools to spot-check
+        required: false
+        default: "7"
+      max_pages:
+        description: Max HTML pages fetched per school
+        required: false
+        default: "3"
+      record_flags:
+        description: Record chrome candidates into learned-qa-patterns.json
+        required: false
+        type: boolean
+        default: false
+      strict:
+        description: Fail the job when any school verdict is fail
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: Sample + digest only (no live fetches)
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    # Daily 12:00 UTC — after coverage (07:00) and quality (10:00)
+    - cron: "0 12 * * *"
+
+permissions:
+  contents: write
+
+# Share with qualitative ingest/quality so spot-check waits on writers.
+concurrency:
+  group: qualitative-data
+  cancel-in-progress: false
+
+jobs:
+  qualitative-spotcheck-loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install data enrichment deps
+        run: pip install -r requirements-data.txt
+
+      - name: Run qualitative source spot-check
+        env:
+          SAMPLE_SIZE: ${{ github.event.inputs.sample_size || '7' }}
+          MAX_PAGES: ${{ github.event.inputs.max_pages || '3' }}
+          RECORD_FLAGS: ${{ github.event.inputs.record_flags || 'false' }}
+          STRICT: ${{ github.event.inputs.strict || 'false' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          ARGS=(
+            --sample-size "$SAMPLE_SIZE"
+            --max-pages "$MAX_PAGES"
+          )
+          if [ "$RECORD_FLAGS" = "true" ]; then
+            ARGS+=(--record-flags)
+          fi
+          if [ "$STRICT" = "true" ]; then
+            ARGS+=(--strict)
+          fi
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          python3 scripts/run-qualitative-spotcheck-loop.py "${ARGS[@]}"
+
+      - name: Commit spot-check digest
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          RECORD_FLAGS: ${{ github.event.inputs.record_flags || 'false' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Digest always; learned store only when --record-flags was set.
+          git add public/data/packs/qualitative-spotcheck-latest.json \
+                  public/data/packs/qualitative-spotcheck-latest.md
+          if [ "$RECORD_FLAGS" = "true" ]; then
+            git add -f output/learned-qa-patterns.json 2>/dev/null || true
+          fi
+          if git diff --staged --quiet; then
+            echo "No qualitative spot-check digest changes"
+          else
+            if [ "$DRY_RUN" = "true" ]; then
+              MSG="Qualitative spot-check dry-run digest"
+            else
+              MSG="Qualitative source spot-check: fidelity digest"
+            fi
+            git commit -m "$MSG"
+            bash scripts/ci-rebase-push.sh origin main
+          fi
