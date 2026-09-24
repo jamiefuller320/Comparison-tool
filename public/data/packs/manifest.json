@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31",
+  "generatedAt": "2026-09-24",
   "seedLocalAuthority": "Hampshire",
   "packs": {
     "isle-of-wight": {
@@ -461,6 +461,29 @@
       "independentEnriched": true,
       "eyEnriched": true,
       "builtAt": "2026-07-31T19:31:47Z"
+    },
+    "city-of-london": {
+      "localAuthority": "City of London",
+      "slug": "city-of-london",
+      "status": "ready",
+      "requestedAt": "2026-09-24T09:51:17Z",
+      "note": "Schools pack with GIAS + KS4/KS5 + phonics + EY/childminders depth.",
+      "paths": {
+        "schoolsIndex": "/data/packs/city-of-london/schools-index.json",
+        "directory": "/data/packs/city-of-london/schools-directory.json",
+        "eyProviders": "/data/packs/city-of-london/ey-providers-index.json",
+        "childminders": "/data/packs/city-of-london/childminders-index.json"
+      },
+      "schoolCount": 6,
+      "withRwm": 1,
+      "withKs4": 3,
+      "eyProviderCount": 7,
+      "childminderCount": 0,
+      "giasEnriched": true,
+      "phonicsEnriched": true,
+      "independentEnriched": true,
+      "eyEnriched": true,
+      "builtAt": "2026-09-24T09:54:01Z"
     }
   }
 }

@@ -63,6 +63,7 @@ def main() -> int:
         "--continue-on-error",
         "--only",
         "--limit",
+        "--london-only",
     )
 
     # GIAS open-date helper (hyphenated module name).
