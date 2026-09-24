@@ -80,6 +80,100 @@ BLOCKED_DOCUMENT_TERMS: tuple[str, ...] = (
 
 BULLET_LINE = re.compile(r"^[\s•·\-\*\u2022◦]+")
 NUMBERED_LINE = re.compile(r"^\s*\d+[\.\):\-]\s+")
+YEAR_RE = re.compile(r"\b(20\d{2})\b")
+
+# Club lists older than this many years are demoted (still extractable, low weight).
+CLUB_DOCUMENT_MAX_AGE_YEARS = 2
+
+
+def document_year_hint(url: str, label: str = "") -> int | None:
+    """Best-effort publication year from a document URL or label."""
+    blob = f"{url} {label}"
+    years = [int(y) for y in YEAR_RE.findall(blob)]
+    if not years:
+        return None
+    return max(years)
+
+
+def looks_like_club_document(url: str, label: str = "") -> bool:
+    blob = f"{url} {label}".lower()
+    blob = re.sub(r"[_\-/]+", " ", blob)
+    if any(
+        t in blob
+        for t in (
+            "club brochure",
+            "clubs brochure",
+            "after school club",
+            "after-school",
+            "extra curricular",
+            "extracurricular",
+            "wraparound",
+            "wrap around",
+        )
+    ):
+        return True
+    if "club" in blob and any(
+        t in blob
+        for t in (
+            "brochure",
+            "letter",
+            "timetable",
+            "programme",
+            "program",
+            "schedule",
+            "autumn",
+            "spring",
+            "summer",
+            "winter",
+            "term",
+        )
+    ):
+        return True
+    return False
+
+
+def is_stale_club_document(
+    url: str,
+    label: str = "",
+    *,
+    today_year: int | None = None,
+    max_age_years: int = CLUB_DOCUMENT_MAX_AGE_YEARS,
+) -> bool:
+    """True when a club list PDF is clearly multi-year-old."""
+    if not looks_like_club_document(url, label):
+        return False
+    year = document_year_hint(url, label)
+    if year is None:
+        return False
+    from datetime import date
+
+    current = today_year if today_year is not None else date.today().year
+    return year < current - max_age_years
+
+
+def club_document_relevance_multiplier(
+    url: str,
+    label: str = "",
+    *,
+    today_year: int | None = None,
+) -> float:
+    """Demote stale club PDFs; prefer current / recent-year lists."""
+    if not looks_like_club_document(url, label):
+        return 1.0
+    year = document_year_hint(url, label)
+    if year is None:
+        return 1.0
+    from datetime import date
+
+    current = today_year if today_year is not None else date.today().year
+    age = current - year
+    if age <= 0:
+        return 1.25  # current-year (or future-dated brochure)
+    if age == 1:
+        return 1.0
+    if age <= CLUB_DOCUMENT_MAX_AGE_YEARS:
+        return 0.55
+    return 0.15
 
 
 def document_extension(url: str) -> str:
@@ -118,12 +212,24 @@ def score_document_url(url: str, anchor: str = "") -> int:
     # Deprioritise generic admission policy PDFs unless also thematic.
     if "admission" in blob and score < 5:
         return 0
+    # Demote multi-year-old club lists so fresher brochures win the slot budget.
+    if is_stale_club_document(url, anchor):
+        score = max(1, score // 3)
+    elif looks_like_club_document(url, anchor):
+        year = document_year_hint(url, anchor)
+        from datetime import date
+
+        if year is not None and year >= date.today().year:
+            score += 4
     return score
 
 
 def infer_section_from_document(url: str, anchor: str = "") -> str:
     label = anchor or unquote(urlparse(url).path.split("/")[-1])
-    return infer_section_from_heading(label.replace("-", " ").replace("_", " "))
+    heading = label.replace("-", " ").replace("_", " ")
+    if looks_like_club_document(url, heading):
+        return "enrichment"
+    return infer_section_from_heading(heading)
 
 
 def document_label(url: str, anchor: str = "") -> str:

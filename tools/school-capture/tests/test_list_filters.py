@@ -60,11 +60,17 @@ def test_filter_offerings_drops_chrome_keeps_real_clubs():
             "Name of Child: Class:",
             "Zones of Regulation",
             "Cognition and Learning",
+            "Dinner Menu",
+            "Pay Online",
+            "Facebook",
         ]
     )
     assert "Ofsted Report" not in cleaned
     assert "Parent View" not in cleaned
     assert "Name of Child: Class:" not in cleaned
+    assert "Dinner Menu" not in cleaned
+    assert "Pay Online" not in cleaned
+    assert "Facebook" not in cleaned
     assert "breakfast club" in cleaned
     assert "drama" in cleaned
     assert "tennis" in cleaned

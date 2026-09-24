@@ -272,3 +272,91 @@ def page_type_confidence_multiplier(page_type: PageType, area: str) -> float:
     if page_type == PageType.ADMIN:
         return 0.0
     return 0.7
+
+
+# Prefer mission / vision / about / faith identity pages when scoring ethos.
+ETHOS_PAGE_HINTS: tuple[str, ...] = (
+    "ethos",
+    "vision",
+    "mission",
+    "values",
+    "aims",
+    "about-us",
+    "aboutus",
+    "about/",
+    "/about",
+    "faith",
+    "catholic",
+    "jewish",
+    "christian",
+    "church",
+    "worship",
+    "spiritual",
+    "identity",
+    "welcome",
+)
+
+CLUB_SOURCE_HINTS: tuple[str, ...] = (
+    "club brochure",
+    "clubs brochure",
+    "club_brochure",
+    "clubs_brochure",
+    "/clubs",
+    "after-school",
+    "afterschool",
+    "extra-curricular",
+    "extracurricular",
+    "wraparound",
+    "wrap-around",
+    "breakfast club",
+)
+
+
+def looks_like_club_source(url: str = "", title: str = "", heading: str = "") -> bool:
+    blob = f"{url} {title} {heading}".lower()
+    blob = re.sub(r"[_\-/]+", " ", blob)
+    if any(h in blob for h in CLUB_SOURCE_HINTS):
+        return True
+    if "club" in blob and any(
+        m in blob
+        for m in (
+            "brochure",
+            "timetable",
+            "letter",
+            "programme",
+            "program",
+            "schedule",
+            "autumn",
+            "spring",
+            "summer",
+            "winter",
+            "term",
+        )
+    ):
+        return True
+    return False
+
+
+def looks_like_ethos_identity_page(url: str = "", title: str = "") -> bool:
+    blob = f"{url_path_blob(url)} {title.lower()}"
+    blob = re.sub(r"[_\-/]+", " ", blob)
+    return any(h in blob for h in ETHOS_PAGE_HINTS)
+
+
+def area_source_confidence_multiplier(
+    area: str,
+    *,
+    url: str = "",
+    title: str = "",
+    heading: str = "",
+) -> float:
+    """Boost mission/vision pages for ethos; demote club brochures away from ethos."""
+    area_key = (area or "").lower()
+    if area_key == "ethos":
+        if looks_like_club_source(url, title, heading):
+            return 0.05
+        if looks_like_ethos_identity_page(url, title):
+            return 1.45
+    if area_key == "enrichment" and looks_like_club_source(url, title, heading):
+        return 1.2
+    return 1.0

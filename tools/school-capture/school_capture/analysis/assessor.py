@@ -15,10 +15,12 @@ from school_capture.analysis.specificity import (
 )
 from school_capture.filters import (
     PageType,
+    area_source_confidence_multiplier,
     classify_page_type,
     has_school_context,
     is_blocked_sentence,
     looks_like_admissions_marketing,
+    looks_like_club_source,
     looks_like_parent_home_advice,
     page_type_confidence_multiplier,
 )
@@ -27,9 +29,12 @@ from school_capture.list_filters import (
     is_nav_or_junk_list_item,
     is_plausible_list_offering,
     is_thematic_heading,
+    looks_like_club_activity_label,
+    looks_like_pdf_extraction_junk,
 )
 from school_capture.html_sections import clean_list_item, infer_section_from_heading
 from school_capture.http_utils import extract_sentences, keyword_hits
+from school_capture.documents import club_document_relevance_multiplier
 from school_capture.models import (
     QualitativeSignal,
     SubjectArea,
@@ -72,6 +77,8 @@ def assess_captures(captures: list[RawCapture]) -> list[SubjectAreaAssessment]:
             if not has_school_context(sentence):
                 continue
             areas = _areas_for_sentence(sentence, primary, cap_section=cap.section)
+            if looks_like_club_source(cap.url or "", cap.page_title or "", ""):
+                areas.discard(SubjectArea.ETHOS)
             for area in areas:
                 if not passes_specificity_gate(sentence, area):
                     continue
@@ -94,9 +101,17 @@ def _ingest_structured_sections(
     for sec in sections:
         if sec.inferred_section == "general" and not is_thematic_heading(sec.heading):
             continue
-        area = SECTION_TO_AREA.get(sec.inferred_section)
+        # Do not default bare "general" list blocks to ethos — only thematic /
+        # section-tagged pages, with club brochures forced to enrichment.
+        area = None
+        if sec.inferred_section and sec.inferred_section not in ("general",):
+            area = SECTION_TO_AREA.get(sec.inferred_section)
         if not area and is_thematic_heading(sec.heading):
-            area = SECTION_TO_AREA.get(infer_section_from_heading(sec.heading))
+            inferred = infer_section_from_heading(sec.heading)
+            if inferred != "general":
+                area = SECTION_TO_AREA.get(inferred)
+        if looks_like_club_source(cap.url or "", cap.page_title or "", sec.heading or ""):
+            area = SubjectArea.ENRICHMENT
         if not area:
             continue
         for item in sec.list_items:
@@ -105,6 +120,8 @@ def _ingest_structured_sections(
                 by_area[area].append(cand)
     # Page-level orphan list items: only on clearly thematic pages.
     page_area = SECTION_TO_AREA.get(cap.section or "")
+    if looks_like_club_source(cap.url or "", cap.page_title or "", ""):
+        page_area = SubjectArea.ENRICHMENT
     if page_area and cap.section not in ("general", "homepage"):
         for item in cap.list_items or []:
             if any(item in s.list_items for s in sections):
@@ -177,6 +194,8 @@ def _candidate_from_list_item(
     item = clean_list_item(raw_item)
     if not item or not is_plausible_list_offering(item):
         return None
+    if looks_like_pdf_extraction_junk(item):
+        return None
 
     # SEN referral / need-type directories are SEND evidence, not community.
     if area == SubjectArea.COMMUNITY and _looks_like_sen_referral_directory(cap, sec):
@@ -204,9 +223,23 @@ def _candidate_from_list_item(
     }:
         return None
 
+    # Club brochure / activity labels never feed ethos or behaviour offerings.
+    if area in (SubjectArea.ETHOS, SubjectArea.BEHAVIOUR) and (
+        looks_like_club_source(cap.url or "", cap.page_title or "", sec.heading or "")
+        or looks_like_club_activity_label(item)
+    ):
+        return None
+
     offerings = extract_offerings(item, area)
     if not offerings:
         offerings = [item]
+    offerings = [
+        o
+        for o in offerings
+        if not is_nav_or_junk_list_item(o) and not looks_like_pdf_extraction_junk(o)
+    ]
+    if not offerings:
+        return None
 
     sentence = f"{sec.heading}: {item}" if sec.heading else item
     spec = specificity_score(item, area) + 2.0
@@ -218,6 +251,16 @@ def _candidate_from_list_item(
     if sec.inferred_section and SECTION_TO_AREA.get(sec.inferred_section) == area:
         relevance += 2.0
     relevance *= page_type_confidence_multiplier(page_type, area.value)
+    relevance *= area_source_confidence_multiplier(
+        area.value,
+        url=cap.url or "",
+        title=cap.page_title or "",
+        heading=sec.heading or "",
+    )
+    relevance *= club_document_relevance_multiplier(
+        cap.url or "",
+        cap.page_title or sec.heading or "",
+    )
     if relevance < 3.0:
         return None
 
@@ -292,6 +335,12 @@ def _score_sentence(
     area: SubjectArea,
     page_type: PageType,
 ) -> _Candidate | None:
+    # Club brochure pages: skip ethos entirely (activities belong in enrichment).
+    if area == SubjectArea.ETHOS and looks_like_club_source(
+        cap.url or "", cap.page_title or "", ""
+    ):
+        return None
+
     lex = AREA_LEXICONS[area]
     lower = sentence.lower()
     breadth = keyword_hits(lower, lex.get("breadth", ()))
@@ -300,6 +349,13 @@ def _score_sentence(
         return None
 
     offerings = extract_offerings(sentence, area)
+    offerings = [
+        o
+        for o in offerings
+        if not is_nav_or_junk_list_item(o) and not looks_like_pdf_extraction_junk(o)
+    ]
+    if area in (SubjectArea.ETHOS, SubjectArea.BEHAVIOUR):
+        offerings = [o for o in offerings if not looks_like_club_activity_label(o)]
     spec = specificity_score(sentence, area)
 
     relevance = 0.0
@@ -312,6 +368,15 @@ def _score_sentence(
     if has_school_context(sentence):
         relevance += 0.5
     relevance *= page_type_confidence_multiplier(page_type, area.value)
+    relevance *= area_source_confidence_multiplier(
+        area.value,
+        url=cap.url or "",
+        title=cap.page_title or "",
+    )
+    relevance *= club_document_relevance_multiplier(
+        cap.url or "",
+        cap.page_title or "",
+    )
 
     if relevance < 2.5:
         return None
