@@ -4,7 +4,7 @@ Finite deployable standard before showing School Compass to the world.
 Not a commitment to finish the whole roadmap — a **parental product** bar with
 **Hampshire maintained depth** and **South East + Dorset + London pack coverage**.
 
-Last reviewed: 2026-08-25.
+Last reviewed: 2026-09-24.
 
 ## Ship bar
 
@@ -37,7 +37,7 @@ Last reviewed: 2026-08-25.
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
 | 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; twice-weekly `pack-quality-loop` + daily parallel `qualitative-loop` (`--ingest-policy auto`: SE tail → London → maintenance; advancing exhausted slots) + daily `qualitative-quality-loop` (full apply on significant learned-QA change / weekly ceiling) |
 | 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East + London parental compare; soft-launch feedback prompt + structured intake for improvement cycle |
-| 7 Regional packs | **Partial** | All 20 South East + Dorset pack LAs `ready`; **33 London boroughs** are in the coverage region / build order (`npm run pack:london`) but not yet harvested into `manifest.json` |
+| 7 Regional packs | **Pass** | All 20 South East + Dorset pack LAs `ready`; all **33 London boroughs** `ready` in `manifest.json` (City of London + 32 boroughs via `npm run pack:london`) |
 
 Re-check guideline rates after each major harvest; flip a row back to Partial if coverage regresses.
 
