@@ -35,7 +35,7 @@ Last reviewed: 2026-09-24.
 | 2 Quantitative honesty | **Pass** | Gap chips on KS4/EY/KS2 (incl. missing Ofsted grade on KS2) |
 | 3 Qualitative enough | **Pass (guideline)** | Hampshire mainstream ~91% / EY ~43% / CM ~51%. Region packs: schools ~88%+ précis, EY ~87%, CM ~74%; mainstream primary/secondary ≫70%. Independent ISI/précis polish waves + weekly automated loop — measure with `npm run report:pack-quality` |
 | 4 Provenance | **Pass** | Board stamps + precis footnotes; visit-pack report button still optional |
-| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; twice-weekly `pack-quality-loop` + daily parallel `qualitative-loop` (`--ingest-policy auto`: SE tail → London → maintenance; advancing exhausted slots) + daily `qualitative-quality-loop` (full apply on significant learned-QA change / weekly ceiling) |
+| 5 Ops | **Pass** | Precis merge-preserved across harvest; KS2 national cache under `.cache/ees/`; `harvest:hampshire` + `pack:southeast:complete`; twice-weekly `pack-quality-loop` + daily parallel `qualitative-loop` (`--ingest-policy auto`: SE tail → London → maintenance; advancing exhausted slots) + daily `qualitative-quality-loop` (full apply on significant learned-QA change / weekly ceiling) + daily `qualitative-spotcheck-loop` (source-vs-site fidelity sample → digest / human-flag candidates) |
 | 6 Positioning | **Pass** | Metadata, loader, README, and hero align on Hampshire + South East + London parental compare; soft-launch feedback prompt + structured intake for improvement cycle |
 | 7 Regional packs | **Pass** | All 20 South East + Dorset pack LAs `ready`; all **33 London boroughs** `ready` in `manifest.json` (City of London + 32 boroughs via `npm run pack:london`) |
 
@@ -89,6 +89,16 @@ npm run loop:seo-coverage -- --max-new-areas 4
 ```
 
 Phases and budget-tuning notes live under **Continuous SEO coverage automation** in `DEFERRED_IDEAS.md`.
+
+### Qualitative source spot-check loop
+
+Daily GitHub Action (12:00 UTC) + `workflow_dispatch` samples ~7 published qualitative shards (SE + London mix), fetches live school HTML, and compares parent-facing offerings/narratives to the human fidelity bar (chrome pollution, PDF junk, overclaim, possible underclaim). Writes `qualitative-spotcheck-latest.{json,md}`; chrome phrases land in `output/spotcheck-human-flag-candidates.jsonl` for `npm run qa:human-flags`. Not a hard Pages deploy gate unless `--strict`.
+
+```bash
+npm run loop:qualitative-spotcheck -- --dry-run
+npm run loop:qualitative-spotcheck -- --sample-size 7
+npm run test:qualitative-spotcheck-loop
+```
 
 Soft-launch qualitative target (guideline, not a hard CI gate):
 
