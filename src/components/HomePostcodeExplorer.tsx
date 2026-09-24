@@ -681,8 +681,13 @@ export function HomePostcodeExplorer({
                           <input
                             id="home-postcode"
                             name="postcode"
+                            type="text"
                             autoComplete="postal-code"
+                            autoCapitalize="characters"
+                            autoCorrect="off"
                             spellCheck={false}
+                            enterKeyHint="search"
+                            inputMode="text"
                             placeholder="Home postcode — SO40 2HR, so402hr, SO40-2HR"
                             value={rawPostcode}
                             onChange={(e) => {

@@ -85,13 +85,19 @@ export async function shareOrCopyComparison(options: {
     typeof navigator !== "undefined" &&
     typeof navigator.share === "function"
   ) {
-    try {
-      await navigator.share({ title, text, url });
-      return "shared";
-    } catch (err) {
-      // User dismissed the sheet — not a failure worth copying over.
-      if (err instanceof DOMException && err.name === "AbortError") {
-        return "failed";
+    const payload = { title, text, url };
+    // Safari / some Android WebViews throw if the payload isn't shareable.
+    const canShare =
+      typeof navigator.canShare !== "function" || navigator.canShare(payload);
+    if (canShare) {
+      try {
+        await navigator.share(payload);
+        return "shared";
+      } catch (err) {
+        // User dismissed the sheet — not a failure worth copying over.
+        if (err instanceof DOMException && err.name === "AbortError") {
+          return "failed";
+        }
       }
     }
   }

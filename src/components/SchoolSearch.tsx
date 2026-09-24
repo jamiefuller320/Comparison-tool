@@ -95,6 +95,10 @@ export function SchoolSearch({
           aria-expanded={open && results.length > 0}
           aria-controls={listId}
           aria-autocomplete="list"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint="search"
           placeholder={
             atMax
               ? "Remove a school to add another (max 4)"
