@@ -1,34 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-24T11:05:29.048553+00:00`
+- Ran at: `2026-09-24T14:30:43.261304+00:00`
 - Provider: `none`
 - Reviewed: `16`
-- Schools changed: `15`
-- Findings applied: `24`
-- New learned phrases: `9`
+- Schools changed: `16`
+- Findings applied: `51`
+- New learned phrases: `20`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 15 school(s) (24 area finding(s)).
-- Learned 9 new junk phrase(s) (store size 900).
+- Applied QA fixes to 16 school(s) (51 area finding(s)).
+- Learned 20 new junk phrase(s) (store size 900).
 - Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `100597` Elm Wood School — score 9.0 flags=chrome,boilerplate
-- `149018` Brick Lane School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `135086` Akiva School — score 6.0 flags=chrome
-- `100556` Ashmole Primary School — score 6.0 flags=chrome
-- `142772` Ashmole Primary School — score 6.0 flags=chrome
-- `100989` Beatrice Tate School — score 6.0 flags=chrome
-- `101393` Brampton College — score 6.0 flags=chrome
-- `101251` Brookhill Nursery School — score 6.0 flags=admissions,chrome
-- `100529` DLD College — score 6.0 flags=chrome
-- `100551` Effra Nursery School and Children's Centre — score 6.0 flags=chrome
-- `100659` Elm Court School — score 6.0 flags=chrome
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `101315` All Saints' CofE Primary School NW2 — score 5.0 flags=policy_toc,implausible_offerings
-- `100593` Crown Lane Primary School — score 5.0 flags=policy_toc,implausible_offerings
-- `101329` All Saints' CofE Nursery and Primary School N20 — score 3.0 flags=chrome
-- `101375` Annemount School — score 3.0 flags=chrome
+- `100619` St Mark's Church of England Primary School — score 16.0 flags=policy_toc,chrome,implausible_offerings
+- `100645` Rosemead Preparatory School — score 15.0 flags=chrome
+- `100907` Lawdale Junior School — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `136450` Platanos College — score 14.0 flags=chrome,policy_toc,implausible_offerings,boilerplate
+- `149084` Mulberry Wood Wharf Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
+- `100882` Childrens House Nursery School — score 12.0 flags=chrome
+- `149917` Maypole School (Leigham Court) — score 12.0 flags=chrome
+- `138803` Octavia House Schools, London — score 12.0 flags=chrome
+- `149556` Streatham Wells Primary — score 12.0 flags=chrome
+- `148043` Aya College (Educational Provision) — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `141120` Beulah Infants' School — score 11.0 flags=boilerplate,chrome,policy_toc,implausible_offerings
+- `144626` Cypress Primary School — score 11.0 flags=boilerplate,chrome,policy_toc,implausible_offerings
+- `150889` London Nautical, City of London Academy — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `100920` Manorfield Primary School — score 11.0 flags=policy_toc,implausible_offerings,chrome
+- `137430` Oasis Academy South Bank Primary — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `100613` St Andrew's Church of England Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
