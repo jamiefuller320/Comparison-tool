@@ -17,7 +17,9 @@ from school_capture.list_filters import (
     SEND_DIRECTORY_LABELS,
     is_nav_or_junk_list_item,
     is_plausible_list_offering,
+    looks_like_club_activity_label,
     looks_like_named_person,
+    looks_like_pdf_extraction_junk,
 )
 from school_capture.models import QualitativeCaptureRecord, SubjectAreaAssessment
 
@@ -34,16 +36,19 @@ POLICY_BOILERPLATE_RE = re.compile(
 MID_SENTENCE_RE = re.compile(r"^[a-z]")
 CHROME_LABEL_RE = re.compile(
     r"\b(ofsted report|parent view|staff portal|report student absence|"
-    r"name of child|key information|online payments|current vacancies|"
+    r"name of child|key information|online payments|pay online|current vacancies|"
     r"financial information|slavery statement|statutory information|"
-    r"data protection regulation)\b",
+    r"data protection regulation|dinner menu|lunch menu|school calendar|"
+    r"newsletters?|prospectus|facebook|instagram|twitter|galleries?|"
+    r"academic life|gcse options|ascending|descending|modified)\b",
     re.I,
 )
 CMS_CHROME_NARRATIVE_RE = re.compile(
     r"\b(current (staff )?vacancies|slavery statement|terms\s*&\s*conditions|"
-    r"terms and conditions|online payments|financial information|"
+    r"terms and conditions|online payments|pay online|financial information|"
     r"general data protection|key information|statutory information|"
-    r"cookie policy|privacy notice)\b",
+    r"cookie policy|privacy notice|dinner menu|school calendar|newsletters?|"
+    r"prospectus|facebook)\b",
     re.I,
 )
 
@@ -116,9 +121,13 @@ def _is_junk_offering(item: str, *, area: str) -> bool:
         return False
     if looks_like_named_person(item):
         return True
+    if looks_like_pdf_extraction_junk(item):
+        return True
     if key in POLICY_DOCUMENT_LABELS:
         return True
     if area == "community" and key in SEND_DIRECTORY_LABELS:
+        return True
+    if area in {"ethos", "behaviour"} and looks_like_club_activity_label(item):
         return True
     if phrase_matches_learned(item):
         return True
@@ -185,15 +194,37 @@ def heuristic_area_findings(area: SubjectAreaAssessment) -> list[AreaQaFinding]:
                 or "key information" in o.lower()
                 or "vacancies" in o.lower()
                 or "online payments" in o.lower()
+                or "pay online" in o.lower()
+                or "dinner menu" in o.lower()
+                or "facebook" in o.lower()
+                or "prospectus" in o.lower()
+                or "newsletter" in o.lower()
+                or "school calendar" in o.lower()
+                or "ascending" in o.lower()
+                or "descending" in o.lower()
+                or "modified" in o.lower()
+                or looks_like_pdf_extraction_junk(o)
                 for o in rest
+            )
+            club_in_ethos = area.area in {"ethos", "behaviour"} and any(
+                looks_like_club_activity_label(o) for o in rest
             )
             findings.append(
                 AreaQaFinding(
                     area=area.area,
                     action="strip",
-                    reason="Offerings look like site chrome, policy TOC, or learned junk.",
-                    junkClass="chrome" if chrome_hit else "policy_toc",
+                    reason=(
+                        "Club / wraparound labels mis-bucketed into ethos/behaviour."
+                        if club_in_ethos
+                        else "Offerings look like site chrome, policy TOC, or learned junk."
+                    ),
+                    junkClass=(
+                        "wrong_area"
+                        if club_in_ethos
+                        else ("chrome" if chrome_hit else "policy_toc")
+                    ),
                     offendingExcerpts=rest[:8],
+                    suggestedArea="enrichment" if club_in_ethos else None,
                 )
             )
 
@@ -241,15 +272,38 @@ def heuristic_area_findings(area: SubjectAreaAssessment) -> list[AreaQaFinding]:
         )
     elif narrative and CMS_CHROME_NARRATIVE_RE.search(narrative):
         # Deterministic synth often lists CMS footer links as if they were provision.
-        findings.append(
-            AreaQaFinding(
-                area=area.area,
-                action="thin",
-                reason="Narrative is dominated by CMS chrome / compliance footer labels.",
-                junkClass="cms_chrome",
-                offendingExcerpts=[narrative[:180]],
+        # Only wipe the whole area when nothing real remains after junk filtering —
+        # otherwise strip chrome labels / retell, keeping dance/football/etc.
+        real_offerings = [
+            o
+            for o in (area.offerings or [])
+            if not _is_junk_offering(o, area=area.area)
+        ]
+        junk_labels = [
+            o
+            for o in (area.offerings or [])
+            if _is_junk_offering(o, area=area.area)
+        ]
+        if real_offerings:
+            findings.append(
+                AreaQaFinding(
+                    area=area.area,
+                    action="strip",
+                    reason="Narrative lists CMS chrome alongside real provision — strip chrome only.",
+                    junkClass="cms_chrome",
+                    offendingExcerpts=([narrative[:180]] + junk_labels)[:8],
+                )
             )
-        )
+        else:
+            findings.append(
+                AreaQaFinding(
+                    area=area.area,
+                    action="thin",
+                    reason="Narrative is dominated by CMS chrome / compliance footer labels.",
+                    junkClass="cms_chrome",
+                    offendingExcerpts=[narrative[:180]],
+                )
+            )
     elif narrative and MID_SENTENCE_RE.match(narrative):
         findings.append(
             AreaQaFinding(

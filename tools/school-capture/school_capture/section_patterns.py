@@ -30,6 +30,8 @@ SECTION_PATTERNS: dict[str, tuple[str, ...]] = {
         "extra-curricular",
         "extracurricular",
         "clubs",
+        "club",
+        "club-brochure",
         "activities",
         "sport",
         "music",
@@ -57,6 +59,13 @@ SECTION_PATTERNS: dict[str, tuple[str, ...]] = {
         "spiritual",
         "moral",
         "british-values",
+        "faith",
+        "catholic",
+        "jewish",
+        "christian",
+        "church",
+        "worship",
+        "identity",
     ),
     "behaviour": (
         "behaviour",
@@ -93,7 +102,8 @@ SECTION_PATTERNS: dict[str, tuple[str, ...]] = {
 
 # High-value page targets (boost discovery score).
 PRIORITY_URL_TERMS: dict[str, tuple[str, ...]] = {
-    "enrichment": ("clubs", "extra-curricular", "wraparound", "breakfast"),
+    "enrichment": ("clubs", "club", "extra-curricular", "wraparound", "breakfast"),
     "curriculum": ("curriculum", "subjects", "options"),
     "send": ("send", "sen", "local-offer", "senco"),
+    "ethos": ("ethos", "vision", "mission", "values", "about-us", "faith", "catholic", "jewish"),
 }

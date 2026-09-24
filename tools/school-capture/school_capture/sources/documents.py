@@ -120,6 +120,23 @@ class SchoolDocumentsAdapter:
                 )
             )
 
+        from school_capture.documents import (
+            club_document_relevance_multiplier,
+            is_stale_club_document,
+        )
+
+        meta = {
+            "pageType": classify_page_type(final, label).value,
+            "documentFormat": "pdf",
+            "pageCount": str(page_count),
+            "listItemCount": str(len(list_items)),
+        }
+        if is_stale_club_document(final, label):
+            meta["staleClubDocument"] = "1"
+            meta["clubRelevance"] = str(
+                club_document_relevance_multiplier(final, label)
+            )
+
         self._update_inventory_status(
             url,
             "extracted",
@@ -136,12 +153,7 @@ class SchoolDocumentsAdapter:
             text=text,
             page_title=label or school.name,
             section=section,
-            meta={
-                "pageType": classify_page_type(final, label).value,
-                "documentFormat": "pdf",
-                "pageCount": str(page_count),
-                "listItemCount": str(len(list_items)),
-            },
+            meta=meta,
             structured_sections=structured,
             list_items=list_items,
         )

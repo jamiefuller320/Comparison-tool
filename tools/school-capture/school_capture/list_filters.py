@@ -21,6 +21,7 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "about",
         "news",
         "calendar",
+        "school calendar",
         "parents",
         "parents & carers",
         "parents and carers",
@@ -31,9 +32,14 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "staff",
         "vacancies",
         "current vacancies",
+        "stafford vacancies",
         "search",
         "login",
         "menu",
+        "dinner menu",
+        "lunch menu",
+        "school menu",
+        "menus",
         "clubs",
         "curriculum",
         "send",
@@ -43,6 +49,8 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "statutory info",
         "financial information",
         "online payments",
+        "pay online",
+        "pay on line",
         "absence reporting",
         "attendance information",
         "awards and recognition",
@@ -50,6 +58,55 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "home learning",
         "school meals",
         "term dates",
+        "newsletters",
+        "news & newsletters",
+        "news and newsletters",
+        "prospectus",
+        "school prospectus",
+        "facebook",
+        "instagram",
+        "twitter",
+        "x (twitter)",
+        "youtube",
+        "galleries",
+        "gallery",
+        "academic life",
+        "gcse options",
+        "curriculum information",
+        "department and subjects",
+        "departments and subjects",
+        "careers and life beyond millais",
+        "join us",
+        "who's who",
+        "who’s who",
+        "parent forum",
+        "governors’ information and duties",
+        "governors' information and duties",
+        "headteacher welcome message",
+        "pupil roles and responsibilities",
+        "vision, values and behaviours",
+        "forest learning alliance",
+        "medical information",
+        "parent events",
+        "parent hub",
+        "parent teacher association",
+        "learning resource centre",
+        "mental health & well being",
+        "mental health and well being",
+        "publications",
+        "school catering",
+        "school communication",
+        "useful acronyms",
+        "uniform & second hand uniform",
+        "uniform and second hand uniform",
+        "school curriculum",
+        "values and ethos",
+        "careers and life beyond millais",
+        "department and subjects",
+        "departments and subjects",
+        "ascending",
+        "descending",
+        "modified",
         # Recurring PrimarySite / school CMS chrome
         "ofsted report",
         "ofsted",
@@ -81,6 +138,8 @@ NAV_LIST_LABELS: frozenset[str] = frozenset(
         "heads’ welcome",
         "heads' welcome",
         "head's welcome",
+        "headteacher's welcome",
+        "headteachers welcome",
         "meet the team",
         "our staff",
         "staff list",
@@ -137,6 +196,24 @@ CHROME_FRAGMENTS: tuple[str, ...] = (
     "statutory information",
     "financial information",
     "online payments",
+    "pay online",
+    "dinner menu",
+    "lunch menu",
+    "school calendar",
+    "newsletters",
+    "news & newsletters",
+    "prospectus",
+    "academic life",
+    "gcse options",
+    "curriculum information",
+    "department and subjects",
+    "headteacher's welcome",
+    "headteacher welcome",
+    "who's who",
+    "who’s who",
+    "parent forum",
+    "governors’ information",
+    "governors' information",
     "data protection regulation",
     "slavery statement",
     "terms & conditions",
@@ -153,6 +230,81 @@ CHROME_FRAGMENTS: tuple[str, ...] = (
     "school fees",
     "open days",
 )
+
+# PDF UI / TOC / questionnaire crumbs that must never become offerings.
+PDF_UI_CRUMB_LABELS: frozenset[str] = frozenset(
+    {
+        "ascending",
+        "descending",
+        "modified",
+        "creating media",
+        "data handling",
+        "point point keykey",
+        "a parent’s guide",
+        "a parent's guide",
+    }
+)
+
+# ALL-CAPS questionnaire / form fragments from SEN information reports.
+ALL_CAPS_QUESTION_RE = re.compile(
+    r"^[A-Z0-9][A-Z0-9\s,;:\-–—/()'\"&?]{6,}\?$"
+)
+ALL_CAPS_FRAGMENT_RE = re.compile(
+    r"^[A-Z0-9][A-Z0-9\s,;:\-–—/()'\"&.]{8,}$"
+)
+FORM_FIELD_LABEL_RE = re.compile(
+    r"^(?:name of (?:child|pupil|parent)|class|date of birth|relationship to|"
+    r"acc(?:ount)?\s*name)\s*:?\s*",
+    re.I,
+)
+
+# Value / identity words that may legitimately appear under ethos.
+ETHOS_VALUE_TERMS: frozenset[str] = frozenset(
+    {
+        "respect",
+        "respectful",
+        "responsibility",
+        "resilience",
+        "resilient",
+        "collaboration",
+        "excellence",
+        "kindness",
+        "kind",
+        "honesty",
+        "brave",
+        "motivated",
+        "faith",
+        "worship",
+        "catholic",
+        "jewish",
+        "christian",
+        "islamic",
+        "muslim",
+        "church",
+        "parish",
+        "mission",
+        "vision",
+        "values",
+        "ethos",
+        "tikkun olam",
+        "kavod",
+        "chessed",
+        "chossen",
+        "yosher",
+        "inclusive",
+        "nurturing",
+        "british values",
+        "rights respecting",
+        "smsc",
+        "faithful",
+    }
+)
+
+
+def _term_in_text(term: str, text: str) -> bool:
+    if " " in term or "-" in term:
+        return term in text
+    return bool(re.search(rf"\b{re.escape(term)}\b", text, re.I))
 
 # Staff-directory / named-person list items mistaken for clubs or provision.
 HONORIFIC_PERSON_RE = re.compile(
@@ -237,6 +389,7 @@ JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r":\s*$",
         r"\bname of child\b",
         r"\bclass:\b",
+        r"^acc(?:ount)?\s*name\b",
         r"^limit screen time$",
         r"^read with your child$",
         r"^offer a balanced",
@@ -259,6 +412,20 @@ JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"^statutory info",
         r"^current vacancies$",
         r"^online payments$",
+        r"^pay online$",
+        r"^dinner menu$",
+        r"^lunch menu$",
+        r"^school calendar$",
+        r"^newsletters?$",
+        r"^prospectus$",
+        r"^facebook$",
+        r"^instagram$",
+        r"^twitter$",
+        r"^galleries?$",
+        r"^academic life$",
+        r"^ascending$",
+        r"^descending$",
+        r"^modified$",
         r"slavery statement",
         r"data protection regulation",
         # Staff directory rows scraped into activity lists
@@ -267,8 +434,46 @@ JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
         r"\bcancelled\s*$",
         r"\b(deputy|assistant)\s+headteachers?\b",
         r"\bheadteachers?\s+and\s+assistant\b",
+        # Social / vacancies chrome with school name prefix
+        r"\bvacancies\b",
+        r"\bfacebook\b",
+        r"\binstagram\b",
+        r"\bprospectus\b",
+        r"\bnewsletter",
+        r"\bpay online\b",
+        r"\bdinner menu\b",
+        r"\bschool calendar\b",
     )
 )
+
+
+def looks_like_pdf_extraction_junk(item: str) -> bool:
+    """True for ALL-CAPS questionnaire lines, TOC crumbs, and PDF form UI labels."""
+    text = re.sub(r"\s+", " ", (item or "").strip())
+    if not text:
+        return True
+    lower = text.lower().rstrip(".").strip()
+    if lower in PDF_UI_CRUMB_LABELS:
+        return True
+    if FORM_FIELD_LABEL_RE.match(text):
+        return True
+    # Drop pure ALL-CAPS question / truncated questionnaire fragments.
+    letters = [c for c in text if c.isalpha()]
+    if letters and ALL_CAPS_QUESTION_RE.match(text):
+        return True
+    if (
+        letters
+        and len(letters) >= 12
+        and sum(1 for c in letters if c.isupper()) / len(letters) >= 0.85
+        and ("?" in text or "," in text or text.endswith("."))
+    ):
+        return True
+    if letters and ALL_CAPS_FRAGMENT_RE.match(text) and len(text.split()) >= 3:
+        # Keep known short activity labels that happen to be title-cased ALL CAPS.
+        if any(_term_in_text(term, lower) for term in ACTIVITY_TERMS + PROVISION_TERMS):
+            return False
+        return True
+    return False
 
 
 def is_nav_or_junk_list_item(item: str) -> bool:
@@ -277,13 +482,20 @@ def is_nav_or_junk_list_item(item: str) -> bool:
     lower = lower.lstrip("•·▪◦\uf09f\u2022-–—* ").strip()
     if not lower:
         return True
+    # Short value / identity words must survive for ethos themes.
+    if lower in ETHOS_VALUE_TERMS or lower.rstrip("s") in ETHOS_VALUE_TERMS:
+        return False
     if looks_like_named_person(item):
+        return True
+    if looks_like_pdf_extraction_junk(item):
         return True
     if lower in NAV_LIST_LABELS:
         return True
     if lower.rstrip("»›>") in NAV_LIST_LABELS:
         return True
     if lower in POLICY_DOCUMENT_LABELS:
+        return True
+    if lower in PDF_UI_CRUMB_LABELS:
         return True
     if any(frag in lower for frag in CHROME_FRAGMENTS):
         return True
@@ -355,16 +567,13 @@ def is_thematic_heading(heading: str) -> bool:
     return any(t in blob for t in thematic)
 
 
-def _term_in_text(term: str, text: str) -> bool:
-    if " " in term or "-" in term:
-        return term in text
-    return bool(re.search(rf"\b{re.escape(term)}\b", text, re.I))
-
-
 def is_plausible_list_offering(item: str) -> bool:
     """List items should look like club/subject/provision labels, not nav or prose."""
     if looks_like_named_person(item):
         return False
+    lower = item.lower().strip()
+    if lower in ETHOS_VALUE_TERMS or lower.rstrip("s") in ETHOS_VALUE_TERMS:
+        return True
     if is_nav_or_junk_list_item(item):
         return False
     lower = item.lower()
@@ -434,6 +643,35 @@ SEND_DIRECTORY_LABELS: frozenset[str] = frozenset(
     }
 )
 
+
+def looks_like_club_activity_label(item: str) -> bool:
+    """True when a label is a club/activity/wraparound offering, not ethos identity."""
+    lower = (item or "").lower()
+    if not lower:
+        return False
+    if any(t in lower for t in ETHOS_VALUE_TERMS):
+        return False
+    if any(_term_in_text(term, lower) for term in PROVISION_TERMS + ACTIVITY_TERMS):
+        return True
+    if "club" in lower or "wraparound" in lower or "wrap around" in lower:
+        return True
+    # External club-provider brochure rows (Akiva-style).
+    provider_markers = (
+        "soccer school",
+        "performing arts",
+        "showchoir",
+        "show choir",
+        "super power",
+        "rising stars",
+        " gymnastics",
+        "academy",
+        "wrap around",
+    )
+    if any(m in lower for m in provider_markers):
+        return True
+    return False
+
+
 def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
     seen: set[str] = set()
     out: list[str] = []
@@ -442,6 +680,8 @@ def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
         item = raw.strip()
         if not item or not is_plausible_list_offering(item):
             continue
+        if looks_like_pdf_extraction_junk(item):
+            continue
         key = item.lower()
         # Community should be PTA / parents evening / local links — not SEN directories.
         if area_key == "community" and key in SEND_DIRECTORY_LABELS:
@@ -449,6 +689,9 @@ def filter_offerings(items: list[str], *, area: str | None = None) -> list[str]:
         if area_key in {"community", "ethos"} and (
             key in POLICY_DOCUMENT_LABELS or "policy" in key or "personnel" in key
         ):
+            continue
+        # Club brochure lines never belong under ethos / behaviour as "provision".
+        if area_key in {"ethos", "behaviour"} and looks_like_club_activity_label(item):
             continue
         if key not in seen:
             seen.add(key)
