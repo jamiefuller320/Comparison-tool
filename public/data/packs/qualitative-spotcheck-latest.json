@@ -1,15 +1,17 @@
 {
-  "ranAt": "2026-09-24T11:38:08.357511+00:00",
-  "dryRun": true,
-  "seed": 20260924,
+  "ranAt": "2026-09-24T16:49:33.043875+00:00",
+  "dryRun": false,
+  "seed": 2492643442,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "skip": 7
+    "warn": 5,
+    "fetch_error": 1,
+    "pass": 1
   },
   "failCount": 0,
-  "warnCount": 0,
+  "warnCount": 5,
   "candidatesWritten": 0,
   "flagsRecorded": false,
   "strict": false,
@@ -20,14 +22,43 @@
       "la": "Hampshire",
       "website": "https://www.st-annes.hants.sch.uk",
       "assessedAt": "2026-08-23",
-      "verdict": "skip",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 22,
       "chromeOfferings": [],
-      "flags": [],
-      "notes": [
-        "dry-run sample only"
-      ]
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: gymnastics",
+            "enrichment: choir",
+            "enrichment: football",
+            "enrichment: cricket",
+            "enrichment: rugby",
+            "enrichment: after school club",
+            "enrichment: extended day",
+            "enrichment: PE coordinator undertake learning walks",
+            "enrichment: PE lesson taught by SPORTS",
+            "enrichment: and challenging PE lessons to"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "catholic",
+            "faithful",
+            "let all you do",
+            "our mission",
+            "our vision"
+          ]
+        }
+      ],
+      "notes": []
     },
     {
       "urn": "148724",
@@ -35,14 +66,51 @@
       "la": "East Sussex",
       "website": "https://stafford.cet.uk",
       "assessedAt": "2026-08-27",
-      "verdict": "skip",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 37,
       "chromeOfferings": [],
-      "flags": [],
-      "notes": [
-        "dry-run sample only"
-      ]
+      "flags": [
+        {
+          "code": "heuristic_cms_chrome",
+          "severity": "warn",
+          "area": "community",
+          "detail": "Narrative lists CMS chrome alongside real provision — strip chrome only.",
+          "excerpts": [
+            "Strong publicly visible evidence for community and parental engagement (10 specific items). Listed provision includes Facebook, News & Newsletters, Outside Agency Directory, Prospe"
+          ]
+        },
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: dance",
+            "curriculum: geography",
+            "curriculum: Adventures of Isobel",
+            "curriculum: Alfred, Lord Tennyson",
+            "curriculum: Alternative Story Ending",
+            "curriculum: Arctic and Antarctic Circle",
+            "curriculum: Artist: Andrea Lauren",
+            "curriculum: Artist: Eric Carle",
+            "curriculum: Benjamin",
+            "curriculum: Carol Ann Duffy"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "be the best you can be",
+            "our mission",
+            "our values",
+            "our vision"
+          ]
+        }
+      ],
+      "notes": []
     },
     {
       "urn": "126066",
@@ -50,79 +118,131 @@
       "la": "West Sussex",
       "website": "http://www.millais.org.uk",
       "assessedAt": "2026-09-08",
-      "verdict": "skip",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 22,
       "chromeOfferings": [],
-      "flags": [],
-      "notes": [
-        "dry-run sample only"
-      ]
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: drama",
+            "enrichment: music"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our mission"
+          ]
+        }
+      ],
+      "notes": []
     },
     {
-      "urn": "138564",
-      "name": "Buttercup Primary School",
+      "urn": "138276",
+      "name": "Solebay Primary - A Paradigm Academy",
       "la": "Tower Hamlets",
-      "website": "https://www.buttercupprimary.co.uk",
+      "website": "https://www.solebayacademy.paradigmtrust.org/",
       "assessedAt": "2026-09-24",
-      "verdict": "skip",
+      "verdict": "fetch_error",
       "pagesFetched": 0,
       "offeringsChecked": 0,
       "chromeOfferings": [],
-      "flags": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
       "notes": [
-        "dry-run sample only"
+        "Homepage fetch failed for https://www.solebayacademy.paradigmtrust.org/"
       ]
     },
     {
-      "urn": "101329",
-      "name": "All Saints' CofE Nursery and Primary School N20",
+      "urn": "101393",
+      "name": "Brampton College",
       "la": "Barnet",
-      "website": "https://www.allsaintsn20.barnet.sch.uk",
+      "website": "https://www.bramptoncollege.com",
       "assessedAt": "2026-09-24",
-      "verdict": "skip",
-      "pagesFetched": 0,
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 25,
+      "chromeOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: chemistry",
+            "curriculum: geography",
+            "enrichment: photography",
+            "enrichment: duke of edinburgh",
+            "enrichment: football",
+            "enrichment: duke of edinburgh awards",
+            "enrichment: photography clubs",
+            "enrichment: gardening",
+            "enrichment: table tennis",
+            "enrichment: tennis"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "137982",
+      "name": "Beacon Academy",
+      "la": "East Sussex",
+      "website": "http://www.beacon-academy.org/web/",
+      "assessedAt": "2026-08-25",
+      "verdict": "pass",
+      "pagesFetched": 1,
       "offeringsChecked": 0,
       "chromeOfferings": [],
       "flags": [],
-      "notes": [
-        "dry-run sample only"
-      ]
+      "notes": []
     },
     {
-      "urn": "125284",
-      "name": "Hawkedale Primary School",
-      "la": "Surrey",
-      "website": "http://www.hawkedale.surrey.sch.uk/",
-      "assessedAt": "2026-09-04",
-      "verdict": "skip",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "flags": [],
-      "notes": [
-        "dry-run sample only"
-      ]
-    },
-    {
-      "urn": "150156",
-      "name": "Ditton Church of England Junior School",
+      "urn": "147563",
+      "name": "Rolvenden Primary School",
       "la": "Kent",
-      "website": "http://www.ditton-jun.kent.sch.uk",
-      "assessedAt": "2026-09-03",
-      "verdict": "skip",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
+      "website": "http://www.rolvenden.kent.sch.uk",
+      "assessedAt": "2026-09-08",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 13,
       "chromeOfferings": [],
-      "flags": [],
-      "notes": [
-        "dry-run sample only"
-      ]
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: gymnastics",
+            "curriculum: athletics",
+            "curriculum: swimming",
+            "curriculum: dance",
+            "curriculum: Exercise and Sleep",
+            "curriculum: can achieve success in PE.",
+            "enrichment: music",
+            "enrichment: orchestra",
+            "enrichment: be played in a band",
+            "ethos: religious education"
+          ]
+        }
+      ],
+      "notes": []
     }
   ],
   "notes": [
     "Live fetch; polite rate limit",
-    "Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review.",
-    "Dry run — selected sample only; no live fetches."
+    "Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review."
   ]
 }
