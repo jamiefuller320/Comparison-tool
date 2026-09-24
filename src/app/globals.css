@@ -31,8 +31,13 @@
   /* Fallback if next/font variables are unavailable. */
   --font-display: "Fraunces", Georgia, serif;
   --font-sans: "Figtree", system-ui, sans-serif;
-  /* Sticky site header offset; journey + nested binders pin under this. */
-  --sticky-header-offset: 3.75rem;
+  /* Sticky site header offset; journey + nested binders pin under this.
+     Include notch / Dynamic Island inset so pinned rails clear the chrome. */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --sticky-header-offset: calc(3.75rem + var(--safe-top));
   --journey-rail-height: 2.85rem;
 }
 
@@ -42,7 +47,13 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 4.5rem;
+  scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 .skip-link {
@@ -76,18 +87,18 @@ html {
 #guides,
 #how,
 #data {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: calc(4.5rem + env(safe-area-inset-top, 0px));
 }
 
 html:has(.journey-toolbar),
 html:has(.journey-chapter-binder),
 html:has(.page-chapter-nav) {
-  scroll-padding-top: 7.25rem;
+  scroll-padding-top: calc(7.25rem + env(safe-area-inset-top, 0px));
 }
 
 /* Nested compare section tabs add a second sticky strip under the journey rail. */
 html:has(.compare-section-binder) {
-  scroll-padding-top: calc(7.25rem + var(--journey-rail-height, 2.85rem));
+  scroll-padding-top: calc(7.25rem + var(--journey-rail-height, 2.85rem) + env(safe-area-inset-top, 0px));
 }
 
 html:has(.journey-toolbar) #top,
@@ -117,7 +128,7 @@ html:has(.page-chapter-nav) #areas,
 html:has(.page-chapter-nav) #guides,
 html:has(.page-chapter-nav) #how,
 html:has(.page-chapter-nav) #data {
-  scroll-margin-top: 7.25rem;
+  scroll-margin-top: calc(7.25rem + env(safe-area-inset-top, 0px));
 }
 
 /* Interactive How chapter owns #how; hide the static SEO copy once JS mounts. */
@@ -129,12 +140,18 @@ html:has(.journey-chapter-binder) .seo-how-fallback {
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
+  /* Landscape notched phones / foldables: keep content clear of side insets. */
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   background:
     radial-gradient(920px 480px at 6% -6%, rgba(11, 79, 108, 0.14), transparent 58%),
     radial-gradient(640px 380px at 96% 2%, rgba(11, 79, 108, 0.08), transparent 55%),
     linear-gradient(180deg, #eef4f7 0%, var(--paper) 38%, #eef2f5 100%);
+  /* Avoid iOS rubber-band overscroll tint flash on pull. */
+  overscroll-behavior-y: contain;
 }
 
 a {
@@ -150,6 +167,7 @@ a {
   position: sticky;
   top: 0;
   z-index: 30;
+  padding-top: env(safe-area-inset-top, 0px);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   background: var(--glass);
@@ -278,9 +296,12 @@ a {
   font: inherit;
   font-size: 0.9rem;
   font-weight: 650;
+  /* ≥44px tap target for iOS / Android accessibility. */
+  min-height: 2.75rem;
   padding: 0.4rem 0.7rem;
   border-radius: 0.65rem;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .nav-menu-toggle-bars {
@@ -320,9 +341,14 @@ body:has(.nav-drawer.open) .nav-drawer-backdrop {
   top: 0;
   right: 0;
   z-index: 32;
-  width: min(20rem, calc(100vw - 2.5rem));
+  width: min(20rem, calc(100vw - 2.5rem - env(safe-area-inset-right, 0px)));
   height: 100dvh;
-  padding: 4.5rem 1.15rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  height: 100svh;
+  padding:
+    calc(4.5rem + env(safe-area-inset-top, 0px))
+    calc(1.15rem + env(safe-area-inset-right, 0px))
+    calc(1.25rem + env(safe-area-inset-bottom, 0px))
+    1.15rem;
   background: var(--glass-strong);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -331,6 +357,8 @@ body:has(.nav-drawer.open) .nav-drawer-backdrop {
   transform: translateX(105%);
   transition: transform 0.22s ease;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-drawer.open {
@@ -399,7 +427,11 @@ body:has(.nav-drawer.open) .nav-drawer-backdrop {
   bottom: 0;
   z-index: 29;
   pointer-events: none;
-  padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+  padding:
+    0.65rem
+    calc(1rem + env(safe-area-inset-right, 0px))
+    calc(0.65rem + env(safe-area-inset-bottom, 0px))
+    calc(1rem + env(safe-area-inset-left, 0px));
 }
 
 .shortlist-dock-inner {
@@ -1455,7 +1487,7 @@ body:has(.shortlist-dock) {
 
 .journey-chapter-binder .binder-sheet {
   /* Device-aware workspace on non-Setup chapters. */
-  min-height: clamp(22rem, calc(100dvh - 13.5rem), 56rem);
+  min-height: clamp(22rem, calc(100dvh - 13.5rem - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)), 56rem);
 }
 
 .journey-stage[data-chapter="setup"] .journey-chapter-binder .binder-sheet {
@@ -2454,7 +2486,7 @@ body:has(.shortlist-dock) {
 
 @media (max-width: 560px) {
   :root {
-    --sticky-header-offset: 3.35rem;
+    --sticky-header-offset: calc(3.35rem + env(safe-area-inset-top, 0px));
   }
 
   .binder-tabs {
@@ -5742,8 +5774,10 @@ html.tour-running .hero-inner > * {
   border-radius: 16px;
   box-shadow: 0 18px 48px rgba(20, 35, 58, 0.22);
   padding: 1rem 1.1rem 1.1rem;
-  max-height: calc(100vh - 32px);
+  max-height: calc(100vh - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(100dvh - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tour-card-meta {
@@ -7518,9 +7552,11 @@ a.area-list-link:hover .area-list-meta {
 
 .content-review-list {
   position: sticky;
-  top: 4.75rem;
-  max-height: calc(100vh - 6rem);
+  top: calc(4.75rem + env(safe-area-inset-top, 0px));
+  max-height: calc(100vh - 6rem - env(safe-area-inset-top, 0px));
+  max-height: calc(100dvh - 6rem - env(safe-area-inset-top, 0px));
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.72);

@@ -404,7 +404,9 @@ export function FindNameSearch({
           type="search"
           value={query}
           autoComplete="off"
+          autoCorrect="off"
           spellCheck={false}
+          enterKeyHint="search"
           placeholder="Search by school name, town, postcode or URN"
           aria-controls={resultsId}
           aria-expanded={results.length > 0}

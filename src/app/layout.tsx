@@ -52,6 +52,14 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
+  appleWebApp: {
+    capable: true,
+    title: BRAND_NAME,
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   robots: {
     index: true,
     follow: true,
@@ -106,6 +114,8 @@ export const viewport: Viewport = {
   ],
   width: "device-width",
   initialScale: 1,
+  // Required for env(safe-area-inset-*) on notched iPhone / Android gesture bars.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
