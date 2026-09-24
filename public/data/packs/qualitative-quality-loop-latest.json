@@ -1,124 +1,149 @@
 {
-  "ranAt": "2026-09-23T14:38:12.195282+00:00",
+  "ranAt": "2026-09-24T14:44:28.958819+00:00",
   "dryRun": false,
-  "mode": "skip",
+  "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 4153,
-    "suspectCount": 24,
+    "recordCount": 4394,
+    "suspectCount": 156,
     "flagCounts": {
-      "implausible_offerings": 17,
-      "admissions": 7
+      "chrome": 69,
+      "cms_chrome": 64,
+      "admissions": 11,
+      "implausible_offerings": 9,
+      "policy_toc": 8,
+      "boilerplate": 5,
+      "high_score_thin_signals": 4
     },
     "topSuspects": [
       {
-        "urn": "147128",
-        "name": "The Ferns Primary Academy",
-        "score": 6.0,
+        "urn": "125810",
+        "name": "Boundstone Nursery School",
+        "score": 10.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "110428",
-        "name": "Lee Common Church of England School",
-        "score": 3.0,
+        "urn": "151784",
+        "name": "Owlsmoor Primary School",
+        "score": 10.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "125344",
-        "name": "Rydes Hill Preparatory School",
-        "score": 3.0,
+        "urn": "147874",
+        "name": "Addington Valley Academy",
+        "score": 9.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "116423",
-        "name": "The Hayling College",
-        "score": 3.0,
+        "urn": "149148",
+        "name": "Daffodil Preparatory School",
+        "score": 9.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "137239",
-        "name": "The Romsey School",
-        "score": 3.0,
+        "urn": "150750",
+        "name": "OMG Education",
+        "score": 9.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "116411",
-        "name": "The Toynbee School",
-        "score": 3.0,
+        "urn": "100632",
+        "name": "St Andrew's Catholic Primary School",
+        "score": 9.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "139916",
-        "name": "Warlingham Village Primary School",
-        "score": 3.0,
+        "urn": "133440",
+        "name": "The Livity School",
+        "score": 9.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "118180",
-        "name": "Arreton St George's Church of England (Aided) Primary School",
-        "score": 2.0,
+        "urn": "145131",
+        "name": "Castle Hill Academy",
+        "score": 8.0,
         "flags": [
+          "policy_toc",
+          "chrome",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "136643",
-        "name": "Bohunt School",
-        "score": 2.0,
+        "urn": "136566",
+        "name": "Ecclesbourne Primary School",
+        "score": 8.0,
         "flags": [
+          "boilerplate",
+          "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "116027",
-        "name": "Bursledon Junior School(CA)",
-        "score": 2.0,
+        "urn": "135989",
+        "name": "Faraday School",
+        "score": 8.0,
         "flags": [
+          "chrome",
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "100564",
+        "name": "Granton Primary School",
+        "score": 8.0,
+        "flags": [
+          "chrome",
+          "policy_toc",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "134734",
-        "name": "Cadland Primary School",
-        "score": 2.0,
+        "urn": "100566",
+        "name": "Heathbrook Primary School",
+        "score": 8.0,
         "flags": [
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "116357",
-        "name": "Charles Kingsley's Church of England Primary School",
-        "score": 2.0,
-        "flags": [
+          "policy_toc",
+          "chrome",
           "implausible_offerings"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 4153,
-    "suspectCount": 24,
+    "recordCount": 4394,
+    "suspectCount": 32,
     "flagCounts": {
-      "implausible_offerings": 17,
-      "admissions": 7
+      "cms_chrome": 15,
+      "admissions": 11,
+      "high_score_thin_signals": 4,
+      "boilerplate": 1,
+      "implausible_offerings": 1
     },
     "topSuspects": [
+      {
+        "urn": "125810",
+        "name": "Boundstone Nursery School",
+        "score": 10.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
       {
         "urn": "147128",
         "name": "The Ferns Primary Academy",
@@ -128,127 +153,124 @@
         ]
       },
       {
-        "urn": "110428",
-        "name": "Lee Common Church of England School",
-        "score": 3.0,
+        "urn": "115872",
+        "name": "Chandler's Ford Infant School",
+        "score": 5.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "125344",
-        "name": "Rydes Hill Preparatory School",
-        "score": 3.0,
+        "urn": "140064",
+        "name": "Culloden Primary - A Paradigm Academy",
+        "score": 5.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "116423",
-        "name": "The Hayling College",
-        "score": 3.0,
+        "urn": "137605",
+        "name": "Dove House Academy",
+        "score": 5.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "137239",
-        "name": "The Romsey School",
-        "score": 3.0,
+        "urn": "145451",
+        "name": "King's Academy Northern Parade (Infant)",
+        "score": 5.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "116411",
-        "name": "The Toynbee School",
-        "score": 3.0,
+        "urn": "145450",
+        "name": "King's Academy Northern Parade (Junior)",
+        "score": 5.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "139916",
-        "name": "Warlingham Village Primary School",
-        "score": 3.0,
+        "urn": "149906",
+        "name": "Light Years School",
+        "score": 5.0,
         "flags": [
-          "admissions"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "118180",
-        "name": "Arreton St George's Church of England (Aided) Primary School",
-        "score": 2.0,
+        "urn": "116330",
+        "name": "Liphook Church of England Controlled Junior School",
+        "score": 5.0,
         "flags": [
-          "implausible_offerings"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "136643",
-        "name": "Bohunt School",
-        "score": 2.0,
+        "urn": "116056",
+        "name": "Liphook Infant School",
+        "score": 5.0,
         "flags": [
-          "implausible_offerings"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "116027",
-        "name": "Bursledon Junior School(CA)",
-        "score": 2.0,
+        "urn": "118310",
+        "name": "Ryarsh Primary School",
+        "score": 5.0,
         "flags": [
-          "implausible_offerings"
+          "cms_chrome"
         ]
       },
       {
-        "urn": "134734",
-        "name": "Cadland Primary School",
-        "score": 2.0,
+        "urn": "125992",
+        "name": "Shipley CofE Primary School",
+        "score": 5.0,
         "flags": [
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "116357",
-        "name": "Charles Kingsley's Church of England Primary School",
-        "score": 2.0,
-        "flags": [
-          "implausible_offerings"
+          "cms_chrome"
         ]
       }
     ]
   },
   "qa": {
-    "reviewed": 0,
-    "changedSchools": 0,
-    "findingsApplied": 0,
-    "learningAdded": 0
+    "reviewed": 156,
+    "changedSchools": 133,
+    "findingsApplied": 157,
+    "learningAdded": 51,
+    "provider": "none"
   },
-  "merged": false,
+  "merged": true,
   "trigger": {
-    "shouldApply": false,
-    "reason": "active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
-    "fingerprint": {
-      "phraseHash": "4528dc3d027f65734f0c",
+    "shouldApply": true,
+    "reason": "eventCount +145 (>= 15)",
+    "fingerprintBefore": {
+      "phraseHash": "1c3926e68b799031e250",
       "phraseCount": 900,
-      "candidateCount": 1445,
-      "eventCount": 6817,
-      "updatedAt": "2026-09-23"
+      "candidateCount": 1489,
+      "eventCount": 6953,
+      "updatedAt": "2026-09-24"
     },
-    "prior": {
-      "phraseHash": "12b1470ce69f6d901d75",
+    "fingerprintAfter": {
+      "phraseHash": "cc27f9f74844f90d42a3",
       "phraseCount": 900,
-      "candidateCount": 1444,
-      "eventCount": 6808,
-      "updatedAt": "2026-09-21"
-    },
-    "priorAppliedAt": "2026-09-21T16:14:43.375021+00:00"
+      "candidateCount": 1540,
+      "eventCount": 7164,
+      "updatedAt": "2026-09-24"
+    }
   },
   "notes": [
-    "Hydrated working sidecar from 4153 published URN shards (prior=0 → 4153).",
-    "Rebalanced learned QA phrases: active=900 candidates=1445.",
-    "Learning fingerprint: {'phraseHash': '4528dc3d027f65734f0c', 'phraseCount': 900, 'candidateCount': 1445, 'eventCount': 6817, 'updatedAt': '2026-09-23'}",
-    "Apply decision: active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
-    "Before: 24 suspects across 4153 records.",
-    "Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest."
+    "Hydrated working sidecar from 4394 published URN shards (prior=0 → 4394).",
+    "Rebalanced learned QA phrases: active=900 candidates=1489.",
+    "Learning fingerprint: {'phraseHash': '1c3926e68b799031e250', 'phraseCount': 900, 'candidateCount': 1489, 'eventCount': 6953, 'updatedAt': '2026-09-24'}",
+    "Apply decision: eventCount +145 (>= 15)",
+    "Before: 156 suspects across 4394 records.",
+    "Applied QA fixes to 133 school(s) (157 area finding(s)).",
+    "Learned 51 new junk phrase(s) (store size 900).",
+    "Reviewed top 156 suspect(s); provider=none.",
+    "Merged cleaned sidecar into 54 schools-index file(s).",
+    "After: 32 suspects across 4394 records.",
+    "Updated output/learned-qa-apply-state.json"
   ]
 }

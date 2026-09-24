@@ -1,26 +1,36 @@
-# Qualitative quality loop — 2026-09-23T14:38:12.195282+00:00
+# Qualitative quality loop — 2026-09-24T14:44:28.958819+00:00
 
-- Mode: `skip`
+- Mode: `apply`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
-- Records: `4153`
-- Suspects before → after: `24` → `24`
-- QA reviewed / changed: `0` / `0`
-- Findings applied: `0`
-- Learned phrases added: `0`
-- Merged to index: `False`
-- Apply trigger: `active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)`
+- Records: `4394`
+- Suspects before → after: `156` → `32`
+- QA reviewed / changed: `156` / `133`
+- Findings applied: `157`
+- Learned phrases added: `51`
+- Merged to index: `True`
+- Apply trigger: `eventCount +145 (>= 15)`
 
 ## Top flag counts (before)
 
-- `implausible_offerings`: 17
-- `admissions`: 7
+- `chrome`: 69
+- `cms_chrome`: 64
+- `admissions`: 11
+- `implausible_offerings`: 9
+- `policy_toc`: 8
+- `boilerplate`: 5
+- `high_score_thin_signals`: 4
 
 ## Notes
 
-- Hydrated working sidecar from 4153 published URN shards (prior=0 → 4153).
-- Rebalanced learned QA phrases: active=900 candidates=1445.
-- Learning fingerprint: {'phraseHash': '4528dc3d027f65734f0c', 'phraseCount': 900, 'candidateCount': 1445, 'eventCount': 6817, 'updatedAt': '2026-09-23'}
-- Apply decision: active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)
-- Before: 24 suspects across 4153 records.
-- Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest.
+- Hydrated working sidecar from 4394 published URN shards (prior=0 → 4394).
+- Rebalanced learned QA phrases: active=900 candidates=1489.
+- Learning fingerprint: {'phraseHash': '1c3926e68b799031e250', 'phraseCount': 900, 'candidateCount': 1489, 'eventCount': 6953, 'updatedAt': '2026-09-24'}
+- Apply decision: eventCount +145 (>= 15)
+- Before: 156 suspects across 4394 records.
+- Applied QA fixes to 133 school(s) (157 area finding(s)).
+- Learned 51 new junk phrase(s) (store size 900).
+- Reviewed top 156 suspect(s); provider=none.
+- Merged cleaned sidecar into 54 schools-index file(s).
+- After: 32 suspects across 4394 records.
+- Updated output/learned-qa-apply-state.json
