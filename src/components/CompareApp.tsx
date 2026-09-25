@@ -42,7 +42,7 @@ import {
   type SchoolsIndexWithPack,
 } from "@/lib/laPacks";
 import { ProductTour } from "@/components/ProductTour";
-import { ProductFeedbackPrompt } from "@/components/ProductFeedbackPrompt";
+import { FeedbackUsageBridge } from "@/components/FeedbackUsageBridge";
 import { contextHeadlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   TOUR_DEMO_EVENT,
@@ -1047,7 +1047,7 @@ export function CompareApp({
   return (
     <>
       <ProductTour />
-      <ProductFeedbackPrompt
+      <FeedbackUsageBridge
         shortlistCount={selected.length}
         shortlistLas={shortlistLas}
         openedSideBySide={Boolean(activePath && selected.length > 0)}

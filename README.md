@@ -193,7 +193,7 @@ create policy "own rows" on public.shortlists
 
 Add the two `NEXT_PUBLIC_SUPABASE_*` values as GitHub Actions secrets so Pages builds pick them up. In Supabase Auth URL config, allow redirect to `https://schoolcompass.uk/` (and keep the old GitHub Pages URL only if you still need it during cutover).
 
-Free-tier projects pause after ~7 days of low database activity. The **Keep Supabase alive** workflow (`supabase-keep-alive.yml`) pings `shortlists` via REST every 3 days using those same secrets (manual **Run workflow** also available). Restore a paused project from the Supabase dashboard first; the ping cannot wake a paused instance.
+Free-tier projects pause after ~7 days of low database activity. The **Keep Supabase alive** workflow (`supabase-keep-alive.yml`) runs **daily**: DNS check, SELECT on `shortlists` / `product_feedback`, then a real **INSERT + DELETE** on `supabase_keepalive` (empty RLS SELECTs alone were not enough to prevent pauses). Requires the SQL in `supabase/product_feedback.sql`. Restore a paused project from the Supabase dashboard first; the ping cannot wake a paused instance (DNS fails while paused).
 
 ## Force refresh (missing school)
 

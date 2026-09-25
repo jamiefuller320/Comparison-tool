@@ -1,9 +1,11 @@
 /**
- * Product feedback — usage-aware soft prompt + structured GitHub intake.
+ * Product feedback — usage-aware soft prompt + Supabase queue (GitHub fallback).
  * Parallel to data-challenge, but for UX / soft-launch learning loops.
  */
 
 import { APP_VERSION, FEEDBACK_CAMPAIGN_ID } from "@/lib/buildMeta";
+import { inferFeedbackSurface } from "@/lib/feedbackSurface";
+import { submitProductFeedbackToSupabase } from "@/lib/productFeedbackSupabase";
 import { hasSeenTour } from "@/lib/tour";
 
 export const FEEDBACK_OPEN_EVENT = "schoolside:open-feedback";
@@ -15,14 +17,16 @@ export type FeedbackTrigger =
   | "engaged"
   | "exit-return"
   | "update"
-  | "after-print";
+  | "after-print"
+  | "page";
 
 export type FeedbackSentiment =
   | "helpful"
   | "mixed"
   | "stuck"
   | "not-for-me"
-  | "skipped";
+  | "skipped"
+  | "freeform";
 
 export type FeedbackTopic =
   | "map"
@@ -63,6 +67,8 @@ export interface ProductFeedbackPayload {
   usage: FeedbackUsage;
   adaptiveQuestion: string;
   pageUrl?: string | null;
+  /** Coarse UI surface for triage (find / compare / feedback-page / …). */
+  surface?: string | null;
   requestedAt: string;
 }
 
@@ -408,6 +414,7 @@ export function serializeFeedbackForIntake(
     email: (payload.email ?? "").trim().slice(0, 200),
     adaptiveQuestion: payload.adaptiveQuestion.slice(0, 400),
     pageUrl: payload.pageUrl ?? "",
+    surface: payload.surface ?? "",
     requestedAt: payload.requestedAt,
     usageHadPostcode: usage.hadPostcode ? "yes" : "no",
     usageShortlistMax: String(usage.shortlistCountMax),
@@ -427,6 +434,7 @@ export function serializeFeedbackForIntake(
       sentiment: payload.sentiment,
       topics: payload.topics,
       adaptiveQuestion: payload.adaptiveQuestion,
+      surface: payload.surface ?? null,
       usage: {
         hadPostcode: usage.hadPostcode,
         shortlistCountMax: usage.shortlistCountMax,
@@ -447,65 +455,24 @@ export function serializeFeedbackForIntake(
   };
 }
 
-export async function requestProductFeedback(
-  input: Omit<
-    ProductFeedbackPayload,
-    "campaignId" | "appVersion" | "usage" | "requestedAt" | "pageUrl"
-  > & {
-    usage?: FeedbackUsage;
-    pageUrl?: string | null;
-    requestedAt?: string;
-  },
+async function dispatchProductFeedbackGithub(
+  payload: ProductFeedbackPayload,
 ): Promise<{
   ok: boolean;
   status: "queued" | "unavailable" | "error";
   detail: string;
 }> {
-  if (input.sentiment === "skipped" && !input.note.trim()) {
-    markFeedbackDismissed();
-    return {
-      ok: true,
-      status: "queued",
-      detail: "No problem — you can share feedback anytime from the header.",
-    };
-  }
-
-  if (input.sentiment !== "skipped" && !input.note.trim() && !input.topics.length) {
-    return {
-      ok: false,
-      status: "error",
-      detail: "Pick a topic or add a short note so we can act on it.",
-    };
-  }
-
-  const payload: ProductFeedbackPayload = {
-    campaignId: FEEDBACK_CAMPAIGN_ID,
-    appVersion: APP_VERSION,
-    trigger: input.trigger,
-    sentiment: input.sentiment,
-    topics: input.topics,
-    note: input.note.trim() || "(no free-text note)",
-    email: input.email?.trim() || null,
-    usage: input.usage || getFeedbackUsage(),
-    adaptiveQuestion: input.adaptiveQuestion,
-    pageUrl:
-      input.pageUrl ||
-      (typeof window !== "undefined" ? window.location.href : null),
-    requestedAt: input.requestedAt || new Date().toISOString(),
-  };
-
   const token = process.env.NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN;
   const repo =
     process.env.NEXT_PUBLIC_GITHUB_REPO || "jamiefuller320/Comparison-tool";
   const clientPayload = serializeFeedbackForIntake(payload);
 
   if (!token) {
-    markFeedbackResponded();
     return {
-      ok: true,
+      ok: false,
       status: "unavailable",
       detail:
-        "Feedback intake is not configured for this deploy. Your note was kept locally as dismissed for this campaign — ask the maintainer to set MISSING_SCHOOL_DISPATCH_TOKEN.",
+        "GitHub feedback intake is not configured for this deploy (MISSING_SCHOOL_DISPATCH_TOKEN).",
     };
   }
 
@@ -525,7 +492,6 @@ export async function requestProductFeedback(
     });
 
     if (res.status === 204 || res.ok) {
-      markFeedbackResponded();
       return {
         ok: true,
         status: "queued",
@@ -547,6 +513,111 @@ export async function requestProductFeedback(
       detail: "Network error while sending feedback. Try again later.",
     };
   }
+}
+
+export async function requestProductFeedback(
+  input: Omit<
+    ProductFeedbackPayload,
+    "campaignId" | "appVersion" | "usage" | "requestedAt" | "pageUrl" | "surface"
+  > & {
+    usage?: FeedbackUsage;
+    pageUrl?: string | null;
+    surface?: string | null;
+    requestedAt?: string;
+  },
+): Promise<{
+  ok: boolean;
+  status: "queued" | "unavailable" | "error";
+  detail: string;
+  transport?: "supabase" | "github";
+}> {
+  if (input.sentiment === "skipped" && !input.note.trim()) {
+    markFeedbackDismissed();
+    return {
+      ok: true,
+      status: "queued",
+      detail: "No problem — you can share feedback anytime from the header.",
+    };
+  }
+
+  if (
+    input.sentiment !== "skipped" &&
+    !input.note.trim() &&
+    !input.topics.length
+  ) {
+    return {
+      ok: false,
+      status: "error",
+      detail: "Pick a topic or add a short note so we can act on it.",
+    };
+  }
+
+  const pageUrl =
+    input.pageUrl ||
+    (typeof window !== "undefined" ? window.location.href : null);
+  let surface = (input.surface || "").trim();
+  if (!surface && typeof window !== "undefined") {
+    surface = inferFeedbackSurface(
+      window.location.pathname,
+      window.location.hash,
+    );
+  }
+
+  const payload: ProductFeedbackPayload = {
+    campaignId: FEEDBACK_CAMPAIGN_ID,
+    appVersion: APP_VERSION,
+    trigger: input.trigger,
+    sentiment: input.sentiment,
+    topics: input.topics,
+    note: input.note.trim() || "(no free-text note)",
+    email: input.email?.trim() || null,
+    usage: input.usage || getFeedbackUsage(),
+    adaptiveQuestion: input.adaptiveQuestion,
+    pageUrl,
+    surface: surface || null,
+    requestedAt: input.requestedAt || new Date().toISOString(),
+  };
+
+  // Primary: Supabase anon INSERT. Fallback: GitHub repository_dispatch.
+  const supabaseResult = await submitProductFeedbackToSupabase(payload);
+  if (supabaseResult.ok) {
+    markFeedbackResponded();
+    return {
+      ok: true,
+      status: "queued",
+      transport: "supabase",
+      detail:
+        "Thanks — your feedback was queued for review. We read every note before changing the product; nothing ships automatically.",
+    };
+  }
+
+  const githubResult = await dispatchProductFeedbackGithub(payload);
+  if (githubResult.ok) {
+    markFeedbackResponded();
+    return { ...githubResult, transport: "github" };
+  }
+
+  if (
+    supabaseResult.reason === "missing-env" &&
+    githubResult.status === "unavailable"
+  ) {
+    markFeedbackResponded();
+    return {
+      ok: true,
+      status: "unavailable",
+      detail:
+        "Feedback intake is not configured for this deploy. Your note was kept locally as dismissed for this campaign — ask the maintainer to set NEXT_PUBLIC_SUPABASE_* (preferred) or MISSING_SCHOOL_DISPATCH_TOKEN.",
+    };
+  }
+
+  return {
+    ok: false,
+    status: "error",
+    detail:
+      supabaseResult.detail ||
+      githubResult.detail ||
+      "Could not send feedback. Try again later.",
+  };
 }
 
 export { FEEDBACK_CAMPAIGN_ID, APP_VERSION };

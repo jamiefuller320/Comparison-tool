@@ -1,0 +1,58 @@
+name: Process product feedback
+
+# Daily inbox sweep: classify open Supabase product_feedback rows.
+# Writes proposed_action (implement / ignore / needs_clarification) with a human gate —
+# opens GitHub issues labelled product-feedback + proposed-implement for implement.
+# Does NOT auto-merge product PRs or apply UX changes from free text.
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Classify without writing Supabase / opening issues"
+        required: false
+        default: "false"
+      limit:
+        description: "Max open rows to process"
+        required: false
+        default: "50"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Route open product feedback
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
+          CHALLENGE_INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+          LIMIT: ${{ github.event_name == 'workflow_dispatch' && inputs.limit || '50' }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "Supabase URL / service role not configured — skipping triage."
+            echo "Add SUPABASE_SERVICE_ROLE_KEY (never NEXT_PUBLIC_) after running supabase/product_feedback.sql."
+            exit 0
+          fi
+          ARGS=(route --limit "${LIMIT}")
+          if [ "${DRY_RUN}" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          npx tsx scripts/process-product-feedback.ts "${ARGS[@]}"

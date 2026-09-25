@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Figtree, Fraunces } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
+import { FeedbackControl } from "@/components/FeedbackControl";
+import { ProductFeedbackPrompt } from "@/components/ProductFeedbackPrompt";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
@@ -135,6 +137,8 @@ export default function RootLayout({
             <SiteHeader />
             {children}
             <SiteFooter />
+            <ProductFeedbackPrompt />
+            <FeedbackControl />
           </AccountProvider>
         </UiPreferencesProvider>
         <Analytics />
