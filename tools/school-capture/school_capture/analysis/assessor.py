@@ -118,6 +118,14 @@ def _ingest_structured_sections(
             cand = _candidate_from_list_item(cap, sec, item, area, page_type)
             if cand:
                 by_area[area].append(cand)
+        # Ethos / behaviour value statements often live in paragraphs (not
+        # bullets) on vision pages — treat short value-led lines as offerings.
+        if area in (SubjectArea.ETHOS, SubjectArea.BEHAVIOUR):
+            for para in sec.paragraphs or []:
+                for item in _ethos_paragraph_offerings(para):
+                    cand = _candidate_from_list_item(cap, sec, item, area, page_type)
+                    if cand:
+                        by_area[area].append(cand)
     # Page-level orphan list items: only on clearly thematic pages.
     page_area = SECTION_TO_AREA.get(cap.section or "")
     if looks_like_club_source(cap.url or "", cap.page_title or "", ""):
@@ -136,6 +144,31 @@ def _ingest_structured_sections(
             if cand:
                 by_area[page_area].append(cand)
     return by_area
+
+
+def _ethos_paragraph_offerings(para: str) -> list[str]:
+    """Pull named values from vision-page paragraphs.
+
+    Example: ``RESPECT Everybody is valued…`` → ``["Respect"]``.
+    Falls back to the cleaned paragraph when it is already a short value label.
+    """
+    text = clean_list_item(para or "")
+    if not text or len(text) > 280:
+        return []
+    # Leading ALL-CAPS value token (Arnhem Wharf style).
+    m = re.match(r"^([A-Z][A-Z][A-Z]+(?:\s+[A-Z]+){0,3})\b", text)
+    if m:
+        label = m.group(1).title()
+        if not is_nav_or_junk_list_item(label):
+            return [label]
+    # Short title-case value line without prose.
+    if len(text) <= 40 and text[0].isupper() and not text.endswith("."):
+        if not is_nav_or_junk_list_item(text):
+            return [text]
+    # Whole paragraph still useful when offerings extract from it later.
+    if len(text) <= 160:
+        return [text]
+    return []
 
 
 def _looks_like_sen_referral_directory(cap: RawCapture, sec: StructuredSection) -> bool:

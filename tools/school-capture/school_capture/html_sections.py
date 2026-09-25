@@ -61,15 +61,10 @@ class ParsedPage:
 
 
 def infer_section_from_heading(heading: str) -> str:
-    blob = heading.lower()
-    best = "general"
-    best_score = 0
-    for section, patterns in SECTION_PATTERNS.items():
-        score = sum(1 for p in patterns if p in blob)
-        if score > best_score:
-            best_score = score
-            best = section
-    return best
+    from school_capture.section_patterns import score_section_patterns
+
+    best, score = score_section_patterns(heading.lower())
+    return best if score else "general"
 
 
 class _SectionParser(HTMLParser):

@@ -103,9 +103,80 @@ def test_stale_club_pdf_demoted():
     )
 
 
+def test_section_patterns_avoid_nested_word_false_positives():
+    from school_capture.html_sections import infer_section_from_heading
+    from school_capture.section_patterns import score_section_patterns
+
+    assert infer_section_from_heading("Year 6 SATs Revision Page") != "ethos"
+    assert infer_section_from_heading("Our School Vision") == "ethos"
+    assert infer_section_from_heading("Admissions") != "ethos"
+    assert infer_section_from_heading("Mission Statement") == "ethos"
+    best, _ = score_section_patterns("year-6-sats-revision-page")
+    assert best != "ethos"
+
+
+def test_ethos_vision_paragraphs_become_value_offerings():
+    """Arnhem-style vision pages put values in paragraphs, not bullets."""
+    from school_capture.sources.base import StructuredSection
+
+    cap = RawCapture(
+        url="https://www.arnhemwharfprimaryschool.com/Vision-10052016094709/",
+        source_type="school-website",
+        text=(
+            "Our Vision\n"
+            "At Arnhem Wharf, we have five key values:\n"
+            "RESPECT Everybody is valued and we are kind to each other.\n"
+            "RESPONSIBILITY We take responsibility for our choices.\n"
+            "RESILIENCE If things are challenging we try again.\n"
+            "COLLABORATION We learn together.\n"
+            "EXCELLENCE We strive to be the best that we can."
+        ),
+        page_title="Vision",
+        section="ethos",
+        structured_sections=[
+            StructuredSection(
+                heading="At Arnhem Wharf, we have five key values:",
+                inferred_section="ethos",
+                list_items=[],
+                paragraphs=[
+                    "RESPECT Everybody is valued and we are kind to each other.",
+                    "RESPONSIBILITY We take responsibility for our choices.",
+                    "RESILIENCE If things are challenging we try again.",
+                    "COLLABORATION We learn together.",
+                    "EXCELLENCE We strive to be the best that we can.",
+                ],
+            )
+        ],
+        meta={"pageType": "substantive"},
+    )
+    by_area = {a.area: a for a in assess_captures([cap])}
+    offerings = [o.lower() for o in by_area["ethos"].offerings]
+    assert by_area["ethos"].score > 0
+    assert "respect" in offerings
+    assert "responsibility" in offerings or "collaboration" in offerings
+    assert any(v in offerings for v in ("resilience", "excellence", "collaboration", "vision"))
+
+
 def test_ethos_prefers_mission_pages_over_club_brochures():
     assert looks_like_ethos_identity_page(
         "https://school.example/about-us/our-vision", "Our Vision and Mission"
+    )
+    assert looks_like_ethos_identity_page(
+        "https://www.akivaschool.org/School-Ethos", "School Ethos"
+    )
+    assert looks_like_ethos_identity_page(
+        "https://school.example/Vision-10052016094709", "Our School Vision"
+    )
+    # Substring traps: vision⊂revision, mission⊂admissions
+    assert not looks_like_ethos_identity_page(
+        "https://school.example/Year-6-SATs-Revision-Page", "SATs Revision"
+    )
+    assert not looks_like_ethos_identity_page(
+        "https://school.example/docs/y6_sats_revision_powerpoints/Apostrophes.pptx",
+        "Apostrophes",
+    )
+    assert not looks_like_ethos_identity_page(
+        "https://school.example/Admissions", "Admissions"
     )
     assert looks_like_club_source(
         "https://school.example/docs/Club_Brochure__Autumn_2026.pdf",

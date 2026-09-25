@@ -338,9 +338,39 @@ def looks_like_club_source(url: str = "", title: str = "", heading: str = "") ->
 
 
 def looks_like_ethos_identity_page(url: str = "", title: str = "") -> bool:
-    blob = f"{url_path_blob(url)} {title.lower()}"
-    blob = re.sub(r"[_\-/]+", " ", blob)
-    return any(h in blob for h in ETHOS_PAGE_HINTS)
+    """True for mission / vision / about / faith pages.
+
+    Uses path tokens (not raw substrings) so ``vision`` does not match
+    ``revision`` and ``mission`` does not match ``admissions``.
+    """
+    parsed = urlparse((url or "").lower())
+    path = parsed.path or ""
+    title_l = (title or "").lower()
+    path_blob = f"{path}?{parsed.query} {title_l}"
+    # About hubs only — not every /aboutus/sportspremium child page.
+    if re.search(r"/about-?us/?$", path) or re.search(r"/about/?$", path):
+        return True
+    if "about-us" in title_l or title_l.strip() in {"about", "about us"}:
+        return True
+    blob = re.sub(r"[_\-/+.?=&]+", " ", path_blob)
+    tokens = set(blob.split())
+    word_hints = (
+        "ethos",
+        "vision",
+        "mission",
+        "values",
+        "aims",
+        "faith",
+        "catholic",
+        "jewish",
+        "christian",
+        "church",
+        "worship",
+        "spiritual",
+        "identity",
+        "welcome",
+    )
+    return any(h in tokens for h in word_hints)
 
 
 def area_source_confidence_multiplier(

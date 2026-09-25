@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from urllib.parse import unquote, urlparse
 
-from school_capture.filters import is_blocked_url
+from school_capture.filters import is_blocked_url, looks_like_ethos_identity_page
 from school_capture.html_sections import parse_structured_page
 from school_capture.http_utils import (
     link_matches,
@@ -22,6 +22,10 @@ MAX_PAGES = 18
 MAX_LINKS_SCAN = 180
 MAX_HUB_PAGES = 3
 MAX_CHILD_LINKS_PER_HUB = 12
+# Learned club/parent terms can outscore mission pages by 10–40×; reserve crawl
+# budget so vision/ethos/faith URLs still reach the assessor (#194 preference).
+ETHOS_RESERVED_SLOTS = 4
+ETHOS_DISCOVERY_BONUS = 28
 
 HUB_BLOB_TERMS: tuple[str, ...] = (
     "curriculum",
@@ -46,13 +50,15 @@ SUBJECT_URL_TERMS: tuple[str, ...] = tuple(
 
 
 def score_url(url: str, anchor: str, *, learned_terms: dict[str, int] | None = None) -> int:
+    from school_capture.section_patterns import section_pattern_matches
+
     blob = _url_blob(url, anchor)
     score = 0
     for sec, patterns in SECTION_PATTERNS.items():
         if link_matches(anchor, url, patterns):
             score += 3
         for priority in PRIORITY_URL_TERMS.get(sec, ()):
-            if priority in blob:
+            if section_pattern_matches(priority, blob):
                 score += 2
     for term in SUBJECT_URL_TERMS:
         if term in blob:
@@ -61,7 +67,15 @@ def score_url(url: str, anchor: str, *, learned_terms: dict[str, int] | None = N
         for term, boost in learned_terms.items():
             if term in blob:
                 score += boost
+    # Prefer mission / vision / about / faith pages in discovery ranking so
+    # they are not crowded out by learned enrichment/parent boosts.
+    if looks_like_ethos_identity_page(url, anchor):
+        score += ETHOS_DISCOVERY_BONUS
     return score
+
+
+def _count_ethos_identity_urls(urls: list[str]) -> int:
+    return sum(1 for u in urls if looks_like_ethos_identity_page(u, ""))
 
 
 def _url_blob(url: str, anchor: str) -> str:
@@ -123,7 +137,9 @@ def discover_site_pages(
     )
     if unchanged and prior_urls:
         urls = [u for u in prior_urls if u and not is_blocked_url(u)]
-        if urls:
+        # Reuse only when the prior crawl already carried ethos identity pages;
+        # otherwise re-walk so mission/vision/faith links are not frozen out.
+        if urls and _count_ethos_identity_urls(urls) >= min(2, ETHOS_RESERVED_SLOTS):
             return urls[:max_pages]
 
     if result.ok and result.final_url and result.text:
@@ -194,6 +210,15 @@ def discover_site_pages(
 
     candidates.sort(key=lambda x: (-x[0], x[1]))
     urls = [final] if not is_blocked_url(final) else []
+    # Reserve crawl slots for ethos identity pages before filling with clubs/etc.
+    ethos_first = [
+        (score, url, anchor)
+        for score, url, anchor in candidates
+        if looks_like_ethos_identity_page(url, anchor)
+    ][:ETHOS_RESERVED_SLOTS]
+    for _, url, _ in ethos_first:
+        if url not in urls:
+            urls.append(url)
     for _, url, _ in candidates:
         if url not in urls:
             urls.append(url)

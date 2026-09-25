@@ -347,6 +347,16 @@ def looks_like_named_person(item: str) -> bool:
         )
     ):
         return True
+    # Governor / SLT register rows: "Flaherty Elizabeth Governor None"
+    if re.search(
+        r"\b(governor|slt|cfo|chief finance|chair of (?:pta|governors)|business manager)\b",
+        cleaned,
+        re.I,
+    ) and len(cleaned.split()) <= 8:
+        # Prefer rows that look like Name + Name + Role
+        caps = [t for t in cleaned.split() if t[:1].isupper()]
+        if len(caps) >= 2:
+            return True
     return False
 
 JUNK_LIST_PATTERNS: tuple[re.Pattern[str], ...] = tuple(

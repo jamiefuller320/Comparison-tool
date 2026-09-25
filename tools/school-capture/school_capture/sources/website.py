@@ -184,15 +184,11 @@ class SchoolWebsiteAdapter:
         return raw
 
     def _infer_section(self, url: str, title: str) -> str:
+        from school_capture.section_patterns import score_section_patterns
+
         blob = f"{url} {title}".lower()
-        best = "general"
-        best_score = 0
-        for section, patterns in SECTION_PATTERNS.items():
-            score = sum(1 for p in patterns if p in blob)
-            if score > best_score:
-                best_score = score
-                best = section
+        best, score = score_section_patterns(blob)
         path = urlparse(url).path.lower()
         if path in ("", "/"):
             return "homepage"
-        return best
+        return best if score else "general"
