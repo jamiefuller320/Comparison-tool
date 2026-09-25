@@ -489,6 +489,9 @@ export function VisitPack({
 
   const [log, setLog] = useState<Record<string, VisitLogEntry>>({});
   const [hydrated, setHydrated] = useState(false);
+  // Must stay above the empty-shortlist return — deep links hydrate schools
+  // after the first paint; a hook after that return tripped React #310.
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
     setLog(loadVisitLog());
@@ -505,8 +508,6 @@ export function VisitPack({
   function entryFor(urn: string): VisitLogEntry {
     return log[urn] ?? { status: "none" };
   }
-
-  const [previewOpen, setPreviewOpen] = useState(false);
 
   function printPack() {
     const pack = document.querySelector<HTMLElement>(".visit-pack");
