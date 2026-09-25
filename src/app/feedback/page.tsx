@@ -44,8 +44,8 @@ export default function FeedbackPage() {
           <div className="section-head">
             <h2 id="feedback-form-heading">Your note</h2>
             <p>
-              Free text is enough. Sentiment and topic chips are optional
-              context for triage.
+              Same fields as the feedback card: which page, how it felt, topics,
+              and your note. Everything joins the same private review queue.
             </p>
           </div>
           <FeedbackPageForm />

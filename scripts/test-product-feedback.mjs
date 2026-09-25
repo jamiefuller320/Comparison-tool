@@ -95,13 +95,18 @@ async function main() {
   assert.equal(row.surface, "find");
   assert.equal(row.triage_note, "");
 
-  const { inferFeedbackSurface, feedbackPageHref } = await import(
+  const { inferFeedbackSurface, feedbackPageHref, feedbackPageSelectOptions, normalizeFeedbackPagePath, surfaceFromFeedbackPagePath } = await import(
     "../src/lib/feedbackSurface.ts"
   );
   assert.equal(inferFeedbackSurface("/feedback/", ""), "feedback-page");
   assert.equal(inferFeedbackSurface("/", "compare"), "compare");
   assert.equal(inferFeedbackSurface("/areas/surrey/", ""), "areas");
   assert.match(feedbackPageHref({ surface: "find" }), /surface=find/);
+  assert.equal(normalizeFeedbackPagePath("https://schoolcompass.uk/#nearby"), "/#nearby");
+  assert.equal(surfaceFromFeedbackPagePath("/#side-by-side"), "compare");
+  const opts = feedbackPageSelectOptions("/schools/example/");
+  assert.equal(opts[0].path, "/schools/example/");
+  assert.ok(opts.some((o) => o.path === "/#nearby"));
 
   const { classifyFeedback } = await import(
     "../scripts/process-product-feedback.ts"

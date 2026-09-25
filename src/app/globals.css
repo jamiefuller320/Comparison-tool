@@ -6233,8 +6233,37 @@ html.tour-running .hero-inner > * {
   color: var(--sea-deep);
 }
 
+.product-feedback-fullpage {
+  margin: 0 0 0.85rem;
+}
+
+.product-feedback-fullpage-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.product-feedback-fullpage-link:hover {
+  color: var(--coral);
+}
+
+.product-feedback-form .product-feedback-sentiments legend,
+.product-feedback-form .product-feedback-topics legend,
+.feedback-page-form .product-feedback-sentiments legend,
+.feedback-page-form .product-feedback-topics legend {
+  margin: 0 0 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+}
+
 .product-feedback-field textarea,
-.product-feedback-field input {
+.product-feedback-field input,
+.product-feedback-field select {
   width: 100%;
   padding: 0.55rem 0.65rem;
   border: 1px solid var(--line);
@@ -6302,8 +6331,7 @@ html.tour-running .hero-inner > * {
   box-shadow: 0 8px 20px rgba(7, 58, 80, 0.1);
 }
 
-.feedback-control-open,
-.feedback-control-page {
+.feedback-control-open {
   appearance: none;
   border: 0;
   background: transparent;
@@ -6316,16 +6344,8 @@ html.tour-running .hero-inner > * {
   cursor: pointer;
 }
 
-.feedback-control-open:hover,
-.feedback-control-page:hover {
+.feedback-control-open:hover {
   color: var(--coral);
-}
-
-.feedback-control-page {
-  font-weight: 550;
-  color: var(--ink-soft);
-  border-left: 1px solid var(--line);
-  padding-left: 0.55rem;
 }
 
 .feedback-page-shell {
@@ -6344,14 +6364,6 @@ html.tour-running .hero-inner > * {
   color: var(--ink-soft);
   font-size: 0.92rem;
   line-height: 1.45;
-}
-
-.feedback-page-form .product-feedback-sentiments legend,
-.feedback-page-form .product-feedback-topics legend {
-  margin: 0 0 0.4rem;
-  font-size: 0.88rem;
-  font-weight: 650;
-  color: var(--sea-deep);
 }
 
 .visit-pack-section {
