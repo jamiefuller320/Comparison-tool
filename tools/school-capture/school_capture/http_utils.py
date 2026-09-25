@@ -292,8 +292,10 @@ def slug_words(value: str) -> set[str]:
 
 
 def link_matches(link_text: str, href: str, patterns: Iterable[str]) -> bool:
+    from school_capture.section_patterns import section_pattern_matches
+
     blob = f"{link_text} {href}".lower()
-    return any(p in blob for p in patterns)
+    return any(section_pattern_matches(p, blob) for p in patterns)
 
 
 def safe_fetch(url: str) -> tuple[str | None, str | None]:

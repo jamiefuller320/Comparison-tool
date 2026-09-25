@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 SECTION_PATTERNS: dict[str, tuple[str, ...]] = {
     "curriculum": (
         "curriculum",
@@ -105,5 +107,47 @@ PRIORITY_URL_TERMS: dict[str, tuple[str, ...]] = {
     "enrichment": ("clubs", "club", "extra-curricular", "wraparound", "breakfast"),
     "curriculum": ("curriculum", "subjects", "options"),
     "send": ("send", "sen", "local-offer", "senco"),
-    "ethos": ("ethos", "vision", "mission", "values", "about-us", "faith", "catholic", "jewish"),
+    "ethos": (
+        "ethos",
+        "vision",
+        "mission",
+        "values",
+        "about-us",
+        "aboutus",
+        "faith",
+        "catholic",
+        "jewish",
+        "british-values",
+        "britishvalues",
+        "school-ethos",
+        "ourcatholicfaith",
+        "ourvision",
+    ),
 }
+
+
+def section_pattern_matches(pattern: str, blob: str) -> bool:
+    """Match section patterns without nested-word false positives.
+
+    ``vision`` must not match ``revision``; ``mission`` must not match
+    ``admissions``. Hyphenated / multi-word patterns stay substring checks.
+    """
+    p = (pattern or "").lower().strip()
+    b = (blob or "").lower()
+    if not p or not b:
+        return False
+    if re.search(r"[^a-z0-9]", p):
+        return p in b
+    return bool(re.search(rf"(?<![a-z0-9]){re.escape(p)}(?![a-z0-9])", b))
+
+
+def score_section_patterns(blob: str) -> tuple[str, int]:
+    """Return (best_section, score) for a URL/title/heading blob."""
+    best = "general"
+    best_score = 0
+    for section, patterns in SECTION_PATTERNS.items():
+        score = sum(1 for p in patterns if section_pattern_matches(p, blob))
+        if score > best_score:
+            best_score = score
+            best = section
+    return best, best_score
