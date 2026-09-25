@@ -174,6 +174,8 @@ export function QualitativeEvidenceSummary({ school }: { school: SchoolRecord })
 }
 
 export function QualitativeEvidenceDetail({ school }: { school: SchoolRecord }) {
+  const [openAreas, setOpenAreas] = useState<Set<string>>(new Set());
+
   if (!schoolHasQualitativeCapture(school)) {
     return (
       <aside className="qual-evidence-detail empty">
@@ -182,7 +184,6 @@ export function QualitativeEvidenceDetail({ school }: { school: SchoolRecord }) 
     );
   }
 
-  const [openAreas, setOpenAreas] = useState<Set<string>>(new Set());
   const capture = school.qualitativeCapture;
   const areaKeys = capture.areas.map((a) => a.area);
 
