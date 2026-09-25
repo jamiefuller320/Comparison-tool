@@ -1,14 +1,23 @@
 name: Keep Supabase alive
 
-# Free-tier projects pause after ~7 days with too little database activity.
-# Ping PostgREST on a schedule so the optional accounts backend stays warm.
-# Requires repo secrets NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY
-# (same secrets used by Deploy GitHub Pages). Skips cleanly when unset.
+# Free-tier projects pause after ~7 days with too little *database* activity.
+# A bare SELECT that returns [] under RLS has proven insufficient in practice
+# (project paused → DNS fails → this workflow cannot wake it).
+#
+# This job:
+#  1. Runs daily (well inside the 7-day window)
+#  2. SELECTs shortlists + product_feedback (API reachability)
+#  3. INSERTs then DELETEs a row on supabase_keepalive (real write activity)
+#  4. Fails visibly when the host is unreachable or secrets/SQL are missing
+#
+# Requires repo secrets NEXT_PUBLIC_SUPABASE_URL + NEXT_PUBLIC_SUPABASE_ANON_KEY.
+# Also requires the SQL in supabase/product_feedback.sql (keepalive table).
+# Skips cleanly when secrets are unset.
 
 on:
   schedule:
-    # Every 3 days at 07:00 UTC — well inside the 7-day inactivity window.
-    - cron: "0 7 */3 * *"
+    # Daily at 07:15 UTC — was every 3 days; still paused after successful SELECTs.
+    - cron: "15 7 * * *"
   workflow_dispatch:
 
 permissions: {}
@@ -17,7 +26,7 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST
+      - name: Ping Supabase (SELECT + write)
         env:
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -29,34 +38,129 @@ jobs:
           fi
 
           URL="${SUPABASE_URL%/}"
-          # Lightweight SELECT against shortlists. RLS may return [] for anon;
-          # the request still counts as database activity.
-          code=$(curl -sS -o /tmp/supabase-keepalive.json -w "%{http_code}" \
-            --connect-timeout 30 --max-time 60 \
-            "${URL}/rest/v1/shortlists?select=id&limit=1" \
-            -H "apikey: ${SUPABASE_ANON_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
-            -H "Accept: application/json" \
-            -H "Prefer: count=exact") || {
-            echo "curl failed — project may be paused or unreachable."
+          HOST="${URL#https://}"
+          HOST="${HOST#http://}"
+          HOST="${HOST%%/*}"
+
+          echo "## Keep Supabase alive" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Host: \`${HOST}\`" >> "$GITHUB_STEP_SUMMARY"
+
+          # DNS must resolve. Paused free-tier projects lose DNS — ping cannot unpause.
+          if ! getent hosts "$HOST" >/dev/null 2>&1; then
+            echo "DNS lookup failed for ${HOST}."
+            echo "Project is likely **paused**. Restore it in the Supabase dashboard, then re-run." | tee -a "$GITHUB_STEP_SUMMARY"
             exit 1
+          fi
+          echo "- DNS: ok" >> "$GITHUB_STEP_SUMMARY"
+
+          auth_hdr=(
+            -H "apikey: ${SUPABASE_ANON_KEY}"
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}"
+            -H "Accept: application/json"
+          )
+
+          ping_get() {
+            local path="$1"
+            local label="$2"
+            local code
+            code=$(curl -sS -o "/tmp/sb-${label}.json" -w "%{http_code}" \
+              --connect-timeout 30 --max-time 60 \
+              "${URL}/rest/v1/${path}" \
+              "${auth_hdr[@]}" \
+              -H "Prefer: count=exact") || {
+              echo "curl failed on GET ${path} — project may be paused or unreachable."
+              exit 1
+            }
+            echo "GET ${path} → HTTP ${code}"
+            head -c 300 "/tmp/sb-${label}.json" || true
+            echo
+            case "${code}" in
+              200|206|401|403)
+                echo "- GET \`${path}\`: HTTP ${code}" >> "$GITHUB_STEP_SUMMARY"
+                ;;
+              404)
+                echo "Table/path missing (${path}). Run supabase/product_feedback.sql in the SQL editor if this is product_feedback or supabase_keepalive."
+                echo "- GET \`${path}\`: HTTP 404 (migration needed?)" >> "$GITHUB_STEP_SUMMARY"
+                # shortlists 404 is fatal (core table). product_feedback 404 is warn-only until migration.
+                if [ "$label" = "shortlists" ]; then
+                  exit 1
+                fi
+                ;;
+              *)
+                echo "Unexpected status ${code} for ${path}."
+                exit 1
+                ;;
+            esac
           }
 
-          echo "HTTP ${code}"
-          head -c 500 /tmp/supabase-keepalive.json || true
+          ping_get "shortlists?select=id&limit=1" "shortlists"
+          ping_get "product_feedback?select=id&limit=1" "product_feedback"
+
+          # Real write: INSERT then DELETE on supabase_keepalive.
+          insert_body='{"source":"gha-keep-alive"}'
+          insert_code=$(curl -sS -o /tmp/sb-keepalive-insert.json -w "%{http_code}" \
+            --connect-timeout 30 --max-time 60 \
+            -X POST "${URL}/rest/v1/supabase_keepalive" \
+            "${auth_hdr[@]}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=representation" \
+            -d "${insert_body}") || {
+            echo "curl failed on INSERT supabase_keepalive."
+            exit 1
+          }
+          echo "INSERT supabase_keepalive → HTTP ${insert_code}"
+          head -c 400 /tmp/sb-keepalive-insert.json || true
           echo
 
-          case "${code}" in
-            200|206)
-              echo "Keep-alive OK — Supabase responded."
+          case "${insert_code}" in
+            200|201)
+              echo "- INSERT \`supabase_keepalive\`: HTTP ${insert_code}" >> "$GITHUB_STEP_SUMMARY"
+              ;;
+            404)
+              echo "::error::supabase_keepalive table missing. Run supabase/product_feedback.sql in the Supabase SQL editor."
+              echo "- INSERT \`supabase_keepalive\`: HTTP 404 — **run SQL migration**" >> "$GITHUB_STEP_SUMMARY"
+              exit 1
               ;;
             401|403)
-              # Auth/RLS rejection still proves the API + DB are up.
-              echo "Keep-alive reached Supabase (auth/RLS ${code})."
+              echo "::error::anon INSERT denied on supabase_keepalive. Re-run supabase/product_feedback.sql (RLS grants)."
+              echo "- INSERT \`supabase_keepalive\`: HTTP ${insert_code} — **fix RLS**" >> "$GITHUB_STEP_SUMMARY"
+              exit 1
               ;;
             *)
-              echo "Unexpected status ${code}."
-              echo "If the project is paused, restore it in the Supabase dashboard, then re-run this workflow."
+              echo "Unexpected INSERT status ${insert_code}."
+              cat /tmp/sb-keepalive-insert.json || true
               exit 1
               ;;
           esac
+
+          row_id=$(python3 - <<'PY'
+          import json
+          try:
+              data = json.load(open("/tmp/sb-keepalive-insert.json"))
+          except Exception:
+              data = None
+          if isinstance(data, list) and data and isinstance(data[0], dict):
+              print(data[0].get("id") or "")
+          elif isinstance(data, dict):
+              print(data.get("id") or "")
+          else:
+              print("")
+          PY
+          )
+
+          if [ -n "${row_id}" ]; then
+            del_code=$(curl -sS -o /tmp/sb-keepalive-delete.json -w "%{http_code}" \
+              --connect-timeout 30 --max-time 60 \
+              -X DELETE "${URL}/rest/v1/supabase_keepalive?id=eq.${row_id}" \
+              "${auth_hdr[@]}") || {
+              echo "curl failed on DELETE supabase_keepalive (insert already counted as activity)."
+              del_code="000"
+            }
+            echo "DELETE supabase_keepalive id=${row_id} → HTTP ${del_code}"
+            echo "- DELETE row: HTTP ${del_code}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- DELETE: skipped (no id returned); insert still counts" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          echo "Keep-alive OK — SELECT + write activity recorded."
+          echo "- Result: **OK**" >> "$GITHUB_STEP_SUMMARY"

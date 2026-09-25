@@ -71,6 +71,82 @@ async function main() {
   const machine = JSON.parse(serialized.machineJson);
   assert.deepEqual(machine.topics, ["compare", "data-trust"]);
   assert.deepEqual(machine.shortlistLas, ["Surrey", "Hampshire"]);
+  assert.equal(serialized.surface, "");
+
+  const { feedbackToInsertRow } = await import(
+    "../src/lib/productFeedbackSupabase.ts"
+  );
+  const row = feedbackToInsertRow({
+    campaignId: FEEDBACK_CAMPAIGN_ID,
+    appVersion: "0.1.0",
+    trigger: "page",
+    sentiment: "freeform",
+    topics: ["map"],
+    note: "Pins overlap on mobile",
+    email: null,
+    usage: compared,
+    adaptiveQuestion: "q",
+    pageUrl: "https://schoolcompass.uk/",
+    surface: "find",
+    requestedAt: "2026-09-25T12:00:00.000Z",
+  });
+  assert.equal(row.status, "open");
+  assert.equal(row.proposed_action, null);
+  assert.equal(row.surface, "find");
+  assert.equal(row.triage_note, "");
+
+  const { inferFeedbackSurface, feedbackPageHref } = await import(
+    "../src/lib/feedbackSurface.ts"
+  );
+  assert.equal(inferFeedbackSurface("/feedback/", ""), "feedback-page");
+  assert.equal(inferFeedbackSurface("/", "compare"), "compare");
+  assert.equal(inferFeedbackSurface("/areas/surrey/", ""), "areas");
+  assert.match(feedbackPageHref({ surface: "find" }), /surface=find/);
+
+  const { classifyFeedback } = await import(
+    "../scripts/process-product-feedback.ts"
+  );
+  const ignore = classifyFeedback({
+    id: "1",
+    created_at: "",
+    campaign_id: "c",
+    app_version: "",
+    trigger: "manual",
+    sentiment: "mixed",
+    topics: [],
+    note: "test",
+    contact_email: null,
+    adaptive_question: "",
+    page_url: "",
+    surface: "",
+    usage: {},
+    status: "open",
+    proposed_action: null,
+    triage_note: "",
+    github_issue_url: null,
+  });
+  assert.equal(ignore.action, "ignore");
+
+  const implement = classifyFeedback({
+    id: "2",
+    created_at: "",
+    campaign_id: "c",
+    app_version: "",
+    trigger: "engaged",
+    sentiment: "stuck",
+    topics: ["print-pack"],
+    note: "Visit pack print is blank on iPhone Safari",
+    contact_email: null,
+    adaptive_question: "",
+    page_url: "/",
+    surface: "visit-pack",
+    usage: {},
+    status: "open",
+    proposed_action: null,
+    triage_note: "",
+    github_issue_url: null,
+  });
+  assert.equal(implement.action, "implement");
 
   // Without browser storage, auto-prompt should stay closed (tour / storage gates).
   const decision = shouldAutoPromptFeedback(compared, { pageLoadSeconds: 300 });

@@ -41,7 +41,8 @@ must enforce access).
 | *(none)* | `qualitative-spotcheck-loop` | Live HTML fetch only; digests + optional learned-flag write; no model secrets |
 | `MISSING_SCHOOL_DISPATCH_TOKEN` | `deploy-pages` → client bundle | Fine-grained PAT; minimal scope |
 | `CHALLENGE_INTAKE_TOKEN` | Intake workflows | Prefer private intake repo |
-| `NEXT_PUBLIC_SUPABASE_*` | `deploy-pages`, `supabase-keep-alive` | Anon key is public; URL is not secret |
+| `NEXT_PUBLIC_SUPABASE_*` | `deploy-pages`, `supabase-keep-alive`, `product-feedback-process` | Anon key is public; URL is not secret |
+| `SUPABASE_SERVICE_ROLE_KEY` | `product-feedback-process` only | **Never** `NEXT_PUBLIC_`; server/Actions only |
 
 ## Automated check
 

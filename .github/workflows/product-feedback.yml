@@ -66,6 +66,7 @@ jobs:
               f"| Topics | {topics} |",
               f"| Adaptive question | {clean('adaptiveQuestion', 400) or '—'} |",
               f"| Page URL | {clean('pageUrl', 400) or '—'} |",
+              f"| Surface | `{clean('surface', 80) or '—'}` |",
               f"| Requested at | {clean('requestedAt', 40) or '—'} |",
               "",
               "### Usage signals",
