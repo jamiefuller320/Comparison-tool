@@ -5,6 +5,13 @@
 -- Testers (anon / publishable key): INSERT into product_feedback only.
 -- Maintainers (service_role): full CRUD for triage.
 -- Keep-alive workflow: anon INSERT + DELETE on supabase_keepalive.
+--
+-- Client inserts MUST use Prefer: return=minimal. return=representation needs
+-- SELECT (which anon does not have) and fails with 401/42501.
+--
+-- Look at this table in the School Compass Supabase project only — not
+-- home_learning. Cursor cloud secrets are shared by name: use
+-- SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY for agents (do not overwrite HL).
 
 -- ---------------------------------------------------------------------------
 -- product_feedback

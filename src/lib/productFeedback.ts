@@ -594,7 +594,16 @@ export async function requestProductFeedback(
   const githubResult = await dispatchProductFeedbackGithub(payload);
   if (githubResult.ok) {
     markFeedbackResponded();
-    return { ...githubResult, transport: "github" };
+    // Maintainer-facing hint: GitHub success means no product_feedback row.
+    const fallbackHint =
+      supabaseResult.reason === "missing-env"
+        ? " (Queued via GitHub — Supabase env missing on this deploy, so nothing appears in product_feedback.)"
+        : " (Queued via GitHub fallback after Supabase insert failed — check the browser console / Network tab for the REST error, and confirm Table Editor is the School Compass project.)";
+    return {
+      ...githubResult,
+      transport: "github",
+      detail: `${githubResult.detail}${fallbackHint}`,
+    };
   }
 
   if (
