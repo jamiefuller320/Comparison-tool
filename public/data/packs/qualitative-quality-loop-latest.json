@@ -1,136 +1,143 @@
 {
-  "ranAt": "2026-09-24T14:44:28.958819+00:00",
+  "ranAt": "2026-09-25T15:05:34.270971+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 4394,
-    "suspectCount": 156,
+    "recordCount": 4493,
+    "suspectCount": 245,
     "flagCounts": {
-      "chrome": 69,
-      "cms_chrome": 64,
-      "admissions": 11,
-      "implausible_offerings": 9,
-      "policy_toc": 8,
-      "boilerplate": 5,
-      "high_score_thin_signals": 4
+      "implausible_offerings": 178,
+      "named_person": 176,
+      "chrome": 67,
+      "cms_chrome": 16,
+      "admissions": 12,
+      "high_score_thin_signals": 4,
+      "boilerplate": 3,
+      "policy_toc": 2
     },
     "topSuspects": [
       {
-        "urn": "125810",
-        "name": "Boundstone Nursery School",
-        "score": 10.0,
+        "urn": "100943",
+        "name": "William Davis Primary School",
+        "score": 51.0,
         "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "151784",
-        "name": "Owlsmoor Primary School",
-        "score": 10.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "147874",
-        "name": "Addington Valley Academy",
-        "score": 9.0,
-        "flags": [
+          "named_person",
+          "implausible_offerings",
           "chrome"
         ]
       },
       {
-        "urn": "149148",
-        "name": "Daffodil Preparatory School",
-        "score": 9.0,
+        "urn": "113853",
+        "name": "Cranborne Middle School",
+        "score": 32.0,
         "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "150750",
-        "name": "OMG Education",
-        "score": 9.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "100632",
-        "name": "St Andrew's Catholic Primary School",
-        "score": 9.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "133440",
-        "name": "The Livity School",
-        "score": 9.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "145131",
-        "name": "Castle Hill Academy",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
+          "named_person",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "136566",
-        "name": "Ecclesbourne Primary School",
-        "score": 8.0,
+        "urn": "100616",
+        "name": "St Jude's Church of England Primary School",
+        "score": 32.0,
         "flags": [
-          "boilerplate",
-          "policy_toc",
+          "named_person",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "135989",
-        "name": "Faraday School",
-        "score": 8.0,
+        "urn": "123025",
+        "name": "North Kidlington Primary School",
+        "score": 30.0,
         "flags": [
-          "chrome",
-          "cms_chrome"
+          "named_person",
+          "implausible_offerings",
+          "chrome"
         ]
       },
       {
-        "urn": "100564",
-        "name": "Granton Primary School",
-        "score": 8.0,
+        "urn": "118864",
+        "name": "Greatstone Primary School",
+        "score": 24.0,
         "flags": [
-          "chrome",
-          "policy_toc",
+          "named_person",
           "implausible_offerings"
         ]
       },
       {
-        "urn": "100566",
-        "name": "Heathbrook Primary School",
-        "score": 8.0,
+        "urn": "110411",
+        "name": "Marsh Gibbon CofE Primary School",
+        "score": 24.0,
         "flags": [
-          "policy_toc",
-          "chrome",
+          "named_person",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "136317",
+        "name": "Sandwich Technology School",
+        "score": 24.0,
+        "flags": [
+          "named_person",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "126155",
+        "name": "St Anthony's School",
+        "score": 24.0,
+        "flags": [
+          "named_person",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "125278",
+        "name": "St Bede's School",
+        "score": 24.0,
+        "flags": [
+          "named_person",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "126047",
+        "name": "St Andrew's CofE Primary School",
+        "score": 19.0,
+        "flags": [
+          "named_person",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "136078",
+        "name": "Barncroft Primary School",
+        "score": 16.0,
+        "flags": [
+          "named_person",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "114606",
+        "name": "Blatchington Mill School",
+        "score": 16.0,
+        "flags": [
+          "named_person",
           "implausible_offerings"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 4394,
-    "suspectCount": 32,
+    "recordCount": 4493,
+    "suspectCount": 31,
     "flagCounts": {
-      "cms_chrome": 15,
-      "admissions": 11,
+      "cms_chrome": 13,
+      "admissions": 12,
       "high_score_thin_signals": 4,
       "boilerplate": 1,
       "implausible_offerings": 1
@@ -161,32 +168,8 @@
         ]
       },
       {
-        "urn": "140064",
-        "name": "Culloden Primary - A Paradigm Academy",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
         "urn": "137605",
         "name": "Dove House Academy",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "145451",
-        "name": "King's Academy Northern Parade (Infant)",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "145450",
-        "name": "King's Academy Northern Parade (Junior)",
         "score": 5.0,
         "flags": [
           "cms_chrome"
@@ -231,46 +214,70 @@
         "flags": [
           "cms_chrome"
         ]
+      },
+      {
+        "urn": "110469",
+        "name": "St Paul's Church of England Combined School, Wooburn",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "116489",
+        "name": "St Peter's Catholic Primary School, Waterlooville",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "151930",
+        "name": "St Peter's Catholic Primary School, Waterlooville",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
       }
     ]
   },
   "qa": {
-    "reviewed": 156,
-    "changedSchools": 133,
-    "findingsApplied": 157,
-    "learningAdded": 51,
+    "reviewed": 245,
+    "changedSchools": 218,
+    "findingsApplied": 259,
+    "learningAdded": 265,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +145 (>= 15)",
+    "reason": "eventCount +41 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "1c3926e68b799031e250",
+      "phraseHash": "47c9ac03806ca4c832fa",
       "phraseCount": 900,
-      "candidateCount": 1489,
-      "eventCount": 6953,
-      "updatedAt": "2026-09-24"
+      "candidateCount": 1553,
+      "eventCount": 7205,
+      "updatedAt": "2026-09-25"
     },
     "fingerprintAfter": {
-      "phraseHash": "cc27f9f74844f90d42a3",
+      "phraseHash": "ded02286ab9dde9dcc34",
       "phraseCount": 900,
-      "candidateCount": 1540,
-      "eventCount": 7164,
-      "updatedAt": "2026-09-24"
+      "candidateCount": 1818,
+      "eventCount": 7623,
+      "updatedAt": "2026-09-25"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 4394 published URN shards (prior=0 → 4394).",
-    "Rebalanced learned QA phrases: active=900 candidates=1489.",
-    "Learning fingerprint: {'phraseHash': '1c3926e68b799031e250', 'phraseCount': 900, 'candidateCount': 1489, 'eventCount': 6953, 'updatedAt': '2026-09-24'}",
-    "Apply decision: eventCount +145 (>= 15)",
-    "Before: 156 suspects across 4394 records.",
-    "Applied QA fixes to 133 school(s) (157 area finding(s)).",
-    "Learned 51 new junk phrase(s) (store size 900).",
-    "Reviewed top 156 suspect(s); provider=none.",
+    "Hydrated working sidecar from 4493 published URN shards (prior=0 → 4493).",
+    "Rebalanced learned QA phrases: active=900 candidates=1553.",
+    "Learning fingerprint: {'phraseHash': '47c9ac03806ca4c832fa', 'phraseCount': 900, 'candidateCount': 1553, 'eventCount': 7205, 'updatedAt': '2026-09-25'}",
+    "Apply decision: eventCount +41 (>= 15)",
+    "Before: 245 suspects across 4493 records.",
+    "Applied QA fixes to 218 school(s) (259 area finding(s)).",
+    "Learned 265 new junk phrase(s) (store size 900).",
+    "Reviewed top 245 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 32 suspects across 4394 records.",
+    "After: 31 suspects across 4493 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
