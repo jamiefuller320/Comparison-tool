@@ -25,8 +25,10 @@ async function main() {
     prepareVisitPackForPrint,
     resolveVisitPackElement,
     buildVisitPackPrintDocument,
+    attachPrintCleanup,
     VISIT_PACK_DOCUMENT_CSS,
     VISIT_PACK_PRINT_CSS,
+    VISIT_PACK_PRINT_SCREEN_CSS,
     VISIT_PACK_PRINT_STYLES,
     PRINT_CLEANUP_SAFETY_MS,
   } = await import("../src/lib/printVisitPack.ts");
@@ -57,12 +59,29 @@ async function main() {
     false,
   );
 
-  // All platforms print via isolated iframe — no main-window clone path.
-  assert.ok(!source.includes("printViaMainWindow"));
-  assert.ok(!source.includes("visit-pack-printing"));
-  assert.ok(!source.includes("visibility: hidden"));
+  // Apple mobile uses main-window path; others use iframe.
+  assert.match(source, /printViaMainWindow/);
   assert.match(source, /printViaIframe/);
+  assert.match(source, /isAppleMobilePrintHost\(\)/);
   assert.match(source, /buildVisitPackPrintDocument/);
+  assert.match(source, /attachPrintCleanup/);
+  assert.equal(typeof attachPrintCleanup, "function");
+
+  // Screen hide must not use visibility/opacity (WebKit blank preview).
+  assert.match(VISIT_PACK_PRINT_SCREEN_CSS, /@media screen/);
+  assert.match(VISIT_PACK_PRINT_SCREEN_CSS, /left:\s*-10000px/);
+  assert.ok(
+    !/visibility:\s*hidden/.test(VISIT_PACK_PRINT_SCREEN_CSS),
+    "screen CSS must not use visibility:hidden",
+  );
+  assert.ok(
+    !/opacity:\s*0/.test(VISIT_PACK_PRINT_SCREEN_CSS),
+    "screen CSS must not use opacity:0",
+  );
+  assert.ok(
+    !/visibility:\s*hidden/.test(source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*/g, "")),
+    "print helpers must not set visibility:hidden",
+  );
 
   // Prefer break-before; avoid break-after (WebKit blank-page padding).
   assert.match(VISIT_PACK_PRINT_CSS, /break-before:\s*page/);
@@ -73,6 +92,7 @@ async function main() {
   assert.match(VISIT_PACK_DOCUMENT_CSS, /color-scheme:\s*light only/);
   assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-pack-compare-table td[\s\S]*color:\s*#14233a/);
   assert.match(VISIT_PACK_PRINT_STYLES, /@media print/);
+  assert.match(VISIT_PACK_PRINT_STYLES, /@media screen/);
   assert.ok(
     !/page-break-after:\s*always/.test(VISIT_PACK_PRINT_STYLES),
     "must not use page-break-after:always (WebKit blank pages)",
@@ -86,6 +106,8 @@ async function main() {
   assert.match(doc, /color-scheme/);
   assert.match(doc, /visit-pack-print-clone/);
   assert.match(doc, /#14233a/);
+  // iframe document should not include main-window screen park rules
+  assert.ok(!doc.includes("visit-pack-printing"));
 
   await withDom(
     `<div class="visit-pack">
@@ -160,6 +182,7 @@ async function main() {
   assert.match(VISIT_PACK_PRINT_CSS, /\.visit-pack-figures-scroll[\s\S]*overflow:\s*visible/);
   assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-pack-chart/);
   assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-pack-school-website/);
+  assert.match(VISIT_PACK_DOCUMENT_CSS, /\.visit-pack-print-root :where\(/);
 
   console.log("OK print-visit-pack");
 }
