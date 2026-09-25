@@ -1,9 +1,16 @@
 /**
- * Print only the visit pack in an isolated iframe.
+ * Print only the visit pack.
  *
- * All platforms (including iPhone / iPad) use a non-zero off-screen iframe with
- * self-contained light document CSS. The previous main-window path hid the
- * clone with visibility:hidden, which WebKit treats as blank in print preview.
+ * iPhone / iPad (WebKit): print a clean clone from the main document. Isolated
+ * iframe `contentWindow.print()` often yields a blank Safari print preview on
+ * iOS when the frame is off-screen. Main-window printing uses
+ * `html.visit-pack-printing` (see globals.css) to show only the clone.
+ *
+ * Do not hide the clone with visibility:hidden / opacity:0 — WebKit treats
+ * those as blank in print preview. Off-screen positioning is fine because
+ * print CSS resets the root to position:static.
+ *
+ * Desktop / Android: isolated non-zero iframe with the same break-before rules.
  */
 
 export function isAppleMobilePrintHost(
@@ -18,7 +25,23 @@ export function isAppleMobilePrintHost(
   return false;
 }
 
-/** Base document styles — always applied inside the print iframe. */
+/**
+ * Screen-only rules for the main-window Apple path. Keep the clone out of the
+ * way while the print sheet is open — never visibility/opacity zero.
+ */
+export const VISIT_PACK_PRINT_SCREEN_CSS = `
+@media screen {
+  html.visit-pack-printing .visit-pack-print-root {
+    position: fixed !important;
+    left: -10000px !important;
+    top: 0 !important;
+    width: 210mm;
+    pointer-events: none !important;
+  }
+}
+`;
+
+/** Base document styles — iframe body and injected main-window style. */
 export const VISIT_PACK_DOCUMENT_CSS = `
 html {
   color-scheme: light only;
@@ -65,18 +88,29 @@ html, body {
   p, li, dt, dd, th, td,
   blockquote, strong, em, small,
   span, div, label, figcaption
+),
+.visit-pack-print-root :where(
+  h1, h2, h3, h4, h5, h6,
+  p, li, dt, dd, th, td,
+  blockquote, strong, em, small,
+  span, div, label, figcaption
 ) {
   color: #14233a !important;
   -webkit-text-fill-color: #14233a !important;
 }
-.visit-pack-print-clone a {
+.visit-pack-print-clone a,
+.visit-pack-print-root a {
   color: #0b4f6c !important;
   -webkit-text-fill-color: #0b4f6c !important;
 }
 .visit-pack-print-clone .visit-contact-meta,
 .visit-pack-print-clone .visit-pack-figures-caption,
 .visit-pack-print-clone .decision-guidance-print-foot,
-.visit-pack-print-clone .visit-pack-school-empty {
+.visit-pack-print-clone .visit-pack-school-empty,
+.visit-pack-print-root .visit-contact-meta,
+.visit-pack-print-root .visit-pack-figures-caption,
+.visit-pack-print-root .decision-guidance-print-foot,
+.visit-pack-print-root .visit-pack-school-empty {
   color: #3d4f66 !important;
   -webkit-text-fill-color: #3d4f66 !important;
 }
@@ -270,11 +304,40 @@ html {
 }
 `;
 
-/** Injected into every print iframe. */
+/** Injected into main window (iOS) and print iframes (desktop). */
 export const VISIT_PACK_PRINT_STYLES =
-  VISIT_PACK_DOCUMENT_CSS + VISIT_PACK_PRINT_CSS;
+  VISIT_PACK_PRINT_SCREEN_CSS + VISIT_PACK_DOCUMENT_CSS + VISIT_PACK_PRINT_CSS;
 
+/**
+ * iOS afterprint often fires when the sheet opens — wait for print mode to end
+ * via matchMedia("print") instead of tearing down the clone early.
+ */
 export const PRINT_CLEANUP_SAFETY_MS = 10 * 60 * 1000;
+
+export function attachPrintCleanup(onDone: () => void): void {
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    mql.removeEventListener("change", onPrintChange);
+    window.removeEventListener("afterprint", finish);
+    window.clearTimeout(safetyTimer);
+    onDone();
+  };
+
+  const mql = window.matchMedia("print");
+  const onPrintChange = () => {
+    if (!mql.matches) finish();
+  };
+
+  mql.addEventListener("change", onPrintChange);
+
+  if (!isAppleMobilePrintHost()) {
+    window.addEventListener("afterprint", finish);
+  }
+
+  const safetyTimer = window.setTimeout(finish, PRINT_CLEANUP_SAFETY_MS);
+}
 
 /** Build a standalone HTML document for the print iframe. */
 export function buildVisitPackPrintDocument(
@@ -288,7 +351,7 @@ export function buildVisitPackPrintDocument(
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light" />
 <base href="${baseHref}" />
-<style>${VISIT_PACK_PRINT_STYLES}</style>
+<style>${VISIT_PACK_DOCUMENT_CSS + VISIT_PACK_PRINT_CSS}</style>
 </head>
 <body>${cloneHtml}</body>
 </html>`;
@@ -342,6 +405,39 @@ export function prepareVisitPackForPrint(pack: HTMLElement): HTMLElement {
   return clone;
 }
 
+function printViaMainWindow(pack: HTMLElement, noteHeightPx: number): void {
+  const printRoot = prepareVisitPackForPrint(pack);
+  printRoot.style.setProperty("--visit-print-note-height", `${noteHeightPx}px`);
+  printRoot.setAttribute("data-visit-pack-print-root", "1");
+
+  const style = document.createElement("style");
+  style.setAttribute("data-visit-pack-print-style", "1");
+  style.textContent = VISIT_PACK_PRINT_STYLES;
+
+  const scrollY = window.scrollY;
+  document.head.appendChild(style);
+  document.body.appendChild(printRoot);
+  document.documentElement.classList.add("visit-pack-printing");
+  document.body.classList.add("visit-pack-printing");
+
+  const finish = () => {
+    document.documentElement.classList.remove("visit-pack-printing");
+    document.body.classList.remove("visit-pack-printing");
+    printRoot.remove();
+    style.remove();
+    window.scrollTo(0, scrollY);
+  };
+
+  attachPrintCleanup(finish);
+
+  window.requestAnimationFrame(() => {
+    window.setTimeout(() => {
+      window.focus();
+      window.print();
+    }, 60);
+  });
+}
+
 function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
   const clone = prepareVisitPackForPrint(pack);
   clone.classList.add("visit-pack-print-clone");
@@ -350,10 +446,11 @@ function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
   const iframe = document.createElement("iframe");
   iframe.setAttribute("title", "Print visit pack");
   iframe.setAttribute("aria-hidden", "true");
-  // Non-zero, off-screen — visible to the print engine but not on screen.
+  // Non-zero, on-viewport corner — visible to the print engine but not on screen.
   // Do not use visibility:hidden or opacity:0 (WebKit prints blank pages).
+  // Do not park far off-screen (left:-10000px) — iOS Safari often blanks that.
   iframe.style.cssText =
-    "position:fixed;left:-10000px;top:0;width:210mm;height:297mm;border:0;pointer-events:none;z-index:-1;";
+    "position:fixed;right:0;bottom:0;width:210mm;height:297mm;border:0;pointer-events:none;z-index:-1;";
 
   document.body.appendChild(iframe);
 
@@ -361,6 +458,7 @@ function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
   const iwin = iframe.contentWindow;
   if (!idoc || !iwin) {
     iframe.remove();
+    printViaMainWindow(pack, noteHeightPx);
     return;
   }
 
@@ -384,6 +482,7 @@ function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
       iwin.print();
     } catch {
       cleanup();
+      printViaMainWindow(pack, noteHeightPx);
     }
   };
 
@@ -395,5 +494,9 @@ export function printVisitPackElement(
   noteHeightPx: number,
 ): void {
   const resolved = resolveVisitPackElement(pack);
+  if (isAppleMobilePrintHost()) {
+    printViaMainWindow(resolved, noteHeightPx);
+    return;
+  }
   printViaIframe(resolved, noteHeightPx);
 }
