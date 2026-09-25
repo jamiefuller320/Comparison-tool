@@ -106,6 +106,47 @@ async function main() {
   const { classifyFeedback } = await import(
     "../scripts/process-product-feedback.ts"
   );
+  const {
+    projectRefFromUrl,
+    projectRefFromServiceKey,
+    envUrl,
+    serviceKey,
+  } = await import("../scripts/process-product-feedback.ts");
+
+  assert.equal(
+    projectRefFromUrl("https://djjpznwiujujfoyvkmsp.supabase.co"),
+    "djjpznwiujujfoyvkmsp",
+  );
+  assert.equal(projectRefFromUrl("https://example.com"), null);
+  // Synthetic JWT payload {"ref":"abc123ref","role":"service_role"}
+  const fakeJwt =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
+    Buffer.from(
+      JSON.stringify({ ref: "abc123ref", role: "service_role" }),
+    ).toString("base64url") +
+    ".sig";
+  assert.equal(projectRefFromServiceKey(fakeJwt), "abc123ref");
+  assert.equal(projectRefFromServiceKey("sb_secret_not_a_jwt"), null);
+
+  const prevUrl = process.env.SCHOOL_COMPASS_SUPABASE_URL;
+  const prevKey = process.env.SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY;
+  const prevGeneric = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  process.env.SCHOOL_COMPASS_SUPABASE_URL =
+    "https://djjpznwiujujfoyvkmsp.supabase.co";
+  process.env.SUPABASE_URL = "https://wrong.supabase.co";
+  process.env.SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY = "sc-role-key";
+  process.env.SUPABASE_SERVICE_ROLE_KEY = "hl-role-key";
+  assert.equal(envUrl(), "https://djjpznwiujujfoyvkmsp.supabase.co");
+  assert.equal(serviceKey(), "sc-role-key");
+  if (prevUrl === undefined) delete process.env.SCHOOL_COMPASS_SUPABASE_URL;
+  else process.env.SCHOOL_COMPASS_SUPABASE_URL = prevUrl;
+  if (prevKey === undefined)
+    delete process.env.SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY;
+  else process.env.SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY = prevKey;
+  if (prevGeneric === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+  else process.env.SUPABASE_SERVICE_ROLE_KEY = prevGeneric;
+  delete process.env.SUPABASE_URL;
+
   const ignore = classifyFeedback({
     id: "1",
     created_at: "",

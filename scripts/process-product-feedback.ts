@@ -4,11 +4,16 @@
  * Heuristic classify → proposed_action + triage_note; human gate before product changes.
  * Does NOT auto-merge PRs or apply UX changes.
  *
- * Env:
+ * Env (GitHub Actions — Comparison-tool repo only; same names are fine per-repo):
  *   SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL
  *   SUPABASE_SERVICE_ROLE_KEY
- *   GITHUB_TOKEN / GH_TOKEN (optional — open proposed-implement issues)
- *   CHALLENGE_INTAKE_REPO (optional private intake)
+ *
+ * Env (Cursor / shared cloud secrets — use distinct names so Home Learning’s
+ * SUPABASE_SERVICE_ROLE_KEY is never overwritten or reused against this project):
+ *   SCHOOL_COMPASS_SUPABASE_URL or COMPARISON_TOOL_SUPABASE_URL
+ *   SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY or COMPARISON_TOOL_SUPABASE_SERVICE_ROLE_KEY
+ *
+ * Optional: GITHUB_TOKEN / GH_TOKEN, CHALLENGE_INTAKE_REPO
  *
  * Usage:
  *   npx tsx scripts/process-product-feedback.ts route [--dry-run] [--limit N]
@@ -47,16 +52,62 @@ type FeedbackRow = {
   github_issue_url: string | null;
 };
 
-function envUrl(): string {
-  return (
-    process.env.SUPABASE_URL ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    ""
+/** First non-empty trimmed env value. */
+function firstEnv(...names: string[]): string {
+  for (const name of names) {
+    const val = (process.env[name] || "").trim();
+    if (val) return val;
+  }
+  return "";
+}
+
+/**
+ * Prefer School Compass–specific Cursor secret names so a shared
+ * SUPABASE_SERVICE_ROLE_KEY (Home Learning) is not used by mistake.
+ * GitHub Actions on this repo can keep using SUPABASE_* / NEXT_PUBLIC_*.
+ */
+export function envUrl(): string {
+  return firstEnv(
+    "SCHOOL_COMPASS_SUPABASE_URL",
+    "COMPARISON_TOOL_SUPABASE_URL",
+    "SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_URL",
   ).replace(/\/$/, "");
 }
 
-function serviceKey(): string {
-  return process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+export function serviceKey(): string {
+  return firstEnv(
+    "SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY",
+    "COMPARISON_TOOL_SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+  );
+}
+
+/** Project ref from https://<ref>.supabase.co */
+export function projectRefFromUrl(url: string): string | null {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    const m = /^([a-z0-9]+)\.supabase\.co$/.exec(host);
+    return m ? m[1] : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Project ref claim from a legacy JWT-shaped service_role key (eyJ…). */
+export function projectRefFromServiceKey(key: string): string | null {
+  if (!key.startsWith("eyJ")) return null;
+  const parts = key.split(".");
+  if (parts.length !== 3) return null;
+  try {
+    const payload = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const pad = "=".repeat((4 - (payload.length % 4)) % 4);
+    const json = Buffer.from(payload + pad, "base64").toString("utf8");
+    const data = JSON.parse(json) as { ref?: unknown };
+    return typeof data.ref === "string" && data.ref ? data.ref : null;
+  } catch {
+    return null;
+  }
 }
 
 function requireEnv(): { url: string; key: string } {
@@ -64,7 +115,20 @@ function requireEnv(): { url: string; key: string } {
   const key = serviceKey();
   if (!url || !key) {
     throw new Error(
-      "Set SUPABASE_URL (or NEXT_PUBLIC_SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY.",
+      "Set School Compass Supabase URL + service role. " +
+        "GitHub Actions: NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY. " +
+        "Cursor cloud secrets (shared by name — do not overwrite Home Learning): " +
+        "SCHOOL_COMPASS_SUPABASE_URL + SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY " +
+        "(or COMPARISON_TOOL_* aliases).",
+    );
+  }
+  const urlRef = projectRefFromUrl(url);
+  const keyRef = projectRefFromServiceKey(key);
+  if (urlRef && keyRef && urlRef !== keyRef) {
+    throw new Error(
+      `Supabase project mismatch: URL is ref=${urlRef} but service_role JWT is ref=${keyRef}. ` +
+        "Cursor’s shared SUPABASE_SERVICE_ROLE_KEY is likely Home Learning — add " +
+        "SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY (School Compass service_role) instead of overwriting it.",
     );
   }
   return { url, key };

@@ -42,7 +42,18 @@ must enforce access).
 | `MISSING_SCHOOL_DISPATCH_TOKEN` | `deploy-pages` → client bundle | Fine-grained PAT; minimal scope |
 | `CHALLENGE_INTAKE_TOKEN` | Intake workflows | Prefer private intake repo |
 | `NEXT_PUBLIC_SUPABASE_*` | `deploy-pages`, `supabase-keep-alive`, `product-feedback-process` | Anon key is public; URL is not secret |
-| `SUPABASE_SERVICE_ROLE_KEY` | `product-feedback-process` only | **Never** `NEXT_PUBLIC_`; server/Actions only |
+| `SUPABASE_SERVICE_ROLE_KEY` | `product-feedback-process` only | **Never** `NEXT_PUBLIC_`; server/Actions only. **GitHub Actions secrets are per-repo** — this name on Comparison-tool does not collide with Home_learning |
+
+### Cursor / shared cloud secrets (agents)
+
+Cursor user/cloud secrets are **shared by name across projects**. Home Learning already uses `SUPABASE_SERVICE_ROLE_KEY`. For School Compass agents / local triage, add **distinct** names (do not overwrite HL):
+
+| Secret | Purpose |
+|--------|---------|
+| `SCHOOL_COMPASS_SUPABASE_URL` (or `COMPARISON_TOOL_SUPABASE_URL`) | School Compass project URL (`https://<ref>.supabase.co`) |
+| `SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY` (or `COMPARISON_TOOL_SUPABASE_SERVICE_ROLE_KEY`) | School Compass `service_role` (dashboard → API) |
+
+`scripts/process-product-feedback.ts` prefers the `SCHOOL_COMPASS_*` / `COMPARISON_TOOL_*` names, then falls back to `SUPABASE_*` / `NEXT_PUBLIC_*` for GitHub Actions. It refuses to run when a JWT `service_role` `ref` does not match the URL host.
 
 ## Automated check
 

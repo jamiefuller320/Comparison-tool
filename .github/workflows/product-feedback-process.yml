@@ -38,6 +38,9 @@ jobs:
 
       - name: Route open product feedback
         env:
+          # Per-repo Actions secret — same name as Home_learning is fine here.
+          # Cursor cloud secrets are shared by name: agents should use
+          # SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY (see docs/ops/gha-secret-hygiene.md).
           SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}

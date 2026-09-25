@@ -41,6 +41,8 @@ export async function submitProductFeedbackToSupabase(
   if (!env) return { ok: false, reason: "missing-env" };
 
   try {
+    // Prefer return=minimal: anon has INSERT but not SELECT. return=representation
+    // triggers RETURNING and fails with 401/42501 even when the row would insert.
     const response = await fetch(`${env.url}/rest/v1/product_feedback`, {
       method: "POST",
       headers: {
@@ -57,6 +59,13 @@ export async function submitProductFeedbackToSupabase(
     }
 
     const text = await response.text().catch(() => "");
+    if (typeof console !== "undefined") {
+      console.warn(
+        "[product-feedback] Supabase insert failed",
+        response.status,
+        text.slice(0, 180),
+      );
+    }
     return {
       ok: false,
       reason: "http",

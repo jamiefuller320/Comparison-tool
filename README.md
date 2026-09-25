@@ -221,18 +221,20 @@ Without those secrets, the workflow opens an issue on this repository with label
 
 ## Soft-launch product feedback
 
-A usage-aware **Feedback** prompt (header always; auto after deep engagement, visit-pack print, or return from an exit) explains that School Compass is under development and asks a question tailored to what the visitor did (or didn’t do). Submissions queue `repository_dispatch` event `product-feedback` (same dispatch token as data challenges) into issues with:
+A usage-aware **Feedback** prompt (header / footer / `/feedback/`; auto after deep engagement, visit-pack print, or return from an exit) explains that School Compass is under development and asks a question tailored to what the visitor did (or didn’t do).
 
-- human-readable usage table
-- labels `product-feedback` + `feedback-{sentiment}`
-- a fenced **machine JSON** payload for collation
+**Primary queue:** browser `POST` → Supabase `product_feedback` (anon INSERT, RLS). Run `supabase/product_feedback.sql` once in the **School Compass** Supabase project (not home_learning). Confirm rows in that project’s Table Editor.
 
-Bump `FEEDBACK_CAMPAIGN_ID` in `src/lib/buildMeta.ts` when a significant build should re-prompt returning visitors. Collate intake with:
+**Fallback:** if Supabase env is missing or the insert fails, the client still queues GitHub `repository_dispatch` `product-feedback` (same dispatch token as data challenges) into issues with usage table + labels + machine JSON.
 
-```bash
-npm run digest:feedback
-# or: python3 scripts/digest-product-feedback.py --repo owner/private-intake --jsonl /tmp/feedback.jsonl
-```
+**Secrets:**
+
+| Where | Name | Notes |
+| --- | --- | --- |
+| GitHub Actions (this repo) | `SUPABASE_SERVICE_ROLE_KEY` | Fine — Actions secrets are **per-repo**; does not collide with Home_learning |
+| Cursor cloud secrets | `SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY` (+ `SCHOOL_COMPASS_SUPABASE_URL`) | Required for agents — Cursor secrets are **shared by name**; do **not** overwrite Home Learning’s `SUPABASE_SERVICE_ROLE_KEY` |
+
+Triage: `npm run feedback:process -- list --status open` (needs School Compass service role). Bump `FEEDBACK_CAMPAIGN_ID` in `src/lib/buildMeta.ts` when a significant build should re-prompt returning visitors. Legacy issue collation: `npm run digest:feedback`.
 
 ```bash
 python3 scripts/harvest-schools.py
