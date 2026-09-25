@@ -273,9 +273,30 @@ export function resolveActiveTourSteps(
   });
 }
 
+/** Live-measure one tour target into document-space (null if missing/hidden). */
+export function measureTourTarget(
+  target: string,
+  doc: Document = document,
+  scrollX = typeof window !== "undefined" ? window.scrollX : 0,
+  scrollY = typeof window !== "undefined" ? window.scrollY : 0,
+): TourTargetCache | null {
+  const el = doc.querySelector(tourTargetSelector(target));
+  if (!(el instanceof HTMLElement)) return null;
+  const r = el.getBoundingClientRect();
+  if (r.width <= 0 || r.height <= 0) return null;
+  return {
+    target,
+    top: r.top + scrollY,
+    left: r.left + scrollX,
+    width: r.width,
+    height: r.height,
+  };
+}
+
 /**
- * Snapshot each step target’s document-space box once at tour start.
- * Later steps reuse this cache so we avoid re-querying / re-layout thrash.
+ * Snapshot each step target’s document-space box.
+ * Prefer remeasuring the active target before paint — cache is a fallback
+ * for scroll helpers and targets that briefly unmount between chapters.
  */
 export function cacheTourTargets(
   steps: TourStep[],
@@ -285,19 +306,101 @@ export function cacheTourTargets(
 ): Map<string, TourTargetCache> {
   const cache = new Map<string, TourTargetCache>();
   for (const step of steps) {
-    const el = doc.querySelector(tourTargetSelector(step.target));
-    if (!(el instanceof HTMLElement)) continue;
-    const r = el.getBoundingClientRect();
-    if (r.width <= 0 || r.height <= 0) continue;
-    cache.set(step.target, {
-      target: step.target,
-      top: r.top + scrollY,
-      left: r.left + scrollX,
-      width: r.width,
-      height: r.height,
-    });
+    const measured = measureTourTarget(step.target, doc, scrollX, scrollY);
+    if (measured) cache.set(step.target, measured);
   }
   return cache;
+}
+
+export type SpotlightClampOptions = {
+  /** Reserve vertical space for the tour card (mobile stacked layout). */
+  reserveBelow?: number;
+};
+
+/**
+ * Pad + clamp a viewport-space box so the spotlight fits the screen and
+ * leaves room for the dialog — especially on narrow stacked layouts.
+ */
+export function clampSpotlightRect(
+  rawTop: number,
+  rawLeft: number,
+  rawWidth: number,
+  rawHeight: number,
+  viewportWidth: number,
+  viewportHeight: number,
+  pad = TOUR_PAD,
+  opts: SpotlightClampOptions = {},
+): ViewportRect {
+  let top = rawTop - pad;
+  let left = rawLeft - pad;
+  let width = rawWidth + pad * 2;
+  let height = rawHeight + pad * 2;
+
+  const narrow = viewportWidth < 720;
+  const reserve = Math.max(0, opts.reserveBelow ?? 0);
+  // Cap huge chapter targets so the dialog always has undimmed room beside
+  // or below a readable focus band (Find map / Side by side wrappers).
+  // On narrow screens use nearly full width (old max(280, 0.7vw) clipped
+  // full-bleed heroes and left spotlights floating mid-column on iPhone).
+  const maxHeight = narrow
+    ? Math.max(
+        100,
+        Math.min(
+          Math.round(viewportHeight * 0.4),
+          viewportHeight - reserve - 28,
+        ),
+      )
+    : Math.max(160, Math.round(viewportHeight * 0.44));
+  const maxWidth = narrow
+    ? Math.max(0, viewportWidth - 16)
+    : Math.max(280, Math.round(viewportWidth * 0.7));
+
+  if (height > maxHeight) {
+    const focusOffset = Math.round((rawHeight - (maxHeight - pad * 2)) * 0.08);
+    top = rawTop + focusOffset - pad;
+    height = maxHeight;
+  }
+  if (width > maxWidth) {
+    // Prefer centering the focus band on the target when we must clip width.
+    if (narrow) {
+      const overflow = width - maxWidth;
+      left = rawLeft - pad + overflow / 2;
+    } else {
+      left = rawLeft - pad;
+    }
+    width = maxWidth;
+  }
+
+  // Keep the cutout on-screen after clamping.
+  left = Math.max(8, Math.min(left, viewportWidth - width - 8));
+  top = Math.max(8, Math.min(top, viewportHeight - height - 8));
+
+  return {
+    top,
+    left,
+    width: Math.min(viewportWidth - 16, width),
+    height: Math.min(viewportHeight - 16, height),
+  };
+}
+
+/** Convert a live client rect into a padded fixed-viewport spotlight. */
+export function viewportRectFromClientRect(
+  rect: Pick<DOMRect, "top" | "left" | "width" | "height">,
+  viewportWidth: number,
+  viewportHeight: number,
+  pad = TOUR_PAD,
+  opts: SpotlightClampOptions = {},
+): ViewportRect {
+  return clampSpotlightRect(
+    rect.top,
+    rect.left,
+    rect.width,
+    rect.height,
+    viewportWidth,
+    viewportHeight,
+    pad,
+    opts,
+  );
 }
 
 /** Convert a cached document box into a padded fixed-viewport spotlight rect. */
@@ -308,37 +411,21 @@ export function viewportRectFromCache(
   viewportWidth: number,
   viewportHeight: number,
   pad = TOUR_PAD,
+  opts: SpotlightClampOptions = {},
 ): ViewportRect {
-  const rawTop = cached.top - scrollY;
-  const rawLeft = cached.left - scrollX;
-  let top = rawTop - pad;
-  let left = rawLeft - pad;
-  let width = cached.width + pad * 2;
-  let height = cached.height + pad * 2;
-
-  // Cap huge chapter targets so the dialog always has undimmed room beside
-  // or below a readable focus band (Find map / Side by side wrappers).
-  const maxHeight = Math.max(160, Math.round(viewportHeight * 0.44));
-  const maxWidth = Math.max(280, Math.round(viewportWidth * 0.7));
-  if (height > maxHeight) {
-    const focusOffset = Math.round((cached.height - (maxHeight - pad * 2)) * 0.12);
-    top = rawTop + focusOffset - pad;
-    height = maxHeight;
-  }
-  if (width > maxWidth) {
-    left = rawLeft - pad;
-    width = maxWidth;
-  }
-
-  return {
-    top: Math.max(8, top),
-    left: Math.max(8, left),
-    width: Math.min(viewportWidth - 16, width),
-    height: Math.min(viewportHeight - 16, height),
-  };
+  return clampSpotlightRect(
+    cached.top - scrollY,
+    cached.left - scrollX,
+    cached.width,
+    cached.height,
+    viewportWidth,
+    viewportHeight,
+    pad,
+    opts,
+  );
 }
 
-/** Instant scroll so the cached target sits near the vertical centre. */
+/** Instant scroll so the target sits near the vertical centre. */
 export function scrollToCachedTarget(
   cached: TourTargetCache,
   viewportHeight: number,
@@ -348,6 +435,27 @@ export function scrollToCachedTarget(
   const top = Math.max(0, centerY - viewportHeight / 2 - headerOffset / 2);
   window.scrollTo({ top, left: 0, behavior: "auto" });
   return top;
+}
+
+/**
+ * Scroll a live element into a readable band, then return its client rect.
+ * Prefer this over document-cache scroll after mobile reflow / chapter flips.
+ */
+export function scrollTourTargetIntoView(
+  target: string,
+  viewportHeight: number,
+  headerOffset = TOUR_HEADER_OFFSET,
+  doc: Document = document,
+): DOMRect | null {
+  const el = doc.querySelector(tourTargetSelector(target));
+  if (!(el instanceof HTMLElement)) return null;
+  const before = el.getBoundingClientRect();
+  if (before.width <= 0 || before.height <= 0) return null;
+
+  const centerY = before.top + window.scrollY + before.height / 2;
+  const top = Math.max(0, centerY - viewportHeight / 2 - headerOffset / 2);
+  window.scrollTo({ top, left: 0, behavior: "auto" });
+  return el.getBoundingClientRect();
 }
 
 function clamp(n: number, min: number, max: number): number {

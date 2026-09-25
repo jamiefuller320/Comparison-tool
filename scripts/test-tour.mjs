@@ -10,6 +10,7 @@ async function main() {
     TOUR_SETUP_TILE_EVENT,
     TOUR_WARM_CHAPTER_EVENT,
     viewportRectFromCache,
+    clampSpotlightRect,
     placeTourCard,
     rectOverlapArea,
   } = await import("../src/lib/tour.ts");
@@ -258,6 +259,35 @@ async function main() {
   const cardCentre = beside.left + 180;
   if (cardCentre > tall.left + 40 && cardCentre < tall.left + tall.width - 40) {
     console.error("FAIL placeTourCard expected a side slot", beside);
+    process.exit(1);
+  }
+
+  // iPhone-width: full-bleed targets should use nearly the full viewport width
+  // (legacy max(280, 0.7vw) clipped heroes and left a mid-column cutout).
+  const phone = clampSpotlightRect(12, 8, 374, 220, 390, 844, 10, {
+    reserveBelow: 280,
+  });
+  if (phone.width < 350 || phone.width > 390 - 16) {
+    console.error("FAIL narrow spotlight should span nearly full width", phone);
+    process.exit(1);
+  }
+  if (phone.top + phone.height > 844 - 280) {
+    console.error("FAIL narrow spotlight should reserve card space", phone);
+    process.exit(1);
+  }
+
+  // Cached path on phone should match the same clamp rules.
+  const phoneCached = viewportRectFromCache(
+    { target: "hero", top: 12, left: 8, width: 374, height: 420 },
+    0,
+    0,
+    390,
+    844,
+    10,
+    { reserveBelow: 260 },
+  );
+  if (phoneCached.width < 350 || phoneCached.height > 844 * 0.45) {
+    console.error("FAIL phone viewportRectFromCache clamp", phoneCached);
     process.exit(1);
   }
 
