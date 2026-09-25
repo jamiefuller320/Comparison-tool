@@ -35,7 +35,6 @@ export function PageChapterNav({ sheet }: { sheet?: ReactNode }) {
     <nav
       className="page-chapter-nav page-chapter-nav-binder no-print"
       aria-label="Page chapters"
-      data-tour="page-chapters"
       data-chapter={chapter}
       data-chapter-step={step}
     >
@@ -47,6 +46,8 @@ export function PageChapterNav({ sheet }: { sheet?: ReactNode }) {
         activeId={chapter}
         onChange={setChapter}
         sheet={sheet}
+        /* Spotlight the tab rail only — not the attached chapter sheet. */
+        dataTour="page-chapters"
         leading={
           <button
             type="button"

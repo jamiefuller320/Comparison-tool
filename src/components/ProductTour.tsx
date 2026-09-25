@@ -15,13 +15,15 @@ import {
   cacheTourTargets,
   hasSeenTour,
   markTourSeen,
+  measureTourTarget,
   placeTourCard,
   requestTourSetupTile,
   requestTourWarmChapter,
   resolveActiveTourSteps,
-  scrollToCachedTarget,
-  viewportRectFromCache,
+  scrollTourTargetIntoView,
   tourTargetSelector,
+  viewportRectFromCache,
+  viewportRectFromClientRect,
   type TourStep,
   type TourTargetCache,
   type ViewportRect,
@@ -93,17 +95,80 @@ export function ProductTour() {
 
   const placeCard = useCallback((spotlight: ViewportRect | null) => {
     const size = cardSizeRef.current;
-    return placeTourCard(
-      spotlight,
-      window.innerWidth,
-      window.innerHeight,
-      Math.min(size.width, window.innerWidth - 32),
-      size.height,
-    );
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    // Match the mobile CSS that stretches the card edge-to-edge.
+    const cardWidth =
+      vw < 720 ? Math.max(280, vw - 32) : Math.min(size.width, vw - 32);
+    return placeTourCard(spotlight, vw, vh, cardWidth, size.height);
   }, []);
 
-  const paintFromCache = useCallback(
+  const spotlightOpts = useCallback(() => {
+    const vw = window.innerWidth;
+    if (vw >= 720) return {};
+    // Leave room under the cutout for the full-width tour card.
+    return { reserveBelow: cardSizeRef.current.height + 24 };
+  }, []);
+
+  const paintTarget = useCallback(
     (target: string, scrollToTarget: boolean) => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const opts = spotlightOpts();
+
+      if (scrollToTarget) {
+        scrollingRef.current = true;
+        scrollTourTargetIntoView(target, vh);
+        // Instant scroll — release the guard and remeasure on the next frame.
+        requestAnimationFrame(() => {
+          scrollingRef.current = false;
+          const el = document.querySelector(tourTargetSelector(target));
+          if (el instanceof HTMLElement) {
+            const box = el.getBoundingClientRect();
+            if (box.width > 0 && box.height > 0) {
+              const measured = measureTourTarget(target);
+              if (measured) cacheRef.current.set(target, measured);
+              const next = viewportRectFromClientRect(box, vw, vh, undefined, opts);
+              setRect(next);
+              setCardPos(placeCard(next));
+              return;
+            }
+          }
+          const cached = cacheRef.current.get(target);
+          if (!cached) {
+            setRect(null);
+            setCardPos(placeCard(null));
+            return;
+          }
+          const next = viewportRectFromCache(
+            cached,
+            window.scrollX,
+            window.scrollY,
+            vw,
+            vh,
+            undefined,
+            opts,
+          );
+          setRect(next);
+          setCardPos(placeCard(next));
+        });
+        return;
+      }
+
+      // Prefer live layout after mobile reflow / sticky headers / demos.
+      const measured = measureTourTarget(target);
+      if (measured) {
+        cacheRef.current.set(target, measured);
+        const el = document.querySelector(tourTargetSelector(target));
+        if (el instanceof HTMLElement) {
+          const box = el.getBoundingClientRect();
+          const next = viewportRectFromClientRect(box, vw, vh, undefined, opts);
+          setRect(next);
+          setCardPos(placeCard(next));
+          return;
+        }
+      }
+
       const cached = cacheRef.current.get(target);
       if (!cached) {
         setRect(null);
@@ -111,26 +176,19 @@ export function ProductTour() {
         return;
       }
 
-      if (scrollToTarget) {
-        scrollingRef.current = true;
-        scrollToCachedTarget(cached, window.innerHeight);
-        // Instant scroll — release the guard on the next frame.
-        requestAnimationFrame(() => {
-          scrollingRef.current = false;
-        });
-      }
-
       const next = viewportRectFromCache(
         cached,
         window.scrollX,
         window.scrollY,
-        window.innerWidth,
-        window.innerHeight,
+        vw,
+        vh,
+        undefined,
+        opts,
       );
       setRect(next);
       setCardPos(placeCard(next));
     },
-    [placeCard],
+    [placeCard, spotlightOpts],
   );
 
   const rebuildCache = useCallback((active: TourStep[]) => {
@@ -307,7 +365,7 @@ export function ProductTour() {
           return;
         }
 
-        paintFromCache(step.target, true);
+        paintTarget(step.target, true);
 
         if (step.demo === "expand-year-trend") {
           if (demoTimerRef.current != null) {
@@ -316,11 +374,11 @@ export function ProductTour() {
           demoTimerRef.current = window.setTimeout(() => {
             if (cancelled || runId !== demoRunIdRef.current) return;
             rebuildCache(steps);
-            paintFromCache("year-trend", true);
+            paintTarget("year-trend", true);
             const panel = document.querySelector(".history-panel-inline");
             if (panel instanceof HTMLElement) {
               panel.scrollIntoView({ behavior: "auto", block: "nearest" });
-              paintFromCache("year-trend", false);
+              paintTarget("year-trend", false);
             }
           }, 420);
         }
@@ -343,7 +401,7 @@ export function ProductTour() {
     index,
     ensureChapterForTarget,
     rebuildCache,
-    paintFromCache,
+    paintTarget,
   ]);
 
   useEffect(() => {
@@ -388,27 +446,50 @@ export function ProductTour() {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
         rafRef.current = null;
-        paintFromCache(step.target, false);
+        paintTarget(step.target, false);
       });
     }
 
-    function onResize() {
-      // Viewport change invalidates document boxes — rebuild once, then paint.
+    function onViewportChange() {
+      // Layout or iOS chrome changed — remasure live targets, then paint.
       rebuildCache(steps);
-      if (step) paintFromCache(step.target, false);
+      if (step) paintTarget(step.target, false);
     }
 
     window.addEventListener("scroll", schedulePaint, { passive: true });
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onViewportChange);
+    const vv = window.visualViewport;
+    vv?.addEventListener("resize", onViewportChange);
+    vv?.addEventListener("scroll", schedulePaint);
+
+    const targetEl = step
+      ? document.querySelector(tourTargetSelector(step.target))
+      : null;
+    let ro: ResizeObserver | null = null;
+    if (targetEl instanceof HTMLElement) {
+      ro = new ResizeObserver(() => schedulePaint());
+      ro.observe(targetEl);
+    }
+
     return () => {
       window.removeEventListener("scroll", schedulePaint);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("resize", onViewportChange);
+      vv?.removeEventListener("resize", onViewportChange);
+      vv?.removeEventListener("scroll", schedulePaint);
+      ro?.disconnect();
       if (rafRef.current != null) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
     };
-  }, [open, step, steps, paintFromCache, rebuildCache]);
+  }, [open, step, steps, paintTarget, rebuildCache]);
+
+  // When the tour card resizes on narrow screens, re-clamp the spotlight so
+  // the dialog and cutout stop overlapping after copy/busy-line changes.
+  useEffect(() => {
+    if (!open || !step || window.innerWidth >= 720) return;
+    paintTarget(step.target, false);
+  }, [open, step, cardSize, paintTarget]);
 
   useEffect(() => {
     if (!open) return;

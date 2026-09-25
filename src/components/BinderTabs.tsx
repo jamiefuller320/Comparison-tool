@@ -153,6 +153,11 @@ export function BinderTabs<Id extends string>({
     };
   }, [activeId, hasSheet, items.length]);
 
+  // With an attached sheet, anchor the walkthrough on the tab strip only so
+  // mobile spotlights don't swallow the whole binder body after reflow.
+  const rootTour = dataTour && !hasSheet ? dataTour : undefined;
+  const stripTour = dataTour && hasSheet ? dataTour : undefined;
+
   return (
     <div
       ref={binderRef}
@@ -163,7 +168,7 @@ export function BinderTabs<Id extends string>({
       data-stuck="false"
       data-active-index={activeIndex}
       data-tab-count={items.length}
-      data-tour={dataTour}
+      data-tour={rootTour}
       style={
         {
           "--binder-tab-count": String(items.length),
@@ -171,7 +176,7 @@ export function BinderTabs<Id extends string>({
       }
     >
       {hasLeading ? (
-        <div className="binder-rail">
+        <div className="binder-rail" data-tour={stripTour}>
           <div className="binder-leading">{leading}</div>
           <div className="binder-tabs" role="tablist" aria-label={ariaLabel}>
             {items.map((item) => {
@@ -212,7 +217,12 @@ export function BinderTabs<Id extends string>({
           </div>
         </div>
       ) : (
-        <div className="binder-tabs" role="tablist" aria-label={ariaLabel}>
+        <div
+          className="binder-tabs"
+          role="tablist"
+          aria-label={ariaLabel}
+          data-tour={stripTour}
+        >
           {items.map((item) => {
             const isActive = item.id === activeId;
             const isDone = Boolean(item.done);
