@@ -1,0 +1,98 @@
+name: Human-gated review digest
+
+# Weekly collation of open human-gated qualitative improvement signals
+# (spot-check ambiguous/ethos + user-improvement thumbs that stay gated).
+# Writes a reviewable digest under public/data/packs + durable queue in output/.
+# Does NOT auto-apply gated phrases.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Print digest only (no commit)
+        required: false
+        type: boolean
+        default: false
+      open_issue:
+        description: Open a weekly summary GitHub issue when items are open
+        required: false
+        type: boolean
+        default: false
+      auto_close_learned:
+        description: Mark phrase items done when already in learned-qa-patterns.json
+        required: false
+        type: boolean
+        default: true
+      include_issues:
+        description: Scan open [user-improvement] GitHub issues
+        required: false
+        type: boolean
+        default: true
+  schedule:
+    # Mondays 14:00 UTC — after daily feedback (08:00), quality (10:00), spot-check (12:00)
+    - cron: "0 14 * * 1"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: human-gated-review
+  cancel-in-progress: false
+
+jobs:
+  collate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Collate human-gated review digest
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          OPEN_ISSUE: ${{ github.event.inputs.open_issue || 'false' }}
+          AUTO_CLOSE: ${{ github.event.inputs.auto_close_learned || 'true' }}
+          INCLUDE_ISSUES: ${{ github.event.inputs.include_issues || 'true' }}
+          GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
+          CHALLENGE_INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          ARGS=()
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          if [ "$OPEN_ISSUE" = "true" ]; then
+            ARGS+=(--open-issue)
+          fi
+          if [ "$AUTO_CLOSE" = "true" ]; then
+            ARGS+=(--auto-close-learned)
+          fi
+          if [ "$INCLUDE_ISSUES" = "true" ]; then
+            ARGS+=(--include-issues)
+          else
+            ARGS+=(--no-include-issues)
+          fi
+          python3 scripts/collate-human-gated-review.py "${ARGS[@]}"
+
+      - name: Commit digest + durable queue
+        if: ${{ (github.event_name == 'schedule') || (github.event.inputs.dry_run != 'true') }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p output public/data/packs
+          git add -f \
+            public/data/packs/human-gated-review-latest.json \
+            public/data/packs/human-gated-review-latest.md \
+            output/human-gated-review-queue.jsonl || true
+          if git diff --staged --quiet; then
+            echo "No human-gated review changes"
+          else
+            git commit -m "Human-gated review: weekly digest"
+            bash scripts/ci-rebase-push.sh origin main
+          fi

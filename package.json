@@ -98,6 +98,9 @@
     "feedback:improvement-flags": "npx --yes tsx scripts/process-user-improvement-flags.ts",
     "test:gha-secret-hygiene": "python3 scripts/test_gha_secret_hygiene.py",
     "digest:feedback": "python3 scripts/digest-product-feedback.py",
+    "review:human-gated": "python3 scripts/collate-human-gated-review.py",
+    "digest:human-gated": "python3 scripts/collate-human-gated-review.py",
+    "test:human-gated-review": "python3 scripts/test-collate-human-gated-review.py",
     "qa:human-flags": "python3 scripts/record-human-qa-flags.py",
     "test:user-improvement-flags": "npx --yes tsx scripts/test-user-improvement-flags.mjs && python3 scripts/test-classify-user-improvement-flag.py"
   },

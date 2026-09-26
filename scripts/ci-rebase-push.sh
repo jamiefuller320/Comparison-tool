@@ -12,7 +12,7 @@ MAX_ATTEMPTS="${3:-5}"
 is_qualitative_data_path() {
   local path="$1"
   case "$path" in
-    output/qualitative-*|output/learned-qa-patterns.json|output/learned-url-terms.json|public/data/schools-index.json|public/data/packs/qualitative-*|public/data/qualitative/*)
+    output/qualitative-*|output/learned-qa-patterns.json|output/learned-url-terms.json|output/human-gated-review-queue.jsonl|public/data/schools-index.json|public/data/packs/qualitative-*|public/data/packs/human-gated-review-latest.*|public/data/qualitative/*)
       return 0
     ;;
   esac
