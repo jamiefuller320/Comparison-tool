@@ -16,6 +16,7 @@ import {
   shortQualitativeSummary,
   type SourceGroupKey,
 } from "@/lib/qualitativeEvidence";
+import { SummaryUsefulVote } from "@/components/SummaryUsefulVote";
 
 function CitedParagraph({
   text,
@@ -144,6 +145,13 @@ function AreaBlock({
             : "Built from scanned sources"}
         </p>
       ) : null}
+      <SummaryUsefulVote
+        urn={school.urn}
+        schoolName={school.name}
+        area={area.area}
+        snippet={paragraph}
+        surface="compare"
+      />
       {open ? (
         <div className="qual-evidence-sources">
           {(Object.keys(groups) as SourceGroupKey[]).map((key) => (
@@ -169,6 +177,13 @@ export function QualitativeEvidenceSummary({ school }: { school: SchoolRecord })
     <div className="qual-evidence-summary">
       <p className="qual-evidence-kicker">From school website scan</p>
       <p className="qual-evidence-summary-body">{summary}</p>
+      <SummaryUsefulVote
+        urn={school.urn}
+        schoolName={school.name}
+        area={null}
+        snippet={summary}
+        surface="compare"
+      />
     </div>
   );
 }

@@ -164,6 +164,23 @@ export function classifyFeedback(row: FeedbackRow): {
   action: ProposedAction;
   note: string;
 } {
+  // Summary thumbs / website-scan flags are handled by
+  // process-user-improvement-flags.ts (quality path) — skip generic UX triage.
+  const usageFlag =
+    row.usage && typeof row.usage === "object"
+      ? (row.usage as Record<string, unknown>).improvementFlag
+      : null;
+  if (
+    row.trigger === "summary-vote" ||
+    (Array.isArray(row.topics) && row.topics.includes("website-scan")) ||
+    (usageFlag && typeof usageFlag === "object")
+  ) {
+    return {
+      action: "needs_clarification",
+      note: "Deferred to process-user-improvement-flags (quality / learned-QA path).",
+    };
+  }
+
   const note = (row.note || "").trim();
   const lower = note.toLowerCase();
   const topics = Array.isArray(row.topics) ? row.topics : [];
@@ -384,6 +401,13 @@ async function cmdRoute(args: string[]): Promise<void> {
 
   for (const row of rows) {
     const { action, note } = classifyFeedback(row);
+    // Leave summary-vote / website-scan rows open for the quality processor.
+    if (
+      note.includes("Deferred to process-user-improvement-flags")
+    ) {
+      console.log(`- ${row.id} → skip (improvement-flag queue)`);
+      continue;
+    }
     console.log(`- ${row.id} → ${action}: ${note}`);
     if (dryRun) continue;
 

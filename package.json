@@ -95,9 +95,11 @@
     "test:provision-nav": "npx --yes tsx scripts/test-provision-nav.mjs",
     "test:product-feedback": "npx --yes tsx scripts/test-product-feedback.mjs",
     "feedback:process": "npx --yes tsx scripts/process-product-feedback.ts",
+    "feedback:improvement-flags": "npx --yes tsx scripts/process-user-improvement-flags.ts",
     "test:gha-secret-hygiene": "python3 scripts/test_gha_secret_hygiene.py",
     "digest:feedback": "python3 scripts/digest-product-feedback.py",
-    "qa:human-flags": "python3 scripts/record-human-qa-flags.py"
+    "qa:human-flags": "python3 scripts/record-human-qa-flags.py",
+    "test:user-improvement-flags": "npx --yes tsx scripts/test-user-improvement-flags.mjs && python3 scripts/test-classify-user-improvement-flag.py"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
