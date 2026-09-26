@@ -4,6 +4,10 @@ name: Qualitative quality loop
 # analyse → full apply when the learned-QA library changed significantly
 # (or weekly max-age / --force) → merge → digest.
 # Unchanged learning days write an analyse-only digest (no sidecar churn).
+#
+# Closed loop: coverage (~07:00) → this quality apply (10:00) →
+# spot-check (12:00, may auto-learn chrome/PDF) → optional same-day re-dispatch
+# of this workflow with force=true when spot-check recorded safe learnings.
 on:
   workflow_dispatch:
     inputs:

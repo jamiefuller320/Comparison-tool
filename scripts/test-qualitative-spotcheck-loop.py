@@ -14,7 +14,10 @@ sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(ROOT / "tools" / "school-capture"))
 
 from qualitative_spotcheck import (  # noqa: E402
+    MAX_SAMPLE_SIZE,
     assess_school,
+    is_safe_auto_learn_phrase,
+    partition_learning_candidates,
     run_spotcheck,
     select_sample,
 )
@@ -148,6 +151,7 @@ def test_chrome_and_pdf_fail() -> None:
         assert "chrome_in_offerings" in codes
         assert "pdf_fragment_junk" in codes
         assert result.chromeOfferings
+        assert result.pdfJunkOfferings
         # Ethos language on site should surface possible underclaim warn.
         assert "possible_underclaim" in codes
 
@@ -189,6 +193,24 @@ def test_select_sample_respects_only_urns() -> None:
         assert sample == ["900002"]
 
 
+def test_safe_auto_learn_guardrails() -> None:
+    assert is_safe_auto_learn_phrase("Dinner Menu")
+    assert is_safe_auto_learn_phrase("Pay Online")
+    assert is_safe_auto_learn_phrase("Ascending")
+    # Ambiguous / SEND-directory without prior learning stays gated.
+    assert not is_safe_auto_learn_phrase("Zones of Regulation")
+    # Ethos / mission phrases are never safe chrome learnings.
+    assert not is_safe_auto_learn_phrase("Let all you do be done with love")
+    auto, gated = partition_learning_candidates(
+        [
+            {"phrase": "Dinner Menu", "junkClass": "spotcheck_chrome"},
+            {"phrase": "Zones of Regulation", "junkClass": "spotcheck_chrome"},
+        ]
+    )
+    assert [e["phrase"] for e in auto] == ["Dinner Menu"]
+    assert [e["phrase"] for e in gated] == ["Zones of Regulation"]
+
+
 def test_run_spotcheck_offline_writes_digest() -> None:
     with tempfile.TemporaryDirectory() as raw:
         tmp = Path(raw)
@@ -196,11 +218,13 @@ def test_run_spotcheck_offline_writes_digest() -> None:
         digest_json = tmp / "spot.json"
         digest_md = tmp / "spot.md"
         candidates = tmp / "candidates.jsonl"
+        learned = tmp / "learned-qa-patterns.json"
         payload = run_spotcheck(
             sample_size=2,
             seed=1,
             only_urns=["900001", "900002"],
             dry_run=False,
+            auto_learn=True,
             offline_sources={
                 "900001": SOURCE_ETHOS_RICH,
                 "900002": SOURCE_CLEAN,
@@ -211,6 +235,7 @@ def test_run_spotcheck_offline_writes_digest() -> None:
             digest_json=digest_json,
             digest_md=digest_md,
             candidates_path=candidates,
+            learned_path=learned,
         )
         assert payload["failCount"] >= 1
         assert digest_json.is_file()
@@ -219,7 +244,65 @@ def test_run_spotcheck_offline_writes_digest() -> None:
         lines = [ln for ln in candidates.read_text(encoding="utf-8").splitlines() if ln]
         assert lines, "expected chrome candidates from failing school"
         row = json.loads(lines[0])
-        assert row.get("junkClass") == "spotcheck_chrome"
+        assert row.get("junkClass") in {"spotcheck_chrome", "spotcheck_pdf"}
+        # Denylist chrome/PDF should auto-learn and request quality apply.
+        assert payload["flagsRecorded"] is True
+        assert payload["qualityApplyRequested"] is True
+        assert payload["autoLearnedCount"] >= 1
+        assert learned.is_file()
+        store = json.loads(learned.read_text(encoding="utf-8"))
+        phrases = {str(p).lower() for p in (store.get("phrases") or [])}
+        stats = {str(k).lower() for k in (store.get("stats") or {})}
+        known = phrases | stats
+        assert "dinner menu" in known or "ascending" in known
+
+
+def test_auto_learn_disabled_skips_store() -> None:
+    with tempfile.TemporaryDirectory() as raw:
+        tmp = Path(raw)
+        shards, root_index, packs = _write_fixture_tree(tmp)
+        learned = tmp / "learned-qa-patterns.json"
+        payload = run_spotcheck(
+            sample_size=2,
+            seed=1,
+            only_urns=["900001", "900002"],
+            dry_run=False,
+            auto_learn=False,
+            offline_sources={
+                "900001": SOURCE_ETHOS_RICH,
+                "900002": SOURCE_CLEAN,
+            },
+            shards_dir=shards,
+            root_index=root_index,
+            packs_root=packs,
+            digest_json=tmp / "spot.json",
+            digest_md=tmp / "spot.md",
+            candidates_path=tmp / "candidates.jsonl",
+            learned_path=learned,
+        )
+        assert payload["candidatesWritten"] >= 1
+        assert payload["flagsRecorded"] is False
+        assert payload["qualityApplyRequested"] is False
+        assert not learned.is_file()
+
+
+def test_sample_size_hard_cap() -> None:
+    with tempfile.TemporaryDirectory() as raw:
+        tmp = Path(raw)
+        shards, root_index, packs = _write_fixture_tree(tmp)
+        payload = run_spotcheck(
+            sample_size=MAX_SAMPLE_SIZE + 50,
+            seed=1,
+            only_urns=["900001", "900002"],
+            dry_run=True,
+            shards_dir=shards,
+            root_index=root_index,
+            packs_root=packs,
+            digest_json=tmp / "spot.json",
+            digest_md=tmp / "spot.md",
+        )
+        assert payload["sampleSize"] <= MAX_SAMPLE_SIZE
+        assert payload["sampleSize"] == 2  # only two fixture URNs
 
 
 def test_cli_dry_run() -> None:
@@ -230,6 +313,7 @@ def test_cli_dry_run() -> None:
             sys.executable,
             str(ROOT / "scripts" / "run-qualitative-spotcheck-loop.py"),
             "--dry-run",
+            "--no-auto-learn",
             "--sample-size",
             "3",
             "--seed",
@@ -250,7 +334,10 @@ def main() -> int:
     test_chrome_and_pdf_fail()
     test_clean_pass()
     test_select_sample_respects_only_urns()
+    test_safe_auto_learn_guardrails()
     test_run_spotcheck_offline_writes_digest()
+    test_auto_learn_disabled_skips_store()
+    test_sample_size_hard_cap()
     test_cli_dry_run()
     print("OK qualitative-spotcheck-loop tests")
     return 0
