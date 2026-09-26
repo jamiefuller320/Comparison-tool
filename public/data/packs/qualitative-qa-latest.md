@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-25T14:58:53.266596+00:00`
+- Ran at: `2026-09-26T13:36:19.399037+00:00`
 - Provider: `none`
-- Reviewed: `245`
-- Schools changed: `218`
-- Findings applied: `259`
-- New learned phrases: `265`
+- Reviewed: `16`
+- Schools changed: `15`
+- Findings applied: `48`
+- New learned phrases: `21`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 218 school(s) (259 area finding(s)).
-- Learned 265 new junk phrase(s) (store size 900).
-- Reviewed top 245 suspect(s); provider=none.
+- Applied QA fixes to 15 school(s) (48 area finding(s)).
+- Learned 21 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `100943` William Davis Primary School — score 51.0 flags=named_person,implausible_offerings,chrome
-- `113853` Cranborne Middle School — score 32.0 flags=named_person,implausible_offerings
-- `100616` St Jude's Church of England Primary School — score 32.0 flags=named_person,implausible_offerings
-- `123025` North Kidlington Primary School — score 30.0 flags=named_person,implausible_offerings,chrome
-- `118864` Greatstone Primary School — score 24.0 flags=named_person,implausible_offerings
-- `110411` Marsh Gibbon CofE Primary School — score 24.0 flags=named_person,implausible_offerings
-- `136317` Sandwich Technology School — score 24.0 flags=named_person,implausible_offerings
-- `126155` St Anthony's School — score 24.0 flags=named_person,implausible_offerings
-- `125278` St Bede's School — score 24.0 flags=named_person,implausible_offerings
-- `126047` St Andrew's CofE Primary School — score 19.0 flags=named_person,implausible_offerings,chrome
-- `136078` Barncroft Primary School — score 16.0 flags=named_person,implausible_offerings
-- `114606` Blatchington Mill School — score 16.0 flags=named_person,implausible_offerings
-- `115968` Fryern Infant School — score 16.0 flags=named_person,implausible_offerings
-- `115884` Fryern Junior School — score 16.0 flags=named_person,implausible_offerings
-- `135212` Garlinge Primary School and Nursery — score 16.0 flags=named_person,implausible_offerings
-- `137850` Goldsworth Primary School — score 16.0 flags=named_person,implausible_offerings
-- `147087` Harbour School Dorset — score 16.0 flags=named_person,implausible_offerings
-- `100631` St Bede's Catholic Primary School — score 16.0 flags=named_person,implausible_offerings
-- `100615` St John's Angell Town Church of England Primary School — score 16.0 flags=named_person,implausible_offerings
-- `116320` Twyford St Mary's Church of England Primary School — score 16.0 flags=named_person,implausible_offerings
+- `145888` John Keats Primary School — score 32.0 flags=policy_toc,implausible_offerings,chrome
+- `144893` Glebe School — score 24.0 flags=policy_toc,chrome,implausible_offerings
+- `101969` John Chilton School — score 24.0 flags=policy_toc,chrome,implausible_offerings
+- `131843` Brunswick Park Primary School — score 22.0 flags=chrome,policy_toc,implausible_offerings
+- `118264` Lawn Primary School — score 15.0 flags=policy_toc,implausible_offerings
+- `101894` Dairy Meadow Primary School — score 14.0 flags=policy_toc,implausible_offerings,chrome
+- `136281` Kemnal Technology College — score 14.0 flags=policy_toc,chrome,implausible_offerings
+- `149604` Grove Primary School — score 13.0 flags=chrome,policy_toc,implausible_offerings,cms_chrome
+- `134369` Alec Reed Academy — score 12.0 flags=chrome
+- `137244` Biggin Hill Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `136545` Charles Darwin School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `101695` Darul Uloom London School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
+- `149534` Downe Primary School — score 10.0 flags=policy_toc,implausible_offerings
+- `139488` Brentside Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `101910` Featherstone Primary and Nursery School — score 8.0 flags=policy_toc,chrome,implausible_offerings
