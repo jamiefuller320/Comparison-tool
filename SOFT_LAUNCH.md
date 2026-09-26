@@ -96,7 +96,7 @@ Phases and budget-tuning notes live under **Continuous SEO coverage automation**
 
 ### Qualitative source spot-check loop
 
-Daily GitHub Action (12:00 UTC) + `workflow_dispatch` samples ~7 published qualitative shards (SE + London mix), fetches live school HTML, and compares parent-facing offerings/narratives to the human fidelity bar (chrome pollution, PDF junk, overclaim, possible underclaim). Writes `qualitative-spotcheck-latest.{json,md}`; chrome phrases land in `output/spotcheck-human-flag-candidates.jsonl` for `npm run qa:human-flags`. Not a hard Pages deploy gate unless `--strict`.
+Daily GitHub Action (12:00 UTC) + `workflow_dispatch` runs **after** the morning quality apply. It samples ~7 published qualitative shards (SE + London mix; hard-capped so cost does not grow with corpus size), fetches live school HTML, and compares parent-facing offerings/narratives to the human fidelity bar. Safe chrome/PDF/nav phrases **auto-integrate** into `learned-qa-patterns.json` and re-dispatch quality apply; ethos underclaim and ambiguous candidates stay human-gated (`output/spotcheck-human-gated-candidates.jsonl` → `npm run qa:human-flags`). Not a hard Pages deploy gate unless `--strict`.
 
 ```bash
 npm run loop:qualitative-spotcheck -- --dry-run
