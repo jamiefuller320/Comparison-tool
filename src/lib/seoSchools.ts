@@ -23,10 +23,10 @@ import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 export const SEO_TOWN_MIN_SCHOOLS = 8;
 
 /** Default static-export budget (school HTML pages). */
-export const SEO_DEFAULT_MAX_SCHOOL_PAGES = 1500;
+export const SEO_DEFAULT_MAX_SCHOOL_PAGES = 5000;
 
 /** Default town-page budget across all included areas. */
-export const SEO_DEFAULT_MAX_TOWN_PAGES = 80;
+export const SEO_DEFAULT_MAX_TOWN_PAGES = 160;
 
 export type SeoCoveragePolicy = {
   seedAlwaysIncluded: boolean;

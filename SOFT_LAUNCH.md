@@ -86,7 +86,11 @@ Weekly GitHub Action (Fri 07:00 UTC) + `workflow_dispatch` expands school/town S
 npm run report:seo-coverage
 npm run loop:seo-coverage -- --dry-run
 npm run loop:seo-coverage -- --max-new-areas 4
+# London wave (keeps existing SE areas; priority anchors first):
+npm run loop:seo-coverage -- --prefer-london --max-new-areas 40
 ```
+
+Hard caps live in `seo-coverage.json` (`maxSchoolPages` / `maxTownPages`); town landings still require `townMinSchools` (default 8). Sitemap + `llms.txt` follow included slugs only — no mass URL injection outside the budgeted set.
 
 Phases and budget-tuning notes live under **Continuous SEO coverage automation** in `DEFERRED_IDEAS.md`.
 

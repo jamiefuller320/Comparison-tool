@@ -64,7 +64,7 @@ Goal: grow crawlable school/town landings as ready packs increase **without** pu
 | --- | --- | --- | --- |
 | **1. Coverage manifest + budgeted landings** | `public/data/seo-coverage.json` gates which LAs get `/schools/{urn}/` and `/areas/{la}/towns/` pages; Hampshire always included; build reads the manifest | **Shipped** | `src/lib/seoSchools.ts`; sitemap + town hubs follow included slugs |
 | **2. Scheduled expansion loop** | Weekly assess ready packs → add whole LAs that fit school/town page budgets (signal floor + interest weighting) → commit coverage + digest | **Shipped** | `npm run loop:seo-coverage`; `.github/workflows/seo-coverage-loop.yml` (Fri 07:00 UTC + dispatch); `npm run report:seo-coverage` |
-| **3. Raise / tune page budget** | Lift `maxSchoolPages` / `maxTownPages` once Pages build time and artifact size stay healthy after several expansion waves | Not started | Watch deploy job duration + `out/` size after loop adds packs |
+| **3. Raise / tune page budget** | Lift `maxSchoolPages` / `maxTownPages` once Pages build time and artifact size stay healthy after several expansion waves | **In progress** (2026-09: raised to 5000 / 160 for London borough SEO wave via `--prefer-london`; watch Pages build duration + `out/` size) | Next: remaining SE packs (Kent/Surrey/…) once deploy stays healthy |
 | **4. Finder → school SEO deep link** | Optional directory/list link from Finder into `/schools/{urn}/` when that URN is in coverage | Not started | Product polish; not required for crawl growth |
 
 **Out of this track:** rewriting area/stage/guide landings (already region-wide); GSC manual validation; national full-URN dump.

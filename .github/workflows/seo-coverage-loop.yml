@@ -9,6 +9,11 @@ on:
         description: Max ready packs to add this run
         required: false
         default: "4"
+      prefer_london:
+        description: Only add London borough packs (keeps SE intact; phased anchors first)
+        required: false
+        type: boolean
+        default: false
       dry_run:
         description: Digest only (do not update seo-coverage.json)
         required: false
@@ -39,12 +44,16 @@ jobs:
       - name: Run SEO coverage loop
         env:
           MAX_NEW: ${{ github.event.inputs.max_new_areas || '4' }}
+          PREFER_LONDON: ${{ github.event.inputs.prefer_london || 'false' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           CHALLENGE_INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO }}
           GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           ARGS=(--max-new-areas "$MAX_NEW")
+          if [ "$PREFER_LONDON" = "true" ]; then
+            ARGS+=(--prefer-london)
+          fi
           if [ "$DRY_RUN" = "true" ]; then
             ARGS+=(--dry-run)
           fi
@@ -58,7 +67,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/data/seo-coverage.json \
             public/data/seo-coverage-loop-latest.json \
-            public/data/seo-coverage-loop-latest.md
+            public/data/seo-coverage-loop-latest.md \
+            public/data/seo-urns.json \
+            public/data/aeo-readiness.json \
+            public/llms.txt
           if git diff --staged --quiet; then
             echo "No SEO coverage changes"
           else
