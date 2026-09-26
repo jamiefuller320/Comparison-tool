@@ -9,6 +9,7 @@ toward parent interest and packs with unique crawlable signal.
 Usage:
   python3 scripts/run-seo-coverage-loop.py --dry-run
   python3 scripts/run-seo-coverage-loop.py --max-new-areas 4
+  python3 scripts/run-seo-coverage-loop.py --prefer-london --max-new-areas 40
 """
 
 from __future__ import annotations
@@ -30,7 +31,13 @@ from pack_interest import (  # noqa: E402
     combine_interest_scores,
     interest_pct_boost,
 )
-from seed_scope import SEED_LOCAL_AUTHORITY, la_slug  # noqa: E402
+from seed_scope import (  # noqa: E402
+    DEFAULT_PARALLEL_QUALITATIVE_LAS_LONDON,
+    SEED_LOCAL_AUTHORITY,
+    is_london_borough_local_authority,
+    la_slug,
+    normalize_la_name,
+)
 
 
 def _load_report_mod() -> ModuleType:
@@ -56,6 +63,14 @@ MIN_SIGNAL_PCT = 70.0
 # Soft readiness: at least one town landing worth publishing.
 MIN_TOWN_COUNT = 1
 
+# London SEO wave priority: qualitative ingest anchors first, then signal/interest.
+# Used when --prefer-london so a tight budget still keeps SE intact and ships
+# highest-value boroughs before the long tail.
+_LONDON_PRIORITY_LAS = {
+    normalize_la_name(la).lower()
+    for la in DEFAULT_PARALLEL_QUALITATIVE_LAS_LONDON
+}
+
 
 def utc_now_iso() -> str:
     return (
@@ -79,13 +94,30 @@ def rank_key(row: dict, interest_by_slug: dict[str, float] | None = None) -> tup
     )
 
 
+def london_rank_key(
+    row: dict, interest_by_slug: dict[str, float] | None = None
+) -> tuple:
+    """London wave: phase-0 anchors first, then normal signal/interest ranking."""
+    la = normalize_la_name(row.get("localAuthority")).lower()
+    phase = 0 if la in _LONDON_PRIORITY_LAS else 1
+    return (phase, *rank_key(row, interest_by_slug))
+
+
 def select_expansions(
     report: dict,
     *,
     max_new_areas: int,
     interest_by_slug: dict[str, float] | None = None,
+    prefer_london: bool = False,
 ) -> list[dict]:
-    """Pick ready packs to add while school + town budgets allow."""
+    """Pick ready packs to add while school + town budgets allow.
+
+    When prefer_london is True, only London borough packs are candidates
+    (keeps SE coverage intact while a dedicated London wave fills landings).
+    Priority boroughs (qualitative anchors) rank first so a partial wave
+    still ships the highest-value LAs if budget or --max-new-areas is tight.
+    Quality gates (signal floor, town count) still apply — no thin doorway LAs.
+    """
     if max_new_areas <= 0:
         return []
 
@@ -98,7 +130,15 @@ def select_expansions(
         and int(row.get("townCount") or 0) >= MIN_TOWN_COUNT
         and int(row.get("schoolCount") or 0) > 0
     ]
-    candidates.sort(key=lambda r: rank_key(r, interest_by_slug))
+    if prefer_london:
+        candidates = [
+            row
+            for row in candidates
+            if is_london_borough_local_authority(row.get("localAuthority"))
+        ]
+        candidates.sort(key=lambda r: london_rank_key(r, interest_by_slug))
+    else:
+        candidates.sort(key=lambda r: rank_key(r, interest_by_slug))
 
     selected: list[dict] = []
     for row in candidates:
@@ -202,6 +242,7 @@ def run(
     max_new_areas: int = 4,
     dry_run: bool = False,
     skip_interest: bool = False,
+    prefer_london: bool = False,
 ) -> dict:
     coverage = read_coverage()
     before = collect_report(coverage)
@@ -217,6 +258,7 @@ def run(
         before,
         max_new_areas=max_new_areas,
         interest_by_slug=interest_by_slug,
+        prefer_london=prefer_london,
     )
 
     new_slugs = list(coverage["includedAreaSlugs"])
@@ -285,11 +327,20 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Ignore pack_interest scores (tests / offline)",
     )
+    parser.add_argument(
+        "--prefer-london",
+        action="store_true",
+        help=(
+            "Only expand with London borough packs this run "
+            "(use after raising page budget for a London wave)"
+        ),
+    )
     args = parser.parse_args(argv)
     run(
         max_new_areas=args.max_new_areas,
         dry_run=args.dry_run,
         skip_interest=args.skip_interest,
+        prefer_london=args.prefer_london,
     )
     return 0
 

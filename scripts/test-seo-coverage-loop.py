@@ -55,7 +55,8 @@ def main() -> int:
         missing = Path(tmp) / "missing.json"
         cov = report_mod.read_coverage(missing)
         assert cov["includedAreaSlugs"] == ["hampshire"], cov
-        assert cov["pageBudget"]["maxSchoolPages"] == 1500
+        assert cov["pageBudget"]["maxSchoolPages"] == 5000
+        assert cov["pageBudget"]["maxTownPages"] == 160
         assert cov["policy"]["townMinSchools"] == 8
 
         path = Path(tmp) / "seo-coverage.json"
@@ -117,6 +118,33 @@ def main() -> int:
     # Cap max_new_areas
     capped = loop.select_expansions(before, max_new_areas=1)
     assert len(capped) == 1
+
+    # prefer_london skips non-London candidates even when they fit.
+    mixed = {
+        "candidates": [
+            candidate("Southampton", "southampton", schools=83, towns=1, signal=97.0),
+            candidate("Lambeth", "lambeth", schools=97, towns=1, signal=93.0),
+            candidate("Newham", "newham", schools=108, towns=1, signal=98.0),
+            candidate(
+                "Tower Hamlets", "tower-hamlets", schools=112, towns=1, signal=92.0
+            ),
+        ],
+        "totals": {"schoolBudgetRemaining": 500, "townBudgetRemaining": 20},
+    }
+    london_only = loop.select_expansions(
+        mixed, max_new_areas=4, prefer_london=True
+    )
+    london_slugs = [r["slug"] for r in london_only]
+    assert "southampton" not in london_slugs, london_slugs
+    assert "lambeth" in london_slugs and "newham" in london_slugs, london_slugs
+    # Priority anchors (Lambeth, Tower Hamlets) ship before higher-signal peers
+    # when the wave is capped.
+    phased = loop.select_expansions(
+        mixed, max_new_areas=2, prefer_london=True
+    )
+    assert [r["slug"] for r in phased] == ["lambeth", "tower-hamlets"], [
+        r["slug"] for r in phased
+    ]
 
     # Live report should at least see Hampshire when data is present.
     live = report_mod.collect_report()

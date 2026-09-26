@@ -30,8 +30,8 @@ AEO_READINESS_PATH = ROOT / "public" / "data" / "aeo-readiness.json"
 MANIFEST_PATH = ROOT / "public" / "data" / "packs" / "manifest.json"
 SEED_INDEX = ROOT / "public" / "data" / "schools-index.json"
 
-DEFAULT_MAX_SCHOOL_PAGES = 1500
-DEFAULT_MAX_TOWN_PAGES = 80
+DEFAULT_MAX_SCHOOL_PAGES = 5000
+DEFAULT_MAX_TOWN_PAGES = 160
 DEFAULT_TOWN_MIN = 8
 
 
