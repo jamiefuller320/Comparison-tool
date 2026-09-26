@@ -18,7 +18,9 @@ export type FeedbackTrigger =
   | "exit-return"
   | "update"
   | "after-print"
-  | "page";
+  | "page"
+  /** Thumbs vote on a qualitative / website-evidence summary cell. */
+  | "summary-vote";
 
 export type FeedbackSentiment =
   | "helpful"
@@ -36,7 +38,9 @@ export type FeedbackTopic =
   | "data-trust"
   | "coverage"
   | "account"
-  | "other";
+  | "other"
+  /** Website-scan / qualitative cell content (thumbs or topic chip). */
+  | "website-scan";
 
 export interface FeedbackUsage {
   hadPostcode: boolean;
@@ -54,6 +58,22 @@ export interface FeedbackUsage {
   sessionStartedAt: string;
   /** Rough engaged seconds accumulated while the tab is visible. */
   engagedSeconds: number;
+  /**
+   * Optional structured vote from summary thumbs (see qualitativeImprovementFlag).
+   * Stored inside usage jsonb — no schema migration.
+   */
+  improvementFlag?: {
+    kind: string;
+    vote: "up" | "down";
+    urn: string;
+    schoolName: string;
+    area: string | null;
+    snippet: string;
+    surface: string;
+    reasonCode?: string | null;
+    reasonLabel?: string | null;
+    reasonDetail?: string | null;
+  };
 }
 
 export interface ProductFeedbackPayload {
@@ -382,6 +402,7 @@ export const FEEDBACK_TOPIC_OPTIONS: { id: FeedbackTopic; label: string }[] = [
   { id: "shortlist", label: "Shortlist" },
   { id: "compare", label: "Side by side" },
   { id: "print-pack", label: "Visit pack" },
+  { id: "website-scan", label: "Website evidence looks wrong" },
   { id: "data-trust", label: "Trusting the numbers" },
   { id: "coverage", label: "Area coverage" },
   { id: "account", label: "Saving / account" },

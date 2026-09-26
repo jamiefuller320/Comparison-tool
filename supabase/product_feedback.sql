@@ -12,6 +12,15 @@
 -- Look at this table in the School Compass Supabase project only — not
 -- home_learning. Cursor cloud secrets are shared by name: use
 -- SCHOOL_COMPASS_SUPABASE_SERVICE_ROLE_KEY for agents (do not overwrite HL).
+--
+-- Parent summary thumbs (website evidence) reuse this table:
+--   trigger = 'summary-vote'
+--   topics include 'website-scan'
+--   usage.improvementFlag = {
+--     kind, vote, urn, schoolName, area, snippet, surface,
+--     reasonCode, reasonLabel, reasonDetail
+--   }
+-- Processed by scripts/process-user-improvement-flags.ts (not free-text UX triage).
 
 -- ---------------------------------------------------------------------------
 -- product_feedback
