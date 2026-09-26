@@ -1,0 +1,236 @@
+{
+  "ranAt": "2026-09-26T10:24:06+00:00",
+  "dryRun": false,
+  "openCount": 9,
+  "queueSize": 9,
+  "upserted": 9,
+  "autoClosedLearned": 0,
+  "counts": {
+    "open": 9,
+    "done": 0,
+    "ignored": 0,
+    "byKind": {
+      "ethos_underclaim": 4,
+      "unsupported_offerings": 5
+    }
+  },
+  "sources": {
+    "spotcheckGated": "output/spotcheck-human-gated-candidates.jsonl",
+    "spotcheckFlags": "output/spotcheck-human-flag-candidates.jsonl",
+    "userGated": "output/user-improvement-gated-candidates.jsonl",
+    "spotcheckDigest": "public/data/packs/qualitative-spotcheck-latest.json",
+    "queue": "output/human-gated-review-queue.jsonl"
+  },
+  "items": [
+    {
+      "id": "1c861310d7447668",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "147519",
+      "schoolName": "St Anne's Catholic Primary School",
+      "la": "Hampshire",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "faithful",
+        "let all you do",
+        "our mission",
+        "our vision"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "7d21b4f2e7266a53",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "126066",
+      "schoolName": "Millais School",
+      "la": "West Sussex",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "our mission"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "7df4288529bdb735",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "148991",
+      "schoolName": "East Stour Primary School",
+      "la": "Kent",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "our vision"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "b95cf95d690bc057",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "148724",
+      "schoolName": "Stafford Junior School",
+      "la": "East Sussex",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "be the best you can be",
+        "our mission",
+        "our values",
+        "our vision"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "17060849b9f8fbe6",
+      "kind": "unsupported_offerings",
+      "source": "qualitative-spotcheck-latest",
+      "action": "human_check",
+      "urn": "126066",
+      "schoolName": "Millais School",
+      "la": "West Sussex",
+      "area": null,
+      "flagCode": "unsupported_offerings",
+      "severity": "warn",
+      "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence \u2014 human check)",
+      "excerpts": [
+        "curriculum: drama",
+        "enrichment: music"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "2a83b57167e6536b",
+      "kind": "unsupported_offerings",
+      "source": "qualitative-spotcheck-latest",
+      "action": "human_check",
+      "urn": "148724",
+      "schoolName": "Stafford Junior School",
+      "la": "East Sussex",
+      "area": null,
+      "flagCode": "unsupported_offerings",
+      "severity": "warn",
+      "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence \u2014 human check)",
+      "excerpts": [
+        "curriculum: dance",
+        "curriculum: geography",
+        "curriculum: Adventures of Isobel",
+        "curriculum: Alfred, Lord Tennyson",
+        "curriculum: Alternative Story Ending",
+        "curriculum: Arctic and Antarctic Circle",
+        "curriculum: Artist: Andrea Lauren",
+        "curriculum: Artist: Eric Carle"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "45b485a1d8d12e8d",
+      "kind": "unsupported_offerings",
+      "source": "qualitative-spotcheck-latest",
+      "action": "human_check",
+      "urn": "136450",
+      "schoolName": "Platanos College",
+      "la": "Lambeth",
+      "area": null,
+      "flagCode": "unsupported_offerings",
+      "severity": "warn",
+      "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence \u2014 human check)",
+      "excerpts": [
+        "curriculum: Healthy Body Healthy",
+        "curriculum: Electrolysis",
+        "curriculum: Photosynthesis",
+        "curriculum: Radioactivity",
+        "curriculum: Reproduction",
+        "curriculum: Respiration",
+        "curriculum: Electromagnetism",
+        "enrichment: centres of excellence for science"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "d3915f61c0db92cb",
+      "kind": "unsupported_offerings",
+      "source": "qualitative-spotcheck-latest",
+      "action": "human_check",
+      "urn": "147519",
+      "schoolName": "St Anne's Catholic Primary School",
+      "la": "Hampshire",
+      "area": null,
+      "flagCode": "unsupported_offerings",
+      "severity": "warn",
+      "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence \u2014 human check)",
+      "excerpts": [
+        "enrichment: music",
+        "enrichment: music lovers",
+        "community: swimming",
+        "community: basketball",
+        "community: Helpline. Dedicated NSPCC",
+        "community: BOOKING PARENTS\u2019 EVENING APPOINTMENTS",
+        "community: Tap VIEW MY"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    },
+    {
+      "id": "f9c3b8ec657089f6",
+      "kind": "unsupported_offerings",
+      "source": "qualitative-spotcheck-latest",
+      "action": "human_check",
+      "urn": "141600",
+      "schoolName": "Rose Green Junior School",
+      "la": "West Sussex",
+      "area": null,
+      "flagCode": "unsupported_offerings",
+      "severity": "warn",
+      "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence \u2014 human check)",
+      "excerpts": [
+        "curriculum: computing",
+        "curriculum: geography",
+        "curriculum: Dreams and Goals",
+        "curriculum: Online Relationships Healthy Eating",
+        "curriculum: Foreign Language Overview",
+        "curriculum: science are compulsory subjects",
+        "curriculum: mathematics",
+        "enrichment: Executive Headteacher: Mr Philip Craig"
+      ],
+      "lastSeen": "2026-09-26T10:24:06+00:00",
+      "status": "open",
+      "firstSeen": "2026-09-26T10:24:06+00:00"
+    }
+  ],
+  "notes": [
+    "No spotcheck gated JSONL yet (expects output/spotcheck-human-gated-candidates.jsonl after auto-learn PR)",
+    "No user-improvement gated JSONL yet (expects output/user-improvement-gated-candidates.jsonl after thumbs PR)"
+  ],
+  "issueUrl": null
+}
