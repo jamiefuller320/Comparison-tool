@@ -1,38 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-25T14:58:53.266596+00:00`
+- Ran at: `2026-09-26T14:03:57.196208+00:00`
 - Provider: `none`
-- Reviewed: `245`
-- Schools changed: `218`
-- Findings applied: `259`
-- New learned phrases: `265`
+- Reviewed: `133`
+- Schools changed: `106`
+- Findings applied: `121`
+- New learned phrases: `27`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 218 school(s) (259 area finding(s)).
-- Learned 265 new junk phrase(s) (store size 900).
-- Reviewed top 245 suspect(s); provider=none.
+- Applied QA fixes to 106 school(s) (121 area finding(s)).
+- Learned 27 new junk phrase(s) (store size 900).
+- Reviewed top 133 suspect(s); provider=none.
 
 ## Suspects
 
-- `100943` William Davis Primary School — score 51.0 flags=named_person,implausible_offerings,chrome
-- `113853` Cranborne Middle School — score 32.0 flags=named_person,implausible_offerings
-- `100616` St Jude's Church of England Primary School — score 32.0 flags=named_person,implausible_offerings
-- `123025` North Kidlington Primary School — score 30.0 flags=named_person,implausible_offerings,chrome
-- `118864` Greatstone Primary School — score 24.0 flags=named_person,implausible_offerings
-- `110411` Marsh Gibbon CofE Primary School — score 24.0 flags=named_person,implausible_offerings
-- `136317` Sandwich Technology School — score 24.0 flags=named_person,implausible_offerings
-- `126155` St Anthony's School — score 24.0 flags=named_person,implausible_offerings
-- `125278` St Bede's School — score 24.0 flags=named_person,implausible_offerings
-- `126047` St Andrew's CofE Primary School — score 19.0 flags=named_person,implausible_offerings,chrome
-- `136078` Barncroft Primary School — score 16.0 flags=named_person,implausible_offerings
-- `114606` Blatchington Mill School — score 16.0 flags=named_person,implausible_offerings
-- `115968` Fryern Infant School — score 16.0 flags=named_person,implausible_offerings
-- `115884` Fryern Junior School — score 16.0 flags=named_person,implausible_offerings
-- `135212` Garlinge Primary School and Nursery — score 16.0 flags=named_person,implausible_offerings
-- `137850` Goldsworth Primary School — score 16.0 flags=named_person,implausible_offerings
-- `147087` Harbour School Dorset — score 16.0 flags=named_person,implausible_offerings
-- `100631` St Bede's Catholic Primary School — score 16.0 flags=named_person,implausible_offerings
-- `100615` St John's Angell Town Church of England Primary School — score 16.0 flags=named_person,implausible_offerings
-- `116320` Twyford St Mary's Church of England Primary School — score 16.0 flags=named_person,implausible_offerings
+- `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
+- `147073` Haberdashers' Borough Academy — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `101900` Havelock Primary School, Nursery & Arp — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `116489` St Peter's Catholic Primary School, Waterlooville — score 8.0 flags=chrome,cms_chrome
+- `151930` St Peter's Catholic Primary School, Waterlooville — score 8.0 flags=chrome,cms_chrome
+- `147732` Arco Academy — score 6.0 flags=chrome
+- `136265` Baston House School — score 6.0 flags=chrome
+- `101684` Breaside Preparatory School — score 6.0 flags=chrome
+- `131237` Cavendish School — score 6.0 flags=chrome
+- `137032` Darrick Wood Infant & Nursery School — score 6.0 flags=chrome
+- `101895` Derwentwater Primary School — score 6.0 flags=chrome
+- `100862` Dulwich Prep & Senior — score 6.0 flags=chrome
+- `101944` Durston House School — score 6.0 flags=chrome
+- `142875` Galleywall Primary, City of London Academy — score 6.0 flags=chrome
+- `139639` Gray's Farm Primary Academy — score 6.0 flags=chrome
+- `101899` Greenwood Primary School — score 6.0 flags=chrome
+- `100866` Herne Hill School — score 6.0 flags=chrome
+- `135493` Insights Independent School — score 6.0 flags=chrome
+- `101889` John Perryn Primary School — score 6.0 flags=chrome
+- `101968` Mandeville School — score 6.0 flags=boilerplate

@@ -4,8 +4,11 @@ Compares published qualitative shards to live school websites for a small
 rotating sample. Detects chrome / PDF-junk / overclaim patterns from the
 human spot-check bar without mutating extractor internals.
 
-Findings feed digests the ops loops already commit, plus optional junk-phrase
-candidates for ``npm run qa:human-flags`` / ``loop:qualitative-quality``.
+Findings feed digests the ops loops already commit. Safe high-confidence
+chrome / PDF junk phrases auto-integrate into ``learned-qa-patterns.json``
+(and can trigger ``loop:qualitative-quality``). Ambiguous candidates stay
+human-gated via ``npm run qa:human-flags``. Ethos underclaim / unsupported
+offerings never auto-learn.
 """
 
 from __future__ import annotations
@@ -35,6 +38,11 @@ from school_capture.http_utils import (  # noqa: E402
     same_site,
 )
 from school_capture.list_filters import (  # noqa: E402
+    CHROME_FRAGMENTS,
+    NAV_LIST_LABELS,
+    PDF_UI_CRUMB_LABELS,
+    POLICY_DOCUMENT_LABELS,
+    SEND_DIRECTORY_LABELS,
     is_nav_or_junk_list_item,
     is_plausible_list_offering,
 )
@@ -54,8 +62,12 @@ PACKS_ROOT = ROOT / PACKS_ROOT_REL
 DIGEST_JSON = ROOT / "public" / "data" / "packs" / "qualitative-spotcheck-latest.json"
 DIGEST_MD = ROOT / "public" / "data" / "packs" / "qualitative-spotcheck-latest.md"
 CANDIDATES_JSONL = ROOT / "output" / "spotcheck-human-flag-candidates.jsonl"
+GATED_CANDIDATES_JSONL = ROOT / "output" / "spotcheck-human-gated-candidates.jsonl"
 
 DEFAULT_SAMPLE_SIZE = 7
+# Hard ceiling so daily wall-clock stays bounded as the shard corpus grows.
+# Spot-check is a fidelity sample after quality apply — not a full-corpus walk.
+MAX_SAMPLE_SIZE = 21
 DEFAULT_MAX_PAGES = 3
 DEFAULT_TIMEOUT_NOTE = "Live fetch; polite rate limit"
 
@@ -162,6 +174,7 @@ class SchoolSpotResult:
     pagesFetched: int = 0
     offeringsChecked: int = 0
     chromeOfferings: list[str] = field(default_factory=list)
+    pdfJunkOfferings: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -175,6 +188,7 @@ class SchoolSpotResult:
             "pagesFetched": self.pagesFetched,
             "offeringsChecked": self.offeringsChecked,
             "chromeOfferings": self.chromeOfferings,
+            "pdfJunkOfferings": self.pdfJunkOfferings,
             "flags": [f.to_dict() for f in self.flags],
             "notes": self.notes,
         }
@@ -639,6 +653,7 @@ def assess_school(
             )
 
     result.chromeOfferings = sorted(set(chrome_hits))[:20]
+    result.pdfJunkOfferings = sorted(set(pdf_junk))[:20]
 
     severities = {f.severity for f in result.flags}
     if result.verdict == "fetch_error":
@@ -654,19 +669,114 @@ def assess_school(
 
 
 def chrome_flag_candidates(results: list[SchoolSpotResult]) -> list[dict[str, str]]:
-    """High-confidence chrome phrases for qa:human-flags (class=spotcheck)."""
+    """High-confidence chrome / PDF junk phrases for learned-QA (class=spotcheck_*).
+
+    Ethos underclaim and unsupported-offering warnings are intentionally excluded.
+    """
     events: list[dict[str, str]] = []
     seen: set[str] = set()
+
+    def add(phrase: str, junk_class: str) -> None:
+        key = _norm(phrase)
+        if not key or key in seen:
+            return
+        seen.add(key)
+        events.append({"phrase": phrase.strip(), "junkClass": junk_class})
+
     for result in results:
         for phrase in result.chromeOfferings:
-            key = _norm(phrase)
-            if not key or key in seen:
+            if _is_spotcheck_chrome(phrase):
+                add(phrase, "spotcheck_chrome")
+        for phrase in result.pdfJunkOfferings:
+            if _is_pdf_fragment_junk(phrase) or _is_spotcheck_chrome(phrase):
+                add(phrase, "spotcheck_pdf")
+        for flag in result.flags:
+            if flag.severity != "fail":
                 continue
-            if not _is_spotcheck_chrome(phrase):
-                continue
-            seen.add(key)
-            events.append({"phrase": phrase.strip(), "junkClass": "spotcheck_chrome"})
+            code = flag.code or ""
+            if code.startswith("heuristic_"):
+                junk = code.removeprefix("heuristic_")
+                if junk not in {"chrome", "cms_chrome", "policy_toc", "named_person"}:
+                    continue
+                for excerpt in flag.excerpts or []:
+                    add(str(excerpt), f"spotcheck_{junk}")
     return events
+
+
+def _learned_store_knows(phrase: str) -> bool:
+    """True when the phrase already lives in the learned-QA archive/active set."""
+    try:
+        from school_capture.learned_qa_patterns import (
+            load_learned_qa_patterns,
+            normalize_phrase,
+        )
+    except Exception:  # noqa: BLE001
+        return False
+    key = normalize_phrase(phrase)
+    if not key:
+        return False
+    store = load_learned_qa_patterns()
+    stats = store.get("stats") or {}
+    if isinstance(stats, dict) and key in stats:
+        return True
+    phrases = {normalize_phrase(str(p)) for p in (store.get("phrases") or [])}
+    return key in phrases
+
+
+def is_safe_auto_learn_phrase(phrase: str) -> bool:
+    """Guardrail: only auto-integrate denylist / PDF / already-learned chrome.
+
+    Ambiguous short labels and SEND-directory need-type names that are not
+    already in the learned store stay human-gated. Ethos/underclaim never
+    reach this function (they are not emitted as candidates).
+    """
+    key = _norm(phrase)
+    if not key:
+        return False
+    # Exact denylist / known chrome / PDF crumbs.
+    if key in SPOTCHECK_CHROME_PHRASES:
+        return True
+    if key in PDF_UI_CRUMBS or key in PDF_UI_CRUMB_LABELS:
+        return True
+    if key in NAV_LIST_LABELS or key.rstrip("»›>") in NAV_LIST_LABELS:
+        return True
+    if key in POLICY_DOCUMENT_LABELS:
+        return True
+    if _is_pdf_fragment_junk(phrase):
+        return True
+    if any(frag in key for frag in CHROME_FRAGMENTS):
+        return True
+    # Reconfirm phrases the learned store already treats as junk.
+    if _learned_store_knows(phrase):
+        return True
+    # SEND referral / need-type labels can be real provision on SEND pages —
+    # never auto-learn a *new* one as chrome (human gate).
+    if key in SEND_DIRECTORY_LABELS:
+        return False
+    # Known nav/junk via denylist path only (is_nav without learned would mostly
+    # be denylist/chrome fragments already covered; still reject loose heuristics).
+    return False
+
+
+def partition_learning_candidates(
+    events: list[dict[str, str]],
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+    """Split candidates into (auto_safe, human_gated)."""
+    auto: list[dict[str, str]] = []
+    gated: list[dict[str, str]] = []
+    for event in events:
+        phrase = str(event.get("phrase") or "")
+        row = {
+            "phrase": phrase.strip(),
+            "junkClass": str(event.get("junkClass") or "spotcheck_chrome"),
+        }
+        if is_safe_auto_learn_phrase(phrase):
+            row["autoLearn"] = "safe"
+            auto.append(row)
+        else:
+            row["autoLearn"] = "gated"
+            gated.append(row)
+    return auto, gated
 
 
 def write_candidates_jsonl(
@@ -700,8 +810,10 @@ def write_digest(
         f"fail `{counts.get('fail', 0)}` · fetch_error `{counts.get('fetch_error', 0)}` · "
         f"skip `{counts.get('skip', 0)}`",
         f"- Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells",
-        f"- Human-flag candidates written: `{payload.get('candidatesWritten', 0)}`",
-        f"- Flags recorded to learned store: `{payload.get('flagsRecorded', False)}`",
+        f"- Learning candidates written: `{payload.get('candidatesWritten', 0)}` "
+        f"(auto `{payload.get('autoLearnedCount', 0)}` · gated `{payload.get('gatedCount', 0)}`)",
+        f"- Auto-learned into learned store: `{payload.get('flagsRecorded', False)}`",
+        f"- Quality apply requested: `{payload.get('qualityApplyRequested', False)}`",
         "",
         "## Schools",
         "",
@@ -730,8 +842,11 @@ def write_digest(
             "## Feedback path",
             "",
             "- Digest: `public/data/packs/qualitative-spotcheck-latest.{json,md}`",
-            "- Chrome candidates: `output/spotcheck-human-flag-candidates.jsonl` → "
+            "- Safe chrome/PDF learnings auto-integrate → `output/learned-qa-patterns.json` "
+            "→ quality loop apply (same day when GHA dispatches)",
+            "- Human-gated candidates: `output/spotcheck-human-gated-candidates.jsonl` → "
             "`npm run qa:human-flags -- --jsonl …` then `npm run loop:qualitative-quality`",
+            "- Ethos underclaim / unsupported offerings stay digest-only (never auto-learn)",
             "- Failures are **fidelity signals** for extractor / QA polish — not a hard "
             "Pages deploy gate unless `--strict` is set on the loop.",
             "",
@@ -748,6 +863,7 @@ def run_spotcheck(
     only_urns: list[str] | None = None,
     prefer_urns: list[str] | None = None,
     dry_run: bool = False,
+    auto_learn: bool = True,
     record_flags: bool = False,
     strict: bool = False,
     fetch: FetchFn | None = None,
@@ -758,14 +874,26 @@ def run_spotcheck(
     digest_json: Path = DIGEST_JSON,
     digest_md: Path = DIGEST_MD,
     candidates_path: Path = CANDIDATES_JSONL,
+    gated_candidates_path: Path = GATED_CANDIDATES_JSONL,
+    learned_path: Path | None = None,
 ) -> dict[str, Any]:
-    """Run the spot-check loop and write digests. Returns payload dict."""
+    """Run the spot-check loop and write digests. Returns payload dict.
+
+    By default, safe chrome/PDF candidates are recorded into the learned-QA
+    store (``auto_learn=True``). ``record_flags=True`` also records human-gated
+    chrome candidates (aggressive opt-in). Ethos underclaim never auto-learns.
+    """
     notes: list[str] = [
         DEFAULT_TIMEOUT_NOTE,
         "Automated checks approximate the human fidelity bar; "
-        "ethos underclaim and PDF-only evidence still need human review.",
+        "ethos underclaim and PDF-only evidence still need human review "
+        "(never auto-learned).",
+        f"Sample capped at {MAX_SAMPLE_SIZE} (requested path stays O(sample) "
+        "as corpus grows).",
     ]
     effective_seed = seed if seed is not None else _default_seed()
+    # Sample-capped: never grow with corpus size (closed loop stays O(sample)).
+    sample_size = max(1, min(int(sample_size), MAX_SAMPLE_SIZE))
     website_index = load_website_index(root_index=root_index, packs_root=packs_root)
     sample = select_sample(
         website_index=website_index,
@@ -813,21 +941,72 @@ def run_spotcheck(
         verdict_counts[result.verdict] = verdict_counts.get(result.verdict, 0) + 1
 
     candidates = chrome_flag_candidates(results) if not dry_run else []
+    auto_events, gated_events = (
+        partition_learning_candidates(candidates) if candidates else ([], [])
+    )
     candidates_written = 0
+    auto_learned_count = 0
+    gated_count = len(gated_events)
     flags_recorded = False
+    quality_apply_requested = False
+
     if candidates and not dry_run:
-        write_candidates_jsonl(candidates, candidates_path)
-        candidates_written = len(candidates)
+        # Full candidate list (auto + gated) for ops visibility.
+        all_rows = [{**e, "autoLearn": "safe"} for e in auto_events] + gated_events
+        write_candidates_jsonl(all_rows, candidates_path)
+        candidates_written = len(all_rows)
         notes.append(
-            f"Wrote {candidates_written} chrome flag candidates → {candidates_path}"
+            f"Wrote {candidates_written} chrome/PDF flag candidates → {candidates_path}"
         )
-        if record_flags:
+        if gated_events:
+            write_candidates_jsonl(gated_events, gated_candidates_path)
+            notes.append(
+                f"Wrote {len(gated_events)} human-gated candidates → "
+                f"{gated_candidates_path}"
+            )
+
+        to_record: list[dict[str, str]] = []
+        if auto_learn and auto_events:
+            to_record.extend(
+                {"phrase": e["phrase"], "junkClass": e["junkClass"]} for e in auto_events
+            )
+        if record_flags and gated_events:
+            # Aggressive opt-in: also record gated chrome candidates.
+            to_record.extend(
+                {"phrase": e["phrase"], "junkClass": e["junkClass"]} for e in gated_events
+            )
+            notes.append(
+                "record-flags: also recording human-gated chrome candidates"
+            )
+        elif record_flags and not gated_events and not auto_learn:
+            # Legacy: --record-flags alone with auto-learn disabled.
+            to_record.extend(
+                {"phrase": e["phrase"], "junkClass": e["junkClass"]} for e in all_rows
+            )
+
+        if to_record:
             from school_capture.learned_qa_patterns import record_qa_learning_events
 
-            record_qa_learning_events(candidates)
+            # Deduplicate by normalized phrase while preserving order.
+            seen_rec: set[str] = set()
+            deduped: list[dict[str, str]] = []
+            for row in to_record:
+                key = _norm(row["phrase"])
+                if key in seen_rec:
+                    continue
+                seen_rec.add(key)
+                deduped.append(row)
+            record_qa_learning_events(deduped, path=learned_path)
             flags_recorded = True
+            auto_learned_count = len(deduped)
+            quality_apply_requested = True
             notes.append(
-                "Recorded spot-check chrome phrases into learned-qa-patterns.json"
+                f"Recorded {auto_learned_count} spot-check phrase(s) into "
+                "learned-qa-patterns.json (quality apply recommended)"
+            )
+        elif auto_events and not auto_learn:
+            notes.append(
+                f"{len(auto_events)} safe candidates available but auto-learn disabled"
             )
 
     payload: dict[str, Any] = {
@@ -841,7 +1020,12 @@ def run_spotcheck(
         "failCount": verdict_counts.get("fail", 0),
         "warnCount": verdict_counts.get("warn", 0),
         "candidatesWritten": candidates_written,
+        "autoLearnedCount": auto_learned_count,
+        "gatedCount": gated_count,
         "flagsRecorded": flags_recorded,
+        "qualityApplyRequested": quality_apply_requested,
+        "autoLearn": auto_learn,
+        "recordFlags": record_flags,
         "strict": strict,
         "schools": [r.to_dict() for r in results],
         "notes": notes,

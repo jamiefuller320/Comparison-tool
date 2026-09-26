@@ -1,9 +1,10 @@
 name: Process product feedback
 
 # Daily inbox sweep: classify open Supabase product_feedback rows.
-# Writes proposed_action (implement / ignore / needs_clarification) with a human gate —
-# opens GitHub issues labelled product-feedback + proposed-implement for implement.
-# Does NOT auto-merge product PRs or apply UX changes from free text.
+# 1) Parent summary thumbs / website-scan flags → quality path
+#    (qa:human-flags candidates / gated URN refresh issues).
+# 2) Remaining UX feedback → proposed_action + human-gated GitHub issues.
+# Does NOT auto-merge product PRs or invent ethos from free text.
 
 on:
   schedule:
@@ -18,9 +19,13 @@ on:
         description: "Max open rows to process"
         required: false
         default: "50"
+      apply_chrome:
+        description: "Record high-confidence user chrome phrases into learned-qa-patterns.json"
+        required: false
+        default: "true"
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 jobs:
@@ -34,9 +39,74 @@ jobs:
           node-version: "20"
           cache: npm
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - run: npm ci
 
-      - name: Route open product feedback
+      - name: Install data enrichment deps
+        run: pip install -r requirements-data.txt
+
+      - name: Route user improvement flags (quality path)
+        env:
+          SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GH_TOKEN: ${{ secrets.CHALLENGE_INTAKE_TOKEN || secrets.GITHUB_TOKEN }}
+          CHALLENGE_INTAKE_REPO: ${{ secrets.CHALLENGE_INTAKE_REPO }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+          LIMIT: ${{ github.event_name == 'workflow_dispatch' && inputs.limit || '50' }}
+          APPLY_CHROME: ${{ github.event_name == 'workflow_dispatch' && inputs.apply_chrome || 'true' }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "Supabase URL / service role not configured — skipping improvement-flag triage."
+            exit 0
+          fi
+          ARGS=(--limit "${LIMIT}")
+          if [ "${DRY_RUN}" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          if [ "${APPLY_CHROME}" = "true" ] && [ "${DRY_RUN}" != "true" ]; then
+            ARGS+=(--apply-chrome)
+          fi
+          npx tsx scripts/process-user-improvement-flags.ts "${ARGS[@]}"
+
+      - name: Commit learned-QA / candidate artefacts from user flags
+        env:
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          if [ "${DRY_RUN}" = "true" ]; then
+            echo "Dry-run — skip commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f output/user-improvement-flag-candidates.jsonl \
+                    output/user-improvement-gated-candidates.jsonl \
+                    output/learned-qa-patterns.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No user-improvement candidate / learned-QA changes"
+          else
+            git commit -m "User improvement flags: learned-QA / candidate queue"
+            bash scripts/ci-rebase-push.sh origin main || true
+          fi
+
+      - name: Dispatch qualitative quality apply when chrome phrases learned
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.dry_run != 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ ! -s output/user-improvement-flag-candidates.jsonl ]; then
+            echo "No chrome candidates — skip quality dispatch"
+            exit 0
+          fi
+          gh workflow run qualitative-quality-loop.yml -f force=true || \
+            echo "Could not dispatch qualitative-quality-loop (non-fatal)"
+
+      - name: Route open product feedback (UX triage)
         env:
           # Per-repo Actions secret — same name as Home_learning is fine here.
           # Cursor cloud secrets are shared by name: agents should use

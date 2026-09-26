@@ -3310,6 +3310,164 @@ body:has(.shortlist-dock) {
   hyphens: auto;
 }
 
+/* Discreet thumbs under website-evidence summaries — always .no-print. */
+.summary-vote {
+  position: relative;
+  margin-top: 0.35rem;
+}
+
+.summary-vote-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.summary-vote-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  padding: 0;
+  border: 1px solid rgba(11, 79, 108, 0.18);
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--ink-soft);
+  cursor: pointer;
+  line-height: 0;
+}
+
+.summary-vote-btn:hover:not(:disabled) {
+  border-color: var(--sea);
+  color: var(--sea-deep);
+}
+
+.summary-vote-btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.summary-vote-btn.on {
+  border-color: var(--sea);
+  color: var(--sea-deep);
+  background: rgba(11, 79, 108, 0.08);
+}
+
+.summary-vote-btn-down.on {
+  border-color: rgba(140, 60, 40, 0.45);
+  color: rgba(120, 50, 35, 0.95);
+  background: rgba(140, 60, 40, 0.08);
+}
+
+.summary-vote-reason {
+  margin-top: 0.45rem;
+  padding: 0.65rem 0.7rem 0.7rem;
+  max-width: 16.5rem;
+  border: 1px solid rgba(11, 79, 108, 0.16);
+  border-radius: 0.55rem;
+  background: rgba(255, 252, 247, 0.98);
+  box-shadow: 0 4px 14px rgba(20, 40, 60, 0.08);
+  animation: riseIn 0.2s ease-out both;
+}
+
+.summary-vote-reason-lead {
+  margin: 0 0 0.45rem;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.summary-vote-reason-options {
+  margin: 0 0 0.5rem;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.summary-vote-reason-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.15rem 0;
+  font-size: 0.74rem;
+  line-height: 1.3;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.summary-vote-reason-option input {
+  margin: 0.15rem 0 0;
+  flex-shrink: 0;
+}
+
+.summary-vote-reason-detail {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  color: var(--sea-deep);
+  font-weight: 600;
+}
+
+.summary-vote-reason-detail textarea {
+  width: 100%;
+  padding: 0.4rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: #fff;
+  font: inherit;
+  font-weight: 400;
+  font-size: 0.74rem;
+  color: var(--ink);
+  resize: vertical;
+  min-height: 2.4rem;
+}
+
+.summary-vote-reason-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.summary-vote-reason-submit {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.7rem;
+}
+
+.summary-vote-msg {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.3;
+  color: var(--ink-soft);
+}
+
+.summary-vote-msg.ok {
+  color: var(--sea-deep);
+}
+
+.summary-vote-msg.warn {
+  color: rgba(120, 90, 20, 0.95);
+}
+
+.summary-vote-msg.err {
+  color: rgba(140, 40, 30, 0.95);
+}
+
+.qual-evidence-area .summary-vote {
+  margin-top: 0.45rem;
+}
+
+@media print {
+  .summary-vote,
+  .summary-vote-reason {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
 .qual-evidence-empty {
   color: var(--ink-soft);
 }
@@ -6233,8 +6391,37 @@ html.tour-running .hero-inner > * {
   color: var(--sea-deep);
 }
 
+.product-feedback-fullpage {
+  margin: 0 0 0.85rem;
+}
+
+.product-feedback-fullpage-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.product-feedback-fullpage-link:hover {
+  color: var(--coral);
+}
+
+.product-feedback-form .product-feedback-sentiments legend,
+.product-feedback-form .product-feedback-topics legend,
+.feedback-page-form .product-feedback-sentiments legend,
+.feedback-page-form .product-feedback-topics legend {
+  margin: 0 0 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 650;
+  color: var(--sea-deep);
+}
+
 .product-feedback-field textarea,
-.product-feedback-field input {
+.product-feedback-field input,
+.product-feedback-field select {
   width: 100%;
   padding: 0.55rem 0.65rem;
   border: 1px solid var(--line);
@@ -6302,8 +6489,7 @@ html.tour-running .hero-inner > * {
   box-shadow: 0 8px 20px rgba(7, 58, 80, 0.1);
 }
 
-.feedback-control-open,
-.feedback-control-page {
+.feedback-control-open {
   appearance: none;
   border: 0;
   background: transparent;
@@ -6316,16 +6502,8 @@ html.tour-running .hero-inner > * {
   cursor: pointer;
 }
 
-.feedback-control-open:hover,
-.feedback-control-page:hover {
+.feedback-control-open:hover {
   color: var(--coral);
-}
-
-.feedback-control-page {
-  font-weight: 550;
-  color: var(--ink-soft);
-  border-left: 1px solid var(--line);
-  padding-left: 0.55rem;
 }
 
 .feedback-page-shell {
@@ -6344,14 +6522,6 @@ html.tour-running .hero-inner > * {
   color: var(--ink-soft);
   font-size: 0.92rem;
   line-height: 1.45;
-}
-
-.feedback-page-form .product-feedback-sentiments legend,
-.feedback-page-form .product-feedback-topics legend {
-  margin: 0 0 0.4rem;
-  font-size: 0.88rem;
-  font-weight: 650;
-  color: var(--sea-deep);
 }
 
 .visit-pack-section {

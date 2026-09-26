@@ -1,22 +1,27 @@
 name: Qualitative source spot-check loop
 
-# Small-sample source-vs-site fidelity check against live school websites.
-# Complements coverage (qualitative-loop) and heuristic cleanup
-# (qualitative-quality-loop). Does not mutate extractor code — digests +
-# optional chrome flag candidates only.
+# Closed loop (daily): coverage (~07:00) → quality apply (10:00) →
+# spot-check (12:00) → safe chrome/PDF auto-learn → next quality apply.
+# Spot-check stays sample-capped (~7 schools; hard max 21) so wall-clock
+# does not grow with corpus size. Ethos/underclaim stay human-gated.
 on:
   workflow_dispatch:
     inputs:
       sample_size:
-        description: Schools to spot-check
+        description: Schools to spot-check (capped; default 7)
         required: false
         default: "7"
       max_pages:
         description: Max HTML pages fetched per school
         required: false
         default: "3"
+      auto_learn:
+        description: Auto-record safe chrome/PDF/nav into learned-qa-patterns.json
+        required: false
+        type: boolean
+        default: true
       record_flags:
-        description: Record chrome candidates into learned-qa-patterns.json
+        description: Also record human-gated chrome candidates (aggressive)
         required: false
         type: boolean
         default: false
@@ -36,6 +41,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 # Share with qualitative ingest/quality so spot-check waits on writers.
 concurrency:
@@ -46,6 +52,8 @@ jobs:
   qualitative-spotcheck-loop:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    outputs:
+      quality_apply_requested: ${{ steps.spotcheck.outputs.quality_apply_requested }}
     steps:
       - uses: actions/checkout@v4
 
@@ -57,9 +65,12 @@ jobs:
         run: pip install -r requirements-data.txt
 
       - name: Run qualitative source spot-check
+        id: spotcheck
         env:
           SAMPLE_SIZE: ${{ github.event.inputs.sample_size || '7' }}
           MAX_PAGES: ${{ github.event.inputs.max_pages || '3' }}
+          # Schedule and unset inputs default on; only explicit false disables.
+          AUTO_LEARN: ${{ github.event.inputs.auto_learn == 'false' && 'false' || 'true' }}
           RECORD_FLAGS: ${{ github.event.inputs.record_flags || 'false' }}
           STRICT: ${{ github.event.inputs.strict || 'false' }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
@@ -69,6 +80,11 @@ jobs:
             --sample-size "$SAMPLE_SIZE"
             --max-pages "$MAX_PAGES"
           )
+          if [ "$AUTO_LEARN" = "true" ]; then
+            ARGS+=(--auto-learn)
+          else
+            ARGS+=(--no-auto-learn)
+          fi
           if [ "$RECORD_FLAGS" = "true" ]; then
             ARGS+=(--record-flags)
           fi
@@ -79,28 +95,60 @@ jobs:
             ARGS+=(--dry-run)
           fi
           python3 scripts/run-qualitative-spotcheck-loop.py "${ARGS[@]}"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
 
-      - name: Commit spot-check digest
+          digest = Path("public/data/packs/qualitative-spotcheck-latest.json")
+          payload = json.loads(digest.read_text(encoding="utf-8")) if digest.is_file() else {}
+          requested = "true" if payload.get("qualityApplyRequested") else "false"
+          recorded = "true" if payload.get("flagsRecorded") else "false"
+          out = os.environ.get("GITHUB_OUTPUT")
+          if out:
+              with open(out, "a", encoding="utf-8") as fh:
+                  fh.write(f"quality_apply_requested={requested}\n")
+                  fh.write(f"flags_recorded={recorded}\n")
+          print(f"quality_apply_requested={requested} flags_recorded={recorded}")
+          PY
+
+      - name: Commit spot-check digest + learned store
         env:
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
-          RECORD_FLAGS: ${{ github.event.inputs.record_flags || 'false' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Digest always; learned store only when --record-flags was set.
+          # Digest always; learned store when auto-learn / record-flags wrote it.
           git add public/data/packs/qualitative-spotcheck-latest.json \
                   public/data/packs/qualitative-spotcheck-latest.md
-          if [ "$RECORD_FLAGS" = "true" ]; then
-            git add -f output/learned-qa-patterns.json 2>/dev/null || true
-          fi
+          git add -f output/learned-qa-patterns.json 2>/dev/null || true
+          git add -f output/spotcheck-human-flag-candidates.jsonl 2>/dev/null || true
+          git add -f output/spotcheck-human-gated-candidates.jsonl 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No qualitative spot-check digest changes"
           else
             if [ "$DRY_RUN" = "true" ]; then
               MSG="Qualitative spot-check dry-run digest"
             else
-              MSG="Qualitative source spot-check: fidelity digest"
+              MSG="Qualitative source spot-check: fidelity digest + auto-learn"
             fi
             git commit -m "$MSG"
             bash scripts/ci-rebase-push.sh origin main
           fi
+
+      - name: Dispatch quality apply for new learnings
+        if: >-
+          steps.spotcheck.outputs.quality_apply_requested == 'true'
+          && (github.event.inputs.dry_run || 'false') != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Feed safe spot-check learnings forward into the quality path
+          # (shared concurrency group qualitative-data queues behind this job).
+          # force=true so a small eventCount bump still triggers corpus apply.
+          gh workflow run qualitative-quality-loop.yml \
+            --ref "${GITHUB_REF_NAME}" \
+            -f force=true \
+            -f dry_run=false
+          echo "Dispatched qualitative-quality-loop (force apply for spot-check learnings)"
