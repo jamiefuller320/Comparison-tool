@@ -1,19 +1,22 @@
 {
-  "ranAt": "2026-09-25T16:54:37.736731+00:00",
+  "ranAt": "2026-09-26T16:05:03.546884+00:00",
   "dryRun": false,
-  "seed": 3837537759,
+  "seed": 1710439114,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 5,
-    "fail": 1,
-    "fetch_error": 1
+    "warn": 7
   },
-  "failCount": 1,
-  "warnCount": 5,
-  "candidatesWritten": 1,
+  "failCount": 0,
+  "warnCount": 7,
+  "candidatesWritten": 0,
+  "autoLearnedCount": 0,
+  "gatedCount": 0,
   "flagsRecorded": false,
+  "qualityApplyRequested": false,
+  "autoLearn": true,
+  "recordFlags": false,
   "strict": false,
   "schools": [
     {
@@ -26,6 +29,7 @@
       "pagesFetched": 3,
       "offeringsChecked": 14,
       "chromeOfferings": [],
+      "pdfJunkOfferings": [],
       "flags": [
         {
           "code": "unsupported_offerings",
@@ -66,6 +70,7 @@
       "pagesFetched": 3,
       "offeringsChecked": 37,
       "chromeOfferings": [],
+      "pdfJunkOfferings": [],
       "flags": [
         {
           "code": "heuristic_cms_chrome",
@@ -118,6 +123,7 @@
       "pagesFetched": 3,
       "offeringsChecked": 22,
       "chromeOfferings": [],
+      "pdfJunkOfferings": [],
       "flags": [
         {
           "code": "unsupported_offerings",
@@ -141,85 +147,41 @@
       "notes": []
     },
     {
-      "urn": "136450",
-      "name": "Platanos College",
-      "la": "Lambeth",
-      "website": "http://www.platanoscollege.com/",
+      "urn": "100903",
+      "name": "Hague Primary School",
+      "la": "Tower Hamlets",
+      "website": "https://shhfederation.org",
       "assessedAt": "2026-09-24",
-      "verdict": "fail",
+      "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 38,
-      "chromeOfferings": [
-        "School Nursing Team"
-      ],
+      "offeringsChecked": 27,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
       "flags": [
-        {
-          "code": "chrome_in_offerings",
-          "severity": "fail",
-          "area": "send",
-          "detail": "Product offerings look like site chrome / nav, not provision",
-          "excerpts": [
-            "School Nursing Team"
-          ]
-        },
         {
           "code": "unsupported_offerings",
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Healthy Body Healthy",
-            "curriculum: Electrolysis",
-            "curriculum: Photosynthesis",
-            "curriculum: Radioactivity",
-            "curriculum: Reproduction",
-            "curriculum: Respiration",
-            "curriculum: Electromagnetism",
-            "enrichment: centres of excellence for science",
-            "enrichment: ‘debate mate’",
-            "enrichment: photography"
+            "ethos: CEOP Safety Centre",
+            "ethos: Cbeebies",
+            "ethos: LGfL StaffMail",
+            "ethos: Times Tables Rock Stars",
+            "community: CEOP Safety Centre",
+            "community: Cbeebies",
+            "community: LGfL StaffMail",
+            "community: Extraordinary FGB",
+            "community: Occupational Change",
+            "community: Complaints Panel"
           ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "137567",
-      "name": "Croydon Metropolitan College",
-      "la": "Croydon",
-      "website": "https://www.croydonmet.org.uk",
-      "assessedAt": "2026-09-24",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.croydonmet.org.uk"
-      ]
-    },
-    {
-      "urn": "148991",
-      "name": "East Stour Primary School",
-      "la": "Kent",
-      "website": "https://www.east-stour.kent.sch.uk/",
-      "assessedAt": "2026-09-04",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 17,
-      "chromeOfferings": [],
-      "flags": [
+        },
         {
           "code": "possible_underclaim",
           "severity": "warn",
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
+            "our values",
             "our vision"
           ]
         }
@@ -227,15 +189,16 @@
       "notes": []
     },
     {
-      "urn": "141600",
-      "name": "Rose Green Junior School",
-      "la": "West Sussex",
-      "website": "https://www.rosegreenjunior.co.uk",
-      "assessedAt": "2026-09-10",
+      "urn": "100560",
+      "name": "Clapham Manor Primary School",
+      "la": "Lambeth",
+      "website": "https://www.claphammanor.lambeth.sch.uk",
+      "assessedAt": "2026-09-24",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 50,
+      "offeringsChecked": 36,
       "chromeOfferings": [],
+      "pdfJunkOfferings": [],
       "flags": [
         {
           "code": "unsupported_offerings",
@@ -243,15 +206,93 @@
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
             "curriculum: computing",
-            "curriculum: geography",
-            "curriculum: Dreams and Goals",
-            "curriculum: Online Relationships Healthy Eating",
-            "curriculum: Foreign Language Overview",
-            "curriculum: science are compulsory subjects",
             "curriculum: mathematics",
-            "enrichment: Executive Headteacher: Mr Philip Craig",
-            "enrichment: Contact Mr. Helly",
-            "enrichment: Autumn Spring Summer"
+            "curriculum: music",
+            "curriculum: inclusive music education",
+            "enrichment: music",
+            "enrichment: P.E. and Sport Premium",
+            "enrichment: choir",
+            "enrichment: such as choir club after school",
+            "enrichment: computing",
+            "enrichment: dedicated music room"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "125245",
+      "name": "Grayswood Church of England (Aided) Primary School",
+      "la": "Surrey",
+      "website": "https://www.grayswoodschool.co.uk",
+      "assessedAt": "2026-09-04",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 14,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: french club",
+            "enrichment: science club",
+            "enrichment: chess",
+            "enrichment: choir",
+            "enrichment: cricket",
+            "enrichment: football",
+            "enrichment: netball",
+            "ethos: SEND/Inclusion",
+            "ethos: Staff and Governors"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "church of england",
+            "our mission"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "125820",
+      "name": "Shelley Primary School",
+      "la": "West Sussex",
+      "website": "http://www.shelley.w-sussex.sch.uk",
+      "assessedAt": "2026-09-10",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 9,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: computer science",
+            "curriculum: computing",
+            "enrichment: drama",
+            "enrichment: football",
+            "enrichment: netball",
+            "enrichment: music"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our values"
           ]
         }
       ],
@@ -260,7 +301,7 @@
   ],
   "notes": [
     "Live fetch; polite rate limit",
-    "Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review.",
-    "Wrote 1 chrome flag candidates → /home/runner/work/Comparison-tool/Comparison-tool/output/spotcheck-human-flag-candidates.jsonl"
+    "Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review (never auto-learned).",
+    "Sample capped at 21 (requested path stays O(sample) as corpus grows)."
   ]
 }
