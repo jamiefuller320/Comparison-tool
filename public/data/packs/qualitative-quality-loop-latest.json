@@ -1,23 +1,33 @@
 {
-  "ranAt": "2026-09-26T14:10:55.951032+00:00",
+  "ranAt": "2026-09-27T15:08:09.458816+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 4673,
-    "suspectCount": 133,
+    "recordCount": 4853,
+    "suspectCount": 90,
     "flagCounts": {
-      "chrome": 93,
-      "cms_chrome": 17,
+      "chrome": 59,
+      "cms_chrome": 13,
       "admissions": 12,
-      "implausible_offerings": 7,
-      "policy_toc": 6,
-      "boilerplate": 4,
-      "high_score_thin_signals": 4
+      "high_score_thin_signals": 4,
+      "implausible_offerings": 4,
+      "policy_toc": 3,
+      "boilerplate": 1
     },
     "topSuspects": [
+      {
+        "urn": "132764",
+        "name": "The Craylands School",
+        "score": 13.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
       {
         "urn": "125810",
         "name": "Boundstone Nursery School",
@@ -27,28 +37,8 @@
         ]
       },
       {
-        "urn": "147073",
-        "name": "Haberdashers' Borough Academy",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "101900",
-        "name": "Havelock Primary School, Nursery & Arp",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "116489",
-        "name": "St Peter's Catholic Primary School, Waterlooville",
+        "urn": "134627",
+        "name": "Quwwat Ul Islam Girls' School",
         "score": 8.0,
         "flags": [
           "chrome",
@@ -56,65 +46,72 @@
         ]
       },
       {
-        "urn": "151930",
-        "name": "St Peter's Catholic Primary School, Waterlooville",
-        "score": 8.0,
-        "flags": [
-          "chrome",
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "147732",
-        "name": "Arco Academy",
+        "urn": "101032",
+        "name": "Albemarle Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "136265",
-        "name": "Baston House School",
+        "urn": "144621",
+        "name": "Belleville Wix Academy",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "101684",
-        "name": "Breaside Preparatory School",
+        "urn": "130995",
+        "name": "Central Park Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "131237",
-        "name": "Cavendish School",
+        "urn": "102049",
+        "name": "Chace Community School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "137032",
-        "name": "Darrick Wood Infant & Nursery School",
+        "urn": "101984",
+        "name": "Chase Side Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "101895",
-        "name": "Derwentwater Primary School",
+        "urn": "145280",
+        "name": "Chesterton Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "100862",
-        "name": "Dulwich Prep & Senior",
+        "urn": "144142",
+        "name": "Curwen Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "101088",
+        "name": "Eaton House the Manor School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "101989",
+        "name": "Firs Farm Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -123,7 +120,7 @@
     ]
   },
   "after": {
-    "recordCount": 4673,
+    "recordCount": 4853,
     "suspectCount": 29,
     "flagCounts": {
       "admissions": 12,
@@ -231,42 +228,42 @@
     ]
   },
   "qa": {
-    "reviewed": 133,
-    "changedSchools": 106,
-    "findingsApplied": 121,
-    "learningAdded": 27,
+    "reviewed": 90,
+    "changedSchools": 61,
+    "findingsApplied": 79,
+    "learningAdded": 11,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +76 (>= 15)",
+    "reason": "eventCount +64 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "49a28bbd7c6dbcab26e6",
+      "phraseHash": "d258d4e5cde6bc8cd067",
       "phraseCount": 900,
-      "candidateCount": 1839,
-      "eventCount": 7699,
-      "updatedAt": "2026-09-26"
+      "candidateCount": 1882,
+      "eventCount": 7921,
+      "updatedAt": "2026-09-27"
     },
     "fingerprintAfter": {
-      "phraseHash": "923db31a066751be2b8f",
+      "phraseHash": "15ec7f8ddf26acbc5a9a",
       "phraseCount": 900,
-      "candidateCount": 1866,
-      "eventCount": 7857,
-      "updatedAt": "2026-09-26"
+      "candidateCount": 1893,
+      "eventCount": 8020,
+      "updatedAt": "2026-09-27"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 4673 published URN shards (prior=0 → 4673).",
-    "Rebalanced learned QA phrases: active=900 candidates=1839.",
-    "Learning fingerprint: {'phraseHash': '49a28bbd7c6dbcab26e6', 'phraseCount': 900, 'candidateCount': 1839, 'eventCount': 7699, 'updatedAt': '2026-09-26'}",
-    "Apply decision: eventCount +76 (>= 15)",
-    "Before: 133 suspects across 4673 records.",
-    "Applied QA fixes to 106 school(s) (121 area finding(s)).",
-    "Learned 27 new junk phrase(s) (store size 900).",
-    "Reviewed top 133 suspect(s); provider=none.",
+    "Hydrated working sidecar from 4853 published URN shards (prior=0 → 4853).",
+    "Rebalanced learned QA phrases: active=900 candidates=1882.",
+    "Learning fingerprint: {'phraseHash': 'd258d4e5cde6bc8cd067', 'phraseCount': 900, 'candidateCount': 1882, 'eventCount': 7921, 'updatedAt': '2026-09-27'}",
+    "Apply decision: eventCount +64 (>= 15)",
+    "Before: 90 suspects across 4853 records.",
+    "Applied QA fixes to 61 school(s) (79 area finding(s)).",
+    "Learned 11 new junk phrase(s) (store size 900).",
+    "Reviewed top 90 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 29 suspects across 4673 records.",
+    "After: 29 suspects across 4853 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }

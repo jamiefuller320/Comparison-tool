@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-27T14:21:55.372772+00:00`
+- Ran at: `2026-09-27T15:00:55.557235+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `15`
-- Findings applied: `38`
-- New learned phrases: `16`
+- Reviewed: `90`
+- Schools changed: `61`
+- Findings applied: `79`
+- New learned phrases: `11`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 15 school(s) (38 area finding(s)).
-- Learned 16 new junk phrase(s) (store size 900).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 61 school(s) (79 area finding(s)).
+- Learned 11 new junk phrase(s) (store size 900).
+- Reviewed top 90 suspect(s); provider=none.
 
 ## Suspects
 
-- `136883` Chestnut Grove Academy — score 13.0 flags=policy_toc,implausible_offerings,chrome
-- `101981` Capel Manor Primary School — score 12.0 flags=chrome
+- `132764` The Craylands School — score 13.0 flags=policy_toc,implausible_offerings,chrome
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `100995` Alderbrook Primary School — score 9.0 flags=chrome
-- `101076` Finton House School — score 9.0 flags=chrome
-- `141247` Focus 1st Academy — score 9.0 flags=chrome
-- `101013` Hotham Primary School — score 9.0 flags=chrome
-- `149715` London Park School Clapham — score 9.0 flags=chrome
-- `101082` Newton Preparatory School — score 9.0 flags=chrome
-- `131407` Oakthorpe Primary School — score 9.0 flags=chrome
-- `101074` Broomwood Pre-Prep & Broomwood Prep-Girls — score 8.0 flags=chrome,policy_toc,implausible_offerings
-- `101089` Broomwood Prep - Boys — score 8.0 flags=chrome,policy_toc,implausible_offerings
-- `101175` Centre Academy London — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `134041` Gatton (VA) Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `145709` Linden Lodge School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `134311` Oasis Academy Enfield — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `134627` Quwwat Ul Islam Girls' School — score 8.0 flags=chrome,cms_chrome
+- `101032` Albemarle Primary School — score 6.0 flags=chrome
+- `144621` Belleville Wix Academy — score 6.0 flags=chrome
+- `130995` Central Park Primary School — score 6.0 flags=chrome
+- `102049` Chace Community School — score 6.0 flags=chrome
+- `101984` Chase Side Primary School — score 6.0 flags=chrome
+- `145280` Chesterton Primary School — score 6.0 flags=chrome
+- `144142` Curwen Primary School — score 6.0 flags=chrome
+- `101088` Eaton House the Manor School — score 6.0 flags=chrome
+- `101989` Firs Farm Primary School — score 6.0 flags=chrome
+- `140423` Floreat Wandsworth Primary School — score 6.0 flags=chrome
+- `102031` Freezywater St George's CofE VA Primary School — score 6.0 flags=chrome
+- `101993` George Spicer Primary School — score 6.0 flags=chrome
+- `149431` Harris Science Academy East London — score 6.0 flags=boilerplate,chrome
+- `101997` Hazelwood Infant School — score 6.0 flags=chrome
+- `101996` Hazelwood Junior School — score 6.0 flags=chrome
+- `102060` Keble Preparatory School — score 6.0 flags=chrome
+- `144141` Kensington Primary School — score 6.0 flags=chrome
