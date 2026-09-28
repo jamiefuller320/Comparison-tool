@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-09-28T16:48:54.742066+00:00`
+- Ran at: `2026-09-28T17:58:01.832577+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `15`
-- Findings applied: `49`
-- New learned phrases: `10`
+- Reviewed: `92`
+- Schools changed: `63`
+- Findings applied: `82`
+- New learned phrases: `19`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 15 school(s) (49 area finding(s)).
-- Learned 10 new junk phrase(s) (store size 900).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 63 school(s) (82 area finding(s)).
+- Learned 19 new junk phrase(s) (store size 900).
+- Reviewed top 92 suspect(s); provider=none.
 
 ## Suspects
 
-- `142329` Lycee International de Londres — score 24.0 flags=policy_toc,chrome,implausible_offerings
-- `147025` Al-Zahra School — score 18.0 flags=policy_toc,implausible_offerings,chrome
-- `101526` Chalkhill Primary School — score 17.0 flags=chrome,policy_toc,implausible_offerings
-- `102432` Grange Park School — score 14.0 flags=chrome,policy_toc,implausible_offerings
-- `101534` John Keble CofE Primary School — score 13.0 flags=policy_toc,implausible_offerings,chrome
-- `100199` Blackheath Prep — score 12.0 flags=chrome
-- `141055` Hillingdon Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `100181` Bishop John Robinson Church of England Primary School — score 9.0 flags=chrome
-- `145718` Braintcroft E-ACT Primary Academy — score 9.0 flags=chrome
-- `101531` Fryent Primary School — score 9.0 flags=chrome
-- `132066` Greenwich Waldorf School — score 9.0 flags=chrome
-- `131246` James Wolfe Primary School and Centre for the Deaf — score 9.0 flags=chrome
-- `101554` Malorees Junior School — score 9.0 flags=chrome
-- `101507` Malorees Primary School — score 9.0 flags=chrome
-- `130921` Middle Park Primary School — score 9.0 flags=chrome
+- `100114` Morden Mount Primary School — score 9.0 flags=chrome
+- `100166` Christ Church Church of England Primary School, Shooters Hill — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `137844` Barnhill Community High School — score 6.0 flags=chrome
+- `143210` Brooklands Primary School — score 6.0 flags=chrome
+- `101569` Buxlow School — score 6.0 flags=chrome
+- `131638` Cherry Lane Primary School — score 6.0 flags=chrome
+- `100125` Fossdene Primary School — score 6.0 flags=chrome
+- `145210` Greenacres Primary School and Language Impairment Unit — score 6.0 flags=chrome
+- `100162` Greenslade Primary School — score 6.0 flags=chrome
+- `100158` Heronsgate Primary School — score 6.0 flags=chrome
+- `102407` Highfield Primary School — score 6.0 flags=chrome
+- `150995` Landon School Harmondsworth — score 6.0 flags=chrome
+- `101524` Mitchell Brook Primary School — score 6.0 flags=chrome
+- `152563` Mount Stewart Infant School — score 6.0 flags=chrome
+- `101500` Mount Stewart Junior School — score 6.0 flags=chrome
+- `152550` Mount Stewart Junior School — score 6.0 flags=chrome
+- `141154` North West London Jewish Day School — score 6.0 flags=chrome
+- `142718` Oakington Manor Primary School — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
