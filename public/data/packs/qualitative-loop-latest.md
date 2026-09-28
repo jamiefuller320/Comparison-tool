@@ -1,42 +1,42 @@
 # Qualitative capture loop
 
-- Ran at: `2026-09-27T14:22:15.587600+00:00`
+- Ran at: `2026-09-28T16:49:16.326452+00:00`
 - Ingest policy / phase: `auto` / `london`
 - Scope: `parallel`
-- LA: `Enfield, Newham, Wandsworth`
-- Index: `public/data/packs/wandsworth/schools-index.json`
-- Remaining with website (pre-capture): `111`
+- LA: `Brent, Greenwich, Hillingdon`
+- Index: `public/data/packs/hillingdon/schools-index.json`
+- Remaining with website (pre-capture): `105`
 - Batch limit (per stream): `60`
-- Sidecar records before → after: `4673` → `4853`
+- Sidecar records before → after: `4853` → `5033`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
 - QA reviewed / changed: `16` / `15`
 - Learned terms: `500`
-- Learned QA phrases: `16`
+- Learned QA phrases: `10`
 - Dry run: `False`
 
 ## Streams
 
-- `Enfield`: status=ok added=60 remaining=106 index=`public/data/packs/enfield/schools-index.json`
-- `Newham`: status=ok added=60 remaining=106 index=`public/data/packs/newham/schools-index.json`
-- `Wandsworth`: status=ok added=60 remaining=111 index=`public/data/packs/wandsworth/schools-index.json`
+- `Brent`: status=ok added=60 remaining=96 index=`public/data/packs/brent/schools-index.json`
+- `Greenwich`: status=ok added=60 remaining=98 index=`public/data/packs/greenwich/schools-index.json`
+- `Hillingdon`: status=ok added=60 remaining=105 index=`public/data/packs/hillingdon/schools-index.json`
 
 ## Notes
 
-- Hydrated working sidecar from 4673 published URN shards (prior=0 → 4673).
-- Ingest policy=auto phase=london (non-London remaining=0, London remaining=2452, pending London packs=0).
-- Stream preferred=Hampshire exhausted (remaining=0); advanced to Wandsworth (remaining=111).
-- Stream preferred=Lambeth exhausted (remaining=0); advanced to Enfield (remaining=106).
-- Stream preferred=Tower Hamlets exhausted (remaining=0); advanced to Newham (remaining=106).
+- Hydrated working sidecar from 4853 published URN shards (prior=0 → 4853).
+- Ingest policy=auto phase=london (non-London remaining=0, London remaining=2272, pending London packs=0).
+- Stream preferred=Hampshire exhausted (remaining=0); advanced to Hillingdon (remaining=105).
+- Stream preferred=Lambeth exhausted (remaining=0); advanced to Greenwich (remaining=98).
+- Stream preferred=Tower Hamlets exhausted (remaining=0); advanced to Brent (remaining=96).
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Wandsworth index=public/data/packs/wandsworth/schools-index.json remainingWithWebsite=111.
-- Stream LA=Enfield index=public/data/packs/enfield/schools-index.json remainingWithWebsite=106.
-- Stream LA=Newham index=public/data/packs/newham/schools-index.json remainingWithWebsite=106.
+- Stream LA=Hillingdon index=public/data/packs/hillingdon/schools-index.json remainingWithWebsite=105.
+- Stream LA=Greenwich index=public/data/packs/greenwich/schools-index.json remainingWithWebsite=98.
+- Stream LA=Brent index=public/data/packs/brent/schools-index.json remainingWithWebsite=96.
 - Running 3 capture streams in parallel (limit 60 each).
-- Merged 3 partial sidecar(s) → 4853 records (union size 4853).
-- Captured batch (sidecar 4673 → 4853); learned terms now 568.
+- Merged 3 partial sidecar(s) → 5033 records (union size 5033).
+- Captured batch (sidecar 4853 → 5033); learned terms now 563.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 15, learned phrases +16.
+- QA provider=none: reviewed 16, changed 15, learned phrases +10.
 - Re-merged affected schools-index files after QA fixes.
