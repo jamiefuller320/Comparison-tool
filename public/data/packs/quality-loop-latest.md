@@ -1,4 +1,4 @@
-# Pack quality loop — 2026-09-23T11:03:06Z
+# Pack quality loop — 2026-09-28T13:26:38Z
 
 - Mode: `polish`
 - Max packs: 6
@@ -11,37 +11,28 @@
 
 | LA | Interest | Boost | Before indie% | After indie% | Before ISI | After ISI |
 |---|---:|---:|---:|---:|---|---|
-| Bournemouth, Christchurch and Poole | 0.436 | 1.7 | 42.9 | 42.9 | 10/14 | 10/14 |
-| Southampton | 0.436 | 1.7 | 57.1 | 57.1 | 4/7 | 4/7 |
-| Brighton and Hove | 0.438 | 1.8 | 61.5 | 61.5 | 7/13 | 7/13 |
-| East Sussex | 0.438 | 1.8 | 62.1 | 62.1 | 18/29 | 18/29 |
-| Milton Keynes | 0.438 | 1.8 | 62.5 | 62.5 | 5/8 | 5/8 |
-| Wokingham | 0.438 | 1.8 | 69.2 | 69.2 | 9/13 | 9/13 |
+| Westminster | 0.939 | 3.8 | 0.0 | 59.4 | 0/32 | 28/32 |
+| Kensington and Chelsea | 0.939 | 3.8 | 0.0 | 66.7 | 0/30 | 24/30 |
+| Wandsworth | 0.939 | 3.8 | 0.0 | 60.0 | 0/30 | 21/30 |
+| Richmond upon Thames | 0.939 | 3.8 | 0.0 | 54.2 | 0/24 | 18/24 |
+| Merton | 0.939 | 3.8 | 0.0 | 43.8 | 0/16 | 10/16 |
+| Tower Hamlets | 0.939 | 3.8 | 0.0 | 20.0 | 0/15 | 5/15 |
 
 ## Top interest signals
 
-- `bracknell-forest`: score 0.438 (boost 1.8%)
-- `brighton-and-hove`: score 0.438 (boost 1.8%)
-- `buckinghamshire`: score 0.438 (boost 1.8%)
-- `east-sussex`: score 0.438 (boost 1.8%)
-- `kent`: score 0.438 (boost 1.8%)
-- `medway`: score 0.438 (boost 1.8%)
-- `milton-keynes`: score 0.438 (boost 1.8%)
-- `oxfordshire`: score 0.438 (boost 1.8%)
+- `kensington-and-chelsea`: score 0.939 (boost 3.8%)
+- `kingston-upon-thames`: score 0.939 (boost 3.8%)
+- `lambeth`: score 0.939 (boost 3.8%)
+- `lewisham`: score 0.939 (boost 3.8%)
+- `merton`: score 0.939 (boost 3.8%)
+- `newham`: score 0.939 (boost 3.8%)
+- `redbridge`: score 0.939 (boost 3.8%)
+- `richmond-upon-thames`: score 0.939 (boost 3.8%)
 
 ## Weakest packs (after)
 
-- Bournemouth, Christchurch and Poole: indie 6/14 (42.9%) · ISI 10/14
-- Southampton: indie 4/7 (57.1%) · ISI 4/7
-- Brighton and Hove: indie 8/13 (61.5%) · ISI 7/13
-- East Sussex: indie 18/29 (62.1%) · ISI 18/29
-- Milton Keynes: indie 5/8 (62.5%) · ISI 5/8
-
-## No indie/ISI movement
-
-- Bournemouth, Christchurch and Poole
-- Southampton
-- Brighton and Hove
-- East Sussex
-- Milton Keynes
-- Wokingham
+- Barking and Dagenham: indie 0/5 (0.0%) · ISI 0/5
+- Barnet: indie 0/35 (0.0%) · ISI 0/35
+- Bexley: indie 0/6 (0.0%) · ISI 0/6
+- Brent: indie 0/14 (0.0%) · ISI 0/14
+- Bromley: indie 0/16 (0.0%) · ISI 0/16
