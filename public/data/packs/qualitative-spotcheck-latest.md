@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-09-27T16:42:11.958404+00:00
+# Qualitative source spot-check — 2026-09-28T19:28:05.433577+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `696795845`
+- Seed: `2625950774`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,15 +22,17 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Nightingale Community Academy** (`143175`, Wandsworth) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
-- **Avenue House School** (`101962`, Ealing) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: responsibility
-- **Bricklehurst Manor School** (`150476`, East Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — community: Read Previous
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, our vision
-- **The Yehudi Menuhin School** (`125428`, Surrey) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
+- **Bullers Wood School** (`136709`, Bromley) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computer science, curriculum: respect, curriculum: employment in areas of medical science, curriculum: mathematics
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — be the best you can be
+- **Freezywater St George's CofE VA Primary School** (`102031`, Enfield) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Forces and Magnets, curriculum: GEOMETRY Properties of, curriculum: photography, ethos: mission
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our values, our vision
+- **Queenborough School and Nursery** (`147749`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: musical theatre club, enrichment: their most famous piece of music, enrichment: choir, send: Mainstream Core Standards
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **Littlegreen Academy** (`146274`, West Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: photography, curriculum: computing, curriculum: Considering Scientific, Recognise, curriculum: Focus: Coherence and Progression
 
 ## Notes
 
