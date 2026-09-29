@@ -1,21 +1,21 @@
 {
-  "ranAt": "2026-09-28T18:04:42.619833+00:00",
+  "ranAt": "2026-09-29T16:29:40.296225+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 5033,
-    "suspectCount": 92,
+    "recordCount": 5213,
+    "suspectCount": 95,
     "flagCounts": {
-      "chrome": 60,
+      "chrome": 59,
       "admissions": 12,
       "cms_chrome": 12,
+      "implausible_offerings": 10,
+      "policy_toc": 9,
       "high_score_thin_signals": 4,
-      "implausible_offerings": 4,
-      "policy_toc": 3,
-      "boilerplate": 1
+      "boilerplate": 3
     },
     "topSuspects": [
       {
@@ -27,90 +27,96 @@
         ]
       },
       {
-        "urn": "100114",
-        "name": "Morden Mount Primary School",
-        "score": 9.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "100166",
-        "name": "Christ Church Church of England Primary School, Shooters Hill",
+        "urn": "102175",
+        "name": "Blanche Nevile School",
         "score": 8.0,
         "flags": [
           "policy_toc",
-          "implausible_offerings",
-          "chrome"
+          "chrome",
+          "implausible_offerings"
         ]
       },
       {
-        "urn": "137844",
-        "name": "Barnhill Community High School",
+        "urn": "144405",
+        "name": "Endeavour Academy Bexley",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "100710",
+        "name": "Fairlawn Primary School",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "100714",
+        "name": "Horniman Primary School",
+        "score": 8.0,
+        "flags": [
+          "chrome",
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "130358",
+        "name": "Alexandra Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "143210",
-        "name": "Brooklands Primary School",
+        "urn": "100719",
+        "name": "All Saints' Church of England Primary School Blackheath",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "101569",
-        "name": "Buxlow School",
+        "urn": "136369",
+        "name": "Bexley Grammar School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "131638",
-        "name": "Cherry Lane Primary School",
+        "urn": "101426",
+        "name": "Birkbeck Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "100125",
-        "name": "Fossdene Primary School",
+        "urn": "140039",
+        "name": "Break Through School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "145210",
-        "name": "Greenacres Primary School and Language Impairment Unit",
+        "urn": "100760",
+        "name": "Brent Knoll School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "100162",
-        "name": "Greenslade Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "100158",
-        "name": "Heronsgate Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102407",
-        "name": "Highfield Primary School",
+        "urn": "102121",
+        "name": "Coleridge Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -119,13 +125,12 @@
     ]
   },
   "after": {
-    "recordCount": 5033,
-    "suspectCount": 30,
+    "recordCount": 5213,
+    "suspectCount": 29,
     "flagCounts": {
       "admissions": 12,
       "cms_chrome": 12,
       "high_score_thin_signals": 4,
-      "boilerplate": 1,
       "implausible_offerings": 1
     },
     "topSuspects": [
@@ -228,42 +233,42 @@
     ]
   },
   "qa": {
-    "reviewed": 92,
-    "changedSchools": 63,
-    "findingsApplied": 82,
-    "learningAdded": 19,
+    "reviewed": 95,
+    "changedSchools": 66,
+    "findingsApplied": 83,
+    "learningAdded": 34,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +67 (>= 15)",
+    "reason": "eventCount +56 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "d1ba58d0da2a7d8800da",
+      "phraseHash": "68c081138d3fc2721a2b",
       "phraseCount": 900,
-      "candidateCount": 1903,
-      "eventCount": 8087,
-      "updatedAt": "2026-09-28"
+      "candidateCount": 1939,
+      "eventCount": 8245,
+      "updatedAt": "2026-09-29"
     },
     "fingerprintAfter": {
-      "phraseHash": "e3207bc2b86cf3725778",
+      "phraseHash": "6135faae24cb88713ada",
       "phraseCount": 900,
-      "candidateCount": 1922,
-      "eventCount": 8189,
-      "updatedAt": "2026-09-28"
+      "candidateCount": 1973,
+      "eventCount": 8366,
+      "updatedAt": "2026-09-29"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 5033 published URN shards (prior=0 → 5033).",
-    "Rebalanced learned QA phrases: active=900 candidates=1903.",
-    "Learning fingerprint: {'phraseHash': 'd1ba58d0da2a7d8800da', 'phraseCount': 900, 'candidateCount': 1903, 'eventCount': 8087, 'updatedAt': '2026-09-28'}",
-    "Apply decision: eventCount +67 (>= 15)",
-    "Before: 92 suspects across 5033 records.",
-    "Applied QA fixes to 63 school(s) (82 area finding(s)).",
-    "Learned 19 new junk phrase(s) (store size 900).",
-    "Reviewed top 92 suspect(s); provider=none.",
+    "Hydrated working sidecar from 5213 published URN shards (prior=0 → 5213).",
+    "Rebalanced learned QA phrases: active=900 candidates=1939.",
+    "Learning fingerprint: {'phraseHash': '68c081138d3fc2721a2b', 'phraseCount': 900, 'candidateCount': 1939, 'eventCount': 8245, 'updatedAt': '2026-09-29'}",
+    "Apply decision: eventCount +56 (>= 15)",
+    "Before: 95 suspects across 5213 records.",
+    "Applied QA fixes to 66 school(s) (83 area finding(s)).",
+    "Learned 34 new junk phrase(s) (store size 900).",
+    "Reviewed top 95 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 5033 records.",
+    "After: 29 suspects across 5213 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
