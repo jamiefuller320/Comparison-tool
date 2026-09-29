@@ -1,11 +1,232 @@
 {
-  "ranAt": "2026-09-28T17:58:01.832577+00:00",
+  "ranAt": "2026-09-29T15:46:22.087408+00:00",
   "dryRun": false,
-  "reviewed": 92,
-  "changedSchools": 63,
-  "findingsApplied": 82,
-  "learningAdded": 19,
+  "reviewed": 16,
+  "changedSchools": 15,
+  "findingsApplied": 36,
+  "learningAdded": 17,
   "suspects": [
+    {
+      "urn": "143922",
+      "name": "Lime Wood Primary School",
+      "score": 15.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Inclusion & Safeguarding"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Inclusion & Safeguarding"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Inclusion & Safeguarding"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "137380",
+      "name": "Northumberland Heath Primary School",
+      "score": 15.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Inclusion & Safeguarding",
+            "Inclusion & SafeguardingInclusion & Safeguarding"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Inclusion & Safeguarding",
+            "Inclusion & SafeguardingInclusion & Safeguarding"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Inclusion & Safeguarding",
+            "Inclusion & SafeguardingInclusion & Safeguarding"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "102097",
+      "name": "Coldfall Primary School",
+      "score": 14.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Children & Families"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Children & Families"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Headteacher's Welcome: Headteacher Mr. Marshall"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "\u25fc To evaluate the effectiveness of safeguarding, inspectors: reviewed the single central record; took account of the views of leaders, staff, and pupils; and considered the extent to which the school has created an open and positive culture around safeguarding that puts pupils\u2019 interests first."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "147071",
+      "name": "Cleeve Meadow School",
+      "score": 11.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Safeguarding Assemblies"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Safeguarding Curriculum: Safeguarding Assemblies"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our PSHE curriculum covers many different areas of Safeguarding including RSE (Relationships and Sex Education), drugs and alcohol education, anti-bullying, healthy relationships, citizenship and health education."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "151382",
+      "name": "Hurstmere School",
+      "score": 11.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Child Protection & Safeguarding"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Child Protection & Safeguarding: Child Protection & Safeguarding"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "This is attended by Raising Standards Leaders, the Inclusion Team, Safeguarding Team and AEN including the SENCO."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
     {
       "urn": "125810",
       "name": "Boundstone Nursery School",
@@ -37,8 +258,39 @@
       ]
     },
     {
-      "urn": "100114",
-      "name": "Morden Mount Primary School",
+      "urn": "131757",
+      "name": "Park View School",
+      "score": 10.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Safeguarding Children"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Safeguarding Children"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "140443",
+      "name": "Bursted Wood Primary School",
       "score": 9.0,
       "flags": [
         "chrome"
@@ -50,18 +302,18 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Our dedicated active lunch time activities were instrumental in creating a highly inclusive and supportive sporting environment, specifically benefiting our Special Educational Needs and Disabilities (SEND) pupils."
+            "High\u2011quality texts, global perspectives, safeguarding content and inclusive enrichment work together to create a curriculum that reflects our school community and prepares children for the wider world."
           ],
           "source": "heuristic"
         },
         {
-          "area": "send",
+          "area": "behaviour",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "It can be accessed here: Special Educational Needs and Disabilities (SEND) Local Offer | Greenwich Community Directory Greenwich SENDIASS provide free all-year round Special Educational Needs and Disability information; advice and support service (SENDIASS) for Young People, children and Parents aged 0 to 25.",
-            "The dedicated funding has driven a substantial and sustainable increase in equitable access to extracurricular activities, specifically targeting disadvantaged and Special Educational Needs and Disabilities (SEND) pupils."
+            "Safeguarding underpins all learning, with age\u2011appropriate teaching on boundaries, body autonomy, online safety, trusted adults and emotional wellbeing, empowering children to keep themselves safe and speak up when something feels wrong.",
+            "Aligning with the 2026 RSHE Guidance The 2026 RSHE guidance places a strong emphasis on safeguarding, inclusion, emotional wellbeing and the development of essential life skills."
           ],
           "source": "heuristic"
         },
@@ -71,15 +323,268 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "It can be accessed here: Special Educational Needs and Disabilities (SEND) Local Offer | Greenwich Community Directory Greenwich SENDIASS provide free all-year round Special Educational Needs and Disability information; advice and support service (SENDIASS) for Young People, children and Parents aged 0 to 25."
+            "High\u2011quality texts, global perspectives, safeguarding content and inclusive enrichment work together to create a curriculum that reflects our school community and prepares children for the wider world."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "100166",
-      "name": "Christ Church Church of England Primary School, Shooters Hill",
+      "urn": "102163",
+      "name": "Highgate School",
+      "score": 9.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "The Wellbeing, Inclusion and Safeguarding Committee (WISC) has helped us review policies, introduce an anonymous reporting system, develop our PSHE curriculum and input to the school\u2019s work on anti-bullying and racial inclusion."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Specialist staff are embedded in each of the schools, working closely with pastoral and wellbeing teams and teachers to build a holistic profile of the academic, safeguarding and pastoral needs of each child, and offer support accordingly.",
+            "The Wellbeing, Inclusion and Safeguarding Committee (WISC) has helped us review policies, introduce an anonymous reporting system, develop our PSHE curriculum and input to the school\u2019s work on anti-bullying and racial inclusion.",
+            "Home | Pre-Prep | Pastoral care Pupil wellbeing is at the heart of all our thinking and teaching Our pupils Within our Pre-Prep, we aim to foster a reflective and supportive community, encouraging an awareness of those around us."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Chair of Governors contact details: Inclusion",
+            "Chair of Governors contact details: LinkedIn",
+            "Chair of Governors contact details: Museum and Archive",
+            "Chair of Governors contact details: Sustainability"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "150552",
+      "name": "Our Lady and St Philip Neri Catholic Primary School",
+      "score": 9.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "They play a key role in monitoring standards, safeguarding, and provision for all pupils, while ensuring the school\u2019s Catholic ethos and values are lived out in daily practice.Governors help ensure that decisions about the school are well-informed, responsible, and focused on improving outcomes for every pupil."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Children with Special Educational Needs and Disabilities (SEND) are highly valued and supported by a team of experienced teachers, teaching assistants, and a Special Educational Needs and Disabilities Coordinator.",
+            "This report should be read alongside the school's SEND Policy, Safeguarding & Child Protection Policy, Accessibility Plan, Medical Conditions Policy, Online Safety Policy, and Complaints Policy."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "The Lewisham Local Offer is for families of children and young people with special educational needs and/or disabilities."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "144406",
+      "name": "Aspire Academy",
+      "score": 8.0,
+      "flags": [
+        "chrome",
+        "policy_toc",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Head's Welcome Head's Welcome Welcome to Aspire Academy We are a small, specialist primary school in Bexley, providing a nurturing and supportive environment for children aged 5\u201311 with social, emotional and mental health (SEMH) needs.",
+            "Individual liberty At Aspire, pupils are actively encouraged to make independent choices, with the knowledge that they are in a safe, secure and supportive environment."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Educational Psychologists"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "140320",
+      "name": "Barnehurst Infant School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Educational Psychologists"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Special Educational Needs (SEN): After School Clubs",
+            "Special Educational Needs (SEN): Wraparound Care",
+            "Special Educational Needs (SEN): ASD Advisory Service"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "140321",
+      "name": "Barnehurst Junior School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Educational Psychologists"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Special Educational Needs (SEN): After School Clubs",
+            "Special Educational Needs (SEN): Wraparound Care",
+            "Special Educational Needs (SEN): ASD Advisory Service"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "102079",
+      "name": "Belmont Infant School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Haringey Local Safeguarding Children Board"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Safeguarding: Haringey Local Safeguarding Children Board",
+            "Safeguarding: Mandatory Reporting of FGM"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "102078",
+      "name": "Belmont Junior School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Haringey Local Safeguarding Children Board"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Safeguarding: Haringey Local Safeguarding Children Board",
+            "Safeguarding: Mandatory Reporting of FGM"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "136334",
+      "name": "Beths Grammar School",
       "score": 8.0,
       "flags": [
         "policy_toc",
@@ -88,103 +593,12 @@
       ],
       "findings": [
         {
-          "area": "ethos",
+          "area": "curriculum",
           "action": "strip",
           "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
           "junkClass": "policy_toc",
           "offendingExcerpts": [
-            "Christ Church Safeguarding Statement"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "If you are concerned about the conduct of a member of staff or a volunteer in our school, you must contact the Headteacher, Anne-Marie Bahlol or the Chair of Governors, Mother Ariadne Van Den Hof."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "137844",
-      "name": "Barnhill Community High School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The club is a welcoming and supportive space where students can develop new skills, expand their knowledge, and share their enthusiasm for the subject."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Games Club Games Club is a welcoming and inclusive space for students with special educational needs and disabilities."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "143210",
-      "name": "Brooklands Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We have termly SEND meetings which include; every class teachers, the SENCo, Learning Mentor, Safeguarding lead as part of the Assess, Play, Do, review cycle.Staff have regular updates in Safeguarding, First Aid, Positive Handling etc."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We have termly SEND meetings which include; every class teachers, the SENCo, Learning Mentor, Safeguarding lead as part of the Assess, Play, Do, review cycle.Staff have regular updates in Safeguarding, First Aid, Positive Handling etc.",
-            "All schools are supported to be as inclusive as possible, with the needs of pupils with a Special Educational Need/s being met in a mainstream setting wherever possible, where families want this to happen."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101569",
-      "name": "Buxlow School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "What the school seeks to do 1.4 The school\u2019s aim is to create a community that is welcoming, happy, vibrant and focused, in which each pupil is encouraged, challenged and supported to achieve and progress."
+            "Term INTENT IMPLEMENTATION IMPACT"
           ],
           "source": "heuristic"
         },
@@ -194,1842 +608,17 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "What the school seeks to do 1.4 The school\u2019s aim is to create a community that is welcoming, happy, vibrant and focused, in which each pupil is encouraged, challenged and supported to achieve and progress."
+            "Headteacher Welcome: HeadteacherBeths Grammar School"
           ],
           "source": "heuristic"
         }
       ]
-    },
-    {
-      "urn": "131638",
-      "name": "Cherry Lane Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Art Curriculum Overview: Art & Design"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Individual Liberty At Cherry Lane pupils are actively encouraged to make independent choices (particularly around learning choice and within social times), knowing that they are in a safe, secure and supportive environment \u2013 developing the children\u2019s autonomy and responsibility for their learning."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100125",
-      "name": "Fossdene Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Stage of SEN Code of Practice: Education, Health and Care Plan (EHCP) ( or if your child has had this type of support for some time, may be provided by a Statement of Special Educational Needs) ."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We expect that all staff, visitors, volunteers and parents demonstrate a full commitment to our safeguarding policies and procedures."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "145210",
-      "name": "Greenacres Primary School and Language Impairment Unit",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We make this vision a reality through the value we place on understanding the whole child and their individual needs, thus providing a learning environment that enables all pupils to make the greatest possible progress and achieve their full potential in a nurturing, supportive and fully inclusive environment."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We make this vision a reality through the value we place on understanding the whole child and their individual needs, thus providing a learning environment that enables all pupils to make the greatest possible progress and achieve their full potential in a nurturing, supportive and fully inclusive environment.",
-            "All schools are supported to be as inclusive as possible, with the needs of pupils with a special educational need/s and or disabilities being met in a mainstream setting wherever possible, where families want this to happen."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100162",
-      "name": "Greenslade Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "These have then been adapted to best meet the needs of our children: https://www.rgs.org/schools/ History: Our units have been written by school staff, taking advice and ideas from a range of sources, including The Historical Association: https://www.history.org.uk/ Science: We follow the statutory national curriculum."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "At Greenslade Primary School, we prioritise the well-being and safety of our pupils, staff, and visitors and we firmly believe that fostering a culture of safeguarding is essential for the holistic development of each individual."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100158",
-      "name": "Heronsgate Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "It can be accessed here: Special Educational Needs and Disabilities (SEND) Local Offer | Greenwich Community Directory Greenwich SENDIASS provide free all-year round Special Educational Needs and Disability information; advice and support service (SENDIASS) for Young People, children and Parents aged 0 to 25."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "It can be accessed here: Special Educational Needs and Disabilities (SEND) Local Offer | Greenwich Community Directory Greenwich SENDIASS provide free all-year round Special Educational Needs and Disability information; advice and support service (SENDIASS) for Young People, children and Parents aged 0 to 25."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102407",
-      "name": "Highfield Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "\u25fc To evaluate the effectiveness of safeguarding, the inspector: reviewed the single central record, took account of the views of leaders, staff, and pupils, and considered the extent to which the school has created an open and positive culture around safeguarding that puts pupils\u2019 interests first."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The school has high expectations and offers all pupils, including those with special educational needs and/or disabilities (SEND), an ambitious curriculum."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "150995",
-      "name": "Landon School Harmondsworth",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Provision of information Paragraphs 7(a), 7(b), 32(1)(c) \uf06e The school\u2019s safeguarding policy takes into account the latest statutory guidance."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "These suitably consider the needs of primary-age pupils who have special educational needs and/or disabilities (SEND), specifically education, health and care plans (EHC plan) for autism and other complex needs."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101524",
-      "name": "Mitchell Brook Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Individual Liberty Within school, pupils are actively encouraged to make choices and take responsibility for these choices, knowing that they are in a safe and supportive environment."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "School role: Pastoral Manager (Behaviour), Deputy Designated Safeguarding Lead (DDSL), Nurture Group Practitioner, CPI Safety Instructor As an ex pupil of Mitchell Brook, I feel so proud to represent the school alongside my colleagues."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "152563",
-      "name": "Mount Stewart Infant School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Curriculum Subjects: Art & Design"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We continue to hold regular Governing Board meetings using online facilities and receive updates on the current situation in school, including attendance, safety, safeguarding and any concerns at those meetings as well as brief updates in between as required."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101500",
-      "name": "Mount Stewart Junior School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Curriculum Subjects: Art & Design"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We continue to hold regular Governing Board meetings using online facilities and receive updates on the current situation in school, including attendance, safety, safeguarding and any concerns at those meetings as well as brief updates in between as required."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "152550",
-      "name": "Mount Stewart Junior School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Curriculum Subjects: Art & Design"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We continue to hold regular Governing Board meetings using online facilities and receive updates on the current situation in school, including attendance, safety, safeguarding and any concerns at those meetings as well as brief updates in between as required."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "141154",
-      "name": "North West London Jewish Day School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Pupils with Special Educational Needs (SEN), pupils who are Gifted and Talented and our growing number of pupils from French and International families for whom English is not their first language."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "There is something very special about North West London Jewish Day School and we are incredibly proud of all our children, supportive parents, inspirational staff and governors, where we all work together to make North West a safe, happy and exciting place to learn."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "142718",
-      "name": "Oakington Manor Primary School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Curriculum: Art & DT",
-            "Curriculum: ICT & Computing"
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This includes children with a special educational need or disability (SEND), whose development may be identified by teachers in different ways."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "147128",
-      "name": "The Ferns Primary Academy",
-      "score": 6.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Absence & Attendance, Celebrating Success, Celebration Assembly, Free Stay and Play, Inset Days, Lettings and 9 more."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Absence & Attendance, Celebrating Success, Celebration Assembly, Free Stay and Play, Inset Days, Lettings and 9 more."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "138983",
-      "name": "Belmore Primary Academy",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "Special Educational Needs Coordinator"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "115872",
-      "name": "Chandler's Ford Infant School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for ethos and values (7 specific items). Listed provision includes gymnastics, dance, Newsletters, I like to do PE."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "138613",
-      "name": "Cranford Park Academy",
-      "score": 5.0,
-      "flags": [
-        "policy_toc",
-        "implausible_offerings"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
-          "offendingExcerpts": [
-            "SEN/Safeguarding None Declared"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "137605",
-      "name": "Dove House Academy",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for ethos and values (8 specific items). Listed provision includes Families, Newsletters, Promoting British Values. 2 items corroborated across mul"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "149906",
-      "name": "Light Years School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for curriculum (11 specific items). Listed provision includes Newsletters, music. 1 item corroborated across multiple pages."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116330",
-      "name": "Liphook Church of England Controlled Junior School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (18 specific items). Listed provision includes Lunch Menus, Parent Videos, School Calendar. 3 items corrobora"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116056",
-      "name": "Liphook Infant School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (18 specific items). Listed provision includes Lunch Menus, Parent Videos, School Calendar. 3 items corrobora"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "118310",
-      "name": "Ryarsh Primary School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (16 specific items). Listed provision includes Galleries, Newsletters, music. 2 items corroborated across mul"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "125992",
-      "name": "Shipley CofE Primary School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (10 specific items). Listed provision includes Facebook, Instagram, LinkedIn. 3 items corroborated across mul"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116489",
-      "name": "St Peter's Catholic Primary School, Waterlooville",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (8 specific items). Listed provision includes Newsletter, music. 1 item corroborated across multiple pages."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "151930",
-      "name": "St Peter's Catholic Primary School, Waterlooville",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (8 specific items). Listed provision includes Newsletter, music. 1 item corroborated across multiple pages."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116383",
-      "name": "St Swithun Wells Catholic Primary School, Chandlers Ford",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Moderate publicly visible evidence for community and parental engagement (3 specific items). Listed provision includes Facebook, Instagram, LinkedIn."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "148724",
-      "name": "Stafford Junior School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (10 specific items). Listed provision includes Facebook, News & Newsletters, Outside Agency Directory, Prospe"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102458",
-      "name": "ACS Hillingdon International School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "These are the standards on safeguarding; measures to guard against bullying; arrangements for pupils\u2019 health and safety; arrangements to check the suitability of staff; the provision of information; the handling of parents\u2019 complaints; and other related aspects of leadership and management."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100756",
-      "name": "Blackheath High School GDST",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "As a teacher of Physical Education and Deputy Designated Safeguarding Lead, I am passionate about our students\u2019 wellbeing and holistic pastoral care."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "109748",
-      "name": "Blagdon Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102368",
-      "name": "Bourne Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Hillingdon Music Services provides further opportunities for pupils and families: https://www.hillingdon.gov.uk/music The Department for Education publishes a guide for parents and young people on music education: https://www.gov.uk/government/publications/music-education-information-for- parents-and-young-people"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "133660",
-      "name": "Brent River College",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Accessibility Plan Brent Local Offer Welcome to Brent\u2019s Local Offer \u2013 a single point of information and advice for children and young people from 0 to 25 with special educational needs and disabilities (SEND) and their families."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101251",
-      "name": "Brookhill Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100155",
-      "name": "Cardwell Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND / Home School Liaison SEND All Greenwich maintained schools have a similar approach to meeting the needs of pupils with Special Educational Needs and are supported by the Local Authority to ensure that all pupils, regardless of their specific needs, make the best possible progress in school.",
-            "Royal Borough Of Greenwich SEND Local Offer Please see the below link for the Royal Borough of Greenwich local offer for children and young people with Special Educational Needs and Disabilities."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101498",
-      "name": "Carlton Vale Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The website link www.brentpcf.org The email address : admin@brentpcf.org Brent Special Educational Needs and Disabilities (SEND) Local Offer Information and advice for children and young people from 0 to 25 with special educational needs and disabilities (SEND) and families of Brent residents.",
-            "The website link: www.resourcesforautism.org.uk Centre for ADHD and Autism: Charity based in Harrow offering support for families of autistic children and young people and / or ADHD."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100164",
-      "name": "Charlton Manor Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "In response to the Department for Education\u2019s guidance on promoting British values in schools, the school seeks to ensure young people leave school prepared for life in modern Britain and are members of society who treat others with respect and tolerance, regardless of background.",
-            "We prioritise the physical and mental wellbeing of our pupils and staff, creating a safe, supportive and nurturing environment for all."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101533",
-      "name": "Christ Church CofE Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The Special Educational Needs Coordinator (SENCo) is the Inclusion Leader, Mrs W Baverstock, MA, PGDE, BA (Hons).",
-            "If you are a parent or prospective parent, you are warmly invited to contact our Special Educational Needs Coordinator (SENCo)."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "136656",
-      "name": "Claremont High School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This partnership is a great reflection of how, together, we strive to be fully involved and supportive of our community."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101489",
-      "name": "Curzon Nursery School & Family Wellbeing Centre",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Brent Council's Local Offer can be found here: www.brent.gov.uk/localoffer Get in touch with our SENDco Please click here to view our Special Educational Needs and Disabilities (SEND) Annual Report."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "141035",
-      "name": "De Salis Studio College",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The tour of the school was led by two Student Ambassadors who were keen to show off the very attractive open plan learning spaces that are such a feature of this new school, with themed areas designed to give the school a more business style atmosphere. There were various areas where parents could pop into school to chat with staff, either openly or in the smaller confidential spaces provided for that purpose. In the reception area information is available for parents about safeguarding. There is also a Parents\u2019 Information Board which is kept up to date by the Student Ambassadors.: Curriculum Content"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "135973",
-      "name": "E-ACT Crest Academy",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Academy Headteachers: Headteachers lead their academies on a day-to-day basis, ensuring high standards of education, safeguarding, behaviour and pupil wellbeing."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "144796",
-      "name": "Edith Kay Independent School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We agree with the Department for Education\u2019s five-part definition of British values: \u2022 democracy \u2022 the rule of law \u2022 individual liberty \u2022 mutual respect \u2022 tolerance of those of different faiths and beliefs At EK learners will encounter these principles throughout everyday school life."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101519",
-      "name": "Elsley Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "As a school, we believe that physical education, experienced in a safe and supportive environment, is a unique and vital contributor to a pupil\u2019s well-being as well as their physical and social development."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101490",
-      "name": "Fawood Nursery School & Family Wellbeing Centre",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Brent Council's Local Offer can be found here: www.brent.gov.uk/localoffer Get in touch with our SENDco Please click here to view our Special Educational Needs and Disabilities (SEND) Annual Report."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102379",
-      "name": "Field End Infant School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "There is also a section for children with Special Educational Needs / Disabilities (SEND) and their families, with events and activities, education and training support and health and wellbeing advice."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "148774",
-      "name": "Field End Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "> Support for families > School lunches > ParentPay > Breakfast Club > After School Clubs > Parent/Carer evenings > Children's Zone > Year 3 page > Year 4 page > Year 5 page > Year 6 page > Children's Leadership Programme > Homework > Contact Us Headteacher's Welcome Welcome to Field End Junior School."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "143592",
-      "name": "Foxfield Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND: Accessibility Policy & Plan"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100129",
-      "name": "Haimo Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "All schools are supported to be as inclusive as possible, with the needs of pupils with a Special Educational Need and/or Disability being met in a mainstream setting wherever possible, where families want this to happen."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101252",
-      "name": "Hampden Way Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102384",
-      "name": "Harmondsworth Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Headteacher's Welcome: L ParentPay",
-            "Headteacher's Welcome: O School Meals"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "138449",
-      "name": "Harris Academy Greenwich",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Expert teachers help students transition from Year 11, and a wide range of enrichment opportunities build skills and prepare them for the future.\u201d \u201cI value the academy\u2019s supportive, ambitious culture and high expectations."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "136519",
-      "name": "Haydon School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Chiara Paschina, Special Educational Needs Coordinator (SENCO), coordinates all the SEND support and intervention in the school, including keeping families informed, holding SEND reviews and liaising with all agencies involved with your child."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102439",
-      "name": "Hayes Park School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Advice from the Department for Education is that British values should be promoted through the school\u2019s SMSC provision (spiritual, moral, social and cultural)."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100131",
-      "name": "Henwick Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We recognise that some pupils, for example some pupils with special educational needs and disabilities (SEND), may not be able to access remote education without support from adults at home."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "133724",
-      "name": "JFS",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "All members of our safeguarding and pastoral teams are trained to Level 3 in safeguarding, ensuring the highest standards of knowledge and practice across the school."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101503",
-      "name": "Kingsbury Green Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Chantelle Corbyn-Thomas \u2013 Co-opted Governor / Chair of Governors: Declaration of Interest: None"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "137685",
-      "name": "Kingsbury High School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The Inclusion faculty consists of Special Educational Needs, Total Communication Resource (TCR) and English as an Additional Language (EAL) departments."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "139275",
-      "name": "Laurel Lane Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This is reinforced in different ways: Collective Worship covers national and international events Individual Liberty Within school, pupils are actively encouraged to make choices, including the right to respectfully express views and beliefs, knowing they are in a safe and supportive environment."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "110428",
-      "name": "Lee Common Church of England School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists music, dance, wraparound care, News and Events, Open Day and Schools Visits, Sports Premium and 2 more. Information appears across 2 pages."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "145895",
-      "name": "Leigh Academy Blackheath",
-      "score": 3.0,
-      "flags": [
-        "boilerplate"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "thin",
-          "reason": "Narrative looks like a mid-sentence fragment.",
-          "junkClass": "boilerplate",
-          "offendingExcerpts": [
-            "latest news, letters & events Our Mission We believe that every learner is entitled to an enriching, varied and personalised education; delivered through a broad and balanced curri"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101504",
-      "name": "Leopold Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our SEND provision is overseen by a Special Educational Needs Coordinator(SENCo), Kaitlyn Atkins, who works across both the Hawkshead Road and Gwenneth Rickus sites.",
-            "28 September 2026 Dear Families of Leopold, Inclusion Update I am writing to inform you of some updates and changes to the Inclusion Team at the school, particularly regarding the support for children with special educational needs and disabilities (SEND) and their families."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "144053",
-      "name": "Manor School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "\u201cLove, Learn, Laugh\u201d guide our approach, recognising that a safe, happy, and supportive environment is fundamental to effective learning."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "135298",
-      "name": "Maple Walk School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The school has identified 11 pupils as having special educational needs and/or disabilities (SEND), which include dyslexia and dyspraxia, ten of whom receive extra support.",
-            "She has been a governor responsible for safeguarding at Amesbury, a preparatory school in Hampshire since 2012 and a trustee of Send Family Link, a charity which supports children with a female family member in prison."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100137",
-      "name": "Meridian Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The framework covers the education and care of all children in early years provision, including children with special educational needs and disabilities (SEND)."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100163",
-      "name": "Mulgrave Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "For children with Special Educational Needs and Disabilities (SEND), an Education, Health and Care Plan (EHCP) can provide the tailored support they need to thrive."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "142356",
-      "name": "Mytchett Primary & Nursery Academy",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists after-school club, breakfast club, Celebration Assembly, Extra-Curricular Clubs, Family Forum, Free Stay and Play and 10 more."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "109752",
-      "name": "New Bridge Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100103",
-      "name": "Newhaven Pupil Referral Unit",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Special Educational Needs & Disability (SEND) At Newhaven, we manage the usual range of additional needs: literacy (reading, vocabulary and comprehension), numeracy, working memory and processing difficulties, ADHD, ASD and mental health difficulties."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102394",
-      "name": "Newnham Infant and Nursery School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Special Educational Needs and Disabilities (SEND): Help and Information",
-            "Special Educational Needs and Disabilities (SEND): SEND Code of Practice",
-            "Special Educational Needs and Disabilities (SEND): SEND Information Report"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "102393",
-      "name": "Newnham Junior School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Special Educational Needs: Exclusions",
-            "Please also refer to Hillingdon\u2019s Local Offer for SEND - https://www.hillingdon.gov.uk/send Exclusions Provision of education and associated services",
-            "All schools must publish a SEND Information Report about their support and provision for children and young people with Special Educational Needs and Disabilities (SEND)."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "145215",
-      "name": "Nightingale Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND Local Offer text All Greenwich maintained schools have a similar approach to meeting the needs of pupils with Special Educational Needs and are supported by the Local Authority to ensure that all pupils, regardless of their specific needs, make the best possible progress in school.",
-            "All schools are supported to be as inclusive as possible, with the needs of pupils with Special Educational Need(s) being met in a mainstream setting wherever possible, where families want this to happen.",
-            "Full Details of our Local Offer SEND policy & Information Report To visit Greenwich Council's Local Offer site, please click here Special Educational Needs Coordinator (SENCo) Mrs."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100168",
-      "name": "Our Lady of Grace Catholic Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Human dignity resources for parents https://www.youtube.com/watch?v=sPfx2rVtgxs https://www.youtube.com/watch?v=ABRl2ZSs58E WESTCOMBE PARK CARE HOME Our Mini Vinnies group, led by Mrs Perera and Miss Erokwu, recently visited Westcombe Park Care Home as part of their mission to serve others in our community."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101545",
-      "name": "Our Lady of Lourdes Catholic Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Art & DT Intent, Implementation and Impact At Our Lady of Lourdes Catholic Primary School & Nursery, we value Art and Design as an important part of the children\u2019s entitlement to a broad and balanced curriculum."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100183",
-      "name": "Plumstead Manor School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "The Special Educational Needs Co-Ordinator (SENCO)/HOD Learning Support \uf0b7 Assisting in writing Personal Learning Plans (PLP), also sometimes called Individual Education Plans (IEP), and sharing and reviewing these with parents at least once each term and planning for the next term.",
-            "He/ She is responsible for: \uf0b7 Coordinating all the support for children with special educational needs (SEN) and or disabilities, and developing the school\u2019s SEND Policy to make sure all children get a consistent, high quality response to meeting their needs in school.",
-            "All sc hools are supported to be as inclusive as possible, with the needs of pupils with a Special Educational Need/s and or disabilities being met in a mainstream setting wherever possible, where families want this to happen."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "100098",
-      "name": "Pound Park Nursery School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We are a supportive learning community, often welcoming apprentices, students, parent helpers, and volunteers\u2014each fully DBS-checked.",
-            "We believe that children learn best in a caring, calm, and supportive environment."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "141315",
-      "name": "Pulse and Water College",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Activities include- PE, Creativity, Cooking, Gaming and School Trips admin@pulseandwatercollege.co.uk 020 8317 2639 Contact Us C SUPPORT Special Educational Needs and Disabilities (SEND) SEN and Additional needs is the responsibility of all staff."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "125344",
-      "name": "Rydes Hill Preparatory School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists music, drama, MONDAY Stay & Play Nursery, TUESDAY Stay & Play Nursery, Academic & Scholarships, Co-educational Prep and 11 more. Information appears across"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "126037",
-      "name": "St Mary's Catholic Primary School",
-      "score": 3.0,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": []
-    },
-    {
-      "urn": "151781",
-      "name": "St Mary's Catholic Primary School",
-      "score": 3.0,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": []
-    },
-    {
-      "urn": "116423",
-      "name": "The Hayling College",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Careers Learning Journey, College Federation Day, Green Careers Week, HSDC College Taster Days, Happy, Healthy and High Performing, Health and Wellbeing an"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "137239",
-      "name": "The Romsey School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Academic Curriculum, Assemblies, Enterprise Project, Further Education Taster Days, Personal Development Tutor Programme, Whole School Curriculum and 5 mor"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116411",
-      "name": "The Toynbee School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists choir, music, College Taster Day, Hampshire Book Awards, Mental Health Roadshow, Mental Health Workshop and 1 more."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "139916",
-      "name": "Warlingham Village Primary School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Curriculum Entitlements, Equality & Diversity, Get Into Teaching Events, Governance, In-Year Transfers, Individual Subjects and 10 more."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "136450",
-      "name": "Platanos College",
-      "score": 2.0,
-      "flags": [
-        "implausible_offerings"
-      ],
-      "findings": []
-    },
-    {
-      "urn": "136013",
-      "name": "The Bay Church of England School",
-      "score": 1.5,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": []
-    },
-    {
-      "urn": "139109",
-      "name": "Worthing High School",
-      "score": 1.5,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": []
     }
   ],
   "notes": [
-    "Applied QA fixes to 63 school(s) (82 area finding(s)).",
-    "Learned 19 new junk phrase(s) (store size 900).",
-    "Reviewed top 92 suspect(s); provider=none."
+    "Applied QA fixes to 15 school(s) (36 area finding(s)).",
+    "Learned 17 new junk phrase(s) (store size 900).",
+    "Reviewed top 16 suspect(s); provider=none."
   ],
   "provider": "none"
 }
