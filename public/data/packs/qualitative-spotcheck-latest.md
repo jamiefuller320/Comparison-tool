@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-09-29T17:54:43.453929+00:00
+# Qualitative source spot-check — 2026-09-30T17:49:49.511715+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `2695324916`
+- Seed: `2670378094`
 - Max pages / school: `3`
-- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,14 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Dulwich College** (`100861`, Southwark) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: mathematics, enrichment: Chewitel Ejiofor OA, enrichment: Directors & Designers
-- **Ferry Lane Primary School** (`102127`, Haringey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: Africa and Morocco., curriculum: Africa and South, curriculum: Africa and Tanzania.
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Great Marlow School** (`136964`, Buckinghamshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, curriculum: citizenship, curriculum: computer science, curriculum: Core PE (not examined)
-- **Whitelands Park Primary School** (`140407`, West Berkshire) — `pass`
+- **Mount Stewart Junior School** (`152550`, Brent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, ethos: respect, ethos: vision, ethos: resilience
+- **Kew House** (`140066`, Hounslow) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Highcliffe School** (`136763`, Bournemouth, Christchurch and Poole) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Guided Academic Reading, curriculum: Trained Literacy Lead, enrichment: orchestra
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos
+- **St Dominic Savio Catholic Primary School** (`110041`, Wokingham) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Online Safety Advice, enrichment: PE Sport Premium 2022-2023.pdf PDF File, enrichment: PE Sports Premium 2023-2024.pdf PDF File, enrichment: spanish club
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, faithful, our mission
 
 ## Notes
 

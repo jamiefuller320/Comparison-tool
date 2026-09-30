@@ -1,13 +1,13 @@
 {
-  "ranAt": "2026-09-29T17:54:43.453929+00:00",
+  "ranAt": "2026-09-30T17:49:49.511715+00:00",
   "dryRun": false,
-  "seed": 2695324916,
+  "seed": 2670378094,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
     "warn": 6,
-    "pass": 1
+    "fetch_error": 1
   },
   "failCount": 0,
   "warnCount": 6,
@@ -148,14 +148,14 @@
       "notes": []
     },
     {
-      "urn": "100861",
-      "name": "Dulwich College",
-      "la": "Southwark",
-      "website": "https://www.dulwich.org.uk",
-      "assessedAt": "2026-09-26",
+      "urn": "152550",
+      "name": "Mount Stewart Junior School",
+      "la": "Brent",
+      "website": "https://www.tmss.org.uk",
+      "assessedAt": "2026-09-28",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 26,
+      "offeringsChecked": 41,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -165,28 +165,49 @@
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
             "curriculum: mathematics",
-            "enrichment: mathematics",
-            "enrichment: Chewitel Ejiofor OA",
-            "enrichment: Directors & Designers",
-            "enrichment: LAMDA and Clubs",
-            "enrichment: theatre trips",
-            "enrichment: whilst regular theatre trips",
-            "enrichment: duke of edinburgh",
-            "ethos: vision"
+            "ethos: respect",
+            "ethos: vision",
+            "ethos: resilience",
+            "ethos: Governance",
+            "ethos: Reflective,",
+            "ethos: Relating,",
+            "ethos: Resourcefulness",
+            "ethos: Responsiveness,",
+            "ethos: Risk-taking"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "102127",
-      "name": "Ferry Lane Primary School",
-      "la": "Haringey",
-      "website": "https://www.ferrylaneschool.co.uk/",
-      "assessedAt": "2026-09-29",
+      "urn": "140066",
+      "name": "Kew House",
+      "la": "Hounslow",
+      "website": "https://www.kewhouseschool.com",
+      "assessedAt": "2026-09-30",
+      "verdict": "fetch_error",
+      "pagesFetched": 3,
+      "offeringsChecked": 38,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "136763",
+      "name": "Highcliffe School",
+      "la": "Bournemouth, Christchurch and Poole",
+      "website": "https://www.highcliffe.school",
+      "assessedAt": "2026-09-11",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 81,
+      "offeringsChecked": 24,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -195,11 +216,9 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: mathematics",
-            "curriculum: Africa and Morocco.",
-            "curriculum: Africa and South",
-            "curriculum: Africa and Tanzania.",
-            "curriculum: Seas, Coasts and"
+            "curriculum: Guided Academic Reading",
+            "curriculum: Trained Literacy Lead",
+            "enrichment: orchestra"
           ]
         },
         {
@@ -208,21 +227,21 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our vision"
+            "our ethos"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "136964",
-      "name": "Great Marlow School",
-      "la": "Buckinghamshire",
-      "website": "https://www.gms.bucks.sch.uk",
-      "assessedAt": "2026-09-07",
+      "urn": "110041",
+      "name": "St Dominic Savio Catholic Primary School",
+      "la": "Wokingham",
+      "website": "https://www.stdominicsavio.co.uk",
+      "assessedAt": "2026-09-14",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 9,
+      "offeringsChecked": 30,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -231,28 +250,27 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: geography",
-            "curriculum: citizenship",
-            "curriculum: computer science",
-            "curriculum: Core PE (not examined)",
-            "curriculum: Food Preparation & Nutrition Statistics"
+            "curriculum: Online Safety Advice",
+            "enrichment: PE Sport Premium 2022-2023.pdf PDF File",
+            "enrichment: PE Sports Premium 2023-2024.pdf PDF File",
+            "enrichment: spanish club",
+            "enrichment: chess",
+            "enrichment: after school club",
+            "enrichment: breakfast club"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "catholic",
+            "faithful",
+            "our mission"
           ]
         }
       ],
-      "notes": []
-    },
-    {
-      "urn": "140407",
-      "name": "Whitelands Park Primary School",
-      "la": "West Berkshire",
-      "website": "https://www.whitelandsparkprimary.co.uk/",
-      "assessedAt": "2026-09-18",
-      "verdict": "pass",
-      "pagesFetched": 3,
-      "offeringsChecked": 4,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [],
       "notes": []
     }
   ],
