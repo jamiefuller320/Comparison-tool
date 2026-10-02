@@ -1,21 +1,21 @@
 {
-  "ranAt": "2026-10-01T17:02:09.082898+00:00",
+  "ranAt": "2026-10-02T16:14:08.164018+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 5573,
-    "suspectCount": 99,
+    "recordCount": 5753,
+    "suspectCount": 107,
     "flagCounts": {
-      "chrome": 67,
+      "chrome": 72,
       "admissions": 12,
       "cms_chrome": 12,
-      "implausible_offerings": 8,
-      "policy_toc": 7,
+      "implausible_offerings": 12,
+      "policy_toc": 11,
       "high_score_thin_signals": 4,
-      "boilerplate": 1
+      "boilerplate": 3
     },
     "topSuspects": [
       {
@@ -27,8 +27,56 @@
         ]
       },
       {
-        "urn": "100008",
-        "name": "Argyle Primary School",
+        "urn": "103052",
+        "name": "Chapel End Infant School and Early Years Centre",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "138651",
+        "name": "Orleans Park School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "100259",
+        "name": "Parkwood Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "102916",
+        "name": "Sacred Heart Catholic Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "100242",
+        "name": "Southwold Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "102915",
+        "name": "St Stephen's C E Primary School",
+        "score": 9.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "100258",
+        "name": "Grazebrook Primary School",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -37,8 +85,28 @@
         ]
       },
       {
-        "urn": "101147",
-        "name": "Christ Church Bentinck CofE Primary School",
+        "urn": "103106",
+        "name": "Holy Family Catholic School",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings",
+          "chrome"
+        ]
+      },
+      {
+        "urn": "141734",
+        "name": "Lime Academy Larkswood",
+        "score": 8.0,
+        "flags": [
+          "chrome",
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "102913",
+        "name": "St James's Catholic Primary School",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -47,85 +115,19 @@
         ]
       },
       {
-        "urn": "131847",
-        "name": "Christchurch Primary School",
+        "urn": "100270",
+        "name": "St John of Jerusalem Church of England Primary School",
         "score": 8.0,
         "flags": [
-          "policy_toc",
           "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "101161",
-        "name": "Francis Holland School",
-        "score": 8.0,
-        "flags": [
           "policy_toc",
-          "chrome",
           "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "142455",
-        "name": "Al-Noor Voluntary Aided Muslim Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "100068",
-        "name": "Alleyns Hampstead Nursery and Junior School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "141006",
-        "name": "Beacon Business Innovation Hub",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "100082",
-        "name": "College Francais Bilingue De Londres",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "101160",
-        "name": "Eaton House School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "139239",
-        "name": "Eifa International School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102833",
-        "name": "Fullwood Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 5573,
+    "recordCount": 5753,
     "suspectCount": 29,
     "flagCounts": {
       "admissions": 12,
@@ -233,42 +235,42 @@
     ]
   },
   "qa": {
-    "reviewed": 99,
-    "changedSchools": 70,
-    "findingsApplied": 93,
-    "learningAdded": 39,
+    "reviewed": 107,
+    "changedSchools": 78,
+    "findingsApplied": 113,
+    "learningAdded": 27,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +69 (>= 15)",
+    "reason": "eventCount +58 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "aa2fe44c1e30782b4948",
+      "phraseHash": "fd2533f1a96f4efa0b95",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 8649,
-      "updatedAt": "2026-10-01"
+      "eventCount": 8854,
+      "updatedAt": "2026-10-02"
     },
     "fingerprintAfter": {
-      "phraseHash": "9bfed3c4bb007a466e4d",
+      "phraseHash": "8bdfaaf1e96872be5997",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 8796,
-      "updatedAt": "2026-10-01"
+      "eventCount": 9026,
+      "updatedAt": "2026-10-02"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 5573 published URN shards (prior=0 → 5573).",
+    "Hydrated working sidecar from 5753 published URN shards (prior=0 → 5753).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': 'aa2fe44c1e30782b4948', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 8649, 'updatedAt': '2026-10-01'}",
-    "Apply decision: eventCount +69 (>= 15)",
-    "Before: 99 suspects across 5573 records.",
-    "Applied QA fixes to 70 school(s) (93 area finding(s)).",
-    "Learned 39 new junk phrase(s) (store size 900).",
-    "Reviewed top 99 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': 'fd2533f1a96f4efa0b95', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 8854, 'updatedAt': '2026-10-02'}",
+    "Apply decision: eventCount +58 (>= 15)",
+    "Before: 107 suspects across 5753 records.",
+    "Applied QA fixes to 78 school(s) (113 area finding(s)).",
+    "Learned 27 new junk phrase(s) (store size 900).",
+    "Reviewed top 107 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 29 suspects across 5573 records.",
+    "After: 29 suspects across 5753 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
