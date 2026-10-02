@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-01T18:15:59.249825+00:00
+# Qualitative source spot-check — 2026-10-02T17:41:49.933659+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3759544204`
+- Seed: `698683436`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,16 +22,15 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Marshalls Park Academy** (`144094`, Havering) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Mock Appraisal Paper, curriculum: computing, curriculum: chemistry, ethos: ethos
-- **Grange Primary School** (`102723`, Newham) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **St Mark's Church of England Primary School** (`142445`, Bournemouth, Christchurch and Poole) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Childnet
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
-- **St Andrew's Church of England Primary School** (`144951`, Dorset) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — send: NHS Foundation Trusts, send: NHS Trusts, send: Parliamentary Under-Secretary of State, community: Jonathan Pinder (Chair & PE)
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
+- **Spring Grove Primary School** (`102500`, Hounslow) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission, our values, our vision
+- **Earlham Primary School** (`131478`, Haringey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: design technology, curriculum: mathematics, curriculum: computing, curriculum: core of computing is computer science
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
+- **Holmewood House School** (`118950`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: sharing ideas in mathematics, enrichment: design technology, enrichment: coding
+- **Oldfield Primary School** (`109888`, Windsor and Maidenhead) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: football
 
 ## Notes
 
