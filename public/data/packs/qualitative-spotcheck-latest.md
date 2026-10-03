@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-02T17:41:49.933659+00:00
+# Qualitative source spot-check — 2026-10-03T15:58:53.832909+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `698683436`
+- Seed: `1455911068`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,15 +22,14 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Spring Grove Primary School** (`102500`, Hounslow) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission, our values, our vision
-- **Earlham Primary School** (`131478`, Haringey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: design technology, curriculum: mathematics, curriculum: computing, curriculum: core of computing is computer science
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
-- **Holmewood House School** (`118950`, Kent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: sharing ideas in mathematics, enrichment: design technology, enrichment: coding
-- **Oldfield Primary School** (`109888`, Windsor and Maidenhead) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: football
+- **Alexandra Infant School** (`140451`, Bromley) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: values, curriculum: vision, curriculum: ethos, curriculum: wrap around care
+- **Manorside Primary School** (`101290`, Barnet) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: wraparound care, enrichment: wraparound care charges, enrichment: breakfast club, enrichment: after school club
+- **Rickley Park Primary School** (`138933`, Milton Keynes) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: swimming, curriculum: Adjectives, curriculum: Goethe and Arturo Pérez Reverte., curriculum: Negation
+- **Tylers Green First School** (`110255`, Buckinghamshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: drama, enrichment: such as drama
 
 ## Notes
 
