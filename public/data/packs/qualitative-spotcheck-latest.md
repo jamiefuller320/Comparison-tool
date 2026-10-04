@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-03T15:58:53.832909+00:00
+# Qualitative source spot-check — 2026-10-04T16:41:12.123986+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `1455911068`
+- Seed: `894026858`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,14 +22,18 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Alexandra Infant School** (`140451`, Bromley) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: values, curriculum: vision, curriculum: ethos, curriculum: wrap around care
-- **Manorside Primary School** (`101290`, Barnet) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: wraparound care, enrichment: wraparound care charges, enrichment: breakfast club, enrichment: after school club
-- **Rickley Park Primary School** (`138933`, Milton Keynes) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: swimming, curriculum: Adjectives, curriculum: Goethe and Arturo Pérez Reverte., curriculum: Negation
-- **Tylers Green First School** (`110255`, Buckinghamshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: drama, enrichment: such as drama
+- **Kisharon School** (`144752`, Barnet) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: citizenship, curriculum: either pshe, ethos: Horticulture
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — jewish, our vision
+- **Holmleigh Primary School** (`100257`, Hackney) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: DE- Weather and, curriculum: Living Things and, curriculum: Living Things and Their, curriculum: Solids, Liquids and
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — inspired to achieve
+- **Sikh Heritage Girls School** (`150865`, Buckinghamshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: mathematics is taught daily, curriculum: geography, curriculum: creating persuasive speeches in history
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **Danecourt School** (`142266`, Medway) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: football, enrichment: tennis, enrichment: dance
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
 
 ## Notes
 
