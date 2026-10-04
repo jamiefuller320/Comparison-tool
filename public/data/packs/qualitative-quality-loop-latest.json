@@ -1,21 +1,21 @@
 {
-  "ranAt": "2026-10-03T14:43:04.682110+00:00",
+  "ranAt": "2026-10-04T15:18:53.073674+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 5933,
-    "suspectCount": 113,
+    "recordCount": 6113,
+    "suspectCount": 102,
     "flagCounts": {
-      "chrome": 81,
+      "chrome": 64,
       "admissions": 13,
-      "cms_chrome": 13,
-      "implausible_offerings": 8,
-      "policy_toc": 7,
+      "implausible_offerings": 13,
+      "cms_chrome": 12,
+      "policy_toc": 12,
       "high_score_thin_signals": 4,
-      "boilerplate": 1
+      "boilerplate": 2
     },
     "topSuspects": [
       {
@@ -27,16 +27,16 @@
         ]
       },
       {
-        "urn": "136263",
-        "name": "The Holmewood School",
+        "urn": "134003",
+        "name": "St Mark's Church of England Academy",
         "score": 9.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "100344",
-        "name": "All Saints CofE Primary School",
+        "urn": "102666",
+        "name": "Bishop Gilpin CofE Primary School",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -45,8 +45,8 @@
         ]
       },
       {
-        "urn": "140657",
-        "name": "Aylward Primary School",
+        "urn": "100474",
+        "name": "Chelsea Open Air Nursery School",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -55,8 +55,8 @@
         ]
       },
       {
-        "urn": "143213",
-        "name": "Fulham Primary School",
+        "urn": "100491",
+        "name": "Oratory Roman Catholic Primary School",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -65,8 +65,8 @@
         ]
       },
       {
-        "urn": "101253",
-        "name": "Moss Hall Nursery School",
+        "urn": "144544",
+        "name": "Rushy Meadow Primary Academy",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -75,27 +75,18 @@
         ]
       },
       {
-        "urn": "147793",
-        "name": "Ormiston Queensmill Academy",
+        "urn": "100499",
+        "name": "Saint Mary's Catholic Primary School",
         "score": 8.0,
         "flags": [
           "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "139633",
-        "name": "Parkfield Primary School",
-        "score": 8.0,
-        "flags": [
-          "cms_chrome",
+          "implausible_offerings",
           "chrome"
         ]
       },
       {
-        "urn": "101254",
-        "name": "St Margaret's Nursery School",
+        "urn": "151351",
+        "name": "St Elphege's RC Junior School",
         "score": 8.0,
         "flags": [
           "policy_toc",
@@ -104,24 +95,32 @@
         ]
       },
       {
-        "urn": "131675",
-        "name": "Burlington House School",
+        "urn": "100503",
+        "name": "All Saints Catholic College",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "100382",
-        "name": "Cambridge School",
+        "urn": "142177",
+        "name": "Avenue Primary Academy",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "100328",
-        "name": "Flora Gardens Primary School",
+        "urn": "102626",
+        "name": "Bond Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "144774",
+        "name": "Brookways School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -130,13 +129,12 @@
     ]
   },
   "after": {
-    "recordCount": 5933,
-    "suspectCount": 31,
+    "recordCount": 6113,
+    "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
       "cms_chrome": 12,
       "high_score_thin_signals": 4,
-      "boilerplate": 1,
       "implausible_offerings": 1
     },
     "topSuspects": [
@@ -239,42 +237,42 @@
     ]
   },
   "qa": {
-    "reviewed": 113,
-    "changedSchools": 83,
-    "findingsApplied": 108,
-    "learningAdded": 32,
+    "reviewed": 102,
+    "changedSchools": 72,
+    "findingsApplied": 97,
+    "learningAdded": 30,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +77 (>= 15)",
+    "reason": "eventCount +81 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "98f239c4ea84c6909a0a",
+      "phraseHash": "2b43b20198093a43d1cc",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 9103,
-      "updatedAt": "2026-10-03"
+      "eventCount": 9342,
+      "updatedAt": "2026-10-04"
     },
     "fingerprintAfter": {
-      "phraseHash": "dd3da10b8a0de494b198",
+      "phraseHash": "6a7badcb2f73ff1a8da3",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 9261,
-      "updatedAt": "2026-10-03"
+      "eventCount": 9487,
+      "updatedAt": "2026-10-04"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 5933 published URN shards (prior=0 → 5933).",
+    "Hydrated working sidecar from 6113 published URN shards (prior=0 → 6113).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '98f239c4ea84c6909a0a', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 9103, 'updatedAt': '2026-10-03'}",
-    "Apply decision: eventCount +77 (>= 15)",
-    "Before: 113 suspects across 5933 records.",
-    "Applied QA fixes to 83 school(s) (108 area finding(s)).",
-    "Learned 32 new junk phrase(s) (store size 900).",
-    "Reviewed top 113 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': '2b43b20198093a43d1cc', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 9342, 'updatedAt': '2026-10-04'}",
+    "Apply decision: eventCount +81 (>= 15)",
+    "Before: 102 suspects across 6113 records.",
+    "Applied QA fixes to 72 school(s) (97 area finding(s)).",
+    "Learned 30 new junk phrase(s) (store size 900).",
+    "Reviewed top 102 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 31 suspects across 5933 records.",
+    "After: 30 suspects across 6113 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
