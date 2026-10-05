@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-04T16:41:12.123986+00:00
+# Qualitative source spot-check — 2026-10-05T20:25:10.369048+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `894026858`
+- Seed: `3567605495`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,18 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Kisharon School** (`144752`, Barnet) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: citizenship, curriculum: either pshe, ethos: Horticulture
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — jewish, our vision
-- **Holmleigh Primary School** (`100257`, Hackney) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: DE- Weather and, curriculum: Living Things and, curriculum: Living Things and Their, curriculum: Solids, Liquids and
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — inspired to achieve
-- **Sikh Heritage Girls School** (`150865`, Buckinghamshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: mathematics is taught daily, curriculum: geography, curriculum: creating persuasive speeches in history
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Danecourt School** (`142266`, Medway) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: football, enrichment: tennis, enrichment: dance
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
+- **Earlsfield Primary School** (`101005`, Wandsworth) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, our vision, rights respecting
+- **Bishop Douglass School Finchley** (`143082`, Barnet) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: chess, enrichment: tournaments (chess, enrichment: musical theatre)
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
+- **Herschel Grammar School** (`137726`, Slough) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: choir
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, church of england
+- **Brookfield Junior School** (`118869`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: after school club, enrichment: range of after school clubs, enrichment: science club
 
 ## Notes
 
