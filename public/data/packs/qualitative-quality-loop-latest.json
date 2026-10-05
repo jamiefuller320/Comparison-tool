@@ -1,23 +1,78 @@
 {
-  "ranAt": "2026-10-04T15:18:53.073674+00:00",
+  "ranAt": "2026-10-05T19:09:56.765837+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 6113,
-    "suspectCount": 102,
+    "recordCount": 6293,
+    "suspectCount": 123,
     "flagCounts": {
-      "chrome": 64,
+      "chrome": 80,
+      "implausible_offerings": 20,
+      "policy_toc": 19,
       "admissions": 13,
-      "implausible_offerings": 13,
-      "cms_chrome": 12,
-      "policy_toc": 12,
+      "cms_chrome": 13,
       "high_score_thin_signals": 4,
-      "boilerplate": 2
+      "boilerplate": 1
     },
     "topSuspects": [
+      {
+        "urn": "131340",
+        "name": "Hill Mead Primary School",
+        "score": 25.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "151115",
+        "name": "Rusthall St Paul's CofE Primary School",
+        "score": 25.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "125416",
+        "name": "Cranmore",
+        "score": 20.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "149975",
+        "name": "Maypole Primary School",
+        "score": 20.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "110120",
+        "name": "St Mary's School Ascot",
+        "score": 20.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "100407",
+        "name": "Hanover Primary School",
+        "score": 16.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
       {
         "urn": "125810",
         "name": "Boundstone Nursery School",
@@ -27,101 +82,44 @@
         ]
       },
       {
-        "urn": "134003",
-        "name": "St Mark's Church of England Academy",
+        "urn": "136177",
+        "name": "Duke of York's Royal Military School",
+        "score": 10.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "101169",
+        "name": "Saint Christina's School",
+        "score": 10.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "110133",
+        "name": "Wellington College Prep",
+        "score": 10.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "100462",
+        "name": "Dallington School",
         "score": 9.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "102666",
-        "name": "Bishop Gilpin CofE Primary School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "100474",
-        "name": "Chelsea Open Air Nursery School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "100491",
-        "name": "Oratory Roman Catholic Primary School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "144544",
-        "name": "Rushy Meadow Primary Academy",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "100499",
-        "name": "Saint Mary's Catholic Primary School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "implausible_offerings",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "151351",
-        "name": "St Elphege's RC Junior School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "100503",
-        "name": "All Saints Catholic College",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "142177",
-        "name": "Avenue Primary Academy",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102626",
-        "name": "Bond Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "144774",
-        "name": "Brookways School",
-        "score": 6.0,
+        "urn": "131351",
+        "name": "Educare Small School",
+        "score": 9.0,
         "flags": [
           "chrome"
         ]
@@ -129,7 +127,7 @@
     ]
   },
   "after": {
-    "recordCount": 6113,
+    "recordCount": 6293,
     "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
@@ -237,42 +235,42 @@
     ]
   },
   "qa": {
-    "reviewed": 102,
-    "changedSchools": 72,
-    "findingsApplied": 97,
-    "learningAdded": 30,
+    "reviewed": 123,
+    "changedSchools": 94,
+    "findingsApplied": 149,
+    "learningAdded": 19,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +81 (>= 15)",
+    "reason": "eventCount +70 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "2b43b20198093a43d1cc",
+      "phraseHash": "eec412c24e871eea26b5",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 9342,
-      "updatedAt": "2026-10-04"
+      "eventCount": 9557,
+      "updatedAt": "2026-10-05"
     },
     "fingerprintAfter": {
-      "phraseHash": "6a7badcb2f73ff1a8da3",
+      "phraseHash": "e341e52ecfd6d3b802a7",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 9487,
-      "updatedAt": "2026-10-04"
+      "eventCount": 9745,
+      "updatedAt": "2026-10-05"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 6113 published URN shards (prior=0 → 6113).",
+    "Hydrated working sidecar from 6293 published URN shards (prior=0 → 6293).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '2b43b20198093a43d1cc', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 9342, 'updatedAt': '2026-10-04'}",
-    "Apply decision: eventCount +81 (>= 15)",
-    "Before: 102 suspects across 6113 records.",
-    "Applied QA fixes to 72 school(s) (97 area finding(s)).",
-    "Learned 30 new junk phrase(s) (store size 900).",
-    "Reviewed top 102 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': 'eec412c24e871eea26b5', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 9557, 'updatedAt': '2026-10-05'}",
+    "Apply decision: eventCount +70 (>= 15)",
+    "Before: 123 suspects across 6293 records.",
+    "Applied QA fixes to 94 school(s) (149 area finding(s)).",
+    "Learned 19 new junk phrase(s) (store size 900).",
+    "Reviewed top 123 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 6113 records.",
+    "After: 30 suspects across 6293 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
