@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-05T20:25:10.369048+00:00
+# Qualitative source spot-check — 2026-10-06T18:08:47.483082+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3567605495`
+- Seed: `831944223`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,16 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Earlsfield Primary School** (`101005`, Wandsworth) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, our vision, rights respecting
-- **Bishop Douglass School Finchley** (`143082`, Barnet) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: chess, enrichment: tournaments (chess, enrichment: musical theatre)
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
-- **Herschel Grammar School** (`137726`, Slough) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: choir
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, church of england
-- **Brookfield Junior School** (`118869`, Kent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: after school club, enrichment: range of after school clubs, enrichment: science club
+- **Colville Primary School** (`100481`, Kensington and Chelsea) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: dance, curriculum: Ada Twist, Scientist, curriculum: EYFS Curriculum Overview
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our vision
+- **Hounslow Heath School** (`150224`, Hounslow) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: drama, enrichment: football, enrichment: homework club, enrichment: coding
+- **Claverham Community College** (`114584`, East Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Dear Parents and Carers,, curriculum: Head of Modern Foreign Languages, enrichment: drama, enrichment: music
+- **Aston and Cote Church of England Primary School** (`123106`, Oxfordshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: after school club, enrichment: breakfast club, send: Annual SEND Information Report, send: Cognition and Learning
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
 
 ## Notes
 
