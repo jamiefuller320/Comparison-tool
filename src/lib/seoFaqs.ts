@@ -6,6 +6,7 @@ import type { GuideFaq } from "@/lib/guides";
 import {
   formatAtt8,
   formatOutcomePercent,
+  schoolPlaceLabel,
   type SeoSchoolSummary,
 } from "@/lib/seoSchools";
 
@@ -34,10 +35,12 @@ export function schoolPageFaqs(school: SeoSchoolSummary): GuideFaq[] {
     });
   }
 
-  const place = school.town || school.localAuthority;
+  const place = schoolPlaceLabel(school);
   faqs.push({
     question: `Where is ${school.name}?`,
-    answer: `${school.name} is in ${place}${school.postcode ? ` (${school.postcode})` : ""}, ${school.localAuthority}. URN ${school.urn}.`,
+    answer: `${school.name} is in ${place}${school.postcode ? ` (${school.postcode})` : ""}${
+      place !== school.localAuthority ? `, ${school.localAuthority}` : ""
+    }. URN ${school.urn}.`,
   });
 
   faqs.push({

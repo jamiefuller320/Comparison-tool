@@ -14,7 +14,12 @@ async function main() {
     listSeoSchools,
     listSeoTowns,
     readSeoCoverage,
+    schoolPageDescription,
+    schoolPageTitle,
     schoolPath,
+    schoolPlaceLabel,
+    townPageDescription,
+    townPageTitle,
     townPath,
     townsIndexPath,
   } = await import("../src/lib/seoSchools.ts");
@@ -89,6 +94,60 @@ async function main() {
   if (!Array.isArray(raw.includedAreaSlugs)) {
     console.error("FAIL seo-coverage.json shape");
     process.exit(1);
+  }
+
+  // SERP copy: town "London" must not erase borough; descriptions stay snappy.
+  const londonish = schools.find(
+    (s) => (s.town || "").trim().toLowerCase() === "london",
+  );
+  if (londonish) {
+    if (schoolPlaceLabel(londonish) !== londonish.localAuthority) {
+      console.error("FAIL schoolPlaceLabel London", schoolPlaceLabel(londonish));
+      process.exit(1);
+    }
+    const title = schoolPageTitle(londonish);
+    if (title.endsWith(", London") || /, London$/.test(title)) {
+      console.error("FAIL schoolPageTitle still ends with London", title);
+      process.exit(1);
+    }
+    if (!title.includes(londonish.localAuthority)) {
+      console.error("FAIL schoolPageTitle missing LA", title);
+      process.exit(1);
+    }
+  }
+  const desc = schoolPageDescription(sample);
+  if (desc.length > 160) {
+    console.error("FAIL schoolPageDescription too long", desc.length, desc);
+    process.exit(1);
+  }
+  if (/\.\s+[a-z]/.test(desc)) {
+    console.error("FAIL schoolPageDescription lowercase after period", desc);
+    process.exit(1);
+  }
+  if (winchester) {
+    const wt = townPageTitle(winchester);
+    if (!wt.includes("Winchester") || !wt.includes("Hampshire")) {
+      console.error("FAIL townPageTitle winchester", wt);
+      process.exit(1);
+    }
+  }
+  const londonTown = listSeoTowns().find(
+    (t) => t.name.trim().toLowerCase() === "london",
+  );
+  if (londonTown) {
+    const tt = townPageTitle(londonTown);
+    if (/in London,/i.test(tt)) {
+      console.error("FAIL townPageTitle awkward London", tt);
+      process.exit(1);
+    }
+    if (!tt.includes(londonTown.localAuthority)) {
+      console.error("FAIL townPageTitle missing LA", tt);
+      process.exit(1);
+    }
+    if (townPageDescription(londonTown).length > 160) {
+      console.error("FAIL townPageDescription too long");
+      process.exit(1);
+    }
   }
 
   console.log(
