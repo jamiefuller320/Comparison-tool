@@ -1,53 +1,23 @@
 {
-  "ranAt": "2026-10-06T16:40:54.929858+00:00",
+  "ranAt": "2026-10-07T17:20:19.986455+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 6458,
-    "suspectCount": 90,
+    "recordCount": 6601,
+    "suspectCount": 84,
     "flagCounts": {
-      "chrome": 57,
+      "chrome": 46,
       "admissions": 13,
       "cms_chrome": 13,
-      "implausible_offerings": 12,
-      "policy_toc": 11,
-      "high_score_thin_signals": 4,
-      "boilerplate": 2
+      "implausible_offerings": 6,
+      "boilerplate": 5,
+      "policy_toc": 5,
+      "high_score_thin_signals": 4
     },
     "topSuspects": [
-      {
-        "urn": "101953",
-        "name": "The Sybil Elgar School",
-        "score": 11.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "136228",
-        "name": "TLC The Learning Centre",
-        "score": 11.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "100813",
-        "name": "Tower Bridge Primary School",
-        "score": 11.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
       {
         "urn": "125810",
         "name": "Boundstone Nursery School",
@@ -57,80 +27,102 @@
         ]
       },
       {
-        "urn": "100837",
-        "name": "Peter Hills with St Mary's and St Paul's CofE Primary School",
-        "score": 9.0,
+        "urn": "101031",
+        "name": "Ronald Ross Primary School",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "100530",
+        "name": "Thomas's Battersea",
+        "score": 8.0,
+        "flags": [
+          "policy_toc",
+          "chrome",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "140222",
+        "name": "Oasis Academy Putney",
+        "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "141701",
-        "name": "PhoenixPlace",
-        "score": 9.0,
+        "urn": "142874",
+        "name": "One Degree Academy",
+        "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "140088",
-        "name": "Raglan Primary School",
-        "score": 9.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "100771",
-        "name": "The Grove Nursery School",
-        "score": 9.0,
+        "urn": "101972",
+        "name": "Orchardside School",
+        "score": 6.0,
         "flags": [
           "boilerplate",
           "chrome"
         ]
       },
       {
-        "urn": "101876",
-        "name": "West Acton Primary School",
-        "score": 9.0,
+        "urn": "101051",
+        "name": "Our Lady Queen of Heaven RC School",
+        "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "151931",
-        "name": "Maudsley and Bethlem Hospital School",
-        "score": 8.0,
+        "urn": "102702",
+        "name": "Rebecca Cheetham Nursery and Children's Centre",
+        "score": 6.0,
         "flags": [
-          "policy_toc",
-          "implausible_offerings",
           "chrome"
         ]
       },
       {
-        "urn": "136464",
-        "name": "Orion Coopers",
-        "score": 8.0,
+        "urn": "130958",
+        "name": "Russet House School",
+        "score": 6.0,
         "flags": [
-          "chrome",
-          "policy_toc",
-          "implausible_offerings"
+          "chrome"
         ]
       },
       {
-        "urn": "141535",
-        "name": "St Mary's Catholic Primary School",
-        "score": 8.0,
+        "urn": "102746",
+        "name": "Star Primary School",
+        "score": 6.0,
         "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
+          "chrome"
+        ]
+      },
+      {
+        "urn": "102005",
+        "name": "Suffolks Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "147128",
+        "name": "The Ferns Primary Academy",
+        "score": 6.0,
+        "flags": [
+          "admissions"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 6458,
+    "recordCount": 6601,
     "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
@@ -238,42 +230,42 @@
     ]
   },
   "qa": {
-    "reviewed": 90,
-    "changedSchools": 60,
-    "findingsApplied": 91,
-    "learningAdded": 37,
+    "reviewed": 84,
+    "changedSchools": 54,
+    "findingsApplied": 65,
+    "learningAdded": 18,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +80 (>= 15)",
+    "reason": "eventCount +73 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "6c25d3da6645f4383d03",
+      "phraseHash": "294c97cd5ad8f7aaed48",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 9825,
-      "updatedAt": "2026-10-06"
+      "eventCount": 10031,
+      "updatedAt": "2026-10-07"
     },
     "fingerprintAfter": {
-      "phraseHash": "e709264fa77b25809112",
+      "phraseHash": "fbcf784212f0daf2c9eb",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 9958,
-      "updatedAt": "2026-10-06"
+      "eventCount": 10110,
+      "updatedAt": "2026-10-07"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 6458 published URN shards (prior=0 → 6458).",
+    "Hydrated working sidecar from 6601 published URN shards (prior=0 → 6601).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '6c25d3da6645f4383d03', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 9825, 'updatedAt': '2026-10-06'}",
-    "Apply decision: eventCount +80 (>= 15)",
-    "Before: 90 suspects across 6458 records.",
-    "Applied QA fixes to 60 school(s) (91 area finding(s)).",
-    "Learned 37 new junk phrase(s) (store size 900).",
-    "Reviewed top 90 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': '294c97cd5ad8f7aaed48', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10031, 'updatedAt': '2026-10-07'}",
+    "Apply decision: eventCount +73 (>= 15)",
+    "Before: 84 suspects across 6601 records.",
+    "Applied QA fixes to 54 school(s) (65 area finding(s)).",
+    "Learned 18 new junk phrase(s) (store size 900).",
+    "Reviewed top 84 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 6458 records.",
+    "After: 30 suspects across 6601 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }

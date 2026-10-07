@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-10-07T16:06:03.284780+00:00`
+- Ran at: `2026-10-07T17:13:04.491445+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `15`
-- Findings applied: `43`
-- New learned phrases: `11`
+- Reviewed: `84`
+- Schools changed: `54`
+- Findings applied: `65`
+- New learned phrases: `18`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 15 school(s) (43 area finding(s)).
-- Learned 11 new junk phrase(s) (store size 900).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 54 school(s) (65 area finding(s)).
+- Learned 18 new junk phrase(s) (store size 900).
+- Reviewed top 84 suspect(s); provider=none.
 
 ## Suspects
 
-- `101024` West Hill Primary School — score 32.0 flags=policy_toc,admissions,implausible_offerings,chrome,admissions_in_enrichment
-- `102786` St Angela's Ursuline School — score 16.0 flags=policy_toc,chrome,implausible_offerings
-- `136978` Stratford School Academy — score 15.0 flags=policy_toc,implausible_offerings
-- `144140` Ravenscroft Primary School — score 12.0 flags=chrome,boilerplate
-- `135762` Saint John Bosco College — score 12.0 flags=chrome
-- `101027` Southmead Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
-- `144084` The Lea Valley Academy — score 11.0 flags=chrome,policy_toc,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `144139` Ranelagh Primary School — score 9.0 flags=chrome
-- `101018` Riversdale Primary School — score 9.0 flags=chrome
-- `101020` Shaftesbury Park Primary School — score 9.0 flags=chrome
-- `148358` Silverways School — score 9.0 flags=chrome
-- `102065` St John's Preparatory and Senior School — score 9.0 flags=chrome
-- `134307` Starks Field Primary School — score 9.0 flags=chrome
-- `102067` West Lea School — score 9.0 flags=chrome
-- `101016` Penwortham Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `101031` Ronald Ross Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `100530` Thomas's Battersea — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `140222` Oasis Academy Putney — score 6.0 flags=chrome
+- `142874` One Degree Academy — score 6.0 flags=chrome
+- `101972` Orchardside School — score 6.0 flags=boilerplate,chrome
+- `101051` Our Lady Queen of Heaven RC School — score 6.0 flags=chrome
+- `102702` Rebecca Cheetham Nursery and Children's Centre — score 6.0 flags=chrome
+- `130958` Russet House School — score 6.0 flags=chrome
+- `102746` Star Primary School — score 6.0 flags=chrome
+- `102005` Suffolks Primary School — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
+- `102006` Tottenhall Infant School — score 6.0 flags=chrome
+- `138406` Wandsworth Preparatory School — score 6.0 flags=chrome
+- `102070` Waverley School — score 6.0 flags=chrome
+- `140682` Westbridge Academy — score 6.0 flags=chrome
+- `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
+- `137605` Dove House Academy — score 5.0 flags=cms_chrome
+- `149906` Light Years School — score 5.0 flags=cms_chrome
+- `116330` Liphook Church of England Controlled Junior School — score 5.0 flags=cms_chrome
