@@ -1,4 +1,4 @@
-# Pack quality loop — 2026-10-05T14:02:58Z
+# Pack quality loop — 2026-10-07T13:00:44Z
 
 - Mode: `polish`
 - Max packs: 6
@@ -11,28 +11,28 @@
 
 | LA | Interest | Boost | Before indie% | After indie% | Before ISI | After ISI |
 |---|---:|---:|---:|---:|---|---|
-| Bromley | 0.842 | 3.4 | 0.0 | 62.5 | 0/16 | 11/16 |
-| Greenwich | 0.842 | 3.4 | 0.0 | 40.0 | 0/15 | 8/15 |
-| Brent | 0.842 | 3.4 | 0.0 | 35.7 | 0/14 | 8/14 |
-| Redbridge | 0.842 | 3.4 | 0.0 | 42.9 | 0/14 | 8/14 |
-| Southwark | 0.842 | 3.4 | 0.0 | 57.1 | 0/14 | 8/14 |
-| Harrow | 0.842 | 3.4 | 0.0 | 58.3 | 0/12 | 9/12 |
+| Hounslow | 0.817 | 3.3 | 0.0 | 25.0 | 0/12 | 4/12 |
+| Haringey | 0.817 | 3.3 | 0.0 | 27.3 | 0/11 | 4/11 |
+| Kingston upon Thames | 0.817 | 3.3 | 0.0 | 54.5 | 0/11 | 8/11 |
+| Enfield | 0.817 | 3.3 | 0.0 | 50.0 | 0/10 | 6/10 |
+| Hillingdon | 0.817 | 3.3 | 0.0 | 40.0 | 0/10 | 8/10 |
+| Havering | 0.817 | 3.3 | 0.0 | 50.0 | 0/8 | 4/8 |
 
 ## Top interest signals
 
-- `barking-and-dagenham`: score 0.842 (boost 3.4%)
-- `barnet`: score 0.842 (boost 3.4%)
-- `bexley`: score 0.842 (boost 3.4%)
-- `brent`: score 0.842 (boost 3.4%)
-- `bromley`: score 0.842 (boost 3.4%)
-- `camden`: score 0.842 (boost 3.4%)
-- `city-of-london`: score 0.842 (boost 3.4%)
-- `croydon`: score 0.842 (boost 3.4%)
+- `barking-and-dagenham`: score 0.817 (boost 3.3%)
+- `barnet`: score 0.817 (boost 3.3%)
+- `bexley`: score 0.817 (boost 3.3%)
+- `brent`: score 0.817 (boost 3.3%)
+- `bromley`: score 0.817 (boost 3.3%)
+- `camden`: score 0.817 (boost 3.3%)
+- `city-of-london`: score 0.817 (boost 3.3%)
+- `croydon`: score 0.817 (boost 3.3%)
 
 ## Weakest packs (after)
 
 - Barking and Dagenham: indie 0/5 (0.0%) · ISI 0/5
 - Bexley: indie 0/6 (0.0%) · ISI 0/6
 - City of London: indie 0/5 (0.0%) · ISI 0/5
-- Enfield: indie 0/10 (0.0%) · ISI 0/10
-- Haringey: indie 0/11 (0.0%) · ISI 0/11
+- Islington: indie 0/5 (0.0%) · ISI 0/5
+- Lambeth: indie 0/8 (0.0%) · ISI 0/8
