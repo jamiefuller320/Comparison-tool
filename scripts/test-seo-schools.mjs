@@ -21,6 +21,7 @@ async function main() {
     townPageDescription,
     townPageTitle,
     townPath,
+    townPlaceLabel,
     townsIndexPath,
   } = await import("../src/lib/seoSchools.ts");
 
@@ -144,8 +145,22 @@ async function main() {
       console.error("FAIL townPageTitle missing LA", tt);
       process.exit(1);
     }
+    if (townPlaceLabel(londonTown) !== londonTown.localAuthority) {
+      console.error("FAIL townPlaceLabel", townPlaceLabel(londonTown));
+      process.exit(1);
+    }
     if (townPageDescription(londonTown).length > 160) {
       console.error("FAIL townPageDescription too long");
+      process.exit(1);
+    }
+  }
+  const shortSchool = schools.find(
+    (s) => `${s.name}, ${schoolPlaceLabel(s)}`.length <= 42,
+  );
+  if (shortSchool) {
+    const st = schoolPageTitle(shortSchool);
+    if (!st.includes("compare nearby")) {
+      console.error("FAIL short school title missing compare intent", st);
       process.exit(1);
     }
   }

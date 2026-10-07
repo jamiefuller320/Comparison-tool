@@ -86,7 +86,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: `${BRAND_NAME} — compare nearby schools before you visit`,
+        alt: `${BRAND_NAME} — shortlist and compare nearby schools`,
       },
     ],
   },

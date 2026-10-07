@@ -27,7 +27,7 @@ import {
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 
 export const SEO_TITLE =
-  `${BRAND_NAME} — compare nearby schools before you visit`;
+  `${BRAND_NAME} — shortlist and compare nearby schools`;
 
 export const SEO_TITLE_TEMPLATE = `%s · ${BRAND_NAME}`;
 
@@ -110,7 +110,7 @@ export function areasHubJsonLd(areas: CoverageArea[]): Record<string, unknown> {
         "@type": "CollectionPage",
         "@id": `${url}#page`,
         url,
-        name: `School areas across ${COVERAGE_REGION_LABEL}`,
+        name: `Compare schools by area`,
         description: `Browse local-authority school compare pages across ${COVERAGE_REGION_LABEL}.`,
         isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
         inLanguage: "en-GB",
@@ -148,51 +148,55 @@ export function areasHubJsonLd(areas: CoverageArea[]): Record<string, unknown> {
   };
 }
 
-export function areaLandingJsonLd(area: CoverageArea): Record<string, unknown> {
+export function areaLandingJsonLd(
+  area: CoverageArea,
+  faqs?: { question: string; answer: string }[],
+): Record<string, unknown> {
   const url = `${BRAND_HOME_URL}${areaPath(area.slug)}`;
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebPage",
-        "@id": `${url}#page`,
-        url,
-        name: areaPageTitle(area),
-        description: areaPageDescription(area),
-        isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
-        about: {
-          "@type": "AdministrativeArea",
-          name: area.localAuthority,
+  const graph: Record<string, unknown>[] = [
+    {
+      "@type": "WebPage",
+      "@id": `${url}#page`,
+      url,
+      name: areaPageTitle(area),
+      description: areaPageDescription(area),
+      isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
+      about: {
+        "@type": "AdministrativeArea",
+        name: area.localAuthority,
+      },
+      inLanguage: "en-GB",
+      breadcrumb: { "@id": `${url}#breadcrumb` },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${url}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${BRAND_HOME_URL}/`,
         },
-        inLanguage: "en-GB",
-        breadcrumb: { "@id": `${url}#breadcrumb` },
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": `${url}#breadcrumb`,
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: `${BRAND_HOME_URL}/`,
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Areas",
-            item: `${BRAND_HOME_URL}${areasIndexPath()}`,
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: area.localAuthority,
-            item: url,
-          },
-        ],
-      },
-    ],
-  };
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Areas",
+          item: `${BRAND_HOME_URL}${areasIndexPath()}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: area.localAuthority,
+          item: url,
+        },
+      ],
+    },
+  ];
+  if (faqs?.length) {
+    graph.push(faqPageJsonLd(faqs, url));
+  }
+  return { "@context": "https://schema.org", "@graph": graph };
 }
 
 export function areaStageLandingJsonLd(

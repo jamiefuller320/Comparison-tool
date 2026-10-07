@@ -16,6 +16,7 @@ import {
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { guidesIndexPath } from "@/lib/guides";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
+import { areaPageFaqs } from "@/lib/seoFaqs";
 import { areaLandingJsonLd } from "@/lib/seo";
 import { isSeoAreaIncluded, listSeoTowns, townsIndexPath } from "@/lib/seoSchools";
 
@@ -72,10 +73,11 @@ export default async function AreaLandingPage({ params }: PageProps) {
   const townCount = isSeoAreaIncluded(area.slug)
     ? listSeoTowns(area.slug).length
     : 0;
+  const faqs = areaPageFaqs(area);
 
   return (
     <main id="main" className="area-page">
-      <JsonLd data={areaLandingJsonLd(area)} />
+      <JsonLd data={areaLandingJsonLd(area, faqs)} />
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
@@ -199,6 +201,26 @@ export default async function AreaLandingPage({ params }: PageProps) {
               visit pack for open days.
             </li>
           </ol>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="area-qa-heading">
+        <div className="shell">
+          <div className="section-head">
+            <h2 id="area-qa-heading">Common questions</h2>
+            <p>
+              Short answers about coverage in {area.localAuthority} — then use
+              the compare tool for your shortlist.
+            </p>
+          </div>
+          <div className="guide-faq">
+            {faqs.map((faq) => (
+              <details key={faq.question} className="guide-faq-item">
+                <summary>{faq.question}</summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 

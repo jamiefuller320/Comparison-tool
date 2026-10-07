@@ -15,6 +15,7 @@ import {
   listSeoAreasWithTowns,
   listSeoTowns,
   townPath,
+  townPlaceLabel,
   townsIndexPath,
 } from "@/lib/seoSchools";
 
@@ -37,10 +38,16 @@ export async function generateMetadata({
   const towns = listSeoTowns(slug);
   if (towns.length === 0) return {};
 
-  const title = `Towns in ${area.localAuthority}`;
   const n = towns.length;
+  const londonOnly =
+    n === 1 && towns[0].name.trim().toLowerCase() === "london";
+  const title = londonOnly
+    ? `Schools across ${area.localAuthority}`
+    : `Towns in ${area.localAuthority}`;
   const townWord = n === 1 ? "town" : "towns";
-  const description = `Browse ${formatCount(n)} ${area.localAuthority} ${townWord} with school shortlists — Ofsted and published outcomes, then compare nearby on School Compass.`;
+  const description = londonOnly
+    ? `Shortlist schools across ${area.localAuthority}: Ofsted grades and DfE outcomes, then compare nearby on School Compass.`
+    : `Browse ${formatCount(n)} ${area.localAuthority} ${townWord} with school shortlists — Ofsted and published outcomes, then compare nearby on School Compass.`;
   const url = townsIndexPath(slug);
 
   return {
@@ -70,6 +77,8 @@ export default async function TownsIndexPage({ params }: PageProps) {
 
   const towns = listSeoTowns(slug);
   if (towns.length === 0) notFound();
+  const londonOnly =
+    towns.length === 1 && towns[0].name.trim().toLowerCase() === "london";
 
   return (
     <main id="main" className="area-page">
@@ -85,11 +94,15 @@ export default async function TownsIndexPage({ params }: PageProps) {
             <span>Towns</span>
           </nav>
           <p className="area-kicker">{BRAND_NAME}</p>
-          <h1>Schools by town in {area.localAuthority}</h1>
+          <h1>
+            {londonOnly
+              ? `Schools across ${area.localAuthority}`
+              : `Schools by town in ${area.localAuthority}`}
+          </h1>
           <p className="area-lead">
-            Postal-town pages for places with enough schools to shortlist —
-            Ofsted grades and published outcomes, then jump into the compare
-            tool. Coverage sits inside {COVERAGE_REGION_LABEL}.
+            {londonOnly
+              ? `Borough-wide school snapshots for ${area.localAuthority} — Ofsted grades and published outcomes, then jump into the compare tool.`
+              : `Postal-town pages for places with enough schools to shortlist — Ofsted grades and published outcomes, then jump into the compare tool. Coverage sits inside ${COVERAGE_REGION_LABEL}.`}
           </p>
           <p className="area-actions">
             <Link href="/#top" className="btn btn-primary">
@@ -113,11 +126,14 @@ export default async function TownsIndexPage({ params }: PageProps) {
         <div className="shell">
           <div className="section-head">
             <h2 id="towns-list-heading">
-              {formatCount(towns.length)} towns with school pages
+              {londonOnly
+                ? `School list for ${area.localAuthority}`
+                : `${formatCount(towns.length)} towns with school pages`}
             </h2>
             <p>
-              Town names come from school addresses (postal town). Each page
-              links into individual school snapshots and the compare tool.
+              {londonOnly
+                ? `GIAS often stores ${area.localAuthority} schools under the postal town “London” — this page is the borough shortlist.`
+                : `Town names come from school addresses (postal town). Each page links into individual school snapshots and the compare tool.`}
             </p>
           </div>
           <ul className="area-list">
@@ -127,7 +143,7 @@ export default async function TownsIndexPage({ params }: PageProps) {
                   className="area-list-link"
                   href={townPath(town.slug, town.areaSlug)}
                 >
-                  <strong>{town.name}</strong>
+                  <strong>{townPlaceLabel(town)}</strong>
                   <span className="area-list-meta">
                     {formatCount(town.schoolCount)} schools
                     {town.withOfsted
