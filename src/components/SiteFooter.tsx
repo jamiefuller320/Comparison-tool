@@ -14,13 +14,14 @@ const TOOL_LINKS = [
   { href: "/#data", label: "Data" },
 ] as const;
 
+/** Prefer SEO-budgeted landings (sitelink / crawl targets), not packs still outside the school-page cap. */
 const AREA_HIGHLIGHTS = [
   { href: "/areas/hampshire/", label: "Hampshire" },
-  { href: "/areas/kent/", label: "Kent" },
-  { href: "/areas/surrey/", label: "Surrey" },
-  { href: "/areas/oxfordshire/", label: "Oxfordshire" },
   { href: "/areas/west-sussex/", label: "West Sussex" },
-  { href: "/areas/southampton/", label: "Southampton" },
+  { href: "/areas/medway/", label: "Medway" },
+  { href: "/areas/lambeth/", label: "Lambeth" },
+  { href: "/areas/tower-hamlets/", label: "Tower Hamlets" },
+  { href: "/areas/camden/", label: "Camden" },
 ] as const;
 
 const GUIDE_LINKS = [

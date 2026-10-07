@@ -11,8 +11,8 @@ import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { areasHubJsonLd, SEO_TITLE_TEMPLATE } from "@/lib/seo";
 
-const title = `School areas across ${COVERAGE_REGION_LABEL}`;
-const description = `Browse every local authority covered by ${BRAND_NAME} across ${COVERAGE_REGION_LABEL}. Open an area page for school and early-years counts, then shortlist nearby settings to compare.`;
+const title = `Compare schools by area`;
+const description = `Browse local-authority pages across ${COVERAGE_REGION_LABEL}. Open an area to shortlist schools and early years, then compare before you visit.`;
 
 export const metadata: Metadata = {
   title,

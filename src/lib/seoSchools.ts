@@ -471,7 +471,17 @@ function clipMetaDescription(text: string, max = META_DESCRIPTION_MAX): string {
 
 export function schoolPageTitle(school: SeoSchoolSummary): string {
   const place = schoolPlaceLabel(school);
-  return `${school.name}, ${place}`;
+  const base = `${school.name}, ${place}`;
+  // Short names: add compare intent before brand suffix (~60-char SERP budget).
+  if (base.length <= 42) return `${base} — compare nearby`;
+  return base;
+}
+
+/** Display / SERP place for a town landing (GIAS "London" → borough). */
+export function townPlaceLabel(town: SeoTown): string {
+  const name = town.name.trim();
+  if (/^london$/i.test(name)) return town.localAuthority;
+  return name;
 }
 
 export function schoolPageDescription(school: SeoSchoolSummary): string {
@@ -491,21 +501,21 @@ export function schoolPageDescription(school: SeoSchoolSummary): string {
 }
 
 export function townPageTitle(town: SeoTown): string {
-  const name = town.name.trim();
-  // Avoid "Schools in London, Tower Hamlets" — borough is the useful place name.
-  if (/^london$/i.test(name)) {
+  const place = townPlaceLabel(town);
+  if (place === town.localAuthority) {
     return `Compare schools in ${town.localAuthority}`;
   }
-  return `Compare schools in ${name}, ${town.localAuthority}`;
+  return `Compare schools in ${place}, ${town.localAuthority}`;
 }
 
 export function townPageDescription(town: SeoTown): string {
-  const name = town.name.trim();
-  const place = /^london$/i.test(name)
-    ? town.localAuthority
-    : `${name} (${town.localAuthority})`;
+  const place = townPlaceLabel(town);
+  const placeBit =
+    place === town.localAuthority
+      ? place
+      : `${place} (${town.localAuthority})`;
   return clipMetaDescription(
-    `Shortlist ${formatCount(town.schoolCount)} schools in ${place}: Ofsted grades and DfE outcomes side by side, then print a visit pack.`,
+    `Shortlist ${formatCount(town.schoolCount)} schools in ${placeBit}: Ofsted grades and DfE outcomes side by side, then print a visit pack.`,
   );
 }
 
@@ -545,13 +555,22 @@ export function schoolJsonLd(
     addressRegion: school.localAuthority,
   };
   if (school.address) address.streetAddress = school.address;
-  if (school.town) address.addressLocality = school.town;
+  // Prefer borough over GIAS "London" so structured data matches SERP titles.
+  const locality = schoolPlaceLabel(school);
+  if (locality) address.addressLocality = locality;
   if (school.postcode) address.postalCode = school.postcode;
 
   const townSlug = school.town ? slugifyTown(school.town) : null;
-  const townLanding =
-    townSlug && getSeoTown(townSlug, school.areaSlug)
-      ? townPath(townSlug, school.areaSlug)
+  const townRow = townSlug
+    ? getSeoTown(townSlug, school.areaSlug)
+    : undefined;
+  const townLanding = townRow
+    ? townPath(townRow.slug, townRow.areaSlug)
+    : null;
+  // Skip a redundant "London" crumb under the borough (same label as LA).
+  const townCrumbName =
+    townRow && townPlaceLabel(townRow) !== school.localAuthority
+      ? townPlaceLabel(townRow)
       : null;
 
   const graph: Record<string, unknown>[] = [
@@ -601,12 +620,12 @@ export function schoolJsonLd(
           name: school.localAuthority,
           item: `${BRAND_HOME_URL}${areaPath(school.areaSlug)}`,
         },
-        ...(townLanding
+        ...(townLanding && townCrumbName
           ? [
               {
                 "@type": "ListItem",
                 position: 4,
-                name: school.town,
+                name: townCrumbName,
                 item: `${BRAND_HOME_URL}${townLanding}`,
               },
               {
@@ -650,69 +669,84 @@ export function schoolJsonLd(
 export function townJsonLd(
   town: SeoTown,
   schools: SeoSchoolSummary[],
+  faqs?: { question: string; answer: string }[],
 ): Record<string, unknown> {
   const url = `${BRAND_HOME_URL}${townPath(town.slug, town.areaSlug)}`;
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "CollectionPage",
-        "@id": `${url}#page`,
-        url,
-        name: townPageTitle(town),
-        description: townPageDescription(town),
-        isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
-        inLanguage: "en-GB",
-        breadcrumb: { "@id": `${url}#breadcrumb` },
-        mainEntity: {
-          "@type": "ItemList",
-          numberOfItems: schools.length,
-          itemListElement: schools.map((school, index) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            name: school.name,
-            url: `${BRAND_HOME_URL}${schoolPath(school.urn)}`,
-          })),
+  const place = townPlaceLabel(town);
+  const graph: Record<string, unknown>[] = [
+    {
+      "@type": "CollectionPage",
+      "@id": `${url}#page`,
+      url,
+      name: townPageTitle(town),
+      description: townPageDescription(town),
+      isPartOf: { "@id": `${BRAND_HOME_URL}/#website` },
+      inLanguage: "en-GB",
+      breadcrumb: { "@id": `${url}#breadcrumb` },
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: schools.length,
+        itemListElement: schools.map((school, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: school.name,
+          url: `${BRAND_HOME_URL}${schoolPath(school.urn)}`,
+        })),
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${url}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: `${BRAND_HOME_URL}/`,
         },
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": `${url}#breadcrumb`,
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: `${BRAND_HOME_URL}/`,
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Areas",
-            item: `${BRAND_HOME_URL}/areas/`,
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: town.localAuthority,
-            item: `${BRAND_HOME_URL}${areaPath(town.areaSlug)}`,
-          },
-          {
-            "@type": "ListItem",
-            position: 4,
-            name: "Towns",
-            item: `${BRAND_HOME_URL}${townsIndexPath(town.areaSlug)}`,
-          },
-          {
-            "@type": "ListItem",
-            position: 5,
-            name: town.name,
-            item: url,
-          },
-        ],
-      },
-    ],
-  };
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Areas",
+          item: `${BRAND_HOME_URL}/areas/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: town.localAuthority,
+          item: `${BRAND_HOME_URL}${areaPath(town.areaSlug)}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 4,
+          name: "Towns",
+          item: `${BRAND_HOME_URL}${townsIndexPath(town.areaSlug)}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 5,
+          name: place,
+          item: url,
+        },
+      ],
+    },
+  ];
+  if (faqs?.length) {
+    graph.push({
+      "@type": "FAQPage",
+      "@id": `${url}#faq`,
+      url,
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: faq.answer,
+        },
+      })),
+    });
+  }
+  return { "@context": "https://schema.org", "@graph": graph };
 }
 
 function normalizeHttp(url: string): string {
