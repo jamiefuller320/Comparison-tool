@@ -24,7 +24,7 @@ import {
   serviceKey,
   projectRefFromUrl,
   projectRefFromServiceKey,
-} from "./process-product-feedback.ts";
+} from "./process-product-feedback";
 
 type FeedbackStatus =
   | "open"
