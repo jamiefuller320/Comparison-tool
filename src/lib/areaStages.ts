@@ -5,10 +5,7 @@
 
 import type { CoverageArea } from "@/lib/areas";
 import { areaPath, formatCount } from "@/lib/areas";
-import {
-  DECISION_GUIDANCE,
-  type GuidancePathId,
-} from "@/lib/decisionGuidance";
+import { type GuidancePathId } from "@/lib/decisionGuidance";
 
 export type AreaStageSlug =
   | "early-years"
@@ -104,10 +101,21 @@ export function areaStageCompareHref(stage: AreaStageLanding): string {
   return `/?stages=${encodeURIComponent(stage.stagesQuery)}#top`;
 }
 
+/**
+ * ~155-char meta description. Page body still uses stage.lead + guidance;
+ * do not concatenate those into the snippet (was 350–430 chars live).
+ */
 export function areaStageDescription(
   area: CoverageArea,
   stage: AreaStageLanding,
 ): string {
-  const guidance = DECISION_GUIDANCE[stage.guidancePath];
-  return `${stage.lead(area)} ${guidance.lead} ${stage.countLabel(area)}.`;
+  const la = area.localAuthority;
+  const bySlug: Record<AreaStageSlug, string> = {
+    "early-years": `Shortlist nurseries and early years in ${la}. Compare Ofsted grades and inspection excerpts, then visit.`,
+    childminders: `Browse consented childminders in ${la} with Ofsted grades where published, then use the vetting checklist.`,
+    ks1: `Map infant and KS1 schools in ${la}. Use LA phonics context, inspection excerpts, and visits.`,
+    primary: `Shortlist primary schools in ${la}. Compare KS2 figures and Ofsted/ISI excerpts, then print a visit pack.`,
+    secondary: `Shortlist secondaries in ${la}. Compare published KS4 / 16–18 figures and Ofsted/ISI excerpts, then visit.`,
+  };
+  return bySlug[stage.slug] ?? stage.lead(area);
 }

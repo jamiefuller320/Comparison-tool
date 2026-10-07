@@ -449,31 +449,64 @@ export function formatAtt8(value: number | null | undefined): string {
   });
 }
 
+/**
+ * Locality label for SERP titles. GIAS often stores Inner London schools with
+ * town "London", which collapses borough signal in the snippet — prefer LA.
+ */
+export function schoolPlaceLabel(school: SeoSchoolSummary): string {
+  const town = school.town?.trim() || "";
+  if (!town || /^london$/i.test(town)) return school.localAuthority;
+  return town;
+}
+
+/** Soft meta length target for Google desktop snippets (~150–160). */
+const META_DESCRIPTION_MAX = 155;
+
+function clipMetaDescription(text: string, max = META_DESCRIPTION_MAX): string {
+  const t = text.trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  return `${cut.replace(/\s+\S*$/, "").trim()}…`;
+}
+
 export function schoolPageTitle(school: SeoSchoolSummary): string {
-  const place = school.town || school.localAuthority;
+  const place = schoolPlaceLabel(school);
   return `${school.name}, ${place}`;
 }
 
 export function schoolPageDescription(school: SeoSchoolSummary): string {
-  const bits: string[] = [
-    `Compare ${school.name} with nearby ${school.localAuthority} schools`,
-  ];
-  if (school.ofstedOverall) bits.push(`Ofsted: ${school.ofstedOverall}`);
-  if (school.rwmExpected != null) {
-    bits.push(`KS2 RWM ${formatOutcomePercent(school.rwmExpected)}`);
-  } else if (school.att8Average != null) {
-    bits.push(`Attainment 8 ${formatAtt8(school.att8Average)}`);
+  const facts: string[] = [];
+  if (school.ofstedOverall) facts.push(`Ofsted ${school.ofstedOverall}`);
+  // Skip 0% / missing-looking outcomes (common on special schools) — hurts CTR.
+  if (school.rwmExpected != null && school.rwmExpected > 0) {
+    facts.push(`KS2 RWM ${formatOutcomePercent(school.rwmExpected)}`);
+  } else if (school.att8Average != null && school.att8Average > 0) {
+    facts.push(`Attainment 8 ${formatAtt8(school.att8Average)}`);
   }
-  bits.push("published figures and inspection excerpts — not a league table");
-  return `${bits.join(". ")}.`;
+  const factStr = facts.length ? ` ${facts.join(" · ")}.` : "";
+  // Benefit first; keep “not a league table” for on-page copy, not the snippet hook.
+  return clipMetaDescription(
+    `Shortlist ${school.name} beside nearby ${school.localAuthority} schools.${factStr} DfE figures and Ofsted/ISI excerpts to visit on.`,
+  );
 }
 
 export function townPageTitle(town: SeoTown): string {
-  return `Schools in ${town.name}, ${town.localAuthority}`;
+  const name = town.name.trim();
+  // Avoid "Schools in London, Tower Hamlets" — borough is the useful place name.
+  if (/^london$/i.test(name)) {
+    return `Compare schools in ${town.localAuthority}`;
+  }
+  return `Compare schools in ${name}, ${town.localAuthority}`;
 }
 
 export function townPageDescription(town: SeoTown): string {
-  return `Browse ${formatCount(town.schoolCount)} schools in ${town.name} (${town.localAuthority}): Ofsted grades and published outcomes, then shortlist in School Compass — parental compare, not a league table.`;
+  const name = town.name.trim();
+  const place = /^london$/i.test(name)
+    ? town.localAuthority
+    : `${name} (${town.localAuthority})`;
+  return clipMetaDescription(
+    `Shortlist ${formatCount(town.schoolCount)} schools in ${place}: Ofsted grades and DfE outcomes side by side, then print a visit pack.`,
+  );
 }
 
 export function schoolCitationLines(school: SeoSchoolSummary): string[] {

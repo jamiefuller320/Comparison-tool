@@ -33,7 +33,7 @@ export const SEO_TITLE_TEMPLATE = `%s · ${BRAND_NAME}`;
 
 /** ~155 chars — search-result friendly. */
 export const SEO_DESCRIPTION =
-  `Shortlist nearby schools and early years across ${COVERAGE_REGION_LABEL}, compare DfE outcomes and Ofsted/ISI excerpts, then print a visit pack. Parental compare — not a league table.`;
+  `Shortlist schools and early years across ${COVERAGE_REGION_LABEL}. Compare DfE outcomes and Ofsted/ISI excerpts before you visit.`;
 
 export const SEO_KEYWORDS = [
   "school comparison",

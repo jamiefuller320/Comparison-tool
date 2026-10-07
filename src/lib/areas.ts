@@ -6,7 +6,6 @@
 import { readFileSync } from "fs";
 import { join } from "path";
 import {
-  COVERAGE_REGION_LABEL,
   SEED_LOCAL_AUTHORITY,
   laSlug,
   listReadyPacks,
@@ -121,11 +120,8 @@ export function areaPageDescription(area: CoverageArea): string {
   const schools = formatCount(area.schoolCount);
   const ey =
     area.eyProviderCount != null
-      ? `${formatCount(area.eyProviderCount)} early years settings`
-      : "early years settings";
-  const cm =
-    area.childminderCount != null
-      ? ` and ${formatCount(area.childminderCount)} consented childminders`
+      ? ` and ${formatCount(area.eyProviderCount)} early years settings`
       : "";
-  return `Shortlist and compare ${schools} schools plus ${ey}${cm} in ${area.localAuthority}. DfE outcomes and Ofsted/ISI excerpts — parental compare across ${COVERAGE_REGION_LABEL}, not a league table.`;
+  // Keep under ~155 chars: LA-specific benefit first; region + disclaimer live on-page.
+  return `Shortlist ${schools} schools${ey} in ${area.localAuthority}. Compare DfE outcomes and Ofsted/ISI excerpts, then print a visit pack.`;
 }

@@ -151,8 +151,8 @@ export const GUIDE_PAGES: GuidePage[] = [
   },
   {
     slug: "faq",
-    title: "School Compass FAQ",
-    description: `Common questions about School Compass — coverage across ${COVERAGE_REGION_LABEL}, data sources, and how parental compare differs from league tables.`,
+    title: "FAQ for parents comparing schools",
+    description: `Coverage across ${COVERAGE_REGION_LABEL}, data sources, and how parental compare differs from league tables.`,
     faqs: [
       {
         question: "Is School Compass a league table?",

@@ -38,7 +38,9 @@ export async function generateMetadata({
   if (towns.length === 0) return {};
 
   const title = `Towns in ${area.localAuthority}`;
-  const description = `Browse ${formatCount(towns.length)} ${area.localAuthority} towns with school shortlists — Ofsted and published outcomes, then compare nearby settings on School Compass.`;
+  const n = towns.length;
+  const townWord = n === 1 ? "town" : "towns";
+  const description = `Browse ${formatCount(n)} ${area.localAuthority} ${townWord} with school shortlists — Ofsted and published outcomes, then compare nearby on School Compass.`;
   const url = townsIndexPath(slug);
 
   return {
