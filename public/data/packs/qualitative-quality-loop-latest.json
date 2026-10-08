@@ -1,21 +1,21 @@
 {
-  "ranAt": "2026-10-07T17:20:19.986455+00:00",
+  "ranAt": "2026-10-08T17:20:14.941319+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 6601,
-    "suspectCount": 84,
+    "recordCount": 6720,
+    "suspectCount": 61,
     "flagCounts": {
-      "chrome": 46,
+      "chrome": 25,
+      "cms_chrome": 14,
       "admissions": 13,
-      "cms_chrome": 13,
-      "implausible_offerings": 6,
-      "boilerplate": 5,
-      "policy_toc": 5,
-      "high_score_thin_signals": 4
+      "high_score_thin_signals": 4,
+      "implausible_offerings": 4,
+      "policy_toc": 3,
+      "boilerplate": 1
     },
     "topSuspects": [
       {
@@ -27,85 +27,24 @@
         ]
       },
       {
-        "urn": "101031",
-        "name": "Ronald Ross Primary School",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "100530",
-        "name": "Thomas's Battersea",
-        "score": 8.0,
-        "flags": [
-          "policy_toc",
-          "chrome",
-          "implausible_offerings"
-        ]
-      },
-      {
-        "urn": "140222",
-        "name": "Oasis Academy Putney",
+        "urn": "135373",
+        "name": "Southover Partnership School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "142874",
-        "name": "One Degree Academy",
+        "urn": "102453",
+        "name": "St Helen's School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "101972",
-        "name": "Orchardside School",
-        "score": 6.0,
-        "flags": [
-          "boilerplate",
-          "chrome"
-        ]
-      },
-      {
-        "urn": "101051",
-        "name": "Our Lady Queen of Heaven RC School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102702",
-        "name": "Rebecca Cheetham Nursery and Children's Centre",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "130958",
-        "name": "Russet House School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102746",
-        "name": "Star Primary School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102005",
-        "name": "Suffolks Primary School",
+        "urn": "102457",
+        "name": "St John's School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -118,11 +57,67 @@
         "flags": [
           "admissions"
         ]
+      },
+      {
+        "urn": "143714",
+        "name": "The PRIDE Academy",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "136092",
+        "name": "Wize Up",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "115872",
+        "name": "Chandler's Ford Infant School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "137605",
+        "name": "Dove House Academy",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "149906",
+        "name": "Light Years School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "116330",
+        "name": "Liphook Church of England Controlled Junior School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "116056",
+        "name": "Liphook Infant School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
       }
     ]
   },
   "after": {
-    "recordCount": 6601,
+    "recordCount": 6720,
     "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
@@ -230,42 +225,42 @@
     ]
   },
   "qa": {
-    "reviewed": 84,
-    "changedSchools": 54,
-    "findingsApplied": 65,
-    "learningAdded": 18,
+    "reviewed": 61,
+    "changedSchools": 31,
+    "findingsApplied": 36,
+    "learningAdded": 12,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +73 (>= 15)",
+    "reason": "eventCount +60 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "294c97cd5ad8f7aaed48",
+      "phraseHash": "4ba827353024978d1d43",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10031,
-      "updatedAt": "2026-10-07"
+      "eventCount": 10170,
+      "updatedAt": "2026-10-08"
     },
     "fingerprintAfter": {
-      "phraseHash": "fbcf784212f0daf2c9eb",
+      "phraseHash": "fb653adeaae513daf4e0",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10110,
-      "updatedAt": "2026-10-07"
+      "eventCount": 10220,
+      "updatedAt": "2026-10-08"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 6601 published URN shards (prior=0 → 6601).",
+    "Hydrated working sidecar from 6720 published URN shards (prior=0 → 6720).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '294c97cd5ad8f7aaed48', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10031, 'updatedAt': '2026-10-07'}",
-    "Apply decision: eventCount +73 (>= 15)",
-    "Before: 84 suspects across 6601 records.",
-    "Applied QA fixes to 54 school(s) (65 area finding(s)).",
-    "Learned 18 new junk phrase(s) (store size 900).",
-    "Reviewed top 84 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': '4ba827353024978d1d43', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10170, 'updatedAt': '2026-10-08'}",
+    "Apply decision: eventCount +60 (>= 15)",
+    "Before: 61 suspects across 6720 records.",
+    "Applied QA fixes to 31 school(s) (36 area finding(s)).",
+    "Learned 12 new junk phrase(s) (store size 900).",
+    "Reviewed top 61 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 6601 records.",
+    "After: 30 suspects across 6720 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
