@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-10-07T17:13:04.491445+00:00`
+- Ran at: `2026-10-08T15:57:33.605434+00:00`
 - Provider: `none`
-- Reviewed: `84`
-- Schools changed: `54`
-- Findings applied: `65`
-- New learned phrases: `18`
+- Reviewed: `16`
+- Schools changed: `15`
+- Findings applied: `33`
+- New learned phrases: `27`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 54 school(s) (65 area finding(s)).
-- Learned 18 new junk phrase(s) (store size 900).
-- Reviewed top 84 suspect(s); provider=none.
+- Applied QA fixes to 15 school(s) (33 area finding(s)).
+- Learned 27 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
+- `136768` Uxbridge High School — score 17.0 flags=chrome,policy_toc,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `101031` Ronald Ross Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `100530` Thomas's Battersea — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `140222` Oasis Academy Putney — score 6.0 flags=chrome
-- `142874` One Degree Academy — score 6.0 flags=chrome
-- `101972` Orchardside School — score 6.0 flags=boilerplate,chrome
-- `101051` Our Lady Queen of Heaven RC School — score 6.0 flags=chrome
-- `102702` Rebecca Cheetham Nursery and Children's Centre — score 6.0 flags=chrome
-- `130958` Russet House School — score 6.0 flags=chrome
-- `102746` Star Primary School — score 6.0 flags=chrome
-- `102005` Suffolks Primary School — score 6.0 flags=chrome
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `102006` Tottenhall Infant School — score 6.0 flags=chrome
-- `138406` Wandsworth Preparatory School — score 6.0 flags=chrome
-- `102070` Waverley School — score 6.0 flags=chrome
-- `140682` Westbridge Academy — score 6.0 flags=chrome
-- `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
-- `137605` Dove House Academy — score 5.0 flags=cms_chrome
-- `149906` Light Years School — score 5.0 flags=cms_chrome
-- `116330` Liphook Church of England Controlled Junior School — score 5.0 flags=cms_chrome
+- `143927` Royal Greenwich Trust School — score 9.0 flags=chrome
+- `136100` StreetVibes Media Academy — score 9.0 flags=chrome,boilerplate
+- `102409` Warrender Primary School — score 9.0 flags=chrome
+- `141561` Rosedale Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `139302` St Matthew's CofE Primary School — score 8.0 flags=chrome,policy_toc,implausible_offerings
+- `100201` St Olave's Prep School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `100177` St Thomas A Becket Roman Catholic Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `138608` Sudbury Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `145849` The Corner School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `100142` Thorntree Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `139319` Preston Manor School — score 6.0 flags=chrome
+- `101535` Princess Frederica CofE Primary School — score 6.0 flags=chrome
+- `143593` Rockliffe Manor Primary School — score 6.0 flags=chrome
+- `102416` Ruislip Gardens Primary School — score 6.0 flags=chrome
