@@ -1,16 +1,16 @@
 # SEO coverage loop
 
-- Generated: `2026-10-02T13:38:35Z`
+- Generated: `2026-10-09T14:11:12Z`
 - Dry run: **False**
-- Added areas: **1** (West Sussex)
+- Added areas: **0** (none — budget full or no ready candidates)
 
 ## Totals
 
 | Metric | Before | After | Budget |
 | --- | ---: | ---: | ---: |
-| School pages | 4598 | 4942 | 5000 |
-| Town pages | 128 | 141 | 160 |
-| Town hubs | 41 | 42 | — |
+| School pages | 4942 | 4942 | 5000 |
+| Town pages | 141 | 141 | 160 |
+| Town hubs | 42 | 42 | — |
 
 # SEO coverage report
 
@@ -37,28 +37,28 @@
 | Waltham Forest | 84 | 1 | 98.8 | 0.0 |
 | Newham | 108 | 1 | 98.1 | 0.0 |
 | Lewisham | 95 | 2 | 96.8 | 0.0 |
-| Enfield | 110 | 2 | 95.5 | 0.0 |
-| Brent | 104 | 3 | 95.2 | 0.0 |
+| Enfield | 110 | 2 | 99.1 | 53.6 |
+| Brent | 104 | 3 | 96.2 | 52.9 |
 | Ealing | 120 | 4 | 96.7 | 49.2 |
 | Hackney | 105 | 1 | 96.2 | 57.1 |
-| Bromley | 118 | 6 | 94.1 | 0.0 |
+| Bromley | 118 | 6 | 98.3 | 50.0 |
 | Bexley | 91 | 5 | 93.4 | 0.0 |
-| Hounslow | 89 | 4 | 93.3 | 0.0 |
-| Havering | 90 | 4 | 93.3 | 0.0 |
-| Southwark | 120 | 1 | 93.3 | 0.0 |
+| Hounslow | 89 | 4 | 97.8 | 62.9 |
+| Havering | 90 | 4 | 96.7 | 64.4 |
+| Southwark | 120 | 1 | 97.5 | 49.2 |
 | Islington | 68 | 1 | 92.6 | 0.0 |
-| Greenwich | 104 | 1 | 92.3 | 0.0 |
+| Greenwich | 104 | 1 | 95.2 | 54.8 |
 | Barnet | 169 | 3 | 96.4 | 33.1 |
 | Sutton | 76 | 3 | 92.1 | 0.0 |
 | Barking and Dagenham | 67 | 2 | 91.0 | 0.0 |
-| Harrow | 72 | 3 | 90.3 | 0.0 |
-| Redbridge | 93 | 4 | 90.3 | 0.0 |
-| Hillingdon | 108 | 5 | 89.8 | 0.0 |
+| Harrow | 72 | 3 | 95.8 | 80.6 |
+| Redbridge | 93 | 4 | 95.7 | 62.4 |
+| Hillingdon | 108 | 5 | 93.5 | 50.9 |
 | Croydon | 154 | 5 | 92.9 | 37.0 |
-| Haringey | 95 | 1 | 89.5 | 0.0 |
+| Haringey | 95 | 1 | 91.6 | 61.1 |
 | Merton | 73 | 3 | 94.5 | 79.5 |
 | Hammersmith and Fulham | 78 | 1 | 94.9 | 75.6 |
-| Kingston upon Thames | 66 | 3 | 84.8 | 0.0 |
+| Kingston upon Thames | 66 | 3 | 93.9 | 86.4 |
 | Wandsworth | 115 | 1 | 95.7 | 50.4 |
 | Richmond upon Thames | 86 | 4 | 91.9 | 64.0 |
 | Camden | 89 | 1 | 91.0 | 64.0 |
@@ -68,10 +68,10 @@
 
 ## AEO / GEO readiness
 
-- llms.txt: `/llms.txt` (generated 2026-09-26T09:48:07.385Z)
+- llms.txt: `/llms.txt` (generated 2026-10-02T13:38:40.001Z)
 - School pages with Ofsted Q&A: **71%**
-- School pages with inspection précis: **30%**
-- School pages with website evidence (quality-gated): **10%**
+- School pages with inspection précis: **48%**
+- School pages with website evidence (quality-gated): **16%**
 
 ## Candidate packs (not yet in coverage)
 
