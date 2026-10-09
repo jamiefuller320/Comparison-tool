@@ -1,15 +1,16 @@
 {
-  "ranAt": "2026-10-08T18:40:22.442585+00:00",
+  "ranAt": "2026-10-09T18:12:27.430118+00:00",
   "dryRun": false,
-  "seed": 3233728240,
+  "seed": 3365146959,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 7
+    "warn": 6,
+    "pass": 1
   },
   "failCount": 0,
-  "warnCount": 7,
+  "warnCount": 6,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -146,37 +147,52 @@
       "notes": []
     },
     {
-      "urn": "100881",
-      "name": "Cherry Garden School",
-      "la": "Southwark",
-      "website": "https://www.cherrygardenschool.co.uk/",
-      "assessedAt": "2026-09-26",
+      "urn": "138688",
+      "name": "Krishna Avanti Primary School",
+      "la": "Harrow",
+      "website": "https://www.avanti.org.uk/kapsharrow/",
+      "assessedAt": "2026-10-03",
       "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 6,
+      "pagesFetched": 1,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "unsupported_offerings",
+          "code": "possible_underclaim",
           "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "ethos: ethos"
+            "our ethos"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "139415",
-      "name": "Halcyon London International School",
-      "la": "Westminster",
-      "website": "https://www.halcyonschool.com",
-      "assessedAt": "2026-10-01",
+      "urn": "151729",
+      "name": "Oxlow Bridge School",
+      "la": "Barking and Dagenham",
+      "website": "https://www.oxlowbridge.com",
+      "assessedAt": "2026-10-05",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 1,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": []
+    },
+    {
+      "urn": "109828",
+      "name": "College Town Primary School",
+      "la": "Bracknell Forest",
+      "website": "http://www.collegetownprimary.com/",
+      "assessedAt": "2026-09-18",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 21,
+      "offeringsChecked": 15,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -185,14 +201,38 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: music",
-            "enrichment: duke of edinburgh",
-            "enrichment: chemistry",
-            "enrichment: authentic science discovery",
-            "enrichment: original music composition",
-            "ethos: smsc",
-            "ethos: ethos",
-            "community: Events and Activities"
+            "enrichment: swimming",
+            "enrichment: PE and Sport Premium",
+            "enrichment: Sports Funding",
+            "send: Late/Absence Procedures",
+            "community: Governors Zone",
+            "community: Gems4health",
+            "community: Supporting Your Children Workshops"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "142817",
+      "name": "Cedar Children's Academy",
+      "la": "Medway",
+      "website": "https://www.cedarchildrensacademy.org.uk",
+      "assessedAt": "2026-09-12",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 11,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: Curriculum Intent, Implementation",
+            "ethos: All Categories",
+            "community: All Categories"
           ]
         },
         {
@@ -201,63 +241,8 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our mission",
-            "our values"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "126149",
-      "name": "Central Education Ltd",
-      "la": "West Sussex",
-      "website": "https://www.centraleducation.org.uk",
-      "assessedAt": "2026-09-03",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 8,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: music",
-            "enrichment: Competitions",
-            "enrichment: Woodland",
-            "enrichment: Workshops",
-            "enrichment: gardening"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "123236",
-      "name": "Carterton Community College",
-      "la": "Oxfordshire",
-      "website": "http://www.cartertoncc.oxon.sch.uk/",
-      "assessedAt": "2026-09-02",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 14,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: chemistry",
-            "curriculum: mathematics",
-            "curriculum: computing",
-            "curriculum: tailored to them by maths specialists",
-            "enrichment: holiday club",
-            "enrichment: duke of edinburgh"
+            "our values",
+            "rights respecting"
           ]
         }
       ],
