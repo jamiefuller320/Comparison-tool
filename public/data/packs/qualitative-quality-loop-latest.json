@@ -1,21 +1,20 @@
 {
-  "ranAt": "2026-10-08T17:20:14.941319+00:00",
+  "ranAt": "2026-10-09T17:00:33.007956+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 6720,
-    "suspectCount": 61,
+    "recordCount": 6817,
+    "suspectCount": 57,
     "flagCounts": {
-      "chrome": 25,
-      "cms_chrome": 14,
+      "chrome": 24,
       "admissions": 13,
+      "cms_chrome": 12,
       "high_score_thin_signals": 4,
       "implausible_offerings": 4,
-      "policy_toc": 3,
-      "boilerplate": 1
+      "policy_toc": 3
     },
     "topSuspects": [
       {
@@ -27,51 +26,11 @@
         ]
       },
       {
-        "urn": "135373",
-        "name": "Southover Partnership School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102453",
-        "name": "St Helen's School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102457",
-        "name": "St John's School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
         "urn": "147128",
         "name": "The Ferns Primary Academy",
         "score": 6.0,
         "flags": [
           "admissions"
-        ]
-      },
-      {
-        "urn": "143714",
-        "name": "The PRIDE Academy",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "136092",
-        "name": "Wize Up",
-        "score": 6.0,
-        "flags": [
-          "chrome"
         ]
       },
       {
@@ -113,11 +72,54 @@
         "flags": [
           "cms_chrome"
         ]
+      },
+      {
+        "urn": "101437",
+        "name": "Parkway Primary School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "100699",
+        "name": "Rangefield Primary School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
+      },
+      {
+        "urn": "118310",
+        "name": "Ryarsh Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "125992",
+        "name": "Shipley CofE Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "138650",
+        "name": "St Columba's Catholic Boys' School",
+        "score": 5.0,
+        "flags": [
+          "policy_toc",
+          "implausible_offerings"
+        ]
       }
     ]
   },
   "after": {
-    "recordCount": 6720,
+    "recordCount": 6817,
     "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
@@ -225,42 +227,42 @@
     ]
   },
   "qa": {
-    "reviewed": 61,
-    "changedSchools": 31,
-    "findingsApplied": 36,
-    "learningAdded": 12,
+    "reviewed": 57,
+    "changedSchools": 27,
+    "findingsApplied": 27,
+    "learningAdded": 9,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +60 (>= 15)",
+    "reason": "eventCount +62 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "4ba827353024978d1d43",
+      "phraseHash": "0ae9bb52ede7cb3daf56",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10170,
-      "updatedAt": "2026-10-08"
+      "eventCount": 10282,
+      "updatedAt": "2026-10-09"
     },
     "fingerprintAfter": {
-      "phraseHash": "fb653adeaae513daf4e0",
+      "phraseHash": "160c4e568848e12086dc",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10220,
-      "updatedAt": "2026-10-08"
+      "eventCount": 10312,
+      "updatedAt": "2026-10-09"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 6720 published URN shards (prior=0 → 6720).",
+    "Hydrated working sidecar from 6817 published URN shards (prior=0 → 6817).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '4ba827353024978d1d43', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10170, 'updatedAt': '2026-10-08'}",
-    "Apply decision: eventCount +60 (>= 15)",
-    "Before: 61 suspects across 6720 records.",
-    "Applied QA fixes to 31 school(s) (36 area finding(s)).",
-    "Learned 12 new junk phrase(s) (store size 900).",
-    "Reviewed top 61 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': '0ae9bb52ede7cb3daf56', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10282, 'updatedAt': '2026-10-09'}",
+    "Apply decision: eventCount +62 (>= 15)",
+    "Before: 57 suspects across 6817 records.",
+    "Applied QA fixes to 27 school(s) (27 area finding(s)).",
+    "Learned 9 new junk phrase(s) (store size 900).",
+    "Reviewed top 57 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 6720 records.",
+    "After: 30 suspects across 6817 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
