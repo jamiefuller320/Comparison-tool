@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-09T18:12:27.430118+00:00
+# Qualitative source spot-check — 2026-10-10T17:10:20.959542+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3365146959`
+- Seed: `1177377333`
 - Max pages / school: `3`
-- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,14 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Krishna Avanti Primary School** (`138688`, Harrow) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos
-- **Oxlow Bridge School** (`151729`, Barking and Dagenham) — `pass`
-- **College Town Primary School** (`109828`, Bracknell Forest) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: swimming, enrichment: PE and Sport Premium, enrichment: Sports Funding, send: Late/Absence Procedures
-- **Cedar Children's Academy** (`142817`, Medway) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Curriculum Intent, Implementation, ethos: All Categories, community: All Categories
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, rights respecting
+- **St Mark's Primary School** (`101874`, Ealing) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: drama, enrichment: breakfast club, enrichment: religious education, behaviour: Araminta De Clermont School Counsellor
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **Woolwich Polytechnic School** (`141163`, Greenwich) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: MyChildAtSchoolMCAS, curriculum: citizenship, curriculum: computing, enrichment: robotics
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
+- **Wroxall Primary School** (`118173`, Isle of Wight) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: dance, curriculum: Rock and Roll, curriculum: Songs of WW2, curriculum: South and West Africa
+- **Westdene Primary School** (`114380`, Brighton and Hove) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: practical science provision
 
 ## Notes
 
