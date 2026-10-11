@@ -1,20 +1,21 @@
 {
-  "ranAt": "2026-10-10T15:52:56.603928+00:00",
+  "ranAt": "2026-10-11T16:21:11.765000+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 6898,
-    "suspectCount": 51,
+    "recordCount": 6973,
+    "suspectCount": 57,
     "flagCounts": {
-      "chrome": 19,
+      "chrome": 23,
+      "cms_chrome": 14,
       "admissions": 13,
-      "cms_chrome": 12,
       "high_score_thin_signals": 4,
-      "implausible_offerings": 3,
-      "policy_toc": 2
+      "implausible_offerings": 2,
+      "boilerplate": 1,
+      "policy_toc": 1
     },
     "topSuspects": [
       {
@@ -26,35 +27,11 @@
         ]
       },
       {
-        "urn": "145510",
-        "name": "The Bridge",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
         "urn": "147128",
         "name": "The Ferns Primary Academy",
         "score": 6.0,
         "flags": [
           "admissions"
-        ]
-      },
-      {
-        "urn": "101821",
-        "name": "Thomas More Catholic School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "102309",
-        "name": "Towers Infant School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
         ]
       },
       {
@@ -112,11 +89,35 @@
         "flags": [
           "cms_chrome"
         ]
+      },
+      {
+        "urn": "116489",
+        "name": "St Peter's Catholic Primary School, Waterlooville",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "151930",
+        "name": "St Peter's Catholic Primary School, Waterlooville",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "101141",
+        "name": "St Saviour's CofE Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
       }
     ]
   },
   "after": {
-    "recordCount": 6898,
+    "recordCount": 6973,
     "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
@@ -224,42 +225,42 @@
     ]
   },
   "qa": {
-    "reviewed": 51,
-    "changedSchools": 21,
-    "findingsApplied": 24,
-    "learningAdded": 3,
+    "reviewed": 57,
+    "changedSchools": 27,
+    "findingsApplied": 27,
+    "learningAdded": 2,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +50 (>= 15)",
+    "reason": "eventCount +36 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "1da16f332de403180ee4",
+      "phraseHash": "2f3ccf4648af3a84d59e",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10362,
-      "updatedAt": "2026-10-10"
+      "eventCount": 10429,
+      "updatedAt": "2026-10-11"
     },
     "fingerprintAfter": {
-      "phraseHash": "1da16f332de403180ee4",
+      "phraseHash": "e8aa72a038818ea91e0b",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10393,
-      "updatedAt": "2026-10-10"
+      "eventCount": 10463,
+      "updatedAt": "2026-10-11"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 6898 published URN shards (prior=0 → 6898).",
+    "Hydrated working sidecar from 6973 published URN shards (prior=0 → 6973).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '1da16f332de403180ee4', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10362, 'updatedAt': '2026-10-10'}",
-    "Apply decision: eventCount +50 (>= 15)",
-    "Before: 51 suspects across 6898 records.",
-    "Applied QA fixes to 21 school(s) (24 area finding(s)).",
-    "Learned 3 new junk phrase(s) (store size 900).",
-    "Reviewed top 51 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': '2f3ccf4648af3a84d59e', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10429, 'updatedAt': '2026-10-11'}",
+    "Apply decision: eventCount +36 (>= 15)",
+    "Before: 57 suspects across 6973 records.",
+    "Applied QA fixes to 27 school(s) (27 area finding(s)).",
+    "Learned 2 new junk phrase(s) (store size 900).",
+    "Reviewed top 57 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 6898 records.",
+    "After: 30 suspects across 6973 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
