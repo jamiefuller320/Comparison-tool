@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-10-12T17:11:22.562060+00:00`
+- Ran at: `2026-10-12T19:38:12.571059+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `14`
-- Findings applied: `27`
-- New learned phrases: `8`
+- Reviewed: `45`
+- Schools changed: `15`
+- Findings applied: `15`
+- New learned phrases: `3`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 14 school(s) (27 area finding(s)).
-- Learned 8 new junk phrase(s) (store size 900).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 15 school(s) (15 area finding(s)).
+- Learned 3 new junk phrase(s) (store size 900).
+- Reviewed top 45 suspect(s); provider=none.
 
 ## Suspects
 
-- `147653` Waterside Academy — score 15.0 flags=policy_toc,implausible_offerings
-- `100243` Thomas Fairchild Community School — score 11.0 flags=chrome,policy_toc,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `102950` The Harrodian School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `140405` Thomas Gamuel Primary School — score 8.0 flags=chrome,cms_chrome
-- `149569` Thomas's College — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `139549` Thomson House School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `143420` Twickenham School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `138461` Waldegrave School — score 8.0 flags=chrome,policy_toc,implausible_offerings
-- `103085` St Mary's Catholic Primary School — score 6.0 flags=chrome
-- `144238` St Mary's CofE Primary School — score 6.0 flags=chrome
-- `144239` St Saviour's Church of England Primary School — score 6.0 flags=chrome
-- `100300` Tayyibah Girls' School — score 6.0 flags=chrome
-- `143103` The Boxing Academy AP Free School — score 6.0 flags=chrome
 - `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `143022` The Richmond upon Thames School — score 6.0 flags=chrome
+- `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
+- `137605` Dove House Academy — score 5.0 flags=cms_chrome
+- `149906` Light Years School — score 5.0 flags=cms_chrome
+- `116330` Liphook Church of England Controlled Junior School — score 5.0 flags=cms_chrome
+- `116056` Liphook Infant School — score 5.0 flags=cms_chrome
+- `118310` Ryarsh Primary School — score 5.0 flags=cms_chrome
+- `125992` Shipley CofE Primary School — score 5.0 flags=cms_chrome
+- `116489` St Peter's Catholic Primary School, Waterlooville — score 5.0 flags=cms_chrome
+- `151930` St Peter's Catholic Primary School, Waterlooville — score 5.0 flags=cms_chrome
+- `116383` St Swithun Wells Catholic Primary School, Chandlers Ford — score 5.0 flags=cms_chrome
+- `148724` Stafford Junior School — score 5.0 flags=cms_chrome
+- `109748` Blagdon Nursery School — score 3.0 flags=admissions
+- `101251` Brookhill Nursery School — score 3.0 flags=admissions
+- `101252` Hampden Way Nursery School — score 3.0 flags=admissions
+- `110428` Lee Common Church of England School — score 3.0 flags=admissions
+- `142356` Mytchett Primary & Nursery Academy — score 3.0 flags=admissions
+- `109752` New Bridge Nursery School — score 3.0 flags=admissions
+- `125344` Rydes Hill Preparatory School — score 3.0 flags=admissions
