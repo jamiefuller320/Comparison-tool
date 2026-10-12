@@ -1,8 +1,8 @@
-# Human-gated review digest — 2026-10-05T21:22:53+00:00
+# Human-gated review digest — 2026-10-12T21:59:23+00:00
 
 - Mode: `collate`
-- Open items: **22** (queue total `22` · done `0` · ignored `0`)
-- New / refreshed this run: `6`
+- Open items: **26** (queue total `26` · done `0` · ignored `0`)
+- New / refreshed this run: `4`
 - Auto-closed (already learned): `0`
 
 ## How to review / mark done
@@ -18,8 +18,8 @@
 
 ## Open by kind
 
-- `unsupported_offerings`: 12
-- `ethos_underclaim`: 10
+- `unsupported_offerings`: 14
+- `ethos_underclaim`: 12
 
 ## Items
 
@@ -58,13 +58,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 143082`
     - `npm run review:human-gated -- --mark-done 05765979e6a767e9`
-- **ethos_underclaim** `1c861310d7447668` St Anne's Catholic Primary School (URN `147519`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: faithful, let all you do, our mission, our vision
-  - review:
-    - `npm run enrich:qualitative -- --urn 147519`
-    - `npm run review:human-gated -- --mark-done 1c861310d7447668`
 - **ethos_underclaim** `2ad04055c6d5ebef` Earlsfield Primary School (URN `101005`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -72,6 +65,27 @@
   - review:
     - `npm run enrich:qualitative -- --urn 101005`
     - `npm run review:human-gated -- --mark-done 2ad04055c6d5ebef`
+- **ethos_underclaim** `f3785dae97da18cb` Herschel Grammar School (URN `137726`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: catholic, church of england
+  - review:
+    - `npm run enrich:qualitative -- --urn 137726`
+    - `npm run review:human-gated -- --mark-done f3785dae97da18cb`
+- **ethos_underclaim** `1c861310d7447668` St Anne's Catholic Primary School (URN `147519`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: faithful, let all you do, our mission, our vision
+  - review:
+    - `npm run enrich:qualitative -- --urn 147519`
+    - `npm run review:human-gated -- --mark-done 1c861310d7447668`
+- **ethos_underclaim** `7aa275b7c983df62` Yeading Infant and Nursery School (URN `102404`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: our vision
+  - review:
+    - `npm run enrich:qualitative -- --urn 102404`
+    - `npm run review:human-gated -- --mark-done 7aa275b7c983df62`
 - **ethos_underclaim** `7d21b4f2e7266a53` Millais School (URN `126066`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -86,13 +100,13 @@
   - review:
     - `npm run enrich:qualitative -- --urn 148724`
     - `npm run review:human-gated -- --mark-done b95cf95d690bc057`
-- **ethos_underclaim** `f3785dae97da18cb` Herschel Grammar School (URN `137726`)
+- **ethos_underclaim** `fd64e8a3e13eb919` Bere Regis Primary and Preschool (URN `145721`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: catholic, church of england
+  - excerpts: our vision
   - review:
-    - `npm run enrich:qualitative -- --urn 137726`
-    - `npm run review:human-gated -- --mark-done f3785dae97da18cb`
+    - `npm run enrich:qualitative -- --urn 145721`
+    - `npm run review:human-gated -- --mark-done fd64e8a3e13eb919`
 - **unsupported_offerings** `45b485a1d8d12e8d` Platanos College (URN `136450`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -135,20 +149,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 136709`
     - `npm run review:human-gated -- --mark-done 999cf56455c18cfa`
-- **unsupported_offerings** `17060849b9f8fbe6` Millais School (URN `126066`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: curriculum: drama, enrichment: music
-  - review:
-    - `npm run enrich:qualitative -- --urn 126066`
-    - `npm run review:human-gated -- --mark-done 17060849b9f8fbe6`
-- **unsupported_offerings** `2a83b57167e6536b` Stafford Junior School (URN `148724`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: curriculum: dance, curriculum: geography, curriculum: Adventures of Isobel, curriculum: Alfred, Lord Tennyson, curriculum: Alternative Story Ending
-  - review:
-    - `npm run enrich:qualitative -- --urn 148724`
-    - `npm run review:human-gated -- --mark-done 2a83b57167e6536b`
 - **unsupported_offerings** `367074e04b57b8d0` Herschel Grammar School (URN `137726`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -163,13 +163,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 143082`
     - `npm run review:human-gated -- --mark-done 935d89bb9f75340c`
-- **unsupported_offerings** `d3915f61c0db92cb` St Anne's Catholic Primary School (URN `147519`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: enrichment: music, enrichment: music lovers, community: swimming, community: basketball, community: Helpline. Dedicated NSPCC
-  - review:
-    - `npm run enrich:qualitative -- --urn 147519`
-    - `npm run review:human-gated -- --mark-done d3915f61c0db92cb`
 - **unsupported_offerings** `eea42b2497853cf2` Brookfield Junior School (URN `118869`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -177,6 +170,41 @@
   - review:
     - `npm run enrich:qualitative -- --urn 118869`
     - `npm run review:human-gated -- --mark-done eea42b2497853cf2`
+- **unsupported_offerings** `17060849b9f8fbe6` Millais School (URN `126066`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: drama, enrichment: music
+  - review:
+    - `npm run enrich:qualitative -- --urn 126066`
+    - `npm run review:human-gated -- --mark-done 17060849b9f8fbe6`
+- **unsupported_offerings** `2a83b57167e6536b` Stafford Junior School (URN `148724`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: dance, curriculum: geography, curriculum: Adventures of Isobel, curriculum: Alfred, Lord Tennyson, curriculum: Alternative Story Ending
+  - review:
+    - `npm run enrich:qualitative -- --urn 148724`
+    - `npm run review:human-gated -- --mark-done 2a83b57167e6536b`
+- **unsupported_offerings** `c704f0cf37b978e9` John Betts Primary School (URN `100346`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: enrichment: music, enrichment: chess, enrichment: ranging from music theory, ethos: religious education, ethos: faith
+  - review:
+    - `npm run enrich:qualitative -- --urn 100346`
+    - `npm run review:human-gated -- --mark-done c704f0cf37b978e9`
+- **unsupported_offerings** `d3915f61c0db92cb` St Anne's Catholic Primary School (URN `147519`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: enrichment: music, enrichment: music lovers, community: swimming, community: basketball, community: Helpline. Dedicated NSPCC
+  - review:
+    - `npm run enrich:qualitative -- --urn 147519`
+    - `npm run review:human-gated -- --mark-done d3915f61c0db92cb`
+- **unsupported_offerings** `d7f5a7ee903c0120` Yeading Infant and Nursery School (URN `102404`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: enrichment: geography, ethos: ethos, ethos: british values, ethos: respect, ethos: responsibility
+  - review:
+    - `npm run enrich:qualitative -- --urn 102404`
+    - `npm run review:human-gated -- --mark-done d7f5a7ee903c0120`
 
 ## Artefacts
 
