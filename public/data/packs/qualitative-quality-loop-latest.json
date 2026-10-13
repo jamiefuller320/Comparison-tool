@@ -1,19 +1,21 @@
 {
-  "ranAt": "2026-10-12T19:47:13.151362+00:00",
+  "ranAt": "2026-10-13T17:33:36.865119+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 7033,
-    "suspectCount": 45,
+    "recordCount": 7074,
+    "suspectCount": 44,
     "flagCounts": {
-      "chrome": 15,
       "admissions": 13,
+      "chrome": 12,
       "cms_chrome": 12,
       "high_score_thin_signals": 4,
-      "implausible_offerings": 1
+      "implausible_offerings": 2,
+      "boilerplate": 1,
+      "policy_toc": 1
     },
     "topSuspects": [
       {
@@ -115,7 +117,7 @@
     ]
   },
   "after": {
-    "recordCount": 7033,
+    "recordCount": 7074,
     "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
@@ -223,42 +225,42 @@
     ]
   },
   "qa": {
-    "reviewed": 45,
-    "changedSchools": 15,
-    "findingsApplied": 15,
+    "reviewed": 44,
+    "changedSchools": 14,
+    "findingsApplied": 14,
     "learningAdded": 3,
     "provider": "none"
   },
   "merged": true,
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +43 (>= 15)",
+    "reason": "eventCount +25 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "1db8fefaaf58b9a35927",
+      "phraseHash": "d184a02a3f47246957c5",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10506,
-      "updatedAt": "2026-10-12"
+      "eventCount": 10549,
+      "updatedAt": "2026-10-13"
     },
     "fingerprintAfter": {
-      "phraseHash": "1db8fefaaf58b9a35927",
+      "phraseHash": "d184a02a3f47246957c5",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10524,
-      "updatedAt": "2026-10-12"
+      "eventCount": 10569,
+      "updatedAt": "2026-10-13"
     }
   },
   "notes": [
-    "Hydrated working sidecar from 7033 published URN shards (prior=0 → 7033).",
+    "Hydrated working sidecar from 7074 published URN shards (prior=0 → 7074).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '1db8fefaaf58b9a35927', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10506, 'updatedAt': '2026-10-12'}",
-    "Apply decision: eventCount +43 (>= 15)",
-    "Before: 45 suspects across 7033 records.",
-    "Applied QA fixes to 15 school(s) (15 area finding(s)).",
+    "Learning fingerprint: {'phraseHash': 'd184a02a3f47246957c5', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10549, 'updatedAt': '2026-10-13'}",
+    "Apply decision: eventCount +25 (>= 15)",
+    "Before: 44 suspects across 7074 records.",
+    "Applied QA fixes to 14 school(s) (14 area finding(s)).",
     "Learned 3 new junk phrase(s) (store size 900).",
-    "Reviewed top 45 suspect(s); provider=none.",
+    "Reviewed top 44 suspect(s); provider=none.",
     "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 7033 records.",
+    "After: 30 suspects across 7074 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
