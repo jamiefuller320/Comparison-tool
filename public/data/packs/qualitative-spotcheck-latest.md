@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-12T21:06:48.982568+00:00
+# Qualitative source spot-check — 2026-10-13T19:05:41.703804+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `79788741`
+- Seed: `632879940`
 - Max pages / school: `3`
-- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,14 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Yeading Infant and Nursery School** (`102404`, Hillingdon) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: geography, ethos: ethos, ethos: british values, ethos: respect
+- **Discovery Primary School** (`131109`, Greenwich) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: music, enrichment: choir, ethos: vision, community: choir
+- **Nightingale Primary School** (`102839`, Redbridge) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: choir, enrichment: drama, enrichment: football
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **John Betts Primary School** (`100346`, Hammersmith and Fulham) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: music, enrichment: chess, enrichment: ranging from music theory, ethos: religious education
-- **Bere Regis Primary and Preschool** (`145721`, Dorset) — `warn`
+- **Manor Green School** (`151044`, Windsor and Maidenhead) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: swimming, curriculum: duke of edinburgh, curriculum: Cognition and Learning, curriculum: Cognition and Learning Snack and
+- **Millbrook Combined School** (`131815`, Buckinghamshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: write french independently, enrichment: dance, enrichment: drama, enrichment: Games/toys/puzzles
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Lea Nursery School** (`109763`, Slough) — `pass`
 
 ## Notes
 
