@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-13T19:05:41.703804+00:00
+# Qualitative source spot-check — 2026-10-14T16:52:33.396724+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `632879940`
+- Seed: `3474637481`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,16 +22,15 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Discovery Primary School** (`131109`, Greenwich) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: music, enrichment: choir, ethos: vision, community: choir
-- **Nightingale Primary School** (`102839`, Redbridge) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: choir, enrichment: drama, enrichment: football
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Manor Green School** (`151044`, Windsor and Maidenhead) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: swimming, curriculum: duke of edinburgh, curriculum: Cognition and Learning, curriculum: Cognition and Learning Snack and
-- **Millbrook Combined School** (`131815`, Buckinghamshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: write french independently, enrichment: dance, enrichment: drama, enrichment: Games/toys/puzzles
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **Hill Mead Primary School** (`131340`, Lambeth) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: extended day, curriculum: Complaints, curriculum: Partnerships, curriculum: School Hours
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision, right respecting
+- **Corbets Tey School** (`102362`, Havering) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
+- **Woodlands Community College** (`116465`, Southampton) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Complete Careers Quiz, curriculum: Construction, curriculum: Decision for You, curriculum: Red Bull Wingfinder
+- **St Peter's CofE Primary School** (`150680`, West Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, enrichment: after school club, enrichment: music, community: music
 
 ## Notes
 
