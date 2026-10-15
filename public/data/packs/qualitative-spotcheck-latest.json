@@ -1,15 +1,16 @@
 {
-  "ranAt": "2026-10-14T16:52:33.396724+00:00",
+  "ranAt": "2026-10-15T16:38:08.479046+00:00",
   "dryRun": false,
-  "seed": 3474637481,
+  "seed": 3898364309,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 7
+    "warn": 6,
+    "fetch_error": 1
   },
   "failCount": 0,
-  "warnCount": 7,
+  "warnCount": 6,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -146,80 +147,36 @@
       "notes": []
     },
     {
-      "urn": "131340",
-      "name": "Hill Mead Primary School",
-      "la": "Lambeth",
-      "website": "https://www.hillmead.org",
-      "assessedAt": "2026-09-24",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 109,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: extended day",
-            "curriculum: Complaints",
-            "curriculum: Partnerships",
-            "curriculum: School Hours",
-            "curriculum: School Lunches",
-            "curriculum: School Performance",
-            "curriculum: Schools Welcome",
-            "enrichment: extended day",
-            "enrichment: Complaints",
-            "enrichment: Drama4ALL Workshop"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our vision",
-            "right respecting"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "102362",
-      "name": "Corbets Tey School",
-      "la": "Havering",
-      "website": "http://www.corbetsteyschool.org.uk/",
-      "assessedAt": "2026-09-30",
-      "verdict": "warn",
-      "pagesFetched": 3,
+      "urn": "145106",
+      "name": "George Mitchell School",
+      "la": "Waltham Forest",
+      "website": "https://www.georgemitchellschool.co.uk",
+      "assessedAt": "2026-10-02",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
       "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "possible_underclaim",
+          "code": "fetch_failed",
           "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our mission"
-          ]
+          "detail": "Could not fetch live school pages for source comparison"
         }
       ],
-      "notes": []
+      "notes": [
+        "Homepage fetch failed for https://www.georgemitchellschool.co.uk"
+      ]
     },
     {
-      "urn": "116465",
-      "name": "Woodlands Community College",
-      "la": "Southampton",
-      "website": "http://www.woodlands.southampton.sch.uk",
-      "assessedAt": "2026-09-20",
+      "urn": "143881",
+      "name": "Tollgate Primary School",
+      "la": "Newham",
+      "website": "https://www.tollgate.boleyntrust.org",
+      "assessedAt": "2026-10-07",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 24,
+      "offeringsChecked": 60,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -228,30 +185,30 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Complete Careers Quiz",
-            "curriculum: Construction",
-            "curriculum: Decision for You",
-            "curriculum: Red Bull Wingfinder",
-            "curriculum: UCAS Careers Quiz",
-            "enrichment: drama",
-            "enrichment: if you are thinking about drama",
-            "enrichment: football",
-            "send: Family Support Worker",
-            "send: Hearing Impairment Advisor"
+            "curriculum: geography",
+            "curriculum: mathematics",
+            "curriculum: music",
+            "curriculum: Multiplication Division Multiplication",
+            "curriculum: Literal Understanding & Retrieval",
+            "curriculum: Word Reading: Phonics & Decoding",
+            "curriculum: Bronze Champions",
+            "curriculum: Gold Champions",
+            "curriculum: gymnastics",
+            "curriculum: athletics"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "150680",
-      "name": "St Peter's CofE Primary School",
-      "la": "West Sussex",
-      "website": "http://www.stpetershenfield.org.uk",
+      "urn": "137215",
+      "name": "The Chalfonts Community College",
+      "la": "Buckinghamshire",
+      "website": "https://www.chalfonts.org",
       "assessedAt": "2026-09-13",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 10,
+      "offeringsChecked": 8,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -260,11 +217,39 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: computing",
-            "enrichment: after school club",
-            "enrichment: music",
-            "community: music",
-            "community: explore music from different cultures"
+            "ethos: Financial Reports & Pupil Premium",
+            "community: Useful Careers Websites"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "136153",
+      "name": "Broughton Manor Preparatory School",
+      "la": "Milton Keynes",
+      "website": "https://www.bmprep.co.uk",
+      "assessedAt": "2026-09-11",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 30,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: theatre trips",
+            "enrichment: gymnastics",
+            "enrichment: swimming",
+            "enrichment: netball",
+            "enrichment: from gymnastics to swimming",
+            "enrichment: hockey to netball",
+            "enrichment: robotics",
+            "enrichment: coding",
+            "enrichment: with state-of-the-art facilities"
           ]
         }
       ],

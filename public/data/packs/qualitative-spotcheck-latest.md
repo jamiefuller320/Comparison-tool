@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-14T16:52:33.396724+00:00
+# Qualitative source spot-check — 2026-10-15T16:38:08.479046+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3474637481`
+- Seed: `3898364309`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,15 +22,14 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Hill Mead Primary School** (`131340`, Lambeth) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: extended day, curriculum: Complaints, curriculum: Partnerships, curriculum: School Hours
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision, right respecting
-- **Corbets Tey School** (`102362`, Havering) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Woodlands Community College** (`116465`, Southampton) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Complete Careers Quiz, curriculum: Construction, curriculum: Decision for You, curriculum: Red Bull Wingfinder
-- **St Peter's CofE Primary School** (`150680`, West Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, enrichment: after school club, enrichment: music, community: music
+- **George Mitchell School** (`145106`, Waltham Forest) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Tollgate Primary School** (`143881`, Newham) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, curriculum: mathematics, curriculum: music, curriculum: Multiplication Division Multiplication
+- **The Chalfonts Community College** (`137215`, Buckinghamshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: Financial Reports & Pupil Premium, community: Useful Careers Websites
+- **Broughton Manor Preparatory School** (`136153`, Milton Keynes) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: theatre trips, enrichment: gymnastics, enrichment: swimming, enrichment: netball
 
 ## Notes
 
