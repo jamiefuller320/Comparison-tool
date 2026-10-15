@@ -1,44 +1,42 @@
 # Qualitative capture loop
 
-- Ran at: `2026-10-14T13:09:55.488649+00:00`
+- Ran at: `2026-10-15T12:50:49.279658+00:00`
 - Ingest policy / phase: `auto` / `london`
 - Scope: `parallel`
-- LA: `Hampshire, Merton, Sutton`
-- Index: `public/data/schools-index.json`
-- Remaining with website (pre-capture): `1`
+- LA: `City of London, Islington, Kensington and Chelsea`
+- Index: `public/data/packs/kensington-and-chelsea/schools-index.json`
+- Remaining with website (pre-capture): `8`
 - Batch limit (per stream): `60`
-- Sidecar records before → after: `7074` → `7097`
+- Sidecar records before → after: `7097` → `7118`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `8`
+- QA reviewed / changed: `16` / `4`
 - Learned terms: `500`
-- Learned QA phrases: `7`
+- Learned QA phrases: `0`
 - Dry run: `False`
 
 ## Streams
 
-- `Hampshire`: status=ok added=1 remaining=1 index=`public/data/schools-index.json`
-- `Merton`: status=ok added=11 remaining=11 index=`public/data/packs/merton/schools-index.json`
-- `Sutton`: status=ok added=11 remaining=11 index=`public/data/packs/sutton/schools-index.json`
+- `City of London`: status=ok added=6 remaining=6 index=`public/data/packs/city-of-london/schools-index.json`
+- `Islington`: status=ok added=7 remaining=7 index=`public/data/packs/islington/schools-index.json`
+- `Kensington and Chelsea`: status=ok added=8 remaining=8 index=`public/data/packs/kensington-and-chelsea/schools-index.json`
 
 ## Notes
 
-- Hydrated working sidecar from 7074 published URN shards (prior=0 → 7074).
-- Ingest policy=auto phase=london (non-London remaining=0, London remaining=51, pending London packs=0).
-- Stream preferred=Hampshire exhausted (remaining=0); advanced to Merton (remaining=11).
-- Stream preferred=Lambeth exhausted (remaining=0); advanced to Sutton (remaining=11).
-- Stream preferred=Tower Hamlets exhausted (remaining=0); advanced to Kensington and Chelsea (remaining=8).
+- Hydrated working sidecar from 7097 published URN shards (prior=0 → 7097).
+- Ingest policy=auto phase=london (non-London remaining=0, London remaining=29, pending London packs=0).
+- Stream preferred=Hampshire exhausted (remaining=0); advanced to Kensington and Chelsea (remaining=8).
+- Stream preferred=Lambeth exhausted (remaining=0); advanced to Islington (remaining=7).
+- Stream preferred=Tower Hamlets exhausted (remaining=0); advanced to City of London (remaining=6).
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream preferred=Lambeth exhausted (remaining=0); advanced to Merton (remaining=11).
-- Stream preferred=Tower Hamlets exhausted (remaining=0); advanced to Sutton (remaining=11).
-- Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=1.
-- Stream LA=Merton index=public/data/packs/merton/schools-index.json remainingWithWebsite=11.
-- Stream LA=Sutton index=public/data/packs/sutton/schools-index.json remainingWithWebsite=11.
+- Stream LA=Kensington and Chelsea index=public/data/packs/kensington-and-chelsea/schools-index.json remainingWithWebsite=8.
+- Stream LA=Islington index=public/data/packs/islington/schools-index.json remainingWithWebsite=7.
+- Stream LA=City of London index=public/data/packs/city-of-london/schools-index.json remainingWithWebsite=6.
 - Running 3 capture streams in parallel (limit 60 each).
-- Merged 3 partial sidecar(s) → 7097 records (union size 7097).
-- Captured batch (sidecar 7074 → 7097); learned terms now 547.
+- Merged 3 partial sidecar(s) → 7118 records (union size 7118).
+- Captured batch (sidecar 7097 → 7118); learned terms now 543.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 8, learned phrases +7.
+- QA provider=none: reviewed 16, changed 4, learned phrases +0.
 - Re-merged affected schools-index files after QA fixes.
