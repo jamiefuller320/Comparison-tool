@@ -1,18 +1,18 @@
 {
-  "ranAt": "2026-10-15T14:52:29.790454+00:00",
+  "ranAt": "2026-10-16T14:30:47.904879+00:00",
   "dryRun": false,
-  "mode": "apply",
+  "mode": "skip",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 7118,
-    "suspectCount": 35,
+    "recordCount": 7126,
+    "suspectCount": 32,
     "flagCounts": {
       "admissions": 13,
       "cms_chrome": 12,
-      "chrome": 5,
       "high_score_thin_signals": 4,
+      "chrome": 2,
       "implausible_offerings": 1
     },
     "topSuspects": [
@@ -115,12 +115,13 @@
     ]
   },
   "after": {
-    "recordCount": 7118,
-    "suspectCount": 30,
+    "recordCount": 7126,
+    "suspectCount": 32,
     "flagCounts": {
       "admissions": 13,
       "cms_chrome": 12,
       "high_score_thin_signals": 4,
+      "chrome": 2,
       "implausible_offerings": 1
     },
     "topSuspects": [
@@ -223,42 +224,37 @@
     ]
   },
   "qa": {
-    "reviewed": 35,
-    "changedSchools": 5,
-    "findingsApplied": 5,
-    "learningAdded": 5,
-    "provider": "none"
+    "reviewed": 0,
+    "changedSchools": 0,
+    "findingsApplied": 0,
+    "learningAdded": 0
   },
-  "merged": true,
+  "merged": false,
   "trigger": {
-    "shouldApply": true,
-    "reason": "eventCount +18 (>= 15)",
-    "fingerprintBefore": {
-      "phraseHash": "9fb532acf1da7a7ae4fc",
+    "shouldApply": false,
+    "reason": "active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
+    "fingerprint": {
+      "phraseHash": "3f070ec75d4d77be417a",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10629,
-      "updatedAt": "2026-10-15"
+      "eventCount": 10644,
+      "updatedAt": "2026-10-16"
     },
-    "fingerprintAfter": {
+    "prior": {
       "phraseHash": "9fb532acf1da7a7ae4fc",
       "phraseCount": 900,
       "candidateCount": 2000,
       "eventCount": 10642,
       "updatedAt": "2026-10-15"
-    }
+    },
+    "priorAppliedAt": "2026-10-15T14:52:29.789784+00:00"
   },
   "notes": [
-    "Hydrated working sidecar from 7118 published URN shards (prior=0 → 7118).",
+    "Hydrated working sidecar from 7126 published URN shards (prior=0 → 7126).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '9fb532acf1da7a7ae4fc', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10629, 'updatedAt': '2026-10-15'}",
-    "Apply decision: eventCount +18 (>= 15)",
-    "Before: 35 suspects across 7118 records.",
-    "Applied QA fixes to 5 school(s) (5 area finding(s)).",
-    "Learned 5 new junk phrase(s) (store size 900).",
-    "Reviewed top 35 suspect(s); provider=none.",
-    "Merged cleaned sidecar into 54 schools-index file(s).",
-    "After: 30 suspects across 7118 records.",
-    "Updated output/learned-qa-apply-state.json"
+    "Learning fingerprint: {'phraseHash': '3f070ec75d4d77be417a', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10644, 'updatedAt': '2026-10-16'}",
+    "Apply decision: active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
+    "Before: 32 suspects across 7126 records.",
+    "Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest."
   ]
 }
