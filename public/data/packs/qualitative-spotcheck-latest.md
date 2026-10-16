@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-15T16:38:08.479046+00:00
+# Qualitative source spot-check — 2026-10-16T16:22:38.628835+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3898364309`
+- Seed: `96854972`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,14 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **George Mitchell School** (`145106`, Waltham Forest) — `fetch_error`
+- **Highshore School** (`100872`, Southwark) — `fetch_error`
   - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Tollgate Primary School** (`143881`, Newham) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, curriculum: mathematics, curriculum: music, curriculum: Multiplication Division Multiplication
-- **The Chalfonts Community College** (`137215`, Buckinghamshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: Financial Reports & Pupil Premium, community: Useful Careers Websites
-- **Broughton Manor Preparatory School** (`136153`, Milton Keynes) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: theatre trips, enrichment: gymnastics, enrichment: swimming, enrichment: netball
+- **Robert Blair School and Children's Centre** (`100422`, Islington) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: drama, enrichment: extended day, enrichment: spring 1 2026 the extended day, ethos: excellence
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **St James' Church of England First School and Nursery, Alderholt** (`142506`, Dorset) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: after school club, enrichment: Additional School Run Clubs, enrichment: PE and Sport Premium, enrichment: breakfast club
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
+- **The King's House School, Windsor** (`138768`, Windsor and Maidenhead) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
 
 ## Notes
 
