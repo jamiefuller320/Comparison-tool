@@ -1,6 +1,6 @@
 # SEO coverage loop
 
-- Generated: `2026-10-09T14:11:12Z`
+- Generated: `2026-10-16T12:08:39Z`
 - Dry run: **False**
 - Added areas: **0** (none — budget full or no ready candidates)
 
@@ -32,25 +32,25 @@
 | Medway | 119 | 3 | 97.5 | 95.0 |
 | Buckinghamshire | 272 | 8 | 97.8 | 94.9 |
 | Bracknell Forest | 48 | 2 | 95.8 | 93.8 |
-| Lambeth | 97 | 1 | 93.8 | 0.0 |
+| Lambeth | 97 | 1 | 94.8 | 58.8 |
 | Tower Hamlets | 112 | 1 | 95.5 | 50.9 |
-| Waltham Forest | 84 | 1 | 98.8 | 0.0 |
-| Newham | 108 | 1 | 98.1 | 0.0 |
-| Lewisham | 95 | 2 | 96.8 | 0.0 |
+| Waltham Forest | 84 | 1 | 100.0 | 71.4 |
+| Newham | 108 | 1 | 98.1 | 92.6 |
+| Lewisham | 95 | 2 | 97.9 | 61.1 |
 | Enfield | 110 | 2 | 99.1 | 53.6 |
 | Brent | 104 | 3 | 96.2 | 52.9 |
 | Ealing | 120 | 4 | 96.7 | 49.2 |
-| Hackney | 105 | 1 | 96.2 | 57.1 |
+| Hackney | 105 | 1 | 97.1 | 71.4 |
 | Bromley | 118 | 6 | 98.3 | 50.0 |
-| Bexley | 91 | 5 | 93.4 | 0.0 |
+| Bexley | 91 | 5 | 97.8 | 63.7 |
 | Hounslow | 89 | 4 | 97.8 | 62.9 |
 | Havering | 90 | 4 | 96.7 | 64.4 |
 | Southwark | 120 | 1 | 97.5 | 49.2 |
-| Islington | 68 | 1 | 92.6 | 0.0 |
+| Islington | 68 | 1 | 100.0 | 85.3 |
 | Greenwich | 104 | 1 | 95.2 | 54.8 |
 | Barnet | 169 | 3 | 96.4 | 33.1 |
-| Sutton | 76 | 3 | 92.1 | 0.0 |
-| Barking and Dagenham | 67 | 2 | 91.0 | 0.0 |
+| Sutton | 76 | 3 | 96.1 | 75.0 |
+| Barking and Dagenham | 67 | 2 | 94.0 | 89.6 |
 | Harrow | 72 | 3 | 95.8 | 80.6 |
 | Redbridge | 93 | 4 | 95.7 | 62.4 |
 | Hillingdon | 108 | 5 | 93.5 | 50.9 |
@@ -68,15 +68,16 @@
 
 ## AEO / GEO readiness
 
-- llms.txt: `/llms.txt` (generated 2026-10-02T13:38:40.001Z)
+- llms.txt: `/llms.txt` (generated 2026-10-09T14:11:22.244Z)
 - School pages with Ofsted Q&A: **71%**
-- School pages with inspection précis: **48%**
-- School pages with website evidence (quality-gated): **16%**
+- School pages with inspection précis: **62%**
+- School pages with website evidence (quality-gated): **21%**
 
 ## Candidate packs (not yet in coverage)
 
 | Area | Schools | Towns ≥min | Signal % | Precis % |
 | --- | ---: | ---: | ---: | ---: |
+| City of London | 6 | 0 | 100.0 | 100.0 |
 | Kent | 704 | 24 | 98.6 | 96.6 |
 | Southampton | 83 | 1 | 97.6 | 96.4 |
 | Oxfordshire | 365 | 13 | 97.3 | 93.2 |
@@ -88,4 +89,3 @@
 | Reading | 72 | 1 | 95.8 | 91.7 |
 | Bournemouth, Christchurch and Poole | 111 | 3 | 95.5 | 92.8 |
 | Brighton and Hove | 77 | 2 | 94.8 | 92.2 |
-| City of London | 6 | 0 | 66.7 | 0.0 |
