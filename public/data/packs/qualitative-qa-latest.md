@@ -1,22 +1,23 @@
 # Qualitative QA loop
 
-- Ran at: `2026-10-15T14:42:11.497965+00:00`
+- Ran at: `2026-10-16T12:24:12.932412+00:00`
 - Provider: `none`
-- Reviewed: `35`
-- Schools changed: `5`
-- Findings applied: `5`
-- New learned phrases: `5`
+- Reviewed: `16`
+- Schools changed: `1`
+- Findings applied: `1`
+- New learned phrases: `1`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 5 school(s) (5 area finding(s)).
-- Learned 5 new junk phrase(s) (store size 900).
-- Reviewed top 35 suspect(s); provider=none.
+- Applied QA fixes to 1 school(s) (1 area finding(s)).
+- Learned 1 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
+- `101219` Warren Junior School — score 8.0 flags=policy_toc,chrome,implausible_offerings
 - `147128` The Ferns Primary Academy — score 6.0 flags=admissions
 - `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
 - `137605` Dove House Academy — score 5.0 flags=cms_chrome
@@ -31,8 +32,3 @@
 - `148724` Stafford Junior School — score 5.0 flags=cms_chrome
 - `109748` Blagdon Nursery School — score 3.0 flags=admissions
 - `101251` Brookhill Nursery School — score 3.0 flags=admissions
-- `101252` Hampden Way Nursery School — score 3.0 flags=admissions
-- `110428` Lee Common Church of England School — score 3.0 flags=admissions
-- `142356` Mytchett Primary & Nursery Academy — score 3.0 flags=admissions
-- `109752` New Bridge Nursery School — score 3.0 flags=admissions
-- `125344` Rydes Hill Preparatory School — score 3.0 flags=admissions
