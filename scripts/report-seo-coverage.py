@@ -34,6 +34,13 @@ DEFAULT_MAX_SCHOOL_PAGES = 5000
 DEFAULT_MAX_TOWN_PAGES = 160
 DEFAULT_TOWN_MIN = 8
 
+# Square Mile is one place, not a set of postal towns. GIAS tags five schools
+# "London" and leaves David Game College blank, so the shared 8-school floor
+# never forms a town. Group every open school in this LA under the LA name.
+# Do not lower DEFAULT_TOWN_MIN for other areas.
+CITY_OF_LONDON_SLUG = "city-of-london"
+CITY_OF_LONDON_PLACE = "City of London"
+
 
 def _load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -93,16 +100,29 @@ def area_index_path(slug: str) -> Path:
     return ROOT / "public" / "data" / "packs" / slug / "schools-index.json"
 
 
-def town_stats(schools: list[dict], *, min_schools: int) -> dict:
+def _place_name(school: dict, *, area_slug: str) -> str:
+    """Group key for town pages. City of London collapses to one place label."""
+    if area_slug == CITY_OF_LONDON_SLUG:
+        return CITY_OF_LONDON_PLACE
+    return (school.get("town") or "").strip()
+
+
+def town_stats(schools: list[dict], *, min_schools: int, area_slug: str = "") -> dict:
     by_town: dict[str, list[dict]] = defaultdict(list)
     for school in schools:
-        town = (school.get("town") or "").strip()
+        town = _place_name(school, area_slug=area_slug)
         if town:
             by_town[town].append(school)
+    square_mile = area_slug == CITY_OF_LONDON_SLUG
     towns = [
         {"name": name, "schoolCount": len(rows)}
         for name, rows in by_town.items()
         if len(rows) >= min_schools
+        or (
+            square_mile
+            and name == CITY_OF_LONDON_PLACE
+            and len(rows) > 0
+        )
     ]
     towns.sort(key=lambda t: (-t["schoolCount"], t["name"]))
     with_signal = sum(
@@ -130,7 +150,7 @@ def town_stats(schools: list[dict], *, min_schools: int) -> dict:
 
 def assess_area(slug: str, local_authority: str, *, min_schools: int) -> dict:
     schools = _open_schools(area_index_path(slug))
-    stats = town_stats(schools, min_schools=min_schools)
+    stats = town_stats(schools, min_schools=min_schools, area_slug=slug)
     return {
         "slug": slug,
         "localAuthority": local_authority,
