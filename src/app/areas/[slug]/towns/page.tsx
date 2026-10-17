@@ -13,6 +13,7 @@ import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import {
   isAuthorityWideTown,
   isSeoAreaIncluded,
+  listSeoAreasWithTowns,
   listSeoTowns,
   townPath,
   townPlaceLabel,
