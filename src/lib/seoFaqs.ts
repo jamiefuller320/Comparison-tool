@@ -61,7 +61,10 @@ export function townPageFaqs(town: SeoTown): GuideFaq[] {
   return [
     {
       question: `How many schools are listed in ${place}?`,
-      answer: `School Compass lists ${formatCount(town.schoolCount)} open schools with a ${town.name} postal town in the ${town.localAuthority} set (${formatCount(town.withOfsted)} with an Ofsted grade in the index). Counts follow the live pack — not a ranking.`,
+      answer:
+        town.areaSlug === "city-of-london" && town.name === "City of London"
+          ? `School Compass lists ${formatCount(town.schoolCount)} open schools in the City of London — the Square Mile — (${formatCount(town.withOfsted)} with an Ofsted grade in the index). Counts follow the live pack — not a ranking.`
+          : `School Compass lists ${formatCount(town.schoolCount)} open schools with a ${town.name} postal town in the ${town.localAuthority} set (${formatCount(town.withOfsted)} with an Ofsted grade in the index). Counts follow the live pack — not a ranking.`,
     },
     {
       question: `How do I compare schools in ${place}?`,

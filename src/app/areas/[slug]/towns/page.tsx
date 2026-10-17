@@ -11,8 +11,8 @@ import {
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import {
+  isAuthorityWideTown,
   isSeoAreaIncluded,
-  listSeoAreasWithTowns,
   listSeoTowns,
   townPath,
   townPlaceLabel,
@@ -39,8 +39,7 @@ export async function generateMetadata({
   if (towns.length === 0) return {};
 
   const n = towns.length;
-  const londonOnly =
-    n === 1 && towns[0].name.trim().toLowerCase() === "london";
+  const londonOnly = n === 1 && isAuthorityWideTown(towns[0]);
   const title = londonOnly
     ? `Schools across ${area.localAuthority}`
     : `Towns in ${area.localAuthority}`;
@@ -78,7 +77,7 @@ export default async function TownsIndexPage({ params }: PageProps) {
   const towns = listSeoTowns(slug);
   if (towns.length === 0) notFound();
   const londonOnly =
-    towns.length === 1 && towns[0].name.trim().toLowerCase() === "london";
+    towns.length === 1 && isAuthorityWideTown(towns[0]);
 
   return (
     <main id="main" className="area-page">
@@ -131,9 +130,11 @@ export default async function TownsIndexPage({ params }: PageProps) {
                 : `${formatCount(towns.length)} towns with school pages`}
             </h2>
             <p>
-              {londonOnly
-                ? `GIAS often stores ${area.localAuthority} schools under the postal town “London” — this page is the borough shortlist.`
-                : `Town names come from school addresses (postal town). Each page links into individual school snapshots and the compare tool.`}
+              {area.slug === "city-of-london"
+                ? `The Square Mile is one place. This page lists every open City of London school.`
+                : londonOnly
+                  ? `GIAS often stores ${area.localAuthority} schools under the postal town “London” — this page is the borough shortlist.`
+                  : `Town names come from school addresses (postal town). Each page links into individual school snapshots and the compare tool.`}
             </p>
           </div>
           <ul className="area-list">

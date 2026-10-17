@@ -7,11 +7,13 @@ async function main() {
     SEO_TOWN_MIN_SCHOOLS,
     getSeoSchool,
     getSeoTown,
+    getSeoTownForSchool,
     isSeoAreaIncluded,
     listSeoAreasWithTowns,
     listSeoCoverageAreaSlugs,
     listSeoHampshireSchools,
     listSeoSchools,
+    listSeoSchoolsInTown,
     listSeoTowns,
     readSeoCoverage,
     schoolPageDescription,
@@ -34,8 +36,16 @@ async function main() {
     console.error("FAIL isSeoAreaIncluded hampshire");
     process.exit(1);
   }
-  if (SEO_TOWN_MIN_SCHOOLS < 1) {
-    console.error("FAIL town min");
+  if (SEO_TOWN_MIN_SCHOOLS !== 8) {
+    console.error("FAIL town min must stay 8", SEO_TOWN_MIN_SCHOOLS);
+    process.exit(1);
+  }
+  if (coverage.policy.townMinSchools !== 8) {
+    console.error("FAIL coverage townMinSchools", coverage.policy.townMinSchools);
+    process.exit(1);
+  }
+  if (!isSeoAreaIncluded("city-of-london")) {
+    console.error("FAIL city of london missing from coverage");
     process.exit(1);
   }
 
@@ -154,6 +164,54 @@ async function main() {
       process.exit(1);
     }
   }
+  const cityTowns = listSeoTowns("city-of-london");
+  if (cityTowns.length !== 1) {
+    console.error("FAIL city town count", cityTowns);
+    process.exit(1);
+  }
+  const cityTown = cityTowns[0];
+  if (cityTown.name !== "City of London" || cityTown.slug !== "city-of-london") {
+    console.error("FAIL city place label", cityTown);
+    process.exit(1);
+  }
+  if (cityTown.slug === "london" || cityTown.name === "London") {
+    console.error("FAIL city page titled London", cityTown);
+    process.exit(1);
+  }
+  if (cityTown.schoolCount !== 6) {
+    console.error("FAIL city school count", cityTown.schoolCount);
+    process.exit(1);
+  }
+  const cityTitle = townPageTitle(cityTown);
+  if (cityTitle !== "Compare schools in City of London") {
+    console.error("FAIL city town title", cityTitle);
+    process.exit(1);
+  }
+  if (townPath(cityTown.slug, cityTown.areaSlug) !== "/areas/city-of-london/towns/city-of-london/") {
+    console.error("FAIL city town path");
+    process.exit(1);
+  }
+  const citySchools = listSeoSchoolsInTown(cityTown);
+  if (citySchools.length !== 6) {
+    console.error("FAIL city schools in town", citySchools.map((s) => s.urn));
+    process.exit(1);
+  }
+  const davidGame = citySchools.find((s) => s.urn === "100544");
+  if (!davidGame) {
+    console.error("FAIL David Game College missing from Square Mile group");
+    process.exit(1);
+  }
+  if (getSeoTownForSchool(davidGame)?.slug !== "city-of-london") {
+    console.error("FAIL blank-town school did not join the place page");
+    process.exit(1);
+  }
+  const expectedUrns = ["100000", "100001", "100002", "100003", "100463", "100544"];
+  const gotUrns = citySchools.map((s) => s.urn).sort();
+  if (gotUrns.join() !== expectedUrns.join()) {
+    console.error("FAIL city URNs", gotUrns);
+    process.exit(1);
+  }
+
   const shortSchool = schools.find(
     (s) => `${s.name}, ${schoolPlaceLabel(s)}`.length <= 42,
   );

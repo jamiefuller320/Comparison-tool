@@ -22,6 +22,31 @@ import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 /** Fallback when seo-coverage.json is missing or incomplete. */
 export const SEO_TOWN_MIN_SCHOOLS = 8;
 
+/**
+ * City of London is one place (the Square Mile). GIAS leaves one school
+ * without a town and tags the rest "London", which is under the 8-school
+ * floor. This group is the only exemption — the floor itself stays 8.
+ */
+export const CITY_OF_LONDON_AREA_SLUG = "city-of-london";
+export const CITY_OF_LONDON_PLACE_NAME = "City of London";
+
+export function isCityOfLondonPlace(town: {
+  areaSlug: string;
+  name: string;
+}): boolean {
+  return (
+    town.areaSlug === CITY_OF_LONDON_AREA_SLUG &&
+    town.name === CITY_OF_LONDON_PLACE_NAME
+  );
+}
+
+/** Single GIAS "London" town, or the Square Mile place group. */
+export function isAuthorityWideTown(town: { areaSlug: string; name: string }): boolean {
+  return (
+    isCityOfLondonPlace(town) || town.name.trim().toLowerCase() === "london"
+  );
+}
+
 /** Default static-export budget (school HTML pages). */
 export const SEO_DEFAULT_MAX_SCHOOL_PAGES = 5000;
 
@@ -315,12 +340,24 @@ export function townPath(
   return `${townsIndexPath(areaSlug)}${encodeURIComponent(townSlug)}/`;
 }
 
+/** Place label used to group town pages. Square Mile schools share one name. */
+export function seoPlaceName(school: SeoSchoolSummary): string | null {
+  if (
+    school.areaSlug === CITY_OF_LONDON_AREA_SLUG &&
+    school.localAuthority === CITY_OF_LONDON_PLACE_NAME
+  ) {
+    return CITY_OF_LONDON_PLACE_NAME;
+  }
+  const town = school.town?.trim();
+  return town || null;
+}
+
 function buildTowns(schools: SeoSchoolSummary[], minSchools: number): SeoTown[] {
   const byKey = new Map<string, SeoSchoolSummary[]>();
   for (const school of schools) {
-    const town = school.town?.trim();
-    if (!town) continue;
-    const key = `${school.areaSlug}::${town}`;
+    const place = seoPlaceName(school);
+    if (!place) continue;
+    const key = `${school.areaSlug}::${place}`;
     const list = byKey.get(key) ?? [];
     list.push(school);
     byKey.set(key, list);
@@ -329,9 +366,10 @@ function buildTowns(schools: SeoSchoolSummary[], minSchools: number): SeoTown[] 
   const towns = [...byKey.entries()]
     .map(([, list]): SeoTown => {
       const first = list[0];
+      const name = seoPlaceName(first)!;
       return {
-        slug: slugifyTown(first.town!),
-        name: first.town!,
+        slug: slugifyTown(name),
+        name,
         localAuthority: first.localAuthority,
         areaSlug: first.areaSlug,
         schoolCount: list.length,
@@ -340,7 +378,11 @@ function buildTowns(schools: SeoSchoolSummary[], minSchools: number): SeoTown[] 
         withKs4: list.filter((s) => s.att8Average != null).length,
       };
     })
-    .filter((town) => town.schoolCount >= minSchools && town.slug)
+    .filter(
+      (town) =>
+        town.slug &&
+        (town.schoolCount >= minSchools || isCityOfLondonPlace(town)),
+    )
     .sort(
       (a, b) =>
         b.schoolCount - a.schoolCount ||
@@ -385,12 +427,26 @@ export function getSeoTown(
   return listSeoTowns(areaSlug).find((town) => town.slug === townSlug);
 }
 
+export function schoolInSeoTown(
+  school: SeoSchoolSummary,
+  town: SeoTown,
+): boolean {
+  if (school.areaSlug !== town.areaSlug) return false;
+  if (isCityOfLondonPlace(town)) return true;
+  return school.town?.trim() === town.name;
+}
+
 export function listSeoSchoolsInTown(town: SeoTown): SeoSchoolSummary[] {
-  return listSeoSchools().filter(
-    (school) =>
-      school.areaSlug === town.areaSlug &&
-      school.town?.trim() === town.name,
-  );
+  return listSeoSchools().filter((school) => schoolInSeoTown(school, town));
+}
+
+/** Town landing for a school, including blank-town Square Mile schools. */
+export function getSeoTownForSchool(
+  school: SeoSchoolSummary,
+): SeoTown | undefined {
+  const place = seoPlaceName(school);
+  if (!place) return undefined;
+  return getSeoTown(slugifyTown(place), school.areaSlug);
 }
 
 /** Areas that have at least one town landing under current coverage. */
@@ -560,10 +616,7 @@ export function schoolJsonLd(
   if (locality) address.addressLocality = locality;
   if (school.postcode) address.postalCode = school.postcode;
 
-  const townSlug = school.town ? slugifyTown(school.town) : null;
-  const townRow = townSlug
-    ? getSeoTown(townSlug, school.areaSlug)
-    : undefined;
+  const townRow = getSeoTownForSchool(school);
   const townLanding = townRow
     ? townPath(townRow.slug, townRow.areaSlug)
     : null;

@@ -146,11 +146,47 @@ def main() -> int:
         r["slug"] for r in phased
     ]
 
+    # City of London is one place. The 8-school floor stays; only this LA is exempt.
+    assert report_mod.DEFAULT_TOWN_MIN == 8
+    city = report_mod.assess_area(
+        "city-of-london", "City of London", min_schools=8
+    )
+    assert city["schoolCount"] == 6, city
+    assert city["townCount"] == 1, city
+    assert city["towns"] == [{"name": "City of London", "schoolCount": 6}], city
+    assert city["towns"][0]["name"] != "London"
+
+    still_thin = report_mod.town_stats(
+        [{"town": "London", "localAuthority": "Lambeth"}] * 6,
+        min_schools=8,
+        area_slug="lambeth",
+    )
+    assert still_thin["townCount"] == 0, still_thin
+
+    with_blank = report_mod.town_stats(
+        [{"town": "London", "localAuthority": "City of London"}] * 5
+        + [{"town": "", "localAuthority": "City of London", "urn": "100544"}],
+        min_schools=8,
+        area_slug="city-of-london",
+    )
+    assert with_blank["schoolCount"] == 6, with_blank
+    assert with_blank["townCount"] == 1, with_blank
+    assert with_blank["towns"][0]["name"] == "City of London"
+    assert with_blank["towns"][0]["schoolCount"] == 6
+
     # Live report should at least see Hampshire when data is present.
     live = report_mod.collect_report()
     assert live["totals"]["schoolPages"] >= 500
     assert "hampshire" in live["includedAreaSlugs"]
+    assert live["policy"]["townMinSchools"] == 8
     assert live["totals"]["schoolBudgetRemaining"] >= 0
+    assert "city-of-london" in live["includedAreaSlugs"], live["includedAreaSlugs"]
+    included_city = next(
+        row for row in live["included"] if row["slug"] == "city-of-london"
+    )
+    assert included_city["schoolCount"] == 6, included_city
+    assert included_city["townCount"] == 1, included_city
+    assert included_city["towns"][0]["name"] == "City of London"
 
     print("PASS test-seo-coverage-loop")
     return 0
