@@ -1,16 +1,15 @@
 {
-  "ranAt": "2026-10-16T16:22:38.628835+00:00",
+  "ranAt": "2026-10-17T15:16:54.718205+00:00",
   "dryRun": false,
-  "seed": 96854972,
+  "seed": 598431390,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 6,
-    "fetch_error": 1
+    "warn": 7
   },
   "failCount": 0,
-  "warnCount": 6,
+  "warnCount": 7,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -147,36 +146,14 @@
       "notes": []
     },
     {
-      "urn": "100872",
-      "name": "Highshore School",
+      "urn": "149369",
+      "name": "Notre Dame Catholic Girls' School",
       "la": "Southwark",
-      "website": "https://www.highshore.southwark.sch.uk",
-      "assessedAt": "2026-09-26",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.highshore.southwark.sch.uk"
-      ]
-    },
-    {
-      "urn": "100422",
-      "name": "Robert Blair School and Children's Centre",
-      "la": "Islington",
-      "website": "http://www.robertblairschool.com",
-      "assessedAt": "2026-10-05",
+      "website": "http://www.notredame.southwark.sch.uk/",
+      "assessedAt": "2026-10-06",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 25,
+      "offeringsChecked": 52,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -185,12 +162,47 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: drama",
-            "enrichment: extended day",
-            "enrichment: spring 1 2026 the extended day",
-            "ethos: excellence",
-            "send: extended day",
-            "send: spring 1 2026 the extended day"
+            "curriculum: drama",
+            "curriculum: orchestra",
+            "curriculum: A Christmas Carol",
+            "curriculum: An Inspector Calls",
+            "curriculum: Carol Ann Duffy",
+            "curriculum: Coleridge & Keats",
+            "curriculum: Creative Descriptive Writing",
+            "curriculum: Diverse Literary Short Stories",
+            "curriculum: Early Modern Play",
+            "curriculum: Early Romantic Poetry"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "100190",
+      "name": "Thomas Tallis School",
+      "la": "Greenwich",
+      "website": "https://www.thomastallisschool.com",
+      "assessedAt": "2026-10-08",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 95,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "send: geography",
+            "send: Counselling",
+            "send: Counselling Services",
+            "send: North West Kent",
+            "send: SENDCo: Lucy Pollitt",
+            "send: Sensory Service",
+            "send: Social Skills and Organisation",
+            "send: Two LARPs: SCALI and DSC",
+            "send: Waterside Behaviour Outreach"
           ]
         },
         {
@@ -206,14 +218,14 @@
       "notes": []
     },
     {
-      "urn": "142506",
-      "name": "St James' Church of England First School and Nursery, Alderholt",
-      "la": "Dorset",
-      "website": "https://www.alderholt.dorset.sch.uk/",
-      "assessedAt": "2026-08-26",
+      "urn": "137920",
+      "name": "Rush Common School",
+      "la": "Oxfordshire",
+      "website": "https://www.rushcommonschool.org/",
+      "assessedAt": "2026-09-09",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 11,
+      "offeringsChecked": 98,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -222,49 +234,40 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: after school club",
-            "enrichment: Additional School Run Clubs",
-            "enrichment: PE and Sport Premium",
-            "enrichment: breakfast club",
-            "community: after school club",
-            "community: Additional School Run Clubs",
-            "community: Attendance Procedures",
-            "community: Childhood Illnesses/Useful Links/Fun Links",
-            "community: Opening Times",
-            "community: School Closure"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "church of england"
+            "curriculum: computing",
+            "curriculum: geography",
+            "curriculum: swimming",
+            "curriculum: Anti-bullying",
+            "curriculum: Anti-bullying Ambassadors",
+            "curriculum: Assemblies",
+            "curriculum: Bereavement Resources",
+            "curriculum: Communiction",
+            "curriculum: Complaints Procedure",
+            "curriculum: Cost of Living Support"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "138768",
-      "name": "The King's House School, Windsor",
-      "la": "Windsor and Maidenhead",
-      "website": "https://www.kingshouseschool.org.uk",
-      "assessedAt": "2026-09-21",
+      "urn": "116116",
+      "name": "Banister Primary School",
+      "la": "Southampton",
+      "website": "https://www.banisterschool.co.uk/",
+      "assessedAt": "2026-09-14",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 16,
+      "offeringsChecked": 14,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "possible_underclaim",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "our vision"
+            "curriculum: geography",
+            "enrichment: music"
           ]
         }
       ],

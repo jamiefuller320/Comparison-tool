@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-16T16:22:38.628835+00:00
+# Qualitative source spot-check — 2026-10-17T15:16:54.718205+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `96854972`
+- Seed: `598431390`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
+- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,16 +22,15 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Highshore School** (`100872`, Southwark) — `fetch_error`
-  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Robert Blair School and Children's Centre** (`100422`, Islington) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: drama, enrichment: extended day, enrichment: spring 1 2026 the extended day, ethos: excellence
+- **Notre Dame Catholic Girls' School** (`149369`, Southwark) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, curriculum: orchestra, curriculum: A Christmas Carol, curriculum: An Inspector Calls
+- **Thomas Tallis School** (`100190`, Greenwich) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — send: geography, send: Counselling, send: Counselling Services, send: North West Kent
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **St James' Church of England First School and Nursery, Alderholt** (`142506`, Dorset) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: after school club, enrichment: Additional School Run Clubs, enrichment: PE and Sport Premium, enrichment: breakfast club
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
-- **The King's House School, Windsor** (`138768`, Windsor and Maidenhead) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **Rush Common School** (`137920`, Oxfordshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography, curriculum: swimming, curriculum: Anti-bullying
+- **Banister Primary School** (`116116`, Southampton) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, enrichment: music
 
 ## Notes
 
