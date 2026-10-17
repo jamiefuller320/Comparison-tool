@@ -69,20 +69,15 @@ KS4_TOTAL_FILTERS = {
     "ETvqF": "TaYuP",  # Prior attainment
 }
 
+# 2024/25 institution KS4 no longer publishes EBacc entry / achievement
+# indicators (those IDs 400 as IndicatorsNotFound). EBacc fields stay optional
+# on the school record when an older release still has them.
 KS4_INDICATORS = {
     "att8Average": "kgVhs",
     "engMath94Percent": "hCRyW",
     "engMath95Percent": "dDo0Z",
     "engMathEnteringPercent": "yBiaB",
     "anyPassPercent": "cHR31",
-    "ebaccEnteringPercent": "bmztT",
-    "ebacc94Percent": "mqo9K",
-    "ebaccAps": "flgYF",
-    "ebaccEng94Percent": "ghgO9",
-    "ebaccMat94Percent": "Pbmeb",
-    "ebaccSci94Percent": "15Di3",
-    "ebaccEngEnteringPercent": "DeYQe",
-    "ebaccMatEnteringPercent": "4G6UZ",
     "ks4Pupils": "IL3Bz",
 }
 
