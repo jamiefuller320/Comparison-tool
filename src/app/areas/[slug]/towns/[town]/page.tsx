@@ -15,6 +15,7 @@ import {
   formatAtt8,
   formatOutcomePercent,
   getSeoTown,
+  isCityOfLondonPlace,
   isSeoAreaIncluded,
   listSeoTowns,
   listSeoSchoolsInTown,
@@ -130,11 +131,15 @@ export default async function TownLandingPage({ params }: PageProps) {
       <section className="section" aria-labelledby="town-counts-heading">
         <div className="shell">
           <div className="section-head">
-            <h2 id="town-counts-heading">What is listed for {town.name}</h2>
+            <h2 id="town-counts-heading">
+              {isCityOfLondonPlace(town)
+                ? `What is listed for ${place}`
+                : `What is listed for ${town.name}`}
+            </h2>
             <p>
-              Counts are from the live {town.localAuthority} index. Postal town
-              is taken from school addresses — some settings sit near LA
-              borders.
+              {isCityOfLondonPlace(town)
+                ? `Counts are every open school in the City of London index — the Square Mile, not a postal-town split.`
+                : `Counts are from the live ${town.localAuthority} index. Postal town is taken from school addresses — some settings sit near LA borders.`}
             </p>
           </div>
           <dl className="area-stats">

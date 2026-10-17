@@ -11,7 +11,7 @@ import {
   formatAtt8,
   formatOutcomePercent,
   getSeoSchool,
-  getSeoTown,
+  getSeoTownForSchool,
   listSeoSchools,
   listSeoSchoolsInTown,
   schoolCitationLines,
@@ -20,7 +20,6 @@ import {
   schoolPageDescription,
   schoolPageTitle,
   schoolPath,
-  slugifyTown,
   townPath,
   townsIndexPath,
   type SeoSchoolSummary,
@@ -51,7 +50,11 @@ export async function generateMetadata({
     alternates: { canonical: url },
     keywords: [
       school.name,
-      school.town ? `${school.town} schools` : "",
+      school.areaSlug === "city-of-london"
+        ? ""
+        : school.town
+          ? `${school.town} schools`
+          : "",
       `${school.localAuthority} schools`,
       school.ofstedOverall ? `Ofsted ${school.ofstedOverall}` : "",
       "compare schools",
@@ -81,10 +84,7 @@ export default async function SchoolLandingPage({ params }: PageProps) {
   const school = getSeoSchool(urn);
   if (!school) notFound();
 
-  const townSlug = school.town ? slugifyTown(school.town) : null;
-  const town = townSlug
-    ? getSeoTown(townSlug, school.areaSlug)
-    : undefined;
+  const town = getSeoTownForSchool(school);
   const neighbours = town
     ? listSeoSchoolsInTown(town)
         .filter((row) => row.urn !== school.urn)
@@ -127,7 +127,11 @@ export default async function SchoolLandingPage({ params }: PageProps) {
           <p className="area-kicker">{BRAND_NAME}</p>
           <h1>{school.name}</h1>
           <p className="area-lead">
-            {[school.town, school.localAuthority, school.postcode]
+            {[
+              school.areaSlug === "city-of-london" ? null : school.town,
+              school.localAuthority,
+              school.postcode,
+            ]
               .filter(Boolean)
               .join(" · ")}
             {metaLine(school) ? `. ${metaLine(school)}.` : "."} Compare published

@@ -1,22 +1,22 @@
 # SEO coverage loop
 
-- Generated: `2026-10-16T12:08:39Z`
+- Generated: `2026-10-17T16:49:54Z`
 - Dry run: **False**
-- Added areas: **0** (none — budget full or no ready candidates)
+- Added areas: **1** (City of London)
 
 ## Totals
 
 | Metric | Before | After | Budget |
 | --- | ---: | ---: | ---: |
-| School pages | 4942 | 4942 | 5000 |
-| Town pages | 141 | 141 | 160 |
-| Town hubs | 42 | 42 | — |
+| School pages | 4942 | 4948 | 5000 |
+| Town pages | 141 | 142 | 160 |
+| Town hubs | 42 | 43 | — |
 
 # SEO coverage report
 
-- School pages: **4942** / 5000 (98.8% · 58 remaining)
-- Town pages: **141** / 160 (19 remaining)
-- Town hubs: **42**
+- School pages: **4948** / 5000 (99.0% · 52 remaining)
+- Town pages: **142** / 160 (18 remaining)
+- Town hubs: **43**
 - Town min schools: 8
 
 ## Included areas
@@ -65,19 +65,19 @@
 | Westminster | 87 | 1 | 88.5 | 59.8 |
 | Kensington and Chelsea | 71 | 1 | 95.8 | 78.9 |
 | West Sussex | 344 | 13 | 98.3 | 94.5 |
+| City of London | 6 | 1 | 100.0 | 100.0 |
 
 ## AEO / GEO readiness
 
-- llms.txt: `/llms.txt` (generated 2026-10-09T14:11:22.244Z)
+- llms.txt: `/llms.txt` (generated 2026-10-16T12:08:45.708Z)
 - School pages with Ofsted Q&A: **71%**
-- School pages with inspection précis: **62%**
-- School pages with website evidence (quality-gated): **21%**
+- School pages with inspection précis: **73%**
+- School pages with website evidence (quality-gated): **23%**
 
 ## Candidate packs (not yet in coverage)
 
 | Area | Schools | Towns ≥min | Signal % | Precis % |
 | --- | ---: | ---: | ---: | ---: |
-| City of London | 6 | 0 | 100.0 | 100.0 |
 | Kent | 704 | 24 | 98.6 | 96.6 |
 | Southampton | 83 | 1 | 97.6 | 96.4 |
 | Oxfordshire | 365 | 13 | 97.3 | 93.2 |
