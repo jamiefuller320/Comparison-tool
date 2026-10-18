@@ -1,34 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-10-17T12:27:47.260809+00:00`
+- Ran at: `2026-10-18T13:42:27.404375+00:00`
 - Provider: `none`
 - Reviewed: `16`
-- Schools changed: `3`
-- Findings applied: `6`
-- New learned phrases: `0`
+- Schools changed: `15`
+- Findings applied: `41`
+- New learned phrases: `15`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 3 school(s) (6 area finding(s)).
-- Learned 0 new junk phrase(s) (store size 900).
+- Applied QA fixes to 15 school(s) (41 area finding(s)).
+- Learned 15 new junk phrase(s) (store size 900).
 - Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
-- `115887` Cherbourg Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `150829` Churchfields, the Village School — score 20.0 flags=policy_toc,implausible_offerings
+- `143007` Bulford St Leonard's C of E (VA) Primary School — score 15.0 flags=policy_toc,implausible_offerings
+- `126535` Appleford School — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `150910` Bellefield Primary and Nursery School — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `144514` Brunel College — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `140454` Christian Malford CofE Primary School — score 14.0 flags=policy_toc,chrome,implausible_offerings
+- `126320` Collingbourne Church of England Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `116636` Treloar School — score 6.0 flags=chrome
-- `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
-- `137605` Dove House Academy — score 5.0 flags=cms_chrome
-- `149906` Light Years School — score 5.0 flags=cms_chrome
-- `116330` Liphook Church of England Controlled Junior School — score 5.0 flags=cms_chrome
-- `116056` Liphook Infant School — score 5.0 flags=cms_chrome
-- `118310` Ryarsh Primary School — score 5.0 flags=cms_chrome
-- `125992` Shipley CofE Primary School — score 5.0 flags=cms_chrome
-- `116489` St Peter's Catholic Primary School, Waterlooville — score 5.0 flags=cms_chrome
-- `151930` St Peter's Catholic Primary School, Waterlooville — score 5.0 flags=cms_chrome
-- `116383` St Swithun Wells Catholic Primary School, Chandlers Ford — score 5.0 flags=cms_chrome
-- `148724` Stafford Junior School — score 5.0 flags=cms_chrome
-- `116488` Ashley Junior School — score 3.0 flags=chrome
+- `126316` Colerne CofE Primary School — score 8.0 flags=policy_toc,implausible_offerings,chrome
+- `126319` Crudwell CofE Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `126394` Baydon St Nicholas Church of England Primary School — score 6.0 flags=chrome
+- `146849` Bishops Cannings Church of England Primary School — score 6.0 flags=chrome
+- `126178` Bratton Primary School — score 6.0 flags=chrome
+- `150220` Broad Chalke CofE Primary School — score 6.0 flags=chrome
+- `149340` Compass Community School Athelstan Park — score 6.0 flags=chrome
+- `149871` Compass Community School Wheatley Park — score 6.0 flags=chrome
