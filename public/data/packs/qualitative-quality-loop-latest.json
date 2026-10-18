@@ -1,17 +1,17 @@
 {
-  "ranAt": "2026-10-17T13:26:53.560634+00:00",
+  "ranAt": "2026-10-18T13:59:24.542265+00:00",
   "dryRun": false,
-  "mode": "skip",
+  "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 7126,
-    "suspectCount": 39,
+    "recordCount": 7186,
+    "suspectCount": 53,
     "flagCounts": {
+      "chrome": 22,
       "admissions": 13,
-      "cms_chrome": 12,
-      "chrome": 9,
+      "cms_chrome": 13,
       "high_score_thin_signals": 4,
       "implausible_offerings": 1
     },
@@ -25,6 +25,30 @@
         ]
       },
       {
+        "urn": "126533",
+        "name": "Cricklade Manor Prep",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "126532",
+        "name": "Dauntsey's School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
+        "urn": "138630",
+        "name": "Devizes School",
+        "score": 6.0,
+        "flags": [
+          "chrome"
+        ]
+      },
+      {
         "urn": "147128",
         "name": "The Ferns Primary Academy",
         "score": 6.0,
@@ -35,6 +59,14 @@
       {
         "urn": "115872",
         "name": "Chandler's Ford Infant School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "126382",
+        "name": "Coombe Bissett Church of England Primary School",
         "score": 5.0,
         "flags": [
           "cms_chrome"
@@ -79,48 +111,15 @@
         "flags": [
           "cms_chrome"
         ]
-      },
-      {
-        "urn": "125992",
-        "name": "Shipley CofE Primary School",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "116489",
-        "name": "St Peter's Catholic Primary School, Waterlooville",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "151930",
-        "name": "St Peter's Catholic Primary School, Waterlooville",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "116383",
-        "name": "St Swithun Wells Catholic Primary School, Chandlers Ford",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
       }
     ]
   },
   "after": {
-    "recordCount": 7126,
-    "suspectCount": 39,
+    "recordCount": 7186,
+    "suspectCount": 30,
     "flagCounts": {
       "admissions": 13,
       "cms_chrome": 12,
-      "chrome": 9,
       "high_score_thin_signals": 4,
       "implausible_offerings": 1
     },
@@ -224,37 +223,42 @@
     ]
   },
   "qa": {
-    "reviewed": 0,
-    "changedSchools": 0,
-    "findingsApplied": 0,
-    "learningAdded": 0
+    "reviewed": 53,
+    "changedSchools": 23,
+    "findingsApplied": 26,
+    "learningAdded": 9,
+    "provider": "none"
   },
-  "merged": false,
+  "merged": true,
   "trigger": {
-    "shouldApply": false,
-    "reason": "active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
-    "fingerprint": {
-      "phraseHash": "2619b284432f79a01823",
+    "shouldApply": true,
+    "reason": "eventCount +68 (>= 15)",
+    "fingerprintBefore": {
+      "phraseHash": "500a83c51e7a4c5967fb",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10653,
-      "updatedAt": "2026-10-17"
+      "eventCount": 10710,
+      "updatedAt": "2026-10-18"
     },
-    "prior": {
-      "phraseHash": "9fb532acf1da7a7ae4fc",
+    "fingerprintAfter": {
+      "phraseHash": "500a83c51e7a4c5967fb",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 10642,
-      "updatedAt": "2026-10-15"
-    },
-    "priorAppliedAt": "2026-10-15T14:52:29.789784+00:00"
+      "eventCount": 10745,
+      "updatedAt": "2026-10-18"
+    }
   },
   "notes": [
-    "Hydrated working sidecar from 7126 published URN shards (prior=0 → 7126).",
+    "Hydrated working sidecar from 7186 published URN shards (prior=0 → 7186).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '2619b284432f79a01823', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10653, 'updatedAt': '2026-10-17'}",
-    "Apply decision: active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
-    "Before: 39 suspects across 7126 records.",
-    "Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest."
+    "Learning fingerprint: {'phraseHash': '500a83c51e7a4c5967fb', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10710, 'updatedAt': '2026-10-18'}",
+    "Apply decision: eventCount +68 (>= 15)",
+    "Before: 53 suspects across 7186 records.",
+    "Applied QA fixes to 23 school(s) (26 area finding(s)).",
+    "Learned 9 new junk phrase(s) (store size 900).",
+    "Reviewed top 53 suspect(s); provider=none.",
+    "Merged cleaned sidecar into 55 schools-index file(s).",
+    "After: 30 suspects across 7186 records.",
+    "Updated output/learned-qa-apply-state.json"
   ]
 }

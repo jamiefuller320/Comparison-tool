@@ -1,29 +1,34 @@
-# Qualitative quality loop — 2026-10-17T13:26:53.560634+00:00
+# Qualitative quality loop — 2026-10-18T13:59:24.542265+00:00
 
-- Mode: `skip`
+- Mode: `apply`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
-- Records: `7126`
-- Suspects before → after: `39` → `39`
-- QA reviewed / changed: `0` / `0`
-- Findings applied: `0`
-- Learned phrases added: `0`
-- Merged to index: `False`
-- Apply trigger: `active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)`
+- Records: `7186`
+- Suspects before → after: `53` → `30`
+- QA reviewed / changed: `53` / `23`
+- Findings applied: `26`
+- Learned phrases added: `9`
+- Merged to index: `True`
+- Apply trigger: `eventCount +68 (>= 15)`
 
 ## Top flag counts (before)
 
+- `chrome`: 22
 - `admissions`: 13
-- `cms_chrome`: 12
-- `chrome`: 9
+- `cms_chrome`: 13
 - `high_score_thin_signals`: 4
 - `implausible_offerings`: 1
 
 ## Notes
 
-- Hydrated working sidecar from 7126 published URN shards (prior=0 → 7126).
+- Hydrated working sidecar from 7186 published URN shards (prior=0 → 7186).
 - Rebalanced learned QA phrases: active=900 candidates=2000.
-- Learning fingerprint: {'phraseHash': '2619b284432f79a01823', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10653, 'updatedAt': '2026-10-17'}
-- Apply decision: active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)
-- Before: 39 suspects across 7126 records.
-- Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest.
+- Learning fingerprint: {'phraseHash': '500a83c51e7a4c5967fb', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 10710, 'updatedAt': '2026-10-18'}
+- Apply decision: eventCount +68 (>= 15)
+- Before: 53 suspects across 7186 records.
+- Applied QA fixes to 23 school(s) (26 area finding(s)).
+- Learned 9 new junk phrase(s) (store size 900).
+- Reviewed top 53 suspect(s); provider=none.
+- Merged cleaned sidecar into 55 schools-index file(s).
+- After: 30 suspects across 7186 records.
+- Updated output/learned-qa-apply-state.json
