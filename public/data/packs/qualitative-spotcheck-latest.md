@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-17T15:16:54.718205+00:00
+# Qualitative source spot-check — 2026-10-18T15:38:17.437598+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `598431390`
+- Seed: `2858849054`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,15 +22,13 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Notre Dame Catholic Girls' School** (`149369`, Southwark) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, curriculum: orchestra, curriculum: A Christmas Carol, curriculum: An Inspector Calls
-- **Thomas Tallis School** (`100190`, Greenwich) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — send: geography, send: Counselling, send: Counselling Services, send: North West Kent
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Rush Common School** (`137920`, Oxfordshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography, curriculum: swimming, curriculum: Anti-bullying
-- **Banister Primary School** (`116116`, Southampton) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, enrichment: music
+- **Tram House School** (`145164`, Wandsworth) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: swimming, enrichment: such as swimming, enrichment: music, enrichment: where students explored its art
+- **The New North Academy** (`137393`, Islington) — `pass`
+- **Barnsole Primary School** (`144423`, Medway) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
+- **Five Acre Wood School** (`119055`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: Assessment and Recording, curriculum: Behavioural Support Services, curriculum: Big Bot, Small Bot
 
 ## Notes
 
