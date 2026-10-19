@@ -1,16 +1,15 @@
 {
-  "ranAt": "2026-10-18T15:38:17.437598+00:00",
+  "ranAt": "2026-10-19T18:33:55.073586+00:00",
   "dryRun": false,
-  "seed": 2858849054,
+  "seed": 101891924,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 6,
-    "pass": 1
+    "warn": 7
   },
   "failCount": 0,
-  "warnCount": 6,
+  "warnCount": 7,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -147,14 +146,14 @@
       "notes": []
     },
     {
-      "urn": "145164",
-      "name": "Tram House School",
-      "la": "Wandsworth",
-      "website": "https://www.beyondautismschools.org.uk",
-      "assessedAt": "2026-10-07",
+      "urn": "100064",
+      "name": "The Hall School",
+      "la": "Camden",
+      "website": "https://www.hallschool.co.uk",
+      "assessedAt": "2026-10-11",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 9,
+      "offeringsChecked": 83,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -163,44 +162,51 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: swimming",
-            "enrichment: such as swimming",
-            "enrichment: music",
-            "enrichment: where students explored its art",
-            "behaviour: Data Protection Officer",
-            "community: Board of Trustees",
-            "community: Chair of Trustees: Angus Johnston"
+            "send: chamber music groups",
+            "send: football"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our ethos"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "137393",
-      "name": "The New North Academy",
-      "la": "Islington",
-      "website": "https://www.newnorthacademy.com/",
-      "assessedAt": "2026-10-05",
-      "verdict": "pass",
-      "pagesFetched": 1,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [],
-      "notes": []
-    },
-    {
-      "urn": "144423",
-      "name": "Barnsole Primary School",
-      "la": "Medway",
-      "website": "https://www.barnsoleprimary.medway.sch.uk",
-      "assessedAt": "2026-09-12",
+      "urn": "151310",
+      "name": "Millbank Gardens Primary Academy",
+      "la": "Westminster",
+      "website": "https://www.millbankgardens.futureacademies.org",
+      "assessedAt": "2026-10-01",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 3,
+      "offeringsChecked": 36,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: dance",
+            "curriculum: Alliteration",
+            "curriculum: Dreams and Goals.",
+            "curriculum: Environmental Sounds",
+            "curriculum: Light and Dark",
+            "curriculum: Nursery Learning Journey",
+            "curriculum: Oral Blending and Segmenting",
+            "curriculum: Past and Present",
+            "curriculum: Rhythm and Rhyme",
+            "curriculum: Mother’s Day, Easter"
+          ]
+        },
         {
           "code": "possible_underclaim",
           "severity": "warn",
@@ -214,14 +220,14 @@
       "notes": []
     },
     {
-      "urn": "119055",
-      "name": "Five Acre Wood School",
-      "la": "Kent",
-      "website": "http://www.fiveacrewood.co.uk",
+      "urn": "122969",
+      "name": "Grandpont Nursery School",
+      "la": "Oxfordshire",
+      "website": "https://www.grandpontnurseryschool.co.uk",
       "assessedAt": "2026-09-04",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 33,
+      "offeringsChecked": 5,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -230,16 +236,32 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: music",
-            "curriculum: Assessment and Recording",
-            "curriculum: Behavioural Support Services",
-            "curriculum: Big Bot, Small Bot",
-            "curriculum: Bluey: Daddy Robot",
-            "curriculum: Harry and His Robots",
-            "curriculum: Independence/Preparing for Adulthood",
-            "curriculum: Owl Babies Story Sack",
-            "curriculum: Pirates & Mermaids",
-            "curriculum: Play and Interaction"
+            "curriculum: Potty Training Advice",
+            "curriculum: Talk Listen Cuddle"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "139674",
+      "name": "Eastbrook Primary Academy",
+      "la": "West Sussex",
+      "website": "https://www.eastbrook.w-sussex.sch.uk",
+      "assessedAt": "2026-09-06",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 9,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: PE and Sport Premium",
+            "send: Communication and Interaction"
           ]
         }
       ],
