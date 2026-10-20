@@ -1,15 +1,16 @@
 {
-  "ranAt": "2026-10-19T18:33:55.073586+00:00",
+  "ranAt": "2026-10-20T16:37:02.214506+00:00",
   "dryRun": false,
-  "seed": 101891924,
+  "seed": 4086972811,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 7
+    "warn": 6,
+    "fetch_error": 1
   },
   "failCount": 0,
-  "warnCount": 7,
+  "warnCount": 6,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -146,14 +147,14 @@
       "notes": []
     },
     {
-      "urn": "100064",
-      "name": "The Hall School",
-      "la": "Camden",
-      "website": "https://www.hallschool.co.uk",
-      "assessedAt": "2026-10-11",
+      "urn": "100724",
+      "name": "St Margaret's Lee CofE Primary School",
+      "la": "Lewisham",
+      "website": "https://www.sml.london",
+      "assessedAt": "2026-10-09",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 83,
+      "offeringsChecked": 24,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -162,8 +163,14 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "send: chamber music groups",
-            "send: football"
+            "enrichment: Organiser",
+            "community: All Saints",
+            "community: Holy Trinity",
+            "community: St Bartholomews",
+            "community: St James Hatcham,",
+            "community: St Marys",
+            "community: St Michaels",
+            "community: St Stephens"
           ]
         },
         {
@@ -172,21 +179,21 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our ethos"
+            "our vision"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "151310",
-      "name": "Millbank Gardens Primary Academy",
-      "la": "Westminster",
-      "website": "https://www.millbankgardens.futureacademies.org",
-      "assessedAt": "2026-10-01",
+      "urn": "102291",
+      "name": "Clockhouse Primary School",
+      "la": "Havering",
+      "website": "http://www.clockhouseprimaryschool.co.uk/",
+      "assessedAt": "2026-09-30",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 36,
+      "offeringsChecked": 15,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -195,16 +202,8 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: dance",
-            "curriculum: Alliteration",
-            "curriculum: Dreams and Goals.",
-            "curriculum: Environmental Sounds",
-            "curriculum: Light and Dark",
-            "curriculum: Nursery Learning Journey",
-            "curriculum: Oral Blending and Segmenting",
-            "curriculum: Past and Present",
-            "curriculum: Rhythm and Rhyme",
-            "curriculum: Mother’s Day, Easter"
+            "enrichment: breakfast club",
+            "ethos: respectful"
           ]
         },
         {
@@ -220,14 +219,14 @@
       "notes": []
     },
     {
-      "urn": "122969",
-      "name": "Grandpont Nursery School",
-      "la": "Oxfordshire",
-      "website": "https://www.grandpontnurseryschool.co.uk",
-      "assessedAt": "2026-09-04",
+      "urn": "110355",
+      "name": "Falconhurst School",
+      "la": "Milton Keynes",
+      "website": "https://www.falconhurstschool.co.uk",
+      "assessedAt": "2026-09-11",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 5,
+      "offeringsChecked": 82,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -236,36 +235,51 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Potty Training Advice",
-            "curriculum: Talk Listen Cuddle"
+            "curriculum: breakfast club",
+            "curriculum: Attendance",
+            "curriculum: Attendance and Meetings",
+            "enrichment: breakfast club",
+            "enrichment: Attendance",
+            "enrichment: Attendance and Meetings",
+            "ethos: Attendance",
+            "ethos: Attendance and Meetings",
+            "ethos: SEND Code of",
+            "send: breakfast club"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our ethos"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "139674",
-      "name": "Eastbrook Primary Academy",
-      "la": "West Sussex",
-      "website": "https://www.eastbrook.w-sussex.sch.uk",
-      "assessedAt": "2026-09-06",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 9,
+      "urn": "133675",
+      "name": "Compass School",
+      "la": "Southampton",
+      "website": "https://www.compass-school.net",
+      "assessedAt": "2026-09-14",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "unsupported_offerings",
+          "code": "fetch_failed",
           "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: PE and Sport Premium",
-            "send: Communication and Interaction"
-          ]
+          "detail": "Could not fetch live school pages for source comparison"
         }
       ],
-      "notes": []
+      "notes": [
+        "Homepage fetch failed for https://www.compass-school.net"
+      ]
     }
   ],
   "notes": [
