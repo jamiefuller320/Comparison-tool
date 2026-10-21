@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-20T16:37:02.214506+00:00
+# Qualitative source spot-check — 2026-10-21T16:55:03.462629+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `4086972811`
+- Seed: `3409410103`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,16 +22,14 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **St Margaret's Lee CofE Primary School** (`100724`, Lewisham) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: Organiser, community: All Saints, community: Holy Trinity, community: St Bartholomews
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Clockhouse Primary School** (`102291`, Havering) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: breakfast club, ethos: respectful
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
-- **Falconhurst School** (`110355`, Milton Keynes) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: breakfast club, curriculum: Attendance, curriculum: Attendance and Meetings, enrichment: breakfast club
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos
-- **Compass School** (`133675`, Southampton) — `fetch_error`
+- **Marlborough School** (`101487`, Bexley) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: football, ethos: excellence, community: Transport, community: Uniform and Equipment
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our mission, our values
+- **Faraday School** (`135989`, Tower Hamlets) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, enrichment: geography, enrichment: geography.” – artsmark, enrichment: computing
+- **Chickerell Primary Academy** (`139147`, Dorset) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Describing Word Search, curriculum: Favourite Part, curriculum: Main Character, curriculum: My Favourite Character
+- **Seabrook Church of England Primary School** (`118678`, Kent) — `fetch_error`
   - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
 
 ## Notes
