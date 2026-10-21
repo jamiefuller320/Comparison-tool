@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-10-20T14:42:44.033029+00:00`
+- Ran at: `2026-10-21T14:31:46.823763+00:00`
 - Provider: `none`
-- Reviewed: `46`
-- Schools changed: `16`
-- Findings applied: `16`
-- New learned phrases: `10`
+- Reviewed: `16`
+- Schools changed: `15`
+- Findings applied: `39`
+- New learned phrases: `12`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 16 school(s) (16 area finding(s)).
-- Learned 10 new junk phrase(s) (store size 900).
-- Reviewed top 46 suspect(s); provider=none.
+- Applied QA fixes to 15 school(s) (39 area finding(s)).
+- Learned 12 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
+- `126392` St Michael's CofE Aided Primary — score 25.0 flags=policy_toc,implausible_offerings
+- `138885` The Clarendon Academy — score 25.0 flags=policy_toc,implausible_offerings
+- `126431` St Patrick's Catholic Primary School, Corsham — score 12.0 flags=chrome
+- `138623` St John's Marlborough — score 11.0 flags=chrome,policy_toc,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
-- `137605` Dove House Academy — score 5.0 flags=cms_chrome
-- `149906` Light Years School — score 5.0 flags=cms_chrome
-- `116330` Liphook Church of England Controlled Junior School — score 5.0 flags=cms_chrome
-- `116056` Liphook Infant School — score 5.0 flags=cms_chrome
-- `118310` Ryarsh Primary School — score 5.0 flags=cms_chrome
-- `125992` Shipley CofE Primary School — score 5.0 flags=cms_chrome
-- `116489` St Peter's Catholic Primary School, Waterlooville — score 5.0 flags=cms_chrome
-- `151930` St Peter's Catholic Primary School, Waterlooville — score 5.0 flags=cms_chrome
-- `116383` St Swithun Wells Catholic Primary School, Chandlers Ford — score 5.0 flags=cms_chrome
-- `148724` Stafford Junior School — score 5.0 flags=cms_chrome
-- `109748` Blagdon Nursery School — score 3.0 flags=admissions
-- `101251` Brookhill Nursery School — score 3.0 flags=admissions
-- `101252` Hampden Way Nursery School — score 3.0 flags=admissions
-- `110428` Lee Common Church of England School — score 3.0 flags=admissions
-- `140112` Morgan's Vale and Woodfalls Church of England Primary School — score 3.0 flags=chrome
-- `142356` Mytchett Primary & Nursery Academy — score 3.0 flags=admissions
-- `109752` New Bridge Nursery School — score 3.0 flags=admissions
+- `143006` St Michael's Church of England Primary School — score 10.0 flags=policy_toc,implausible_offerings
+- `126424` St Joseph's Catholic Primary School, Malmesbury — score 9.0 flags=chrome,boilerplate
+- `126182` St Paul's Primary School — score 9.0 flags=chrome
+- `126388` St John's Church of England Primary School, Tisbury — score 8.0 flags=chrome,policy_toc,implausible_offerings
+- `126361` Stratford-sub-Castle Church of England Voluntary Controlled Primary School — score 8.0 flags=chrome,policy_toc,implausible_offerings
+- `145198` The Springfields Academy — score 8.0 flags=chrome,policy_toc,implausible_offerings
+- `126473` St Joseph's Catholic School — score 6.0 flags=chrome
+- `137057` St Laurence School — score 6.0 flags=chrome
+- `150284` St Martin's CofE Primary School — score 6.0 flags=chrome
+- `149557` St Thomas a Becket Church of England Aided Primary School — score 6.0 flags=chrome
+- `139023` The Corsham Regis Primary Academy — score 6.0 flags=chrome
