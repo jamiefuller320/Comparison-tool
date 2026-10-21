@@ -1,4 +1,4 @@
-# Pack quality loop — 2026-10-19T12:26:13Z
+# Pack quality loop — 2026-10-21T11:21:29Z
 
 - Mode: `polish`
 - Max packs: 6
@@ -11,23 +11,23 @@
 
 | LA | Interest | Boost | Before indie% | After indie% | Before ISI | After ISI |
 |---|---:|---:|---:|---:|---|---|
-| Wiltshire | 3.892 | 15.6 | 0.0 | 48.1 | 0/27 | 16/27 |
-| Barking and Dagenham | 0.679 | 2.7 | 0.0 | 0.0 | 0/5 | 0/5 |
-| Newham | 0.679 | 2.7 | 0.0 | 0.0 | 2/7 | 2/7 |
-| Hackney | 0.679 | 2.7 | 6.2 | 6.2 | 3/32 | 3/32 |
-| Tower Hamlets | 0.68 | 2.7 | 20.0 | 20.0 | 5/15 | 5/15 |
-| Sutton | 0.68 | 2.7 | 25.0 | 25.0 | 4/8 | 4/8 |
+| Barking and Dagenham | 0.659 | 2.6 | 0.0 | 0.0 | 0/5 | 0/5 |
+| Newham | 0.659 | 2.6 | 0.0 | 0.0 | 2/7 | 2/7 |
+| Hackney | 0.659 | 2.6 | 6.2 | 6.2 | 3/32 | 3/32 |
+| Tower Hamlets | 0.659 | 2.6 | 20.0 | 20.0 | 5/15 | 5/15 |
+| Hounslow | 0.659 | 2.6 | 25.0 | 25.0 | 4/12 | 4/12 |
+| Sutton | 0.659 | 2.6 | 25.0 | 25.0 | 4/8 | 4/8 |
 
 ## Top interest signals
 
-- `wiltshire`: score 3.892 (boost 15.6%)
-- `richmond-upon-thames`: score 0.68 (boost 2.7%)
-- `southwark`: score 0.68 (boost 2.7%)
-- `sutton`: score 0.68 (boost 2.7%)
-- `tower-hamlets`: score 0.68 (boost 2.7%)
-- `waltham-forest`: score 0.68 (boost 2.7%)
-- `wandsworth`: score 0.68 (boost 2.7%)
-- `westminster`: score 0.68 (boost 2.7%)
+- `wiltshire`: score 3.776 (boost 15.1%)
+- `barking-and-dagenham`: score 0.659 (boost 2.6%)
+- `barnet`: score 0.659 (boost 2.6%)
+- `bexley`: score 0.659 (boost 2.6%)
+- `brent`: score 0.659 (boost 2.6%)
+- `bromley`: score 0.659 (boost 2.6%)
+- `camden`: score 0.659 (boost 2.6%)
+- `city-of-london`: score 0.659 (boost 2.6%)
 
 ## Weakest packs (after)
 
@@ -43,4 +43,5 @@
 - Newham
 - Hackney
 - Tower Hamlets
+- Hounslow
 - Sutton
