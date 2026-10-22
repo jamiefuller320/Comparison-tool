@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-10-21T16:55:03.462629+00:00
+# Qualitative source spot-check — 2026-10-22T16:54:49.433321+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3409410103`
+- Seed: `115628877`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,15 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Marlborough School** (`101487`, Bexley) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: football, ethos: excellence, community: Transport, community: Uniform and Equipment
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our mission, our values
-- **Faraday School** (`135989`, Tower Hamlets) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, enrichment: geography, enrichment: geography.” – artsmark, enrichment: computing
-- **Chickerell Primary Academy** (`139147`, Dorset) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Describing Word Search, curriculum: Favourite Part, curriculum: Main Character, curriculum: My Favourite Character
-- **Seabrook Church of England Primary School** (`118678`, Kent) — `fetch_error`
+- **St Mary's Hare Park School** (`102357`, Havering) — `fetch_error`
   - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Chesterton Primary School** (`145280`, Wandsworth) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Chesterton Reading Progression, curriculum: music, enrichment: music, enrichment: Chesterton Singing Project
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **St Michael's Church of England Controlled Infant School** (`116332`, Hampshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: after school clubs msport active, enrichment: breakfast club, community: breakfast club, community: Arriving Late
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
+- **Brushwood Junior School** (`110523`, Buckinghamshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: PE And Sport Premium, enrichment: Sports Funding Allocation, enrichment: Sports Premium Declarations, enrichment: Sports Premium School Specifics
 
 ## Notes
 
