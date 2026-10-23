@@ -1,16 +1,15 @@
 {
-  "ranAt": "2026-10-22T16:54:49.433321+00:00",
+  "ranAt": "2026-10-23T16:46:38.999466+00:00",
   "dryRun": false,
-  "seed": 115628877,
+  "seed": 2588944502,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 6,
-    "fetch_error": 1
+    "warn": 7
   },
   "failCount": 0,
-  "warnCount": 6,
+  "warnCount": 7,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -147,33 +146,11 @@
       "notes": []
     },
     {
-      "urn": "102357",
-      "name": "St Mary's Hare Park School",
-      "la": "Havering",
-      "website": "http://www.stmarysharepark.co.uk",
-      "assessedAt": "2026-10-10",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 48,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for http://www.stmarysharepark.co.uk"
-      ]
-    },
-    {
-      "urn": "145280",
-      "name": "Chesterton Primary School",
-      "la": "Wandsworth",
-      "website": "https://www.chestertonschool.org.uk/",
-      "assessedAt": "2026-09-27",
+      "urn": "135835",
+      "name": "The City Academy, Hackney",
+      "la": "Hackney",
+      "website": "https://www.thecityacademyhackney.org",
+      "assessedAt": "2026-10-12",
       "verdict": "warn",
       "pagesFetched": 3,
       "offeringsChecked": 30,
@@ -185,16 +162,16 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Chesterton Reading Progression",
-            "curriculum: music",
-            "enrichment: music",
-            "enrichment: Chesterton Singing Project",
-            "enrichment: Rhythmic Notation and Keyboards",
-            "enrichment: Wandsworth Singing Project",
-            "enrichment: breakfast club",
-            "ethos: citizenship",
-            "ethos: Assemblies",
-            "ethos: Eco Council"
+            "curriculum: computing",
+            "curriculum: drama",
+            "curriculum: geography",
+            "curriculum: one of french",
+            "curriculum: core english",
+            "curriculum: extended english",
+            "curriculum: computer science",
+            "curriculum: chemistry",
+            "curriculum: photography",
+            "curriculum: Architecture"
           ]
         },
         {
@@ -210,14 +187,14 @@
       "notes": []
     },
     {
-      "urn": "116332",
-      "name": "St Michael's Church of England Controlled Infant School",
-      "la": "Hampshire",
-      "website": "https://www.st-michaels-inf.hants.sch.uk/",
-      "assessedAt": "2026-08-24",
+      "urn": "136797",
+      "name": "Carshalton High School for Girls",
+      "la": "Sutton",
+      "website": "http://www.chsg.org.uk/",
+      "assessedAt": "2026-10-04",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 35,
+      "offeringsChecked": 7,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -226,16 +203,7 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: after school clubs msport active",
-            "enrichment: breakfast club",
-            "community: breakfast club",
-            "community: Arriving Late",
-            "community: Attendance",
-            "community: Behaviour",
-            "community: Charging",
-            "community: Complaints",
-            "community: Emergency School Closure",
-            "community: Holidays"
+            "ethos: kindness"
           ]
         },
         {
@@ -244,21 +212,21 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "church of england"
+            "our values"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "110523",
-      "name": "Brushwood Junior School",
-      "la": "Buckinghamshire",
-      "website": "http://www.brushwoodjunior.education",
-      "assessedAt": "2026-09-05",
+      "urn": "125212",
+      "name": "St Paul's Catholic Primary School, Thames Ditton",
+      "la": "Surrey",
+      "website": "https://www.stpauls-thamesditton.surrey.sch.uk/",
+      "assessedAt": "2026-09-10",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 20,
+      "offeringsChecked": 28,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -267,14 +235,58 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: PE And Sport Premium",
-            "enrichment: Sports Funding Allocation",
-            "enrichment: Sports Premium Declarations",
-            "enrichment: Sports Premium School Specifics",
-            "enrichment: Sports Premium Sustainability and Impact",
+            "curriculum: music",
+            "curriculum: coding",
+            "curriculum: computing",
+            "curriculum: photography",
+            "curriculum: geography",
+            "curriculum: orchestra",
+            "curriculum: Combining Images and Text",
+            "curriculum: UK and Kenya.",
+            "curriculum: Autumn Spring Summer",
+            "curriculum: Listening, Attention and Understanding"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "catholic",
+            "our mission"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "116558",
+      "name": "Boundary Oak School",
+      "la": "Hampshire",
+      "website": "https://www.boundaryoakschool.co.uk",
+      "assessedAt": "2026-09-23",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 40,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: breakfast club",
+            "enrichment: athletics",
+            "enrichment: basketball",
+            "enrichment: chess",
+            "enrichment: cricket",
+            "enrichment: duke of edinburgh",
+            "enrichment: football",
             "enrichment: orchestra",
-            "enrichment: after school club",
-            "send: Late/Absence Procedures"
+            "enrichment: photography",
+            "enrichment: tennis"
           ]
         }
       ],

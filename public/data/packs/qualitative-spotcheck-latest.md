@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-22T16:54:49.433321+00:00
+# Qualitative source spot-check — 2026-10-23T16:46:38.999466+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `115628877`
+- Seed: `2588944502`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
+- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,16 +22,17 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **St Mary's Hare Park School** (`102357`, Havering) — `fetch_error`
-  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Chesterton Primary School** (`145280`, Wandsworth) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Chesterton Reading Progression, curriculum: music, enrichment: music, enrichment: Chesterton Singing Project
+- **The City Academy, Hackney** (`135835`, Hackney) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: drama, curriculum: geography, curriculum: one of french
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **St Michael's Church of England Controlled Infant School** (`116332`, Hampshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: after school clubs msport active, enrichment: breakfast club, community: breakfast club, community: Arriving Late
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
-- **Brushwood Junior School** (`110523`, Buckinghamshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: PE And Sport Premium, enrichment: Sports Funding Allocation, enrichment: Sports Premium Declarations, enrichment: Sports Premium School Specifics
+- **Carshalton High School for Girls** (`136797`, Sutton) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: kindness
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
+- **St Paul's Catholic Primary School, Thames Ditton** (`125212`, Surrey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: coding, curriculum: computing, curriculum: photography
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, our mission
+- **Boundary Oak School** (`116558`, Hampshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: breakfast club, enrichment: athletics, enrichment: basketball, enrichment: chess
 
 ## Notes
 
