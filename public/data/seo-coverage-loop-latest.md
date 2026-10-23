@@ -1,16 +1,16 @@
 # SEO coverage loop
 
-- Generated: `2026-10-17T16:49:54Z`
+- Generated: `2026-10-23T12:27:51Z`
 - Dry run: **False**
-- Added areas: **1** (City of London)
+- Added areas: **0** (none — budget full or no ready candidates)
 
 ## Totals
 
 | Metric | Before | After | Budget |
 | --- | ---: | ---: | ---: |
-| School pages | 4942 | 4948 | 5000 |
-| Town pages | 141 | 142 | 160 |
-| Town hubs | 42 | 43 | — |
+| School pages | 4948 | 4948 | 5000 |
+| Town pages | 142 | 142 | 160 |
+| Town hubs | 43 | 43 | — |
 
 # SEO coverage report
 
@@ -33,7 +33,7 @@
 | Buckinghamshire | 272 | 8 | 97.8 | 94.9 |
 | Bracknell Forest | 48 | 2 | 95.8 | 93.8 |
 | Lambeth | 97 | 1 | 94.8 | 58.8 |
-| Tower Hamlets | 112 | 1 | 95.5 | 50.9 |
+| Tower Hamlets | 112 | 1 | 97.3 | 87.5 |
 | Waltham Forest | 84 | 1 | 100.0 | 71.4 |
 | Newham | 108 | 1 | 98.1 | 92.6 |
 | Lewisham | 95 | 2 | 97.9 | 61.1 |
@@ -43,13 +43,13 @@
 | Hackney | 105 | 1 | 97.1 | 71.4 |
 | Bromley | 118 | 6 | 98.3 | 50.0 |
 | Bexley | 91 | 5 | 97.8 | 63.7 |
-| Hounslow | 89 | 4 | 97.8 | 62.9 |
+| Hounslow | 89 | 4 | 97.8 | 86.5 |
 | Havering | 90 | 4 | 96.7 | 64.4 |
 | Southwark | 120 | 1 | 97.5 | 49.2 |
 | Islington | 68 | 1 | 100.0 | 85.3 |
 | Greenwich | 104 | 1 | 95.2 | 54.8 |
 | Barnet | 169 | 3 | 96.4 | 33.1 |
-| Sutton | 76 | 3 | 96.1 | 75.0 |
+| Sutton | 76 | 3 | 96.1 | 90.8 |
 | Barking and Dagenham | 67 | 2 | 94.0 | 89.6 |
 | Harrow | 72 | 3 | 95.8 | 80.6 |
 | Redbridge | 93 | 4 | 95.7 | 62.4 |
@@ -69,10 +69,10 @@
 
 ## AEO / GEO readiness
 
-- llms.txt: `/llms.txt` (generated 2026-10-16T12:08:45.708Z)
+- llms.txt: `/llms.txt` (generated 2026-10-17T16:49:57.116Z)
 - School pages with Ofsted Q&A: **71%**
 - School pages with inspection précis: **73%**
-- School pages with website evidence (quality-gated): **23%**
+- School pages with website evidence (quality-gated): **24%**
 
 ## Candidate packs (not yet in coverage)
 
@@ -82,6 +82,7 @@
 | Southampton | 83 | 1 | 97.6 | 96.4 |
 | Oxfordshire | 365 | 13 | 97.3 | 93.2 |
 | West Berkshire | 104 | 4 | 97.1 | 95.2 |
+| Wiltshire | 274 | 11 | 97.1 | 20.4 |
 | Surrey | 528 | 22 | 97.0 | 93.6 |
 | Milton Keynes | 127 | 2 | 96.9 | 95.3 |
 | Wokingham | 94 | 2 | 96.8 | 92.6 |
