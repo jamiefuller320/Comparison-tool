@@ -1,42 +1,44 @@
 # Qualitative capture loop
 
-- Ran at: `2026-10-22T13:22:17.508641+00:00`
-- Ingest policy / phase: `auto` / `se_tail`
+- Ran at: `2026-10-23T13:18:41.679236+00:00`
+- Ingest policy / phase: `auto` / `maintenance`
 - Scope: `parallel`
-- LA: `Dorset, East Sussex, Wiltshire`
-- Index: `public/data/packs/wiltshire/schools-index.json`
-- Remaining with website (pre-capture): `15`
-- Batch limit (per stream): `60`
-- Sidecar records before → after: `7366` → `7381`
+- LA: `Hampshire, Lambeth, Tower Hamlets`
+- Index: `public/data/schools-index.json`
+- Remaining with website (pre-capture): `0`
+- Batch limit (per stream): `15`
+- Sidecar records before → after: `7381` → `7381`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `4`
+- QA reviewed / changed: `16` / `6`
 - Learned terms: `500`
-- Learned QA phrases: `6`
+- Learned QA phrases: `1`
 - Dry run: `False`
 
 ## Streams
 
-- `Dorset`: status=ok added=0 remaining=0 index=`public/data/packs/dorset/schools-index.json`
-- `East Sussex`: status=ok added=0 remaining=0 index=`public/data/packs/east-sussex/schools-index.json`
-- `Wiltshire`: status=ok added=15 remaining=15 index=`public/data/packs/wiltshire/schools-index.json`
+- `Hampshire`: status=ok added=0 remaining=0 index=`public/data/schools-index.json`
+- `Lambeth`: status=ok added=0 remaining=0 index=`public/data/packs/lambeth/schools-index.json`
+- `Tower Hamlets`: status=ok added=0 remaining=0 index=`public/data/packs/tower-hamlets/schools-index.json`
 
 ## Notes
 
-- Hydrated working sidecar from 7366 published URN shards (prior=0 → 7366).
-- Ingest policy=auto phase=se_tail (non-London remaining=15, London remaining=0, pending London packs=0).
-- Stream preferred=Hampshire exhausted (remaining=0); advanced to Wiltshire (remaining=15).
-- Stream preferred=Dorset exhausted (remaining=0); no replacement LA with website work.
-- Stream preferred=East Sussex exhausted (remaining=0); no replacement LA with website work.
+- Hydrated working sidecar from 7381 published URN shards (prior=0 → 7381).
+- Ingest policy=auto phase=maintenance (non-London remaining=0, London remaining=0, pending London packs=0).
+- Maintenance phase: core region website ingest complete — prioritise stale re-screens, qualitative-quality-loop, and pack-quality / selective Cursor polish; expand into adjacent LAs only when ready packs exist and maintenance budgets allow (see PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER).
+- Stream preferred=Hampshire exhausted (remaining=0); no replacement LA with website work.
+- Stream preferred=Lambeth exhausted (remaining=0); no replacement LA with website work.
+- Stream preferred=Tower Hamlets exhausted (remaining=0); no replacement LA with website work.
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Wiltshire index=public/data/packs/wiltshire/schools-index.json remainingWithWebsite=15.
-- Stream LA=Dorset index=public/data/packs/dorset/schools-index.json remainingWithWebsite=0.
-- Stream LA=East Sussex index=public/data/packs/east-sussex/schools-index.json remainingWithWebsite=0.
-- Running 3 capture streams in parallel (limit 60 each).
+- Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=0.
+- Stream LA=Lambeth index=public/data/packs/lambeth/schools-index.json remainingWithWebsite=0.
+- Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.
+- Running 3 capture streams in parallel (limit 15 each).
 - Merged 3 partial sidecar(s) → 7381 records (union size 7381).
-- Captured batch (sidecar 7366 → 7381); learned terms now 529.
+- Captured batch (sidecar 7381 → 7381); learned terms now 526.
+- No new captures — website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 4, learned phrases +6.
+- QA provider=none: reviewed 16, changed 6, learned phrases +1.
 - Re-merged affected schools-index files after QA fixes.
