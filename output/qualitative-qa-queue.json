@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-23",
+  "generatedAt": "2026-10-24",
   "dryRun": false,
-  "count": 36,
+  "count": 16,
   "schools": [
     {
       "urn": "125810",
@@ -33,6 +33,105 @@
         }
       ],
       "status": "no_change"
+    },
+    {
+      "urn": "115989",
+      "name": "Locks Heath Infant & Nursery  School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Supporting Families and SEND"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Supporting Families and SEND",
+            "Supporting Families and SEND: Supporting Families"
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 1
+    },
+    {
+      "urn": "116228",
+      "name": "Hook Infant School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our dedicated staff, supportive governors, fantastic Hook Schools Community Association and strong links with Hook Junior School all contribute to the warm and welcoming atmosphere that visitors often comment upon."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our dedicated staff, supportive governors, fantastic Hook Schools Community Association and strong links with Hook Junior School all contribute to the warm and welcoming atmosphere that visitors often comment upon."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
+    },
+    {
+      "urn": "116145",
+      "name": "North Farnborough Infant School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "SEND information report November 2025 pdf Parent Guide Ordinarily Available Provision pdf Parent Guide SEN Support pdf Hampshire's Early Years Ordinarily Available Provision pdf Special Educational Needs and Disabilities (SEND)"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "We also have incredibly supportive parents who enhance the life of the school by reading to children, organising community events, assisting on educational visits, and raising funds through the Friends of North Farnborough Infant School (FONFIS)."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 2
     },
     {
       "urn": "147128",
@@ -295,446 +394,6 @@
         }
       ],
       "status": "no_change"
-    },
-    {
-      "urn": "116348",
-      "name": "Amport Church of England Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND Our Special Educational Needs Coordinator (SENCo) is Mrs Alice Eggington At Amport Primary School, we are committed to ensuring that every child has the opportunity to succeed."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "116527",
-      "name": "Bedales School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Bedales Senior, Prep and Pre-prep See our detailed prospectuses to understand our innovative curriculum, vibrant school life, and supportive community."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "109748",
-      "name": "Blagdon Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "116574",
-      "name": "Brockwood Park School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Boarders\u2019 induction covers topics such as expectations of behaviour, safeguarding, travel safety, fire awareness and safety on the school site."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "101251",
-      "name": "Brookhill Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "116428",
-      "name": "Crookhorn College",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "If you have any concerns please contact Mrs Vicci Geddes, Assistant Headteacher & Special Educational Needs Coordinator (SENCO) via email: vicci.geddes@crookhorn.hants.sch.uk Growing numbers of parents have expressed concern that their children are displaying traits of ADHD."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "115898",
-      "name": "Greatham Primary School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "SEND Special Educational Needs & Disability (SEND) Our Special Educational Needs Co-ordinator (SENCo) organises help for any child who may need additional support."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "101252",
-      "name": "Hampden Way Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "110428",
-      "name": "Lee Common Church of England School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists music, dance, wraparound care, News and Events, Open Day and Schools Visits, Sports Premium and 2 more. Information appears across 2 pages."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "142356",
-      "name": "Mytchett Primary & Nursery Academy",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists after-school club, breakfast club, Celebration Assembly, Extra-Curricular Clubs, Family Forum, Free Stay and Play and 10 more."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "109752",
-      "name": "New Bridge Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "116513",
-      "name": "Rookwood School",
-      "score": 3.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Leaders ensure that pupils who have special educational needs and/or disabilities (SEND), including those who have an education, health and care plan (EHC plan), are supported with appropriate strategies and resources to meet their individual needs so that they make good progress from their starting points.",
-            "The school has identified 62 pupils as having special educational needs and/or disabilities (SEND), which include dyslexia and attention deficit disorders, all of whom receive additional specialist help."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 1
-    },
-    {
-      "urn": "125344",
-      "name": "Rydes Hill Preparatory School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists music, drama, MONDAY Stay & Play Nursery, TUESDAY Stay & Play Nursery, Academic & Scholarships, Co-educational Prep and 11 more. Information appears across"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "126037",
-      "name": "St Mary's Catholic Primary School",
-      "score": 3.0,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "151781",
-      "name": "St Mary's Catholic Primary School",
-      "score": 3.0,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "100351",
-      "name": "St Paul's CofE Primary School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists music, Learning, Foundation Subjects, Open Day Visits. Information appears across 2 pages."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "116423",
-      "name": "The Hayling College",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Careers Learning Journey, College Federation Day, Green Careers Week, HSDC College Taster Days, Happy, Healthy and High Performing, Health and Wellbeing an"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "137239",
-      "name": "The Romsey School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Academic Curriculum, Assemblies, Enterprise Project, Further Education Taster Days, Personal Development Tutor Programme, Whole School Curriculum and 5 mor"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "116411",
-      "name": "The Toynbee School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists choir, music, College Taster Day, Hampshire Book Awards, Mental Health Roadshow, Mental Health Workshop and 1 more."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "139916",
-      "name": "Warlingham Village Primary School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Curriculum Entitlements, Equality & Diversity, Get Into Teaching Events, Governance, In-Year Transfers, Individual Subjects and 10 more."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "136450",
-      "name": "Platanos College",
-      "score": 2.0,
-      "flags": [
-        "implausible_offerings"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "136013",
-      "name": "The Bay Church of England School",
-      "score": 1.5,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
-    },
-    {
-      "urn": "139109",
-      "name": "Worthing High School",
-      "score": 1.5,
-      "flags": [
-        "high_score_thin_signals"
-      ],
-      "findings": [],
-      "status": "watch",
-      "note": "Suspicious but no auto-actionable findings"
     }
   ]
 }
