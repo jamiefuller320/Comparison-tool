@@ -1,17 +1,17 @@
 {
-  "ranAt": "2026-10-23T14:51:46.770842+00:00",
+  "ranAt": "2026-10-24T13:49:49.346220+00:00",
   "dryRun": false,
-  "mode": "apply",
+  "mode": "skip",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
     "recordCount": 7381,
-    "suspectCount": 36,
+    "suspectCount": 34,
     "flagCounts": {
       "admissions": 13,
       "cms_chrome": 12,
-      "chrome": 6,
+      "chrome": 4,
       "high_score_thin_signals": 4,
       "implausible_offerings": 1
     },
@@ -116,10 +116,11 @@
   },
   "after": {
     "recordCount": 7381,
-    "suspectCount": 30,
+    "suspectCount": 34,
     "flagCounts": {
       "admissions": 13,
       "cms_chrome": 12,
+      "chrome": 4,
       "high_score_thin_signals": 4,
       "implausible_offerings": 1
     },
@@ -223,42 +224,37 @@
     ]
   },
   "qa": {
-    "reviewed": 36,
-    "changedSchools": 6,
-    "findingsApplied": 6,
-    "learningAdded": 0,
-    "provider": "none"
+    "reviewed": 0,
+    "changedSchools": 0,
+    "findingsApplied": 0,
+    "learningAdded": 0
   },
-  "merged": true,
+  "merged": false,
   "trigger": {
-    "shouldApply": true,
-    "reason": "eventCount +39 (>= 15)",
-    "fingerprintBefore": {
-      "phraseHash": "579f6615ad17529c7c26",
+    "shouldApply": false,
+    "reason": "active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
+    "fingerprint": {
+      "phraseHash": "8a477c3799f517206871",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11010,
-      "updatedAt": "2026-10-23"
+      "eventCount": 11024,
+      "updatedAt": "2026-10-24"
     },
-    "fingerprintAfter": {
+    "prior": {
       "phraseHash": "579f6615ad17529c7c26",
       "phraseCount": 900,
       "candidateCount": 2000,
       "eventCount": 11017,
       "updatedAt": "2026-10-23"
-    }
+    },
+    "priorAppliedAt": "2026-10-23T14:51:46.770360+00:00"
   },
   "notes": [
     "Hydrated working sidecar from 7381 published URN shards (prior=0 → 7381).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '579f6615ad17529c7c26', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11010, 'updatedAt': '2026-10-23'}",
-    "Apply decision: eventCount +39 (>= 15)",
-    "Before: 36 suspects across 7381 records.",
-    "Applied QA fixes to 6 school(s) (6 area finding(s)).",
-    "Learned 0 new junk phrase(s) (store size 900).",
-    "Reviewed top 36 suspect(s); provider=none.",
-    "Merged cleaned sidecar into 55 schools-index file(s).",
-    "After: 30 suspects across 7381 records.",
-    "Updated output/learned-qa-apply-state.json"
+    "Learning fingerprint: {'phraseHash': '8a477c3799f517206871', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11024, 'updatedAt': '2026-10-24'}",
+    "Apply decision: active phrase hash changed but phraseCount delta 0 < 5 (treat as minor rebalance)",
+    "Before: 34 suspects across 7381 records.",
+    "Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest."
   ]
 }
