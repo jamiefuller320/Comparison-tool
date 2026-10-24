@@ -1,15 +1,16 @@
 {
-  "ranAt": "2026-10-23T16:46:38.999466+00:00",
+  "ranAt": "2026-10-24T15:40:01.883277+00:00",
   "dryRun": false,
-  "seed": 2588944502,
+  "seed": 4267845057,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 7
+    "warn": 4,
+    "fetch_error": 3
   },
   "failCount": 0,
-  "warnCount": 7,
+  "warnCount": 4,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -146,11 +147,33 @@
       "notes": []
     },
     {
-      "urn": "135835",
-      "name": "The City Academy, Hackney",
-      "la": "Hackney",
-      "website": "https://www.thecityacademyhackney.org",
-      "assessedAt": "2026-10-12",
+      "urn": "131740",
+      "name": "Rotherfield Primary School",
+      "la": "Islington",
+      "website": "https://www.rotherfieldprimary.co.uk",
+      "assessedAt": "2026-10-05",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
+      "notes": [
+        "Homepage fetch failed for https://www.rotherfieldprimary.co.uk"
+      ]
+    },
+    {
+      "urn": "134585",
+      "name": "Al-Khair School",
+      "la": "Croydon",
+      "website": "https://alkhairschool.org.uk",
+      "assessedAt": "2026-09-24",
       "verdict": "warn",
       "pagesFetched": 3,
       "offeringsChecked": 30,
@@ -162,135 +185,63 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: computing",
-            "curriculum: drama",
-            "curriculum: geography",
-            "curriculum: one of french",
-            "curriculum: core english",
-            "curriculum: extended english",
-            "curriculum: computer science",
-            "curriculum: chemistry",
-            "curriculum: photography",
-            "curriculum: Architecture"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our vision"
+            "ethos: Introduction",
+            "ethos: Proprietor Message",
+            "ethos: Admission & Fees",
+            "ethos: Complaints",
+            "ethos: Enrichment",
+            "ethos: mission",
+            "ethos: vision",
+            "ethos: british values",
+            "ethos: respect"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "136797",
-      "name": "Carshalton High School for Girls",
-      "la": "Sutton",
-      "website": "http://www.chsg.org.uk/",
-      "assessedAt": "2026-10-04",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 7,
+      "urn": "145286",
+      "name": "St Crispin's School",
+      "la": "Wokingham",
+      "website": "http://www.crispins.co.uk/",
+      "assessedAt": "2026-09-14",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "unsupported_offerings",
+          "code": "fetch_failed",
           "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "ethos: kindness"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our values"
-          ]
+          "detail": "Could not fetch live school pages for source comparison"
         }
       ],
-      "notes": []
+      "notes": [
+        "Homepage fetch failed for http://www.crispins.co.uk/"
+      ]
     },
     {
-      "urn": "125212",
-      "name": "St Paul's Catholic Primary School, Thames Ditton",
-      "la": "Surrey",
-      "website": "https://www.stpauls-thamesditton.surrey.sch.uk/",
-      "assessedAt": "2026-09-10",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 28,
+      "urn": "113893",
+      "name": "St Edward's Roman Catholic/Church of England School, Poole",
+      "la": "Bournemouth, Christchurch and Poole",
+      "website": "http://website.network.st-edwards.poole.sch.uk/",
+      "assessedAt": "2026-09-17",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "unsupported_offerings",
+          "code": "fetch_failed",
           "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: music",
-            "curriculum: coding",
-            "curriculum: computing",
-            "curriculum: photography",
-            "curriculum: geography",
-            "curriculum: orchestra",
-            "curriculum: Combining Images and Text",
-            "curriculum: UK and Kenya.",
-            "curriculum: Autumn Spring Summer",
-            "curriculum: Listening, Attention and Understanding"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "catholic",
-            "our mission"
-          ]
+          "detail": "Could not fetch live school pages for source comparison"
         }
       ],
-      "notes": []
-    },
-    {
-      "urn": "116558",
-      "name": "Boundary Oak School",
-      "la": "Hampshire",
-      "website": "https://www.boundaryoakschool.co.uk",
-      "assessedAt": "2026-09-23",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 40,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: breakfast club",
-            "enrichment: athletics",
-            "enrichment: basketball",
-            "enrichment: chess",
-            "enrichment: cricket",
-            "enrichment: duke of edinburgh",
-            "enrichment: football",
-            "enrichment: orchestra",
-            "enrichment: photography",
-            "enrichment: tennis"
-          ]
-        }
-      ],
-      "notes": []
+      "notes": [
+        "Homepage fetch failed for http://website.network.st-edwards.poole.sch.uk/"
+      ]
     }
   ],
   "notes": [

@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-23T16:46:38.999466+00:00
+# Qualitative source spot-check — 2026-10-24T15:40:01.883277+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `2588944502`
+- Seed: `4267845057`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `4` · fail `0` · fetch_error `3` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,17 +22,14 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **The City Academy, Hackney** (`135835`, Hackney) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: drama, curriculum: geography, curriculum: one of french
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Carshalton High School for Girls** (`136797`, Sutton) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: kindness
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
-- **St Paul's Catholic Primary School, Thames Ditton** (`125212`, Surrey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: coding, curriculum: computing, curriculum: photography
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, our mission
-- **Boundary Oak School** (`116558`, Hampshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: breakfast club, enrichment: athletics, enrichment: basketball, enrichment: chess
+- **Rotherfield Primary School** (`131740`, Islington) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Al-Khair School** (`134585`, Croydon) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: Introduction, ethos: Proprietor Message, ethos: Admission & Fees, ethos: Complaints
+- **St Crispin's School** (`145286`, Wokingham) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **St Edward's Roman Catholic/Church of England School, Poole** (`113893`, Bournemouth, Christchurch and Poole) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
 
 ## Notes
 
