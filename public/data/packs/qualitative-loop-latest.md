@@ -1,6 +1,6 @@
 # Qualitative capture loop
 
-- Ran at: `2026-10-24T12:27:12.087371+00:00`
+- Ran at: `2026-10-25T13:13:53.456181+00:00`
 - Ingest policy / phase: `auto` / `maintenance`
 - Scope: `parallel`
 - LA: `Hampshire, Lambeth, Tower Hamlets`
@@ -11,7 +11,7 @@
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `3`
+- QA reviewed / changed: `16` / `6`
 - Learned terms: `500`
 - Learned QA phrases: `1`
 - Dry run: `False`
@@ -40,5 +40,5 @@
 - No new captures — website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 3, learned phrases +1.
+- QA provider=none: reviewed 16, changed 6, learned phrases +1.
 - Re-merged affected schools-index files after QA fixes.

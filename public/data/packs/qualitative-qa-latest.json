@@ -1,9 +1,9 @@
 {
-  "ranAt": "2026-10-24T12:26:46.354021+00:00",
+  "ranAt": "2026-10-25T13:13:29.192316+00:00",
   "dryRun": false,
   "reviewed": 16,
-  "changedSchools": 3,
-  "findingsApplied": 5,
+  "changedSchools": 6,
+  "findingsApplied": 13,
   "learningAdded": 1,
   "suspects": [
     {
@@ -37,22 +37,31 @@
       ]
     },
     {
-      "urn": "115989",
-      "name": "Locks Heath Infant & Nursery  School",
-      "score": 8.0,
+      "urn": "149858",
+      "name": "Napier School",
+      "score": 9.0,
       "flags": [
-        "policy_toc",
-        "chrome",
-        "implausible_offerings"
+        "chrome"
       ],
       "findings": [
         {
-          "area": "send",
+          "area": "curriculum",
           "action": "strip",
-          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
-          "junkClass": "policy_toc",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
           "offendingExcerpts": [
-            "Supporting Families and SEND"
+            "Through our curriculum, pastoral support, therapeutic approaches, and safeguarding systems we seek to identify concerns at the earliest opportunity."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "At Napier School, we provide a nurturing and inclusive environment where children with special educational needs are supported to thrive academically, socially, and emotionally.",
+            "Home Our Approach Curriculum Our curriculum underpins our ethos and aims to ensure that pupils are given the opportunity to achieve their full potential within a supportive community."
           ],
           "source": "heuristic"
         },
@@ -62,16 +71,16 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Supporting Families and SEND",
-            "Supporting Families and SEND: Supporting Families"
+            "At Napier School, we provide a nurturing and inclusive environment where children with special educational needs are supported to thrive academically, socially, and emotionally.",
+            "\u2022 Supportive Intervention Plans: Individual support plans will be developed in collaboration with relevant professionals to ensure responses are tailored, consistent, and grounded in the student\u2019s best interests."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "116228",
-      "name": "Hook Infant School",
+      "urn": "115944",
+      "name": "Cupernham Junior School",
       "score": 6.0,
       "flags": [
         "chrome"
@@ -83,25 +92,116 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Our dedicated staff, supportive governors, fantastic Hook Schools Community Association and strong links with Hook Junior School all contribute to the warm and welcoming atmosphere that visitors often comment upon."
+            "We encourage our children to show compassion, respect and consideration for others, helping to create a happy, inclusive and supportive school community."
           ],
           "source": "heuristic"
         },
         {
-          "area": "community",
+          "area": "send",
           "action": "strip",
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "Our dedicated staff, supportive governors, fantastic Hook Schools Community Association and strong links with Hook Junior School all contribute to the warm and welcoming atmosphere that visitors often comment upon."
+            "Key Information SEND Our Inclusion Leader is Mrs Laura Francis Our Special Educational Needs Co-ordinator (SENCO) is Mrs Sharon Strachan They can both be contacted on 01794 512702."
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "116145",
-      "name": "North Farnborough Infant School",
+      "urn": "116468",
+      "name": "Kings' School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Choose your language Pastoral System, Safeguarding & Welfare Team pastoral system Kings\u2019 is a happy and accomplished school and our commitment to academic excellence is underpinned by our friendly and supportive culture, helping to produce resilient and confident young adults."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Choose your language Pastoral System, Safeguarding & Welfare Team pastoral system Kings\u2019 is a happy and accomplished school and our commitment to academic excellence is underpinned by our friendly and supportive culture, helping to produce resilient and confident young adults.",
+            "Kings\u2019 takes the welfare and safeguarding of our pupils extremely seriously and, as such, have an extensive Pastoral Team in place to provide support and guidance to children whenever, and however, they need it."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115965",
+      "name": "Padnell Infant School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Children & Curriculum: mathematics"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Class teachers take responsibility for providing a curriculum that is suitable for all pupils, including those with Special Educational Needs or Disabilities (SEND) with support from the SENCO."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "115908",
+      "name": "Riders Junior School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "As the SENCO, my role is to coordinate and oversee the provision for students with special educational needs and disabilities (SEND), working closely with teachers, families, and professionals to create an inclusive and supportive learning environment."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "As the SENCO, my role is to coordinate and oversee the provision for students with special educational needs and disabilities (SEND), working closely with teachers, families, and professionals to create an inclusive and supportive learning environment."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "116368",
+      "name": "Romsey Abbey Church of England Primary School",
       "score": 6.0,
       "flags": [
         "chrome"
@@ -113,7 +213,7 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "SEND information report November 2025 pdf Parent Guide Ordinarily Available Provision pdf Parent Guide SEN Support pdf Hampshire's Early Years Ordinarily Available Provision pdf Special Educational Needs and Disabilities (SEND)"
+            "Our vision and ambition for children with special educational needs and disabilities (SEND) is the same as for all pupils at our school: that they gain the confidence and skills to enable success, relish challenge and lead happy, fulfilled lives that make a positive contribution to the local community and beyond."
           ],
           "source": "heuristic"
         },
@@ -123,7 +223,7 @@
           "reason": "Signals are site chrome or nav chrome labels.",
           "junkClass": "chrome",
           "offendingExcerpts": [
-            "We also have incredibly supportive parents who enhance the life of the school by reading to children, organising community events, assisting on educational visits, and raising funds through the Friends of North Farnborough Infant School (FONFIS)."
+            "Our vision and ambition for children with special educational needs and disabilities (SEND) is the same as for all pupils at our school: that they gain the confidence and skills to enable success, relish challenge and lead happy, fulfilled lives that make a positive contribution to the local community and beyond."
           ],
           "source": "heuristic"
         }
@@ -318,70 +418,10 @@
           "source": "heuristic"
         }
       ]
-    },
-    {
-      "urn": "151930",
-      "name": "St Peter's Catholic Primary School, Waterlooville",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (8 specific items). Listed provision includes Newsletter, music. 1 item corroborated across multiple pages."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116383",
-      "name": "St Swithun Wells Catholic Primary School, Chandlers Ford",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Moderate publicly visible evidence for community and parental engagement (3 specific items). Listed provision includes Facebook, Instagram, LinkedIn."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "148724",
-      "name": "Stafford Junior School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (10 specific items). Listed provision includes Facebook, News & Newsletters, Outside Agency Directory, Prospe"
-          ],
-          "source": "heuristic"
-        }
-      ]
     }
   ],
   "notes": [
-    "Applied QA fixes to 3 school(s) (5 area finding(s)).",
+    "Applied QA fixes to 6 school(s) (13 area finding(s)).",
     "Learned 1 new junk phrase(s) (store size 900).",
     "Reviewed top 16 suspect(s); provider=none."
   ],
