@@ -1,16 +1,15 @@
 {
-  "ranAt": "2026-10-24T15:40:01.883277+00:00",
+  "ranAt": "2026-10-25T15:50:28.785761+00:00",
   "dryRun": false,
-  "seed": 4267845057,
+  "seed": 1195373435,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 4,
-    "fetch_error": 3
+    "warn": 7
   },
   "failCount": 0,
-  "warnCount": 4,
+  "warnCount": 7,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -147,36 +146,14 @@
       "notes": []
     },
     {
-      "urn": "131740",
-      "name": "Rotherfield Primary School",
-      "la": "Islington",
-      "website": "https://www.rotherfieldprimary.co.uk",
-      "assessedAt": "2026-10-05",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.rotherfieldprimary.co.uk"
-      ]
-    },
-    {
-      "urn": "134585",
-      "name": "Al-Khair School",
-      "la": "Croydon",
-      "website": "https://alkhairschool.org.uk",
-      "assessedAt": "2026-09-24",
+      "urn": "136914",
+      "name": "Glenthorne High School",
+      "la": "Sutton",
+      "website": "http://www.glenthorne.sutton.sch.uk/",
+      "assessedAt": "2026-10-04",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 30,
+      "offeringsChecked": 18,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -185,63 +162,129 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "ethos: Introduction",
-            "ethos: Proprietor Message",
-            "ethos: Admission & Fees",
-            "ethos: Complaints",
-            "ethos: Enrichment",
-            "ethos: mission",
-            "ethos: vision",
+            "curriculum: Careers​​​​​​​",
+            "curriculum: mathematics",
+            "curriculum: chemistry",
+            "enrichment: dance",
+            "ethos: chemistry",
             "ethos: british values",
-            "ethos: respect"
+            "ethos: smsc"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "145286",
-      "name": "St Crispin's School",
-      "la": "Wokingham",
-      "website": "http://www.crispins.co.uk/",
-      "assessedAt": "2026-09-14",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
+      "urn": "102380",
+      "name": "Glebe Primary School",
+      "la": "Hillingdon",
+      "website": "http://www.glebe.hillingdon.sch.uk",
+      "assessedAt": "2026-09-28",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 11,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "fetch_failed",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: science are compulsory subjects",
+            "ethos: mission",
+            "ethos: british values",
+            "ethos: respect",
+            "ethos: faith",
+            "ethos: smsc",
+            "ethos: ethos"
+          ]
         }
       ],
-      "notes": [
-        "Homepage fetch failed for http://www.crispins.co.uk/"
-      ]
+      "notes": []
     },
     {
-      "urn": "113893",
-      "name": "St Edward's Roman Catholic/Church of England School, Poole",
-      "la": "Bournemouth, Christchurch and Poole",
-      "website": "http://website.network.st-edwards.poole.sch.uk/",
-      "assessedAt": "2026-09-17",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
+      "urn": "151251",
+      "name": "St Mary Star of the Sea Catholic Primary School",
+      "la": "East Sussex",
+      "website": "http://www.st-mary-star.e-sussex.sch.uk/",
+      "assessedAt": "2026-08-27",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 19,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "fetch_failed",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: football",
+            "enrichment: dance",
+            "enrichment: after school club",
+            "enrichment: breakfast club",
+            "enrichment: & after school club aims",
+            "enrichment: one for after school club",
+            "enrichment: for after school club",
+            "behaviour: disciplines pe promotes",
+            "send: Criteria for SEND",
+            "send: Monitoring and Review Process"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "catholic"
+          ]
         }
       ],
-      "notes": [
-        "Homepage fetch failed for http://website.network.st-edwards.poole.sch.uk/"
-      ]
+      "notes": []
+    },
+    {
+      "urn": "114544",
+      "name": "Our Lady of Lourdes RC School",
+      "la": "Brighton and Hove",
+      "website": "https://www.ourladyoflourdesprimaryschool.co.uk",
+      "assessedAt": "2026-09-15",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 27,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: mathematics",
+            "enrichment: french club",
+            "enrichment: after school club",
+            "enrichment: football",
+            "enrichment: after-school club",
+            "enrichment: netball",
+            "enrichment: childcare",
+            "send: Contact: Simon Strange",
+            "send: Front Door for Families",
+            "send: Hearing Impairment Support"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "catholic",
+            "our values"
+          ]
+        }
+      ],
+      "notes": []
     }
   ],
   "notes": [
