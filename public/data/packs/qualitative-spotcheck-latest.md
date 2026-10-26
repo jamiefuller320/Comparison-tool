@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-25T15:50:28.785761+00:00
+# Qualitative source spot-check — 2026-10-26T18:30:41.623209+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `1195373435`
+- Seed: `3204729388`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,16 +22,16 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Glenthorne High School** (`136914`, Sutton) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Careers​​​​​​​, curriculum: mathematics, curriculum: chemistry, enrichment: dance
-- **Glebe Primary School** (`102380`, Hillingdon) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: science are compulsory subjects, ethos: mission, ethos: british values, ethos: respect
-- **St Mary Star of the Sea Catholic Primary School** (`151251`, East Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: football, enrichment: dance, enrichment: after school club, enrichment: breakfast club
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
-- **Our Lady of Lourdes RC School** (`114544`, Brighton and Hove) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: french club, enrichment: after school club, enrichment: football
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, our values
+- **Wilbury Primary School** (`146900`, Enfield) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, enrichment: music, enrichment: Composing, enrichment: Listening
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **Menorah Grammar School** (`101387`, Barnet) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **St Paul's Catholic Primary School, Thames Ditton** (`125212`, Surrey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: coding, curriculum: computing, curriculum: photography
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, our mission
+- **St Philip's Catholic Primary School** (`114569`, East Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: pe attack, curriculum: basketball, curriculum: netball, curriculum: computing
 
 ## Notes
 

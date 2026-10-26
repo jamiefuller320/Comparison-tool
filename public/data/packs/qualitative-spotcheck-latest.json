@@ -1,15 +1,16 @@
 {
-  "ranAt": "2026-10-25T15:50:28.785761+00:00",
+  "ranAt": "2026-10-26T18:30:41.623209+00:00",
   "dryRun": false,
-  "seed": 1195373435,
+  "seed": 3204729388,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 7
+    "warn": 6,
+    "fetch_error": 1
   },
   "failCount": 0,
-  "warnCount": 7,
+  "warnCount": 6,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -146,14 +147,14 @@
       "notes": []
     },
     {
-      "urn": "136914",
-      "name": "Glenthorne High School",
-      "la": "Sutton",
-      "website": "http://www.glenthorne.sutton.sch.uk/",
-      "assessedAt": "2026-10-04",
+      "urn": "146900",
+      "name": "Wilbury Primary School",
+      "la": "Enfield",
+      "website": "https://www.wilburyprimaryschool.org.uk/",
+      "assessedAt": "2026-10-07",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 18,
+      "offeringsChecked": 22,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -162,74 +163,13 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Careers​​​​​​​",
-            "curriculum: mathematics",
-            "curriculum: chemistry",
-            "enrichment: dance",
-            "ethos: chemistry",
-            "ethos: british values",
-            "ethos: smsc"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "102380",
-      "name": "Glebe Primary School",
-      "la": "Hillingdon",
-      "website": "http://www.glebe.hillingdon.sch.uk",
-      "assessedAt": "2026-09-28",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 11,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: science are compulsory subjects",
-            "ethos: mission",
-            "ethos: british values",
-            "ethos: respect",
-            "ethos: faith",
-            "ethos: smsc",
+            "curriculum: computing",
+            "enrichment: music",
+            "enrichment: Composing",
+            "enrichment: Listening",
+            "enrichment: Performing",
+            "enrichment: computing",
             "ethos: ethos"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "151251",
-      "name": "St Mary Star of the Sea Catholic Primary School",
-      "la": "East Sussex",
-      "website": "http://www.st-mary-star.e-sussex.sch.uk/",
-      "assessedAt": "2026-08-27",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 19,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: football",
-            "enrichment: dance",
-            "enrichment: after school club",
-            "enrichment: breakfast club",
-            "enrichment: & after school club aims",
-            "enrichment: one for after school club",
-            "enrichment: for after school club",
-            "behaviour: disciplines pe promotes",
-            "send: Criteria for SEND",
-            "send: Monitoring and Review Process"
           ]
         },
         {
@@ -238,21 +178,43 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "catholic"
+            "our vision"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "114544",
-      "name": "Our Lady of Lourdes RC School",
-      "la": "Brighton and Hove",
-      "website": "https://www.ourladyoflourdesprimaryschool.co.uk",
-      "assessedAt": "2026-09-15",
+      "urn": "101387",
+      "name": "Menorah Grammar School",
+      "la": "Barnet",
+      "website": "https://www.menorahgrammar.barnet.sch.uk",
+      "assessedAt": "2026-09-25",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
+      "notes": [
+        "Homepage fetch failed for https://www.menorahgrammar.barnet.sch.uk"
+      ]
+    },
+    {
+      "urn": "125212",
+      "name": "St Paul's Catholic Primary School, Thames Ditton",
+      "la": "Surrey",
+      "website": "https://www.stpauls-thamesditton.surrey.sch.uk/",
+      "assessedAt": "2026-09-10",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 27,
+      "offeringsChecked": 28,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -261,16 +223,16 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: mathematics",
-            "enrichment: french club",
-            "enrichment: after school club",
-            "enrichment: football",
-            "enrichment: after-school club",
-            "enrichment: netball",
-            "enrichment: childcare",
-            "send: Contact: Simon Strange",
-            "send: Front Door for Families",
-            "send: Hearing Impairment Support"
+            "curriculum: music",
+            "curriculum: coding",
+            "curriculum: computing",
+            "curriculum: photography",
+            "curriculum: geography",
+            "curriculum: orchestra",
+            "curriculum: Combining Images and Text",
+            "curriculum: UK and Kenya.",
+            "curriculum: Autumn Spring Summer",
+            "curriculum: Listening, Attention and Understanding"
           ]
         },
         {
@@ -280,7 +242,39 @@
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
             "catholic",
-            "our values"
+            "our mission"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "114569",
+      "name": "St Philip's Catholic Primary School",
+      "la": "East Sussex",
+      "website": "http://www.stphilips.e-sussex.sch.uk",
+      "assessedAt": "2026-08-27",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 44,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: pe attack",
+            "curriculum: basketball",
+            "curriculum: netball",
+            "curriculum: computing",
+            "curriculum: geography",
+            "curriculum: music",
+            "curriculum: rugby",
+            "curriculum: gymnastics",
+            "curriculum: God Loves You",
+            "curriculum: Hit, Catch and Run"
           ]
         }
       ],
