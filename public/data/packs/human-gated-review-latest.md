@@ -1,8 +1,8 @@
-# Human-gated review digest — 2026-10-19T19:40:29+00:00
+# Human-gated review digest — 2026-10-26T19:46:04+00:00
 
 - Mode: `collate`
-- Open items: **32** (queue total `32` · done `0` · ignored `0`)
-- New / refreshed this run: `6`
+- Open items: **37** (queue total `37` · done `0` · ignored `0`)
+- New / refreshed this run: `5`
 - Auto-closed (already learned): `0`
 
 ## How to review / mark done
@@ -18,8 +18,8 @@
 
 ## Open by kind
 
-- `unsupported_offerings`: 18
-- `ethos_underclaim`: 14
+- `unsupported_offerings`: 21
+- `ethos_underclaim`: 16
 
 ## Items
 
@@ -86,20 +86,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 145721`
     - `npm run review:human-gated -- --mark-done fd64e8a3e13eb919`
-- **ethos_underclaim** `1c861310d7447668` St Anne's Catholic Primary School (URN `147519`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: faithful, let all you do, our mission, our vision
-  - review:
-    - `npm run enrich:qualitative -- --urn 147519`
-    - `npm run review:human-gated -- --mark-done 1c861310d7447668`
-- **ethos_underclaim** `7d21b4f2e7266a53` Millais School (URN `126066`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: our mission
-  - review:
-    - `npm run enrich:qualitative -- --urn 126066`
-    - `npm run review:human-gated -- --mark-done 7d21b4f2e7266a53`
 - **ethos_underclaim** `84741fefb0b8847e` Millbank Gardens Primary Academy (URN `151310`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -114,6 +100,27 @@
   - review:
     - `npm run enrich:qualitative -- --urn 100064`
     - `npm run review:human-gated -- --mark-done b63111fa83bc2af3`
+- **ethos_underclaim** `1c861310d7447668` St Anne's Catholic Primary School (URN `147519`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: faithful, let all you do, our mission, our vision
+  - review:
+    - `npm run enrich:qualitative -- --urn 147519`
+    - `npm run review:human-gated -- --mark-done 1c861310d7447668`
+- **ethos_underclaim** `7d21b4f2e7266a53` Millais School (URN `126066`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: our mission
+  - review:
+    - `npm run enrich:qualitative -- --urn 126066`
+    - `npm run review:human-gated -- --mark-done 7d21b4f2e7266a53`
+- **ethos_underclaim** `937ccef0ffb07d19` Wilbury Primary School (URN `146900`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: our vision
+  - review:
+    - `npm run enrich:qualitative -- --urn 146900`
+    - `npm run review:human-gated -- --mark-done 937ccef0ffb07d19`
 - **ethos_underclaim** `b95cf95d690bc057` Stafford Junior School (URN `148724`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -121,6 +128,13 @@
   - review:
     - `npm run enrich:qualitative -- --urn 148724`
     - `npm run review:human-gated -- --mark-done b95cf95d690bc057`
+- **ethos_underclaim** `f6cb9a6931781ef6` St Paul's Catholic Primary School, Thames Ditton (URN `125212`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: catholic, our mission
+  - review:
+    - `npm run enrich:qualitative -- --urn 125212`
+    - `npm run review:human-gated -- --mark-done f6cb9a6931781ef6`
 - **unsupported_offerings** `45b485a1d8d12e8d` Platanos College (URN `136450`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -198,20 +212,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 102404`
     - `npm run review:human-gated -- --mark-done d7f5a7ee903c0120`
-- **unsupported_offerings** `17060849b9f8fbe6` Millais School (URN `126066`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: curriculum: drama, enrichment: music
-  - review:
-    - `npm run enrich:qualitative -- --urn 126066`
-    - `npm run review:human-gated -- --mark-done 17060849b9f8fbe6`
-- **unsupported_offerings** `2a83b57167e6536b` Stafford Junior School (URN `148724`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: curriculum: dance, curriculum: geography, curriculum: Adventures of Isobel, curriculum: Alfred, Lord Tennyson, curriculum: Alternative Story Ending
-  - review:
-    - `npm run enrich:qualitative -- --urn 148724`
-    - `npm run review:human-gated -- --mark-done 2a83b57167e6536b`
 - **unsupported_offerings** `5e56f62f947597e4` Grandpont Nursery School (URN `122969`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -226,13 +226,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 139674`
     - `npm run review:human-gated -- --mark-done 762052af7a204cab`
-- **unsupported_offerings** `d3915f61c0db92cb` St Anne's Catholic Primary School (URN `147519`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: enrichment: music, enrichment: music lovers, community: swimming, community: basketball, community: Helpline. Dedicated NSPCC
-  - review:
-    - `npm run enrich:qualitative -- --urn 147519`
-    - `npm run review:human-gated -- --mark-done d3915f61c0db92cb`
 - **unsupported_offerings** `ea98dff6647bfde6` The Hall School (URN `100064`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -247,6 +240,48 @@
   - review:
     - `npm run enrich:qualitative -- --urn 151310`
     - `npm run review:human-gated -- --mark-done f20f47f4647866ac`
+- **unsupported_offerings** `1207f337e1784a73` St Paul's Catholic Primary School, Thames Ditton (URN `125212`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: music, curriculum: coding, curriculum: computing, curriculum: photography, curriculum: geography
+  - review:
+    - `npm run enrich:qualitative -- --urn 125212`
+    - `npm run review:human-gated -- --mark-done 1207f337e1784a73`
+- **unsupported_offerings** `17060849b9f8fbe6` Millais School (URN `126066`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: drama, enrichment: music
+  - review:
+    - `npm run enrich:qualitative -- --urn 126066`
+    - `npm run review:human-gated -- --mark-done 17060849b9f8fbe6`
+- **unsupported_offerings** `2a83b57167e6536b` Stafford Junior School (URN `148724`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: dance, curriculum: geography, curriculum: Adventures of Isobel, curriculum: Alfred, Lord Tennyson, curriculum: Alternative Story Ending
+  - review:
+    - `npm run enrich:qualitative -- --urn 148724`
+    - `npm run review:human-gated -- --mark-done 2a83b57167e6536b`
+- **unsupported_offerings** `5e91834f997abc18` Wilbury Primary School (URN `146900`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: computing, enrichment: music, enrichment: Composing, enrichment: Listening, enrichment: Performing
+  - review:
+    - `npm run enrich:qualitative -- --urn 146900`
+    - `npm run review:human-gated -- --mark-done 5e91834f997abc18`
+- **unsupported_offerings** `8d5a6f9a63590de2` St Philip's Catholic Primary School (URN `114569`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: pe attack, curriculum: basketball, curriculum: netball, curriculum: computing, curriculum: geography
+  - review:
+    - `npm run enrich:qualitative -- --urn 114569`
+    - `npm run review:human-gated -- --mark-done 8d5a6f9a63590de2`
+- **unsupported_offerings** `d3915f61c0db92cb` St Anne's Catholic Primary School (URN `147519`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: enrichment: music, enrichment: music lovers, community: swimming, community: basketball, community: Helpline. Dedicated NSPCC
+  - review:
+    - `npm run enrich:qualitative -- --urn 147519`
+    - `npm run review:human-gated -- --mark-done d3915f61c0db92cb`
 
 ## Artefacts
 
