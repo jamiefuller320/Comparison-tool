@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-10-25T13:13:53.456181+00:00",
+  "ranAt": "2026-10-26T14:39:31.715791+00:00",
   "ingestPolicy": "auto",
   "ingestPhase": "maintenance",
   "ingestAssessment": {
@@ -63,14 +63,14 @@
   "qaLimit": 16,
   "qa": {
     "reviewed": 16,
-    "changedSchools": 6,
-    "findingsApplied": 13,
-    "learningAdded": 1,
+    "changedSchools": 3,
+    "findingsApplied": 12,
+    "learningAdded": 4,
     "provider": "none"
   },
   "learnedTerms": {
     "termCount": 500,
-    "boostTermCount": 478,
+    "boostTermCount": 479,
     "schoolCount": 7381,
     "rebuilt": true,
     "fromCapture": 500,
@@ -90,11 +90,11 @@
     "Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.",
     "Running 3 capture streams in parallel (limit 15 each).",
     "Merged 3 partial sidecar(s) \u2192 7381 records (union size 7381).",
-    "Captured batch (sidecar 7381 \u2192 7381); learned terms now 523.",
+    "Captured batch (sidecar 7381 \u2192 7381); learned terms now 522.",
     "No new captures \u2014 website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.",
     "Merged sidecar into 3 schools-index file(s).",
     "Selective synth provider=none; learned terms after citation merge=500.",
-    "QA provider=none: reviewed 16, changed 6, learned phrases +1.",
+    "QA provider=none: reviewed 16, changed 3, learned phrases +4.",
     "Re-merged affected schools-index files after QA fixes."
   ],
   "progressPath": "output/qualitative-progress.json"
