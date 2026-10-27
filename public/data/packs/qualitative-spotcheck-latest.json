@@ -1,13 +1,13 @@
 {
-  "ranAt": "2026-10-26T18:30:41.623209+00:00",
+  "ranAt": "2026-10-27T17:46:53.049438+00:00",
   "dryRun": false,
-  "seed": 3204729388,
+  "seed": 1955716403,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
     "warn": 6,
-    "fetch_error": 1
+    "pass": 1
   },
   "failCount": 0,
   "warnCount": 6,
@@ -147,14 +147,14 @@
       "notes": []
     },
     {
-      "urn": "146900",
-      "name": "Wilbury Primary School",
-      "la": "Enfield",
-      "website": "https://www.wilburyprimaryschool.org.uk/",
-      "assessedAt": "2026-10-07",
+      "urn": "101534",
+      "name": "John Keble CofE Primary School",
+      "la": "Brent",
+      "website": "https://www.johnkeble.com/",
+      "assessedAt": "2026-09-28",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 22,
+      "offeringsChecked": 38,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -163,58 +163,44 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: computing",
-            "enrichment: music",
-            "enrichment: Composing",
-            "enrichment: Listening",
-            "enrichment: Performing",
-            "enrichment: computing",
-            "ethos: ethos"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our vision"
+            "curriculum: childcare",
+            "curriculum: Cultural Capital",
+            "curriculum: Facility Hire",
+            "curriculum: Reporting Absence Online",
+            "curriculum: Subjects",
+            "ethos: Cultural Capital",
+            "ethos: Facility Hire",
+            "ethos: Reporting Absence Online",
+            "ethos: Subjects",
+            "ethos: All Soul's Church"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "101387",
-      "name": "Menorah Grammar School",
-      "la": "Barnet",
-      "website": "https://www.menorahgrammar.barnet.sch.uk",
-      "assessedAt": "2026-09-25",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
+      "urn": "100019",
+      "name": "New End Primary School",
+      "la": "Camden",
+      "website": "http://www.newend.camden.sch.uk/",
+      "assessedAt": "2026-10-01",
+      "verdict": "pass",
+      "pagesFetched": 3,
       "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.menorahgrammar.barnet.sch.uk"
-      ]
+      "flags": [],
+      "notes": []
     },
     {
-      "urn": "125212",
-      "name": "St Paul's Catholic Primary School, Thames Ditton",
+      "urn": "138766",
+      "name": "Lift Wishmore",
       "la": "Surrey",
-      "website": "https://www.stpauls-thamesditton.surrey.sch.uk/",
-      "assessedAt": "2026-09-10",
+      "website": "https://www.liftwishmore.org",
+      "assessedAt": "2026-09-05",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 28,
+      "offeringsChecked": 24,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -223,16 +209,15 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: music",
-            "curriculum: coding",
-            "curriculum: computing",
-            "curriculum: photography",
-            "curriculum: geography",
-            "curriculum: orchestra",
-            "curriculum: Combining Images and Text",
-            "curriculum: UK and Kenya.",
-            "curriculum: Autumn Spring Summer",
-            "curriculum: Listening, Attention and Understanding"
+            "behaviour: ADDISSVisit",
+            "behaviour: ChildnetVisit",
+            "behaviour: MindVisit",
+            "behaviour: YoungMindsVisit",
+            "community: football",
+            "community: Computers",
+            "community: Electronic Games",
+            "community: Fishing Equipment",
+            "community: Trampoline"
           ]
         },
         {
@@ -241,7 +226,6 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "catholic",
             "our mission"
           ]
         }
@@ -249,14 +233,14 @@
       "notes": []
     },
     {
-      "urn": "114569",
-      "name": "St Philip's Catholic Primary School",
-      "la": "East Sussex",
-      "website": "http://www.stphilips.e-sussex.sch.uk",
-      "assessedAt": "2026-08-27",
+      "urn": "136211",
+      "name": "Birtley House Independent School",
+      "la": "Kent",
+      "website": "https://www.birtleyhouseschool.co.uk",
+      "assessedAt": "2026-09-02",
       "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 44,
+      "pagesFetched": 1,
+      "offeringsChecked": 20,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -265,20 +249,23 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: pe attack",
-            "curriculum: basketball",
-            "curriculum: netball",
-            "curriculum: computing",
-            "curriculum: geography",
             "curriculum: music",
-            "curriculum: rugby",
-            "curriculum: gymnastics",
-            "curriculum: God Loves You",
-            "curriculum: Hit, Catch and Run"
+            "curriculum: geography",
+            "curriculum: athletics",
+            "curriculum: design technology",
+            "curriculum: Bright Lights, Big City",
+            "curriculum: Rainbows Shadows and Reflections Splash",
+            "curriculum: Term Autumn Spring Summer",
+            "curriculum: Variations Y6 Songs of WW2",
+            "curriculum: Y1 Improving Mouse",
+            "curriculum: Y2 Algorithms and"
           ]
         }
       ],
-      "notes": []
+      "notes": [
+        "Signal page fetch failed: https://www.birtleyhouseschool.co.uk/after-school-clubs/",
+        "Signal page fetch failed: https://www.birtleyhouseschool.co.uk/personal-development/"
+      ]
     }
   ],
   "notes": [
