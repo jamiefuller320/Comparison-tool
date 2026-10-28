@@ -1,18 +1,16 @@
 # Qualitative QA loop
 
-- Ran at: `2026-10-27T15:46:02.096621+00:00`
+- Ran at: `2026-10-28T13:58:44.550950+00:00`
 - Provider: `none`
-- Reviewed: `31`
-- Schools changed: `1`
-- Findings applied: `1`
+- Reviewed: `16`
+- Schools changed: `0`
+- Findings applied: `0`
 - New learned phrases: `0`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 1 school(s) (1 area finding(s)).
-- Learned 0 new junk phrase(s) (store size 900).
-- Reviewed top 31 suspect(s); provider=none.
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
@@ -32,7 +30,3 @@
 - `109748` Blagdon Nursery School — score 3.0 flags=admissions
 - `101251` Brookhill Nursery School — score 3.0 flags=admissions
 - `101252` Hampden Way Nursery School — score 3.0 flags=admissions
-- `110428` Lee Common Church of England School — score 3.0 flags=admissions
-- `142356` Mytchett Primary & Nursery Academy — score 3.0 flags=admissions
-- `109752` New Bridge Nursery School — score 3.0 flags=admissions
-- `125344` Rydes Hill Preparatory School — score 3.0 flags=admissions
