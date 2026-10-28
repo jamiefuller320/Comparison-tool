@@ -1,16 +1,17 @@
 {
-  "ranAt": "2026-10-27T17:46:53.049438+00:00",
+  "ranAt": "2026-10-28T18:09:03.853905+00:00",
   "dryRun": false,
-  "seed": 1955716403,
+  "seed": 1488898678,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 6,
-    "pass": 1
+    "warn": 5,
+    "pass": 1,
+    "fetch_error": 1
   },
   "failCount": 0,
-  "warnCount": 6,
+  "warnCount": 5,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -147,11 +148,25 @@
       "notes": []
     },
     {
-      "urn": "101534",
-      "name": "John Keble CofE Primary School",
-      "la": "Brent",
-      "website": "https://www.johnkeble.com/",
-      "assessedAt": "2026-09-28",
+      "urn": "141039",
+      "name": "Canary Wharf College, Glenworth",
+      "la": "Tower Hamlets",
+      "website": "https://www.canarywharfcollege.co.uk/",
+      "assessedAt": "2026-09-24",
+      "verdict": "pass",
+      "pagesFetched": 1,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": []
+    },
+    {
+      "urn": "144084",
+      "name": "The Lea Valley Academy",
+      "la": "Enfield",
+      "website": "http://www.leavalley.org.uk",
+      "assessedAt": "2026-10-07",
       "verdict": "warn",
       "pagesFetched": 3,
       "offeringsChecked": 38,
@@ -163,61 +178,16 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: childcare",
-            "curriculum: Cultural Capital",
-            "curriculum: Facility Hire",
-            "curriculum: Reporting Absence Online",
-            "curriculum: Subjects",
-            "ethos: Cultural Capital",
-            "ethos: Facility Hire",
-            "ethos: Reporting Absence Online",
-            "ethos: Subjects",
-            "ethos: All Soul's Church"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "100019",
-      "name": "New End Primary School",
-      "la": "Camden",
-      "website": "http://www.newend.camden.sch.uk/",
-      "assessedAt": "2026-10-01",
-      "verdict": "pass",
-      "pagesFetched": 3,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [],
-      "notes": []
-    },
-    {
-      "urn": "138766",
-      "name": "Lift Wishmore",
-      "la": "Surrey",
-      "website": "https://www.liftwishmore.org",
-      "assessedAt": "2026-09-05",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 24,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "behaviour: ADDISSVisit",
-            "behaviour: ChildnetVisit",
-            "behaviour: MindVisit",
-            "behaviour: YoungMindsVisit",
-            "community: football",
-            "community: Computers",
-            "community: Electronic Games",
-            "community: Fishing Equipment",
-            "community: Trampoline"
+            "curriculum: physical theatre",
+            "curriculum: drama",
+            "curriculum: drama mediums",
+            "curriculum: Autumn Spring Summer",
+            "curriculum: Flashback, Script Work and Thought-Tracking.",
+            "curriculum: Work, Props and Costume.",
+            "curriculum: Craig and Bentley",
+            "curriculum: Plays and Practitioners",
+            "curriculum: level drama",
+            "curriculum: theatre years 12"
           ]
         },
         {
@@ -226,20 +196,42 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our mission"
+            "our vision"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "136211",
-      "name": "Birtley House Independent School",
-      "la": "Kent",
-      "website": "https://www.birtleyhouseschool.co.uk",
-      "assessedAt": "2026-09-02",
+      "urn": "138620",
+      "name": "Thomas Bennett Community College",
+      "la": "West Sussex",
+      "website": "https://www.thomasbennett-kemnal.org",
+      "assessedAt": "2026-09-13",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 20,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
+      "notes": [
+        "Homepage fetch failed for https://www.thomasbennett-kemnal.org"
+      ]
+    },
+    {
+      "urn": "147430",
+      "name": "St Peter's Catholic School",
+      "la": "Surrey",
+      "website": "https://www.st-petersschool.co.uk",
+      "assessedAt": "2026-09-10",
       "verdict": "warn",
-      "pagesFetched": 1,
+      "pagesFetched": 3,
       "offeringsChecked": 20,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
@@ -249,23 +241,26 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: music",
-            "curriculum: geography",
-            "curriculum: athletics",
-            "curriculum: design technology",
-            "curriculum: Bright Lights, Big City",
-            "curriculum: Rainbows Shadows and Reflections Splash",
-            "curriculum: Term Autumn Spring Summer",
-            "curriculum: Variations Y6 Songs of WW2",
-            "curriculum: Y1 Improving Mouse",
-            "curriculum: Y2 Algorithms and"
+            "curriculum: pshe head of sociology",
+            "curriculum: economic education (pshe)",
+            "curriculum: mathematics",
+            "curriculum: computing",
+            "curriculum: geography"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our ethos",
+            "our values",
+            "our vision"
           ]
         }
       ],
-      "notes": [
-        "Signal page fetch failed: https://www.birtleyhouseschool.co.uk/after-school-clubs/",
-        "Signal page fetch failed: https://www.birtleyhouseschool.co.uk/personal-development/"
-      ]
+      "notes": []
     }
   ],
   "notes": [
