@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-28T18:09:03.853905+00:00
+# Qualitative source spot-check — 2026-10-29T18:16:30.531322+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `1488898678`
+- Seed: `1592973512`
 - Max pages / school: `3`
-- Verdicts: pass `1` · warn `5` · fail `0` · fetch_error `1` · skip `0`
+- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,15 +22,15 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Canary Wharf College, Glenworth** (`141039`, Tower Hamlets) — `pass`
-- **The Lea Valley Academy** (`144084`, Enfield) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: physical theatre, curriculum: drama, curriculum: drama mediums, curriculum: Autumn Spring Summer
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Thomas Bennett Community College** (`138620`, West Sussex) — `fetch_error`
-  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **St Peter's Catholic School** (`147430`, Surrey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: pshe head of sociology, curriculum: economic education (pshe), curriculum: mathematics, curriculum: computing
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our values, our vision
+- **Phoenix Arch School** (`101581`, Brent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Deserts Deserts Deserts, curriculum: Volcanoes Earthquakes Earthquakes Earthquakes, curriculum: Arabia and Early, curriculum: Festival of Holi
+- **Heathcote School & Science College** (`103097`, Waltham Forest) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: installation art, curriculum: chemistry, curriculum: drama, curriculum: Algorithms
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, our vision
+- **Cross Keys Learning** (`145574`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Breaks and Lunchtimes, curriculum: Director: Steve Fuller, curriculum: Headteacher: Mark Beaman, curriculum: Inclusion Manager: Jay Britton
+- **Kings Bournemouth** (`138333`, Bournemouth, Christchurch and Poole) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: Ownership, ethos: Smart Hub
 
 ## Notes
 
