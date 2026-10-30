@@ -1,6 +1,6 @@
 # SEO coverage loop
 
-- Generated: `2026-10-23T12:27:51Z`
+- Generated: `2026-10-30T13:53:36Z`
 - Dry run: **False**
 - Added areas: **0** (none — budget full or no ready candidates)
 
@@ -69,9 +69,9 @@
 
 ## AEO / GEO readiness
 
-- llms.txt: `/llms.txt` (generated 2026-10-17T16:49:57.116Z)
+- llms.txt: `/llms.txt` (generated 2026-10-23T12:27:58.722Z)
 - School pages with Ofsted Q&A: **71%**
-- School pages with inspection précis: **73%**
+- School pages with inspection précis: **74%**
 - School pages with website evidence (quality-gated): **24%**
 
 ## Candidate packs (not yet in coverage)
