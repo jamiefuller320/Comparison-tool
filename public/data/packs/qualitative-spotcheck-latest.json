@@ -1,15 +1,16 @@
 {
-  "ranAt": "2026-10-29T18:16:30.531322+00:00",
+  "ranAt": "2026-10-30T17:53:12.159430+00:00",
   "dryRun": false,
-  "seed": 1592973512,
+  "seed": 3385032511,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 7
+    "warn": 5,
+    "fetch_error": 2
   },
   "failCount": 0,
-  "warnCount": 7,
+  "warnCount": 5,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -146,14 +147,14 @@
       "notes": []
     },
     {
-      "urn": "101581",
-      "name": "Phoenix Arch School",
-      "la": "Brent",
-      "website": "https://www.phoenixarchschool.co.uk",
-      "assessedAt": "2026-10-08",
+      "urn": "100014",
+      "name": "Fleet Primary School",
+      "la": "Camden",
+      "website": "http://www.fleet.camden.sch.uk/",
+      "assessedAt": "2026-10-01",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 42,
+      "offeringsChecked": 24,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -162,30 +163,74 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Deserts Deserts Deserts",
-            "curriculum: Volcanoes Earthquakes Earthquakes Earthquakes",
-            "curriculum: Arabia and Early",
-            "curriculum: Festival of Holi",
-            "curriculum: Rama and Sita",
-            "curriculum: Ramadan Ramadan Ramadan Islam",
-            "curriculum: Desert Life Circuits and",
-            "curriculum: Earth and Space",
-            "curriculum: Earth and Space Eating and",
-            "curriculum: Life Cycle What Scientists"
+            "curriculum: Curriculum and Standards Committee",
+            "curriculum: Purpose of Committee",
+            "enrichment: music",
+            "enrichment: male music teachers",
+            "enrichment: physical education",
+            "enrichment: swimming",
+            "enrichment: after-school club",
+            "ethos: Pastoral Care and Well-being",
+            "ethos: Teaching and Learning",
+            "ethos: rights respecting"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "103097",
-      "name": "Heathcote School & Science College",
-      "la": "Waltham Forest",
-      "website": "http://www.heathcoteschool.com/",
-      "assessedAt": "2026-10-02",
+      "urn": "152286",
+      "name": "St Mary's Priory Catholic Junior School",
+      "la": "Haringey",
+      "website": "https://www.stmarysrcpriory.haringey.sch.uk/",
+      "assessedAt": "2026-10-09",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
+      "notes": [
+        "Homepage fetch failed for https://www.stmarysrcpriory.haringey.sch.uk/"
+      ]
+    },
+    {
+      "urn": "125025",
+      "name": "Worplesdon Primary School",
+      "la": "Surrey",
+      "website": "https://www.worplesdonprimaryschool.com/",
+      "assessedAt": "2026-09-20",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
+      "notes": [
+        "Homepage fetch failed for https://www.worplesdonprimaryschool.com/"
+      ]
+    },
+    {
+      "urn": "142429",
+      "name": "Kingsnorth Church of England Primary School",
+      "la": "Kent",
+      "website": "https://www.kingsnorth.kent.sch.uk",
+      "assessedAt": "2026-09-06",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 37,
+      "offeringsChecked": 10,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -194,16 +239,13 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: installation art",
-            "curriculum: chemistry",
-            "curriculum: drama",
-            "curriculum: Algorithms",
-            "curriculum: Architecture Collage and",
-            "curriculum: Bank Robbery Gone Wrong",
-            "curriculum: Business/Enterprise Curriculum Pathway",
-            "curriculum: Ceramic Final Outcome",
-            "curriculum: Comic Book Illustrations",
-            "curriculum: Computer Crime & Cyber"
+            "curriculum: Reading Books»",
+            "enrichment: after school club",
+            "enrichment: breakfast club",
+            "enrichment: music",
+            "enrichment: choir",
+            "enrichment: cooking activities",
+            "enrichment: after-school club"
           ]
         },
         {
@@ -212,61 +254,7 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our values",
-            "our vision"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "145574",
-      "name": "Cross Keys Learning",
-      "la": "Kent",
-      "website": "https://www.crosskeyslearning.com",
-      "assessedAt": "2026-09-03",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 14,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: Breaks and Lunchtimes",
-            "curriculum: Director: Steve Fuller",
-            "curriculum: Headteacher: Mark Beaman",
-            "curriculum: Inclusion Manager: Jay Britton",
-            "curriculum: Lower Phase Leader: Devon Bobbett",
-            "curriculum: Security, Lost Property & Valuables",
-            "curriculum: Upper Phase Leader: Sandra Cochrane"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "138333",
-      "name": "Kings Bournemouth",
-      "la": "Bournemouth, Christchurch and Poole",
-      "website": "https://www.kingseducation.com",
-      "assessedAt": "2026-09-11",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 7,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "ethos: Ownership",
-            "ethos: Smart Hub"
+            "church of england"
           ]
         }
       ],

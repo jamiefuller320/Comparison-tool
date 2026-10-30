@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-10-29T18:16:30.531322+00:00
+# Qualitative source spot-check — 2026-10-30T17:53:12.159430+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `1592973512`
+- Seed: `3385032511`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `5` · fail `0` · fetch_error `2` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,15 +22,15 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Phoenix Arch School** (`101581`, Brent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Deserts Deserts Deserts, curriculum: Volcanoes Earthquakes Earthquakes Earthquakes, curriculum: Arabia and Early, curriculum: Festival of Holi
-- **Heathcote School & Science College** (`103097`, Waltham Forest) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: installation art, curriculum: chemistry, curriculum: drama, curriculum: Algorithms
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, our vision
-- **Cross Keys Learning** (`145574`, Kent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Breaks and Lunchtimes, curriculum: Director: Steve Fuller, curriculum: Headteacher: Mark Beaman, curriculum: Inclusion Manager: Jay Britton
-- **Kings Bournemouth** (`138333`, Bournemouth, Christchurch and Poole) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: Ownership, ethos: Smart Hub
+- **Fleet Primary School** (`100014`, Camden) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Curriculum and Standards Committee, curriculum: Purpose of Committee, enrichment: music, enrichment: male music teachers
+- **St Mary's Priory Catholic Junior School** (`152286`, Haringey) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Worplesdon Primary School** (`125025`, Surrey) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Kingsnorth Church of England Primary School** (`142429`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Reading Books», enrichment: after school club, enrichment: breakfast club, enrichment: music
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
 
 ## Notes
 
