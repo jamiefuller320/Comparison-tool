@@ -1,14 +1,14 @@
-# Qualitative source spot-check — 2026-10-30T17:53:12.159430+00:00
+# Qualitative source spot-check — 2026-10-31T17:03:34.531673+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3385032511`
+- Seed: `2513534123`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `5` · fail `0` · fetch_error `2` · skip `0`
+- Verdicts: pass `0` · warn `6` · fail `1` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
-- Learning candidates written: `0` (auto `0` · gated `0`)
-- Auto-learned into learned store: `False`
-- Quality apply requested: `False`
+- Learning candidates written: `1` (auto `1` · gated `0`)
+- Auto-learned into learned store: `True`
+- Quality apply requested: `True`
 
 ## Schools
 
@@ -22,21 +22,24 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Fleet Primary School** (`100014`, Camden) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Curriculum and Standards Committee, curriculum: Purpose of Committee, enrichment: music, enrichment: male music teachers
-- **St Mary's Priory Catholic Junior School** (`152286`, Haringey) — `fetch_error`
-  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Worplesdon Primary School** (`125025`, Surrey) — `fetch_error`
-  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Kingsnorth Church of England Primary School** (`142429`, Kent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Reading Books», enrichment: after school club, enrichment: breakfast club, enrichment: music
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
+- **Norwood Green Junior School** (`139869`, Hounslow) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: music, enrichment: but i especially art, ethos: kindness, ethos: respect
+- **Heathmere Primary School** (`101029`, Wandsworth) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Contact Details, curriculum: Equality, curriculum: Exam and Assessment Results, curriculum: Information
+- **South View Infant and Nursery School** (`115975`, Hampshire) — `fail`
+  - `fail` `chrome_in_offerings` [community]: Product offerings look like site chrome / nav, not provision — School Dinners
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — community: Apply for Free School Meals, community: Diary Dates, community: Leaflets and Booklets, community: Triple P Courses
+- **St John Fisher Catholic Primary School, Littlemore** (`139480`, Oxfordshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: art movements, enrichment: breakfast club, send: Accessibility Plan, send: Oxfordshire County Council Local Offer
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, our mission
 
 ## Notes
 
 - Live fetch; polite rate limit
 - Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review (never auto-learned).
 - Sample capped at 21 (requested path stays O(sample) as corpus grows).
+- Wrote 1 chrome/PDF flag candidates → /home/runner/work/Comparison-tool/Comparison-tool/output/spotcheck-human-flag-candidates.jsonl
+- Recorded 1 spot-check phrase(s) into learned-qa-patterns.json (quality apply recommended)
 
 ## Feedback path
 

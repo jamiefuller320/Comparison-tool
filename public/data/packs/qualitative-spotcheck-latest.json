@@ -1,21 +1,21 @@
 {
-  "ranAt": "2026-10-30T17:53:12.159430+00:00",
+  "ranAt": "2026-10-31T17:03:34.531673+00:00",
   "dryRun": false,
-  "seed": 3385032511,
+  "seed": 2513534123,
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 5,
-    "fetch_error": 2
+    "warn": 6,
+    "fail": 1
   },
-  "failCount": 0,
-  "warnCount": 5,
-  "candidatesWritten": 0,
-  "autoLearnedCount": 0,
+  "failCount": 1,
+  "warnCount": 6,
+  "candidatesWritten": 1,
+  "autoLearnedCount": 1,
   "gatedCount": 0,
-  "flagsRecorded": false,
-  "qualityApplyRequested": false,
+  "flagsRecorded": true,
+  "qualityApplyRequested": true,
   "autoLearn": true,
   "recordFlags": false,
   "strict": false,
@@ -147,14 +147,14 @@
       "notes": []
     },
     {
-      "urn": "100014",
-      "name": "Fleet Primary School",
-      "la": "Camden",
-      "website": "http://www.fleet.camden.sch.uk/",
-      "assessedAt": "2026-10-01",
+      "urn": "139869",
+      "name": "Norwood Green Junior School",
+      "la": "Hounslow",
+      "website": "https://www.ngjs.co.uk",
+      "assessedAt": "2026-09-30",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 24,
+      "offeringsChecked": 8,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -163,74 +163,25 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Curriculum and Standards Committee",
-            "curriculum: Purpose of Committee",
             "enrichment: music",
-            "enrichment: male music teachers",
-            "enrichment: physical education",
-            "enrichment: swimming",
-            "enrichment: after-school club",
-            "ethos: Pastoral Care and Well-being",
-            "ethos: Teaching and Learning",
-            "ethos: rights respecting"
+            "enrichment: but i especially art",
+            "ethos: kindness",
+            "ethos: respect",
+            "ethos: british values"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "152286",
-      "name": "St Mary's Priory Catholic Junior School",
-      "la": "Haringey",
-      "website": "https://www.stmarysrcpriory.haringey.sch.uk/",
-      "assessedAt": "2026-10-09",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.stmarysrcpriory.haringey.sch.uk/"
-      ]
-    },
-    {
-      "urn": "125025",
-      "name": "Worplesdon Primary School",
-      "la": "Surrey",
-      "website": "https://www.worplesdonprimaryschool.com/",
-      "assessedAt": "2026-09-20",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.worplesdonprimaryschool.com/"
-      ]
-    },
-    {
-      "urn": "142429",
-      "name": "Kingsnorth Church of England Primary School",
-      "la": "Kent",
-      "website": "https://www.kingsnorth.kent.sch.uk",
-      "assessedAt": "2026-09-06",
+      "urn": "101029",
+      "name": "Heathmere Primary School",
+      "la": "Wandsworth",
+      "website": "https://www.heathmereprimary.org/",
+      "assessedAt": "2026-09-27",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 10,
+      "offeringsChecked": 96,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -239,13 +190,84 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Reading Books»",
-            "enrichment: after school club",
+            "curriculum: Contact Details",
+            "curriculum: Equality",
+            "curriculum: Exam and Assessment Results",
+            "curriculum: Information",
+            "curriculum: SEN & Disability",
+            "curriculum: School Gallery",
+            "curriculum: School Lunches",
+            "curriculum: SportS Premium",
+            "curriculum: Vision and Mission Statement",
+            "curriculum: gymnastics"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "115975",
+      "name": "South View Infant and Nursery School",
+      "la": "Hampshire",
+      "website": "http://www.southview-fed.hants.sch.uk",
+      "assessedAt": "2026-08-23",
+      "verdict": "fail",
+      "pagesFetched": 3,
+      "offeringsChecked": 22,
+      "chromeOfferings": [
+        "School Dinners"
+      ],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "chrome_in_offerings",
+          "severity": "fail",
+          "area": "community",
+          "detail": "Product offerings look like site chrome / nav, not provision",
+          "excerpts": [
+            "School Dinners"
+          ]
+        },
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "community: Apply for Free School Meals",
+            "community: Diary Dates",
+            "community: Leaflets and Booklets",
+            "community: Triple P Courses"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "139480",
+      "name": "St John Fisher Catholic Primary School, Littlemore",
+      "la": "Oxfordshire",
+      "website": "https://www.st-john-fisher.oxon.sch.uk",
+      "assessedAt": "2026-09-12",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 34,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: art movements",
             "enrichment: breakfast club",
-            "enrichment: music",
-            "enrichment: choir",
-            "enrichment: cooking activities",
-            "enrichment: after-school club"
+            "send: Accessibility Plan",
+            "send: Oxfordshire County Council Local Offer",
+            "community: Useful for Parents",
+            "community: Attendance and Punctuality",
+            "community: Extra-Curricular Activities",
+            "community: Homework",
+            "community: Uniform Expectations"
           ]
         },
         {
@@ -254,7 +276,8 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "church of england"
+            "catholic",
+            "our mission"
           ]
         }
       ],
@@ -264,6 +287,8 @@
   "notes": [
     "Live fetch; polite rate limit",
     "Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review (never auto-learned).",
-    "Sample capped at 21 (requested path stays O(sample) as corpus grows)."
+    "Sample capped at 21 (requested path stays O(sample) as corpus grows).",
+    "Wrote 1 chrome/PDF flag candidates → /home/runner/work/Comparison-tool/Comparison-tool/output/spotcheck-human-flag-candidates.jsonl",
+    "Recorded 1 spot-check phrase(s) into learned-qa-patterns.json (quality apply recommended)"
   ]
 }
