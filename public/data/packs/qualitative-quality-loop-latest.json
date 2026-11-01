@@ -1,7 +1,7 @@
 {
-  "ranAt": "2026-10-31T17:11:16.287686+00:00",
+  "ranAt": "2026-11-01T16:35:35.423585+00:00",
   "dryRun": false,
-  "mode": "apply",
+  "mode": "skip",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
@@ -222,40 +222,37 @@
     ]
   },
   "qa": {
-    "reviewed": 30,
+    "reviewed": 0,
     "changedSchools": 0,
     "findingsApplied": 0,
-    "learningAdded": 0,
-    "provider": "none"
+    "learningAdded": 0
   },
   "merged": false,
   "trigger": {
-    "shouldApply": true,
-    "reason": "forced (--force)",
-    "fingerprintBefore": {
+    "shouldApply": false,
+    "reason": "learning library unchanged since last apply",
+    "fingerprint": {
+      "phraseHash": "e80c91f285227ad8c878",
+      "phraseCount": 900,
+      "candidateCount": 2000,
+      "eventCount": 11090,
+      "updatedAt": "2026-11-01"
+    },
+    "prior": {
       "phraseHash": "e80c91f285227ad8c878",
       "phraseCount": 900,
       "candidateCount": 2000,
       "eventCount": 11090,
       "updatedAt": "2026-10-31"
     },
-    "fingerprintAfter": {
-      "phraseHash": "e80c91f285227ad8c878",
-      "phraseCount": 900,
-      "candidateCount": 2000,
-      "eventCount": 11090,
-      "updatedAt": "2026-10-31"
-    }
+    "priorAppliedAt": "2026-10-31T17:11:16.287227+00:00"
   },
   "notes": [
     "Hydrated working sidecar from 7381 published URN shards (prior=0 → 7381).",
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': 'e80c91f285227ad8c878', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11090, 'updatedAt': '2026-10-31'}",
-    "Apply decision: forced (--force)",
+    "Learning fingerprint: {'phraseHash': 'e80c91f285227ad8c878', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11090, 'updatedAt': '2026-11-01'}",
+    "Apply decision: learning library unchanged since last apply",
     "Before: 30 suspects across 7381 records.",
-    "Reviewed top 30 suspect(s); provider=none.",
-    "No schools changed — merge skipped.",
-    "After: 30 suspects across 7381 records.",
-    "Updated output/learned-qa-apply-state.json"
+    "Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest."
   ]
 }
