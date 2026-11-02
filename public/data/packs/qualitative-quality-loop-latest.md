@@ -1,4 +1,4 @@
-# Qualitative quality loop — 2026-11-01T16:35:35.423585+00:00
+# Qualitative quality loop — 2026-11-02T19:59:44.461203+00:00
 
 - Mode: `skip`
 - Provider: `none`
@@ -22,7 +22,7 @@
 
 - Hydrated working sidecar from 7381 published URN shards (prior=0 → 7381).
 - Rebalanced learned QA phrases: active=900 candidates=2000.
-- Learning fingerprint: {'phraseHash': 'e80c91f285227ad8c878', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11090, 'updatedAt': '2026-11-01'}
+- Learning fingerprint: {'phraseHash': 'e80c91f285227ad8c878', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11090, 'updatedAt': '2026-11-02'}
 - Apply decision: learning library unchanged since last apply
 - Before: 30 suspects across 7381 records.
 - Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest.
