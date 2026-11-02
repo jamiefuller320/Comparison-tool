@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-11-01T17:48:29.414398+00:00
+# Qualitative source spot-check — 2026-11-02T21:34:17.423741+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `4235385934`
+- Seed: `3140147970`
 - Max pages / school: `3`
 - Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -22,17 +22,14 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **Hillbrook School** (`101057`, Wandsworth) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computer science, curriculum: coding, curriculum: computing, curriculum: Digital Literacy Progression
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Northview Junior and Infant School** (`101508`, Brent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, enrichment: computing, enrichment: music, enrichment: music production
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our mission, our values, our vision
-- **St Edward's School** (`123292`, Oxfordshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: chemistry, curriculum: photography, enrichment: chemistry, ethos: Document Status: Approved
-- **King's Court First School** (`109827`, Windsor and Maidenhead) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: breakfast club, enrichment: childcare
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our vision
+- **Ray Lodge Primary School** (`145045`, Redbridge) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: expressive art, curriculum: Full Curriculum Overview, curriculum: Reflection Celebration Evaluation, curriculum: Chanting and Tuned
+- **Berrylands School** (`152326`, Kingston upon Thames) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: ethos, ethos: resilience, behaviour: FS Research Psychologist
+- **St Thomas of Canterbury Catholic Primary School** (`147431`, Surrey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: PE and Sports Funding, enrichment: after school club, enrichment: holiday club, send: Busenya Partnership
+- **Simon Langton Girls' Grammar School** (`118840`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: Instrument of Government, ethos: Pupil Premium, ethos: School Voluntary Fund, ethos: Structure of Governing Body
 
 ## Notes
 
