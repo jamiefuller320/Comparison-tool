@@ -1,8 +1,8 @@
-# Human-gated review digest — 2026-10-26T19:46:04+00:00
+# Human-gated review digest — 2026-11-02T22:36:44+00:00
 
 - Mode: `collate`
-- Open items: **37** (queue total `37` · done `0` · ignored `0`)
-- New / refreshed this run: `5`
+- Open items: **41** (queue total `41` · done `0` · ignored `0`)
+- New / refreshed this run: `4`
 - Auto-closed (already learned): `0`
 
 ## How to review / mark done
@@ -18,7 +18,7 @@
 
 ## Open by kind
 
-- `unsupported_offerings`: 21
+- `unsupported_offerings`: 25
 - `ethos_underclaim`: 16
 
 ## Items
@@ -100,6 +100,20 @@
   - review:
     - `npm run enrich:qualitative -- --urn 100064`
     - `npm run review:human-gated -- --mark-done b63111fa83bc2af3`
+- **ethos_underclaim** `937ccef0ffb07d19` Wilbury Primary School (URN `146900`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: our vision
+  - review:
+    - `npm run enrich:qualitative -- --urn 146900`
+    - `npm run review:human-gated -- --mark-done 937ccef0ffb07d19`
+- **ethos_underclaim** `f6cb9a6931781ef6` St Paul's Catholic Primary School, Thames Ditton (URN `125212`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: catholic, our mission
+  - review:
+    - `npm run enrich:qualitative -- --urn 125212`
+    - `npm run review:human-gated -- --mark-done f6cb9a6931781ef6`
 - **ethos_underclaim** `1c861310d7447668` St Anne's Catholic Primary School (URN `147519`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -114,13 +128,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 126066`
     - `npm run review:human-gated -- --mark-done 7d21b4f2e7266a53`
-- **ethos_underclaim** `937ccef0ffb07d19` Wilbury Primary School (URN `146900`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: our vision
-  - review:
-    - `npm run enrich:qualitative -- --urn 146900`
-    - `npm run review:human-gated -- --mark-done 937ccef0ffb07d19`
 - **ethos_underclaim** `b95cf95d690bc057` Stafford Junior School (URN `148724`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -128,13 +135,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 148724`
     - `npm run review:human-gated -- --mark-done b95cf95d690bc057`
-- **ethos_underclaim** `f6cb9a6931781ef6` St Paul's Catholic Primary School, Thames Ditton (URN `125212`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: catholic, our mission
-  - review:
-    - `npm run enrich:qualitative -- --urn 125212`
-    - `npm run review:human-gated -- --mark-done f6cb9a6931781ef6`
 - **unsupported_offerings** `45b485a1d8d12e8d` Platanos College (URN `136450`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -247,20 +247,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 125212`
     - `npm run review:human-gated -- --mark-done 1207f337e1784a73`
-- **unsupported_offerings** `17060849b9f8fbe6` Millais School (URN `126066`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: curriculum: drama, enrichment: music
-  - review:
-    - `npm run enrich:qualitative -- --urn 126066`
-    - `npm run review:human-gated -- --mark-done 17060849b9f8fbe6`
-- **unsupported_offerings** `2a83b57167e6536b` Stafford Junior School (URN `148724`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: curriculum: dance, curriculum: geography, curriculum: Adventures of Isobel, curriculum: Alfred, Lord Tennyson, curriculum: Alternative Story Ending
-  - review:
-    - `npm run enrich:qualitative -- --urn 148724`
-    - `npm run review:human-gated -- --mark-done 2a83b57167e6536b`
 - **unsupported_offerings** `5e91834f997abc18` Wilbury Primary School (URN `146900`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -275,6 +261,48 @@
   - review:
     - `npm run enrich:qualitative -- --urn 114569`
     - `npm run review:human-gated -- --mark-done 8d5a6f9a63590de2`
+- **unsupported_offerings** `17060849b9f8fbe6` Millais School (URN `126066`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: drama, enrichment: music
+  - review:
+    - `npm run enrich:qualitative -- --urn 126066`
+    - `npm run review:human-gated -- --mark-done 17060849b9f8fbe6`
+- **unsupported_offerings** `1e36049652bcf8c7` Simon Langton Girls' Grammar School (URN `118840`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: ethos: Instrument of Government, ethos: Pupil Premium, ethos: School Voluntary Fund, ethos: Structure of Governing Body
+  - review:
+    - `npm run enrich:qualitative -- --urn 118840`
+    - `npm run review:human-gated -- --mark-done 1e36049652bcf8c7`
+- **unsupported_offerings** `2a83b57167e6536b` Stafford Junior School (URN `148724`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: dance, curriculum: geography, curriculum: Adventures of Isobel, curriculum: Alfred, Lord Tennyson, curriculum: Alternative Story Ending
+  - review:
+    - `npm run enrich:qualitative -- --urn 148724`
+    - `npm run review:human-gated -- --mark-done 2a83b57167e6536b`
+- **unsupported_offerings** `48cbcdb5897e614e` Ray Lodge Primary School (URN `145045`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: curriculum: expressive art, curriculum: Full Curriculum Overview, curriculum: Reflection Celebration Evaluation, curriculum: Chanting and Tuned, curriculum: Fairy Tales: Timbre
+  - review:
+    - `npm run enrich:qualitative -- --urn 145045`
+    - `npm run review:human-gated -- --mark-done 48cbcdb5897e614e`
+- **unsupported_offerings** `5e0dbc051304ab02` Berrylands School (URN `152326`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: ethos: ethos, ethos: resilience, behaviour: FS Research Psychologist
+  - review:
+    - `npm run enrich:qualitative -- --urn 152326`
+    - `npm run review:human-gated -- --mark-done 5e0dbc051304ab02`
+- **unsupported_offerings** `6c6c3bb1da3ad305` St Thomas of Canterbury Catholic Primary School (URN `147431`)
+  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
+  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
+  - excerpts: enrichment: PE and Sports Funding, enrichment: after school club, enrichment: holiday club, send: Busenya Partnership, send: after school club
+  - review:
+    - `npm run enrich:qualitative -- --urn 147431`
+    - `npm run review:human-gated -- --mark-done 6c6c3bb1da3ad305`
 - **unsupported_offerings** `d3915f61c0db92cb` St Anne's Catholic Primary School (URN `147519`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
