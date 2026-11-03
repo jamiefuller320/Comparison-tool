@@ -1,13 +1,13 @@
 {
-  "la": "Hampshire, Lambeth, Tower Hamlets",
+  "la": "Lambeth, Oxfordshire, Tower Hamlets",
   "las": [
-    "Hampshire",
     "Lambeth",
+    "Oxfordshire",
     "Tower Hamlets"
   ],
-  "updatedAt": "2026-11-02",
-  "sidecarRecords": 7381,
-  "lastBatchSize": 0,
+  "updatedAt": "2026-11-03",
+  "sidecarRecords": 7382,
+  "lastBatchSize": 1,
   "failures": 0,
   "processedUrns": [
     "100000",
@@ -7335,6 +7335,7 @@
     "152197",
     "152205",
     "152214",
+    "152225",
     "152231",
     "152232",
     "152260",
@@ -7392,20 +7393,8 @@
     "152653",
     "152762"
   ],
-  "processedCount": 7381,
+  "processedCount": 7382,
   "streams": [
-    {
-      "la": "Hampshire",
-      "index": "public/data/schools-index.json",
-      "remainingWithWebsite": 0,
-      "partial": "output/qualitative-partials/hampshire.json",
-      "progress": "output/qualitative-progress-hampshire.json",
-      "before": 7381,
-      "after": 7381,
-      "added": 0,
-      "status": "ok",
-      "error": null
-    },
     {
       "la": "Lambeth",
       "index": "public/data/packs/lambeth/schools-index.json",
@@ -7415,6 +7404,18 @@
       "before": 7381,
       "after": 7381,
       "added": 0,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "la": "Oxfordshire",
+      "index": "public/data/packs/oxfordshire/schools-index.json",
+      "remainingWithWebsite": 1,
+      "partial": "output/qualitative-partials/oxfordshire.json",
+      "progress": "output/qualitative-progress-oxfordshire.json",
+      "before": 7381,
+      "after": 7382,
+      "added": 1,
       "status": "ok",
       "error": null
     },

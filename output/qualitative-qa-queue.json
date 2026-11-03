@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02",
+  "generatedAt": "2026-11-03",
   "dryRun": false,
   "count": 16,
   "schools": [
@@ -33,6 +33,49 @@
         }
       ],
       "status": "no_change"
+    },
+    {
+      "urn": "152225",
+      "name": "Aspris Ridgeway School",
+      "score": 9.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "We provide a supportive, structured programme of careers education and real-world opportunities, tailored to each student\u2019s interests, strengths and aspirations."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our team is focused on creating a nurturing, supportive, structured and safe environment where pupils feel empowered to grow.",
+            "A place where everyone wants to be every day At Aspris Ridgeway School, we believe every young person deserves the chance to thrive in a safe, supportive, and inspiring environment."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "This data is used immediately to close gaps and ensure learning is challenging, supportive, and meets individual EHCP outcomes."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "auto_fixed",
+      "changes": 3
     },
     {
       "urn": "147128",
@@ -320,27 +363,6 @@
     {
       "urn": "101251",
       "name": "Brookhill Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "no_change"
-    },
-    {
-      "urn": "101252",
-      "name": "Hampden Way Nursery School",
       "score": 3.0,
       "flags": [
         "admissions"

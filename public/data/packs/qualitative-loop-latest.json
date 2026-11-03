@@ -1,5 +1,5 @@
 {
-  "ranAt": "2026-11-02T16:58:54.437343+00:00",
+  "ranAt": "2026-11-03T15:02:10.094698+00:00",
   "ingestPolicy": "auto",
   "ingestPhase": "maintenance",
   "ingestAssessment": {
@@ -9,9 +9,9 @@
     "pendingLondonPacks": 0
   },
   "scope": "parallel",
-  "la": "Hampshire",
-  "index": "public/data/schools-index.json",
-  "remainingWithWebsite": 0,
+  "la": "Oxfordshire",
+  "index": "public/data/packs/oxfordshire/schools-index.json",
+  "remainingWithWebsite": 1,
   "limit": 15,
   "offset": 0,
   "skipExisting": true,
@@ -19,20 +19,8 @@
   "refreshLimit": 30,
   "advanceStreams": true,
   "sidecarBefore": 7381,
-  "sidecarAfter": 7381,
+  "sidecarAfter": 7382,
   "streams": [
-    {
-      "la": "Hampshire",
-      "index": "public/data/schools-index.json",
-      "remainingWithWebsite": 0,
-      "partial": "output/qualitative-partials/hampshire.json",
-      "progress": "output/qualitative-progress-hampshire.json",
-      "before": 7381,
-      "after": 7381,
-      "added": 0,
-      "status": "ok",
-      "error": null
-    },
     {
       "la": "Lambeth",
       "index": "public/data/packs/lambeth/schools-index.json",
@@ -42,6 +30,18 @@
       "before": 7381,
       "after": 7381,
       "added": 0,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "la": "Oxfordshire",
+      "index": "public/data/packs/oxfordshire/schools-index.json",
+      "remainingWithWebsite": 1,
+      "partial": "output/qualitative-partials/oxfordshire.json",
+      "progress": "output/qualitative-progress-oxfordshire.json",
+      "before": 7381,
+      "after": 7382,
+      "added": 1,
       "status": "ok",
       "error": null
     },
@@ -63,15 +63,15 @@
   "qaLimit": 16,
   "qa": {
     "reviewed": 16,
-    "changedSchools": 0,
-    "findingsApplied": 0,
+    "changedSchools": 1,
+    "findingsApplied": 3,
     "learningAdded": 0,
     "provider": "none"
   },
   "learnedTerms": {
     "termCount": 500,
-    "boostTermCount": 489,
-    "schoolCount": 7381,
+    "boostTermCount": 491,
+    "schoolCount": 7382,
     "rebuilt": true,
     "fromCapture": 500,
     "citationLearning": true
@@ -85,16 +85,17 @@
     "Stream preferred=Lambeth exhausted (remaining=0); no replacement LA with website work.",
     "Stream preferred=Tower Hamlets exhausted (remaining=0); no replacement LA with website work.",
     "Enriched schoolWebsite from GIAS (seed + ready packs).",
-    "Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=0.",
+    "Stream preferred=Hampshire exhausted (remaining=0); advanced to Oxfordshire (remaining=1).",
+    "Stream LA=Oxfordshire index=public/data/packs/oxfordshire/schools-index.json remainingWithWebsite=1.",
     "Stream LA=Lambeth index=public/data/packs/lambeth/schools-index.json remainingWithWebsite=0.",
     "Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.",
     "Running 3 capture streams in parallel (limit 15 each).",
-    "Merged 3 partial sidecar(s) \u2192 7381 records (union size 7381).",
-    "Captured batch (sidecar 7381 \u2192 7381); learned terms now 513.",
-    "No new captures \u2014 website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.",
+    "Merged 3 partial sidecar(s) \u2192 7382 records (union size 7382).",
+    "Captured batch (sidecar 7381 \u2192 7382); learned terms now 511.",
     "Merged sidecar into 3 schools-index file(s).",
     "Selective synth provider=none; learned terms after citation merge=500.",
-    "QA provider=none: reviewed 16, changed 0, learned phrases +0."
+    "QA provider=none: reviewed 16, changed 1, learned phrases +0.",
+    "Re-merged affected schools-index files after QA fixes."
   ],
   "progressPath": "output/qualitative-progress.json"
 }

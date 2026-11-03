@@ -1,25 +1,25 @@
 # Qualitative capture loop
 
-- Ran at: `2026-11-02T16:58:54.437343+00:00`
+- Ran at: `2026-11-03T15:02:10.094698+00:00`
 - Ingest policy / phase: `auto` / `maintenance`
 - Scope: `parallel`
-- LA: `Hampshire, Lambeth, Tower Hamlets`
-- Index: `public/data/schools-index.json`
-- Remaining with website (pre-capture): `0`
+- LA: `Lambeth, Oxfordshire, Tower Hamlets`
+- Index: `public/data/packs/oxfordshire/schools-index.json`
+- Remaining with website (pre-capture): `1`
 - Batch limit (per stream): `15`
-- Sidecar records before → after: `7381` → `7381`
+- Sidecar records before → after: `7381` → `7382`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `0`
+- QA reviewed / changed: `16` / `1`
 - Learned terms: `500`
 - Learned QA phrases: `0`
 - Dry run: `False`
 
 ## Streams
 
-- `Hampshire`: status=ok added=0 remaining=0 index=`public/data/schools-index.json`
 - `Lambeth`: status=ok added=0 remaining=0 index=`public/data/packs/lambeth/schools-index.json`
+- `Oxfordshire`: status=ok added=1 remaining=1 index=`public/data/packs/oxfordshire/schools-index.json`
 - `Tower Hamlets`: status=ok added=0 remaining=0 index=`public/data/packs/tower-hamlets/schools-index.json`
 
 ## Notes
@@ -31,13 +31,14 @@
 - Stream preferred=Lambeth exhausted (remaining=0); no replacement LA with website work.
 - Stream preferred=Tower Hamlets exhausted (remaining=0); no replacement LA with website work.
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=0.
+- Stream preferred=Hampshire exhausted (remaining=0); advanced to Oxfordshire (remaining=1).
+- Stream LA=Oxfordshire index=public/data/packs/oxfordshire/schools-index.json remainingWithWebsite=1.
 - Stream LA=Lambeth index=public/data/packs/lambeth/schools-index.json remainingWithWebsite=0.
 - Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.
 - Running 3 capture streams in parallel (limit 15 each).
-- Merged 3 partial sidecar(s) → 7381 records (union size 7381).
-- Captured batch (sidecar 7381 → 7381); learned terms now 513.
-- No new captures — website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.
+- Merged 3 partial sidecar(s) → 7382 records (union size 7382).
+- Captured batch (sidecar 7381 → 7382); learned terms now 511.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 0, learned phrases +0.
+- QA provider=none: reviewed 16, changed 1, learned phrases +0.
+- Re-merged affected schools-index files after QA fixes.
