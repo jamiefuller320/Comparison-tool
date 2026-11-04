@@ -1,9 +1,9 @@
 {
-  "ranAt": "2026-11-03T15:01:33.332126+00:00",
+  "ranAt": "2026-11-04T15:19:20.194654+00:00",
   "dryRun": false,
   "reviewed": 16,
-  "changedSchools": 1,
-  "findingsApplied": 3,
+  "changedSchools": 0,
+  "findingsApplied": 0,
   "learningAdded": 0,
   "suspects": [
     {
@@ -31,47 +31,6 @@
           "junkClass": "cms_chrome",
           "offendingExcerpts": [
             "Strong publicly visible evidence for community and parental engagement (11 specific items). Listed provision includes Newsletters, Term Dates & INSET Days. 2 items corroborated acr"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "152225",
-      "name": "Aspris Ridgeway School",
-      "score": 9.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "enrichment",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "We provide a supportive, structured programme of careers education and real-world opportunities, tailored to each student\u2019s interests, strengths and aspirations."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Our team is focused on creating a nurturing, supportive, structured and safe environment where pupils feel empowered to grow.",
-            "A place where everyone wants to be every day At Aspris Ridgeway School, we believe every young person deserves the chance to thrive in a safe, supportive, and inspiring environment."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "This data is used immediately to close gaps and ensure learning is challenging, supportive, and meets individual EHCP outcomes."
           ],
           "source": "heuristic"
         }
@@ -366,11 +325,29 @@
           "source": "heuristic"
         }
       ]
+    },
+    {
+      "urn": "101252",
+      "name": "Hampden Way Nursery School",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
+          ],
+          "source": "heuristic"
+        }
+      ]
     }
   ],
   "notes": [
-    "Applied QA fixes to 1 school(s) (3 area finding(s)).",
-    "Learned 0 new junk phrase(s) (store size 900).",
     "Reviewed top 16 suspect(s); provider=none."
   ],
   "provider": "none"
