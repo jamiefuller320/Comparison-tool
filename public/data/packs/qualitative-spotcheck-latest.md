@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-11-03T19:18:55.425896+00:00
+# Qualitative source spot-check — 2026-11-04T19:34:34.492978+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `1350070686`
+- Seed: `2868450126`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `7` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -22,16 +22,14 @@
 - **Millais School** (`126066`, West Sussex) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: drama, enrichment: music
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
-- **St Richard's Church of England Primary School** (`102907`, Richmond upon Thames) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: after school club, enrichment: after school club, enrichment: breakfast club, ethos: christian
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Bursted Wood Primary School** (`140443`, Bexley) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: science club, curriculum: chess, enrichment: music
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our values, our vision
-- **St Mary's Church of England First School, Charminster** (`151330`, Dorset) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
-- **Al-Madani Independent Grammar School** (`145416`, Slough) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission, our vision
+- **Singlegate Primary School** (`102647`, Merton) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: spanish club, enrichment: dance, enrichment: tennis, enrichment: gymnastics
+- **Snaresbrook Prep School** (`102871`, Redbridge) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: drama, enrichment: athletics, enrichment: ashton playing fields for athletics, ethos: kindness
+- **Droxford Junior School** (`152067`, Hampshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — behaviour: Health & Wellbeing»
+- **Hunnyhill Ormiston Academy** (`152114`, Isle of Wight) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
 
 ## Notes
 
