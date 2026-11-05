@@ -31,6 +31,7 @@ const fraunces = Fraunces({
 });
 
 const googleVerification =
+  process.env.NEXT_PUBLIC_GSC_VERIFICATION?.trim() ||
   process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {

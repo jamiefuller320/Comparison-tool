@@ -183,6 +183,11 @@ export const GUIDE_PAGES: GuidePage[] = [
         answer:
           "Yes. The web compare tool is free to use in the browser. Optional account save is for shortlist convenience only.",
       },
+      {
+        question: "Does the site use cookies or tracking?",
+        answer:
+          "Optional cookieless analytics may run on the live site to count aggregate page views and a few anonymous actions (for example printing a visit pack). It does not use advertising cookies, does not build marketing profiles, and does not need a consent banner for that analytics under typical UK PECR treatment. Shortlist save and feedback may use browser storage or your email only when you choose those features.",
+      },
     ],
   },
 ];

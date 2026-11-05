@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
@@ -43,6 +43,7 @@ import {
 } from "@/lib/laPacks";
 import { ProductTour } from "@/components/ProductTour";
 import { FeedbackUsageBridge } from "@/components/FeedbackUsageBridge";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 import { contextHeadlineForParents, suggestAlternatives } from "@/lib/compare";
 import {
   TOUR_DEMO_EVENT,
@@ -191,6 +192,14 @@ export function CompareApp({
   // Drop a warm sheet once it becomes the live chapter.
   useEffect(() => {
     setWarmChapter((prev) => (prev && prev === chapter ? null : prev));
+  }, [chapter]);
+
+  const prevChapterRef = useRef(chapter);
+  useEffect(() => {
+    if (chapter === "side-by-side" && prevChapterRef.current !== "side-by-side") {
+      trackAnalyticsEvent("Compare View");
+    }
+    prevChapterRef.current = chapter;
   }, [chapter]);
 
   const byUrn = useMemo(() => {
@@ -498,6 +507,7 @@ export function CompareApp({
       setSelected((prev) => {
         if (prev.includes(urn)) return prev.filter((u) => u !== urn);
         if (prev.length >= 4) return prev;
+        trackAnalyticsEvent("Shortlist Add");
         return [...prev, urn];
       });
     });
