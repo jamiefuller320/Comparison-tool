@@ -1,6 +1,7 @@
 name: Force school data refresh
 
-# Triggered by "A school is missing" (repository_dispatch) or manually.
+# Manual only. The site records missing-school requests in Supabase and
+# does not call repository_dispatch (that required a token in the public JS).
 # Hard-limited to one successful refresh per UTC day.
 
 on:
@@ -10,8 +11,6 @@ on:
         description: "Missing school name or URN (optional)"
         required: false
         type: string
-  repository_dispatch:
-    types: [missing-school]
 
 permissions:
   contents: write
@@ -71,7 +70,7 @@ jobs:
         if: steps.gate.outputs.allowed == 'true'
         env:
           TODAY: ${{ steps.gate.outputs.today }}
-          SCHOOL: ${{ github.event.client_payload.school || inputs.school || '' }}
+          SCHOOL: ${{ inputs.school || '' }}
         run: |
           python3 - <<'PY'
           import json, os, sys

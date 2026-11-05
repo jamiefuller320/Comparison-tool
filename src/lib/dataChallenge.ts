@@ -1,8 +1,9 @@
 /** Challenge / “report a problem” payload + private intake dispatch. */
 
+import { utcToday } from "@/lib/data";
+import { submitOperationalIntake } from "@/lib/operationalIntake";
 import type { ChallengeBoardId, SourceStamp } from "@/lib/sourceStamp";
 import { formatSourceStamp } from "@/lib/sourceStamp";
-import { utcToday } from "@/lib/data";
 
 export interface DataChallengePayload {
   board: ChallengeBoardId;
@@ -75,8 +76,8 @@ export function serializeChallengeForIntake(
 }
 
 /**
- * Queue a data-quality challenge via repository_dispatch (same token pattern
- * as missing-school). Workflow opens a private intake issue when configured.
+ * Save a data-quality challenge via the Supabase anon insert on product_feedback.
+ * The note is private to maintainers (anon cannot read the table). No GitHub call.
  */
 export async function requestDataChallenge(
   payload: DataChallengePayload,
@@ -101,10 +102,6 @@ export async function requestDataChallenge(
     };
   }
 
-  const token = process.env.NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN;
-  const repo =
-    process.env.NEXT_PUBLIC_GITHUB_REPO || "jamiefuller320/Comparison-tool";
-
   const clientPayload = serializeChallengeForIntake({
     ...payload,
     note: payload.note.trim(),
@@ -114,53 +111,39 @@ export async function requestDataChallenge(
     requestedAt: payload.requestedAt || new Date().toISOString(),
   });
 
-  if (!token) {
-    // Still mark locally so we don't spam when token is missing.
+  const result = await submitOperationalIntake({
+    kind: "data-challenge",
+    note: clientPayload.note,
+    topics: ["data-trust"],
+    surface: "report-problem",
+    email: payload.email,
+    intake: clientPayload,
+    adaptiveQuestion: "Does a published figure, grade, or analysis look wrong?",
+  });
+
+  if (result.ok) {
+    markChallengeSubmittedToday();
+    return {
+      ok: true,
+      status: "queued",
+      detail:
+        "Thanks — your challenge was saved for private review. We use it to check sources and fix mistakes, not as a public complaints board.",
+    };
+  }
+
+  if (result.reason === "missing-env") {
     markChallengeSubmittedToday();
     return {
       ok: true,
       status: "unavailable",
       detail:
-        "Challenge intake is not configured for this deploy. Your note was not sent — ask the maintainer to set MISSING_SCHOOL_DISPATCH_TOKEN and the data-challenge workflow.",
+        "Challenge intake is not configured for this deploy. Your note was not sent.",
     };
   }
 
-  try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
-      method: "POST",
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${token}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        event_type: "data-challenge",
-        client_payload: clientPayload,
-      }),
-    });
-
-    if (res.status === 204 || res.ok) {
-      markChallengeSubmittedToday();
-      return {
-        ok: true,
-        status: "queued",
-        detail:
-          "Thanks — your challenge was queued for private review. We use it to check sources and fix mistakes, not as a public complaints board.",
-      };
-    }
-
-    const body = await res.text();
-    return {
-      ok: false,
-      status: "error",
-      detail: `Could not queue challenge (${res.status}). ${body.slice(0, 180)}`,
-    };
-  } catch {
-    return {
-      ok: false,
-      status: "error",
-      detail: "Network error while sending the challenge. Try again later.",
-    };
-  }
+  return {
+    ok: false,
+    status: "error",
+    detail: result.detail || "Could not send the challenge. Try again later.",
+  };
 }

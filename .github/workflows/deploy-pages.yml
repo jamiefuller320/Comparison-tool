@@ -77,10 +77,10 @@ jobs:
           # GITHUB_PAGES_PROJECT_PATH unset so assets are rooted at /, not
           # /Comparison-tool/.
           GITHUB_PAGES: "true"
-          # Optional fine-grained PAT (Actions: write) so "A school is missing"
-          # can queue repository_dispatch. Workflow still enforces 1 refresh/day.
-          NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN: ${{ secrets.MISSING_SCHOOL_DISPATCH_TOKEN }}
-          NEXT_PUBLIC_GITHUB_REPO: ${{ github.repository }}
+          # Do not pass a GitHub token into this build. Missing-school,
+          # area-coverage, data-challenge, and product feedback use the
+          # Supabase anon insert (NEXT_PUBLIC_SUPABASE_* below). A
+          # NEXT_PUBLIC_* dispatch token would ship in the public JS bundle.
           # Optional Supabase magic-link accounts (Save shortlist across devices).
           # Without these, Save shortlist still works as a browser-local email save.
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}

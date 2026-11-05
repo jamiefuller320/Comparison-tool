@@ -1,6 +1,6 @@
 # Qualitative capture loop
 
-- Ran at: `2026-11-04T15:19:23.749073+00:00`
+- Ran at: `2026-11-05T15:20:34.604493+00:00`
 - Ingest policy / phase: `auto` / `maintenance`
 - Scope: `parallel`
 - LA: `Hampshire, Lambeth, Tower Hamlets`
