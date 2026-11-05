@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from qualitative_ingest_policy import INGEST_POLICY_PRESETS  # noqa: E402
 
 
 def main() -> int:
@@ -52,7 +54,9 @@ def main() -> int:
         int(s.get("remainingWithWebsite") or 0) == 0 for s in streams
     )
     assert advanced or exhausted_fallback, (las, notes[:500])
-    assert payload.get("limit") == 60
+    phase = payload.get("ingestPhase") or "se_tail"
+    expected_limit = INGEST_POLICY_PRESETS[phase]["limit"]
+    assert payload.get("limit") == expected_limit, (phase, payload.get("limit"))
     digest = ROOT / "public" / "data" / "packs" / "qualitative-loop-latest.json"
     assert digest.is_file()
     print("OK qualitative-loop parallel dry-run")

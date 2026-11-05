@@ -489,10 +489,13 @@ function printViaIframe(pack: HTMLElement, noteHeightPx: number): void {
   window.setTimeout(triggerPrint, 250);
 }
 
+import { trackAnalyticsEvent } from "@/lib/analytics";
+
 export function printVisitPackElement(
   pack: HTMLElement,
   noteHeightPx: number,
 ): void {
+  trackAnalyticsEvent("Visit Pack Print");
   const resolved = resolveVisitPackElement(pack);
   if (isAppleMobilePrintHost()) {
     printViaMainWindow(resolved, noteHeightPx);
