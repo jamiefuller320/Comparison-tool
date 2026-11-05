@@ -75,5 +75,6 @@ jobs:
             echo "No GIAS lifecycle changes"
           else
             git commit -m "GIAS lifecycle sync: closed schools, successors, and new openings"
-            bash scripts/ci-rebase-push.sh origin main
+            git pull --rebase origin main
+            git push
           fi
