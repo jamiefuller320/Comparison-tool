@@ -50,8 +50,6 @@ const KS4_PRINT_KEYS = [
   "engMath94Percent",
   "engMath95Percent",
   "anyPassPercent",
-  "ebaccEng94Percent",
-  "ebaccMat94Percent",
   "ks5ApsPerEntry",
   "ofstedOverall",
 ] as const;
@@ -175,7 +173,6 @@ const KS4_SCORE_KEYS = [
 const KS4_PCT_KEYS = [
   { key: "engMath94Percent", label: "Eng & maths 4+" },
   { key: "engMath95Percent", label: "Eng & maths 5+" },
-  { key: "ebaccEnteringPercent", label: "EBacc entry" },
 ] as const;
 
 function numericField(

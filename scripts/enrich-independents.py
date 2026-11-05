@@ -33,6 +33,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from govuk_mi_dates import ofsted_csv_sort_key  # noqa: E402
 from sector_benches import ks4_benchmark_block  # noqa: E402
 from seed_scope import (  # noqa: E402
     filter_schools_to_la,
@@ -728,36 +729,6 @@ def harvest_gias_directory(
         flush=True,
     )
     return by_urn
-
-
-_MONTHS = {
-    "january": 1,
-    "february": 2,
-    "march": 3,
-    "april": 4,
-    "may": 5,
-    "june": 6,
-    "july": 7,
-    "august": 8,
-    "september": 9,
-    "october": 10,
-    "november": 11,
-    "december": 12,
-}
-
-
-def ofsted_csv_sort_key(url: str) -> tuple[int, int, int]:
-    m = re.search(
-        r"as_at_(\d{1,2})_([A-Za-z]+)_(\d{4})\.csv",
-        url,
-        flags=re.IGNORECASE,
-    )
-    if not m:
-        return (0, 0, 0)
-    day = int(m.group(1))
-    month = _MONTHS.get(m.group(2).lower(), 0)
-    year = int(m.group(3))
-    return (year, month, day)
 
 
 def latest_ofsted_csv_url() -> str:

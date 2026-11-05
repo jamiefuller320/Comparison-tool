@@ -9,11 +9,6 @@ export type IndependentMetricKey =
   | "engMath94Percent"
   | "engMath95Percent"
   | "anyPassPercent"
-  | "ebaccEng94Percent"
-  | "ebaccMat94Percent"
-  | "ebaccEnteringPercent"
-  | "ebacc94Percent"
-  | "ebaccAps"
   | "ks5ApsPerEntry"
   | "ks5Best3Aps"
   | "ks5ValueAdded"
@@ -46,7 +41,7 @@ function engMathBlankHint(school: SchoolRecord): string | null {
     cleared.includes("engMath94Percent") ||
     cleared.includes("engMath95Percent")
   ) {
-    return "Cleared as a nil return — see EBacc English/maths pillars";
+    return "Cleared as a nil return — not published in the latest KS4 tables";
   }
   return null;
 }
@@ -68,7 +63,7 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     group: "outcomes",
     unit: "pct",
     parentHint:
-      "Combined GCSE English & maths 4+. Nil/IGCSE returns are shown as —; where needed this uses the lower of the EBacc English and maths pillars.",
+      "Combined GCSE English & maths 4+. Nil/IGCSE returns are shown as —.",
     get: (s) => s.engMath94Percent,
     blankHint: (s) => engMathBlankHint(s) || ks4OutcomeBlankHint(s),
   },
@@ -89,48 +84,6 @@ export const INDEPENDENT_METRICS: IndependentMetric[] = [
     parentHint: "Share achieving any pass at GCSE or equivalent.",
     get: (s) => s.anyPassPercent,
     blankHint: ks4OutcomeBlankHint,
-  },
-  {
-    key: "ebaccEng94Percent",
-    label: "EBacc English 4+",
-    group: "pathways",
-    unit: "pct",
-    parentHint:
-      "English pillar at grade 4+ — useful when the combined English & maths GCSE measure is a nil return.",
-    get: (s) => s.ebaccEng94Percent,
-  },
-  {
-    key: "ebaccMat94Percent",
-    label: "EBacc maths 4+",
-    group: "pathways",
-    unit: "pct",
-    parentHint:
-      "Maths pillar at grade 4+ — often still published when combined English & maths is missing.",
-    get: (s) => s.ebaccMat94Percent,
-  },
-  {
-    key: "ebaccEnteringPercent",
-    label: "Entering EBacc",
-    group: "pathways",
-    unit: "pct",
-    parentHint: "Share entered for the full English Baccalaureate subject combination.",
-    get: (s) => s.ebaccEnteringPercent,
-  },
-  {
-    key: "ebacc94Percent",
-    label: "EBacc grade 4+",
-    group: "pathways",
-    unit: "pct",
-    parentHint: "Share achieving grades 4+ across the full EBacc (blank if nobody entered).",
-    get: (s) => s.ebacc94Percent,
-  },
-  {
-    key: "ebaccAps",
-    label: "EBacc average point score",
-    group: "pathways",
-    unit: "score",
-    parentHint: "Average points across the EBacc pillars.",
-    get: (s) => s.ebaccAps,
   },
   {
     key: "ks5ApsPerEntry",
