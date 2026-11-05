@@ -21,6 +21,7 @@ import {
   type FeedbackSurface,
 } from "@/lib/feedbackSurface";
 import { BRAND_NAME } from "@/lib/brand";
+import { trackAnalyticsEvent } from "@/lib/analytics";
 
 export type ProductFeedbackFormProps = {
   /** Sheet (card) or dedicated /feedback page — same fields either way. */
@@ -116,6 +117,7 @@ export function ProductFeedbackForm({
       setTone(result.ok ? "ok" : "err");
       setMessage(result.detail);
       if (result.ok) {
+        trackAnalyticsEvent("Feedback Submit");
         setNote("");
         setTopics([]);
         onSubmitted?.();
