@@ -133,9 +133,8 @@ export function ReportProblemButton({
             />
           </label>
           <p className="footnote" style={{ margin: 0 }}>
-            Prefer omitting email unless the maintainer has configured a private
-            intake repo. Do not include children’s names or other sensitive
-            personal data.
+            Email is optional and stored only so a maintainer can reply. Do not
+            include children’s names or other sensitive personal data.
           </p>
           <div className="report-problem-actions">
             <button

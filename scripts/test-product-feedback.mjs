@@ -194,6 +194,28 @@ async function main() {
   });
   assert.equal(implement.action, "implement");
 
+  const operational = classifyFeedback({
+    id: "3",
+    created_at: "",
+    campaign_id: "c",
+    app_version: "",
+    trigger: "missing-school",
+    sentiment: "freeform",
+    topics: ["coverage"],
+    note: "Missing setting: Example Primary",
+    contact_email: null,
+    adaptive_question: "",
+    page_url: "/",
+    surface: "missing-school",
+    usage: { intake: { kind: "missing-school", school: "Example Primary" } },
+    status: "open",
+    proposed_action: null,
+    triage_note: "",
+    github_issue_url: null,
+  });
+  assert.equal(operational.action, "needs_clarification");
+  assert.match(operational.note, /Deferred operational intake/);
+
   // Without browser storage, auto-prompt should stay closed (tour / storage gates).
   const decision = shouldAutoPromptFeedback(compared, { pageLoadSeconds: 300 });
   assert.equal(decision.open, false);

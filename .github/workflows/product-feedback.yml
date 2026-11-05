@@ -1,12 +1,11 @@
 name: Product feedback intake
 
-# Soft-launch / usage-aware feedback from the live site.
+# Legacy manual intake. The live site saves product feedback with the
+# Supabase anon insert and does not call repository_dispatch.
 # Prefer CHALLENGE_INTAKE_REPO (private) so notes/emails stay off public issues.
 # Falls back to this repo with label product-feedback.
 
 on:
-  repository_dispatch:
-    types: [product-feedback]
   workflow_dispatch:
     inputs:
       dry_run:

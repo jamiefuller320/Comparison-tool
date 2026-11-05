@@ -27,11 +27,41 @@ def test_scan_workflows_clean_on_repo() -> None:
     assert report.ok
 
 
-def test_deploy_pages_warns_on_client_dispatch_token() -> None:
+def test_deploy_pages_does_not_bake_dispatch_token() -> None:
     text = (WORKFLOWS / "deploy-pages.yml").read_text(encoding="utf-8")
     findings = scan_workflow_text("deploy-pages.yml", text)
-    assert any(item.rule == "next_public_sensitive_in_deploy" for item in findings)
+    assert not any(item.rule == "next_public_sensitive_in_deploy" for item in findings)
+    assert "MISSING_SCHOOL_DISPATCH_TOKEN" not in text
+    assert "NEXT_PUBLIC_GITHUB_REPO" not in text
     assert not any(item.severity == "error" for item in findings)
+    for path in WORKFLOWS.glob("*.yml"):
+        workflow = path.read_text(encoding="utf-8")
+        assert "MISSING_SCHOOL_DISPATCH_TOKEN" not in workflow, path.name
+        assert "NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN" not in workflow, path.name
+    src = ROOT / "src"
+    hits = [
+        str(path.relative_to(ROOT))
+        for path in src.rglob("*")
+        if path.suffix in {".ts", ".tsx", ".js", ".mjs"}
+        and "NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN" in path.read_text(encoding="utf-8")
+    ]
+    assert hits == [], hits
+
+
+def test_detects_next_public_dispatch_token() -> None:
+    baked = """
+name: Deploy
+on: push
+jobs:
+  build:
+    steps:
+      - name: Build
+        env:
+          NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN: ${{ secrets.MISSING_SCHOOL_DISPATCH_TOKEN }}
+        run: npm run build:pages
+"""
+    findings = scan_workflow_text("deploy-pages.yml", baked)
+    assert any(item.rule == "next_public_sensitive_in_deploy" for item in findings)
 
 
 def test_detects_untrusted_expr_in_run_block() -> None:
@@ -159,7 +189,8 @@ def test_qualitative_loop_commit_uses_env_for_dry_run() -> None:
 def main() -> int:
     tests = [
         test_scan_workflows_clean_on_repo,
-        test_deploy_pages_warns_on_client_dispatch_token,
+        test_deploy_pages_does_not_bake_dispatch_token,
+        test_detects_next_public_dispatch_token,
         test_detects_untrusted_expr_in_run_block,
         test_detects_dispatch_input_in_run_block,
         test_dispatch_input_via_env_is_allowed,

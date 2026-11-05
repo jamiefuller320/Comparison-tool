@@ -1,7 +1,8 @@
 name: Build on-demand LA pack
 
-# Queued by "Request another area" (repository_dispatch la-pack) or manually.
-# Writes under public/data/packs/{slug}/ — does not overwrite Hampshire root.
+# Manual only. "Request area coverage" saves a product_feedback row; the
+# browser does not call repository_dispatch. Writes under
+# public/data/packs/{slug}/ — does not overwrite Hampshire root.
 
 on:
   workflow_dispatch:
@@ -14,8 +15,6 @@ on:
         description: "Optional sample size for smoke builds (0 = full LA)"
         required: false
         default: "0"
-  repository_dispatch:
-    types: [la-pack]
 
 permissions:
   contents: write
@@ -35,14 +34,12 @@ jobs:
       - name: Resolve LA input
         id: la
         env:
-          DISPATCH_LA: ${{ github.event.client_payload.localAuthority }}
           INPUT_LA: ${{ inputs.local_authority }}
-          DISPATCH_SAMPLE: ${{ github.event.client_payload.sample }}
           INPUT_SAMPLE: ${{ inputs.sample }}
         run: |
           set -euo pipefail
-          LA="${DISPATCH_LA:-$INPUT_LA}"
-          SAMPLE="${DISPATCH_SAMPLE:-${INPUT_SAMPLE:-0}}"
+          LA="${INPUT_LA}"
+          SAMPLE="${INPUT_SAMPLE:-0}"
           if [ -z "$LA" ]; then
             echo "local_authority is required" >&2
             exit 1
