@@ -30,6 +30,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from govuk_mi_dates import as_at_label_from_url, ofsted_csv_sort_key  # noqa: E402
 from seed_scope import (  # noqa: E402
     SEED_LOCAL_AUTHORITY,
     is_local_authority,
@@ -60,21 +61,6 @@ OFSTED_GRADE_LABELS = {
 }
 
 ALLOWED_TYPES = {"Childminder", "Childcare on domestic premises"}
-
-_MONTHS = {
-    "january": 1,
-    "february": 2,
-    "march": 3,
-    "april": 4,
-    "may": 5,
-    "june": 6,
-    "july": 7,
-    "august": 8,
-    "september": 9,
-    "october": 10,
-    "november": 11,
-    "december": 12,
-}
 
 
 def get_bytes(url: str, retries: int = 4) -> bytes:
@@ -132,26 +118,8 @@ def grade_label(code: str | None) -> str | None:
     return text
 
 
-def ofsted_csv_sort_key(url: str) -> tuple[int, int, int]:
-    m = re.search(
-        r"as_at_(\d{1,2})_([A-Za-z]+)_(\d{4})\.csv",
-        url,
-        flags=re.IGNORECASE,
-    )
-    if not m:
-        return (0, 0, 0)
-    return (
-        int(m.group(3)),
-        _MONTHS.get(m.group(2).lower(), 0),
-        int(m.group(1)),
-    )
-
-
 def as_at_label(url: str) -> str:
-    m = re.search(r"as_at_(\d{1,2})_([A-Za-z]+)_(\d{4})", url, re.I)
-    if not m:
-        return "unknown"
-    return f"{m.group(1)} {m.group(2)} {m.group(3)}"
+    return as_at_label_from_url(url)
 
 
 def latest_consented_csv_url() -> tuple[str, str]:

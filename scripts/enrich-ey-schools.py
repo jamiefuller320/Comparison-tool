@@ -27,6 +27,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from govuk_mi_dates import as_at_label_from_url, ofsted_csv_sort_key  # noqa: E402
 from seed_scope import (  # noqa: E402
     SEED_LOCAL_AUTHORITY,
     is_local_authority,
@@ -50,22 +51,6 @@ OFSTED_GRADE_LABELS = {
     "3": "Requires improvement",
     "4": "Inadequate",
 }
-
-_MONTHS = {
-    "january": 1,
-    "february": 2,
-    "march": 3,
-    "april": 4,
-    "may": 5,
-    "june": 6,
-    "july": 7,
-    "august": 8,
-    "september": 9,
-    "october": 10,
-    "november": 11,
-    "december": 12,
-}
-
 
 def get_bytes(url: str, retries: int = 4) -> bytes:
     last: Exception | None = None
@@ -124,21 +109,6 @@ def parse_ungraded_outcome(text: str | None) -> str | None:
     return None
 
 
-def ofsted_csv_sort_key(url: str) -> tuple[int, int, int]:
-    m = re.search(
-        r"as_at_(\d{1,2})_([A-Za-z]+)_(\d{4})\.csv",
-        url,
-        flags=re.IGNORECASE,
-    )
-    if not m:
-        return (0, 0, 0)
-    return (
-        int(m.group(3)),
-        _MONTHS.get(m.group(2).lower(), 0),
-        int(m.group(1)),
-    )
-
-
 def latest_state_ofsted_csv_url() -> tuple[str, str]:
     html = get_bytes(OFSTED_PAGE).decode("utf-8", "replace")
     matches = re.findall(
@@ -151,12 +121,7 @@ def latest_state_ofsted_csv_url() -> tuple[str, str]:
     unique = list(dict.fromkeys(matches))
     unique.sort(key=ofsted_csv_sort_key)
     chosen = unique[-1]
-    as_at_m = re.search(r"as_at_(\d{1,2})_([A-Za-z]+)_(\d{4})", chosen, re.I)
-    as_at = (
-        f"{as_at_m.group(1)} {as_at_m.group(2)} {as_at_m.group(3)}"
-        if as_at_m
-        else "unknown"
-    )
+    as_at = as_at_label_from_url(chosen)
     print(f"  State Ofsted CSV: {chosen}", flush=True)
     return chosen, as_at
 
