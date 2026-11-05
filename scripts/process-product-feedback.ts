@@ -164,6 +164,31 @@ export function classifyFeedback(row: FeedbackRow): {
   action: ProposedAction;
   note: string;
 } {
+  // Missing-school, area coverage, and data challenges are saved for a person
+  // to read. Leave them open — do not auto-ignore a short school name or
+  // open a public issue.
+  const usageIntake =
+    row.usage && typeof row.usage === "object"
+      ? (row.usage as Record<string, unknown>).intake
+      : null;
+  const intakeKind =
+    usageIntake && typeof usageIntake === "object"
+      ? String((usageIntake as Record<string, unknown>).kind || "")
+      : "";
+  if (
+    row.trigger === "missing-school" ||
+    row.trigger === "area-coverage" ||
+    row.trigger === "data-challenge" ||
+    intakeKind === "missing-school" ||
+    intakeKind === "area-coverage" ||
+    intakeKind === "data-challenge"
+  ) {
+    return {
+      action: "needs_clarification",
+      note: "Deferred operational intake (missing school, area coverage, or data challenge). Review in product_feedback; the site does not dispatch GitHub.",
+    };
+  }
+
   // Summary thumbs / website-scan flags are handled by
   // process-user-improvement-flags.ts (quality path) — skip generic UX triage.
   const usageFlag =
@@ -401,11 +426,13 @@ async function cmdRoute(args: string[]): Promise<void> {
 
   for (const row of rows) {
     const { action, note } = classifyFeedback(row);
-    // Leave summary-vote / website-scan rows open for the quality processor.
-    if (
-      note.includes("Deferred to process-user-improvement-flags")
-    ) {
+    // Leave summary-vote / website-scan and operational intake rows open.
+    if (note.includes("Deferred to process-user-improvement-flags")) {
       console.log(`- ${row.id} → skip (improvement-flag queue)`);
+      continue;
+    }
+    if (note.includes("Deferred operational intake")) {
+      console.log(`- ${row.id} → skip (operational intake)`);
       continue;
     }
     console.log(`- ${row.id} → ${action}: ${note}`);

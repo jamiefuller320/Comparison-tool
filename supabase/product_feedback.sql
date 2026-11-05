@@ -21,6 +21,12 @@
 --     reasonCode, reasonLabel, reasonDetail
 --   }
 -- Processed by scripts/process-user-improvement-flags.ts (not free-text UX triage).
+--
+-- Missing-school, area-coverage, and data-challenge requests reuse this table
+-- (anon INSERT only — no client GitHub token):
+--   trigger = 'missing-school' | 'area-coverage' | 'data-challenge'
+--   usage.intake = { kind, ...string fields }  (no email; email is contact_email)
+-- Left open by scripts/process-product-feedback.ts for a person to review.
 
 -- ---------------------------------------------------------------------------
 -- product_feedback

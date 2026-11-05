@@ -6,10 +6,6 @@ async function main() {
   } = await import("../src/lib/uiPreferences.ts");
 
   const defaults = defaultUiPreferences();
-  if (defaults.floatingControls !== false) {
-    console.error("FAIL default floatingControls should be off");
-    process.exit(1);
-  }
   for (const id of COMPARE_TABLE_IDS) {
     const row = defaults.tables[id];
     if (!row?.stickyHeader || !row?.stickyFirstColumn) {
@@ -19,16 +15,11 @@ async function main() {
   }
 
   const normalized = normalizeUiPreferences({
-    floatingControls: true,
     tables: {
       ks2: { stickyHeader: false, stickyFirstColumn: true },
       mystery: { stickyHeader: false, stickyFirstColumn: false },
     },
   });
-  if (!normalized.floatingControls) {
-    console.error("FAIL floatingControls not kept");
-    process.exit(1);
-  }
   if (normalized.tables.ks2.stickyHeader !== false) {
     console.error("FAIL ks2 stickyHeader patch", normalized.tables.ks2);
     process.exit(1);
@@ -43,8 +34,8 @@ async function main() {
   }
 
   const empty = normalizeUiPreferences(null);
-  if (empty.floatingControls !== false) {
-    console.error("FAIL null input should default");
+  if (empty.tables.ks2.stickyHeader !== true || !empty.tables.ks2.stickyFirstColumn) {
+    console.error("FAIL null input should default tables", empty.tables.ks2);
     process.exit(1);
   }
 

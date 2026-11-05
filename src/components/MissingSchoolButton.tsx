@@ -110,8 +110,10 @@ export function MissingSchoolButton({
           <p>
             Search first — many infants and secondaries appear once the right
             stages and range are selected. If a setting in the covered area is
-            truly absent, “Update directory” queues a refresh (limited to{" "}
-            <strong>one per day</strong>).
+            truly absent, “Update directory” saves a request for review and
+            reloads the latest published directory (limited to{" "}
+            <strong>one per day</strong>). It does not start a rebuild from
+            the browser.
           </p>
           <div className="postcode-row">
             <input
@@ -157,9 +159,9 @@ export function MissingSchoolButton({
 
           <p className="footnote" style={{ marginTop: "1rem" }}>
             Need somewhere outside {COVERAGE_REGION_LABEL}? Request coverage for
-            another local authority (exact DfE label). When the refresh finishes,
-            those schools appear on the map and in search automatically. Limited
-            to one area request per day.
+            another local authority (exact DfE label). The request is saved for
+            a maintainer; new areas are not built from the browser. Limited to
+            one area request per day.
           </p>
           <div className="postcode-row">
             <input

@@ -1,0 +1,64 @@
+name: PR CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install school-capture test deps
+        run: pip install -e "./tools/school-capture[dev]"
+
+      - name: Typecheck
+        run: npm run lint
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**', 'next.config.*', 'tailwind.config.*', 'postcss.config.*') }}
+          restore-keys: |
+            next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
+      - name: Build static site (Pages parity)
+        env:
+          GITHUB_PAGES: "true"
+        run: npm run build:pages
+
+      - name: Run test scripts
+        run: |
+          set -euo pipefail
+          mapfile -t tests < <(node -pe "
+            Object.keys(require('./package.json').scripts)
+              .filter((k) => k.startsWith('test:'))
+              .sort()
+              .join('\n')
+          ")
+          for script in "${tests[@]}"; do
+            echo "::group::$script"
+            npm run -s "$script"
+            echo "::endgroup::"
+          done

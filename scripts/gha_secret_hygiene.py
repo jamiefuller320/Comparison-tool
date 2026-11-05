@@ -220,9 +220,9 @@ def scan_workflow_text(path: str, text: str) -> list[HygieneFinding]:
                     path=path,
                     rule="next_public_sensitive_in_deploy",
                     message=(
-                        f"{match.group(0)} is embedded in the static site bundle — "
-                        "any visitor can read it. Use a fine-grained PAT with minimal "
-                        "repository_dispatch scope and rotate if exposed."
+                        f"{match.group(0)} would be embedded in the static site bundle — "
+                        "any visitor could read it. Do not pass a GitHub token as "
+                        "NEXT_PUBLIC_*. Route intake through Supabase instead."
                     ),
                 )
             )
