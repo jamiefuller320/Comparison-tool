@@ -55,8 +55,6 @@ import { useCompareView } from "@/components/CompareViewControls";
 const CHART_KEYS = [
   "engMath94Percent",
   "anyPassPercent",
-  "ebaccMat94Percent",
-  "ebaccEng94Percent",
 ] as const;
 
 function formatValue(
@@ -153,10 +151,9 @@ export function IndependentComparisonBoard({
     );
   }
 
-  const groups = ["outcomes", "pathways", "ks5", "inspection", "cohort"] as const;
+  const groups = ["outcomes", "ks5", "inspection", "cohort"] as const;
   const groupTitles = {
     outcomes: "Published GCSE outcomes",
-    pathways: "Subject pathways (incl. alternatives when combined basics are nil)",
     ks5: "16–18 / A-level outcomes",
     inspection: "Inspection",
     cohort: "Cohort context",
@@ -220,7 +217,7 @@ export function IndependentComparisonBoard({
           {school.ks4Period ? <span>KS4 {school.ks4Period}</span> : null}
           {school.ks5Period ? <span>16–18 {school.ks5Period}</span> : null}
           {school.engMath94IsPillarFallback ? (
-            <span>English &amp; maths 4+ from EBacc pillars</span>
+            <span>English &amp; maths 4+ estimated from published pillars</span>
           ) : school.engMathMeasureUnavailable ? (
             <span>Combined English &amp; maths GCSE measure not published</span>
           ) : null}

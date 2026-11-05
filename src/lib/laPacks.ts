@@ -431,12 +431,7 @@ export function recomputeSectorKs4Benches(
       att8Average: mean(att8),
       engMath94Percent: mean(collectMetric(schools, sector, "engMath94Percent")),
       engMath95Percent: mean(collectMetric(schools, sector, "engMath95Percent")),
-      ebaccEnteringPercent: mean(
-        collectMetric(schools, sector, "ebaccEnteringPercent"),
-      ),
       anyPassPercent: mean(collectMetric(schools, sector, "anyPassPercent")),
-      ebaccEng94Percent: mean(collectMetric(schools, sector, "ebaccEng94Percent")),
-      ebaccMat94Percent: mean(collectMetric(schools, sector, "ebaccMat94Percent")),
       ks5ApsPerEntry: mean(ks5),
       ks5Best3Aps: mean(collectMetric(schools, sector, "ks5Best3Aps")),
       period,
