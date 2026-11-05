@@ -4,6 +4,26 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Bot loops push with GITHUB_TOKEN, which does not fire branch push workflows.
+  # Redeploy main after a successful loop run on main (same repo only).
+  workflow_run:
+    workflows:
+      - Build on-demand LA pack
+      - Force school data refresh
+      - Human-gated review digest
+      - Pack quality loop
+      - Process product feedback
+      - Qualitative capture loop
+      - Qualitative quality loop
+      - Qualitative source spot-check loop
+      - Refresh Hampshire early years
+      - Refresh school data
+      - SEO coverage loop
+    types: [completed]
+    branches: [main]
+  schedule:
+    # Safety net if a loop run is skipped or workflow_run misfires.
+    - cron: "0 21 * * *"
 
 permissions:
   contents: read
@@ -19,16 +39,28 @@ concurrency:
 jobs:
   build:
     # Manual runs must target main; never publish an old feature-branch checkout.
-    if: github.event_name == 'push' || github.ref == 'refs/heads/main'
+    if: >-
+      github.event_name == 'push' ||
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout deploy tip
         uses: actions/checkout@v4
         with:
           # Push events deploy the exact SHA that triggered the run.
-          # workflow_dispatch always rebuilds the tip of main, even if the
-          # Actions UI was opened from another branch.
-          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.sha }}
+          # Other triggers always rebuild the tip of main (loop pushes do not
+          # set github.sha to the new commit on workflow_run).
+          ref: >-
+            ${{
+              (github.event_name == 'workflow_dispatch' ||
+               github.event_name == 'workflow_run' ||
+               github.event_name == 'schedule') && 'main' || github.sha
+            }}
       - name: Confirm deploy commit
         run: |
           echo "Deploying $(git rev-parse --short HEAD) from $(git rev-parse --abbrev-ref HEAD || echo detached)"
