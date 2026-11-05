@@ -18,20 +18,18 @@ Same monitoring pattern as [value_investor](https://github.com/jamiefuller320/va
 | `${{ steps.*.outputs.* }}` inside `run:` when output carries dispatch/input data | Shell injection / commit message poisoning | Pass via `env:` after validation |
 | Logging full API keys | Key leak via Actions logs | Log presence only (`keyPresent: true`), never values |
 
-## Known client-side exposure (warning, not blocked)
+## Client bundle
 
-`deploy-pages.yml` bakes `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN` into the static
-bundle so the live site can queue `repository_dispatch` events without a backend.
+`deploy-pages.yml` must not pass a GitHub token into the static build. Missing-school,
+area-coverage, data-challenge, and product feedback use the Supabase anon insert on
+`product_feedback`. The hygiene scanner warns if `deploy-pages.yml` references
+`NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN` (or another `NEXT_PUBLIC_*` secret,
+password, or private key).
 
-This is intentional but **visible to every visitor**:
-
-- Use a **fine-grained PAT** scoped only to `repository_dispatch` on this repo
-- Workflows enforce rate limits (one force-refresh / LA pack per UTC day)
-- Rotate the PAT if abuse is suspected
-- Longer term: proxy dispatches through a serverless endpoint with server-side auth
-
-`NEXT_PUBLIC_SUPABASE_ANON_KEY` is also public by design (Supabase row-level security
-must enforce access).
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` is public by design (Supabase row-level security
+must enforce access). Delete the Actions secret `MISSING_SCHOOL_DISPATCH_TOKEN`
+and revoke the personal access token that was stored in it. Do not rotate that
+token back into a `NEXT_PUBLIC_*` variable.
 
 ## Which secrets workflows use
 
@@ -39,7 +37,7 @@ must enforce access).
 |--------|-----------|-------|
 | `CURSOR_API_KEY` / `OPENAI_API_KEY` | `qualitative-loop`, `qualitative-quality-loop` | Schedule / trusted dispatch only; never on untrusted refs |
 | *(none)* | `qualitative-spotcheck-loop` | Live HTML fetch; digests + safe chrome/PDF auto-learn into learned store; may `gh workflow run` quality loop (needs `actions: write`); no model secrets |
-| `MISSING_SCHOOL_DISPATCH_TOKEN` | `deploy-pages` → client bundle | Fine-grained PAT; minimal scope |
+| `MISSING_SCHOOL_DISPATCH_TOKEN` | *(removed)* | Was baked into the public JS as `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN`. Delete the Actions secret and revoke the PAT. Not read by any workflow. |
 | `CHALLENGE_INTAKE_TOKEN` | Intake workflows | Prefer private intake repo |
 | `NEXT_PUBLIC_SUPABASE_*` | `deploy-pages`, `supabase-keep-alive`, `product-feedback-process` | Anon key is public; URL is not secret |
 | `SUPABASE_SERVICE_ROLE_KEY` | `product-feedback-process` only | **Never** `NEXT_PUBLIC_`; server/Actions only. **GitHub Actions secrets are per-repo** — this name on Comparison-tool does not collide with Home_learning |
@@ -86,5 +84,5 @@ npm run test:gha-secret-hygiene
 
 ## Related
 
-- [README.md](../../README.md) — secret setup for dispatch token, Supabase, intake repo
+- [README.md](../../README.md) — Supabase intake and the manual challenge workflow
 - value_investor [docs/ops/gha-secret-hygiene.md](https://github.com/jamiefuller320/value_investor/blob/main/docs/ops/gha-secret-hygiene.md)

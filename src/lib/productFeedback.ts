@@ -1,6 +1,7 @@
 /**
- * Product feedback — usage-aware soft prompt + Supabase queue (GitHub fallback).
- * Parallel to data-challenge, but for UX / soft-launch learning loops.
+ * Product feedback — usage-aware soft prompt + Supabase anon insert.
+ * Missing-school, area-coverage, and data-challenge requests use the same
+ * table (see usage.intake). The client never calls the GitHub API.
  */
 
 import { APP_VERSION, FEEDBACK_CAMPAIGN_ID } from "@/lib/buildMeta";
@@ -20,7 +21,13 @@ export type FeedbackTrigger =
   | "after-print"
   | "page"
   /** Thumbs vote on a qualitative / website-evidence summary cell. */
-  | "summary-vote";
+  | "summary-vote"
+  /** “A school is missing” — recorded for review, not a live rebuild. */
+  | "missing-school"
+  /** Request coverage for a local authority outside the current packs. */
+  | "area-coverage"
+  /** “Report a problem” on a published figure or grade. */
+  | "data-challenge";
 
 export type FeedbackSentiment =
   | "helpful"
@@ -73,6 +80,14 @@ export interface FeedbackUsage {
     reasonCode?: string | null;
     reasonLabel?: string | null;
     reasonDetail?: string | null;
+  };
+  /**
+   * Missing-school, area-coverage, or data-challenge request.
+   * Stored inside usage jsonb. Email stays in contact_email, not here.
+   */
+  intake?: {
+    kind: "missing-school" | "area-coverage" | "data-challenge";
+    [key: string]: string;
   };
 }
 
@@ -476,66 +491,6 @@ export function serializeFeedbackForIntake(
   };
 }
 
-async function dispatchProductFeedbackGithub(
-  payload: ProductFeedbackPayload,
-): Promise<{
-  ok: boolean;
-  status: "queued" | "unavailable" | "error";
-  detail: string;
-}> {
-  const token = process.env.NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN;
-  const repo =
-    process.env.NEXT_PUBLIC_GITHUB_REPO || "jamiefuller320/Comparison-tool";
-  const clientPayload = serializeFeedbackForIntake(payload);
-
-  if (!token) {
-    return {
-      ok: false,
-      status: "unavailable",
-      detail:
-        "GitHub feedback intake is not configured for this deploy (MISSING_SCHOOL_DISPATCH_TOKEN).",
-    };
-  }
-
-  try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
-      method: "POST",
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${token}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        event_type: "product-feedback",
-        client_payload: clientPayload,
-      }),
-    });
-
-    if (res.status === 204 || res.ok) {
-      return {
-        ok: true,
-        status: "queued",
-        detail:
-          "Thanks — your feedback was queued for the soft-launch improvement cycle. Optional email is kept off the public issue body.",
-      };
-    }
-
-    const body = await res.text();
-    return {
-      ok: false,
-      status: "error",
-      detail: `Could not send feedback (${res.status}). ${body.slice(0, 180)}`,
-    };
-  } catch {
-    return {
-      ok: false,
-      status: "error",
-      detail: "Network error while sending feedback. Try again later.",
-    };
-  }
-}
-
 export async function requestProductFeedback(
   input: Omit<
     ProductFeedbackPayload,
@@ -550,7 +505,7 @@ export async function requestProductFeedback(
   ok: boolean;
   status: "queued" | "unavailable" | "error";
   detail: string;
-  transport?: "supabase" | "github";
+  transport?: "supabase";
 }> {
   if (input.sentiment === "skipped" && !input.note.trim()) {
     markFeedbackDismissed();
@@ -599,7 +554,6 @@ export async function requestProductFeedback(
     requestedAt: input.requestedAt || new Date().toISOString(),
   };
 
-  // Primary: Supabase anon INSERT. Fallback: GitHub repository_dispatch.
   const supabaseResult = await submitProductFeedbackToSupabase(payload);
   if (supabaseResult.ok) {
     markFeedbackResponded();
@@ -612,41 +566,20 @@ export async function requestProductFeedback(
     };
   }
 
-  const githubResult = await dispatchProductFeedbackGithub(payload);
-  if (githubResult.ok) {
-    markFeedbackResponded();
-    // Maintainer-facing hint: GitHub success means no product_feedback row.
-    const fallbackHint =
-      supabaseResult.reason === "missing-env"
-        ? " (Queued via GitHub — Supabase env missing on this deploy, so nothing appears in product_feedback.)"
-        : " (Queued via GitHub fallback after Supabase insert failed — check the browser console / Network tab for the REST error, and confirm Table Editor is the School Compass project.)";
-    return {
-      ...githubResult,
-      transport: "github",
-      detail: `${githubResult.detail}${fallbackHint}`,
-    };
-  }
-
-  if (
-    supabaseResult.reason === "missing-env" &&
-    githubResult.status === "unavailable"
-  ) {
+  if (supabaseResult.reason === "missing-env") {
     markFeedbackResponded();
     return {
       ok: true,
       status: "unavailable",
       detail:
-        "Feedback intake is not configured for this deploy. Your note was kept locally as dismissed for this campaign — ask the maintainer to set NEXT_PUBLIC_SUPABASE_* (preferred) or MISSING_SCHOOL_DISPATCH_TOKEN.",
+        "Feedback intake is not configured for this deploy. Your note was kept locally as dismissed for this campaign — ask the maintainer to set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
     };
   }
 
   return {
     ok: false,
     status: "error",
-    detail:
-      supabaseResult.detail ||
-      githubResult.detail ||
-      "Could not send feedback. Try again later.",
+    detail: supabaseResult.detail || "Could not send feedback. Try again later.",
   };
 }
 

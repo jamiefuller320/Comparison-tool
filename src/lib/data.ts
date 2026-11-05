@@ -1,9 +1,9 @@
+import { fetchWithRetry } from "@/lib/resilientFetch";
 import type {
   ChildmindersIndex,
   EyProvidersIndex,
   SchoolsIndex,
 } from "@/lib/types";
-import { fetchWithRetry } from "@/lib/resilientFetch";
 
 /** Resolve data URLs for both local and GitHub Pages basePath. */
 export function dataUrl(path: string): string {
@@ -205,9 +205,8 @@ export function markLocalForceRefreshToday(): void {
 }
 
 /**
- * Ask GitHub Actions to rebuild the school index (repository_dispatch).
- * Requires NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN at build time
- * (fine-grained PAT with Actions write on this repo). Workflow enforces 1/day.
+ * Record a missing setting for maintainer review (Supabase product_feedback).
+ * Does not start a directory rebuild from the browser. One request per UTC day.
  */
 export async function requestForceRefresh(school: string): Promise<{
   ok: boolean;
@@ -233,61 +232,42 @@ export async function requestForceRefresh(school: string): Promise<{
     };
   }
 
-  const token = process.env.NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN;
-  const repo =
-    process.env.NEXT_PUBLIC_GITHUB_REPO || "jamiefuller320/Comparison-tool";
+  const name = school.trim().slice(0, 200);
+  const { submitOperationalIntake } = await import("@/lib/operationalIntake");
+  const result = await submitOperationalIntake({
+    kind: "missing-school",
+    note: `Missing setting: ${name}`,
+    topics: ["coverage"],
+    surface: "missing-school",
+    intake: { school: name },
+    adaptiveQuestion: "Is a setting missing from the published directory?",
+  });
 
-  if (!token) {
+  if (result.ok) {
+    markLocalForceRefreshToday();
+    return {
+      ok: true,
+      status: "queued",
+      detail:
+        "Thanks — we saved this missing-setting request for review and will reload the latest published directory. A rebuild is not started from the browser.",
+    };
+  }
+
+  if (result.reason === "missing-env") {
     markLocalForceRefreshToday();
     return {
       ok: true,
       status: "unavailable",
       detail:
-        "Refresh token is not configured for this deploy. Reloaded the latest published index instead — ask the maintainer to set MISSING_SCHOOL_DISPATCH_TOKEN for full rebuilds.",
+        "Request intake is not configured for this deploy. Reloaded the latest published directory instead. A rebuild is not started from the browser.",
     };
   }
 
-  try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
-      method: "POST",
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${token}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        event_type: "missing-school",
-        client_payload: {
-          school: school.slice(0, 200),
-          requestedAt: new Date().toISOString(),
-        },
-      }),
-    });
-
-    if (res.status === 204 || res.ok) {
-      markLocalForceRefreshToday();
-      return {
-        ok: true,
-        status: "queued",
-        detail:
-          "Refresh queued. The directory usually updates within a few minutes — reload this page shortly.",
-      };
-    }
-
-    const body = await res.text();
-    return {
-      ok: false,
-      status: "error",
-      detail: `Could not queue refresh (${res.status}). ${body.slice(0, 180)}`,
-    };
-  } catch {
-    return {
-      ok: false,
-      status: "error",
-      detail: "Network error while requesting a refresh. Try again later.",
-    };
-  }
+  return {
+    ok: false,
+    status: "error",
+    detail: result.detail || "Could not save that request. Try again later.",
+  };
 }
 
 const LA_PACK_LOCAL_KEY = "schoolside.laPackRequestDate";
@@ -303,15 +283,15 @@ export function markLocalLaPackRequestToday(): void {
 }
 
 /**
- * Queue an on-demand LA pack build (repository_dispatch `la-pack`).
- * Reuses the missing-school dispatch token. Workflow enforces one pack/day.
+ * Record a request for another local authority (Supabase product_feedback).
+ * Does not start a pack build from the browser. One request per UTC day.
  */
 export async function requestLaPack(localAuthority: string): Promise<{
   ok: boolean;
   status: "queued" | "limited" | "unavailable" | "error";
   detail: string;
 }> {
-  const la = localAuthority.trim().replace(/\s+/g, " ");
+  const la = localAuthority.trim().replace(/\s+/g, " ").slice(0, 120);
   if (!la) {
     return {
       ok: false,
@@ -328,58 +308,38 @@ export async function requestLaPack(localAuthority: string): Promise<{
     };
   }
 
-  const token = process.env.NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN;
-  const repo =
-    process.env.NEXT_PUBLIC_GITHUB_REPO || "jamiefuller320/Comparison-tool";
+  const { submitOperationalIntake } = await import("@/lib/operationalIntake");
+  const result = await submitOperationalIntake({
+    kind: "area-coverage",
+    note: `Request area coverage: ${la}`,
+    topics: ["coverage"],
+    surface: "area-coverage",
+    intake: { localAuthority: la },
+    adaptiveQuestion: "Which local authority should be added to the directory?",
+  });
 
-  if (!token) {
+  if (result.ok) {
+    markLocalLaPackRequestToday();
+    return {
+      ok: true,
+      status: "queued",
+      detail: `Thanks — we saved a coverage request for ${la}. New areas are added by a maintainer, not started from the browser.`,
+    };
+  }
+
+  if (result.reason === "missing-env") {
     markLocalLaPackRequestToday();
     return {
       ok: true,
       status: "unavailable",
       detail:
-        "Area coverage requests are not configured for this deploy. Ask the maintainer to set MISSING_SCHOOL_DISPATCH_TOKEN.",
+        "Area coverage requests are not configured for this deploy. Your request was not sent.",
     };
   }
 
-  try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
-      method: "POST",
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${token}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        event_type: "la-pack",
-        client_payload: {
-          localAuthority: la.slice(0, 120),
-          requestedAt: new Date().toISOString(),
-        },
-      }),
-    });
-
-    if (res.status === 204 || res.ok) {
-      markLocalLaPackRequestToday();
-      return {
-        ok: true,
-        status: "queued",
-        detail: `Queued coverage for ${la}. When the refresh finishes and deploys, those schools appear on the map and in search automatically.`,
-      };
-    }
-
-    const body = await res.text();
-    return {
-      ok: false,
-      status: "error",
-      detail: `Could not queue area coverage (${res.status}). ${body.slice(0, 180)}`,
-    };
-  } catch {
-    return {
-      ok: false,
-      status: "error",
-      detail: "Network error while requesting area coverage. Try again later.",
-    };
-  }
+  return {
+    ok: false,
+    status: "error",
+    detail: result.detail || "Could not save that area request. Try again later.",
+  };
 }

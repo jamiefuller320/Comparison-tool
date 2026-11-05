@@ -1,12 +1,11 @@
 name: Data challenge intake
 
-# Private review queue for "Report a problem" challenges from the live site.
+# Legacy manual intake. The live site now saves "Report a problem" notes with
+# the Supabase anon insert and does not call repository_dispatch.
 # Prefer CHALLENGE_INTAKE_REPO (private) so emails and notes stay off a public
 # issues list. Falls back to this repo with label data-challenge.
 
 on:
-  repository_dispatch:
-    types: [data-challenge]
   workflow_dispatch:
     inputs:
       dry_run:

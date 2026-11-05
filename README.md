@@ -31,7 +31,7 @@ Constants: `src/lib/seedScope.ts` and `scripts/seed_scope.py` (`SEED_LOCAL_AUTHO
 
 Scheduled refresh uses the Hampshire maintained harvest. A **twice-weekly pack quality loop** (`npm run loop:pack-quality`, workflow `pack-quality-loop.yml`) assesses ready packs, polishes the weakest indie/ISI gaps under caps, and commits a digest. The daily **qualitative coverage loop** (`npm run loop:qualitative`) GIAS-enriches websites, then runs **parallel streams** under **`--ingest-policy auto`** (SE tail → London borough wave → maintenance: phase-tuned capture + stale refresh + light QA); when a stream’s website pool is exhausted it **advances** to the ready pack with the largest remaining pool. Post–core-region direction is **maintain the corpus first**, then **contiguous ring expansion** toward national search (capacity permitting) — see **Qualitative website ingest roadmap** in `DEFERRED_IDEAS.md`. A separate daily **qualitative quality loop** (`npm run loop:qualitative-quality`, workflow `qualitative-quality-loop.yml`) analyses the sidecar and runs a **full apply when the learned-QA library changed significantly** (or weekly max-age / `--force`) — unchanged learning days stay analyse-only. A daily **source spot-check loop** (`npm run loop:qualitative-spotcheck`, workflow `qualitative-spotcheck-loop.yml`) runs **after** quality apply, samples ~7 published shards (hard-capped; does not grow with corpus size), digests chrome / PDF-junk / overclaim fidelity vs live sites, and **auto-integrates safe chrome/PDF/nav phrases** into `learned-qa-patterns.json` (re-dispatching quality apply); ethos underclaim stays human-gated. `npm run harvest` remains the **full England scaffold** for capability / escape hatch.
 
-**On-demand area packs (backend collation):** outside Hampshire, parents can **Request area coverage** (exact DfE LA label) from **A school is missing**. That queues `repository_dispatch` `la-pack` → `scripts/build-la-pack.py`, which writes under `public/data/packs/{slug}/` without overwriting the Hampshire root. Pack builds include **GIAS coverage, KS4/KS5 outcomes, LA phonics benches, Ofsted day care / school EY enrich, consented childminders, and LA EYFSP benches**. Ready packs in `public/data/packs/manifest.json` are **merged geo-lazily** into the map and search when the home postcode’s LA (plus neighbours) is needed, or when a shared `?schools=` link references pack URNs (`packs/urn-lookup.json`) — the client no longer downloads every South East pack on first paint. Packs remain the unit for deciding which LAs to harvest. **Qualitative website captures** ship as per-URN shards under `public/data/qualitative/` (not embedded in `schools-index.json`); shortlists load them on demand (`npm run publish:qualitative`). Further depth and an interest-weighted ingest→assess→improve loop are tracked in `DEFERRED_IDEAS.md`.
+**On-demand area packs (backend collation):** outside Hampshire, parents can **Request area coverage** (exact DfE LA label) from **A school is missing**. That saves a Supabase `product_feedback` row for a maintainer (anon insert; the browser does not call GitHub). Pack builds are run manually with `scripts/build-la-pack.py` (workflow `build-la-pack.yml`), which writes under `public/data/packs/{slug}/` without overwriting the Hampshire root. Pack builds include **GIAS coverage, KS4/KS5 outcomes, LA phonics benches, Ofsted day care / school EY enrich, consented childminders, and LA EYFSP benches**. Ready packs in `public/data/packs/manifest.json` are **merged geo-lazily** into the map and search when the home postcode’s LA (plus neighbours) is needed, or when a shared `?schools=` link references pack URNs (`packs/urn-lookup.json`) — the client no longer downloads every South East pack on first paint. Packs remain the unit for deciding which LAs to harvest. **Qualitative website captures** ship as per-URN shards under `public/data/qualitative/` (not embedded in `schools-index.json`); shortlists load them on demand (`npm run publish:qualitative`). Further depth and an interest-weighted ingest→assess→improve loop are tracked in `DEFERRED_IDEAS.md`.
 
 **Deferred ideas:** see [`DEFERRED_IDEAS.md`](./DEFERRED_IDEAS.md) for chat-mined backlog, partial work, and explicitly parked ideas (so we don’t re-litigate closed paths without new data).
 
@@ -197,21 +197,17 @@ Free-tier projects pause after ~7 days of low database activity. The **Keep Supa
 
 ## Force refresh (missing school)
 
-The site button **A school is missing** searches the live index first, then can queue a full rebuild.
+The site button **A school is missing** searches the live index first. If the setting is still absent, it saves a `product_feedback` row (`trigger = missing-school`) and reloads the published directory. It does not call GitHub and does not start a rebuild.
 
-1. Create a fine-grained GitHub PAT with **Actions: Read and write** on this repository
-2. Add repo secret `MISSING_SCHOOL_DISPATCH_TOKEN` with that PAT
-3. Redeploy Pages (so `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN` is baked into the static build)
-
-The `Force school data refresh` workflow still enforces **one successful refresh per UTC day** even if the token is reused.
+Maintainers run **Force school data refresh** by hand (`workflow_dispatch`). That workflow still enforces **one successful refresh per UTC day**. Do not put a GitHub token in `NEXT_PUBLIC_*` or in the Pages build env.
 
 ## Report a problem (data challenges)
 
-Comparison boards show a **source stamp** (period / as-at / dataset + official deep link) and a **Report a problem** control. Challenges queue a private review item via `repository_dispatch` event `data-challenge` (same baked `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN` as missing-school).
+Comparison boards show a **source stamp** (period / as-at / dataset + official deep link) and a **Report a problem** control. Challenges are an anon insert into Supabase `product_feedback` (`trigger = data-challenge`, detail in `usage.intake`). Optional email is `contact_email`. Anon cannot read the table.
 
 Boards also surface **known data-quality gaps** as small chips beside the stamp (missing Ofsted as-at, unpublished KS2/KS4 figures with reasons such as special/AP or no Year 11 cohort, nil-cleared English & maths, ISI without Ofsted grades, ungraded Ofsted, missing phonics LA rows). Those flags are automated honesty about the pack — not the same as a user challenge.
 
-Optional private intake (recommended so notes/emails stay off public issues):
+The manual `data-challenge` workflow (not the website) can still open an issue. Optional private intake so those notes stay off public issues:
 
 1. Create a **private** intake repository
 2. Add secrets on this repo: `CHALLENGE_INTAKE_REPO` (`owner/name`) and `CHALLENGE_INTAKE_TOKEN` (PAT that can open issues there)
@@ -223,9 +219,7 @@ Without those secrets, the workflow opens an issue on this repository with label
 
 A usage-aware **Feedback** prompt (header / footer / `/feedback/`; auto after deep engagement, visit-pack print, or return from an exit) explains that School Compass is under development and asks a question tailored to what the visitor did (or didn’t do).
 
-**Primary queue:** browser `POST` → Supabase `product_feedback` (anon INSERT, RLS). Run `supabase/product_feedback.sql` once in the **School Compass** Supabase project (not home_learning). Confirm rows in that project’s Table Editor.
-
-**Fallback:** if Supabase env is missing or the insert fails, the client still queues GitHub `repository_dispatch` `product-feedback` (same dispatch token as data challenges) into issues with usage table + labels + machine JSON.
+**Queue:** browser `POST` → Supabase `product_feedback` (anon INSERT, RLS). Run `supabase/product_feedback.sql` once in the **School Compass** Supabase project (not home_learning). Confirm rows in that project’s Table Editor. If Supabase env is missing, the note stays on this browser only. There is no GitHub fallback from the client.
 
 **Secrets:**
 
