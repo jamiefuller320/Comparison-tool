@@ -194,7 +194,11 @@ export function CompareApp({
   }, [chapter]);
 
   const byUrn = useMemo(() => {
-    const map = new Map(index.schools.map((s) => [s.urn, s]));
+    const map = new Map<string, SchoolRecord>();
+    for (const school of index.schools) {
+      if (school.closed) continue;
+      map.set(school.urn, school);
+    }
     for (const provider of eyIndex?.providers ?? []) {
       map.set(provider.urn, provider);
     }
@@ -685,6 +689,7 @@ export function CompareApp({
         ? []
         : index.schools.filter(
             (s) =>
+              !s.closed &&
               schoolMatchesPhases(s, stages, stageMatch) &&
               schoolMatchesSectors(s, sectors) &&
               passesComparableKs4Filter(s, {
@@ -729,6 +734,7 @@ export function CompareApp({
       ...(eyIndex?.providers ?? []),
       ...(childmindersIndex?.providers ?? []),
     ]) {
+      if (school.closed) continue;
       if (seen.has(school.urn)) continue;
       seen.add(school.urn);
       combined.push(school);

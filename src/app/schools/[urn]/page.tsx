@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { JsonLd } from "@/components/JsonLd";
+import { SchoolClosedRedirect } from "@/components/SchoolClosedRedirect";
 import { areaPath, areasIndexPath, formatCount } from "@/lib/areas";
+import {
+  getGiasSuccessorRedirect,
+  listGiasSuccessorRedirects,
+} from "@/lib/giasRedirects";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { guidePath } from "@/lib/guides";
 import { laSlug } from "@/lib/laPacks";
@@ -30,7 +35,14 @@ type PageProps = {
 };
 
 export function generateStaticParams() {
-  return listSeoSchools().map((school) => ({ urn: school.urn }));
+  const params = listSeoSchools().map((school) => ({ urn: school.urn }));
+  const seen = new Set(params.map((row) => row.urn));
+  for (const redirect of listGiasSuccessorRedirects()) {
+    if (seen.has(redirect.urn)) continue;
+    seen.add(redirect.urn);
+    params.push({ urn: redirect.urn });
+  }
+  return params;
 }
 
 export async function generateMetadata({
@@ -38,7 +50,21 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { urn } = await params;
   const school = getSeoSchool(urn);
-  if (!school) return {};
+  if (!school) {
+    const redirect = getGiasSuccessorRedirect(urn);
+    if (!redirect) return { robots: { index: false, follow: false } };
+    const title = `${redirect.name} has closed`;
+    return {
+      title,
+      description: redirect.successorOnSite
+        ? `${redirect.name} has closed. Continue to ${redirect.successorName}.`
+        : `${redirect.name} has closed.`,
+      robots: { index: false, follow: true },
+      alternates: redirect.successorOnSite
+        ? { canonical: schoolPath(redirect.successorUrn) }
+        : undefined,
+    };
+  }
 
   const title = schoolPageTitle(school);
   const description = schoolPageDescription(school);
@@ -81,7 +107,11 @@ function metaLine(school: SeoSchoolSummary): string {
 
 export default async function SchoolLandingPage({ params }: PageProps) {
   const { urn } = await params;
+  const redirect = getGiasSuccessorRedirect(urn);
   const school = getSeoSchool(urn);
+  if (!school && redirect) {
+    return <SchoolClosedRedirect row={redirect} />;
+  }
   if (!school) notFound();
 
   const town = getSeoTownForSchool(school);

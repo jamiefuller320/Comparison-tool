@@ -51,17 +51,46 @@ def _head_name(row: dict[str, str]) -> str | None:
     return name or None
 
 
+# Whole-field GIAS nulls. Keep aligned with scripts/gias_address.py.
+_GIAS_NULL_TOKENS = frozenset(
+    {
+        "z",
+        "na",
+        "n/a",
+        "n.a",
+        "n.a.",
+        "none",
+        "null",
+        "nil",
+        "-",
+        "—",
+        ".",
+        "not applicable",
+        "not recorded",
+        "does not apply",
+        "not available",
+    }
+)
+
+
+def _address_part(value: str | None) -> str:
+    text = (value or "").strip()
+    if not text or text.lower() in _GIAS_NULL_TOKENS:
+        return ""
+    return text
+
+
 def _postal_address(row: dict[str, str]) -> tuple[str | None, str | None, str | None]:
     parts = [
-        (row.get("Street") or "").strip(),
-        (row.get("Locality") or "").strip(),
-        (row.get("Address3") or "").strip(),
-        (row.get("Town") or "").strip(),
-        (row.get("County (name)") or row.get("County") or "").strip(),
+        _address_part(row.get("Street")),
+        _address_part(row.get("Locality")),
+        _address_part(row.get("Address3")),
+        _address_part(row.get("Town")),
+        _address_part(row.get("County (name)") or row.get("County")),
     ]
-    address = ", ".join(p for p in parts if p)
-    town = (row.get("Town") or "").strip() or None
-    postcode = (row.get("Postcode") or "").strip() or None
+    address = ", ".join(part for part in parts if part)
+    town = _address_part(row.get("Town")) or None
+    postcode = _address_part(row.get("Postcode")) or None
     return address or None, town, postcode
 
 

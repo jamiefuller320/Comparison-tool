@@ -109,6 +109,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from gias_address import is_gias_null_token, strip_gias_address, strip_gias_token  # noqa: E402
 from seed_scope import (  # noqa: E402
     SEED_LOCAL_AUTHORITY,
     filter_schools_to_la,
@@ -201,7 +202,7 @@ def parse_metric(value: str | None) -> float | None:
 def postcode_from_address(address: str | None) -> str | None:
     if not address:
         return None
-    parts = [p.strip() for p in address.split(",") if p.strip() and p.strip().lower() != "z"]
+    parts = [p.strip() for p in address.split(",") if p.strip() and not is_gias_null_token(p)]
     if not parts:
         return None
     tail = parts[-1]
@@ -215,7 +216,7 @@ def postcode_from_address(address: str | None) -> str | None:
 def town_from_address(address: str | None) -> str | None:
     if not address:
         return None
-    parts = [p.strip() for p in address.split(",") if p.strip() and p.strip().lower() != "z"]
+    parts = [p.strip() for p in address.split(",") if p.strip() and not is_gias_null_token(p)]
     if len(parts) >= 2:
         # penultimate before postcode
         return parts[-2]
@@ -305,10 +306,10 @@ def harvest_profiles(
             "locationId": base.get("locationId") or sch_id,
             "localAuthority": la_map.get(la_id or "", ""),
             "laId": la_id,
-            "address": address if address and address.lower() != "z" else None,
+            "address": strip_gias_address(address),
             "postcode": postcode_from_address(address),
             "town": town_from_address(address),
-            "telephone": decoded.get("telnum") if decoded.get("telnum") not in {None, "z"} else None,
+            "telephone": strip_gias_token(decoded.get("telnum")),
             "ageRange": decoded.get("agerange"),
             "schoolType": nftype,
             "schoolTypeLabel": NFTYPE_LABELS.get(nftype, nftype or None),
