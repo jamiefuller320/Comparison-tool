@@ -243,6 +243,12 @@ export interface SchoolRecord extends SchoolMetrics, IndependentMetrics {
   sector?: "state" | "independent" | null;
   religiousDenomination?: string | null;
   closed?: boolean;
+  /** GIAS CloseDate (YYYY-MM-DD) when the establishment is closed. */
+  closeDate?: string | null;
+  /** GIAS ReasonEstablishmentClosed label when the establishment is closed. */
+  closeReason?: string | null;
+  /** GIAS successor URN when the closed school was replaced. */
+  successorUrn?: string | null;
   pupilsAged11?: number | null;
   eligiblePupils?: number | null;
   disadvantagedPercent?: number | null;
