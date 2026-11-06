@@ -52,5 +52,6 @@ jobs:
             echo "No data changes"
           else
             git commit -m "Refresh Hampshire maintained school index"
+            git pull --rebase origin main
             git push
           fi
