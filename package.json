@@ -44,6 +44,8 @@
     "test:pack-quality-loop": "python3 scripts/test-pack-quality-loop.py",
     "report:seo-coverage": "python3 scripts/report-seo-coverage.py",
     "loop:seo-coverage": "python3 scripts/run-seo-coverage-loop.py",
+    "sync:gias-lifecycle": "python3 scripts/sync-gias-lifecycle.py",
+    "test:gias-lifecycle": "python3 scripts/test-gias-lifecycle.py && npx --yes tsx scripts/test-gias-address.mjs",
     "generate:aeo-manifests": "npx --yes tsx scripts/generate-aeo-manifests.mjs",
     "test:seo-coverage-loop": "python3 scripts/test-seo-coverage-loop.py",
     "test:seo-schools": "npx --yes tsx scripts/test-seo-schools.mjs",

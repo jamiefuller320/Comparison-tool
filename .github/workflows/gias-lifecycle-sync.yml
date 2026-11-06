@@ -1,0 +1,80 @@
+name: GIAS lifecycle sync
+
+# Weekly refresh of pack indexes from the GIAS edubase extract.
+# Marks closed URNs, writes successor redirect stubs, adds open schools in
+# local authorities that already have a pack, and strips placeholder addresses.
+# Tuesday 06:15 UTC — after Monday pack-quality (06:00) and before the Friday
+# 07:00 SEO coverage loop, so freed cap slots are visible there.
+# Does not deploy Pages. See deploy-pages.yml for publishing.
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Digest only (do not rewrite indexes)
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    - cron: "15 6 * * 2"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gias-lifecycle-sync
+  cancel-in-progress: false
+
+jobs:
+  gias-lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Sync GIAS lifecycle
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+          ARGS=()
+          if [ "$DRY_RUN" = "true" ]; then
+            ARGS+=(--dry-run)
+          fi
+          python3 scripts/sync-gias-lifecycle.py "${ARGS[@]}"
+
+      - name: Commit lifecycle sync
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/data/schools-index.json \
+            public/data/schools-directory.json \
+            public/data/harvest-summary.json \
+            public/data/seo-coverage.json \
+            public/data/seo-urns.json \
+            public/data/aeo-readiness.json \
+            public/data/gias-successor-redirects.json \
+            public/data/gias-lifecycle-latest.json \
+            public/data/gias-lifecycle-latest.md \
+            public/llms.txt \
+            public/data/packs \
+            src/data/harvest-summary.json
+          if git diff --staged --quiet; then
+            echo "No GIAS lifecycle changes"
+          else
+            git commit -m "GIAS lifecycle sync: closed schools, successors, and new openings"
+            git pull --rebase origin main
+            git push
+          fi

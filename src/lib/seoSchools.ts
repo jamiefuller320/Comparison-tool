@@ -9,6 +9,7 @@ import { existsSync, readFileSync } from "fs";
 import { join } from "path";
 import { areaPath, formatCount } from "@/lib/areas";
 import { BRAND_HOME_URL } from "@/lib/brand";
+import { stripGiasAddress, stripGiasToken } from "@/lib/giasAddress";
 import {
   SEED_LOCAL_AUTHORITY,
   laSlug,
@@ -149,9 +150,9 @@ function toSummary(
     name,
     localAuthority: school.localAuthority?.trim() || SEED_LOCAL_AUTHORITY,
     areaSlug,
-    town: school.town?.trim() || null,
-    postcode: school.postcode?.trim() || null,
-    address: school.address?.trim() || null,
+    town: stripGiasToken(school.town),
+    postcode: stripGiasToken(school.postcode),
+    address: stripGiasAddress(school.address),
     phase: school.phase?.trim() || null,
     phases: school.phases ?? null,
     sector: school.sector ?? null,
@@ -610,11 +611,13 @@ export function schoolJsonLd(
     addressCountry: "GB",
     addressRegion: school.localAuthority,
   };
-  if (school.address) address.streetAddress = school.address;
+  const streetAddress = stripGiasAddress(school.address);
+  if (streetAddress) address.streetAddress = streetAddress;
   // Prefer borough over GIAS "London" so structured data matches SERP titles.
   const locality = schoolPlaceLabel(school);
   if (locality) address.addressLocality = locality;
-  if (school.postcode) address.postalCode = school.postcode;
+  const postalCode = stripGiasToken(school.postcode);
+  if (postalCode) address.postalCode = postalCode;
 
   const townRow = getSeoTownForSchool(school);
   const townLanding = townRow

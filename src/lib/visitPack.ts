@@ -1,3 +1,4 @@
+import { stripGiasAddress, stripGiasToken } from "@/lib/giasAddress";
 import type { ContactEntry, SchoolRecord } from "@/lib/types";
 import {
   CHILDMINDER_VETTING_CHECKLIST,
@@ -278,8 +279,9 @@ export function contactLinesForRecord(record: SchoolRecord): VisitPackContactLin
   add("senco", "SENCO", senco, pickContact(contacts, "senco", "name"));
 
   for (const entry of contacts) {
-    if (entry.role === "office" && entry.address) {
-      add("office", "Address", entry.address, entry);
+    const officeAddress = stripGiasAddress(entry.address);
+    if (entry.role === "office" && officeAddress) {
+      add("office", "Address", officeAddress, entry);
       break;
     }
   }
@@ -293,7 +295,11 @@ export function toVisitContactRow(
 ): VisitContactRow | null {
   const kind = forceKind ?? visitPackKind(record);
   if (!kind) return null;
-  const addressLine = [record.address, record.town, record.postcode]
+  const addressLine = [
+    stripGiasAddress(record.address),
+    stripGiasToken(record.town),
+    stripGiasToken(record.postcode),
+  ]
     .filter(Boolean)
     .join(", ");
   const contactLines = contactLinesForRecord(record);

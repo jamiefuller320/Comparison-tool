@@ -16,6 +16,7 @@ async function main() {
     listSeoSchoolsInTown,
     listSeoTowns,
     readSeoCoverage,
+    schoolJsonLd,
     schoolPageDescription,
     schoolPageTitle,
     schoolPath,
@@ -221,6 +222,38 @@ async function main() {
       console.error("FAIL short school title missing compare intent", st);
       process.exit(1);
     }
+  }
+
+  const { addressHasGiasPlaceholder, stripGiasAddress } = await import(
+    "../src/lib/giasAddress.ts"
+  );
+  const zed = schools.find((s) => addressHasGiasPlaceholder(s.address));
+  if (zed) {
+    console.error("FAIL GIAS placeholder still on a landing", zed.urn, zed.address);
+    process.exit(1);
+  }
+  const dirtyLd = schoolJsonLd({
+    ...sample,
+    address: "Belle Vue Road, z, z, Aldershot",
+  });
+  const street = dirtyLd["@graph"].find((node) => node["@type"] === "School")
+    ?.address?.streetAddress;
+  if (street !== "Belle Vue Road, Aldershot" || stripGiasAddress(sample.address) !== sample.address) {
+    console.error("FAIL JSON-LD placeholder strip", street);
+    process.exit(1);
+  }
+  const redirectFile = JSON.parse(
+    readFileSync(join(root, "public/data/gias-successor-redirects.json"), "utf8"),
+  );
+  const seoUrns = new Set(schools.map((s) => s.urn));
+  const leaked = (redirectFile.redirects || []).filter((row) => seoUrns.has(row.urn));
+  if (leaked.length) {
+    console.error("FAIL closed successor still in SEO set", leaked.slice(0, 5));
+    process.exit(1);
+  }
+  if (coverage.pageBudget.maxSchoolPages !== 5000) {
+    console.error("FAIL school page cap", coverage.pageBudget);
+    process.exit(1);
   }
 
   console.log(
