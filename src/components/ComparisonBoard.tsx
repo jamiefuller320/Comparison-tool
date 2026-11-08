@@ -42,6 +42,7 @@ import { SecondaryContextPane } from "@/components/SecondaryContextPane";
 import { AdmissionsPlacesRows } from "@/components/AdmissionsPlacesRows";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
+import { InspectionAsAtNotes } from "@/components/SourceStampLine";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
 import { gapsForKs2Board, schoolGaps } from "@/lib/dataGaps";
 import {
@@ -91,12 +92,18 @@ export function ComparisonBoard({
   schools,
   england,
   sourceStamp,
+  ofstedStateAsAt,
+  ofstedIndependentAsAt,
+  giasAsAt,
   contextSlot,
   summarySlot,
 }: {
   schools: SchoolRecord[];
   england: BenchmarkSet;
   sourceStamp?: SourceStamp | null;
+  ofstedStateAsAt?: string | null;
+  ofstedIndependentAsAt?: string | null;
+  giasAsAt?: string | null;
   contextSlot: ReactNode;
   summarySlot?: ReactNode;
 }) {
@@ -356,6 +363,11 @@ export function ComparisonBoard({
             {sourceStamp ? (
               <BoardProvenance stamp={sourceStamp} board="ks2" gaps={dataGaps} />
             ) : null}
+            <InspectionAsAtNotes
+              ofstedStateAsAt={ofstedStateAsAt}
+              ofstedIndependentAsAt={ofstedIndependentAsAt}
+              giasAsAt={giasAsAt}
+            />
           </div>
         </>
       }

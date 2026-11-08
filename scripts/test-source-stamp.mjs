@@ -1,6 +1,7 @@
 async function main() {
   const {
     formatSourceStamp,
+    inspectionAsAtNotes,
     ks2TablesStamp,
     ks4TablesStamp,
     ofstedStateStamp,
@@ -21,6 +22,25 @@ async function main() {
   });
   if (ks2.id !== "ks2-tables" || !ks2.period || !ks2.deepLink) {
     console.error("FAIL ks2 stamp", ks2);
+    process.exit(1);
+  }
+
+  const asAtNotes = inspectionAsAtNotes({
+    ofstedStateAsAt: "30 Sep 2026",
+    ofstedIndependentAsAt: "31 July 2026",
+    giasAsAt: "5 November 2026",
+  });
+  if (
+    asAtNotes.length !== 3 ||
+    !asAtNotes[0].includes("State-school Ofsted MI as at 30 Sep 2026") ||
+    !asAtNotes[1].includes("Independent Ofsted MI as at 31 July 2026") ||
+    !asAtNotes[2].includes("GIAS as at 5 November 2026")
+  ) {
+    console.error("FAIL inspectionAsAtNotes", asAtNotes);
+    process.exit(1);
+  }
+  if (inspectionAsAtNotes({}).length !== 0) {
+    console.error("FAIL empty inspectionAsAtNotes");
     process.exit(1);
   }
 

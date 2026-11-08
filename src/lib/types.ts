@@ -456,6 +456,8 @@ export interface SchoolsIndex {
     ks5Period?: string;
     ofstedAsAt?: string;
     ofstedStateAsAt?: string;
+    giasAsAt?: string;
+    dataRefreshedAt?: string;
     phonicsPeriod?: string;
     phonicsLaCount?: number;
     phonicsEnriched?: boolean;

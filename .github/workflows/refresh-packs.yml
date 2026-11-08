@@ -1,0 +1,88 @@
+name: Refresh LA pack data
+
+# Rolling monthly rota for pack Ofsted MI, GIAS, and KS2/KS4.
+# Daily 04:15 UTC: the two ready packs with the oldest dataRefreshedAt get a
+# full depth refresh (about four weeks for the ready set). The same run applies
+# the latest state-school Ofsted MI to every ready pack and the Hampshire
+# root, so every LA pack shares one MI as-at date on the compare boards.
+# Reuses harvest-schools.py, enrich-secondaries.py, enrich-school-websites.py,
+# enrich-independents.py, and enrich-ey-schools.py (gov.uk month parser).
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Packs to depth-refresh (ignored when all is true)"
+        required: false
+        default: "2"
+      all:
+        description: "Depth-refresh every ready pack and Hampshire"
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    - cron: "15 4 * * *"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: refresh-packs
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install data enrichment deps
+        run: pip install -r requirements-data.txt
+
+      - name: Refresh pack sources
+        env:
+          LIMIT: ${{ github.event.inputs.limit || '2' }}
+          REFRESH_ALL: ${{ github.event.inputs.all || 'false' }}
+        run: |
+          set -euo pipefail
+          if [ "$REFRESH_ALL" = "true" ]; then
+            python3 scripts/refresh-pack-data.py --all
+          else
+            python3 scripts/refresh-pack-data.py --limit "$LIMIT"
+          fi
+
+      - name: Commit refreshed packs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/data/schools-index.json \
+            public/data/schools-directory.json \
+            public/data/harvest-summary.json \
+            src/data/harvest-summary.json \
+            public/data/packs
+          if git diff --staged --quiet; then
+            echo "No pack data changes"
+          else
+            git commit -m "Refresh LA pack Ofsted, GIAS, KS2, and KS4"
+            git pull --rebase origin main
+            git push
+          fi
+
+  notify-failure:
+    name: Notify on failure
+    runs-on: ubuntu-latest
+    needs: refresh
+    if: ${{ failure() && needs.refresh.result == 'failure' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Open or update workflow-failure issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/notify-workflow-failure.sh "Refresh LA pack data"

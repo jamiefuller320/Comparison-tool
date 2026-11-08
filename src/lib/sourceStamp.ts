@@ -35,6 +35,22 @@ const PHONICS_EXPLORE =
 const EYFSP_EXPLORE =
   "https://explore-education-statistics.service.gov.uk/find-statistics/early-years-foundation-stage-profile-results";
 
+/** Visible as-at lines for inspection grades and GIAS fields on compare boards. */
+export function inspectionAsAtNotes(opts: {
+  ofstedStateAsAt?: string | null;
+  ofstedIndependentAsAt?: string | null;
+  giasAsAt?: string | null;
+}): string[] {
+  const notes: string[] = [];
+  const state = opts.ofstedStateAsAt?.trim();
+  const independent = opts.ofstedIndependentAsAt?.trim();
+  const gias = opts.giasAsAt?.trim();
+  if (state) notes.push(`State-school Ofsted MI as at ${state}.`);
+  if (independent) notes.push(`Independent Ofsted MI as at ${independent}.`);
+  if (gias) notes.push(`GIAS as at ${gias}.`);
+  return notes;
+}
+
 export function formatSourceStamp(stamp: SourceStamp): string {
   const bits = [
     stamp.label,

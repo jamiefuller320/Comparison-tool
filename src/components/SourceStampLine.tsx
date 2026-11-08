@@ -1,7 +1,25 @@
 "use client";
 
 import type { SourceStamp } from "@/lib/sourceStamp";
-import { formatSourceStamp } from "@/lib/sourceStamp";
+import { formatSourceStamp, inspectionAsAtNotes } from "@/lib/sourceStamp";
+
+export function InspectionAsAtNotes({
+  ofstedStateAsAt,
+  ofstedIndependentAsAt,
+  giasAsAt,
+}: {
+  ofstedStateAsAt?: string | null;
+  ofstedIndependentAsAt?: string | null;
+  giasAsAt?: string | null;
+}) {
+  const notes = inspectionAsAtNotes({
+    ofstedStateAsAt,
+    ofstedIndependentAsAt,
+    giasAsAt,
+  });
+  if (!notes.length) return null;
+  return <p className="compare-context-note">{notes.join(" ")}</p>;
+}
 
 export function SourceStampLine({
   stamp,
