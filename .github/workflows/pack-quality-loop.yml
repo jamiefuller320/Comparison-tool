@@ -1,6 +1,8 @@
 name: Pack quality loop
 
-# Twice-weekly assess → capped polish on weakest ready packs → commit digest.
+# Twice-weekly assess → capped précis on sitemap schools that lack one
+# (worst open-school coverage first), then Wiltshire. A target with no
+# movement for 2 runs rotates out. Does not change the SEO school-page cap.
 # Complements monthly Hampshire refresh and weekly EY refresh.
 on:
   workflow_dispatch:
@@ -28,7 +30,7 @@ on:
         type: boolean
         default: false
   schedule:
-    # Mondays + Wednesdays 06:00 UTC — keep weakest packs moving
+    # Mondays + Wednesdays 06:00 UTC — fill thin sitemap précis, then Wiltshire
     - cron: "0 6 * * 1,3"
 
 permissions:
@@ -90,7 +92,7 @@ jobs:
             if [ "$DRY_RUN" = "true" ]; then
               MSG="Pack quality loop dry-run digest"
             else
-              MSG="Pack quality loop: polish weakest ready packs"
+              MSG="Pack quality loop: précis for thin sitemap landings"
             fi
             git commit -m "$MSG"
             git pull --rebase origin main

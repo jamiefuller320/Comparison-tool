@@ -59,11 +59,11 @@ npm run report:pack-quality
 
 ### Automated pack quality loop (phase 1)
 
-Weekly GitHub Action (Wed 06:00 UTC) + `workflow_dispatch`:
+Twice-weekly GitHub Action (Mon + Wed 06:00 UTC) + `workflow_dispatch`:
 
-1. **Assess** — `report:pack-quality` JSON metrics  
-2. **Select** — up to N weakest ready packs with indie/ISI headroom  
-3. **Polish** — capped `polish:pack-quality` (ISI resolve + missing précis)  
+1. **Assess** — `report:pack-quality` JSON metrics, plus open-school précis gaps on sitemap areas  
+2. **Select** — up to N packs: sitemap schools missing a précis (lowest open % first), then Wiltshire. A pack with no précis/ISI movement for 2 runs rotates behind the rest. The SEO school-page cap is not an input.  
+3. **Polish** — capped `polish:pack-quality` (ISI resolve + missing précis; `--precis-limit` per pack)  
 4. **Digest** — writes `public/data/packs/quality-loop-latest.{json,md}` and commits pack deltas  
 
 ```bash
@@ -71,7 +71,7 @@ npm run loop:pack-quality -- --dry-run
 npm run loop:pack-quality -- --max-packs 6 --isi-resolve-cap 80 --precis-limit 60
 ```
 
-Future phases (pack TTL, SCH-batched KS2) are logged under **Continuous data-quality automation** in `DEFERRED_IDEAS.md` — return there rather than re-deriving from chat. Interest weighting (phase 2) ships with `scripts/pack_interest.py` and biases `loop:pack-quality` target selection.
+Future phases (pack TTL, SCH-batched KS2) are logged under **Continuous data-quality automation** in `DEFERRED_IDEAS.md` — return there rather than re-deriving from chat. Interest scores (`scripts/pack_interest.py`) are recorded on the digest and do not change précis target order.
 
 ### Automated SEO coverage loop
 
