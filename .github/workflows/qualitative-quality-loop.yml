@@ -3,6 +3,8 @@ name: Qualitative quality loop
 # Corpus cleanup separate from coverage ingest:
 # analyse → full apply when the learned-QA library changed significantly
 # (or weekly max-age / --force) → merge → digest.
+# Any phrase-fingerprint change also runs a corpus-wide exact sweep of the
+# chrome denylist and active learned chrome labels across every shard.
 # Unchanged learning days write an analyse-only digest (no sidecar churn).
 #
 # Closed loop: coverage (~07:00) → this quality apply (10:00) →

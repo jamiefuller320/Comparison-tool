@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools" / "school-capture"))
 
 from school_capture.learned_qa_patterns import learning_change_is_significant
+from school_capture.qa_corpus_sweep import corpus_sweep_needed
 
 
 def test_first_run_is_significant() -> None:
@@ -48,6 +49,22 @@ def test_minor_rebalance_ignored() -> None:
     assert "minor" in reason.lower()
 
 
+def test_corpus_sweep_runs_on_any_phrase_hash_change() -> None:
+    """A one-phrase hash change is below the suspect-QA delta but must sweep."""
+    previous = {"phraseHash": "aaa", "phraseCount": 900, "eventCount": 100}
+    current = {"phraseHash": "bbb", "phraseCount": 901, "eventCount": 100}
+    significant, _reason = learning_change_is_significant(
+        previous, current, min_phrase_delta=5
+    )
+    assert not significant
+    ok, reason = corpus_sweep_needed(previous, current)
+    assert ok
+    assert "fingerprint" in reason.lower()
+    unchanged, unchanged_reason = corpus_sweep_needed(previous, dict(previous))
+    assert not unchanged
+    assert "unchanged" in unchanged_reason.lower()
+
+
 def test_phrase_set_change_triggers() -> None:
     ok, reason = learning_change_is_significant(
         {"phraseHash": "aaa", "phraseCount": 600, "eventCount": 100},
@@ -63,6 +80,7 @@ def main() -> int:
     test_event_delta_triggers()
     test_unchanged_not_significant()
     test_minor_rebalance_ignored()
+    test_corpus_sweep_runs_on_any_phrase_hash_change()
     test_phrase_set_change_triggers()
     print("OK learning_change_is_significant")
     return 0
