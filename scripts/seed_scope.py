@@ -84,7 +84,10 @@ SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES: tuple[str, ...] = (
 )
 
 # Ready-pack LAs outside the ONS South East + Dorset core (e.g. Wiltshire).
-COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES: tuple[str, ...] = ("Wiltshire",)
+COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES: tuple[str, ...] = (
+    "Wiltshire",
+    "Gloucestershire",
+)
 
 # Canonical alias for the full coverage region membership list.
 COVERAGE_REGION_LOCAL_AUTHORITIES: tuple[str, ...] = (

@@ -92,6 +92,7 @@ export const SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES = [
  */
 export const COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES = [
   "Wiltshire",
+  "Gloucestershire",
 ] as const;
 
 /** Canonical alias for full coverage-region membership. */
@@ -174,6 +175,12 @@ export const COVERAGE_LA_NEIGHBOURS: Record<string, readonly string[]> = {
     "Gloucestershire",
     "Oxfordshire",
     "Southampton",
+    "Hampshire",
+  ],
+  Gloucestershire: [
+    "Wiltshire",
+    "Somerset",
+    "Oxfordshire",
     "Hampshire",
   ],
   "West Berkshire": [
