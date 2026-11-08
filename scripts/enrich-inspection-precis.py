@@ -259,6 +259,10 @@ def prioritize_records(
     ofsted: list[dict] = []
     other: list[dict] = []
     for r in records:
+        # Closed schools are not sitemap landings. Do not spend the fetch
+        # budget on them.
+        if r.get("closed"):
+            continue
         has_precis = bool(r.get("inspectionPrecis"))
         has_highlights = bool(
             r.get("inspectionStrengths") and r.get("inspectionImprovements")

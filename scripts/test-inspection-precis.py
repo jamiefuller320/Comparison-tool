@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import sys
 from pathlib import Path
 
@@ -306,6 +307,29 @@ In the early years, leaders should further strengthen the sequences of key knowl
         assert n == 1
         assert fresh[0]["inspectionPrecis"] == "Kept excerpt."
         assert fresh[0]["inspectionQuotes"][0]["text"] == "Pupils feel safe."
+
+    spec = importlib.util.spec_from_file_location(
+        "enrich_inspection_precis", SCRIPTS / "enrich-inspection-precis.py"
+    )
+    assert spec and spec.loader
+    enrich = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(enrich)
+    ordered = enrich.prioritize_records(
+        [
+            {
+                "urn": "closed",
+                "closed": True,
+                "phase": "primary",
+                "ofstedReportUrl": "https://example.test/closed",
+            },
+            {
+                "urn": "open",
+                "phase": "primary",
+                "ofstedReportUrl": "https://example.test/open",
+            },
+        ]
+    )
+    assert [r["urn"] for r in ordered] == ["open"]
 
     print("inspection precis ok")
 

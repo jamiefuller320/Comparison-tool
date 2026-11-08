@@ -3,7 +3,7 @@
 
 Focus: ISI citation resolve → school précis (ISI-first) → highlight buckets.
 Default targets are a static wave list; prefer `run-pack-quality-loop.py` (or
-`npm run loop:pack-quality`) to select the current weakest ready packs.
+`npm run loop:pack-quality`) to spend the précis budget on sitemap gaps, then Wiltshire.
 
 Usage:
   python3 scripts/polish-pack-quality.py
