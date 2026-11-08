@@ -60,6 +60,16 @@ async function main() {
     console.error("FAIL coverage label should mention London", COVERAGE_REGION_LABEL);
     process.exit(1);
   }
+  if (
+    !isCoverageRegionLocalAuthority("Wiltshire") ||
+    !String(COVERAGE_REGION_LABEL).toLowerCase().includes("wiltshire")
+  ) {
+    console.error(
+      "FAIL coverage label should include Wiltshire pack",
+      COVERAGE_REGION_LABEL,
+    );
+    process.exit(1);
+  }
 
   const py = spawnSync(
     "python3",

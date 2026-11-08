@@ -161,7 +161,7 @@ export const GUIDE_PAGES: GuidePage[] = [
       },
       {
         question: "Which areas are covered?",
-        answer: `Hampshire is the deepest maintained root. Ready packs for South East England, London, and Dorset merge silently into map and search. Areas outside the region can be requested from the missing-school flow.`,
+        answer: `Hampshire is the deepest maintained root. Ready packs for ${COVERAGE_REGION_LABEL} merge silently into map and search. Areas outside the region can be requested from the missing-school flow.`,
       },
       {
         question: "Where do the numbers come from?",
