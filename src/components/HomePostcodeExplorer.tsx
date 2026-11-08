@@ -269,7 +269,13 @@ export function HomePostcodeExplorer({
     setError(null);
     setRelocateError(null);
     try {
-      const geo = await geocodePostcode(normalised);
+      // Start the Hampshire seed while the postcode resolves, then wait for
+      // it before placing home so the map is not briefly empty. Area packs
+      // still follow from the district, as they did when the seed was preloaded.
+      const [geo] = await Promise.all([
+        geocodePostcode(normalised),
+        onEnsureAreaCoverage?.() ?? Promise.resolve(),
+      ]);
       if (!geo) {
         setError(`No match for ${normalised}. Check the postcode and try again.`);
         setHome(null);
