@@ -30,6 +30,7 @@ type HarvestSummary = {
   withKs4?: number;
   generatedAt?: string;
   inspectionPrecisEnrichedAt?: string;
+  dataRefreshedAt?: string;
 };
 
 type IndexWithStats = {
@@ -63,6 +64,7 @@ function hampshireArea(): CoverageArea {
     eyProviderCount: ey.stats?.providerCount ?? null,
     childminderCount: childminders.stats?.providerCount ?? null,
     lastModified:
+      harvest.dataRefreshedAt ??
       harvest.inspectionPrecisEnrichedAt ??
       harvest.generatedAt ??
       ey.generatedAt ??
@@ -85,7 +87,8 @@ export function listCoverageAreas(): CoverageArea[] {
       withKs4: pack.withKs4 ?? null,
       eyProviderCount: pack.eyProviderCount ?? null,
       childminderCount: pack.childminderCount ?? null,
-      lastModified: pack.builtAt ?? manifest.generatedAt ?? null,
+      lastModified:
+        pack.dataRefreshedAt ?? pack.builtAt ?? manifest.generatedAt ?? null,
     }),
   );
 

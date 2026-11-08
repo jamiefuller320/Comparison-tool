@@ -333,6 +333,8 @@ export interface LaPackManifestEntry {
   eyEnriched?: boolean;
   requestedAt?: string;
   builtAt?: string;
+  /** ISO time of the last KS2 / GIAS / KS4 pack refresh. */
+  dataRefreshedAt?: string;
   note?: string;
   paths?: {
     schoolsIndex?: string;

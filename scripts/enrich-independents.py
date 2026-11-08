@@ -33,7 +33,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from govuk_mi_dates import ofsted_csv_sort_key  # noqa: E402
+from govuk_mi_dates import as_at_label_from_url, ofsted_csv_sort_key  # noqa: E402
 from sector_benches import ks4_benchmark_block  # noqa: E402
 from seed_scope import (  # noqa: E402
     filter_schools_to_la,
@@ -110,9 +110,12 @@ OFSTED_PAGE = (
     "non-association-independent-schools-inspections-and-outcomes-management-information"
 )
 EDUBASE_CACHE = Path("/tmp/edubase-all.csv")
+EDUBASE_STAMP = Path("/tmp/edubase-all.stamp")
 EDUBASE_BASE = (
     "https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/"
 )
+EES_CACHE_DIR = ROOT / ".cache" / "ees"
+OFSTED_INDEPENDENT_CACHE = ROOT / ".cache" / "ofsted" / "independent.json"
 
 OFSTED_GRADE_LABELS = {
     "1": "Outstanding",
@@ -285,7 +288,65 @@ def sanitize_ks5_metrics(metrics: dict) -> tuple[dict, list[str]]:
     return out, cleared
 
 
+def _read_metric_cache(path: Path, fingerprint: dict) -> dict | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    for key, value in fingerprint.items():
+        if payload.get(key) != value:
+            return None
+    rows = payload.get("byUrn")
+    if not isinstance(rows, dict) or not rows:
+        return None
+    return rows
+
+
+def _write_metric_cache(path: Path, fingerprint: dict, by_urn: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(
+        json.dumps({**fingerprint, "byUrn": by_urn}, separators=(",", ":")),
+        encoding="utf-8",
+    )
+    tmp.replace(path)
+
+
+def _subset_metrics(
+    by_urn: dict[str, dict],
+    urns: set[str],
+    cleared_key: str,
+) -> tuple[dict[str, dict], int]:
+    kept = {urn: metrics for urn, metrics in by_urn.items() if urn in urns}
+    cleared = sum(len(metrics.get(cleared_key) or []) for metrics in kept.values())
+    return kept, cleared
+
+
 def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
+    fingerprint = {
+        "dataset": KS4_DATASET,
+        "year": KS4_YEAR,
+        "indicators": KS4_INDICATORS,
+        "filters": KS4_TOTAL_FILTERS,
+    }
+    cache_path = EES_CACHE_DIR / "ks4-performance.json"
+    cached = _read_metric_cache(cache_path, fingerprint)
+    if cached is not None:
+        by_urn, cleared_total = _subset_metrics(
+            cached, indie_urns, "ks4ClearedNilFields"
+        )
+        print(
+            f"Loaded KS4 cache ({len(cached)} schools) — "
+            f"matched {len(by_urn)} in this index "
+            f"(cleared {cleared_total} nil/zero field values)",
+            flush=True,
+        )
+        return by_urn, KS4_YEAR, cleared_total
+
     print("Fetching KS4 meta…", flush=True)
     meta = get_json(f"{BASE}/data-sets/{KS4_DATASET}/meta")
     sch_map = build_sch_map(meta)
@@ -318,7 +379,7 @@ def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
                 continue
             sch_id = (row.get("locations") or {}).get("SCH")
             urn = sch_map.get(sch_id or "", "")
-            if not urn or urn not in indie_urns:
+            if not urn:
                 continue
             values = row.get("values") or {}
             metrics = {
@@ -340,17 +401,40 @@ def harvest_ks4(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
             by_urn[urn] = metrics
         page += 1
 
+    _write_metric_cache(cache_path, fingerprint, by_urn)
+    matched, matched_cleared = _subset_metrics(
+        by_urn, indie_urns, "ks4ClearedNilFields"
+    )
     print(
-        f"  KS4 matched schools: {len(by_urn)} "
-        f"(cleared {cleared_total} nil/zero field values; "
+        f"  KS4 national schools: {len(by_urn)}; matched {len(matched)} "
+        f"(cleared {matched_cleared} nil/zero field values; "
         f"skipped {skipped_subgroups} subgroup rows)",
         flush=True,
     )
-    return by_urn, KS4_YEAR, cleared_total
+    return matched, KS4_YEAR, matched_cleared
 
 
 def harvest_ks5(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
     """Harvest A-level (preferred) then Academic APS for independents."""
+    fingerprint = {
+        "dataset": KS5_DATASET,
+        "year": KS5_YEAR,
+        "indicators": KS5_INDICATORS,
+    }
+    cache_path = EES_CACHE_DIR / "ks5-performance.json"
+    cached = _read_metric_cache(cache_path, fingerprint)
+    if cached is not None:
+        by_urn, cleared_total = _subset_metrics(
+            cached, indie_urns, "ks5ClearedNilFields"
+        )
+        print(
+            f"Loaded KS5 cache ({len(cached)} schools) — "
+            f"matched {len(by_urn)} in this index "
+            f"(cleared {cleared_total} nil fields)",
+            flush=True,
+        )
+        return by_urn, KS5_YEAR, cleared_total
+
     print("Fetching KS5 / 16–18 meta…", flush=True)
     meta = get_json(f"{BASE}/data-sets/{KS5_DATASET}/meta")
     sch_map = build_sch_map(meta)
@@ -382,7 +466,7 @@ def harvest_ks5(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
                 continue
             sch_id = (row.get("locations") or {}).get("SCH")
             urn = sch_map.get(sch_id or "", "")
-            if not urn or urn not in indie_urns:
+            if not urn:
                 continue
             values = row.get("values") or {}
             metrics = {
@@ -407,18 +491,25 @@ def harvest_ks5(indie_urns: set[str]) -> tuple[dict[str, dict], str, int]:
         if urn not in by_urn:
             by_urn[urn] = metrics
 
-    cleared_total = sum(len(m.get("ks5ClearedNilFields") or []) for m in by_urn.values())
+    _write_metric_cache(cache_path, fingerprint, by_urn)
+    matched, cleared_total = _subset_metrics(
+        by_urn, indie_urns, "ks5ClearedNilFields"
+    )
     print(
-        f"  KS5 matched schools: {len(by_urn)} "
+        f"  KS5 national schools: {len(by_urn)}; matched {len(matched)} "
         f"(A level {len(alevel_by_urn)}; academic fill "
         f"{len(by_urn) - len(alevel_by_urn)}; cleared {cleared_total} nil fields)",
         flush=True,
     )
-    return by_urn, KS5_YEAR, cleared_total
+    return matched, KS5_YEAR, cleared_total
 
 
 def ensure_edubase() -> Path:
-    if EDUBASE_CACHE.exists() and EDUBASE_CACHE.stat().st_size > 1_000_000:
+    if (
+        EDUBASE_CACHE.exists()
+        and EDUBASE_CACHE.stat().st_size > 1_000_000
+        and EDUBASE_STAMP.exists()
+    ):
         return EDUBASE_CACHE
     from datetime import date, timedelta
 
@@ -428,6 +519,7 @@ def ensure_edubase() -> Path:
         url = f"{EDUBASE_BASE}edubasealldata{d}.csv"
         try:
             EDUBASE_CACHE.write_bytes(get_bytes(url))
+            EDUBASE_STAMP.write_text(d + "\n", encoding="utf-8")
             print(f"Downloaded Edubase {d}", flush=True)
             return EDUBASE_CACHE
         except Exception as exc:  # noqa: BLE001
@@ -775,6 +867,16 @@ def first_value(row: dict[str, str], *keys: str) -> str | None:
 def harvest_ofsted() -> tuple[dict[str, dict], str]:
     print("Fetching Ofsted independent inspection MI…", flush=True)
     url = latest_ofsted_csv_url()
+    as_at = as_at_label_from_url(url)
+    if as_at == "unknown":
+        as_at = time.strftime("%Y-%m-%d")
+    cached = _read_metric_cache(OFSTED_INDEPENDENT_CACHE, {"url": url})
+    if cached is not None:
+        print(
+            f"  Ofsted rows from cache: {len(cached)} (as at {as_at})",
+            flush=True,
+        )
+        return cached, as_at
     raw = get_bytes(url)
     text = None
     for enc in ("utf-8-sig", "utf-8", "cp1252", "latin-1"):
@@ -853,9 +955,7 @@ def harvest_ofsted() -> tuple[dict[str, dict], str]:
             "ofstedPupilsOnRoll": int(nor) if nor is not None else None,
         }
 
-    # Derive as-at date from filename when possible.
-    m = re.search(r"as_at_(\d{1,2}_[A-Za-z]+_\d{4})", url)
-    as_at = m.group(1).replace("_", " ") if m else time.strftime("%Y-%m-%d")
+    _write_metric_cache(OFSTED_INDEPENDENT_CACHE, {"url": url}, by_urn)
     print(f"  Ofsted rows: {len(by_urn)} (as at {as_at})", flush=True)
     return by_urn, as_at
 

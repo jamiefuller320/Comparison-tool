@@ -126,9 +126,45 @@ def latest_state_ofsted_csv_url() -> tuple[str, str]:
     return chosen, as_at
 
 
+def _read_ofsted_cache(path: Path, url: str) -> dict[str, dict] | None:
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict) or payload.get("url") != url:
+        return None
+    rows = payload.get("byUrn")
+    if not isinstance(rows, dict) or not rows:
+        return None
+    return rows
+
+
+def _write_ofsted_cache(path: Path, url: str, as_at: str, by_urn: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".json.tmp")
+    tmp.write_text(
+        json.dumps(
+            {"url": url, "asAt": as_at, "byUrn": by_urn},
+            separators=(",", ":"),
+        ),
+        encoding="utf-8",
+    )
+    tmp.replace(path)
+
+
 def harvest_state_ofsted() -> tuple[dict[str, dict], str, str]:
     print("Fetching state-funded school Ofsted MI…", flush=True)
     url, as_at = latest_state_ofsted_csv_url()
+    cache_path = ROOT / ".cache" / "ofsted" / "state-schools.json"
+    cached = _read_ofsted_cache(cache_path, url)
+    if cached is not None:
+        print(
+            f"  Ofsted rows from cache: {len(cached)} (as at {as_at})",
+            flush=True,
+        )
+        return cached, url, as_at
     raw = get_bytes(url)
     text = None
     for enc in ("utf-8-sig", "utf-8", "cp1252", "latin-1"):
@@ -227,6 +263,7 @@ def harvest_state_ofsted() -> tuple[dict[str, dict], str, str]:
         by_urn[urn] = {k: v for k, v in payload.items() if v is not None}
 
     print(f"  Ofsted rows with usable signal: {len(by_urn)}", flush=True)
+    _write_ofsted_cache(cache_path, url, as_at, by_urn)
     return by_urn, url, as_at
 
 
@@ -239,31 +276,22 @@ def offers_early_years(school: dict) -> bool:
     return len(nums) >= 2 and nums[0] <= 4
 
 
-def main() -> None:
-    import argparse
-
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--la",
-        default="",
-        help="Optional LA label for EY Ofsted counter / defensive scope",
-    )
-    parser.add_argument(
-        "--index",
-        default=str(DEFAULT_INDEX.relative_to(ROOT)),
-        help="Path to schools-index.json",
-    )
-    args = parser.parse_args()
-
-    paths = resolve_index_bundle(args.index, ROOT)
+def apply_state_ofsted(
+    index_arg: str,
+    target_la: str,
+    ofsted_by_urn: dict[str, dict],
+    csv_url: str,
+    as_at: str,
+) -> int:
+    """Write state-school Ofsted rows onto one schools index."""
+    paths = resolve_index_bundle(index_arg, ROOT)
     index_path = paths["index"]
     directory_path = paths["directory"]
     summary_path = paths["summary"]
     if not index_path.exists():
         raise SystemExit(f"Missing {index_path} — run harvest first")
 
-    target_la = normalize_la_name(args.la) if args.la else ""
-    ofsted_by_urn, csv_url, as_at = harvest_state_ofsted()
+    target_la = normalize_la_name(target_la) if target_la else ""
     payload = json.loads(index_path.read_text(encoding="utf-8"))
     schools = payload.get("schools") or []
     if target_la:
@@ -347,6 +375,33 @@ def main() -> None:
         existing["eySchoolsOfsted"] = summary
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(existing, indent=2) + "\n", encoding="utf-8")
+    return matched
+
+
+def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--la",
+        default="",
+        help="Optional LA label for EY Ofsted counter / defensive scope",
+    )
+    parser.add_argument(
+        "--index",
+        default=str(DEFAULT_INDEX.relative_to(ROOT)),
+        help="Path to schools-index.json",
+    )
+    args = parser.parse_args()
+    ofsted_by_urn, csv_url, as_at = harvest_state_ofsted()
+    matched = apply_state_ofsted(
+        args.index,
+        args.la,
+        ofsted_by_urn,
+        csv_url,
+        as_at,
+    )
+    print(f"State Ofsted as at {as_at}: matched {matched}", flush=True)
 
 
 if __name__ == "__main__":

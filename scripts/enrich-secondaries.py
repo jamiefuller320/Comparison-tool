@@ -23,7 +23,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +41,7 @@ from seed_scope import (  # noqa: E402
 
 DEFAULT_INDEX = ROOT / "public" / "data" / "schools-index.json"
 CACHE = Path("/tmp/edubase-all.csv")
+EDUBASE_STAMP = Path("/tmp/edubase-all.stamp")
 UA = "Mozilla/5.0 (compatible; Schoolside/0.1; +https://github.com/jamiefuller320/Comparison-tool)"
 
 
@@ -116,8 +117,25 @@ def apply_gias_opening_fields(school: dict, row: dict) -> None:
         school["reasonEstablishmentOpened"] = reason
 
 
+def gias_as_at_label(stamp: str) -> str:
+    """Turn an edubase filename date (YYYYMMDD) into a board label."""
+    dt = datetime.strptime(stamp.strip(), "%Y%m%d")
+    return f"{dt.day} {dt.strftime('%B')} {dt.year}"
+
+
+def read_edubase_stamp() -> str:
+    if not EDUBASE_STAMP.exists():
+        return ""
+    return EDUBASE_STAMP.read_text(encoding="utf-8").strip()
+
+
 def download_edubase() -> Path:
-    if CACHE.exists() and CACHE.stat().st_size > 1_000_000:
+    if (
+        CACHE.exists()
+        and CACHE.stat().st_size > 1_000_000
+        and read_edubase_stamp()
+    ):
+        print(f"Using cached Edubase {read_edubase_stamp()}", flush=True)
         return CACHE
     last_err: Exception | None = None
     for i in range(14):
@@ -130,6 +148,7 @@ def download_edubase() -> Path:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
             with urllib.request.urlopen(req, timeout=180) as resp:
                 CACHE.write_bytes(resp.read())
+            EDUBASE_STAMP.write_text(d + "\n", encoding="utf-8")
             print(f"Downloaded Edubase {d} ({CACHE.stat().st_size // 1024} KB)", flush=True)
             return CACHE
         except Exception as exc:  # noqa: BLE001
@@ -278,7 +297,7 @@ def main() -> int:
 
         if urn in by_urn:
             existing = by_urn[urn]
-            # Refresh age/phase/sector metadata; keep KS2 attainment fields.
+            # Refresh GIAS identity; keep KS2 attainment and inspection fields.
             existing["ageRange"] = age_range
             existing["phases"] = phases
             existing["phase"] = suggest_phase(phases)
@@ -288,10 +307,20 @@ def main() -> int:
             )
             existing["giasPhase"] = (row.get("PhaseOfEducation (name)") or "").strip() or existing.get("giasPhase")
             apply_gias_opening_fields(existing, row)
-            if postcode and not existing.get("postcode"):
+            if name:
+                existing["name"] = name
+            address = build_address(row)
+            if address:
+                existing["address"] = address
+            if postcode:
                 existing["postcode"] = postcode
-            if town and not existing.get("town"):
+            if town:
                 existing["town"] = town
+            if not existing.get("giasUrl"):
+                existing["giasUrl"] = (
+                    "https://www.get-information-schools.service.gov.uk/"
+                    f"Establishments/Establishment/Details/{urn}"
+                )
             updated_meta += 1
             continue
 
@@ -362,6 +391,13 @@ def main() -> int:
         {s.get("localAuthority") for s in schools if s.get("localAuthority")}
     )
     payload["stats"]["giasEnriched"] = True
+    gias_stamp = read_edubase_stamp()
+    if gias_stamp:
+        gias_as_at = gias_as_at_label(gias_stamp)
+        payload["stats"]["giasAsAt"] = gias_as_at
+        payload.setdefault("source", {}).setdefault("datasets", {})[
+            "giasEdubaseStamp"
+        ] = gias_stamp
     payload["stats"]["stateCount"] = sum(1 for s in schools if s.get("sector") == "state")
     payload["stats"]["independentCount"] = sum(
         1 for s in schools if s.get("sector") == "independent"
@@ -401,15 +437,19 @@ def main() -> int:
             if k in s and s[k] not in (None, "")
         }
         directory.append(row)
+    directory_payload: dict = {}
+    if directory_path.exists():
+        try:
+            loaded = json.loads(directory_path.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                directory_payload = loaded
+        except json.JSONDecodeError:
+            directory_payload = {}
+    directory_payload["generatedAt"] = payload.get("generatedAt")
+    directory_payload["period"] = payload.get("period")
+    directory_payload["schools"] = directory
     directory_path.write_text(
-        json.dumps(
-            {
-                "generatedAt": payload.get("generatedAt"),
-                "period": payload.get("period"),
-                "schools": directory,
-            },
-            separators=(",", ":"),
-        ),
+        json.dumps(directory_payload, separators=(",", ":")),
         encoding="utf-8",
     )
 
@@ -431,11 +471,25 @@ def main() -> int:
             str(directory_path.relative_to(ROOT)),
         ],
     }
-    summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    if gias_stamp:
+        summary["giasAsAt"] = gias_as_at_label(gias_stamp)
+
+    def _merge_summary(path: Path, patch: dict) -> None:
+        existing: dict = {}
+        if path.exists():
+            try:
+                loaded = json.loads(path.read_text(encoding="utf-8"))
+                if isinstance(loaded, dict):
+                    existing = loaded
+            except json.JSONDecodeError:
+                existing = {}
+        existing.update(patch)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(existing, indent=2) + "\n", encoding="utf-8")
+
+    _merge_summary(summary_path, summary)
     if paths["is_root"]:
-        (ROOT / "src" / "data" / "harvest-summary.json").write_text(
-            json.dumps(summary, indent=2), encoding="utf-8"
-        )
+        _merge_summary(ROOT / "src" / "data" / "harvest-summary.json", summary)
 
     print(
         json.dumps(

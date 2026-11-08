@@ -39,6 +39,7 @@ import { SchoolOutboundLinks } from "@/components/SchoolOutboundLinks";
 import { SecondaryContextPane } from "@/components/SecondaryContextPane";
 import type { SourceStamp } from "@/lib/sourceStamp";
 import { schoolDeepLink } from "@/lib/sourceStamp";
+import { InspectionAsAtNotes } from "@/components/SourceStampLine";
 import { ReportProblemButton } from "@/components/ReportProblemButton";
 import { AdmissionsPlacesRows } from "@/components/AdmissionsPlacesRows";
 import {
@@ -88,6 +89,8 @@ export function IndependentComparisonBoard({
   benchmarkLabel = "Sector mean",
   sourceStamp,
   ofstedStateAsAt,
+  ofstedIndependentAsAt,
+  giasAsAt,
   contextSlot,
   summarySlot,
 }: {
@@ -98,6 +101,8 @@ export function IndependentComparisonBoard({
   benchmarkLabel?: string;
   sourceStamp?: SourceStamp | null;
   ofstedStateAsAt?: string | null;
+  ofstedIndependentAsAt?: string | null;
+  giasAsAt?: string | null;
   contextSlot: ReactNode;
   summarySlot?: ReactNode;
 }) {
@@ -293,6 +298,11 @@ export function IndependentComparisonBoard({
             ) : (
               <DataGapFlags gaps={dataGaps.filter((g) => g.level === "board")} />
             )}
+            <InspectionAsAtNotes
+              ofstedStateAsAt={ofstedStateAsAt}
+              ofstedIndependentAsAt={ofstedIndependentAsAt}
+              giasAsAt={giasAsAt}
+            />
           </div>
         </>
       }

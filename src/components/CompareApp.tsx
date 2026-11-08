@@ -1004,6 +1004,9 @@ export function CompareApp({
             schools={ks2Selected}
             england={index.benchmarks.england}
             sourceStamp={ks2Stamp}
+            ofstedStateAsAt={index.stats.ofstedStateAsAt}
+            ofstedIndependentAsAt={index.stats.ofstedAsAt}
+            giasAsAt={index.stats.giasAsAt}
             contextSlot={ks2Context}
             summarySlot={
               <PathSummaries schools={ks2Selected} {...summaryOpts} />
@@ -1034,6 +1037,8 @@ export function CompareApp({
           benchmarkLabel={ks4BenchLabel}
           sourceStamp={ks4Stamp}
           ofstedStateAsAt={index.stats.ofstedStateAsAt}
+          ofstedIndependentAsAt={index.stats.ofstedAsAt}
+          giasAsAt={index.stats.giasAsAt}
           contextSlot={ks4Context}
           summarySlot={
             <PathSummaries
