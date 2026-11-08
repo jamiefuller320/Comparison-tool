@@ -2,7 +2,7 @@ name: Refresh LA pack data
 
 # Rolling monthly rota for pack Ofsted MI, GIAS, and KS2/KS4.
 # Daily 04:15 UTC: the two ready packs with the oldest dataRefreshedAt get a
-# full depth refresh (about 27 days for the ready set). The same run applies
+# full depth refresh (about four weeks for the ready set). The same run applies
 # the latest state-school Ofsted MI to every ready pack and the Hampshire
 # root, so every LA pack shares one MI as-at date on the compare boards.
 # Reuses harvest-schools.py, enrich-secondaries.py, enrich-school-websites.py,

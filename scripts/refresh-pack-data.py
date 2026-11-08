@@ -274,9 +274,7 @@ def index_school_count(path: Path) -> int:
     if not path.exists():
         return 0
     payload = load_json(path)
-    schools = payload.get("schools") or []
-    stats = payload.get("stats") or {}
-    return int(stats.get("schoolCount") or len(schools))
+    return len(payload.get("schools") or [])
 
 
 def pack_targets() -> list[dict]:
