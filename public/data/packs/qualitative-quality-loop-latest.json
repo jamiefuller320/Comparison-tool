@@ -1,169 +1,271 @@
 {
-  "ranAt": "2026-11-08T06:20:16.165598+00:00",
+  "ranAt": "2026-11-08T16:46:51.029321+00:00",
   "dryRun": false,
-  "mode": "corpus-sweep",
+  "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 7382,
-    "suspectCount": 0,
-    "flagCounts": {},
-    "topSuspects": []
-  },
-  "after": {
-    "recordCount": 7382,
-    "suspectCount": 0,
-    "flagCounts": {},
-    "topSuspects": []
-  },
-  "qa": {
-    "reviewed": 0,
-    "changedSchools": 0,
-    "findingsApplied": 0,
-    "learningAdded": 0
-  },
-  "merged": false,
-  "corpusSweep": {
-    "shouldRun": true,
-    "reason": "forced (--corpus-sweep-only)",
-    "shardsScanned": 7382,
-    "schoolsChanged": 285,
-    "offeringsRemoved": 665,
-    "signalsRemoved": 315,
-    "deniedLabelCount": 680,
-    "removedByLabel": {
-      "contact details": 334,
-      "parentpay": 127,
-      "parent pay": 91,
-      "school dinners": 51,
-      "accessibility": 42,
-      "translate": 20
+    "recordCount": 7383,
+    "suspectCount": 38,
+    "flagCounts": {
+      "cms_chrome": 14,
+      "admissions": 13,
+      "chrome": 6,
+      "high_score_thin_signals": 4,
+      "implausible_offerings": 1
     },
-    "sample": [
+    "topSuspects": [
       {
-        "urn": "100013",
-        "name": "Edith Neville Primary School",
-        "removed": [
-          "Contact Details"
+        "urn": "125810",
+        "name": "Boundstone Nursery School",
+        "score": 10.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100050",
-        "name": "Parliament Hill School",
-        "removed": [
-          "ParentPay",
-          "ParentPay",
-          "ParentPay"
+        "urn": "147128",
+        "name": "The Ferns Primary Academy",
+        "score": 6.0,
+        "flags": [
+          "admissions"
         ]
       },
       {
-        "urn": "100099",
-        "name": "Abbey Wood Nursery School",
-        "removed": [
-          "ParentPay",
-          "ParentPay",
-          "ParentPay",
-          "ParentPay",
-          "ParentPay"
+        "urn": "136164",
+        "name": "Brighton Aldridge Community Academy",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100174",
-        "name": "St Alfege with St Peter's Church of England Primary School",
-        "removed": [
-          "ParentPay",
-          "ParentPay",
-          "ParentPay"
+        "urn": "115872",
+        "name": "Chandler's Ford Infant School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100354",
-        "name": "Good Shepherd RC Primary School",
-        "removed": [
-          "Contact Details"
+        "urn": "137605",
+        "name": "Dove House Academy",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100425",
-        "name": "Thornhill Primary School",
-        "removed": [
-          "ParentPay"
+        "urn": "149906",
+        "name": "Light Years School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100443",
-        "name": "St Luke's CofE Primary School",
-        "removed": [
-          "Contact Details"
+        "urn": "116330",
+        "name": "Liphook Church of England Controlled Junior School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100448",
-        "name": "St Andrew's (Barnsbury) Church of England Primary School",
-        "removed": [
-          "Contact Details"
+        "urn": "116056",
+        "name": "Liphook Infant School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100486",
-        "name": "Park Walk Primary School",
-        "removed": [
-          "Contact Details"
+        "urn": "137063",
+        "name": "Portslade Aldridge Community Academy",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100514",
-        "name": "Sussex House School",
-        "removed": [
-          "Contact Details"
+        "urn": "114416",
+        "name": "Rotherfield Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100593",
-        "name": "Crown Lane Primary School",
-        "removed": [
-          "Parent Pay"
+        "urn": "118310",
+        "name": "Ryarsh Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       },
       {
-        "urn": "100627",
-        "name": "Saint Gabriel's College",
-        "removed": [
-          "ParentPay",
-          "ParentPay"
+        "urn": "125992",
+        "name": "Shipley CofE Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
         ]
       }
-    ],
-    "dryRun": false
+    ]
+  },
+  "after": {
+    "recordCount": 7383,
+    "suspectCount": 32,
+    "flagCounts": {
+      "cms_chrome": 14,
+      "admissions": 13,
+      "high_score_thin_signals": 4,
+      "implausible_offerings": 1
+    },
+    "topSuspects": [
+      {
+        "urn": "125810",
+        "name": "Boundstone Nursery School",
+        "score": 10.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "147128",
+        "name": "The Ferns Primary Academy",
+        "score": 6.0,
+        "flags": [
+          "admissions"
+        ]
+      },
+      {
+        "urn": "136164",
+        "name": "Brighton Aldridge Community Academy",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "115872",
+        "name": "Chandler's Ford Infant School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "137605",
+        "name": "Dove House Academy",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "149906",
+        "name": "Light Years School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "116330",
+        "name": "Liphook Church of England Controlled Junior School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "116056",
+        "name": "Liphook Infant School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "137063",
+        "name": "Portslade Aldridge Community Academy",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "114416",
+        "name": "Rotherfield Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "118310",
+        "name": "Ryarsh Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      },
+      {
+        "urn": "125992",
+        "name": "Shipley CofE Primary School",
+        "score": 5.0,
+        "flags": [
+          "cms_chrome"
+        ]
+      }
+    ]
+  },
+  "qa": {
+    "reviewed": 38,
+    "changedSchools": 6,
+    "findingsApplied": 6,
+    "learningAdded": 0,
+    "provider": "none"
+  },
+  "merged": true,
+  "corpusSweep": {
+    "shouldRun": false,
+    "reason": "phrase fingerprint unchanged"
   },
   "trigger": {
-    "shouldApply": false,
-    "reason": "corpus-sweep-only; suspect-window QA skipped",
-    "fingerprint": {
+    "shouldApply": true,
+    "reason": "eventCount +16 (>= 15)",
+    "fingerprintBefore": {
       "phraseHash": "00a67bb08bd66dd734e2",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11094,
-      "updatedAt": "2026-11-04",
+      "eventCount": 11110,
+      "updatedAt": "2026-11-08",
       "chromeDenylistCount": 9
     },
-    "prior": {
-      "phraseHash": "e80c91f285227ad8c878",
+    "fingerprintAfter": {
+      "phraseHash": "00a67bb08bd66dd734e2",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11090,
-      "updatedAt": "2026-10-31"
-    },
-    "priorAppliedAt": "2026-10-31T17:11:16.287227+00:00"
+      "eventCount": 11117,
+      "updatedAt": "2026-11-08",
+      "chromeDenylistCount": 9
+    }
   },
   "notes": [
-    "Learning fingerprint: {'phraseHash': '00a67bb08bd66dd734e2', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11094, 'updatedAt': '2026-11-04', 'chromeDenylistCount': 9}",
-    "Apply decision: corpus-sweep-only; suspect-window QA skipped",
-    "Corpus sweep decision: forced (--corpus-sweep-only)",
-    "Corpus sweep removed 665 chrome offering(s) from 285 school(s) across 7382 shards.",
-    "Corpus sweep reads published shards directly; sidecar hydrate skipped.",
-    "Updated output/learned-qa-apply-state.json",
-    "Suspect-window QA skipped. Corpus sweep applied exact chrome and learned-chrome labels across every shard."
+    "Rebalanced learned QA phrases: active=900 candidates=2000.",
+    "Learning fingerprint: {'phraseHash': '00a67bb08bd66dd734e2', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11110, 'updatedAt': '2026-11-08', 'chromeDenylistCount': 9}",
+    "Apply decision: eventCount +16 (>= 15)",
+    "Corpus sweep decision: phrase fingerprint unchanged",
+    "Hydrated working sidecar from 7383 published URN shards (prior=0 → 7383).",
+    "Before: 38 suspects across 7383 records.",
+    "Applied QA fixes to 6 school(s) (6 area finding(s)).",
+    "Learned 0 new junk phrase(s) (store size 900).",
+    "Reviewed top 38 suspect(s); provider=none.",
+    "Merged cleaned sidecar into 57 schools-index file(s).",
+    "After: 32 suspects across 7383 records.",
+    "Updated output/learned-qa-apply-state.json"
   ]
 }

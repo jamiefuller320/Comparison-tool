@@ -1,49 +1,38 @@
-# Qualitative quality loop — 2026-11-08T06:20:16.165598+00:00
+# Qualitative quality loop — 2026-11-08T16:46:51.029321+00:00
 
-- Mode: `corpus-sweep`
+- Mode: `apply`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
-- Records: `7382`
-- Suspects before → after: `0` → `0`
-- QA reviewed / changed: `0` / `0`
-- Findings applied: `0`
+- Records: `7383`
+- Suspects before → after: `38` → `32`
+- QA reviewed / changed: `38` / `6`
+- Findings applied: `6`
 - Learned phrases added: `0`
-- Merged to index: `False`
-- Apply trigger: `corpus-sweep-only; suspect-window QA skipped`
+- Merged to index: `True`
+- Apply trigger: `eventCount +16 (>= 15)`
 
-- Corpus sweep: `forced (--corpus-sweep-only)`
-- Chrome offerings removed: `665` across `285` schools (7382 shards scanned)
-
-## Chrome labels removed
-
-- `contact details`: 334
-- `parentpay`: 127
-- `parent pay`: 91
-- `school dinners`: 51
-- `accessibility`: 42
-- `translate`: 20
-
-## Corpus sweep sample
-
-- `100013` Edith Neville Primary School: Contact Details
-- `100050` Parliament Hill School: ParentPay, ParentPay, ParentPay
-- `100099` Abbey Wood Nursery School: ParentPay, ParentPay, ParentPay, ParentPay, ParentPay
-- `100174` St Alfege with St Peter's Church of England Primary School: ParentPay, ParentPay, ParentPay
-- `100354` Good Shepherd RC Primary School: Contact Details
-- `100425` Thornhill Primary School: ParentPay
-- `100443` St Luke's CofE Primary School: Contact Details
-- `100448` St Andrew's (Barnsbury) Church of England Primary School: Contact Details
+- Corpus sweep: `phrase fingerprint unchanged`
+- Chrome offerings removed: `0` across `0` schools (0 shards scanned)
 
 ## Top flag counts (before)
 
-- (none)
+- `cms_chrome`: 14
+- `admissions`: 13
+- `chrome`: 6
+- `high_score_thin_signals`: 4
+- `implausible_offerings`: 1
 
 ## Notes
 
-- Learning fingerprint: {'phraseHash': '00a67bb08bd66dd734e2', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11094, 'updatedAt': '2026-11-04', 'chromeDenylistCount': 9}
-- Apply decision: corpus-sweep-only; suspect-window QA skipped
-- Corpus sweep decision: forced (--corpus-sweep-only)
-- Corpus sweep removed 665 chrome offering(s) from 285 school(s) across 7382 shards.
-- Corpus sweep reads published shards directly; sidecar hydrate skipped.
+- Rebalanced learned QA phrases: active=900 candidates=2000.
+- Learning fingerprint: {'phraseHash': '00a67bb08bd66dd734e2', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11110, 'updatedAt': '2026-11-08', 'chromeDenylistCount': 9}
+- Apply decision: eventCount +16 (>= 15)
+- Corpus sweep decision: phrase fingerprint unchanged
+- Hydrated working sidecar from 7383 published URN shards (prior=0 → 7383).
+- Before: 38 suspects across 7383 records.
+- Applied QA fixes to 6 school(s) (6 area finding(s)).
+- Learned 0 new junk phrase(s) (store size 900).
+- Reviewed top 38 suspect(s); provider=none.
+- Merged cleaned sidecar into 57 schools-index file(s).
+- After: 32 suspects across 7383 records.
 - Updated output/learned-qa-apply-state.json
-- Suspect-window QA skipped. Corpus sweep applied exact chrome and learned-chrome labels across every shard.
