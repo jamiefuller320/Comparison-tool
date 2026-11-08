@@ -49,6 +49,7 @@
     "generate:aeo-manifests": "npx --yes tsx scripts/generate-aeo-manifests.mjs",
     "test:seo-coverage-loop": "python3 scripts/test-seo-coverage-loop.py",
     "test:seo-schools": "npx --yes tsx scripts/test-seo-schools.mjs",
+    "test:seo-hub-links": "npx --yes tsx scripts/test-seo-hub-links.mjs",
     "test:seo-qualitative": "npx --yes tsx scripts/test-seo-qualitative.mjs",
     "harvest:ey": "python3 scripts/harvest-ey-providers.py && python3 scripts/harvest-childminders.py && python3 scripts/enrich-ey-schools.py",
     "harvest:childminders": "python3 scripts/harvest-childminders.py",

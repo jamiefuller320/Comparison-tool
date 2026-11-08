@@ -18,6 +18,8 @@ import { guidesIndexPath } from "@/lib/guides";
 import { COVERAGE_REGION_LABEL } from "@/lib/laPacks";
 import { areaPageFaqs } from "@/lib/seoFaqs";
 import { areaLandingJsonLd } from "@/lib/seo";
+import { SeoSchoolHubList } from "@/components/SeoSchoolHubList";
+import { listSeoSchoolsInArea } from "@/lib/seoHubLinks";
 import {
   isAuthorityWideTown,
   isSeoAreaIncluded,
@@ -84,6 +86,9 @@ export default async function AreaLandingPage({ params }: PageProps) {
     towns.length === 1 &&
     isAuthorityWideTown(towns[0]);
   const faqs = areaPageFaqs(area);
+  const seoSchools = isSeoAreaIncluded(area.slug)
+    ? listSeoSchoolsInArea(area.slug)
+    : [];
 
   return (
     <main id="main" className="area-page">
@@ -128,6 +133,29 @@ export default async function AreaLandingPage({ params }: PageProps) {
           <AreaStageList area={area} />
         </div>
       </section>
+
+      {seoSchools.length > 0 ? (
+        <section className="section" aria-labelledby="area-schools-heading">
+          <div className="shell">
+            <div className="section-head">
+              <h2 id="area-schools-heading">
+                Schools in {area.localAuthority}
+              </h2>
+              <p>
+                A–Z school snapshots in the {area.localAuthority} sitemap set —
+                open a page for Ofsted and published outcomes, or shortlist in
+                the compare tool.
+              </p>
+            </div>
+            <p className="area-home-more">
+              <span className="area-list-meta">
+                {formatCount(seoSchools.length)} schools in this sitemap set
+              </span>
+            </p>
+            <SeoSchoolHubList schools={seoSchools} />
+          </div>
+        </section>
+      ) : null}
 
       {townCount > 0 ? (
         <section className="section" aria-labelledby="area-towns-heading">
