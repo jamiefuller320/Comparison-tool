@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AreaCoverageList } from "@/components/AreaCoverageList";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { AreaStageList } from "@/components/AreaStageList";
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -96,7 +97,7 @@ export default async function AreaLandingPage({ params }: PageProps) {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <Link href={areasIndexPath()}>Areas</Link>
             <span aria-hidden="true">/</span>
@@ -111,9 +112,9 @@ export default async function AreaLandingPage({ params }: PageProps) {
             {COVERAGE_REGION_LABEL} — a parental compass, not a league table.
           </p>
           <p className="area-actions">
-            <Link href="/#top" className="btn btn-primary">
+            <CompareToolLink href="/#top" className="btn btn-primary">
               Start with a postcode
-            </Link>
+            </CompareToolLink>
             <Link href={guidesIndexPath()} className="btn btn-ghost area-btn-ghost">
               Parent guides
             </Link>
@@ -235,7 +236,7 @@ export default async function AreaLandingPage({ params }: PageProps) {
           </div>
           <ol className="area-steps">
             <li>
-              <Link href="/#top">Open the compare tool</Link> and enter a home
+              <CompareToolLink href="/#top">Open the compare tool</CompareToolLink> and enter a home
               postcode in {area.localAuthority}.
             </li>
             <li>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { ContentReviewApp } from "@/components/ContentReviewApp";
 import { BRAND_NAME } from "@/lib/brand";
 
@@ -19,7 +19,7 @@ export default function ContentReviewPage() {
       <header className="content-review-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <span>Lab</span>
             <span aria-hidden="true">/</span>

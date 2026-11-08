@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { JsonLd } from "@/components/JsonLd";
 import {
   areaPath,
@@ -85,7 +86,7 @@ export default async function TownsIndexPage({ params }: PageProps) {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <Link href={areasIndexPath()}>Areas</Link>
             <span aria-hidden="true">/</span>
@@ -105,9 +106,9 @@ export default async function TownsIndexPage({ params }: PageProps) {
               : `Postal-town pages for places with enough schools to shortlist — Ofsted grades and published outcomes, then jump into the compare tool. Coverage sits inside ${COVERAGE_REGION_LABEL}.`}
           </p>
           <p className="area-actions">
-            <Link href="/#top" className="btn btn-primary">
+            <CompareToolLink href="/#top" className="btn btn-primary">
               Start with a postcode
-            </Link>
+            </CompareToolLink>
             <Link
               href={areaPath(area.slug)}
               className="btn btn-ghost area-btn-ghost"

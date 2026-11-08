@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { JsonLd } from "@/components/JsonLd";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import {
@@ -32,7 +33,7 @@ export default function GuidesIndexPage() {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <span>Guides</span>
           </nav>
@@ -44,9 +45,9 @@ export default function GuidesIndexPage() {
             visit.
           </p>
           <p className="area-actions">
-            <Link href="/#top" className="btn btn-primary">
+            <CompareToolLink href="/#top" className="btn btn-primary">
               Open the compare tool
-            </Link>
+            </CompareToolLink>
             <Link href="/areas/" className="btn btn-ghost area-btn-ghost">
               Browse areas
             </Link>

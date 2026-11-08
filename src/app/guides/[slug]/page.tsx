@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { JsonLd } from "@/components/JsonLd";
 import { areasIndexPath } from "@/lib/areas";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
@@ -55,7 +56,7 @@ export default async function GuidePage({ params }: PageProps) {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <Link href={guidesIndexPath()}>Guides</Link>
             <span aria-hidden="true">/</span>
@@ -65,9 +66,9 @@ export default async function GuidePage({ params }: PageProps) {
           <h1>{guide.title}</h1>
           <p className="area-lead">{guide.description}</p>
           <p className="area-actions">
-            <Link href="/#top" className="btn btn-primary">
+            <CompareToolLink href="/#top" className="btn btn-primary">
               Open the compare tool
-            </Link>
+            </CompareToolLink>
             <Link
               href={areasIndexPath()}
               className="btn btn-ghost area-btn-ghost"

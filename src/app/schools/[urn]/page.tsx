@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { JsonLd } from "@/components/JsonLd";
 import { SchoolClosedRedirect } from "@/components/SchoolClosedRedirect";
 import { areaPath, areasIndexPath, formatCount } from "@/lib/areas";
@@ -136,7 +137,7 @@ export default async function SchoolLandingPage({ params }: PageProps) {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <Link href={areasIndexPath()}>Areas</Link>
             <span aria-hidden="true">/</span>
@@ -169,9 +170,9 @@ export default async function SchoolLandingPage({ params }: PageProps) {
             table.
           </p>
           <p className="area-actions">
-            <Link href={schoolCompareHref(school)} className="btn btn-primary">
+            <CompareToolLink href={schoolCompareHref(school)} className="btn btn-primary">
               Compare this school
-            </Link>
+            </CompareToolLink>
             {websiteHref ? (
               <a
                 href={websiteHref}
@@ -447,7 +448,7 @@ export default async function SchoolLandingPage({ params }: PageProps) {
           </div>
           <ol className="area-steps">
             <li>
-              <Link href={schoolCompareHref(school)}>Compare this school</Link>{" "}
+              <CompareToolLink href={schoolCompareHref(school)}>Compare this school</CompareToolLink>{" "}
               to load it into Side by side.
             </li>
             <li>
