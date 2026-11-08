@@ -4,11 +4,16 @@
 Programme: analyse suspects → apply current heuristics + learned phrases to the
 sidecar → merge into schools-index → write digest.
 
-Full corpus re-apply is triggered when the learned-QA library changed
+Suspect-window re-apply is triggered when the learned-QA library changed
 significantly since the last apply (active phrase set / eventCount), or when
-``--force`` / the periodic max-age ceiling is hit. Minor days skip apply and
-only write an analyse digest — coverage expansion stays in
+``--force`` / the periodic max-age ceiling is hit. Minor days skip that
+window and only write an analyse digest — coverage expansion stays in
 run-qualitative-loop.py / qualitative-loop.yml.
+
+Separately, a corpus-wide exact sweep of the chrome denylist and active
+learned chrome phrases runs over every shard whenever the phrase fingerprint
+hash changes (including a one-phrase change the significant-delta gate
+ignores). ``--corpus-sweep-only`` forces that sweep without suspect QA.
 
 Usage:
   python3 scripts/run-qualitative-quality-loop.py
@@ -37,6 +42,10 @@ from school_capture.learned_qa_patterns import (  # noqa: E402
     learning_change_is_significant,
     learning_library_fingerprint,
     rebalance_learned_qa_patterns,
+)
+from school_capture.qa_corpus_sweep import (  # noqa: E402
+    apply_corpus_chrome_sweep,
+    corpus_sweep_needed,
 )
 from school_capture.qa_heuristics import rank_suspects  # noqa: E402
 from school_capture.sidecar import (  # noqa: E402
@@ -194,9 +203,35 @@ def write_digest(payload: dict) -> None:
         f"- Merged to index: `{payload.get('merged')}`",
         f"- Apply trigger: `{trigger.get('reason', 'n/a')}`",
         "",
+    ]
+    sweep = payload.get("corpusSweep") or {}
+    if sweep:
+        lines.append(f"- Corpus sweep: `{sweep.get('reason', 'n/a')}`")
+        lines.append(
+            f"- Chrome offerings removed: `{sweep.get('offeringsRemoved', 0)}` "
+            f"across `{sweep.get('schoolsChanged', 0)}` schools "
+            f"({sweep.get('shardsScanned', 0)} shards scanned)"
+        )
+        by_label = sweep.get("removedByLabel") or {}
+        if by_label:
+            lines.extend(["", "## Chrome labels removed", ""])
+            for label, count in list(by_label.items())[:12]:
+                lines.append(f"- `{label}`: {count}")
+        sample = sweep.get("sample") or []
+        if sample:
+            lines.extend(["", "## Corpus sweep sample", ""])
+            for row in sample[:8]:
+                removed = ", ".join(row.get("removed") or []) or "—"
+                lines.append(
+                    f"- `{row.get('urn')}` {row.get('name')}: {removed}"
+                )
+        lines.append("")
+    lines.extend(
+        [
         "## Top flag counts (before)",
         "",
-    ]
+        ]
+    )
     for flag, count in (before.get("flagCounts") or {}).items():
         lines.append(f"- `{flag}`: {count}")
     if not before.get("flagCounts"):
@@ -268,21 +303,25 @@ def main(argv: list[str] | None = None) -> int:
         help="Update sidecar only; do not merge into schools-index",
     )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--corpus-sweep-only",
+        action="store_true",
+        help=(
+            "Force the corpus-wide exact chrome/learned sweep and skip "
+            "suspect-window QA (no sidecar hydrate)"
+        ),
+    )
     args = parser.parse_args(argv)
 
     notes: list[str] = []
-    hydrate = ensure_capture_sidecar(DEFAULT_CAPTURE, DEFAULT_SHARDS)
-    if hydrate.get("hydrated"):
-        notes.append(
-            "Hydrated working sidecar from "
-            f"{hydrate.get('shardCount', 0)} published URN shards "
-            f"(prior={hydrate.get('priorSchoolCount', 0)} → "
-            f"{hydrate.get('schoolCount', 0)})."
-        )
-    elif not DEFAULT_CAPTURE.is_file():
-        notes.append("No working sidecar and no shards to hydrate — nothing to clean.")
+    empty_qa = {
+        "reviewed": 0,
+        "changedSchools": 0,
+        "findingsApplied": 0,
+        "learningAdded": 0,
+    }
 
-    if DEFAULT_LEARNED.is_file() and not args.dry_run:
+    if DEFAULT_LEARNED.is_file() and not args.dry_run and not args.corpus_sweep_only:
         try:
             balanced = rebalance_learned_qa_patterns(DEFAULT_LEARNED)
             notes.append(
@@ -302,6 +341,7 @@ def main(argv: list[str] | None = None) -> int:
             "candidateCount": 0,
             "eventCount": 0,
             "updatedAt": None,
+            "chromeDenylistCount": 0,
         }
     )
     state = load_apply_state()
@@ -313,14 +353,76 @@ def main(argv: list[str] | None = None) -> int:
         min_phrase_delta=args.min_phrase_delta,
         max_age_days=args.max_apply_age_days,
     )
+    sweep_needed, sweep_reason = corpus_sweep_needed(
+        state.get("fingerprint") if state else None,
+        fingerprint,
+        force=bool(args.force or args.corpus_sweep_only),
+    )
+    if args.corpus_sweep_only:
+        should_apply = False
+        trigger_reason = "corpus-sweep-only; suspect-window QA skipped"
+        sweep_needed = True
+        sweep_reason = "forced (--corpus-sweep-only)"
     notes.append(f"Learning fingerprint: {fingerprint}")
     notes.append(f"Apply decision: {trigger_reason}")
+    notes.append(f"Corpus sweep decision: {sweep_reason}")
 
-    before = analyse_corpus(min_score=args.min_score)
-    notes.append(
-        f"Before: {before['suspectCount']} suspects across "
-        f"{before['recordCount']} records."
-    )
+    # Sweep shards before hydrating the sidecar. A later merge writes the
+    # sidecar back over every shard, so the sidecar must not predate the sweep.
+    sweep_stats: dict | None = None
+    if sweep_needed and not args.dry_run:
+        sweep_stats = apply_corpus_chrome_sweep(
+            DEFAULT_SHARDS,
+            DEFAULT_LEARNED if DEFAULT_LEARNED.is_file() else None,
+        )
+        notes.append(
+            "Corpus sweep removed "
+            f"{sweep_stats.get('offeringsRemoved', 0)} chrome offering(s) "
+            f"from {sweep_stats.get('schoolsChanged', 0)} school(s) "
+            f"across {sweep_stats.get('shardsScanned', 0)} shards."
+        )
+        if args.corpus_sweep_only and DEFAULT_CAPTURE.is_file():
+            DEFAULT_CAPTURE.unlink()
+            notes.append("Removed stale working sidecar after corpus sweep.")
+
+    def corpus_sweep_block() -> dict:
+        block: dict = {"shouldRun": sweep_needed, "reason": sweep_reason}
+        if sweep_stats:
+            block.update(sweep_stats)
+        return block
+
+    if args.corpus_sweep_only and not args.dry_run:
+        notes.append(
+            "Corpus sweep reads published shards directly; sidecar hydrate skipped."
+        )
+        before = {
+            "recordCount": int((sweep_stats or {}).get("shardsScanned") or 0),
+            "suspectCount": 0,
+            "flagCounts": {},
+            "topSuspects": [],
+        }
+    else:
+        hydrate = ensure_capture_sidecar(
+            DEFAULT_CAPTURE,
+            DEFAULT_SHARDS,
+            force=bool(sweep_stats),
+        )
+        if hydrate.get("hydrated"):
+            notes.append(
+                "Hydrated working sidecar from "
+                f"{hydrate.get('shardCount', 0)} published URN shards "
+                f"(prior={hydrate.get('priorSchoolCount', 0)} → "
+                f"{hydrate.get('schoolCount', 0)})."
+            )
+        elif not DEFAULT_CAPTURE.is_file():
+            notes.append(
+                "No working sidecar and no shards to hydrate — nothing to clean."
+            )
+        before = analyse_corpus(min_score=args.min_score)
+        notes.append(
+            f"Before: {before['suspectCount']} suspects across "
+            f"{before['recordCount']} records."
+        )
 
     if args.dry_run:
         payload = {
@@ -332,13 +434,9 @@ def main(argv: list[str] | None = None) -> int:
             "provider": args.provider,
             "before": before,
             "after": before,
-            "qa": {
-                "reviewed": 0,
-                "changedSchools": 0,
-                "findingsApplied": 0,
-                "learningAdded": 0,
-            },
+            "qa": empty_qa,
             "merged": False,
+            "corpusSweep": corpus_sweep_block(),
             "trigger": {
                 "shouldApply": should_apply,
                 "reason": trigger_reason,
@@ -351,22 +449,42 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if not should_apply:
+        mode = "corpus-sweep" if sweep_stats else "skip"
+        if sweep_stats:
+            save_apply_state(
+                {
+                    "appliedAt": datetime.now(timezone.utc).isoformat(),
+                    "fingerprint": fingerprint,
+                    "triggerReason": sweep_reason,
+                    "mode": mode,
+                    "reviewed": 0,
+                    "changedSchools": int(sweep_stats.get("schoolsChanged") or 0),
+                    "findingsApplied": int(sweep_stats.get("offeringsRemoved") or 0),
+                    "offeringsRemoved": int(sweep_stats.get("offeringsRemoved") or 0),
+                }
+            )
+            notes.append("Updated output/learned-qa-apply-state.json")
+            skip_note = (
+                "Suspect-window QA skipped. Corpus sweep applied exact chrome "
+                "and learned-chrome labels across every shard."
+            )
+        else:
+            skip_note = (
+                "Skipped full apply — learning library unchanged "
+                "(and within periodic max age). Analyse-only digest."
+            )
         payload = {
             "ranAt": datetime.now(timezone.utc).isoformat(),
             "dryRun": False,
-            "mode": "skip",
+            "mode": mode,
             "limit": args.limit,
             "minScore": args.min_score,
             "provider": args.provider,
             "before": before,
             "after": before,
-            "qa": {
-                "reviewed": 0,
-                "changedSchools": 0,
-                "findingsApplied": 0,
-                "learningAdded": 0,
-            },
+            "qa": empty_qa,
             "merged": False,
+            "corpusSweep": corpus_sweep_block(),
             "trigger": {
                 "shouldApply": False,
                 "reason": trigger_reason,
@@ -374,11 +492,7 @@ def main(argv: list[str] | None = None) -> int:
                 "prior": state.get("fingerprint"),
                 "priorAppliedAt": state.get("appliedAt"),
             },
-            "notes": notes
-            + [
-                "Skipped full apply — learning library unchanged "
-                "(and within periodic max age). Analyse-only digest."
-            ],
+            "notes": notes + [skip_note],
         }
         write_digest(payload)
         print(json.dumps(payload, indent=2))
@@ -488,6 +602,7 @@ def main(argv: list[str] | None = None) -> int:
         "after": after,
         "qa": qa_stats,
         "merged": merged,
+        "corpusSweep": corpus_sweep_block(),
         "trigger": {
             "shouldApply": True,
             "reason": trigger_reason,

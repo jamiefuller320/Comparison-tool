@@ -451,18 +451,28 @@ def phrase_matches_learned(text: str, path: Path | None = None) -> bool:
 
 
 def learning_library_fingerprint(path: Path | None = None) -> dict[str, Any]:
-    """Stable fingerprint of the active learned-QA phrase set + event count."""
+    """Stable fingerprint of active learned phrases plus the chrome denylist.
+
+    The denylist is part of the hash so seeding or editing an exact chrome
+    label changes the fingerprint and the corpus sweep runs, even when the
+    active phrase count is unchanged.
+    """
     import hashlib
+
+    from school_capture.chrome_denylist import EXACT_CHROME_LABELS
 
     store = load_learned_qa_patterns(path)
     phrases = sorted(str(p) for p in (store.get("phrases") or []) if p)
-    digest = hashlib.sha256("\n".join(phrases).encode("utf-8")).hexdigest()[:20]
+    denied = sorted(EXACT_CHROME_LABELS)
+    blob = "\n".join(phrases) + "\n--chrome-denylist--\n" + "\n".join(denied)
+    digest = hashlib.sha256(blob.encode("utf-8")).hexdigest()[:20]
     return {
         "phraseHash": digest,
         "phraseCount": len(phrases),
         "candidateCount": int(store.get("candidateCount") or len(phrases)),
         "eventCount": int(store.get("eventCount") or 0),
         "updatedAt": store.get("updatedAt"),
+        "chromeDenylistCount": len(denied),
     }
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+from school_capture.chrome_denylist import is_exact_chrome_label
 from school_capture.offering_terms import (
     ACTIVITY_TERMS,
     CURRICULUM_SUBJECT_TERMS,
@@ -495,6 +496,10 @@ def is_nav_or_junk_list_item(item: str) -> bool:
     # Short value / identity words must survive for ethos themes.
     if lower in ETHOS_VALUE_TERMS or lower.rstrip("s") in ETHOS_VALUE_TERMS:
         return False
+    # Exact CMS chrome (Contact Details, ParentPay, …). Not a substring:
+    # "Accessibility Plan" and "Privacy and Security" stay plausible.
+    if is_exact_chrome_label(item):
+        return True
     if looks_like_named_person(item):
         return True
     if looks_like_pdf_extraction_junk(item):
