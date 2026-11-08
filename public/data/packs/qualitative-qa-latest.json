@@ -1,11 +1,103 @@
 {
-  "ranAt": "2026-11-05T15:20:31.044628+00:00",
+  "ranAt": "2026-11-08T14:24:27.089595+00:00",
   "dryRun": false,
   "reviewed": 16,
-  "changedSchools": 0,
-  "findingsApplied": 0,
-  "learningAdded": 0,
+  "changedSchools": 6,
+  "findingsApplied": 14,
+  "learningAdded": 2,
   "suspects": [
+    {
+      "urn": "152446",
+      "name": "Gillingham School",
+      "score": 12.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our Sixth Form Our exceptional Sixth Form provides a vibrant, supportive, and ambitious setting where students are challenged to achieve their best, grow as independent thinkers, take on meaningful leadership roles, and prepare confidently for university, apprenticeships, or the world of work."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Working alongside the Senior Leadership Team, Committee members have the opportunity to influence positive change, represent their peers and contribute to a safe, inclusive and supportive school community."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Collaborating to address academic, social, emotional, and behavioural needs, ensuring a positive and supportive learning environment."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Working alongside the Senior Leadership Team, Committee members have the opportunity to influence positive change, represent their peers and contribute to a safe, inclusive and supportive school community."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "102031",
+      "name": "Freezywater St George's CofE VA Primary School",
+      "score": 11.0,
+      "flags": [
+        "policy_toc",
+        "implausible_offerings",
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "enrichment",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Activity/Action Impact Comments"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "At our school safeguarding encompasses: Safeguarding is also supported by our approach to behaviour management, our response to managing bullying, our response to caring, our response to children who are absent from school and our health and safety procedures."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "At our school safeguarding encompasses: Safeguarding is also supported by our approach to behaviour management, our response to managing bullying, our response to caring, our response to children who are absent from school and our health and safety procedures."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
     {
       "urn": "125810",
       "name": "Boundstone Nursery School",
@@ -37,6 +129,129 @@
       ]
     },
     {
+      "urn": "126066",
+      "name": "Millais School",
+      "score": 8.0,
+      "flags": [
+        "policy_toc",
+        "chrome",
+        "implausible_offerings"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Offerings look like site chrome, policy TOC, or learned junk.",
+          "junkClass": "policy_toc",
+          "offendingExcerpts": [
+            "Academic, Behavioural & Safeguarding",
+            "Special Educational Needs and"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Reviewed SEND Information Report   May 2026: Academic, Behavioural & Safeguarding"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "114525",
+      "name": "Firle Church of England Primary School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our wonderful children, dedicated staff, supportive families and strong community come together to create a special place where everyone is valued and every child is given the opportunity to grow."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Our wonderful children, dedicated staff, supportive families and strong community come together to create a special place where everyone is valued and every child is given the opportunity to grow."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "114550",
+      "name": "Framfield Church of England Primary School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Useful Downloads SEND Policy SEND Information Report 2025-26 Universally Available Provision Booklet (May 2026) Useful Links SEN Local Offer \u2013 a Special Educational Needs and Disabilities (SEND) Information Hub SEN Local Offer \u2013 Advice & Information Amaze \u2013 for families with disabled children and young people in Sussex"
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Useful Downloads SEND Policy SEND Information Report 2025-26 Universally Available Provision Booklet (May 2026) Useful Links SEN Local Offer \u2013 a Special Educational Needs and Disabilities (SEND) Information Hub SEN Local Offer \u2013 Advice & Information Amaze \u2013 for families with disabled children and young people in Sussex"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "148724",
+      "name": "Stafford Junior School",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "ethos",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Through her role as a governor, Hayley brings valuable insight and a passion for creating a safe, inclusive, and supportive environment for all pupils."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "She has a strong focus on safeguarding, curriculum development, and supporting children with special educational needs and disabilities (SEND)."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
       "urn": "147128",
       "name": "The Ferns Primary Academy",
       "score": 6.0,
@@ -61,6 +276,26 @@
           "junkClass": "admissions",
           "offendingExcerpts": [
             "The school website lists Absence & Attendance, Celebrating Success, Celebration Assembly, Free Stay and Play, Inset Days, Lettings and 9 more."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "136164",
+      "name": "Brighton Aldridge Community Academy",
+      "score": 5.0,
+      "flags": [
+        "cms_chrome"
+      ],
+      "findings": [
+        {
+          "area": "community",
+          "action": "strip",
+          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
+          "junkClass": "cms_chrome",
+          "offendingExcerpts": [
+            "Strong publicly visible evidence for community and parental engagement (42 specific items). Listed provision includes Prospectus, Student Wellbeing Form. 3 items corroborated acros"
           ],
           "source": "heuristic"
         }
@@ -167,8 +402,8 @@
       ]
     },
     {
-      "urn": "118310",
-      "name": "Ryarsh Primary School",
+      "urn": "137063",
+      "name": "Portslade Aldridge Community Academy",
       "score": 5.0,
       "flags": [
         "cms_chrome"
@@ -180,15 +415,15 @@
           "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
           "junkClass": "cms_chrome",
           "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (16 specific items). Listed provision includes Galleries, Newsletters, music. 2 items corroborated across mul"
+            "Strong publicly visible evidence for community and parental engagement (52 specific items). Listed provision includes Prospectus, Student Wellbeing Form. 3 items corroborated acros"
           ],
           "source": "heuristic"
         }
       ]
     },
     {
-      "urn": "125992",
-      "name": "Shipley CofE Primary School",
+      "urn": "114416",
+      "name": "Rotherfield Primary School",
       "score": 5.0,
       "flags": [
         "cms_chrome"
@@ -200,147 +435,7 @@
           "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
           "junkClass": "cms_chrome",
           "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (10 specific items). Listed provision includes Facebook, Instagram, LinkedIn. 3 items corroborated across mul"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116489",
-      "name": "St Peter's Catholic Primary School, Waterlooville",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (8 specific items). Listed provision includes Newsletter, music. 1 item corroborated across multiple pages."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "151930",
-      "name": "St Peter's Catholic Primary School, Waterlooville",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (8 specific items). Listed provision includes Newsletter, music. 1 item corroborated across multiple pages."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "116383",
-      "name": "St Swithun Wells Catholic Primary School, Chandlers Ford",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Moderate publicly visible evidence for community and parental engagement (3 specific items). Listed provision includes Facebook, Instagram, LinkedIn."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "148724",
-      "name": "Stafford Junior School",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Strong publicly visible evidence for community and parental engagement (10 specific items). Listed provision includes Facebook, News & Newsletters, Outside Agency Directory, Prospe"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "109748",
-      "name": "Blagdon Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101251",
-      "name": "Brookhill Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "101252",
-      "name": "Hampden Way Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists BACE Family Park Days, BEYA Children\u2019s Centre, Baby Rhyme Time, Good Start, Great Start, Newstead Children\u2019s Centre: Park Sessions, Outdoor Stay & Play and"
+            "Strong publicly visible evidence for community and parental engagement (22 specific items). Listed provision includes Newsletter, School Comms Booking, Helen Miller Chair of Govern"
           ],
           "source": "heuristic"
         }
@@ -348,6 +443,8 @@
     }
   ],
   "notes": [
+    "Applied QA fixes to 6 school(s) (14 area finding(s)).",
+    "Learned 2 new junk phrase(s) (store size 900).",
     "Reviewed top 16 suspect(s); provider=none."
   ],
   "provider": "none"

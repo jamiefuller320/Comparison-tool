@@ -1,43 +1,39 @@
 # Qualitative capture loop
 
-- Ran at: `2026-11-05T15:20:34.604493+00:00`
-- Ingest policy / phase: `auto` / `maintenance`
+- Ran at: `2026-11-08T14:25:05.731629+00:00`
+- Ingest policy / phase: `auto` / `se_tail`
 - Scope: `parallel`
-- LA: `Hampshire, Lambeth, Tower Hamlets`
+- LA: `Hampshire, Dorset, East Sussex`
 - Index: `public/data/schools-index.json`
-- Remaining with website (pre-capture): `0`
-- Batch limit (per stream): `15`
-- Sidecar records before → after: `7382` → `7382`
+- Remaining with website (pre-capture): `578`
+- Batch limit (per stream): `60`
+- Sidecar records before → after: `7382` → `7383`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `0`
+- QA reviewed / changed: `16` / `6`
 - Learned terms: `500`
-- Learned QA phrases: `0`
+- Learned QA phrases: `2`
 - Dry run: `False`
 
 ## Streams
 
 - `Hampshire`: status=ok added=0 remaining=0 index=`public/data/schools-index.json`
-- `Lambeth`: status=ok added=0 remaining=0 index=`public/data/packs/lambeth/schools-index.json`
-- `Tower Hamlets`: status=ok added=0 remaining=0 index=`public/data/packs/tower-hamlets/schools-index.json`
+- `Dorset`: status=ok added=1 remaining=1 index=`public/data/packs/dorset/schools-index.json`
+- `East Sussex`: status=ok added=0 remaining=0 index=`public/data/packs/east-sussex/schools-index.json`
 
 ## Notes
 
 - Hydrated working sidecar from 7382 published URN shards (prior=0 → 7382).
-- Ingest policy=auto phase=maintenance (non-London remaining=0, London remaining=0, pending London packs=0).
-- Maintenance phase: core region website ingest complete — prioritise stale re-screens, qualitative-quality-loop, and pack-quality / selective Cursor polish; expand into adjacent LAs only when ready packs exist and maintenance budgets allow (see PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER).
-- Stream preferred=Hampshire exhausted (remaining=0); no replacement LA with website work.
-- Stream preferred=Lambeth exhausted (remaining=0); no replacement LA with website work.
-- Stream preferred=Tower Hamlets exhausted (remaining=0); no replacement LA with website work.
+- Ingest policy=auto phase=se_tail (non-London remaining=4982, London remaining=2943, pending London packs=0).
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=0.
-- Stream LA=Lambeth index=public/data/packs/lambeth/schools-index.json remainingWithWebsite=0.
-- Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.
-- Running 3 capture streams in parallel (limit 15 each).
-- Merged 3 partial sidecar(s) → 7382 records (union size 7382).
-- Captured batch (sidecar 7382 → 7382); learned terms now 509.
-- No new captures — website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.
+- Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=578.
+- Stream LA=Dorset index=public/data/packs/dorset/schools-index.json remainingWithWebsite=178.
+- Stream LA=East Sussex index=public/data/packs/east-sussex/schools-index.json remainingWithWebsite=207.
+- Running 3 capture streams in parallel (limit 60 each).
+- Merged 3 partial sidecar(s) → 7383 records (union size 7383).
+- Captured batch (sidecar 7382 → 7383); learned terms now 595.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 0, learned phrases +0.
+- QA provider=none: reviewed 16, changed 6, learned phrases +2.
+- Re-merged affected schools-index files after QA fixes.
