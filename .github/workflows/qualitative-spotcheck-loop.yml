@@ -124,6 +124,7 @@ jobs:
           git add -f output/learned-qa-patterns.json 2>/dev/null || true
           git add -f output/spotcheck-human-flag-candidates.jsonl 2>/dev/null || true
           git add -f output/spotcheck-human-gated-candidates.jsonl 2>/dev/null || true
+          git add -f output/spotcheck-anchor-streaks.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No qualitative spot-check digest changes"
           else

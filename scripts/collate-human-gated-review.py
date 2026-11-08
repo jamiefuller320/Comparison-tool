@@ -55,6 +55,7 @@ KIND_ETHOS = "ethos_underclaim"
 KIND_UNSUPPORTED = "unsupported_offerings"
 KIND_USER = "user_improvement"
 KIND_ISSUE = "github_issue"
+DIGEST_ONLY_NOTE = "digest-only: unsupported offerings (no PDF confirmation)"
 
 
 def utc_now() -> str:
@@ -255,6 +256,14 @@ def collect_spotcheck_digest_flags(seen_at: str) -> list[dict[str, Any]]:
             excerpts = flag.get("excerpts") or []
             excerpt_key = ",".join(str(x) for x in excerpts[:4])
             kind = KIND_ETHOS if code == "possible_underclaim" else KIND_UNSUPPORTED
+            if kind == KIND_UNSUPPORTED:
+                from human_gated_support import load_shard, pdf_confirms_unsupported
+
+                shard = load_shard(urn) if urn else None
+                if not pdf_confirms_unsupported(
+                    shard, flag.get("excerpts") or []
+                ):
+                    continue
             item_id = stable_id("spotcheck-digest", kind, urn, code, area, excerpt_key)
             items.append(
                 {
@@ -332,6 +341,33 @@ def collect_github_issues(limit: int) -> list[dict[str, Any]]:
             }
         )
     return items
+
+
+def downgrade_unsupported_digest_only(
+    queue: dict[str, dict[str, Any]],
+    *,
+    when: str,
+) -> int:
+    """Close open unsupported_offerings rows that lack PDF confirmation."""
+    from human_gated_support import load_shard, pdf_confirms_unsupported
+
+    downgraded = 0
+    for row in queue.values():
+        if str(row.get("status") or "open") != "open":
+            continue
+        if str(row.get("kind") or "") != KIND_UNSUPPORTED:
+            continue
+        urn = str(row.get("urn") or "").strip()
+        if pdf_confirms_unsupported(
+            load_shard(urn) if urn else None,
+            row.get("excerpts") or [],
+        ):
+            continue
+        row["status"] = "ignored"
+        row["doneAt"] = when
+        row["doneNote"] = DIGEST_ONLY_NOTE
+        downgraded += 1
+    return downgraded
 
 
 def mark_done(
@@ -594,6 +630,7 @@ def collate(
     mark_done_ids: list[str],
     mark_done_feedback: list[str],
     done_note: str | None,
+    downgrade_unsupported: bool,
     digest_json: Path,
     digest_md: Path,
     queue_path: Path,
@@ -631,6 +668,15 @@ def collate(
         if before is None:
             upserted += 1
 
+    unsupported_downgraded = 0
+    if downgrade_unsupported:
+        unsupported_downgraded = downgrade_unsupported_digest_only(queue, when=seen_at)
+        if unsupported_downgraded:
+            notes.append(
+                f"Downgraded {unsupported_downgraded} unsupported_offerings row(s) "
+                "to digest-only (no PDF confirmation)"
+            )
+
     auto_closed = 0
     if auto_close:
         auto_closed = auto_close_learned(queue, learned_phrases(), seen_at)
@@ -664,6 +710,7 @@ def collate(
         "openCount": len(items),
         "queueSize": len(queue),
         "upserted": upserted,
+        "unsupportedDowngraded": unsupported_downgraded,
         "autoClosedLearned": auto_closed,
         "counts": {
             "open": status_counts.get("open", 0),
@@ -770,6 +817,11 @@ def main() -> int:
     )
     parser.add_argument("--done-note", default=None, help="Note stored on --mark-done*")
     parser.add_argument(
+        "--no-downgrade-unsupported",
+        action="store_true",
+        help="Keep open unsupported_offerings queue rows without PDF confirmation",
+    )
+    parser.add_argument(
         "--digest-json",
         type=Path,
         default=DIGEST_JSON,
@@ -798,6 +850,7 @@ def main() -> int:
         mark_done_ids=args.mark_done,
         mark_done_feedback=args.mark_done_feedback,
         done_note=args.done_note,
+        downgrade_unsupported=not args.no_downgrade_unsupported,
         digest_json=args.digest_json,
         digest_md=args.digest_md,
         queue_path=args.queue,
