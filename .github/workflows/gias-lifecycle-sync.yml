@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: gias-lifecycle-sync
@@ -78,3 +79,16 @@ jobs:
             git pull --rebase origin main
             git push
           fi
+
+  notify-failure:
+    name: Notify on failure
+    runs-on: ubuntu-latest
+    needs: gias-lifecycle
+    if: ${{ failure() && needs.gias-lifecycle.result == 'failure' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Open or update workflow-failure issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/notify-workflow-failure.sh "GIAS lifecycle sync"

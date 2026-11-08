@@ -57,7 +57,8 @@ export const LONDON_BOROUGH_LOCAL_AUTHORITIES = [
 ] as const;
 
 /**
- * Coverage region: ONS South East LAs + Dorset / BCP + London boroughs.
+ * Coverage region: ONS South East LAs + Dorset / BCP + London boroughs,
+ * plus extended ready packs (e.g. Wiltshire).
  * Hampshire is the maintained root; other members ship as silent-merge packs.
  */
 export const SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES = [
@@ -85,13 +86,39 @@ export const SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES = [
   ...LONDON_BOROUGH_LOCAL_AUTHORITIES,
 ] as const;
 
+/**
+ * Ready-pack local authorities outside the ONS South East + Dorset footprint
+ * that still merge silently into map and search (see packs/manifest.json).
+ */
+export const COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES = [
+  "Wiltshire",
+] as const;
+
 /** Canonical alias for full coverage-region membership. */
-export const COVERAGE_REGION_LOCAL_AUTHORITIES =
-  SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES;
+export const COVERAGE_REGION_LOCAL_AUTHORITIES = [
+  ...SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES,
+  ...COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES,
+] as const;
+
+/** User-facing geography phrases for meta copy and guides. */
+export const COVERAGE_REGION_LABEL_PARTS = [
+  "South East England",
+  "London",
+  "Dorset",
+  ...COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES,
+] as const;
+
+function formatOxfordList(items: readonly string[]): string {
+  if (items.length === 0) return "";
+  if (items.length === 1) return items[0]!;
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+}
 
 /** Human label for the wider coverage region. */
-export const COVERAGE_REGION_LABEL =
-  "South East England, London, and Dorset";
+export const COVERAGE_REGION_LABEL = formatOxfordList(
+  COVERAGE_REGION_LABEL_PARTS,
+);
 
 /**
  * Contiguous neighbours within the coverage region (DfE LA labels).
@@ -141,6 +168,14 @@ export const COVERAGE_LA_NEIGHBOURS: Record<string, readonly string[]> = {
     "Wiltshire",
   ],
   "Bournemouth, Christchurch and Poole": ["Dorset", "Hampshire"],
+  Wiltshire: [
+    "Dorset",
+    "Somerset",
+    "Gloucestershire",
+    "Oxfordshire",
+    "Southampton",
+    "Hampshire",
+  ],
   "West Berkshire": [
     "Hampshire",
     "Reading",

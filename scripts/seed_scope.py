@@ -83,9 +83,13 @@ SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES: tuple[str, ...] = (
     *LONDON_BOROUGH_LOCAL_AUTHORITIES,
 )
 
+# Ready-pack LAs outside the ONS South East + Dorset core (e.g. Wiltshire).
+COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES: tuple[str, ...] = ("Wiltshire",)
+
 # Canonical alias for the full coverage region membership list.
 COVERAGE_REGION_LOCAL_AUTHORITIES: tuple[str, ...] = (
-    SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES
+    *SOUTHEAST_PLUS_DORSET_LOCAL_AUTHORITIES,
+    *COVERAGE_REGION_EXTENDED_LOCAL_AUTHORITIES,
 )
 
 # Build order for batch pack harvest (Hampshire omitted — maintained root).
