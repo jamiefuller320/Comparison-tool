@@ -21,14 +21,16 @@ import { ProductFeedbackForm } from "@/components/ProductFeedbackForm";
 import { FEEDBACK_CAMPAIGN_ID } from "@/lib/buildMeta";
 import { BRAND_NAME } from "@/lib/brand";
 
+const NO_STRINGS: string[] = [];
+
 export function ProductFeedbackPrompt({
   shortlistCount = 0,
-  shortlistLas = [],
+  shortlistLas = NO_STRINGS,
   hadPostcode = false,
   openedSideBySide = false,
   sawVisitPack = false,
-  stages = [],
-  sectors = [],
+  stages = NO_STRINGS,
+  sectors = NO_STRINGS,
 }: {
   shortlistCount?: number;
   /** Distinct DfE LA labels from the live shortlist (voluntary intake signal). */

@@ -6,37 +6,29 @@ import type {
   EyProvidersIndex,
   SchoolsIndex,
 } from "@/lib/types";
-import { loadSeedIndexes } from "@/lib/collateIndexes";
+import { loadSeedIndexes, type SeedIndexes } from "@/lib/collateIndexes";
 import {
   ensureAreaCoverageForDistrict,
   ensureAreaCoverageForUrns,
 } from "@/lib/ensureAreaCoverage";
+import { homepageSearchNeedsSeed } from "@/lib/homepageSeed";
 import { CompareApp } from "@/components/CompareApp";
 import { JourneyChapterProvider } from "@/components/JourneyChapterContext";
-import { HarbourSetupPortal } from "@/components/HarbourBand";
 
 type PackPhase = "idle" | "loading" | "ready" | "partial";
 
 /**
- * Seed-first load only. Wider LA packs arrive geo-lazily via
- * ensureAreaCoverage (postcode district + neighbours, or share-link URNs).
+ * Lets the setup form paint before Hampshire / early years / childminder
+ * indexes are downloaded. Not stored as the live index.
  */
-async function progressiveLoad(
-  fetchImpl: typeof fetch,
-  cacheBust: boolean,
-  onSeed: (seed: {
-    schools: SchoolsIndex;
-    ey: EyProvidersIndex | null;
-    childminders: ChildmindersIndex | null;
-  }) => void,
-  onNote: (note: string | null) => void,
-): Promise<{ packsFailed: number; packsLoaded: number; readyCount: number }> {
-  onNote("Loading Hampshire seed…");
-  const seed = await loadSeedIndexes(fetchImpl, cacheBust);
-  onSeed(seed);
-  onNote(null);
-  return { packsFailed: 0, packsLoaded: 0, readyCount: 0 };
-}
+const PENDING_INDEX: SchoolsIndex = {
+  generatedAt: "",
+  period: "",
+  source: { api: "", datasets: {}, primarySite: "", note: "" },
+  benchmarks: { england: {}, localAuthorities: {} },
+  schools: [],
+  stats: { schoolCount: 0, withRwm: 0, localAuthorityCount: 0 },
+};
 
 export function CompareLoader() {
   const [index, setIndex] = useState<SchoolsIndex | null>(null);
@@ -52,74 +44,68 @@ export function CompareLoader() {
     ey: null as EyProvidersIndex | null,
     childminders: null as ChildmindersIndex | null,
   });
+  const seedPromiseRef = useRef<Promise<SeedIndexes> | null>(null);
   indexesRef.current = {
     schools: index,
     ey: eyIndex,
     childminders: childmindersIndex,
   };
 
-  const applySeed = useCallback(
-    (seed: {
-      schools: SchoolsIndex;
-      ey: EyProvidersIndex | null;
-      childminders: ChildmindersIndex | null;
-    }) => {
-      setIndex(seed.schools);
-      setEyIndex(seed.ey);
-      setChildmindersIndex(seed.childminders);
-      setError(null);
-    },
-    [],
-  );
+  const applySeed = useCallback((seed: SeedIndexes) => {
+    indexesRef.current = {
+      schools: seed.schools,
+      ey: seed.ey,
+      childminders: seed.childminders,
+    };
+    setIndex(seed.schools);
+    setEyIndex(seed.ey);
+    setChildmindersIndex(seed.childminders);
+    setError(null);
+  }, []);
 
-  const finishPacks = useCallback(
-    (result: {
-      packsFailed: number;
-      packsLoaded: number;
-      readyCount: number;
-    }) => {
-      if (result.readyCount === 0) {
-        setPackPhase("ready");
-        setPackNote(null);
-        return;
-      }
-      if (result.packsFailed > 0) {
-        setPackPhase("partial");
-        setPackNote(
-          `Loaded ${result.packsLoaded} of ${result.readyCount} area packs. Retry if your area is missing.`,
-        );
-        return;
-      }
-      setPackPhase("ready");
-      setPackNote(null);
+  const ensureSeed = useCallback(
+    (cacheBust: boolean) => {
+      if (seedPromiseRef.current && !cacheBust) return seedPromiseRef.current;
+      setPackPhase("loading");
+      setPackNote(
+        cacheBust ? "Refreshing school data…" : "Loading Hampshire seed…",
+      );
+      const promise = loadSeedIndexes(fetch, cacheBust)
+        .then((seed) => {
+          applySeed(seed);
+          setPackPhase("ready");
+          setPackNote(null);
+          return seed;
+        })
+        .catch((err: unknown) => {
+          seedPromiseRef.current = null;
+          setError(
+            err instanceof Error ? err.message : "Could not load school data",
+          );
+          setPackPhase("idle");
+          setPackNote(null);
+          throw err;
+        });
+      seedPromiseRef.current = promise;
+      return promise;
     },
-    [],
+    [applySeed],
   );
 
   const reloadIndex = useCallback(async () => {
-    setPackPhase("loading");
-    setPackNote("Refreshing school data…");
-    try {
-      const result = await progressiveLoad(
-        fetch,
-        true,
-        applySeed,
-        setPackNote,
-      );
-      finishPacks(result);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Could not load school data",
-      );
-      setPackPhase("idle");
-      setPackNote(null);
-      throw err;
-    }
-  }, [applySeed, finishPacks]);
+    seedPromiseRef.current = null;
+    await ensureSeed(true);
+  }, [ensureSeed]);
 
   const ensureAreaCoverage = useCallback(
     async (adminDistrict?: string | null) => {
-      const current = indexesRef.current;
+      let seed: SeedIndexes;
+      try {
+        seed = await ensureSeed(false);
+      } catch {
+        return;
+      }
+      const current = indexesRef.current.schools ? indexesRef.current : seed;
       if (!adminDistrict?.trim() || !current.schools) return;
       try {
         setPackPhase("loading");
@@ -145,22 +131,27 @@ export function CompareLoader() {
         applySeed(result.next);
         setPackPhase("ready");
         window.setTimeout(() => {
-          setPackNote((note) =>
-            note?.startsWith("Added ") ? null : note,
-          );
+          setPackNote((note) => (note?.startsWith("Added ") ? null : note));
         }, 2400);
       } catch {
         setPackPhase("ready");
         /* Soft-fail — Finder still uses whatever is already collated. */
       }
     },
-    [applySeed],
+    [applySeed, ensureSeed],
   );
 
   const ensureUrnCoverage = useCallback(
     async (urns: string[]) => {
-      const current = indexesRef.current;
-      if (!urns.length || !current.schools) return;
+      if (!urns.length) return;
+      let seed: SeedIndexes;
+      try {
+        seed = await ensureSeed(false);
+      } catch {
+        return;
+      }
+      const current = indexesRef.current.schools ? indexesRef.current : seed;
+      if (!current.schools) return;
       try {
         setPackPhase("loading");
         const result = await ensureAreaCoverageForUrns(
@@ -183,115 +174,53 @@ export function CompareLoader() {
         applySeed(result.next);
         setPackPhase("ready");
         window.setTimeout(() => {
-          setPackNote((note) =>
-            note?.startsWith("Loaded ") ? null : note,
-          );
+          setPackNote((note) => (note?.startsWith("Loaded ") ? null : note));
         }, 2400);
       } catch {
         setPackPhase("ready");
       }
     },
-    [applySeed],
+    [applySeed, ensureSeed],
   );
 
   useEffect(() => {
-    let cancelled = false;
     const cacheBust = reloadToken > 0;
+    if (!cacheBust && !homepageSearchNeedsSeed(window.location.search)) return;
+    void ensureSeed(cacheBust).catch(() => {
+      /* error state set inside ensureSeed */
+    });
+  }, [reloadToken, ensureSeed]);
 
-    setPackPhase("loading");
-    progressiveLoad(
-      fetch,
-      cacheBust,
-      (seed) => {
-        if (!cancelled) applySeed(seed);
-      },
-      (note) => {
-        if (!cancelled) setPackNote(note);
-      },
-    )
-      .then((result) => {
-        if (!cancelled) finishPacks(result);
-      })
-      .catch((err: Error) => {
-        if (!cancelled) {
-          setError(err.message || "Could not load school data");
-          setPackPhase("idle");
-          setPackNote(null);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [reloadToken, applySeed, finishPacks]);
-
-  if (error && !index) {
-    return (
-      <HarbourSetupPortal active>
-        <div className="hero-controls">
-          <div className="shell hero-inner">
-            <p className="postcode-error" role="alert">
-              {error}
-            </p>
-            <p className="hint">
-              On a slow connection this can time out before the first file
-              finishes. Wait a moment and try again — Hampshire data alone is
-              enough to start.
-            </p>
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => {
-                setError(null);
-                setReloadToken((n) => n + 1);
-              }}
-            >
-              Retry loading data
-            </button>
-          </div>
-        </div>
-      </HarbourSetupPortal>
-    );
-  }
-
-  if (!index) {
-    return (
-      <HarbourSetupPortal active>
-        <div className="hero-controls">
-          <div className="shell hero-inner">
-            <p>Loading school and early-years data…</p>
-            <p className="hint">
-              First load brings Hampshire; nearby area packs load when you set a
-              home postcode.
-            </p>
-          </div>
-        </div>
-      </HarbourSetupPortal>
-    );
-  }
+  const showBanner =
+    Boolean(error) ||
+    packPhase === "loading" ||
+    packPhase === "partial" ||
+    Boolean(packNote);
 
   return (
     <>
-      {packPhase === "loading" || packPhase === "partial" || packNote ? (
+      {showBanner ? (
         <div className="data-load-banner" role="status" aria-live="polite">
           <div className="shell data-load-banner-inner">
             <p>
-              {packNote ||
+              {error ||
+                packNote ||
                 (packPhase === "loading"
                   ? "Loading nearby area coverage…"
                   : "Some area packs did not finish loading.")}
             </p>
-            {packPhase === "partial" ? (
+            {error || packPhase === "partial" ? (
               <button
                 type="button"
                 className="btn-ghost"
                 onClick={() => {
+                  setError(null);
                   void reloadIndex().catch(() => {
-                    /* error state set inside reloadIndex */
+                    /* error state set inside ensureSeed */
                   });
                 }}
               >
-                Retry packs
+                {error ? "Retry loading data" : "Retry packs"}
               </button>
             ) : null}
           </div>
@@ -299,7 +228,7 @@ export function CompareLoader() {
       ) : null}
       <JourneyChapterProvider>
         <CompareApp
-          index={index}
+          index={index ?? PENDING_INDEX}
           eyIndex={eyIndex}
           childmindersIndex={childmindersIndex}
           onIndexReload={reloadIndex}

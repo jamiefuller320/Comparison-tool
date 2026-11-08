@@ -296,10 +296,11 @@ export function ProductTour() {
   }, [start]);
 
   useEffect(() => {
+    // The card used to open on a timer and became the homepage LCP element.
+    // How to use (TOUR_START_EVENT) still starts it. ?tour=1 is an explicit link.
     const params = new URLSearchParams(window.location.search);
     const force = params.get("tour") === "1" || params.get("tour") === "true";
-    if (!force && hasSeenTour()) return;
-
+    if (!force) return;
     const timer = window.setTimeout(() => {
       if (force || !hasSeenTour()) start();
     }, AUTO_START_DELAY_MS);

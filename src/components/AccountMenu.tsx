@@ -13,7 +13,23 @@ export function AccountMenu() {
   const [message, setMessage] = useState<string | null>(null);
   const [tone, setTone] = useState<"ok" | "err">("ok");
 
-  if (!account.hydrated) return null;
+  // Keep the trigger in the first paint. Mounting it only after hydration
+  // widens the header and wraps the wordmark, which shifts the page.
+  if (!account.hydrated) {
+    return (
+      <div className="account-menu">
+        <button
+          type="button"
+          className="account-menu-trigger"
+          disabled
+          aria-hidden="true"
+          tabIndex={-1}
+        >
+          Recall shortlist
+        </button>
+      </div>
+    );
+  }
 
   const savedCount = account.saved[0]?.schools?.length ?? 0;
 

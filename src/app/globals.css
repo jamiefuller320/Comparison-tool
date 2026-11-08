@@ -906,7 +906,8 @@ body:has(.shortlist-dock) {
   content: none;
 }
 
-.hero-controls .hero-inner {
+.hero-controls .hero-inner,
+.harbour-band .hero-inner {
   position: relative;
   z-index: 1;
   animation: none;
@@ -1642,8 +1643,20 @@ body:has(.shortlist-dock) {
   color: #f7fbff;
 }
 
-.harbour-setup-slot:empty {
-  min-height: 0;
+/*
+  Setup journey chrome portals into this slot after hydration. Reserve the
+  measured phone and desktop heights of that journey (Lighthouse mobile is
+  412px) so section#areas does not jump when the slot fills. Mid-width phones
+  are a few pixels shorter; the extra band is harbour wash, not a shift.
+*/
+#harbour-setup-slot {
+  min-height: 419px;
+}
+
+@media (min-width: 721px) {
+  #harbour-setup-slot {
+    min-height: 345px;
+  }
 }
 
 .harbour-band[data-includes-setup="false"] {

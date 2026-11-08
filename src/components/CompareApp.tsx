@@ -202,6 +202,13 @@ export function CompareApp({
     prevChapterRef.current = chapter;
   }, [chapter]);
 
+  // Setup paints without the Hampshire indexes. Find, Shortlist, and Side by
+  // side need the catalogue (name search works without a postcode).
+  useEffect(() => {
+    if (chapter === "setup" || chapter === "how") return;
+    void onEnsureAreaCoverage?.();
+  }, [chapter, onEnsureAreaCoverage]);
+
   const byUrn = useMemo(() => {
     const map = new Map<string, SchoolRecord>();
     for (const school of index.schools) {
