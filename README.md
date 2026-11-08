@@ -54,6 +54,10 @@ domain is active.
   **SEO coverage loop** (`npm run loop:seo-coverage`) within a school/town page
   budget so static Pages HTML does not jump to every URN as pack volume grows.
   Inspect with `npm run report:seo-coverage`.
+- Weekly **Search Console** job (`npm run fetch:search-console`, Thursday 06:30 UTC)
+  writes page and segment impressions, clicks, CTR, and position into that digest
+  when the `GSC_SERVICE_ACCOUNT_JSON` secret is set. With no secret it prints a
+  notice and leaves the digest unchanged.
 
 ### Enable GitHub Pages + schoolcompass.uk (one-time)
 

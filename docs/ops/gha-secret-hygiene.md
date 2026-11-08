@@ -39,6 +39,7 @@ token back into a `NEXT_PUBLIC_*` variable.
 | *(none)* | `qualitative-spotcheck-loop` | Live HTML fetch; digests + safe chrome/PDF auto-learn into learned store; may `gh workflow run` quality loop (needs `actions: write`); no model secrets |
 | `MISSING_SCHOOL_DISPATCH_TOKEN` | *(removed)* | Was baked into the public JS as `NEXT_PUBLIC_MISSING_SCHOOL_DISPATCH_TOKEN`. Delete the Actions secret and revoke the PAT. Not read by any workflow. |
 | `CHALLENGE_INTAKE_TOKEN` | Intake workflows | Prefer private intake repo |
+| `GSC_SERVICE_ACCOUNT_JSON` | `search-console` | Google service-account key JSON. Read-only Search Analytics. Schedule and manual dispatch only. The job skips when it is unset and must not print the key. |
 | `NEXT_PUBLIC_SUPABASE_*` | `deploy-pages`, `supabase-keep-alive`, `product-feedback-process` | Anon key is public; URL is not secret |
 | `SUPABASE_SERVICE_ROLE_KEY` | `product-feedback-process` only | **Never** `NEXT_PUBLIC_`; server/Actions only. **GitHub Actions secrets are per-repo** — this name on Comparison-tool does not collide with Home_learning |
 

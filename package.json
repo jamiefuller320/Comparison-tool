@@ -47,6 +47,8 @@
     "sync:gias-lifecycle": "python3 scripts/sync-gias-lifecycle.py",
     "test:gias-lifecycle": "python3 scripts/test-gias-lifecycle.py && npx --yes tsx scripts/test-gias-address.mjs",
     "generate:aeo-manifests": "npx --yes tsx scripts/generate-aeo-manifests.mjs",
+    "fetch:search-console": "python3 scripts/search_console.py",
+    "test:search-console": "python3 scripts/test-search-console.py",
     "test:seo-coverage-loop": "python3 scripts/test-seo-coverage-loop.py",
     "test:seo-schools": "npx --yes tsx scripts/test-seo-schools.mjs",
     "test:seo-hub-links": "npx --yes tsx scripts/test-seo-hub-links.mjs",

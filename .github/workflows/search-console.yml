@@ -1,0 +1,54 @@
+name: Search Console
+
+# Weekly Search Analytics read for the SEO digest (cap, eviction, Wiltshire).
+# Property: sc-domain:schoolcompass.uk. Secret: GSC_SERVICE_ACCOUNT_JSON.
+# Skips with a NOTICE and exit 0 when that secret is unset. Does not remove
+# pages or raise the cap. Owner setup is the project doc search-console-setup.md.
+# Thursday 06:30 UTC, before the Friday 07:00 SEO coverage loop, which copies
+# public/data/search-console-latest.json back into the digest when it rewrites it.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 6 * * 4"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: search-console
+  cancel-in-progress: false
+
+jobs:
+  search-console:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch Search Console into the SEO digest
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL: ${{ vars.GSC_SITE_URL }}
+          GSC_START_DATE: ${{ vars.GSC_START_DATE }}
+          GSC_END_DATE: ${{ vars.GSC_END_DATE }}
+        run: python3 scripts/search_console.py
+
+      - name: Commit Search Console digest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/data/search-console-latest.json \
+            public/data/seo-coverage-loop-latest.json \
+            public/data/seo-coverage-loop-latest.md
+          if git diff --staged --quiet; then
+            echo "No Search Console digest changes"
+          else
+            git commit -m "Search Console: weekly page and segment performance"
+            git pull --rebase origin main
+            git push
+          fi
