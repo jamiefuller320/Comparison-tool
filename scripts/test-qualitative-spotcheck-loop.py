@@ -14,12 +14,18 @@ sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(ROOT / "tools" / "school-capture"))
 
 from qualitative_spotcheck import (  # noqa: E402
+    ANCHOR_ROTATE_AFTER,
     MAX_SAMPLE_SIZE,
+    SchoolSpotResult,
+    SpotFlag,
+    active_anchor_urns,
     assess_school,
     is_safe_auto_learn_phrase,
     partition_learning_candidates,
     run_spotcheck,
     select_sample,
+    update_anchor_streaks,
+    write_anchor_streaks,
 )
 
 
@@ -284,6 +290,34 @@ def test_auto_learn_disabled_skips_store() -> None:
         assert payload["flagsRecorded"] is False
         assert payload["qualityApplyRequested"] is False
         assert not learned.is_file()
+
+
+def test_anchor_rotation_after_identical_warns() -> None:
+    with tempfile.TemporaryDirectory() as raw:
+        tmp = Path(raw)
+        streak_path = tmp / "streaks.json"
+        sig = "possible_underclaim|ethos|our mission"
+        result = SchoolSpotResult(
+            urn="147519",
+            name="St Anne's",
+            la="Hampshire",
+            website="https://example.test/",
+            assessedAt="2026-09-01",
+            verdict="warn",
+            flags=[
+                SpotFlag(
+                    code="possible_underclaim",
+                    severity="warn",
+                    area="ethos",
+                    excerpts=["our mission"],
+                )
+            ],
+        )
+        for _ in range(ANCHOR_ROTATE_AFTER):
+            update_anchor_streaks([result], path=streak_path)
+        assert "147519" not in active_anchor_urns(streak_path)
+        write_anchor_streaks({}, streak_path)
+        assert "147519" in active_anchor_urns(streak_path)
 
 
 def test_sample_size_hard_cap() -> None:

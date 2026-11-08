@@ -104,6 +104,7 @@
     "review:human-gated": "python3 scripts/collate-human-gated-review.py",
     "digest:human-gated": "python3 scripts/collate-human-gated-review.py",
     "test:human-gated-review": "python3 scripts/test-collate-human-gated-review.py",
+    "batch:human-gated-ethos": "python3 scripts/run-human-gated-ethos-batch.py",
     "qa:human-flags": "python3 scripts/record-human-qa-flags.py",
     "test:user-improvement-flags": "npx --yes tsx scripts/test-user-improvement-flags.mjs && python3 scripts/test-classify-user-improvement-flag.py"
   },

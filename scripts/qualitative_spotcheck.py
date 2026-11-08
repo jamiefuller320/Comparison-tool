@@ -81,6 +81,8 @@ ANCHOR_URNS: tuple[str, ...] = (
     "130352",  # Arnhem Wharf — underclaim
     "135086",  # Akiva — ethos mis-bucket
 )
+ANCHOR_STREAK_PATH = ROOT / "output" / "spotcheck-anchor-streaks.json"
+ANCHOR_ROTATE_AFTER = 3
 
 # Chrome / nav tokens the human bar treats as fidelity failures even when
 # extractor denylists have not caught up yet (parallel extractor PR).
@@ -311,9 +313,10 @@ def select_sample(
         return []
 
     rng = random.Random(seed if seed is not None else _default_seed())
+    base_prefer = prefer_urns if prefer_urns is not None else active_anchor_urns()
     preferred = [
         u
-        for u in (prefer_urns or list(ANCHOR_URNS))
+        for u in base_prefer
         if u in website_index and (shards_dir / f"{u}.json").is_file()
     ]
 
@@ -357,6 +360,86 @@ def select_sample(
         take(urn)
 
     return chosen
+
+
+def warn_signature(result: SchoolSpotResult) -> str:
+    """Stable key for consecutive identical warn patterns (anchors)."""
+    parts: list[str] = []
+    for flag in sorted(result.flags, key=lambda f: (f.code or "", f.area or "")):
+        if flag.severity != "warn":
+            continue
+        ex = ",".join((flag.excerpts or [])[:3])
+        parts.append(f"{flag.code}|{flag.area or ''}|{ex}")
+    return "|".join(parts) if parts else "clean"
+
+
+def load_anchor_streaks(path: Path = ANCHOR_STREAK_PATH) -> dict[str, dict[str, Any]]:
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def write_anchor_streaks(
+    streaks: dict[str, dict[str, Any]], path: Path = ANCHOR_STREAK_PATH
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(streaks, indent=2) + "\n", encoding="utf-8")
+
+
+def rotated_out_anchors(path: Path = ANCHOR_STREAK_PATH) -> set[str]:
+    streaks = load_anchor_streaks(path)
+    out: set[str] = set()
+    for urn in ANCHOR_URNS:
+        row = streaks.get(urn) or {}
+        if int(row.get("streak") or 0) >= ANCHOR_ROTATE_AFTER:
+            out.add(urn)
+    return out
+
+
+def update_anchor_streaks(
+    results: list[SchoolSpotResult],
+    *,
+    path: Path = ANCHOR_STREAK_PATH,
+    when: str | None = None,
+) -> list[str]:
+    """Bump streaks for anchor URNs; return URNs rotated out this run."""
+    if when is None:
+        when = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    streaks = load_anchor_streaks(path)
+    rotated: list[str] = []
+    anchor_set = set(ANCHOR_URNS)
+    for result in results:
+        if result.urn not in anchor_set:
+            continue
+        sig = warn_signature(result)
+        row = streaks.get(result.urn) or {"streak": 0, "signature": ""}
+        if result.verdict == "pass" or not sig or sig == "clean":
+            row = {"streak": 0, "signature": sig, "lastVerdict": result.verdict, "updatedAt": when}
+        elif sig == row.get("signature"):
+            row["streak"] = int(row.get("streak") or 0) + 1
+            row["lastVerdict"] = result.verdict
+            row["updatedAt"] = when
+        else:
+            row = {
+                "streak": 1,
+                "signature": sig,
+                "lastVerdict": result.verdict,
+                "updatedAt": when,
+            }
+        streaks[result.urn] = row
+        if int(row.get("streak") or 0) >= ANCHOR_ROTATE_AFTER:
+            rotated.append(result.urn)
+    write_anchor_streaks(streaks, path)
+    return rotated
+
+
+def active_anchor_urns(path: Path = ANCHOR_STREAK_PATH) -> list[str]:
+    rotated = rotated_out_anchors(path)
+    return [u for u in ANCHOR_URNS if u not in rotated]
 
 
 def _default_seed() -> int:
@@ -524,6 +607,16 @@ def assess_school(
             )
             # Still run product-only chrome checks below with empty source.
             source_text = ""
+
+    if shard and not offline_source_text:
+        from human_gated_support import fetch_pdf_corpus, pdf_signal_urls
+
+        pdf_blob = fetch_pdf_corpus(pdf_signal_urls(shard), fetch_pdf_bytes=None)
+        if pdf_blob.strip():
+            source_text = f"{source_text}\n{pdf_blob}"
+            result.notes.append(
+                f"Merged PDF evidence from {min(len(pdf_signal_urls(shard)), 3)} document(s)"
+            )
 
     source_lower = source_text.lower()
     chrome_hits: list[str] = []
@@ -1009,10 +1102,21 @@ def run_spotcheck(
                 f"{len(auto_events)} safe candidates available but auto-learn disabled"
             )
 
+    rotated_anchors: list[str] = []
+    if not dry_run and results:
+        rotated_anchors = update_anchor_streaks(results)
+        if rotated_anchors:
+            notes.append(
+                "Rotated spot-check anchors out (≥3 identical warns): "
+                + ", ".join(sorted(rotated_anchors))
+            )
+
     payload: dict[str, Any] = {
         "ranAt": datetime.now(timezone.utc).isoformat(),
         "dryRun": dry_run,
         "seed": effective_seed,
+        "rotatedAnchors": rotated_anchors,
+        "activeAnchors": active_anchor_urns(),
         "requestedSampleSize": sample_size,
         "sampleSize": len(results),
         "maxPages": max_pages,
