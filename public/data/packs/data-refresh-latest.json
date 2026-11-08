@@ -1,0 +1,414 @@
+{
+  "generatedAt": "2026-11-08T08:12:01Z",
+  "rota": {
+    "cron": "15 4 * * *",
+    "hourUtc": "04:15",
+    "packsPerRun": 2,
+    "readyPacks": 55,
+    "cycleDays": 28,
+    "schedule": "Daily at 04:15 UTC. Each run refreshes KS2, GIAS, and KS4 for the 2 ready packs with the oldest dataRefreshedAt, then applies the latest state-school Ofsted MI to every ready pack and the Hampshire root."
+  },
+  "ofstedStateAsAt": "30 Sep 2026",
+  "ofstedStateCsv": "https://assets.publishing.service.gov.uk/media/6ad095a72de3184ccf8b818d/Management_information_-_state-funded_schools_-_latest_inspections_as_at_30_Sep_2026.csv",
+  "sharedOfstedDates": [
+    "30 Sep 2026"
+  ],
+  "depthRefreshed": [
+    "hampshire",
+    "barking-and-dagenham",
+    "barnet",
+    "bexley",
+    "bournemouth-christchurch-and-poole",
+    "bracknell-forest",
+    "brent",
+    "brighton-and-hove",
+    "bromley",
+    "buckinghamshire",
+    "camden",
+    "city-of-london",
+    "croydon",
+    "dorset",
+    "ealing",
+    "east-sussex",
+    "enfield",
+    "greenwich",
+    "hackney",
+    "hammersmith-and-fulham",
+    "haringey",
+    "harrow",
+    "havering",
+    "hillingdon",
+    "hounslow",
+    "isle-of-wight",
+    "islington",
+    "kensington-and-chelsea",
+    "kent",
+    "kingston-upon-thames",
+    "lambeth",
+    "lewisham",
+    "medway",
+    "merton",
+    "milton-keynes",
+    "newham",
+    "oxfordshire",
+    "portsmouth",
+    "reading",
+    "redbridge",
+    "richmond-upon-thames",
+    "slough",
+    "somerset",
+    "southampton",
+    "southwark",
+    "surrey",
+    "sutton",
+    "tower-hamlets",
+    "waltham-forest",
+    "wandsworth",
+    "west-berkshire",
+    "west-sussex",
+    "westminster",
+    "wiltshire",
+    "windsor-and-maidenhead",
+    "wokingham"
+  ],
+  "ofstedAligned": [],
+  "failures": [],
+  "schoolsMovedToNewMiDate": 3731,
+  "schoolsAlreadyOnMiDate": 4320,
+  "schoolsMovedByRegion": {
+    "seed": 606,
+    "london": 3125
+  },
+  "movedPacks": [
+    {
+      "slug": "hampshire",
+      "localAuthority": "Hampshire",
+      "region": "seed",
+      "schoolCount": 606,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "barking-and-dagenham",
+      "localAuthority": "Barking and Dagenham",
+      "region": "london",
+      "schoolCount": 67,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "barnet",
+      "localAuthority": "Barnet",
+      "region": "london",
+      "schoolCount": 169,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "bexley",
+      "localAuthority": "Bexley",
+      "region": "london",
+      "schoolCount": 91,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "brent",
+      "localAuthority": "Brent",
+      "region": "london",
+      "schoolCount": 104,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "bromley",
+      "localAuthority": "Bromley",
+      "region": "london",
+      "schoolCount": 118,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "camden",
+      "localAuthority": "Camden",
+      "region": "london",
+      "schoolCount": 89,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "city-of-london",
+      "localAuthority": "City of London",
+      "region": "london",
+      "schoolCount": 6,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "croydon",
+      "localAuthority": "Croydon",
+      "region": "london",
+      "schoolCount": 154,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "ealing",
+      "localAuthority": "Ealing",
+      "region": "london",
+      "schoolCount": 120,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "enfield",
+      "localAuthority": "Enfield",
+      "region": "london",
+      "schoolCount": 111,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "greenwich",
+      "localAuthority": "Greenwich",
+      "region": "london",
+      "schoolCount": 104,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "hackney",
+      "localAuthority": "Hackney",
+      "region": "london",
+      "schoolCount": 105,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "hammersmith-and-fulham",
+      "localAuthority": "Hammersmith and Fulham",
+      "region": "london",
+      "schoolCount": 78,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "haringey",
+      "localAuthority": "Haringey",
+      "region": "london",
+      "schoolCount": 95,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "harrow",
+      "localAuthority": "Harrow",
+      "region": "london",
+      "schoolCount": 72,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "havering",
+      "localAuthority": "Havering",
+      "region": "london",
+      "schoolCount": 90,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "hillingdon",
+      "localAuthority": "Hillingdon",
+      "region": "london",
+      "schoolCount": 109,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "hounslow",
+      "localAuthority": "Hounslow",
+      "region": "london",
+      "schoolCount": 89,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "islington",
+      "localAuthority": "Islington",
+      "region": "london",
+      "schoolCount": 68,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "kensington-and-chelsea",
+      "localAuthority": "Kensington and Chelsea",
+      "region": "london",
+      "schoolCount": 71,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "kingston-upon-thames",
+      "localAuthority": "Kingston upon Thames",
+      "region": "london",
+      "schoolCount": 66,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "lambeth",
+      "localAuthority": "Lambeth",
+      "region": "london",
+      "schoolCount": 97,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "lewisham",
+      "localAuthority": "Lewisham",
+      "region": "london",
+      "schoolCount": 95,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "merton",
+      "localAuthority": "Merton",
+      "region": "london",
+      "schoolCount": 75,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "newham",
+      "localAuthority": "Newham",
+      "region": "london",
+      "schoolCount": 108,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "redbridge",
+      "localAuthority": "Redbridge",
+      "region": "london",
+      "schoolCount": 93,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "richmond-upon-thames",
+      "localAuthority": "Richmond upon Thames",
+      "region": "london",
+      "schoolCount": 86,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "southwark",
+      "localAuthority": "Southwark",
+      "region": "london",
+      "schoolCount": 120,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "sutton",
+      "localAuthority": "Sutton",
+      "region": "london",
+      "schoolCount": 76,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "tower-hamlets",
+      "localAuthority": "Tower Hamlets",
+      "region": "london",
+      "schoolCount": 112,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "waltham-forest",
+      "localAuthority": "Waltham Forest",
+      "region": "london",
+      "schoolCount": 84,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "wandsworth",
+      "localAuthority": "Wandsworth",
+      "region": "london",
+      "schoolCount": 116,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    },
+    {
+      "slug": "westminster",
+      "localAuthority": "Westminster",
+      "region": "london",
+      "schoolCount": 87,
+      "from": "31 August 2026",
+      "to": "30 Sep 2026"
+    }
+  ],
+  "giasAsAtBySlug": {
+    "hampshire": "8 November 2026",
+    "barking-and-dagenham": "8 November 2026",
+    "barnet": "8 November 2026",
+    "bexley": "8 November 2026",
+    "bournemouth-christchurch-and-poole": "8 November 2026",
+    "bracknell-forest": "8 November 2026",
+    "brent": "8 November 2026",
+    "brighton-and-hove": "8 November 2026",
+    "bromley": "8 November 2026",
+    "buckinghamshire": "8 November 2026",
+    "camden": "8 November 2026",
+    "city-of-london": "8 November 2026",
+    "croydon": "8 November 2026",
+    "dorset": "8 November 2026",
+    "ealing": "8 November 2026",
+    "east-sussex": "8 November 2026",
+    "enfield": "8 November 2026",
+    "greenwich": "8 November 2026",
+    "hackney": "8 November 2026",
+    "hammersmith-and-fulham": "8 November 2026",
+    "haringey": "8 November 2026",
+    "harrow": "8 November 2026",
+    "havering": "8 November 2026",
+    "hillingdon": "8 November 2026",
+    "hounslow": "8 November 2026",
+    "isle-of-wight": "8 November 2026",
+    "islington": "8 November 2026",
+    "kensington-and-chelsea": "8 November 2026",
+    "kent": "8 November 2026",
+    "kingston-upon-thames": "8 November 2026",
+    "lambeth": "8 November 2026",
+    "lewisham": "8 November 2026",
+    "medway": "8 November 2026",
+    "merton": "8 November 2026",
+    "milton-keynes": "8 November 2026",
+    "newham": "8 November 2026",
+    "oxfordshire": "8 November 2026",
+    "portsmouth": "8 November 2026",
+    "reading": "8 November 2026",
+    "redbridge": "8 November 2026",
+    "richmond-upon-thames": "8 November 2026",
+    "slough": "8 November 2026",
+    "somerset": "8 November 2026",
+    "southampton": "8 November 2026",
+    "southwark": "8 November 2026",
+    "surrey": "8 November 2026",
+    "sutton": "8 November 2026",
+    "tower-hamlets": "8 November 2026",
+    "waltham-forest": "8 November 2026",
+    "wandsworth": "8 November 2026",
+    "west-berkshire": "8 November 2026",
+    "west-sussex": "8 November 2026",
+    "westminster": "8 November 2026",
+    "wiltshire": "8 November 2026",
+    "windsor-and-maidenhead": "8 November 2026",
+    "wokingham": "8 November 2026"
+  }
+}
