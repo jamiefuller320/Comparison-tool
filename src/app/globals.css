@@ -28,16 +28,20 @@
   --foreground: var(--ink);
   --glass: rgba(244, 247, 249, 0.82);
   --glass-strong: rgba(244, 247, 249, 0.94);
-  /* Fallback if next/font variables are unavailable. */
-  --font-display: "Fraunces", Georgia, serif;
-  --font-sans: "Figtree", system-ui, sans-serif;
+  /*
+    --font-sans and --font-display are set by next/font on <html>, including
+    the size-adjusted fallback faces. Do not assign them here. :root matches
+    that class's specificity and this file loads later, so a plain Figtree /
+    Fraunces stack wins and the breadcrumb and hero reflow when the webfonts
+    arrive. Georgia / system-ui remain the last resort on each font-family.
+  */
   /* Sticky site header offset; journey + nested binders pin under this.
      Include notch / Dynamic Island inset so pinned rails clear the chrome. */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
-  --sticky-header-offset: calc(3.75rem + var(--safe-top));
+  --sticky-header-offset: calc(4.05rem + var(--safe-top));
   --journey-rail-height: 2.85rem;
 }
 
@@ -178,7 +182,12 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 3.75rem;
+  /*
+    Loaded mobile bar (Lighthouse 412px, Fraunces wordmark + account chip).
+    Reserving it keeps the breadcrumb and hero from being pushed down when
+    the display face arrives.
+  */
+  min-height: 4.05rem;
   gap: 1rem;
 }
 
@@ -186,7 +195,7 @@ a {
   display: inline-flex;
   align-items: baseline;
   gap: 0.45rem;
-  font-family: var(--font-display);
+  font-family: var(--font-display), Georgia, serif;
   font-weight: 650;
   font-size: 1.35rem;
   letter-spacing: -0.02em;
@@ -931,7 +940,7 @@ body:has(.shortlist-dock) {
 }
 
 .hero-brand {
-  font-family: var(--font-display);
+  font-family: var(--font-display), Georgia, serif;
   font-size: clamp(2.8rem, 7vw, 4.4rem);
   font-weight: 700;
   letter-spacing: -0.035em;
@@ -1667,7 +1676,7 @@ body:has(.shortlist-dock) {
 /* Legacy sticky strip / toolbar helpers (kept for older mounts). */
 .journey-toolbar-wrap {
   position: sticky;
-  top: 3.75rem;
+  top: 4.05rem;
   z-index: 24;
   margin: 0;
   padding: 0.45rem 0 0.5rem;
@@ -1694,7 +1703,7 @@ body:has(.shortlist-dock) {
 
 .page-chapter-nav:not(.page-chapter-nav-toolbar):not(.page-chapter-nav-binder) {
   position: sticky;
-  top: 3.75rem;
+  top: 4.05rem;
   z-index: 24;
   margin: 0;
   padding: 0.35rem 0 0;
@@ -6558,7 +6567,7 @@ html.tour-running .hero-inner > * {
 }
 
 .visit-pack-brand {
-  font-family: var(--font-display);
+  font-family: var(--font-display), Georgia, serif;
   font-size: 1.35rem;
   font-weight: 700;
   margin: 0 0 0.2rem !important;
@@ -7392,7 +7401,13 @@ html.tour-running .hero-inner > * {
   align-items: center;
   margin: 0 0 1rem;
   font-size: 0.88rem;
+  line-height: 1.35;
   color: rgba(247, 251, 255, 0.72);
+  /*
+    Three lines on a 412px phone. Shorter trails keep the gap inside the
+    breadcrumb; a late wrap cannot push the hero.
+  */
+  min-height: 4rem;
 }
 
 .area-breadcrumb a {
@@ -7423,6 +7438,11 @@ html.tour-running .hero-inner > * {
   font-weight: 650;
   letter-spacing: -0.02em;
   line-height: 1.15;
+  /*
+    Three title lines inside the harbour wash (Lighthouse mobile, 412px).
+    Short names keep the spare lines so a fallback wrap cannot grow the hero.
+  */
+  min-height: 3.45em;
 }
 
 .area-lead {
@@ -7431,6 +7451,11 @@ html.tour-running .hero-inner > * {
   line-height: 1.55;
   color: rgba(247, 251, 255, 0.86);
   max-width: 38rem;
+  /*
+    Four lines. A shorter lead keeps the spare line in the hero wash so the
+    snapshot below does not jump when Figtree finishes loading.
+  */
+  min-height: 8.14rem;
 }
 
 .area-actions {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { areasIndexPath } from "@/lib/areas";
 import { BRAND_DOMAIN, BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 import { guidePath, guidesIndexPath } from "@/lib/guides";
@@ -38,9 +39,9 @@ export function SiteFooter() {
     <footer className="site-footer" role="contentinfo">
       <div className="shell site-footer-inner">
         <div className="site-footer-brand">
-          <Link href="/" className="site-footer-name">
+          <CompareToolLink href="/" className="site-footer-name">
             {BRAND_NAME}
-          </Link>
+          </CompareToolLink>
           <p>
             Parental school compare for {COVERAGE_REGION_LABEL} — shortlist
             nearby schools and early years, compare published figures and
@@ -52,7 +53,7 @@ export function SiteFooter() {
           <ul>
             {TOOL_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href}>{link.label}</Link>
+                <CompareToolLink href={link.href}>{link.label}</CompareToolLink>
               </li>
             ))}
           </ul>

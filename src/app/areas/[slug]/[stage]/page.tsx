@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { JsonLd } from "@/components/JsonLd";
 import {
   areaPath,
@@ -91,7 +92,7 @@ export default async function AreaStageLandingPage({ params }: PageProps) {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <Link href={areasIndexPath()}>Areas</Link>
             <span aria-hidden="true">/</span>
@@ -104,9 +105,9 @@ export default async function AreaStageLandingPage({ params }: PageProps) {
           <p className="area-lead">{stage.lead(area)}</p>
           <p className="area-lead area-stage-count">{stage.countLabel(area)}</p>
           <p className="area-actions">
-            <Link href={areaStageCompareHref(stage)} className="btn btn-primary">
+            <CompareToolLink href={areaStageCompareHref(stage)} className="btn btn-primary">
               Open compare for {stage.shortLabel}
-            </Link>
+            </CompareToolLink>
             <Link
               href={guidePath(guideSlug)}
               className="btn btn-ghost area-btn-ghost"

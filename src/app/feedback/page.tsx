@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { FeedbackPageForm } from "@/components/FeedbackPageForm";
 import { BRAND_HOME_URL, BRAND_NAME } from "@/lib/brand";
 
@@ -25,7 +25,7 @@ export default function FeedbackPage() {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <span>Feedback</span>
           </nav>
