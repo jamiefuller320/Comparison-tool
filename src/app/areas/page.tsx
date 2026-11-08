@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { AreaCoverageList } from "@/components/AreaCoverageList";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import { JsonLd } from "@/components/JsonLd";
 import {
   areasIndexPath,
@@ -38,7 +38,7 @@ export default function AreasIndexPage() {
       <header className="area-hero">
         <div className="shell">
           <nav className="area-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
+            <CompareToolLink href="/">Home</CompareToolLink>
             <span aria-hidden="true">/</span>
             <span>Areas</span>
           </nav>
@@ -51,9 +51,9 @@ export default function AreasIndexPage() {
             league table.
           </p>
           <p className="area-actions">
-            <Link href="/#top" className="btn btn-primary">
+            <CompareToolLink href="/#top" className="btn btn-primary">
               Open the compare tool
-            </Link>
+            </CompareToolLink>
           </p>
         </div>
       </header>

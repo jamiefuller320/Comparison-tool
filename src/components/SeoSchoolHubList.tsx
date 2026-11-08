@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CompareToolLink } from "@/components/CompareToolLink";
 import {
   formatAtt8,
   formatOutcomePercent,
@@ -38,12 +39,12 @@ export function SeoSchoolHubList({
                 <strong>{school.name}</strong>
                 <span className="area-list-meta">{meta || "Open snapshot"}</span>
               </Link>
-              <Link
+              <CompareToolLink
                 className="school-seo-compare-link"
                 href={schoolCompareHref(school)}
               >
                 Compare
-              </Link>
+              </CompareToolLink>
             </div>
           </li>
         );

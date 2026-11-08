@@ -92,6 +92,10 @@ import {
   type CatchmentFeature,
 } from "@/lib/catchments";
 
+/**
+ * Leaflet stays in its own chunk and is fetched only when the Find chapter
+ * mounts this map. Landing pages never render it.
+ */
 const NearbyMap = dynamic(
   () => import("@/components/NearbyMap").then((m) => m.NearbyMap),
   {

@@ -70,6 +70,16 @@ async function main() {
     );
     process.exit(1);
   }
+  if (
+    !isCoverageRegionLocalAuthority("Gloucestershire") ||
+    !String(COVERAGE_REGION_LABEL).toLowerCase().includes("gloucestershire")
+  ) {
+    console.error(
+      "FAIL coverage label should include Gloucestershire pack",
+      COVERAGE_REGION_LABEL,
+    );
+    process.exit(1);
+  }
 
   const py = spawnSync(
     "python3",
