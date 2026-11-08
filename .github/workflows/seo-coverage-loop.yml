@@ -2,6 +2,8 @@ name: SEO coverage loop
 
 # Weekly assess → expand seo-coverage.json within page budget → commit digest.
 # Keeps school/town SEO landings growing with ready packs without dumping every URN.
+# The digest keeps the latest Search Console read (search-console.yml) when
+# public/data/search-console-latest.json is present.
 on:
   workflow_dispatch:
     inputs:

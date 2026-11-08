@@ -27,6 +27,7 @@ SCRIPTS = Path(__file__).resolve().parent
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
+import search_console  # noqa: E402
 from pack_interest import (  # noqa: E402
     combine_interest_scores,
     interest_pct_boost,
@@ -209,6 +210,8 @@ def write_digest(
         ],
         "includedAreaSlugs": after["includedAreaSlugs"],
         "pageBudget": after["pageBudget"],
+        # Last successful Search Console read, so Friday's rewrite does not drop it.
+        "searchConsole": search_console.for_digest(),
     }
     DIGEST_JSON.write_text(json.dumps(digest, indent=2) + "\n", encoding="utf-8")
 
@@ -233,6 +236,8 @@ def write_digest(
         f"| Town hubs | {before['totals']['townHubs']} | {after['totals']['townHubs']} | — |",
         "",
         format_markdown(after),
+        "",
+        search_console.render_markdown(digest["searchConsole"]),
     ]
     DIGEST_MD.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
