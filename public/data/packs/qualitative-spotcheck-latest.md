@@ -1,8 +1,8 @@
-# Qualitative source spot-check — 2026-11-08T17:48:46.724135+00:00
+# Qualitative source spot-check — 2026-11-09T22:08:06.010016+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `1358213343`
+- Seed: `3597153457`
 - Max pages / school: `3`
 - Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
@@ -21,15 +21,15 @@
 - **Arnhem Wharf Primary School** (`130352`, Tower Hamlets) — `warn`
   - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: Booking Process Guide, enrichment: Child Registration Guide, enrichment: Dear Parents and Carers
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **West Park CofE Primary (Controlled) School** (`126016`, West Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: gymnastics, enrichment: dance, enrichment: sequences in gymnastics, send: Absence and Attendance
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Willow Primary School** (`139198`, Slough) — `pass`
-- **Bishop Tufnell CofE Primary School, Felpham** (`126050`, West Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Measuring Weight Shape Repeating, curriculum: Addition and Subtraction, curriculum: Number- Addition and, curriculum: Number- Fractions Number- Decimals and
-- **Pond Meadow School** (`141533`, Surrey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Admissions and Accessibility, curriculum: Attendance, curriculum: Compliments and Complaints, curriculum: Financials and Charging
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, our vision
+- **St Mary of Charity CofE (Aided) Primary School** (`141220`, Kent) — `pass`
+- **Trinity Church of England Primary School** (`123173`, Oxfordshire) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos
+- **Grove Academy** (`149897`, Slough) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Admissions Overview, curriculum: Attendance, curriculum: Provider Access, curriculum: Free Bus Pass Scheme
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
+- **Cardinal Newman Catholic Primary School** (`143364`, Surrey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, curriculum: mathematics, curriculum: Flourish, curriculum: Modern Languages
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
 
 ## Notes
 
