@@ -1,47 +1,40 @@
-# Pack quality loop — 2026-11-04T13:56:17Z
+# Pack quality loop — 2026-11-09T15:40:11Z
 
 - Mode: `polish`
 - Max packs: 6
 - ISI resolve cap: 80
-- Precis limit: 60
+- Precis limit: 60 per pack
+- Precis order: sitemap schools missing a précis (lowest open % first), then Wiltshire
+- Rotate after 2 runs with no movement
 - Upgrade highlights: False
-- Interest weighting: on
+- Interest scores: recorded on this digest (they do not change target order)
 
 ## Targets
 
-| LA | Interest | Boost | Before indie% | After indie% | Before ISI | After ISI |
-|---|---:|---:|---:|---:|---|---|
-| Newham | 0.531 | 2.1 | 0.0 | 0.0 | 2/7 | 2/7 |
-| Barking and Dagenham | 0.53 | 2.1 | 0.0 | 0.0 | 0/5 | 0/5 |
-| Hackney | 0.53 | 2.1 | 6.2 | 6.2 | 3/32 | 3/32 |
-| Tower Hamlets | 0.531 | 2.1 | 20.0 | 20.0 | 5/15 | 5/15 |
-| Sutton | 0.531 | 2.1 | 25.0 | 25.0 | 4/8 | 4/8 |
-| Hounslow | 0.53 | 2.1 | 25.0 | 25.0 | 4/12 | 4/12 |
+| LA | Tier | Missing | Stall | Before indie% | After indie% | Before ISI | After ISI |
+|---|---|---:|---:|---:|---:|---|---|
+| Barnet | sitemap | 111 | 0 | 31.4 | 34.3 | 15/35 | 15/35 |
+| Croydon | sitemap | 96 | 0 | 40.0 | 40.0 | 12/25 | 12/25 |
+| Southwark | sitemap | 58 | 0 | 57.1 | 57.1 | 8/14 | 8/14 |
+| Bromley | sitemap | 58 | 0 | 62.5 | 62.5 | 11/16 | 11/16 |
+| Enfield | sitemap | 52 | 0 | 50.0 | 50.0 | 6/10 | 6/10 |
+| Ealing | sitemap | 54 | 0 | 27.8 | 27.8 | 6/18 | 6/18 |
 
 ## Top interest signals
 
-- `wiltshire`: score 3.038 (boost 12.2%)
-- `islington`: score 0.531 (boost 2.1%)
-- `kensington-and-chelsea`: score 0.531 (boost 2.1%)
-- `kingston-upon-thames`: score 0.531 (boost 2.1%)
-- `lambeth`: score 0.531 (boost 2.1%)
-- `lewisham`: score 0.531 (boost 2.1%)
-- `merton`: score 0.531 (boost 2.1%)
-- `newham`: score 0.531 (boost 2.1%)
+- `gloucestershire`: score 3.921 (boost 15.7%)
+- `somerset`: score 3.916 (boost 15.7%)
+- `wiltshire`: score 2.811 (boost 11.2%)
+- `barking-and-dagenham`: score 0.491 (boost 2.0%)
+- `barnet`: score 0.491 (boost 2.0%)
+- `bexley`: score 0.491 (boost 2.0%)
+- `brent`: score 0.491 (boost 2.0%)
+- `bromley`: score 0.491 (boost 2.0%)
 
 ## Weakest packs (after)
 
+- Gloucestershire: indie 0/32 (0.0%) · ISI 0/32
+- Somerset: indie 0/35 (0.0%) · ISI 0/35
 - Barking and Dagenham: indie 0/5 (0.0%) · ISI 0/5
 - Newham: indie 0/7 (0.0%) · ISI 2/7
 - Hackney: indie 2/32 (6.2%) · ISI 3/32
-- Tower Hamlets: indie 3/15 (20.0%) · ISI 5/15
-- Hounslow: indie 3/12 (25.0%) · ISI 4/12
-
-## No indie/ISI movement
-
-- Newham
-- Barking and Dagenham
-- Hackney
-- Tower Hamlets
-- Sutton
-- Hounslow
