@@ -1,34 +1,38 @@
 # Qualitative QA loop
 
-- Ran at: `2026-11-09T18:58:10.868091+00:00`
+- Ran at: `2026-11-09T20:25:58.210619+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `15`
-- Findings applied: `41`
-- New learned phrases: `17`
+- Reviewed: `81`
+- Schools changed: `48`
+- Findings applied: `64`
+- New learned phrases: `18`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 15 school(s) (41 area finding(s)).
-- Learned 17 new junk phrase(s) (store size 900).
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 48 school(s) (64 area finding(s)).
+- Learned 18 new junk phrase(s) (store size 900).
+- Reviewed top 81 suspect(s); provider=none.
 
 ## Suspects
 
-- `135097` Al Ashraf Primary School — score 25.0 flags=policy_toc,implausible_offerings
-- `136623` Chosen Hill School — score 25.0 flags=policy_toc,implausible_offerings
-- `148830` Buckler's Mead School — score 17.0 flags=policy_toc,admissions,chrome,implausible_offerings
-- `119015` ISP School — score 15.0 flags=chrome
-- `139524` Blockley Church of England Primary School — score 14.0 flags=chrome,policy_toc,implausible_offerings
-- `152587` St Mark's Church of England Primary School — score 13.0 flags=policy_toc,implausible_offerings,cms_chrome,chrome
-- `115690` Brimscombe Church of England (VA) Primary School — score 11.0 flags=chrome,cms_chrome
-- `123786` Cannington Church of England Primary School — score 11.0 flags=policy_toc,implausible_offerings,boilerplate,chrome
-- `123827` Chewton Mendip Church of England VA Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `115723` Archway School — score 9.0 flags=chrome
-- `115502` Blakeney Primary School — score 9.0 flags=chrome
-- `115821` Bettridge School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `123927` Chard School — score 8.0 flags=policy_toc,chrome,implausible_offerings
-- `136960` Chipping Campden School — score 8.0 flags=chrome,implausible_offerings
-- `115810` Al-Ashraf Secondary School for Girls — score 6.0 flags=chrome
+- `115650` Ann Edwards Church of England Primary School — score 6.0 flags=chrome
+- `137174` Avishayes Community Primary School — score 6.0 flags=chrome
+- `148211` Aylburton Church of England Primary School — score 6.0 flags=chrome
+- `123711` Beech Grove Primary School — score 6.0 flags=chrome
+- `115800` Berkhampstead School — score 6.0 flags=chrome
+- `123747` Bishop Henderson Church of England Primary School — score 6.0 flags=chrome
+- `137271` Bishops Cleeve Primary Academy — score 6.0 flags=chrome
+- `115678` Bussage Church of England Primary School — score 6.0 flags=chrome
+- `146896` Charlton Horethorne Church of England Primary School — score 6.0 flags=chrome
+- `136999` Charlton Kings Infants' School — score 6.0 flags=chrome
+- `123746` Charlton Mackrell CofE Primary School — score 6.0 flags=chrome
+- `146326` Chesterton Primary School — score 6.0 flags=chrome
+- `139278` Churchfield Church School — score 6.0 flags=chrome
+- `140416` Court Fields School — score 6.0 flags=chrome
+- `123641` Coxley Primary School — score 6.0 flags=chrome
+- `151501` St Francis' Catholic Primary School, Maidstone — score 6.0 flags=chrome
+- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
+- `136164` Brighton Aldridge Community Academy — score 5.0 flags=cms_chrome
+- `152148` Butleigh Church of England Primary School — score 5.0 flags=policy_toc,implausible_offerings

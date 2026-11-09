@@ -1,19 +1,21 @@
 {
-  "ranAt": "2026-11-08T16:46:51.029321+00:00",
+  "ranAt": "2026-11-09T20:37:20.849333+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 7383,
-    "suspectCount": 38,
+    "recordCount": 7508,
+    "suspectCount": 81,
     "flagCounts": {
+      "chrome": 45,
       "cms_chrome": 14,
       "admissions": 13,
-      "chrome": 6,
       "high_score_thin_signals": 4,
-      "implausible_offerings": 1
+      "implausible_offerings": 4,
+      "policy_toc": 2,
+      "boilerplate": 1
     },
     "topSuspects": [
       {
@@ -25,103 +27,103 @@
         ]
       },
       {
-        "urn": "147128",
-        "name": "The Ferns Primary Academy",
+        "urn": "115650",
+        "name": "Ann Edwards Church of England Primary School",
         "score": 6.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "136164",
-        "name": "Brighton Aldridge Community Academy",
-        "score": 5.0,
+        "urn": "137174",
+        "name": "Avishayes Community Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "115872",
-        "name": "Chandler's Ford Infant School",
-        "score": 5.0,
+        "urn": "148211",
+        "name": "Aylburton Church of England Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "137605",
-        "name": "Dove House Academy",
-        "score": 5.0,
+        "urn": "123711",
+        "name": "Beech Grove Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "149906",
-        "name": "Light Years School",
-        "score": 5.0,
+        "urn": "115800",
+        "name": "Berkhampstead School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "116330",
-        "name": "Liphook Church of England Controlled Junior School",
-        "score": 5.0,
+        "urn": "123747",
+        "name": "Bishop Henderson Church of England Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "116056",
-        "name": "Liphook Infant School",
-        "score": 5.0,
+        "urn": "137271",
+        "name": "Bishops Cleeve Primary Academy",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "137063",
-        "name": "Portslade Aldridge Community Academy",
-        "score": 5.0,
+        "urn": "115678",
+        "name": "Bussage Church of England Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "114416",
-        "name": "Rotherfield Primary School",
-        "score": 5.0,
+        "urn": "146896",
+        "name": "Charlton Horethorne Church of England Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "118310",
-        "name": "Ryarsh Primary School",
-        "score": 5.0,
+        "urn": "136999",
+        "name": "Charlton Kings Infants' School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "125992",
-        "name": "Shipley CofE Primary School",
-        "score": 5.0,
+        "urn": "123746",
+        "name": "Charlton Mackrell CofE Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 7383,
-    "suspectCount": 32,
+    "recordCount": 7508,
+    "suspectCount": 33,
     "flagCounts": {
       "cms_chrome": 14,
       "admissions": 13,
       "high_score_thin_signals": 4,
-      "implausible_offerings": 1
+      "implausible_offerings": 2
     },
     "topSuspects": [
       {
@@ -223,49 +225,58 @@
     ]
   },
   "qa": {
-    "reviewed": 38,
-    "changedSchools": 6,
-    "findingsApplied": 6,
-    "learningAdded": 0,
+    "reviewed": 81,
+    "changedSchools": 48,
+    "findingsApplied": 64,
+    "learningAdded": 18,
     "provider": "none"
   },
   "merged": true,
   "corpusSweep": {
-    "shouldRun": false,
-    "reason": "phrase fingerprint unchanged"
+    "shouldRun": true,
+    "reason": "phrase fingerprint changed (00a67bb0→65f33fd2)",
+    "shardsScanned": 7508,
+    "schoolsChanged": 0,
+    "offeringsRemoved": 0,
+    "signalsRemoved": 0,
+    "deniedLabelCount": 679,
+    "removedByLabel": {},
+    "sample": [],
+    "dryRun": false
   },
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +16 (>= 15)",
+    "reason": "eventCount +59 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "00a67bb08bd66dd734e2",
+      "phraseHash": "65f33fd26f2b14d71277",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11110,
-      "updatedAt": "2026-11-08",
+      "eventCount": 11176,
+      "updatedAt": "2026-11-09",
       "chromeDenylistCount": 9
     },
     "fingerprintAfter": {
-      "phraseHash": "00a67bb08bd66dd734e2",
+      "phraseHash": "8c66a7745afd85cdf3f1",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11117,
-      "updatedAt": "2026-11-08",
+      "eventCount": 11259,
+      "updatedAt": "2026-11-09",
       "chromeDenylistCount": 9
     }
   },
   "notes": [
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '00a67bb08bd66dd734e2', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11110, 'updatedAt': '2026-11-08', 'chromeDenylistCount': 9}",
-    "Apply decision: eventCount +16 (>= 15)",
-    "Corpus sweep decision: phrase fingerprint unchanged",
-    "Hydrated working sidecar from 7383 published URN shards (prior=0 → 7383).",
-    "Before: 38 suspects across 7383 records.",
-    "Applied QA fixes to 6 school(s) (6 area finding(s)).",
-    "Learned 0 new junk phrase(s) (store size 900).",
-    "Reviewed top 38 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': '65f33fd26f2b14d71277', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11176, 'updatedAt': '2026-11-09', 'chromeDenylistCount': 9}",
+    "Apply decision: eventCount +59 (>= 15)",
+    "Corpus sweep decision: phrase fingerprint changed (00a67bb0→65f33fd2)",
+    "Corpus sweep removed 0 chrome offering(s) from 0 school(s) across 7508 shards.",
+    "Hydrated working sidecar from 7508 published URN shards (prior=0 → 7508).",
+    "Before: 81 suspects across 7508 records.",
+    "Applied QA fixes to 48 school(s) (64 area finding(s)).",
+    "Learned 18 new junk phrase(s) (store size 900).",
+    "Reviewed top 81 suspect(s); provider=none.",
     "Merged cleaned sidecar into 57 schools-index file(s).",
-    "After: 32 suspects across 7383 records.",
+    "After: 33 suspects across 7508 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
