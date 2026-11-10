@@ -97,7 +97,7 @@
 - Status: **ok**
 - Property: `sc-domain:schoolcompass.uk`
 - Window: 2026-10-07 → 2026-11-07 (includes the 7 Oct 2026 meta deploy)
-- Fetched: `2026-11-10T09:43:27Z`
+- Fetched: `2026-11-10T10:25:58Z`
 - Clicks / impressions / CTR / position: **45** / **15383** / **0.29%** / **34.2**
 - Pages: **3055** (per-page rows are in the JSON digest)
 
@@ -474,6 +474,52 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 | Secondary | 14 | 4602 | 0.30% | 38.4 |
 | All-through | 3 | 1342 | 0.22% | 38.0 |
 | Special | 5 | 1263 | 0.40% | 29.5 |
+
+### Top queries (current window)
+
+| Query | Class | Clicks | Impressions | CTR | Position |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| alderwood | nonBranded | 0 | 26 | 0.00% | 68.5 |
+| alperton community school | nonBranded | 0 | 15 | 0.00% | 65.9 |
+| "wellineii" school * * | nonBranded | 0 | 9 | 0.00% | 8.8 |
+| amersham school | nonBranded | 0 | 9 | 0.00% | 58.4 |
+| "wellineii" school or | nonBranded | 0 | 8 | 0.00% | 6.6 |
+| american school in london | nonBranded | 0 | 8 | 0.00% | 90.2 |
+| schoolcompass | branded | 1 | 8 | 12.50% | 4.1 |
+| abbs cross | nonBranded | 0 | 7 | 0.00% | 76.0 |
+| american school | nonBranded | 0 | 7 | 0.00% | 70.3 |
+| albion school | nonBranded | 0 | 5 | 0.00% | 7.4 |
+| all saints catholic schools | nonBranded | 0 | 5 | 0.00% | 82.8 |
+| annunciation catholic school | nonBranded | 0 | 5 | 0.00% | 19.8 |
+| annunciation school | nonBranded | 0 | 5 | 0.00% | 48.4 |
+| ark elvin academy | nonBranded | 0 | 5 | 0.00% | 73.0 |
+| abingdon house | nonBranded | 0 | 4 | 0.00% | 60.0 |
+| ark pioneer academy | nonBranded | 0 | 4 | 0.00% | 72.8 |
+| benjamin college leighton buzzard | nonBranded | 0 | 4 | 0.00% | 10.8 |
+| "wellineii" school | nonBranded | 0 | 3 | 0.00% | 10.3 |
+| aerodrome croydon | nonBranded | 0 | 3 | 0.00% | 78.3 |
+| ambler primary school | nonBranded | 0 | 3 | 0.00% | 60.3 |
+
+_Showing 20 of 200. The JSON digest lists more (capped for size)._
+
+### Query class (current window)
+
+| Class | Clicks | Impressions | CTR | Position |
+| --- | ---: | ---: | ---: | ---: |
+| Branded queries | 1 | 8 | 12.50% | 4.1 |
+| Non-branded queries | 5 | 372 | 1.34% | 53.7 |
+
+### Baseline comparison
+
+- Baseline window: **2026-09-07 → 2026-10-06**
+- Totals: current **0.29%** CTR (15383 impr.) vs baseline **0.49%** (5670 impr.)
+- CTR delta: **-0.20 pp**
+
+| Query class | Current CTR | Baseline CTR | Δ impr. |
+| --- | ---: | ---: | ---: |
+| Branded queries | 12.50% | 0.00% | +8 |
+| Non-branded queries | 1.34% | 0.00% | +84 |
+- Baseline is the calendar month before the 7 Oct 2026 meta deploy. Query segments use the query dimension plus page×query rollups; brandClass splits on “school compass” / “schoolcompass” in the query text.
 
 ### Cap, eviction, Wiltshire
 
