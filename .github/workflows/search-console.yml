@@ -35,6 +35,8 @@ jobs:
           GSC_SITE_URL: ${{ vars.GSC_SITE_URL }}
           GSC_START_DATE: ${{ vars.GSC_START_DATE }}
           GSC_END_DATE: ${{ vars.GSC_END_DATE }}
+          GSC_BASELINE_START_DATE: ${{ vars.GSC_BASELINE_START_DATE }}
+          GSC_BASELINE_END_DATE: ${{ vars.GSC_BASELINE_END_DATE }}
         run: python3 scripts/search_console.py
 
       - name: Commit Search Console digest
@@ -48,7 +50,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No Search Console digest changes"
           else
-            git commit -m "Search Console: weekly page and segment performance"
+            git commit -m "Search Console: weekly page, query, and baseline performance"
             git pull --rebase origin main
             git push
           fi
