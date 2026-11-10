@@ -14,6 +14,8 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SHARDS = ROOT / "public" / "data" / "qualitative"
 MAX_PDF_FETCH = 3
+_ETHOS_PRODUCT_AREAS = frozenset({"ethos", "behaviour", "community"})
+_OUR_LABEL_RE = re.compile(r"^our (mission|vision|values|ethos)$", re.I)
 
 
 def load_shard(urn: str, shards_dir: Path = DEFAULT_SHARDS) -> dict[str, Any] | None:
@@ -137,6 +139,69 @@ def pdf_confirms_unsupported(
         if _offering_supported_in_source(offering, pdf_text):
             return True
     return False
+
+
+def _label_key(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "").lower()).strip(" .;,:")
+
+
+def ethos_product_blob(shard: dict[str, Any] | None) -> str:
+    """Parent-facing ethos/behaviour/community text the spot-check compares."""
+    if not shard:
+        return ""
+    parts: list[str] = []
+    for area in shard.get("areas") or []:
+        if str(area.get("area") or "") not in _ETHOS_PRODUCT_AREAS:
+            continue
+        parts.append(str(area.get("summary") or ""))
+        parts.append(str(area.get("narrativeSummary") or ""))
+        parts.extend(str(t) for t in (area.get("themes") or []))
+        parts.extend(str(o) for o in (area.get("offerings") or []))
+    return " ".join(parts).lower()
+
+
+def ethos_offering_keys(shard: dict[str, Any] | None) -> set[str]:
+    """Exact offering labels, not summary boilerplate or longer phrases."""
+    if not shard:
+        return set()
+    keys: set[str] = set()
+    for area in shard.get("areas") or []:
+        if str(area.get("area") or "") not in _ETHOS_PRODUCT_AREAS:
+            continue
+        for offering in area.get("offerings") or []:
+            key = _label_key(str(offering))
+            if key:
+                keys.add(key)
+    return keys
+
+
+def ethos_hint_reflected(hint: str, shard: dict[str, Any] | None) -> bool:
+    """True when the published cell already carries this spot-check hint.
+
+    "our vision" counts when vision is its own offering. It does not count
+    just because the stock summary says "ethos and values", or because a
+    longer label such as "british values" contains the word.
+    Distinctive phrases ("let all you do") still need the phrase itself.
+    """
+    key = _label_key(hint)
+    if not key:
+        return True
+    if key in ethos_product_blob(shard):
+        return True
+    match = _OUR_LABEL_RE.match(key)
+    if match and match.group(1).lower() in ethos_offering_keys(shard):
+        return True
+    return False
+
+
+def ethos_excerpts_reflected(
+    shard: dict[str, Any] | None,
+    excerpts: list[Any],
+) -> bool:
+    """True when every flagged excerpt is already in the published cell."""
+    if not shard or not excerpts:
+        return False
+    return all(ethos_hint_reflected(str(item), shard) for item in excerpts)
 
 
 def ethos_recapture_looks_good(shard: dict[str, Any] | None) -> bool:

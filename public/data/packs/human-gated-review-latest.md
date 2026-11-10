@@ -1,9 +1,10 @@
-# Human-gated review digest — 2026-11-08T07:25:16+00:00
+# Human-gated review digest — 2026-11-10T10:33:49+00:00
 
 - Mode: `collate`
-- Open items: **20** (queue total `41` · done `7` · ignored `14`)
+- Open items: **16** (queue total `41` · done `11` · ignored `14`)
 - New / refreshed this run: `0`
 - Auto-closed (already learned): `0`
+- Ethos rows closed (already in the published cell): `4`
 
 ## How to review / mark done
 
@@ -19,17 +20,10 @@
 ## Open by kind
 
 - `unsupported_offerings`: 11
-- `ethos_underclaim`: 9
+- `ethos_underclaim`: 5
 
 ## Items
 
-- **ethos_underclaim** `7df4288529bdb735` East Stour Primary School (URN `148991`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: our vision
-  - review:
-    - `npm run enrich:qualitative -- --urn 148991`
-    - `npm run review:human-gated -- --mark-done 7df4288529bdb735`
 - **ethos_underclaim** `297e30173ffe0aee` Freezywater St George's CofE VA Primary School (URN `102031`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -37,13 +31,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 102031`
     - `npm run review:human-gated -- --mark-done 297e30173ffe0aee`
-- **ethos_underclaim** `7aa275b7c983df62` Yeading Infant and Nursery School (URN `102404`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: our vision
-  - review:
-    - `npm run enrich:qualitative -- --urn 102404`
-    - `npm run review:human-gated -- --mark-done 7aa275b7c983df62`
 - **ethos_underclaim** `84741fefb0b8847e` Millbank Gardens Primary Academy (URN `151310`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -58,13 +45,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 100064`
     - `npm run review:human-gated -- --mark-done b63111fa83bc2af3`
-- **ethos_underclaim** `937ccef0ffb07d19` Wilbury Primary School (URN `146900`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: our vision
-  - review:
-    - `npm run enrich:qualitative -- --urn 146900`
-    - `npm run review:human-gated -- --mark-done 937ccef0ffb07d19`
 - **ethos_underclaim** `1c861310d7447668` St Anne's Catholic Primary School (URN `147519`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -72,13 +52,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 147519`
     - `npm run review:human-gated -- --mark-done 1c861310d7447668`
-- **ethos_underclaim** `7d21b4f2e7266a53` Millais School (URN `126066`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: our mission
-  - review:
-    - `npm run enrich:qualitative -- --urn 126066`
-    - `npm run review:human-gated -- --mark-done 7d21b4f2e7266a53`
 - **ethos_underclaim** `b95cf95d690bc057` Stafford Junior School (URN `148724`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -172,6 +145,5 @@
 
 ## Notes
 
-- GitHub [user-improvement] issues: none or gh unavailable
-- Downgraded 1 unsupported_offerings row(s) to digest-only (no PDF confirmation)
+- Marked done 4 ethos row(s) already reflected in the published cell
 - No spotcheck gated JSONL yet (expects output/spotcheck-human-gated-candidates.jsonl after auto-learn PR)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import replace
 
 from school_capture.analysis.synthesis import deterministic_parent_paragraph
@@ -12,6 +13,29 @@ from school_capture.models import (
 )
 from school_capture.qa_heuristics import AreaQaFinding, SchoolQaSuspect
 from school_capture.synth_policy import area_has_evidence
+
+
+def _align_strength_word(summary: str, score: int) -> str:
+    """Keep the lead-in strength word consistent with a lowered score.
+
+    Strip used to cap the score at 40 and leave "Strong publicly visible
+    evidence" in place. Only the stock lead-in is rewritten.
+    """
+    if not summary:
+        return summary
+    if score >= 65:
+        word = "Strong"
+    elif score >= 40:
+        word = "Moderate"
+    else:
+        word = "Limited"
+    updated, count = re.subn(
+        r"^(Strong|Moderate|Limited) publicly visible evidence",
+        f"{word} publicly visible evidence",
+        summary,
+        count=1,
+    )
+    return updated if count else summary
 
 
 def _excerpt_hits(text: str, excerpts: list[str]) -> bool:
@@ -56,14 +80,28 @@ def apply_area_finding(
         narrative = None
         method = None
 
+    # A single leftover label is thin. Several surviving offerings or signals
+    # are still real provision — do not collapse that area to score 40 just
+    # because one chrome signal was removed.
+    if not offerings and not signals:
+        score, confidence = 0, 0.05
+    elif len(offerings) + len(signals) < 2:
+        score, confidence = min(area.score, 40), min(area.confidence, 0.4)
+    else:
+        score, confidence = area.score, area.confidence
+    summary = area.summary or ""
+    if score < area.score:
+        summary = _align_strength_word(summary, score)
+
     next_area = replace(
         area,
         offerings=offerings,
         signals=signals,
         narrativeSummary=narrative,
         synthesisMethod=method,
-        score=0 if not offerings and not signals else min(area.score, 40),
-        confidence=0.05 if not offerings and not signals else min(area.confidence, 0.4),
+        summary=summary,
+        score=score,
+        confidence=confidence,
     )
 
     # Rebuild a honest thin/deterministic narrative after stripping.
