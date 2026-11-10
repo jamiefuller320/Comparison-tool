@@ -13,8 +13,11 @@ async function main() {
     listSeoCoverageAreaSlugs,
     listSeoHampshireSchools,
     listSeoSchools,
+    listBuiltSeoTownLandings,
+    listIndexableSeoTowns,
     listSeoSchoolsInTown,
     listSeoTowns,
+    isBoroughDuplicateTownHub,
     readSeoCoverage,
     schoolJsonLd,
     schoolPageDescription,
@@ -143,6 +146,48 @@ async function main() {
       process.exit(1);
     }
   }
+  const londonHubs = listSeoTowns().filter(
+    (t) => t.slug === "london" && t.areaSlug !== "city-of-london",
+  );
+  if (londonHubs.length !== 25) {
+    console.error("FAIL borough london hub count", londonHubs.length);
+    process.exit(1);
+  }
+  for (const hub of londonHubs) {
+    if (!isBoroughDuplicateTownHub(hub)) {
+      console.error("FAIL expected borough duplicate", hub);
+      process.exit(1);
+    }
+  }
+  if (listIndexableSeoTowns().some((t) => t.slug === "london" && t.areaSlug !== "city-of-london")) {
+    console.error("FAIL london duplicate in indexable towns");
+    process.exit(1);
+  }
+  const builtDuplicates = listBuiltSeoTownLandings().filter(isBoroughDuplicateTownHub);
+  if (builtDuplicates.length !== 25) {
+    console.error("FAIL built redirect stub count", builtDuplicates.length);
+    process.exit(1);
+  }
+  if (listIndexableSeoTowns("barnet").length < 1) {
+    console.error("FAIL barnet should keep non-london town pages when present");
+    process.exit(1);
+  }
+  if (!listSeoAreasWithTowns().includes("barnet")) {
+    console.error("FAIL barnet should have towns index");
+    process.exit(1);
+  }
+  const londonOnlyBorough = londonHubs.find(
+    (t) => listIndexableSeoTowns(t.areaSlug).length === 0,
+  );
+  if (!londonOnlyBorough) {
+    console.error("FAIL expected at least one london-only borough");
+    process.exit(1);
+  }
+  if (listSeoAreasWithTowns().includes(londonOnlyBorough.areaSlug)) {
+    console.error("FAIL london-only borough still has towns index", londonOnlyBorough.areaSlug);
+    process.exit(1);
+  }
+
   const londonTown = listSeoTowns().find(
     (t) => t.name.trim().toLowerCase() === "london",
   );

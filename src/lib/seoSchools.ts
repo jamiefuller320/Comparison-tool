@@ -48,6 +48,17 @@ export function isAuthorityWideTown(town: { areaSlug: string; name: string }): b
   );
 }
 
+/**
+ * Borough "London" postal-town hub duplicates the area page (not City of London).
+ * Those URLs are dropped from the sitemap and not built as static HTML.
+ */
+export function isBoroughDuplicateTownHub(town: {
+  areaSlug: string;
+  name: string;
+}): boolean {
+  return isAuthorityWideTown(town) && !isCityOfLondonPlace(town);
+}
+
 /** Default static-export budget (school HTML pages). */
 export const SEO_DEFAULT_MAX_SCHOOL_PAGES = 5000;
 
@@ -416,6 +427,16 @@ export function listSeoTowns(areaSlug?: string): SeoTown[] {
   return cachedTownsByArea?.get(areaSlug) ?? [];
 }
 
+/** Town landings that are indexable (exclude borough-wide GIAS "London" duplicates). */
+export function listIndexableSeoTowns(areaSlug?: string): SeoTown[] {
+  return listSeoTowns(areaSlug).filter((town) => !isBoroughDuplicateTownHub(town));
+}
+
+/** Static HTML town routes: indexable pages plus noindex redirect stubs. */
+export function listBuiltSeoTownLandings(areaSlug?: string): SeoTown[] {
+  return listSeoTowns(areaSlug);
+}
+
 /** @deprecated Prefer listSeoTowns(areaSlug) */
 export function listSeoHampshireTowns(): SeoTown[] {
   return listSeoTowns(laSlug(SEED_LOCAL_AUTHORITY));
@@ -450,9 +471,18 @@ export function getSeoTownForSchool(
   return getSeoTown(slugifyTown(place), school.areaSlug);
 }
 
-/** Areas that have at least one town landing under current coverage. */
+/** Indexable town hub for internal links (skips borough "London" duplicates). */
+export function getIndexableSeoTownForSchool(
+  school: SeoSchoolSummary,
+): SeoTown | undefined {
+  const town = getSeoTownForSchool(school);
+  if (!town || isBoroughDuplicateTownHub(town)) return undefined;
+  return town;
+}
+
+/** Areas that have at least one indexable town landing under current coverage. */
 export function listSeoAreasWithTowns(): string[] {
-  return [...new Set(listSeoTowns().map((t) => t.areaSlug))];
+  return [...new Set(listIndexableSeoTowns().map((t) => t.areaSlug))];
 }
 
 /**
@@ -619,7 +649,7 @@ export function schoolJsonLd(
   const postalCode = stripGiasToken(school.postcode);
   if (postalCode) address.postalCode = postalCode;
 
-  const townRow = getSeoTownForSchool(school);
+  const townRow = getIndexableSeoTownForSchool(school);
   const townLanding = townRow
     ? townPath(townRow.slug, townRow.areaSlug)
     : null;

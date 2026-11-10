@@ -38,7 +38,17 @@ function hubHtmlOrphans(geoSchoolUrns) {
     const rel = htmlPath.slice(areasDir.length + 1);
     if (/^[^/]+\/towns\/[^/]+\/index\.html$/.test(rel)) {
       hubPages += 1;
-      for (const urn of collectSchoolHrefs(readFileSync(htmlPath, "utf8"))) {
+      const html = readFileSync(htmlPath, "utf8");
+      const borough = rel.split("/")[0];
+      if (/^[^/]+\/towns\/london\/index\.html$/.test(rel) && borough !== "city-of-london") {
+        const areaHref = `/areas/${borough}/`;
+        if (!/http-equiv="refresh"/i.test(html) || !html.includes(areaHref)) {
+          console.error("FAIL london town stub missing redirect", rel);
+          process.exit(1);
+        }
+        continue;
+      }
+      for (const urn of collectSchoolHrefs(html)) {
         linked.add(urn);
       }
       continue;

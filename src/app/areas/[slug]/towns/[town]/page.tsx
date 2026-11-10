@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BoroughDuplicateTownRedirect } from "@/components/BoroughDuplicateTownRedirect";
 import { CompareToolLink } from "@/components/CompareToolLink";
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -16,9 +17,11 @@ import { SeoSchoolHubList } from "@/components/SeoSchoolHubList";
 import { listSeoSchoolsForTownHub } from "@/lib/seoHubLinks";
 import {
   getSeoTown,
+  isBoroughDuplicateTownHub,
   isCityOfLondonPlace,
   isSeoAreaIncluded,
-  listSeoTowns,
+  listBuiltSeoTownLandings,
+  listIndexableSeoTowns,
   townJsonLd,
   townPageDescription,
   townPageTitle,
@@ -32,7 +35,7 @@ type PageProps = {
 };
 
 export function generateStaticParams() {
-  return listSeoTowns().map((town) => ({
+  return listBuiltSeoTownLandings().map((town) => ({
     slug: town.areaSlug,
     town: town.slug,
   }));
@@ -45,6 +48,17 @@ export async function generateMetadata({
   if (!isSeoAreaIncluded(slug)) return {};
   const town = getSeoTown(townSlug, slug);
   if (!town) return {};
+
+  if (isBoroughDuplicateTownHub(town)) {
+    const canonical = areaPath(slug);
+    const place = townPlaceLabel(town);
+    return {
+      title: `Schools in ${place}`,
+      description: `Compare schools in ${town.localAuthority} — this page redirects to the borough area hub.`,
+      robots: { index: false, follow: true },
+      alternates: { canonical },
+    };
+  }
 
   const title = townPageTitle(town);
   const description = townPageDescription(town);
@@ -79,8 +93,12 @@ export default async function TownLandingPage({ params }: PageProps) {
   const town = getSeoTown(townSlug, slug);
   if (!area || !town) notFound();
 
+  if (isBoroughDuplicateTownHub(town)) {
+    return <BoroughDuplicateTownRedirect town={town} />;
+  }
+
   const schools = listSeoSchoolsForTownHub(town);
-  const siblingTowns = listSeoTowns(slug)
+  const siblingTowns = listIndexableSeoTowns(slug)
     .filter((row) => row.slug !== town.slug)
     .slice(0, 8);
   const place = townPlaceLabel(town);

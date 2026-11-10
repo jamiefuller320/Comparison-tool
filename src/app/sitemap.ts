@@ -4,9 +4,9 @@ import { AREA_STAGE_LANDINGS, areaStagePath } from "@/lib/areaStages";
 import { BRAND_HOME_URL } from "@/lib/brand";
 import { GUIDE_PAGES, guidePath, guidesIndexPath } from "@/lib/guides";
 import {
+  listIndexableSeoTowns,
   listSeoAreasWithTowns,
   listSeoSchools,
-  listSeoTowns,
   schoolPath,
   townPath,
   townsIndexPath,
@@ -18,7 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
   const areas = listCoverageAreas();
   const areaBySlug = new Map(areas.map((area) => [area.slug, area]));
-  const towns = listSeoTowns();
+  const towns = listIndexableSeoTowns();
   const schools = listSeoSchools();
   const townHubSlugs = listSeoAreasWithTowns();
 

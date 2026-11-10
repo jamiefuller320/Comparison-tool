@@ -15,6 +15,8 @@ import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 import {
   getSeoTown,
   getSeoTownForSchool,
+  isBoroughDuplicateTownHub,
+  listIndexableSeoTowns,
   listSeoSchools,
   listSeoSchoolsInTown,
   listSeoTowns,
@@ -32,7 +34,7 @@ export function listSeoSchoolsInArea(areaSlug: string): SeoSchoolSummary[] {
 /** True when this school is listed on its postal-town hub page today. */
 export function schoolOnNativeTownHub(school: SeoSchoolSummary): boolean {
   const town = getSeoTownForSchool(school);
-  if (!town) return false;
+  if (!town || isBoroughDuplicateTownHub(town)) return false;
   return schoolInSeoTown(school, town);
 }
 
@@ -111,6 +113,7 @@ function buildOrphanTownAssignments(): Map<string, string> {
     if (coord) {
       let bestM = Infinity;
       for (const hub of hubs) {
+        if (isBoroughDuplicateTownHub(hub)) continue;
         const center = townHubCentroid(hub);
         if (!center) continue;
         const m = haversineMetres(coord.lat, coord.lon, center.lat, center.lon);
@@ -121,7 +124,8 @@ function buildOrphanTownAssignments(): Map<string, string> {
       }
     }
     if (!picked) {
-      picked = [...hubs].sort(
+      const candidates = hubs.filter((hub) => !isBoroughDuplicateTownHub(hub));
+      picked = [...candidates].sort(
         (a, b) =>
           b.schoolCount - a.schoolCount ||
           a.name.localeCompare(b.name, "en-GB"),
@@ -188,7 +192,7 @@ export function auditSeoHubLinks(): HubLinkAudit {
       fromArea.add(school.urn);
     }
   }
-  for (const town of listSeoTowns()) {
+  for (const town of listIndexableSeoTowns()) {
     for (const school of listSeoSchoolsForTownHub(town)) {
       fromTown.add(school.urn);
     }
@@ -196,7 +200,7 @@ export function auditSeoHubLinks(): HubLinkAudit {
 
   const linked = new Set<string>([...fromArea, ...fromTown]);
   const townOnly = new Set<string>();
-  for (const town of listSeoTowns()) {
+  for (const town of listIndexableSeoTowns()) {
     for (const school of listSeoSchoolsInTown(town)) {
       townOnly.add(school.urn);
     }
