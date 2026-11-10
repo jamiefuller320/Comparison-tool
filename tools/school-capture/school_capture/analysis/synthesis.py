@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 import urllib.error
 import urllib.request
 from dataclasses import replace
@@ -215,8 +216,27 @@ def _cursor_agent_prompt(
 
     if getattr(agent_result, "status", None) == "error":
         return None
+    _log_cursor_synthesis_usage(agent_result)
     text = getattr(agent_result, "result", None) or ""
     return str(text).strip() or None
+
+
+def _log_cursor_synthesis_usage(agent_result: object) -> None:
+    """Print token counts when the SDK attaches them. Cost is often absent."""
+    usage = getattr(agent_result, "usage", None)
+    if usage is None:
+        print("cursor synthesis usage: not reported", file=sys.stderr)
+        return
+    print(
+        "cursor synthesis usage: "
+        f"input={getattr(usage, 'input_tokens', 0)} "
+        f"output={getattr(usage, 'output_tokens', 0)} "
+        f"cache_read={getattr(usage, 'cache_read_tokens', 0)} "
+        f"cache_write={getattr(usage, 'cache_write_tokens', 0)} "
+        f"reasoning={getattr(usage, 'reasoning_tokens', None)} "
+        f"total={getattr(usage, 'total_tokens', 0)}",
+        file=sys.stderr,
+    )
 
 
 def _parse_json_object(text: str) -> dict | None:

@@ -1,10 +1,10 @@
-# Human-gated review digest — 2026-11-10T10:33:49+00:00
+# Human-gated review digest — 2026-11-10T10:59:57+00:00
 
 - Mode: `collate`
-- Open items: **16** (queue total `41` · done `11` · ignored `14`)
+- Open items: **15** (queue total `41` · done `12` · ignored `14`)
 - New / refreshed this run: `0`
 - Auto-closed (already learned): `0`
-- Ethos rows closed (already in the published cell): `4`
+- Ethos rows closed (already in the published cell): `0`
 
 ## How to review / mark done
 
@@ -20,17 +20,10 @@
 ## Open by kind
 
 - `unsupported_offerings`: 11
-- `ethos_underclaim`: 5
+- `ethos_underclaim`: 4
 
 ## Items
 
-- **ethos_underclaim** `297e30173ffe0aee` Freezywater St George's CofE VA Primary School (URN `102031`)
-  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
-  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
-  - excerpts: church of england, our values, our vision
-  - review:
-    - `npm run enrich:qualitative -- --urn 102031`
-    - `npm run review:human-gated -- --mark-done 297e30173ffe0aee`
 - **ethos_underclaim** `84741fefb0b8847e` Millbank Gardens Primary Academy (URN `151310`)
   - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
   - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
@@ -145,5 +138,5 @@
 
 ## Notes
 
-- Marked done 4 ethos row(s) already reflected in the published cell
+- Marked done: 1 item(s)
 - No spotcheck gated JSONL yet (expects output/spotcheck-human-gated-candidates.jsonl after auto-learn PR)
