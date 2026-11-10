@@ -162,6 +162,49 @@ def test_chrome_and_pdf_fail() -> None:
         assert "possible_underclaim" in codes
 
 
+def test_our_vision_offering_is_not_an_underclaim() -> None:
+    with tempfile.TemporaryDirectory() as raw:
+        tmp = Path(raw)
+        shards = tmp / "qualitative"
+        shards.mkdir()
+        shard = {
+            "urn": "900003",
+            "name": "Vision Primary",
+            "assessedAt": "2026-11-08",
+            "areas": [
+                {
+                    "area": "ethos",
+                    "score": 70,
+                    "confidence": 0.7,
+                    "summary": "Listed provision includes vision and respect.",
+                    "themes": ["respect"],
+                    "offerings": ["vision", "respect"],
+                    "signals": [],
+                    "narrativeSummary": "The school website lists vision and respect.",
+                }
+            ],
+        }
+        (shards / "900003.json").write_text(json.dumps(shard), encoding="utf-8")
+        result = assess_school(
+            "900003",
+            website_index={
+                "900003": {
+                    "name": "Vision Primary",
+                    "website": "https://vision.example.test/",
+                    "la": "Hampshire",
+                    "laSlug": "hampshire",
+                }
+            },
+            shards_dir=shards,
+            offline_source_text="Our vision is respect. Our mission is let all you do be done in love.",
+        )
+        codes = {f.code for f in result.flags}
+        under = next(f for f in result.flags if f.code == "possible_underclaim")
+        assert "our vision" not in [e.lower() for e in under.excerpts]
+        assert "let all you do" in [e.lower() for e in under.excerpts]
+        assert "possible_underclaim" in codes
+
+
 def test_clean_pass() -> None:
     with tempfile.TemporaryDirectory() as raw:
         tmp = Path(raw)
@@ -342,26 +385,38 @@ def test_sample_size_hard_cap() -> None:
 def test_cli_dry_run() -> None:
     import subprocess
 
-    out = subprocess.check_output(
-        [
-            sys.executable,
-            str(ROOT / "scripts" / "run-qualitative-spotcheck-loop.py"),
-            "--dry-run",
-            "--no-auto-learn",
-            "--sample-size",
-            "3",
-            "--seed",
-            "42",
-        ],
-        cwd=ROOT,
-        text=True,
-    )
-    payload = json.loads(out)
-    assert payload["dryRun"] is True
-    assert payload["sampleSize"] <= 3
     digest = ROOT / "public" / "data" / "packs" / "qualitative-spotcheck-latest.json"
-    assert digest.is_file()
-    print("OK qualitative-spotcheck-loop dry-run")
+    digest_md = ROOT / "public" / "data" / "packs" / "qualitative-spotcheck-latest.md"
+    saved = {
+        path: path.read_bytes() if path.is_file() else None
+        for path in (digest, digest_md)
+    }
+    try:
+        out = subprocess.check_output(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "run-qualitative-spotcheck-loop.py"),
+                "--dry-run",
+                "--no-auto-learn",
+                "--sample-size",
+                "3",
+                "--seed",
+                "42",
+            ],
+            cwd=ROOT,
+            text=True,
+        )
+        payload = json.loads(out)
+        assert payload["dryRun"] is True
+        assert payload["sampleSize"] <= 3
+        assert digest.is_file()
+        print("OK qualitative-spotcheck-loop dry-run")
+    finally:
+        for path, raw in saved.items():
+            if raw is None:
+                path.unlink(missing_ok=True)
+            else:
+                path.write_bytes(raw)
 
 
 def main() -> int:

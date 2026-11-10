@@ -718,21 +718,16 @@ def assess_school(
         )
 
     if source_lower and ETHOS_HINT_RE.search(source_text):
-        product_blob = " ".join(
-            [
-                str(area.get("summary") or "")
-                + " "
-                + str(area.get("narrativeSummary") or "")
-                + " "
-                + " ".join(str(t) for t in (area.get("themes") or []))
-                + " "
-                + " ".join(str(o) for o in (area.get("offerings") or []))
-                for area in shard.get("areas") or []
-                if area.get("area") in {"ethos", "behaviour", "community"}
-            ]
-        ).lower()
+        from human_gated_support import ethos_hint_reflected
+
         hints = sorted({m.group(0).lower() for m in ETHOS_HINT_RE.finditer(source_text)})
-        missed = [h for h in hints if h not in product_blob and len(h) > 4]
+        # "our vision" is reflected once vision is its own offering. Longer
+        # distinctive phrases still have to appear in the published cell.
+        missed = [
+            h
+            for h in hints
+            if len(h) > 4 and not ethos_hint_reflected(h, shard)
+        ]
         if missed:
             result.flags.append(
                 SpotFlag(

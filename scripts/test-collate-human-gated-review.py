@@ -217,7 +217,88 @@ class CollateHumanGatedReviewTests(unittest.TestCase):
                 queue_path=self.queue,
             )
         self.assertEqual(third["autoClosedLearned"], 1)
-        self.assertEqual(third["openCount"], 0)
+
+    def test_reflected_our_vision_row_is_marked_done(self) -> None:
+        shard = {
+            "urn": "900010",
+            "areas": [
+                {
+                    "area": "ethos",
+                    "summary": "Strong publicly visible evidence for ethos and values.",
+                    "themes": ["ethos"],
+                    "offerings": ["vision", "british values"],
+                    "narrativeSummary": "The school website lists vision.",
+                }
+            ],
+        }
+        self.spotcheck_digest.write_text(
+            json.dumps(
+                {
+                    "schools": [
+                        {
+                            "urn": "900010",
+                            "name": "Vision Primary",
+                            "flags": [
+                                {
+                                    "code": "possible_underclaim",
+                                    "area": "ethos",
+                                    "excerpts": ["our vision"],
+                                }
+                            ],
+                        },
+                        {
+                            "urn": "900011",
+                            "name": "Motto Primary",
+                            "flags": [
+                                {
+                                    "code": "possible_underclaim",
+                                    "area": "ethos",
+                                    "excerpts": ["be the best you can be"],
+                                }
+                            ],
+                        },
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        def _load(urn: str):
+            if urn == "900010":
+                return shard
+            return {
+                "urn": urn,
+                "areas": [
+                    {
+                        "area": "ethos",
+                        "offerings": ["respect"],
+                        "summary": "respect",
+                        "narrativeSummary": "",
+                        "themes": [],
+                    }
+                ],
+            }
+
+        with mock.patch(
+            "human_gated_support.load_shard", side_effect=_load
+        ):
+            payload = collate.collate(
+                dry_run=False,
+                include_issues=False,
+                issue_limit=10,
+                auto_close=False,
+                open_issue=False,
+                mark_done_ids=[],
+                mark_done_feedback=[],
+                done_note=None,
+                downgrade_unsupported=False,
+                digest_json=self.digest_json,
+                digest_md=self.digest_md,
+                queue_path=self.queue,
+            )
+        self.assertEqual(payload["ethosClosedReflected"], 1)
+        self.assertEqual(payload["openCount"], 1)
+        self.assertEqual(payload["items"][0]["urn"], "900011")
 
     def test_flag_candidates_only_when_autolearn_gated(self) -> None:
         self._write_jsonl(

@@ -1,17 +1,18 @@
 {
-  "ranAt": "2026-11-08T07:25:16+00:00",
+  "ranAt": "2026-11-10T10:33:49+00:00",
   "dryRun": false,
-  "openCount": 20,
+  "openCount": 16,
   "queueSize": 41,
   "upserted": 0,
-  "unsupportedDowngraded": 1,
+  "unsupportedDowngraded": 0,
+  "ethosClosedReflected": 4,
   "autoClosedLearned": 0,
   "counts": {
-    "open": 20,
-    "done": 7,
+    "open": 16,
+    "done": 11,
     "ignored": 14,
     "byKind": {
-      "ethos_underclaim": 9,
+      "ethos_underclaim": 5,
       "unsupported_offerings": 11
     }
   },
@@ -23,25 +24,6 @@
     "queue": "output/human-gated-review-queue.jsonl"
   },
   "items": [
-    {
-      "id": "7df4288529bdb735",
-      "kind": "ethos_underclaim",
-      "source": "qualitative-spotcheck-latest",
-      "action": "targeted_refresh",
-      "urn": "148991",
-      "schoolName": "East Stour Primary School",
-      "la": "Kent",
-      "area": "ethos",
-      "flagCode": "possible_underclaim",
-      "severity": "warn",
-      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-      "excerpts": [
-        "our vision"
-      ],
-      "lastSeen": "2026-09-26T10:24:06+00:00",
-      "status": "open",
-      "firstSeen": "2026-09-26T10:24:06+00:00"
-    },
     {
       "id": "297e30173ffe0aee",
       "kind": "ethos_underclaim",
@@ -62,25 +44,6 @@
       "lastSeen": "2026-09-28T20:23:50+00:00",
       "status": "open",
       "firstSeen": "2026-09-28T20:23:50+00:00"
-    },
-    {
-      "id": "7aa275b7c983df62",
-      "kind": "ethos_underclaim",
-      "source": "qualitative-spotcheck-latest",
-      "action": "targeted_refresh",
-      "urn": "102404",
-      "schoolName": "Yeading Infant and Nursery School",
-      "la": "Hillingdon",
-      "area": "ethos",
-      "flagCode": "possible_underclaim",
-      "severity": "warn",
-      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-      "excerpts": [
-        "our vision"
-      ],
-      "lastSeen": "2026-10-12T21:59:23+00:00",
-      "status": "open",
-      "firstSeen": "2026-10-12T21:59:23+00:00"
     },
     {
       "id": "84741fefb0b8847e",
@@ -121,25 +84,6 @@
       "firstSeen": "2026-10-19T19:40:29+00:00"
     },
     {
-      "id": "937ccef0ffb07d19",
-      "kind": "ethos_underclaim",
-      "source": "qualitative-spotcheck-latest",
-      "action": "targeted_refresh",
-      "urn": "146900",
-      "schoolName": "Wilbury Primary School",
-      "la": "Enfield",
-      "area": "ethos",
-      "flagCode": "possible_underclaim",
-      "severity": "warn",
-      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-      "excerpts": [
-        "our vision"
-      ],
-      "lastSeen": "2026-10-26T19:46:04+00:00",
-      "status": "open",
-      "firstSeen": "2026-10-26T19:46:04+00:00"
-    },
-    {
       "id": "1c861310d7447668",
       "kind": "ethos_underclaim",
       "source": "qualitative-spotcheck-latest",
@@ -156,25 +100,6 @@
         "let all you do",
         "our mission",
         "our vision"
-      ],
-      "lastSeen": "2026-11-02T22:36:44+00:00",
-      "status": "open",
-      "firstSeen": "2026-09-26T10:24:06+00:00"
-    },
-    {
-      "id": "7d21b4f2e7266a53",
-      "kind": "ethos_underclaim",
-      "source": "qualitative-spotcheck-latest",
-      "action": "targeted_refresh",
-      "urn": "126066",
-      "schoolName": "Millais School",
-      "la": "West Sussex",
-      "area": "ethos",
-      "flagCode": "possible_underclaim",
-      "severity": "warn",
-      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-      "excerpts": [
-        "our mission"
       ],
       "lastSeen": "2026-11-02T22:36:44+00:00",
       "status": "open",
@@ -483,8 +408,7 @@
     }
   ],
   "notes": [
-    "GitHub [user-improvement] issues: none or gh unavailable",
-    "Downgraded 1 unsupported_offerings row(s) to digest-only (no PDF confirmation)",
+    "Marked done 4 ethos row(s) already reflected in the published cell",
     "No spotcheck gated JSONL yet (expects output/spotcheck-human-gated-candidates.jsonl after auto-learn PR)"
   ],
   "issueUrl": null

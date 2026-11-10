@@ -56,6 +56,9 @@ KIND_UNSUPPORTED = "unsupported_offerings"
 KIND_USER = "user_improvement"
 KIND_ISSUE = "github_issue"
 DIGEST_ONLY_NOTE = "digest-only: unsupported offerings (no PDF confirmation)"
+REFLECTED_ETHOS_NOTE = (
+    "ethos excerpts already reflected in the published ethos/behaviour cell"
+)
 
 
 def utc_now() -> str:
@@ -343,6 +346,37 @@ def collect_github_issues(limit: int) -> list[dict[str, Any]]:
     return items
 
 
+def close_reflected_ethos(
+    queue: dict[str, dict[str, Any]],
+    *,
+    when: str,
+) -> int:
+    """Mark open ethos rows done when the published cell already has the excerpts.
+
+    Spot-check used to keep "our vision" open after vision was stored as its
+    own offering. Distinctive phrases that are still absent stay open.
+    """
+    from human_gated_support import ethos_excerpts_reflected, load_shard
+
+    closed = 0
+    for row in queue.values():
+        if str(row.get("status") or "open") != "open":
+            continue
+        if str(row.get("kind") or "") != KIND_ETHOS:
+            continue
+        excerpts = row.get("excerpts") or []
+        if not excerpts:
+            continue
+        urn = str(row.get("urn") or "").strip()
+        if not ethos_excerpts_reflected(load_shard(urn) if urn else None, excerpts):
+            continue
+        row["status"] = "done"
+        row["doneAt"] = when
+        row["doneNote"] = REFLECTED_ETHOS_NOTE
+        closed += 1
+    return closed
+
+
 def downgrade_unsupported_digest_only(
     queue: dict[str, dict[str, Any]],
     *,
@@ -485,6 +519,8 @@ def build_markdown(payload: dict[str, Any]) -> str:
         f"done `{counts.get('done', 0)}` · ignored `{counts.get('ignored', 0)}`)",
         f"- New / refreshed this run: `{payload.get('upserted', 0)}`",
         f"- Auto-closed (already learned): `{payload.get('autoClosedLearned', 0)}`",
+        f"- Ethos rows closed (already in the published cell): "
+        f"`{payload.get('ethosClosedReflected', 0)}`",
         "",
         "## How to review / mark done",
         "",
@@ -668,6 +704,13 @@ def collate(
         if before is None:
             upserted += 1
 
+    ethos_reflected = close_reflected_ethos(queue, when=seen_at)
+    if ethos_reflected:
+        notes.append(
+            f"Marked done {ethos_reflected} ethos row(s) already reflected "
+            "in the published cell"
+        )
+
     unsupported_downgraded = 0
     if downgrade_unsupported:
         unsupported_downgraded = downgrade_unsupported_digest_only(queue, when=seen_at)
@@ -711,6 +754,7 @@ def collate(
         "queueSize": len(queue),
         "upserted": upserted,
         "unsupportedDowngraded": unsupported_downgraded,
+        "ethosClosedReflected": ethos_reflected,
         "autoClosedLearned": auto_closed,
         "counts": {
             "open": status_counts.get("open", 0),
