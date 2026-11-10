@@ -20,6 +20,7 @@ async function main() {
     schoolPageDescription,
     schoolPageTitle,
     schoolPath,
+    schoolPhaseWord,
     schoolPlaceLabel,
     townPageDescription,
     townPageTitle,
@@ -128,12 +129,20 @@ async function main() {
     }
   }
   const desc = schoolPageDescription(sample);
-  if (desc.length > 160) {
+  if (desc.length > 155) {
     console.error("FAIL schoolPageDescription too long", desc.length, desc);
+    process.exit(1);
+  }
+  if (!desc.startsWith("Compare ")) {
+    console.error("FAIL schoolPageDescription should lead with compare", desc);
     process.exit(1);
   }
   if (/\.\s+[a-z]/.test(desc)) {
     console.error("FAIL schoolPageDescription lowercase after period", desc);
+    process.exit(1);
+  }
+  if (/not a league table/i.test(desc)) {
+    console.error("FAIL disclaimer belongs on the page, not the snippet", desc);
     process.exit(1);
   }
   if (winchester) {
@@ -213,15 +222,142 @@ async function main() {
     process.exit(1);
   }
 
-  const shortSchool = schools.find(
-    (s) => `${s.name}, ${schoolPlaceLabel(s)}`.length <= 42,
-  );
-  if (shortSchool) {
-    const st = schoolPageTitle(shortSchool);
-    if (!st.includes("compare nearby")) {
-      console.error("FAIL short school title missing compare intent", st);
+  for (const school of schools) {
+    const title = schoolPageTitle(school);
+    const description = schoolPageDescription(school);
+    const place = schoolPlaceLabel(school);
+    const phase = schoolPhaseWord(school);
+    const name = school.name.replace(/\.+$/, "").trim();
+    const base = `${name}, ${place}`;
+    if (base.length <= 60 && title.length > 60) {
+      console.error("FAIL schoolPageTitle over 60", school.urn, title.length, title);
       process.exit(1);
     }
+    if (phase && `${name} — ${phase} in ${place}`.length <= 60) {
+      if (title !== `${name} — ${phase} in ${place}`) {
+        console.error("FAIL schoolPageTitle phase pattern", school.urn, title);
+        process.exit(1);
+      }
+    } else if (title !== base) {
+      console.error("FAIL schoolPageTitle fallback", school.urn, title);
+      process.exit(1);
+    }
+    if (!title.includes(place)) {
+      console.error("FAIL schoolPageTitle missing place", school.urn, title);
+      process.exit(1);
+    }
+    if (description.length > 155) {
+      console.error(
+        "FAIL schoolPageDescription over 155",
+        school.urn,
+        description.length,
+        description,
+      );
+      process.exit(1);
+    }
+    if (!description.startsWith("Compare ")) {
+      console.error("FAIL description lead", school.urn, description);
+      process.exit(1);
+    }
+    if (/\.\s+[a-z]/.test(description)) {
+      console.error("FAIL description lowercase after period", school.urn, description);
+      process.exit(1);
+    }
+    if (/KS2 RWM 0%/.test(description)) {
+      console.error("FAIL zero KS2 outcome in meta", school.urn, description);
+      process.exit(1);
+    }
+    if (
+      school.ofstedOverall &&
+      !description.includes(`Ofsted ${school.ofstedOverall}`)
+    ) {
+      console.error("FAIL missing Ofsted in meta", school.urn, description);
+      process.exit(1);
+    }
+    if (
+      school.rwmExpected != null &&
+      school.rwmExpected > 0 &&
+      !description.includes(
+        `KS2 RWM ${Math.round(school.rwmExpected <= 1 ? school.rwmExpected * 100 : school.rwmExpected)}%`,
+      )
+    ) {
+      console.error("FAIL missing KS2 result in meta", school.urn, description);
+      process.exit(1);
+    }
+    if (
+      !(school.rwmExpected != null && school.rwmExpected > 0) &&
+      school.att8Average != null &&
+      school.att8Average > 0 &&
+      !description.includes("Attainment 8")
+    ) {
+      console.error("FAIL missing Attainment 8 in meta", school.urn, description);
+      process.exit(1);
+    }
+  }
+
+  const middlePark = getSeoSchool("130921");
+  if (!middlePark) {
+    console.error("FAIL Middle Park missing from SEO set");
+    process.exit(1);
+  }
+  if (schoolPageTitle(middlePark) !== "Middle Park Primary School — primary in Greenwich") {
+    console.error("FAIL Middle Park title", schoolPageTitle(middlePark));
+    process.exit(1);
+  }
+  const middleDesc = schoolPageDescription(middlePark);
+  if (!/with \d+ other primary schools in Greenwich/.test(middleDesc)) {
+    console.error("FAIL Middle Park peer lead", middleDesc);
+    process.exit(1);
+  }
+  if (!middleDesc.includes("KS2 RWM 68%")) {
+    console.error("FAIL Middle Park results", middleDesc);
+    process.exit(1);
+  }
+
+  const paddock = getSeoSchool("101102");
+  if (!paddock) {
+    console.error("FAIL Paddock missing from SEO set");
+    process.exit(1);
+  }
+  if (schoolPageTitle(paddock) !== "Paddock School — special in Wandsworth") {
+    console.error("FAIL Paddock title", schoolPageTitle(paddock));
+    process.exit(1);
+  }
+  const paddockDesc = schoolPageDescription(paddock);
+  if (!paddockDesc.includes("Ofsted Outstanding") || /KS2 RWM 0%/.test(paddockDesc)) {
+    console.error("FAIL Paddock facts", paddockDesc);
+    process.exit(1);
+  }
+  if (!/other special schools in Wandsworth/.test(paddockDesc)) {
+    console.error("FAIL Paddock peer lead", paddockDesc);
+    process.exit(1);
+  }
+
+  const southfields = getSeoSchool("138682");
+  if (!southfields?.inspectionPrecis) {
+    console.error("FAIL Southfields précis missing");
+    process.exit(1);
+  }
+  const southfieldsDesc = schoolPageDescription(southfields);
+  if (
+    schoolPageTitle(southfields) !== "Southfields Academy — secondary in Wandsworth" ||
+    !southfieldsDesc.includes("Ofsted Good") ||
+    !southfieldsDesc.includes("Attainment 8 49.4")
+  ) {
+    console.error("FAIL Southfields snippet", schoolPageTitle(southfields), southfieldsDesc);
+    process.exit(1);
+  }
+
+  const withHook = schools.find((school) => schoolPageDescription(school).includes("“"));
+  if (!withHook) {
+    console.error("FAIL expected some précis hooks in meta descriptions");
+    process.exit(1);
+  }
+  const hookDesc = schoolPageDescription(withHook);
+  const quoted = hookDesc.match(/“[^”]+”/);
+  if (!quoted || quoted[0].includes("…") || !withHook.inspectionPrecis?.includes(quoted[0].slice(1, -1))) {
+    console.error("FAIL précis hook is not a full excerpt", withHook.urn, hookDesc);
+    process.exit(1);
   }
 
   const { addressHasGiasPlaceholder, stripGiasAddress } = await import(

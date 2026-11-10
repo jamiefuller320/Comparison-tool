@@ -17,6 +17,7 @@ import {
   packDataPathBySlug,
   type LaPackManifest,
 } from "@/lib/laPacks";
+import { looksLikeInspectionPrecisJunk } from "@/lib/inspectionHighlights";
 import { loadSeoQualitativeThemes, type SeoQualitativeTheme } from "@/lib/seoQualitative";
 import type { SchoolRecord, SchoolsIndex } from "@/lib/types";
 
@@ -519,6 +520,12 @@ export function schoolPlaceLabel(school: SeoSchoolSummary): string {
 /** Soft meta length target for Google desktop snippets (~150–160). */
 const META_DESCRIPTION_MAX = 155;
 
+/**
+ * Page-title budget before the layout suffix ` · School Compass`.
+ * Google’s title line is about 60 characters; phase + place have to fit here.
+ */
+const SCHOOL_TITLE_MAX = 60;
+
 function clipMetaDescription(text: string, max = META_DESCRIPTION_MAX): string {
   const t = text.trim();
   if (t.length <= max) return t;
@@ -526,12 +533,52 @@ function clipMetaDescription(text: string, max = META_DESCRIPTION_MAX): string {
   return `${cut.replace(/\s+\S*$/, "").trim()}…`;
 }
 
+/**
+ * Short phase word for titles and snippets (“primary in Greenwich”).
+ * Special and nursery labels beat the broad age phase — that is the query
+ * parents actually type, and it stays a fact from GIAS type/phase.
+ */
+export function schoolPhaseWord(
+  school: Pick<SeoSchoolSummary, "phase" | "schoolTypeLabel">,
+): string | null {
+  const type = (school.schoolTypeLabel || "").toLowerCase();
+  if (/\bspecial\b/.test(type)) return "special";
+  if (type.includes("nursery")) return "nursery";
+  const phase = (school.phase || "").trim().toLowerCase();
+  if (phase === "primary") return "primary";
+  if (phase === "secondary") return "secondary";
+  if (phase === "all-through" || phase === "all through") return "all-through";
+  if (phase === "infant") return "infant";
+  if (phase === "junior") return "junior";
+  if (phase === "nursery") return "nursery";
+  if (phase === "ks4" || phase === "16 plus" || phase === "16-plus") {
+    if (
+      type.includes("further education") ||
+      type.includes("post 16") ||
+      type.includes("post-16")
+    ) {
+      return "post-16";
+    }
+    return "secondary";
+  }
+  return null;
+}
+
+/** GIAS sometimes stores a trailing full stop on the name; the snippet adds its own. */
+function snippetSchoolName(name: string): string {
+  return name.replace(/[.]+$/g, "").trim();
+}
+
 export function schoolPageTitle(school: SeoSchoolSummary): string {
   const place = schoolPlaceLabel(school);
-  const base = `${school.name}, ${place}`;
-  // Short names: add compare intent before brand suffix (~60-char SERP budget).
-  if (base.length <= 42) return `${base} — compare nearby`;
-  return base;
+  const name = snippetSchoolName(school.name);
+  const phase = schoolPhaseWord(school);
+  // Phase + locality in place of the generic “— compare nearby” suffix.
+  if (phase) {
+    const phased = `${name} — ${phase} in ${place}`;
+    if (phased.length <= SCHOOL_TITLE_MAX) return phased;
+  }
+  return `${name}, ${place}`;
 }
 
 /** Display / SERP place for a town landing (GIAS "London" → borough). */
@@ -541,7 +588,77 @@ export function townPlaceLabel(town: SeoTown): string {
   return name;
 }
 
-export function schoolPageDescription(school: SeoSchoolSummary): string {
+let phasePeerCounts: Map<string, number> | null = null;
+
+/** Other schools in the same borough or town with the same snippet phase word. */
+function phasePeerCount(school: SeoSchoolSummary): number {
+  if (!phasePeerCounts) {
+    const groups = new Map<string, number>();
+    for (const row of listSeoSchools()) {
+      const word = schoolPhaseWord(row);
+      if (!word) continue;
+      const key = `${row.areaSlug}\0${schoolPlaceLabel(row)}\0${word}`;
+      groups.set(key, (groups.get(key) ?? 0) + 1);
+    }
+    phasePeerCounts = new Map();
+    for (const row of listSeoSchools()) {
+      const word = schoolPhaseWord(row);
+      if (!word) continue;
+      const key = `${row.areaSlug}\0${schoolPlaceLabel(row)}\0${word}`;
+      phasePeerCounts.set(row.urn, Math.max(0, (groups.get(key) ?? 1) - 1));
+    }
+  }
+  return phasePeerCounts.get(school.urn) ?? 0;
+}
+
+function indefiniteArticle(word: string): string {
+  return /^[aeiou]/i.test(word) ? "an" : "a";
+}
+
+function schoolMetaLead(
+  school: SeoSchoolSummary,
+  place: string,
+  phase: string | null,
+  peers: number,
+): string {
+  const name = snippetSchoolName(school.name);
+  if (phase && peers >= 1) {
+    const noun = peers === 1 ? "school" : "schools";
+    return `Compare ${name} with ${peers} other ${phase} ${noun} in ${place}.`;
+  }
+  if (phase) {
+    return `Compare ${name} side by side — ${indefiniteArticle(phase)} ${phase} school in ${place}.`;
+  }
+  return `Compare ${name} side by side with other schools in ${place}.`;
+}
+
+/** When the peer sentence is too long, keep phase, place, and facts, and shorten the name. */
+function compactSchoolMeta(
+  school: SeoSchoolSummary,
+  place: string,
+  phase: string | null,
+  facts: string,
+): string | null {
+  if (!facts) return null;
+  const name = snippetSchoolName(school.name);
+  const phaseBit = phase
+    ? `, ${indefiniteArticle(phase)} ${phase} in ${place}`
+    : ` in ${place}`;
+  const full = `Compare ${name}${phaseBit}. ${facts}`;
+  if (full.length <= META_DESCRIPTION_MAX) return full;
+  const suffix = `${phaseBit}. ${facts}`;
+  const budget = META_DESCRIPTION_MAX - "Compare ".length - suffix.length;
+  if (budget < 16) return null;
+  const cut = name.slice(0, budget - 1);
+  const space = cut.lastIndexOf(" ");
+  const shortName = (space >= 12 ? cut.slice(0, space) : cut)
+    .replace(/[,:;–-]\s*$/, "")
+    .trim();
+  if (shortName.length < 12) return null;
+  return `Compare ${shortName}…${suffix}`;
+}
+
+function schoolFactSentence(school: SeoSchoolSummary): string {
   const facts: string[] = [];
   if (school.ofstedOverall) facts.push(`Ofsted ${school.ofstedOverall}`);
   // Skip 0% / missing-looking outcomes (common on special schools) — hurts CTR.
@@ -550,10 +667,53 @@ export function schoolPageDescription(school: SeoSchoolSummary): string {
   } else if (school.att8Average != null && school.att8Average > 0) {
     facts.push(`Attainment 8 ${formatAtt8(school.att8Average)}`);
   }
-  const factStr = facts.length ? ` ${facts.join(" · ")}.` : "";
-  // Benefit first; keep “not a league table” for on-page copy, not the snippet hook.
-  return clipMetaDescription(
-    `Shortlist ${school.name} beside nearby ${school.localAuthority} schools.${factStr} DfE figures and Ofsted/ISI excerpts to visit on.`,
+  return facts.length ? `${facts.join(" · ")}.` : "";
+}
+
+/**
+ * First inspection sentence, quoted, only when the whole sentence fits.
+ * A chopped excerpt reads as clickbait, so overflow drops the hook.
+ */
+function precisMetaHook(school: SeoSchoolSummary, maxChars: number): string | null {
+  if (maxChars < 42) return null;
+  const raw = school.inspectionPrecis?.replace(/\s+/g, " ").trim() ?? "";
+  if (!raw || looksLikeInspectionPrecisJunk(raw)) return null;
+  const sentence = (raw.split(/(?<=[.!?])\s/)[0] || raw).trim();
+  if (sentence.length < 40) return null;
+  const quoted = `“${sentence}”`;
+  return quoted.length <= maxChars ? quoted : null;
+}
+
+function joinMeta(parts: string[]): string {
+  return parts
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+export function schoolPageDescription(school: SeoSchoolSummary): string {
+  const place = schoolPlaceLabel(school);
+  const phase = schoolPhaseWord(school);
+  const peers = phase ? phasePeerCount(school) : 0;
+  const lead = schoolMetaLead(school, place, phase, peers);
+  const facts = schoolFactSentence(school);
+  const base = joinMeta([lead, facts]);
+  const room = META_DESCRIPTION_MAX - base.length - 1;
+  const hook = precisMetaHook(school, room);
+  const closer = /side[- ]by[- ]side/i.test(lead)
+    ? "DfE figures and inspection excerpts."
+    : "Side-by-side DfE figures and excerpts.";
+  const within = (text: string) =>
+    text.length <= META_DESCRIPTION_MAX ? text : null;
+  // Keep the place name intact. A generic closer is not worth clipping the lead.
+  // “Not a league table” stays on the page, not in the snippet.
+  return (
+    (hook ? within(joinMeta([lead, facts, hook])) : null) ||
+    within(joinMeta([lead, facts, closer])) ||
+    (facts ? within(joinMeta([lead, facts])) : null) ||
+    compactSchoolMeta(school, place, phase, facts) ||
+    within(lead) ||
+    clipMetaDescription(lead)
   );
 }
 
