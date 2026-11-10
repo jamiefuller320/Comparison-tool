@@ -13,6 +13,7 @@ async function main() {
     listSeoCoverageAreaSlugs,
     listSeoHampshireSchools,
     listSeoSchools,
+    listBuiltSeoTownLandings,
     listIndexableSeoTowns,
     listSeoSchoolsInTown,
     listSeoTowns,
@@ -160,6 +161,11 @@ async function main() {
   }
   if (listIndexableSeoTowns().some((t) => t.slug === "london" && t.areaSlug !== "city-of-london")) {
     console.error("FAIL london duplicate in indexable towns");
+    process.exit(1);
+  }
+  const builtDuplicates = listBuiltSeoTownLandings().filter(isBoroughDuplicateTownHub);
+  if (builtDuplicates.length !== 25) {
+    console.error("FAIL built redirect stub count", builtDuplicates.length);
     process.exit(1);
   }
   if (listIndexableSeoTowns("barnet").length < 1) {

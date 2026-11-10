@@ -432,6 +432,11 @@ export function listIndexableSeoTowns(areaSlug?: string): SeoTown[] {
   return listSeoTowns(areaSlug).filter((town) => !isBoroughDuplicateTownHub(town));
 }
 
+/** Static HTML town routes: indexable pages plus noindex redirect stubs. */
+export function listBuiltSeoTownLandings(areaSlug?: string): SeoTown[] {
+  return listSeoTowns(areaSlug);
+}
+
 /** @deprecated Prefer listSeoTowns(areaSlug) */
 export function listSeoHampshireTowns(): SeoTown[] {
   return listSeoTowns(laSlug(SEED_LOCAL_AUTHORITY));
