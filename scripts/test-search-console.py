@@ -742,9 +742,12 @@ def test_workflow_secret_is_env_only() -> None:
     text = (ROOT / ".github" / "workflows" / "search-console.yml").read_text(encoding="utf-8")
     assert "GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}" in text
     assert "cron:" in text and "* * 4" in text
-    run_blocks = text.split("run:", 1)[1]
-    assert "secrets." not in run_blocks
-    assert "GSC_SERVICE_ACCOUNT_JSON" not in run_blocks
+    assert "ci-rebase-push.sh origin main" in text
+    rebase_push = (ROOT / "scripts" / "ci-rebase-push.sh").read_text(encoding="utf-8")
+    assert "public/data/search-console-latest.json" in rebase_push
+    commit_step = text.split("Commit Search Console digest", 1)[1]
+    assert "secrets." not in commit_step
+    assert "GSC_SERVICE_ACCOUNT_JSON" not in commit_step
 
 
 def test_publishable_evidence_gate() -> None:
