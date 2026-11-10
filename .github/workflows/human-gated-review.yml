@@ -51,6 +51,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install school-capture (PDF helpers for collate)
+        run: pip install -e "./tools/school-capture[dev]"
+
       - name: Collate human-gated review digest
         env:
           DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
