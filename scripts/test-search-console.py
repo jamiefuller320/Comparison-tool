@@ -196,7 +196,51 @@ def api_rows() -> list[dict]:
     ]
 
 
+def query_rows() -> list[dict]:
+    return [
+        {
+            "keys": ["school compass"],
+            "clicks": 10,
+            "impressions": 200,
+            "position": 1.5,
+        },
+        {
+            "keys": ["ofsted greenwich primary"],
+            "clicks": 2,
+            "impressions": 500,
+            "position": 8.0,
+        },
+        {
+            "keys": ["compare schools winchester"],
+            "clicks": 1,
+            "impressions": 120,
+            "position": 12.0,
+        },
+    ]
+
+
+def page_query_rows() -> list[dict]:
+    return [
+        {
+            "keys": ["https://schoolcompass.uk/schools/111/", "ofsted greenwich primary"],
+            "clicks": 1,
+            "impressions": 80,
+            "position": 9.0,
+        },
+        {
+            "keys": ["https://schoolcompass.uk/schools/222/", "lambeth primary schools"],
+            "clicks": 1,
+            "impressions": 60,
+            "position": 7.0,
+        },
+    ]
+
+
 def test_window_and_paths() -> None:
+    assert sc.baseline_window() == (date(2026, 9, 7), date(2026, 10, 6))
+    assert sc.query_brand_class("School Compass login") == "branded"
+    assert sc.query_brand_class("schoolcompass.uk") == "branded"
+    assert sc.query_brand_class("ofsted report") == "nonBranded"
     start, end = sc.default_window(date(2026, 11, 8))
     assert (start, end) == (date(2026, 10, 7), date(2026, 11, 5)), (start, end)
     later_start, later_end = sc.default_window(date(2027, 2, 1))
@@ -291,6 +335,81 @@ def test_mocked_api_segments_and_eviction() -> None:
     assert "Wiltshire SEO: **off**" in markdown
     assert "Raise cap: **no**" in markdown
     assert "/schools/333/" in markdown
+
+
+def test_query_segments_and_baseline_comparison() -> None:
+    cat = catalog()
+    current = sc.build_report(
+        api_rows(),
+        cat,
+        start=date(2026, 10, 7),
+        end=date(2026, 11, 5),
+        property_url=sc.DEFAULT_SITE_URL,
+        fetched_at="2026-11-08T06:30:00Z",
+        evidence_fn=lambda urn: False,
+    )
+    current["queries"] = sc.build_query_tables(
+        query_rows(), page_query_rows(), cat
+    )
+    baseline = sc.build_report(
+        [
+            {
+                "keys": ["https://schoolcompass.uk/schools/111/"],
+                "clicks": 0,
+                "impressions": 40,
+                "position": 15,
+            }
+        ],
+        cat,
+        start=date(2026, 9, 7),
+        end=date(2026, 10, 6),
+        property_url=sc.DEFAULT_SITE_URL,
+        fetched_at="2026-09-08T06:30:00Z",
+        evidence_fn=lambda urn: False,
+    )
+    baseline["queries"] = sc.build_query_tables(
+        [
+            {
+                "keys": ["school compass"],
+                "clicks": 5,
+                "impressions": 50,
+                "position": 2,
+            },
+            {
+                "keys": ["random query"],
+                "clicks": 0,
+                "impressions": 30,
+                "position": 20,
+            },
+        ],
+        [],
+        cat,
+    )
+    current["comparison"] = sc.build_comparison(
+        current,
+        baseline,
+        current["queries"],
+        baseline["queries"],
+        baseline_start=date(2026, 9, 7),
+        baseline_end=date(2026, 10, 6),
+    )
+    q = current["queries"]
+    assert len(q["topOverall"]) == 3
+    assert q["topOverall"][0]["query"] == "ofsted greenwich primary"
+    branded = q["bySegment"]["branded"]
+    non_branded = q["bySegment"]["nonBranded"]
+    assert branded["impressions"] == 200
+    assert non_branded["impressions"] == 620
+    london = q["bySegment"]["regionSchool:london"]
+    assert london["impressions"] == 60
+    assert len(london["topQueries"]) == 1
+    cmp_tot = current["comparison"]["totals"]
+    assert cmp_tot["current"]["impressions"] > cmp_tot["baseline"]["impressions"]
+    assert current["comparison"]["baselineStartDate"] == "2026-09-07"
+    md = sc.render_markdown(current)
+    assert "### Top queries (current window)" in md
+    assert "### Baseline comparison" in md
+    assert "nonBranded" in md or "Non-branded" in md
 
 
 def test_pagination_and_signed_jwt() -> None:
@@ -444,7 +563,20 @@ def test_fixture_merges_into_existing_digest() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         fixture = root / "rows.json"
-        fixture.write_text(json.dumps({"rows": api_rows()}), encoding="utf-8")
+        fixture.write_text(
+            json.dumps(
+                {
+                    "pages": api_rows(),
+                    "queries": query_rows(),
+                    "pageQueries": page_query_rows(),
+                    "baseline": {
+                        "pages": api_rows()[:2],
+                        "queries": query_rows()[:1],
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
         digest_json = root / "seo-coverage-loop-latest.json"
         digest_md = root / "seo-coverage-loop-latest.md"
         digest_json.write_text(
@@ -475,6 +607,8 @@ def test_fixture_merges_into_existing_digest() -> None:
         assert again.count("## Search Console") == 1
         latest = json.loads((root / "search-console-latest.json").read_text(encoding="utf-8"))
         assert latest["pageCount"] == report["pageCount"]
+        assert report.get("queries", {}).get("topOverall")
+        assert report.get("comparison", {}).get("totals")
 
 
 def test_catalog_and_coverage_loop_keep_the_read() -> None:
@@ -658,6 +792,7 @@ def main() -> int:
     tests = [
         test_window_and_paths,
         test_mocked_api_segments_and_eviction,
+        test_query_segments_and_baseline_comparison,
         test_pagination_and_signed_jwt,
         test_skip_and_invalid_secret_do_not_leak_or_write,
         test_fixture_merges_into_existing_digest,

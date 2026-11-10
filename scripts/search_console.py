@@ -53,14 +53,21 @@ SECRET_ENV = "GSC_SERVICE_ACCOUNT_JSON"
 SCOPE = "https://www.googleapis.com/auth/webmasters.readonly"
 DEFAULT_TOKEN_URI = "https://oauth2.googleapis.com/token"
 META_DEPLOY = date(2026, 10, 7)
+BASELINE_START = date(2026, 9, 7)
+BASELINE_END = date(2026, 10, 6)
 DATA_LAG_DAYS = 3
 ROLLING_DAYS = 28
+TOP_QUERY_ROWS = 200
+TOP_PAGE_QUERY_FETCH = 5000
+TOP_PAGE_QUERY_STORE = 400
+TOP_QUERY_PER_SEGMENT = 25
 # Keep the 7 Oct 2026 meta-deploy window while it is still the decision sample.
 MAX_META_WINDOW_DAYS = 90
 IMPRESSION_FLOOR = 50
 TOP_POSITION = 3.0
 PRECIS_TURN_ON = 70.0
 ROW_LIMIT = 25000
+BRANDED_QUERY_RE = re.compile(r"school\s*compass|schoolcompass", re.I)
 SECTION_START = "<!-- search-console:start -->"
 SECTION_END = "<!-- search-console:end -->"
 
@@ -204,6 +211,25 @@ def default_window(today: date | None = None) -> tuple[date, date]:
     if start > end:
         raise SearchConsoleError("Search Console start date is after the end date.")
     return start, end
+
+
+def baseline_window() -> tuple[date, date]:
+    """Pre-meta-deploy window for before/after CTR reads (default 7 Sep – 6 Oct 2026)."""
+    start = BASELINE_START
+    end = BASELINE_END
+    start_env = (os.environ.get("GSC_BASELINE_START_DATE") or "").strip()
+    end_env = (os.environ.get("GSC_BASELINE_END_DATE") or "").strip()
+    if start_env:
+        start = parse_iso_date(start_env, "GSC_BASELINE_START_DATE")
+    if end_env:
+        end = parse_iso_date(end_env, "GSC_BASELINE_END_DATE")
+    if start > end:
+        raise SearchConsoleError("Search Console baseline start date is after the end date.")
+    return start, end
+
+
+def query_brand_class(query: str) -> str:
+    return "branded" if BRANDED_QUERY_RE.search(query or "") else "nonBranded"
 
 
 def slugify_town(town: str) -> str:
@@ -594,6 +620,273 @@ def _add_segment(
         pair = (meta, _Bucket())
         buckets[key] = pair
     pair[1].add(page["clicks"], page["impressions"], page["position"])
+
+
+def _round_metrics(bucket: _Bucket) -> dict[str, Any]:
+    return bucket.metrics()
+
+
+def _query_row_metrics(row: dict[str, Any]) -> tuple[int, int, float]:
+    clicks = _as_int(row.get("clicks"))
+    impressions = _as_int(row.get("impressions"))
+    position = _as_float(row.get("position"))
+    return clicks, impressions, position
+
+
+def _trim_query_rows(rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    trimmed = rows[:limit]
+    for row in trimmed:
+        row.pop("_sort_impressions", None)
+    return trimmed
+
+
+def build_query_tables(
+    query_rows: list[dict[str, Any]],
+    page_query_rows: list[dict[str, Any]],
+    catalog: dict[str, Any],
+) -> dict[str, Any]:
+    """Top queries overall and per segment from query + page×query dimensions."""
+    top_overall: list[dict[str, Any]] = []
+    for row in query_rows:
+        keys = row.get("keys") or []
+        if not keys:
+            continue
+        q = str(keys[0])
+        clicks, impressions, position = _query_row_metrics(row)
+        top_overall.append(
+            {
+                "query": q,
+                "brandClass": query_brand_class(q),
+                "clicks": clicks,
+                "impressions": impressions,
+                "ctr": round((clicks / impressions) if impressions else 0.0, 6),
+                "position": round(position, 2),
+            }
+        )
+    top_overall.sort(key=lambda r: (-r["impressions"], r["query"]))
+    top_overall = top_overall[:TOP_QUERY_ROWS]
+
+    brand_buckets = {"branded": _Bucket(), "nonBranded": _Bucket()}
+    brand_query_lists: dict[str, list[dict[str, Any]]] = {
+        "branded": [],
+        "nonBranded": [],
+    }
+    for row in query_rows:
+        keys = row.get("keys") or []
+        if not keys:
+            continue
+        q = str(keys[0])
+        clicks, impressions, position = _query_row_metrics(row)
+        brand = query_brand_class(q)
+        brand_buckets[brand].add(clicks, impressions, position)
+        brand_query_lists[brand].append(
+            {
+                "query": q,
+                "brandClass": brand,
+                "clicks": clicks,
+                "impressions": impressions,
+                "ctr": round((clicks / impressions) if impressions else 0.0, 6),
+                "position": round(position, 2),
+                "_sort_impressions": impressions,
+            }
+        )
+
+    segment_buckets: dict[str, tuple[dict[str, Any], _Bucket, list[dict[str, Any]]]] = {}
+    for key, label in (
+        ("branded", "Branded queries"),
+        ("nonBranded", "Non-branded queries"),
+    ):
+        segment_buckets[key] = (
+            {"label": label},
+            brand_buckets[key],
+            brand_query_lists[key],
+        )
+
+    page_kind_labels = {
+        "school": "School pages",
+        "town": "Town hubs",
+        "area": "Area hubs",
+        "home": "Home",
+    }
+
+    def segment_for_page(classified: dict[str, Any]) -> list[tuple[str, dict[str, Any]]]:
+        out: list[tuple[str, dict[str, Any]]] = []
+        kind = classified.get("pageKind") or "other"
+        if kind in page_kind_labels:
+            out.append((f"pageKind:{kind}", {"label": page_kind_labels[kind]}))
+        if kind == "school" and classified.get("region"):
+            region = classified["region"]
+            if region in {"london", "south-east"}:
+                label = "London school pages" if region == "london" else "South East school pages"
+                out.append((f"regionSchool:{region}", {"label": label}))
+        return out
+
+    pq_sorted: list[dict[str, Any]] = []
+    for row in page_query_rows:
+        keys = row.get("keys") or []
+        if len(keys) < 2:
+            continue
+        host, path = canonical_url(str(keys[0]))
+        query = str(keys[1])
+        if host == "schoolcompass.uk":
+            classified = classify_path(path, catalog)
+        else:
+            classified = {"path": path or str(keys[0]), "pageKind": "other"}
+        clicks, impressions, position = _query_row_metrics(row)
+        brand = query_brand_class(query)
+        record = {
+            "path": classified.get("path") or path,
+            "pageKind": classified.get("pageKind"),
+            "query": query,
+            "brandClass": brand,
+            "clicks": clicks,
+            "impressions": impressions,
+            "ctr": round((clicks / impressions) if impressions else 0.0, 6),
+            "position": round(position, 2),
+            "_sort_impressions": impressions,
+        }
+        if classified.get("region"):
+            record["region"] = classified["region"]
+        if classified.get("area"):
+            record["area"] = classified["area"]
+        pq_sorted.append(record)
+
+        for seg_key, meta in segment_for_page(classified):
+            if seg_key not in segment_buckets:
+                segment_buckets[seg_key] = (meta, _Bucket(), [])
+            segment_buckets[seg_key][1].add(clicks, impressions, position)
+            segment_buckets[seg_key][2].append(
+                {
+                    "query": query,
+                    "brandClass": brand,
+                    "clicks": clicks,
+                    "impressions": impressions,
+                    "ctr": record["ctr"],
+                    "position": position,
+                    "_sort_impressions": impressions,
+                }
+            )
+
+    pq_sorted.sort(key=lambda r: (-r["_sort_impressions"], r["path"], r["query"]))
+    page_query_top = _trim_query_rows(pq_sorted, TOP_PAGE_QUERY_STORE)
+
+    by_segment: dict[str, Any] = {}
+    for key, (meta, bucket, queries) in segment_buckets.items():
+        queries.sort(key=lambda r: (-r["_sort_impressions"], r["query"]))
+        by_segment[key] = {
+            **meta,
+            **_round_metrics(bucket),
+            "topQueries": _trim_query_rows(
+                [
+                    {
+                        "query": q["query"],
+                        "brandClass": q["brandClass"],
+                        "clicks": q["clicks"],
+                        "impressions": q["impressions"],
+                        "ctr": q["ctr"],
+                        "position": q["position"],
+                    }
+                    for q in queries
+                ],
+                TOP_QUERY_PER_SEGMENT,
+            ),
+        }
+
+    return {
+        "topOverall": top_overall,
+        "pageQueryTop": page_query_top,
+        "bySegment": by_segment,
+        "apiQueryRows": len(query_rows),
+        "apiPageQueryRows": len(page_query_rows),
+    }
+
+
+def build_comparison(
+    current_pages: dict[str, Any],
+    baseline_pages: dict[str, Any],
+    current_queries: dict[str, Any],
+    baseline_queries: dict[str, Any],
+    *,
+    baseline_start: date,
+    baseline_end: date,
+) -> dict[str, Any]:
+    def delta(cur: float | int | None, base: float | int | None) -> float | int | None:
+        if cur is None or base is None:
+            return None
+        return cur - base  # type: ignore[operator]
+
+    cur_tot = current_pages.get("totals") or {}
+    base_tot = baseline_pages.get("totals") or {}
+
+    def segment_map(report: dict[str, Any], segment_key: str) -> dict[str, dict[str, Any]]:
+        rows = (report.get("segments") or {}).get(segment_key) or []
+        return {str(row["key"]): row for row in rows}
+
+    region_current = segment_map(current_pages, "regionPageKind")
+    region_baseline = segment_map(baseline_pages, "regionPageKind")
+    region_keys = sorted(set(region_current) | set(region_baseline))
+    region_compare = []
+    for key in region_keys:
+        cur = region_current.get(key) or {}
+        base = region_baseline.get(key) or {}
+        region_compare.append(
+            {
+                "key": key,
+                "region": cur.get("region") or base.get("region"),
+                "pageKind": cur.get("pageKind") or base.get("pageKind"),
+                "current": _pick_metrics(cur),
+                "baseline": _pick_metrics(base),
+                "deltaCtr": delta(cur.get("ctr"), base.get("ctr")),
+                "deltaImpressions": delta(cur.get("impressions"), base.get("impressions")),
+            }
+        )
+
+    qc_keys = sorted(
+        set((current_queries.get("bySegment") or {}))
+        | set((baseline_queries.get("bySegment") or {}))
+    )
+    query_class_compare = []
+    for key in qc_keys:
+        cur = (current_queries.get("bySegment") or {}).get(key) or {}
+        base = (baseline_queries.get("bySegment") or {}).get(key) or {}
+        query_class_compare.append(
+            {
+                "key": key,
+                "label": cur.get("label") or base.get("label") or key,
+                "current": _pick_metrics(cur),
+                "baseline": _pick_metrics(base),
+                "deltaCtr": delta(cur.get("ctr"), base.get("ctr")),
+                "deltaImpressions": delta(cur.get("impressions"), base.get("impressions")),
+            }
+        )
+
+    return {
+        "baselineStartDate": baseline_start.isoformat(),
+        "baselineEndDate": baseline_end.isoformat(),
+        "totals": {
+            "current": _pick_metrics(cur_tot),
+            "baseline": _pick_metrics(base_tot),
+            "deltaCtr": delta(cur_tot.get("ctr"), base_tot.get("ctr")),
+            "deltaImpressions": delta(cur_tot.get("impressions"), base_tot.get("impressions")),
+            "deltaClicks": delta(cur_tot.get("clicks"), base_tot.get("clicks")),
+        },
+        "regionPageKind": region_compare,
+        "querySegments": query_class_compare,
+        "note": (
+            "Baseline is the calendar month before the 7 Oct 2026 meta deploy. "
+            "Query segments use the query dimension plus page×query rollups; "
+            "brandClass splits on “school compass” / “schoolcompass” in the query text."
+        ),
+    }
+
+
+def _pick_metrics(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "clicks": row.get("clicks", 0),
+        "impressions": row.get("impressions", 0),
+        "ctr": row.get("ctr", 0.0),
+        "position": row.get("position", 0.0),
+    }
 
 
 def cap_decision(coverage: dict[str, Any]) -> dict[str, Any]:
@@ -997,6 +1290,86 @@ def render_markdown(report: dict[str, Any]) -> str:
     else:
         lines.append("_No school-page rows._")
 
+    queries = report.get("queries") or {}
+    if queries.get("topOverall"):
+        lines.extend(["", "### Top queries (current window)", ""])
+        lines.extend(
+            _markdown_table(
+                ["Query", "Class", "Clicks", "Impressions", "CTR", "Position"],
+                [
+                    f"| {row['query'][:80]} | {row['brandClass']} | {_metric_cells(row)} |"
+                    for row in queries["topOverall"][:20]
+                ],
+            )
+        )
+        if len(queries["topOverall"]) > 20:
+            lines.append("")
+            lines.append(
+                f"_Showing 20 of {len(queries['topOverall'])}. "
+                "The JSON digest lists more (capped for size)._"
+            )
+    by_segment = queries.get("bySegment") or {}
+    branded = by_segment.get("branded")
+    non_branded = by_segment.get("nonBranded")
+    if branded or non_branded:
+        lines.extend(["", "### Query class (current window)", ""])
+        rows = []
+        for key in ("branded", "nonBranded"):
+            row = by_segment.get(key)
+            if not row:
+                continue
+            rows.append(
+                f"| {row.get('label', key)} | {_metric_cells(row)} |"
+            )
+        if rows:
+            lines.extend(
+                _markdown_table(
+                    ["Class", "Clicks", "Impressions", "CTR", "Position"],
+                    rows,
+                )
+            )
+
+    comparison = report.get("comparison")
+    if comparison:
+        tot = comparison.get("totals") or {}
+        cur = tot.get("current") or {}
+        base = tot.get("baseline") or {}
+        lines.extend(
+            [
+                "",
+                "### Baseline comparison",
+                "",
+                f"- Baseline window: **{comparison['baselineStartDate']} → "
+                f"{comparison['baselineEndDate']}**",
+                (
+                    f"- Totals: current **{_pct(cur.get('ctr'))}** CTR "
+                    f"({cur.get('impressions', 0)} impr.) vs baseline "
+                    f"**{_pct(base.get('ctr'))}** ({base.get('impressions', 0)} impr.)"
+                ),
+            ]
+        )
+        delta_ctr = tot.get("deltaCtr")
+        if delta_ctr is not None:
+            sign = "+" if delta_ctr >= 0 else ""
+            lines.append(f"- CTR delta: **{sign}{delta_ctr * 100:.2f} pp**")
+        qcmp = [
+            row
+            for row in (comparison.get("querySegments") or [])
+            if row.get("key") in {"branded", "nonBranded"}
+        ]
+        if qcmp:
+            lines.extend(["", "| Query class | Current CTR | Baseline CTR | Δ impr. |", "| --- | ---: | ---: | ---: |"])
+            for row in qcmp:
+                c = row.get("current") or {}
+                b = row.get("baseline") or {}
+                dimpr = row.get("deltaImpressions")
+                dimpr_s = f"{dimpr:+d}" if isinstance(dimpr, int) else "—"
+                lines.append(
+                    f"| {row.get('label', row['key'])} | {_pct(c.get('ctr'))} | "
+                    f"{_pct(b.get('ctr'))} | {dimpr_s} |"
+                )
+        lines.append(f"- {comparison.get('note', '')}")
+
     cap = decisions["cap"]
     wiltshire = decisions["wiltshire"]
     lines.extend(
@@ -1196,14 +1569,16 @@ def fetch_access_token(
     return token
 
 
-def query_pages(
+def query_analytics(
     token: str,
     *,
     site: str,
     start: date,
     end: date,
+    dimensions: list[str],
     http: HttpJson | None = None,
     row_limit: int = ROW_LIMIT,
+    max_rows: int | None = None,
 ) -> list[dict[str, Any]]:
     http = http or default_http_json
     encoded = urllib.parse.quote(site, safe="")
@@ -1211,18 +1586,20 @@ def query_pages(
         "https://www.googleapis.com/webmasters/v3/sites/"
         f"{encoded}/searchAnalytics/query"
     )
+    aggregation = "byPage" if dimensions == ["page"] else "auto"
     rows: list[dict[str, Any]] = []
     start_row = 0
-    while True:
+    cap = max_rows if max_rows is not None else ROW_LIMIT * 20
+    while len(rows) < cap:
         body = {
             "startDate": start.isoformat(),
             "endDate": end.isoformat(),
-            "dimensions": ["page"],
-            "rowLimit": row_limit,
+            "dimensions": dimensions,
+            "rowLimit": min(row_limit, cap - len(rows)),
             "startRow": start_row,
             "dataState": "final",
             "type": "web",
-            "aggregationType": "byPage",
+            "aggregationType": aggregation,
         }
         try:
             payload = http(
@@ -1243,10 +1620,30 @@ def query_pages(
         if not isinstance(batch, list):
             raise SearchConsoleError("Search Analytics response rows were not a list.")
         rows.extend(batch)
-        if len(batch) < row_limit:
+        if len(batch) < body["rowLimit"]:
             break
-        start_row += row_limit
+        start_row += body["rowLimit"]
     return rows
+
+
+def query_pages(
+    token: str,
+    *,
+    site: str,
+    start: date,
+    end: date,
+    http: HttpJson | None = None,
+    row_limit: int = ROW_LIMIT,
+) -> list[dict[str, Any]]:
+    return query_analytics(
+        token,
+        site=site,
+        start=start,
+        end=end,
+        dimensions=["page"],
+        http=http,
+        row_limit=row_limit,
+    )
 
 
 def default_http_json(
@@ -1277,13 +1674,18 @@ def default_http_json(
     return payload
 
 
-def load_fixture(path: Path) -> list[dict[str, Any]]:
+def load_fixture(path: Path) -> dict[str, Any]:
     data = json.loads(path.read_text(encoding="utf-8"))
-    if isinstance(data, dict):
-        data = data.get("rows") or []
-    if not isinstance(data, list):
-        raise SearchConsoleError("--fixture must be a list of Search Analytics rows.")
-    return data
+    if isinstance(data, list):
+        return {"pages": data}
+    if not isinstance(data, dict):
+        raise SearchConsoleError("--fixture must be Search Analytics rows or a fixture object.")
+    return {
+        "pages": data.get("pages") or data.get("rows") or [],
+        "queries": data.get("queries") or [],
+        "pageQueries": data.get("pageQueries") or [],
+        "baseline": data.get("baseline") or {},
+    }
 
 
 def run_fetch(
@@ -1293,42 +1695,125 @@ def run_fetch(
     http: HttpJson | None = None,
 ) -> dict[str, Any] | None:
     """Return the report, or None when the secret is absent and there is no fixture."""
+    catalog = catalog if catalog is not None else load_catalog()
+    start, end = default_window()
+    baseline_start, baseline_end = baseline_window()
+    pages: list[dict[str, Any]] = []
+    query_rows: list[dict[str, Any]] = []
+    page_query_rows: list[dict[str, Any]] = []
+    baseline_pages: list[dict[str, Any]] = []
+    baseline_query_rows: list[dict[str, Any]] = []
+    baseline_page_query_rows: list[dict[str, Any]] = []
+
     if fixture is not None:
-        rows = load_fixture(fixture)
+        loaded = load_fixture(fixture)
+        pages = loaded["pages"]
+        query_rows = loaded["queries"]
+        page_query_rows = loaded["pageQueries"]
+        base = loaded["baseline"]
+        baseline_pages = base.get("pages") or []
+        baseline_query_rows = base.get("queries") or []
+        baseline_page_query_rows = base.get("pageQueries") or []
     elif not secret_raw():
         print(SKIP_NOTICE)
         return None
     else:
         account = parse_service_account(secret_raw())
-        start, end = default_window()
         token = fetch_access_token(account, http=http)
-        rows = query_pages(
+        site = site_url()
+        pages = query_pages(token, site=site, start=start, end=end, http=http)
+        query_rows = query_analytics(
             token,
-            site=site_url(),
+            site=site,
             start=start,
             end=end,
+            dimensions=["query"],
             http=http,
+            row_limit=ROW_LIMIT,
+            max_rows=TOP_QUERY_ROWS,
+        )
+        page_query_rows = query_analytics(
+            token,
+            site=site,
+            start=start,
+            end=end,
+            dimensions=["page", "query"],
+            http=http,
+            row_limit=ROW_LIMIT,
+            max_rows=TOP_PAGE_QUERY_FETCH,
+        )
+        baseline_pages = query_pages(
+            token,
+            site=site,
+            start=baseline_start,
+            end=baseline_end,
+            http=http,
+        )
+        baseline_query_rows = query_analytics(
+            token,
+            site=site,
+            start=baseline_start,
+            end=baseline_end,
+            dimensions=["query"],
+            http=http,
+            row_limit=ROW_LIMIT,
+            max_rows=TOP_QUERY_ROWS,
+        )
+        baseline_page_query_rows = query_analytics(
+            token,
+            site=site,
+            start=baseline_start,
+            end=baseline_end,
+            dimensions=["page", "query"],
+            http=http,
+            row_limit=ROW_LIMIT,
+            max_rows=TOP_PAGE_QUERY_FETCH,
         )
         print(
             f"Search Console token ok for {account['client_email']} "
-            f"on {site_url()} ({start.isoformat()} → {end.isoformat()})."
+            f"on {site} ({start.isoformat()} → {end.isoformat()}); "
+            f"baseline {baseline_start.isoformat()} → {baseline_end.isoformat()}."
         )
-    start, end = default_window()
+
     report = build_report(
-        rows,
-        catalog if catalog is not None else load_catalog(),
+        pages,
+        catalog,
         start=start,
         end=end,
         property_url=site_url(),
     )
+    report["queries"] = build_query_tables(query_rows, page_query_rows, catalog)
+    if baseline_pages or baseline_query_rows:
+        baseline_report = build_report(
+            baseline_pages,
+            catalog,
+            start=baseline_start,
+            end=baseline_end,
+            property_url=site_url(),
+        )
+        baseline_queries = build_query_tables(
+            baseline_query_rows,
+            baseline_page_query_rows,
+            catalog,
+        )
+        report["comparison"] = build_comparison(
+            report,
+            baseline_report,
+            report["queries"],
+            baseline_queries,
+            baseline_start=baseline_start,
+            baseline_end=baseline_end,
+        )
     write_latest(report)
     merge_into_digest(report)
     decisions = report["decisions"]
+    q = report.get("queries") or {}
     print(
         f"Search Console: {report['pageCount']} pages, "
         f"{len(report['segments']['area'])} areas, "
         f"{len(report['segments']['town'])} towns, "
         f"{len(report['segments']['schoolType'])} school types, "
+        f"top queries {len(q.get('topOverall') or [])}, "
         f"eviction review {decisions['evictionCount']}. "
         f"Wiltshire recommendation {decisions['wiltshire'].get('recommendation')}."
     )
