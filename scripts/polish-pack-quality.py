@@ -57,6 +57,7 @@ def polish_la(
     upgrade_highlights: bool,
     skip_isi: bool,
     skip_precis: bool,
+    priority_urns: list[str] | None = None,
 ) -> None:
     slug = la_slug(la)
     index = f"public/data/packs/{slug}/schools-index.json"
@@ -95,6 +96,8 @@ def polish_la(
         ]
         if upgrade_highlights:
             cmd.append("--upgrade-highlights")
+        for urn in priority_urns or []:
+            cmd.extend(["--priority-urn", urn])
         run(cmd)
 
 
@@ -115,8 +118,25 @@ def main() -> int:
     )
     parser.add_argument("--skip-isi", action="store_true")
     parser.add_argument("--skip-precis", action="store_true")
+    parser.add_argument(
+        "--gsc-priority-by-slug",
+        default="",
+        help="JSON map of pack slug → ordered GSC priority URNs (from pack loop)",
+    )
     parser.add_argument("--continue-on-error", action="store_true", default=True)
     args = parser.parse_args()
+
+    gsc_by_slug: dict[str, list[str]] = {}
+    if args.gsc_priority_by_slug.strip():
+        try:
+            parsed = json.loads(args.gsc_priority_by_slug)
+        except json.JSONDecodeError as exc:
+            raise SystemExit(f"Invalid --gsc-priority-by-slug JSON: {exc}") from exc
+        if isinstance(parsed, dict):
+            gsc_by_slug = {
+                str(slug): [str(u) for u in (urns or [])]
+                for slug, urns in parsed.items()
+            }
 
     targets = args.only or DEFAULT_TARGETS
     manifest = load_manifest()
@@ -136,6 +156,7 @@ def main() -> int:
                 upgrade_highlights=args.upgrade_highlights,
                 skip_isi=args.skip_isi,
                 skip_precis=args.skip_precis,
+                priority_urns=gsc_by_slug.get(slug),
             )
         except subprocess.CalledProcessError as exc:
             print(f"FAIL {la}: {exc}", flush=True)
