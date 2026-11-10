@@ -16,10 +16,13 @@ import { schoolPageFaqs } from "@/lib/seoFaqs";
 import {
   formatAtt8,
   formatOutcomePercent,
+  getIndexableSeoTownForSchool,
   getSeoSchool,
   getSeoTownForSchool,
+  listIndexableSeoTowns,
   listSeoSchools,
   listSeoSchoolsInTown,
+  townPlaceLabel,
   schoolCitationLines,
   schoolCompareHref,
   schoolJsonLd,
@@ -116,6 +119,7 @@ export default async function SchoolLandingPage({ params }: PageProps) {
   if (!school) notFound();
 
   const town = getSeoTownForSchool(school);
+  const townHub = getIndexableSeoTownForSchool(school);
   const neighbours = town
     ? listSeoSchoolsInTown(town)
         .filter((row) => row.urn !== school.urn)
@@ -144,11 +148,11 @@ export default async function SchoolLandingPage({ params }: PageProps) {
             <Link href={areaPath(laSlug(school.localAuthority))}>
               {school.localAuthority}
             </Link>
-            {town ? (
+            {townHub ? (
               <>
                 <span aria-hidden="true">/</span>
-                <Link href={townPath(town.slug, town.areaSlug)}>
-                  {town.name}
+                <Link href={townPath(townHub.slug, townHub.areaSlug)}>
+                  {townPlaceLabel(townHub)}
                 </Link>
               </>
             ) : null}
@@ -386,10 +390,13 @@ export default async function SchoolLandingPage({ params }: PageProps) {
         <section className="section" aria-labelledby="school-nearby-heading">
           <div className="shell">
             <div className="section-head">
-              <h2 id="school-nearby-heading">Other schools in {town.name}</h2>
+              <h2 id="school-nearby-heading">
+                Other schools in {townPlaceLabel(town)}
+              </h2>
               <p>
-                {formatCount(town.schoolCount)} schools on the {town.name} town
-                page — shortlist a few, then compare side by side.
+                {formatCount(town.schoolCount)} schools in{" "}
+                {townPlaceLabel(town)} — shortlist a few, then compare side by
+                side.
               </p>
             </div>
             <ul className="area-list">
@@ -406,13 +413,23 @@ export default async function SchoolLandingPage({ params }: PageProps) {
               ))}
             </ul>
             <p className="area-home-more">
-              <Link href={townPath(town.slug, town.areaSlug)}>
-                All schools in {town.name}
+              <Link
+                href={
+                  townHub
+                    ? townPath(townHub.slug, townHub.areaSlug)
+                    : areaPath(school.areaSlug)
+                }
+              >
+                All schools in {townPlaceLabel(town)}
               </Link>
-              {" · "}
-              <Link href={townsIndexPath(town.areaSlug)}>
-                {school.localAuthority} towns
-              </Link>
+              {listIndexableSeoTowns(school.areaSlug).length > 0 ? (
+                <>
+                  {" · "}
+                  <Link href={townsIndexPath(town.areaSlug)}>
+                    {school.localAuthority} towns
+                  </Link>
+                </>
+              ) : null}
             </p>
           </div>
         </section>

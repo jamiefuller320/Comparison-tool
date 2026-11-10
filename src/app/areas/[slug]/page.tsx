@@ -24,7 +24,7 @@ import { listSeoSchoolsInArea } from "@/lib/seoHubLinks";
 import {
   isAuthorityWideTown,
   isSeoAreaIncluded,
-  listSeoTowns,
+  listIndexableSeoTowns,
   townsIndexPath,
 } from "@/lib/seoSchools";
 
@@ -79,7 +79,7 @@ export default async function AreaLandingPage({ params }: PageProps) {
   const areas = listCoverageAreas();
   const neighbours = areas.filter((row) => row.slug !== area.slug);
   const towns = isSeoAreaIncluded(area.slug)
-    ? listSeoTowns(area.slug)
+    ? listIndexableSeoTowns(area.slug)
     : [];
   const townCount = towns.length;
   const squareMile =

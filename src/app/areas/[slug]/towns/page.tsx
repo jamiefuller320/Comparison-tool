@@ -15,6 +15,7 @@ import {
   isAuthorityWideTown,
   isSeoAreaIncluded,
   listSeoAreasWithTowns,
+  listIndexableSeoTowns,
   listSeoTowns,
   townPath,
   townPlaceLabel,
@@ -37,7 +38,7 @@ export async function generateMetadata({
   const area = getCoverageArea(slug);
   if (!area) return {};
 
-  const towns = listSeoTowns(slug);
+  const towns = listIndexableSeoTowns(slug);
   if (towns.length === 0) return {};
 
   const n = towns.length;
@@ -76,10 +77,11 @@ export default async function TownsIndexPage({ params }: PageProps) {
   const area = getCoverageArea(slug);
   if (!area) notFound();
 
-  const towns = listSeoTowns(slug);
+  const towns = listIndexableSeoTowns(slug);
   if (towns.length === 0) notFound();
+  const rawTowns = listSeoTowns(slug);
   const londonOnly =
-    towns.length === 1 && isAuthorityWideTown(towns[0]);
+    rawTowns.length === 1 && isAuthorityWideTown(rawTowns[0]);
 
   return (
     <main id="main" className="area-page">

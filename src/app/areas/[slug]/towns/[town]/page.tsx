@@ -18,7 +18,7 @@ import {
   getSeoTown,
   isCityOfLondonPlace,
   isSeoAreaIncluded,
-  listSeoTowns,
+  listIndexableSeoTowns,
   townJsonLd,
   townPageDescription,
   townPageTitle,
@@ -32,7 +32,7 @@ type PageProps = {
 };
 
 export function generateStaticParams() {
-  return listSeoTowns().map((town) => ({
+  return listIndexableSeoTowns().map((town) => ({
     slug: town.areaSlug,
     town: town.slug,
   }));
@@ -80,7 +80,7 @@ export default async function TownLandingPage({ params }: PageProps) {
   if (!area || !town) notFound();
 
   const schools = listSeoSchoolsForTownHub(town);
-  const siblingTowns = listSeoTowns(slug)
+  const siblingTowns = listIndexableSeoTowns(slug)
     .filter((row) => row.slug !== town.slug)
     .slice(0, 8);
   const place = townPlaceLabel(town);
