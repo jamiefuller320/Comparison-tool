@@ -331,6 +331,23 @@ In the early years, leaders should further strengthen the sequences of key knowl
     )
     assert [r["urn"] for r in ordered] == ["open"]
 
+    gsc_ordered = enrich.prioritize_records(
+        [
+            {
+                "urn": "later",
+                "phase": "primary",
+                "ofstedReportUrl": "https://example.test/later",
+            },
+            {
+                "urn": "gsc",
+                "phase": "primary",
+                "ofstedReportUrl": "https://example.test/gsc",
+            },
+        ],
+        priority_urns=["gsc"],
+    )
+    assert [r["urn"] for r in gsc_ordered] == ["gsc", "later"]
+
     print("inspection precis ok")
 
 

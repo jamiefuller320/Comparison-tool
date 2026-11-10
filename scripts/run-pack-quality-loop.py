@@ -37,6 +37,11 @@ from pack_interest import (  # noqa: E402
     combine_interest_scores,
     interest_pct_boost,
 )
+from pack_quality_gsc import (  # noqa: E402
+    annotate_pack_rows_for_gsc,
+    load_gsc_precis_targeting,
+    priority_urns_for_area,
+)
 from seed_scope import SEED_LOCAL_AUTHORITY, la_slug  # noqa: E402
 
 DIGEST_JSON = ROOT / "public" / "data" / "packs" / "quality-loop-latest.json"
@@ -174,11 +179,14 @@ def select_precis_targets(
     *,
     max_packs: int,
     stall_runs: dict[str, int] | None = None,
+    gsc_active: bool = False,
 ) -> list[dict]:
-    """Précis budget: worst sitemap gaps, then Wiltshire.
+    """Précis budget: GSC pos 4–20 gaps, worst sitemap gaps, then Wiltshire.
 
     Hampshire (the seed) is excluded. Packs outside the sitemap are excluded
-    except Wiltshire. A pack with no movement for STALL_BEFORE_ROTATE
+    except Wiltshire. When Search Console data is active, sitemap packs with
+    school landings in positions 4–20 without a précis sort ahead of the
+    open-% ordering. A pack with no movement for STALL_BEFORE_ROTATE
     consecutive runs sorts behind packs that have not stalled; stalled packs
     then rotate among themselves by stall count.
     """
@@ -195,9 +203,19 @@ def select_precis_targets(
         stall = int(stalls.get(slug) or 0)
         rotated = stall >= STALL_BEFORE_ROTATE
         tier = precis_priority_tier(row)
+        gsc_count = int(row.get("gscPrecisOpportunity") or 0)
+        gsc_impr = int(row.get("gscPrecisImpressions") or 0)
+        gsc_boost = (
+            gsc_active
+            and tier == 0
+            and gsc_count > 0
+        )
         return (
             1 if rotated else 0,
             stall if rotated else 0,
+            0 if gsc_boost else 1,
+            -gsc_impr if gsc_boost else 0,
+            -gsc_count if gsc_boost else 0,
             9 if tier is None else tier,
             float(row.get("openPrecisPct") or 0.0),
             -int(row.get("openMissingPrecis") or 0),
@@ -214,11 +232,15 @@ def select_targets(
     max_packs: int,
     interest_by_slug: dict[str, float] | None = None,
     stall_runs: dict[str, int] | None = None,
+    gsc_active: bool = False,
 ) -> list[dict]:
     """Select précis targets. Interest is accepted and does not change order."""
     del interest_by_slug
     return select_precis_targets(
-        rows, max_packs=max_packs, stall_runs=stall_runs
+        rows,
+        max_packs=max_packs,
+        stall_runs=stall_runs,
+        gsc_active=gsc_active,
     )
 
 
@@ -311,6 +333,9 @@ def snapshot_row(
     tier = precis_priority_tier(row)
     if tier is not None:
         snap["precisTier"] = tier
+    if row.get("gscPrecisOpportunity") is not None:
+        snap["gscPrecisOpportunity"] = row.get("gscPrecisOpportunity")
+        snap["gscPrecisImpressions"] = row.get("gscPrecisImpressions")
     return snap
 
 
@@ -325,7 +350,13 @@ def write_digest(payload: dict) -> None:
         f"- Max packs: {payload.get('maxPacks')}",
         f"- ISI resolve cap: {payload.get('isiResolveCap')}",
         f"- Precis limit: {payload.get('precisLimit')} per pack",
-        f"- Precis order: sitemap schools missing a précis (lowest open % first), then Wiltshire",
+        "- Precis order: "
+        + (
+            "GSC positions 4–20 without a précis (sitemap packs), then "
+            if payload.get("gscPrecisTargeting")
+            else ""
+        )
+        + "sitemap schools missing a précis (lowest open % first), then Wiltshire",
         f"- Rotate after {payload.get('stallBeforeRotate', STALL_BEFORE_ROTATE)} runs with no movement",
         f"- Upgrade highlights: {payload.get('upgradeHighlights')}",
         "- Interest scores: "
@@ -458,11 +489,14 @@ def main() -> int:
         sitemap_slugs=sitemap_slugs,
         stats_by_slug=stats_by_slug,
     )
+    gsc_targeting = load_gsc_precis_targeting()
+    before_rows = annotate_pack_rows_for_gsc(before_rows, gsc_targeting)
     stall_before = load_stall_runs()
     targets = select_precis_targets(
         before_rows,
         max_packs=args.max_packs,
         stall_runs=stall_before,
+        gsc_active=gsc_targeting.active,
     )
     before_snaps = [
         snapshot_row(r, interest_by_slug=interest_by_slug) for r in targets
@@ -488,6 +522,15 @@ def main() -> int:
         )
 
     failures: list[str] = []
+    gsc_priority_json = ""
+    if gsc_targeting.active:
+        by_slug = {
+            str(row.get("slug") or ""): priority_urns_for_area(
+                gsc_targeting, str(row.get("slug") or "")
+            )
+            for row in targets
+        }
+        gsc_priority_json = json.dumps(by_slug)
     if not args.dry_run and targets:
         cmd = [
             sys.executable,
@@ -501,6 +544,8 @@ def main() -> int:
             cmd.extend(["--only", row["localAuthority"]])
         if args.upgrade_highlights:
             cmd.append("--upgrade-highlights")
+        if gsc_priority_json:
+            cmd.extend(["--gsc-priority-by-slug", gsc_priority_json])
         try:
             run(cmd)
         except subprocess.CalledProcessError as exc:
@@ -519,6 +564,7 @@ def main() -> int:
             sitemap_slugs=sitemap_slugs,
             stats_by_slug=after_stats,
         )
+        after_rows = annotate_pack_rows_for_gsc(after_rows, gsc_targeting)
     after_by = {r["slug"]: r for r in after_rows if r.get("slug")}
     after_snaps = [
         snapshot_row(after_by[t["slug"]], interest_by_slug=interest_by_slug)
@@ -553,7 +599,10 @@ def main() -> int:
     rotated = [
         r.get("localAuthority")
         for r in select_precis_targets(
-            before_rows, max_packs=args.max_packs, stall_runs={}
+            before_rows,
+            max_packs=args.max_packs,
+            stall_runs={},
+            gsc_active=gsc_targeting.active,
         )
         if r.get("slug") not in selected_slugs
     ]
@@ -587,7 +636,13 @@ def main() -> int:
         "maxPacks": args.max_packs,
         "isiResolveCap": args.isi_resolve_cap,
         "precisLimit": args.precis_limit,
-        "precisTargeting": "sitemap-missing-then-wiltshire",
+        "precisTargeting": (
+            "gsc-4-20-missing-then-sitemap-then-wiltshire"
+            if gsc_targeting.active
+            else "sitemap-missing-then-wiltshire"
+        ),
+        "gscPrecisTargeting": gsc_targeting.active,
+        "gscPrecisOpportunitySchools": gsc_targeting.school_count,
         "stallBeforeRotate": STALL_BEFORE_ROTATE,
         "upgradeHighlights": bool(args.upgrade_highlights),
         "interestWeighting": not args.no_interest,

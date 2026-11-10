@@ -41,7 +41,7 @@
     "report:pack-quality": "python3 scripts/report-pack-quality.py",
     "polish:pack-quality": "python3 scripts/polish-pack-quality.py",
     "loop:pack-quality": "python3 scripts/run-pack-quality-loop.py",
-    "test:pack-quality-loop": "python3 scripts/test-pack-quality-loop.py",
+    "test:pack-quality-loop": "python3 scripts/test-pack-quality-loop.py && python3 scripts/test-pack-quality-gsc.py",
     "report:seo-coverage": "python3 scripts/report-seo-coverage.py",
     "loop:seo-coverage": "python3 scripts/run-seo-coverage-loop.py",
     "sync:gias-lifecycle": "python3 scripts/sync-gias-lifecycle.py",

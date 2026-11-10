@@ -246,6 +246,7 @@ def prioritize_records(
     records: list[dict],
     *,
     upgrade_highlights: bool = False,
+    priority_urns: list[str] | None = None,
 ) -> list[dict]:
     """Soft-launch order: ISI, mainstream secondaries, primaries, then other Ofsted.
 
@@ -288,7 +289,20 @@ def prioritize_records(
             ofsted.append(r)
         else:
             other.append(r)
-    return isi + mainstream_sec + mainstream_pri + ofsted + other
+    ordered = isi + mainstream_sec + mainstream_pri + ofsted + other
+    if not priority_urns:
+        return ordered
+    rank = {urn: i for i, urn in enumerate(priority_urns)}
+    gsc_first: list[dict] = []
+    rest: list[dict] = []
+    for record in ordered:
+        urn = str(record.get("urn") or "").strip()
+        if urn in rank:
+            gsc_first.append(record)
+        else:
+            rest.append(record)
+    gsc_first.sort(key=lambda r: rank[str(r.get("urn") or "").strip()])
+    return gsc_first + rest
 
 
 def load_json(path: Path) -> dict:
@@ -316,6 +330,12 @@ def main() -> None:
         action="append",
         default=[],
         help="Only enrich these URNs (repeatable)",
+    )
+    parser.add_argument(
+        "--priority-urn",
+        action="append",
+        default=[],
+        help="Try these URNs first when spending the précis limit (repeatable)",
     )
     parser.add_argument(
         "--limit",
@@ -466,9 +486,11 @@ def main() -> None:
         for school in schools:
             if looks_like_letterhead_junk(school.get("inspectionPrecis")):
                 school["inspectionPrecis"] = None
+    priority_urns = [str(u).strip() for u in args.priority_urn if str(u).strip()]
     ordered = prioritize_records(
         schools if (target_la or args.urn) else payload.get("schools") or [],
         upgrade_highlights=args.upgrade_highlights,
+        priority_urns=priority_urns or None,
     )
     # When LA filtered, ordered is the filtered list but we must mutate payload schools.
     label = (
