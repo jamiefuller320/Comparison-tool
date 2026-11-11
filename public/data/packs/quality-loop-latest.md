@@ -1,10 +1,10 @@
-# Pack quality loop — 2026-11-09T15:40:11Z
+# Pack quality loop — 2026-11-11T13:59:23Z
 
 - Mode: `polish`
 - Max packs: 6
 - ISI resolve cap: 80
 - Precis limit: 60 per pack
-- Precis order: sitemap schools missing a précis (lowest open % first), then Wiltshire
+- Precis order: GSC positions 4–20 without a précis (sitemap packs), then sitemap schools missing a précis (lowest open % first), then Wiltshire
 - Rotate after 2 runs with no movement
 - Upgrade highlights: False
 - Interest scores: recorded on this digest (they do not change target order)
@@ -13,23 +13,23 @@
 
 | LA | Tier | Missing | Stall | Before indie% | After indie% | Before ISI | After ISI |
 |---|---|---:|---:|---:|---:|---|---|
-| Barnet | sitemap | 111 | 0 | 31.4 | 34.3 | 15/35 | 15/35 |
-| Croydon | sitemap | 96 | 0 | 40.0 | 40.0 | 12/25 | 12/25 |
-| Southwark | sitemap | 58 | 0 | 57.1 | 57.1 | 8/14 | 8/14 |
-| Bromley | sitemap | 58 | 0 | 62.5 | 62.5 | 11/16 | 11/16 |
-| Enfield | sitemap | 52 | 0 | 50.0 | 50.0 | 6/10 | 6/10 |
-| Ealing | sitemap | 54 | 0 | 27.8 | 27.8 | 6/18 | 6/18 |
+| Greenwich | sitemap | 46 | 0 | 40.0 | 40.0 | 8/15 | 8/15 |
+| Wandsworth | sitemap | 53 | 0 | 60.0 | 60.0 | 21/30 | 21/30 |
+| Croydon | sitemap | 40 | 0 | 40.0 | 40.0 | 12/25 | 12/25 |
+| Brent | sitemap | 49 | 0 | 35.7 | 35.7 | 8/14 | 8/14 |
+| Richmond upon Thames | sitemap | 30 | 0 | 54.2 | 54.2 | 18/24 | 18/24 |
+| Barnet | sitemap | 57 | 0 | 34.3 | 34.3 | 15/35 | 15/35 |
 
 ## Top interest signals
 
-- `gloucestershire`: score 3.921 (boost 15.7%)
-- `somerset`: score 3.916 (boost 15.7%)
-- `wiltshire`: score 2.811 (boost 11.2%)
-- `barking-and-dagenham`: score 0.491 (boost 2.0%)
-- `barnet`: score 0.491 (boost 2.0%)
-- `bexley`: score 0.491 (boost 2.0%)
-- `brent`: score 0.491 (boost 2.0%)
-- `bromley`: score 0.491 (boost 2.0%)
+- `gloucestershire`: score 3.806 (boost 15.2%)
+- `somerset`: score 3.801 (boost 15.2%)
+- `wiltshire`: score 2.728 (boost 10.9%)
+- `barking-and-dagenham`: score 0.476 (boost 1.9%)
+- `barnet`: score 0.476 (boost 1.9%)
+- `bexley`: score 0.476 (boost 1.9%)
+- `brent`: score 0.476 (boost 1.9%)
+- `bromley`: score 0.476 (boost 1.9%)
 
 ## Weakest packs (after)
 
