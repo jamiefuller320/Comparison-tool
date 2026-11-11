@@ -1,38 +1,34 @@
 # Qualitative QA loop
 
-- Ran at: `2026-11-10T17:31:21.769742+00:00`
+- Ran at: `2026-11-11T16:32:06.592234+00:00`
 - Provider: `none`
-- Reviewed: `77`
-- Schools changed: `54`
-- Findings applied: `61`
-- New learned phrases: `9`
+- Reviewed: `16`
+- Schools changed: `15`
+- Findings applied: `41`
+- New learned phrases: `27`
 - Dry run: `False`
 
 ## Notes
 
-- Applied QA fixes to 54 school(s) (61 area finding(s)).
-- Learned 9 new junk phrase(s) (store size 900).
-- Reviewed top 77 suspect(s); provider=none.
+- Applied QA fixes to 15 school(s) (41 area finding(s)).
+- Learned 27 new junk phrase(s) (store size 900).
+- Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
+- `123653` Meare Village Primary School — score 19.0 flags=chrome,policy_toc,implausible_offerings
+- `136970` Oakfield Academy — score 16.0 flags=chrome,policy_toc,implausible_offerings
+- `136639` Kingsmead Academy — score 14.0 flags=chrome,policy_toc,implausible_offerings
+- `115749` Heron Primary School — score 11.0 flags=chrome,policy_toc,implausible_offerings
+- `135353` Kingsway Primary School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `123860` Knights Templar Community Church School & Nursery — score 11.0 flags=policy_toc,implausible_offerings,chrome
+- `150069` Merriott Primary School — score 11.0 flags=policy_toc,implausible_offerings,chrome
+- `140636` Old Cleeve Church of England First School — score 11.0 flags=policy_toc,chrome,implausible_offerings
+- `145308` Park House School — score 11.0 flags=chrome,policy_toc,implausible_offerings
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `123910` Downside School — score 6.0 flags=chrome
-- `123643` Dunster First School — score 6.0 flags=chrome
-- `139772` Edward Jenner School — score 6.0 flags=chrome
-- `135727` Finlay Community School — score 6.0 flags=chrome
-- `123681` Hamp Nursery and Infants' School — score 6.0 flags=chrome
-- `123764` Herne View Church of England Primary — score 6.0 flags=chrome
-- `148724` Stafford Junior School — score 6.0 flags=chrome
-- `147128` The Ferns Primary Academy — score 6.0 flags=admissions
-- `136164` Brighton Aldridge Community Academy — score 5.0 flags=cms_chrome
-- `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
-- `137605` Dove House Academy — score 5.0 flags=cms_chrome
-- `123905` King's Bruton — score 5.0 flags=policy_toc,implausible_offerings
-- `149906` Light Years School — score 5.0 flags=cms_chrome
-- `116330` Liphook Church of England Controlled Junior School — score 5.0 flags=cms_chrome
-- `116056` Liphook Infant School — score 5.0 flags=cms_chrome
-- `137063` Portslade Aldridge Community Academy — score 5.0 flags=cms_chrome
-- `114416` Rotherfield Primary School — score 5.0 flags=cms_chrome
-- `118310` Ryarsh Primary School — score 5.0 flags=cms_chrome
-- `125992` Shipley CofE Primary School — score 5.0 flags=cms_chrome
+- `123789` Nether Stowey Church of England Primary School — score 9.0 flags=chrome
+- `142579` Nunney First School — score 9.0 flags=chrome
+- `123738` Kingsmoor Primary School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `123703` Milverton Community Primary School and Pre-School — score 8.0 flags=policy_toc,chrome,implausible_offerings
+- `115491` Harewood Infant School — score 6.0 flags=chrome
+- `115628` Hatherop Church of England Primary School — score 6.0 flags=chrome
