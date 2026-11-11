@@ -1,21 +1,20 @@
 {
-  "ranAt": "2026-11-10T17:44:52.571304+00:00",
+  "ranAt": "2026-11-11T17:53:26.949756+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 7632,
-    "suspectCount": 77,
+    "recordCount": 7754,
+    "suspectCount": 70,
     "flagCounts": {
-      "chrome": 41,
+      "chrome": 36,
       "cms_chrome": 14,
       "admissions": 13,
       "high_score_thin_signals": 4,
       "implausible_offerings": 3,
-      "boilerplate": 2,
-      "policy_toc": 1
+      "boilerplate": 2
     },
     "topSuspects": [
       {
@@ -27,103 +26,106 @@
         ]
       },
       {
-        "urn": "123910",
-        "name": "Downside School",
+        "urn": "115716",
+        "name": "Hillesley Church of England Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome",
+          "boilerplate"
+        ]
+      },
+      {
+        "urn": "137033",
+        "name": "Katharine Lady Berkeley's School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "123643",
-        "name": "Dunster First School",
+        "urn": "115529",
+        "name": "Kingswood Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "139772",
-        "name": "Edward Jenner School",
+        "urn": "115667",
+        "name": "Leckhampton Church of England Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "135727",
-        "name": "Finlay Community School",
+        "urn": "115631",
+        "name": "Littledean Church of England Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "123681",
-        "name": "Hamp Nursery and Infants' School",
+        "urn": "149255",
+        "name": "Longborough Church of England Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome",
+          "boilerplate"
+        ]
+      },
+      {
+        "urn": "115496",
+        "name": "Longlevens Junior School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "123764",
-        "name": "Herne View Church of England Primary",
+        "urn": "137123",
+        "name": "Marling School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "148724",
-        "name": "Stafford Junior School",
+        "urn": "151761",
+        "name": "Martock Church School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "147128",
-        "name": "The Ferns Primary Academy",
+        "urn": "131782",
+        "name": "Meadowside Primary School",
         "score": 6.0,
         "flags": [
-          "admissions"
+          "chrome"
         ]
       },
       {
-        "urn": "136164",
-        "name": "Brighton Aldridge Community Academy",
-        "score": 5.0,
+        "urn": "151281",
+        "name": "Milborne Port Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "115872",
-        "name": "Chandler's Ford Infant School",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
-        ]
-      },
-      {
-        "urn": "137605",
-        "name": "Dove House Academy",
-        "score": 5.0,
-        "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 7632,
-    "suspectCount": 33,
+    "recordCount": 7754,
+    "suspectCount": 35,
     "flagCounts": {
       "cms_chrome": 14,
       "admissions": 13,
       "high_score_thin_signals": 4,
-      "implausible_offerings": 2
+      "implausible_offerings": 3,
+      "boilerplate": 1
     },
     "topSuspects": [
       {
@@ -225,58 +227,79 @@
     ]
   },
   "qa": {
-    "reviewed": 77,
-    "changedSchools": 54,
-    "findingsApplied": 61,
+    "reviewed": 70,
+    "changedSchools": 36,
+    "findingsApplied": 49,
     "learningAdded": 9,
     "provider": "none"
   },
   "merged": true,
   "corpusSweep": {
     "shouldRun": true,
-    "reason": "phrase fingerprint changed (8c66a774→52424fb8)",
-    "shardsScanned": 7632,
-    "schoolsChanged": 0,
+    "reason": "phrase fingerprint changed (0db6c6cc→97e7255c)",
+    "shardsScanned": 7754,
+    "schoolsChanged": 4,
     "offeringsRemoved": 0,
-    "signalsRemoved": 0,
-    "deniedLabelCount": 691,
+    "signalsRemoved": 4,
+    "deniedLabelCount": 693,
     "removedByLabel": {},
-    "sample": [],
+    "sample": [
+      {
+        "urn": "143207",
+        "name": "Lift Berkeley",
+        "removed": []
+      },
+      {
+        "urn": "145729",
+        "name": "Lift Cam Woodfield Junior",
+        "removed": []
+      },
+      {
+        "urn": "150052",
+        "name": "Lift Callowell",
+        "removed": []
+      },
+      {
+        "urn": "152685",
+        "name": "Lift Hillview",
+        "removed": []
+      }
+    ],
     "dryRun": false
   },
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +53 (>= 15)",
+    "reason": "eventCount +61 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "52424fb888147fc1f8d4",
+      "phraseHash": "97e7255cb6fea03f8b9b",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11312,
-      "updatedAt": "2026-11-10",
+      "eventCount": 11451,
+      "updatedAt": "2026-11-11",
       "chromeDenylistCount": 9
     },
     "fingerprintAfter": {
-      "phraseHash": "0db6c6cc211d2992536a",
+      "phraseHash": "da768f53b46548c31114",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11390,
-      "updatedAt": "2026-11-10",
+      "eventCount": 11522,
+      "updatedAt": "2026-11-11",
       "chromeDenylistCount": 9
     }
   },
   "notes": [
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '52424fb888147fc1f8d4', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11312, 'updatedAt': '2026-11-10', 'chromeDenylistCount': 9}",
-    "Apply decision: eventCount +53 (>= 15)",
-    "Corpus sweep decision: phrase fingerprint changed (8c66a774→52424fb8)",
-    "Corpus sweep removed 0 chrome offering(s) from 0 school(s) across 7632 shards.",
-    "Hydrated working sidecar from 7632 published URN shards (prior=0 → 7632).",
-    "Before: 77 suspects across 7632 records.",
-    "Applied QA fixes to 54 school(s) (61 area finding(s)).",
+    "Learning fingerprint: {'phraseHash': '97e7255cb6fea03f8b9b', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11451, 'updatedAt': '2026-11-11', 'chromeDenylistCount': 9}",
+    "Apply decision: eventCount +61 (>= 15)",
+    "Corpus sweep decision: phrase fingerprint changed (0db6c6cc→97e7255c)",
+    "Corpus sweep removed 0 chrome offering(s) from 4 school(s) across 7754 shards.",
+    "Hydrated working sidecar from 7754 published URN shards (prior=0 → 7754).",
+    "Before: 70 suspects across 7754 records.",
+    "Applied QA fixes to 36 school(s) (49 area finding(s)).",
     "Learned 9 new junk phrase(s) (store size 900).",
-    "Reviewed top 77 suspect(s); provider=none.",
+    "Reviewed top 70 suspect(s); provider=none.",
     "Merged cleaned sidecar into 57 schools-index file(s).",
-    "After: 33 suspects across 7632 records.",
+    "After: 35 suspects across 7754 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
