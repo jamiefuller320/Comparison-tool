@@ -1,11 +1,8 @@
 {
-  "ranAt": "2026-11-10T19:30:55.524450+00:00",
+  "ranAt": "2026-11-11T19:26:13.894086+00:00",
   "dryRun": false,
-  "seed": 342516282,
-  "rotatedAnchors": [
-    "150721",
-    "100598"
-  ],
+  "seed": 1318861037,
+  "rotatedAnchors": [],
   "activeAnchors": [
     "130352",
     "135086"
@@ -14,11 +11,12 @@
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 6,
+    "warn": 5,
+    "pass": 1,
     "fetch_error": 1
   },
   "failCount": 0,
-  "warnCount": 6,
+  "warnCount": 5,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -28,75 +26,6 @@
   "recordFlags": false,
   "strict": false,
   "schools": [
-    {
-      "urn": "150721",
-      "name": "Uplands Primary School and Nursery",
-      "la": "Bracknell Forest",
-      "website": "https://www.uplandsberkshire.org",
-      "assessedAt": "2026-09-18",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 24,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: Notation.",
-            "enrichment: Performing."
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "inspired to achieve"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "100598",
-      "name": "Allen Edwards Primary School",
-      "la": "Lambeth",
-      "website": "http://www.allenedwards.co.uk",
-      "assessedAt": "2026-09-25",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 24,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: extended day",
-            "ethos: Therapist and Outreach Workers",
-            "ethos: faith",
-            "ethos: smsc"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our values",
-            "our vision"
-          ]
-        }
-      ],
-      "notes": []
-    },
     {
       "urn": "130352",
       "name": "Arnhem Wharf Primary School",
@@ -125,109 +54,79 @@
       ]
     },
     {
-      "urn": "147563",
-      "name": "Rolvenden Primary School",
-      "la": "Kent",
-      "website": "http://www.rolvenden.kent.sch.uk",
-      "assessedAt": "2026-09-08",
+      "urn": "135086",
+      "name": "Akiva School",
+      "la": "Barnet",
+      "website": "https://www.akivaschool.org",
+      "assessedAt": "2026-09-25",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 13,
+      "offeringsChecked": 17,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: music",
-            "enrichment: orchestra",
-            "enrichment: be played in a band",
-            "ethos: religious education",
-            "community: religious education"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 2 document(s)"
-      ]
-    },
-    {
-      "urn": "118991",
-      "name": "Cobham Hall",
-      "la": "Kent",
-      "website": "https://www.cobhamhall.com",
-      "assessedAt": "2026-09-03",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 25,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: Transport",
-            "enrichment: music",
-            "enrichment: natural sets for drama",
-            "ethos: Scholarships and Bursaries"
-          ]
-        },
         {
           "code": "possible_underclaim",
           "severity": "warn",
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our values"
+            "our values",
+            "tikkun olam"
           ]
         }
       ],
+      "notes": [
+        "Merged PDF evidence from 3 document(s)"
+      ]
+    },
+    {
+      "urn": "118704",
+      "name": "St Lawrence Church of England Primary School",
+      "la": "Kent",
+      "website": "http://www.st-lawrence-sevenoaks.kent.sch.uk",
+      "assessedAt": "2026-09-10",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 4,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
       "notes": []
     },
     {
-      "urn": "110227",
-      "name": "Fulmer Infant School",
-      "la": "Buckinghamshire",
-      "website": "https://www.fulmer.bucks.sch.uk/",
-      "assessedAt": "2026-09-07",
+      "urn": "142137",
+      "name": "All Saints Church of England Primary School",
+      "la": "Medway",
+      "website": "http://www.allsaints.medway.sch.uk",
+      "assessedAt": "2026-09-12",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 13,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "unsupported_offerings",
+          "code": "possible_underclaim",
           "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "curriculum: computing",
-            "curriculum: geography",
-            "curriculum: mathematics",
-            "curriculum: music",
-            "curriculum: Early Reading & Phonics",
-            "curriculum: PE Progression of Skills pdf",
-            "curriculum: Remote Learning",
-            "community: geography",
-            "community: local history"
+            "church of england"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "139070",
-      "name": "Weyfield Primary Academy",
-      "la": "Surrey",
-      "website": "https://www.weyfield-tkat.org/",
-      "assessedAt": "2026-09-20",
+      "urn": "140368",
+      "name": "George Grenville Academy",
+      "la": "Buckinghamshire",
+      "website": "https://www.georgegrenville.co.uk/",
+      "assessedAt": "2026-09-07",
       "verdict": "fetch_error",
       "pagesFetched": 0,
-      "offeringsChecked": 17,
+      "offeringsChecked": 70,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -238,14 +137,76 @@
         }
       ],
       "notes": [
-        "Homepage fetch failed for https://www.weyfield-tkat.org/"
+        "Homepage fetch failed for https://www.georgegrenville.co.uk/"
       ]
+    },
+    {
+      "urn": "145069",
+      "name": "Thomas Harding Junior School",
+      "la": "Buckinghamshire",
+      "website": "http://www.thomasharding.org.uk",
+      "assessedAt": "2026-09-19",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 20,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: music",
+            "enrichment: music",
+            "enrichment: Young Voices",
+            "enrichment: Sports Premium",
+            "community: E-Safety for Parents",
+            "community: For Parents",
+            "community: Praise Phrases",
+            "community: Children-with-new-devices-Guide",
+            "community: Parent-and-Carer-Toolkit",
+            "community: Young-children-and-screen-time---a-guide-for-parents-and-carers"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "116024",
+      "name": "Foxhills Infant School",
+      "la": "Hampshire",
+      "website": "https://www.foxhillsfederation.org.uk",
+      "assessedAt": "2026-08-10",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 22,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: french club",
+            "enrichment: gymnastics",
+            "enrichment: football",
+            "enrichment: drama",
+            "enrichment: tennis",
+            "enrichment: Aerobathon",
+            "enrichment: Dodgeball",
+            "enrichment: childcare",
+            "ethos: Democracy"
+          ]
+        }
+      ],
+      "notes": []
     }
   ],
   "notes": [
     "Live fetch; polite rate limit",
     "Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review (never auto-learned).",
-    "Sample capped at 21 (requested path stays O(sample) as corpus grows).",
-    "Rotated spot-check anchors out (≥3 identical warns): 100598, 150721"
+    "Sample capped at 21 (requested path stays O(sample) as corpus grows)."
   ]
 }
