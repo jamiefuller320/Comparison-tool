@@ -1,22 +1,22 @@
 {
-  "ranAt": "2026-11-11T19:26:13.894086+00:00",
+  "ranAt": "2026-11-12T19:44:18.023459+00:00",
   "dryRun": false,
-  "seed": 1318861037,
-  "rotatedAnchors": [],
+  "seed": 3237735248,
+  "rotatedAnchors": [
+    "130352"
+  ],
   "activeAnchors": [
-    "130352",
     "135086"
   ],
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 5,
-    "pass": 1,
-    "fetch_error": 1
+    "warn": 6,
+    "pass": 1
   },
   "failCount": 0,
-  "warnCount": 5,
+  "warnCount": 6,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -81,74 +81,55 @@
       ]
     },
     {
-      "urn": "118704",
-      "name": "St Lawrence Church of England Primary School",
+      "urn": "136499",
+      "name": "Amherst School",
       "la": "Kent",
-      "website": "http://www.st-lawrence-sevenoaks.kent.sch.uk",
-      "assessedAt": "2026-09-10",
+      "website": "http://www.amherst.kent.sch.uk",
+      "assessedAt": "2026-09-02",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 15,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: breakfast club",
+            "send: Mainstream Core Standardspdf",
+            "send: Mainstream",
+            "community: breakfast club",
+            "community: Donations"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "116604",
+      "name": "Norman Gate School",
+      "la": "Hampshire",
+      "website": "http://www.normangate.hants.sch.uk",
+      "assessedAt": "2026-10-25",
       "verdict": "pass",
       "pagesFetched": 3,
-      "offeringsChecked": 4,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [],
       "notes": []
     },
     {
-      "urn": "142137",
-      "name": "All Saints Church of England Primary School",
-      "la": "Medway",
-      "website": "http://www.allsaints.medway.sch.uk",
-      "assessedAt": "2026-09-12",
+      "urn": "145217",
+      "name": "Reigate School",
+      "la": "Surrey",
+      "website": "http://www.reigate-school.surrey.sch.uk",
+      "assessedAt": "2026-09-06",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "church of england"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "140368",
-      "name": "George Grenville Academy",
-      "la": "Buckinghamshire",
-      "website": "https://www.georgegrenville.co.uk/",
-      "assessedAt": "2026-09-07",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 70,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.georgegrenville.co.uk/"
-      ]
-    },
-    {
-      "urn": "145069",
-      "name": "Thomas Harding Junior School",
-      "la": "Buckinghamshire",
-      "website": "http://www.thomasharding.org.uk",
-      "assessedAt": "2026-09-19",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 20,
+      "offeringsChecked": 8,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -157,30 +138,53 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: music",
-            "enrichment: music",
-            "enrichment: Young Voices",
-            "enrichment: Sports Premium",
-            "community: E-Safety for Parents",
-            "community: For Parents",
-            "community: Praise Phrases",
-            "community: Children-with-new-devices-Guide",
-            "community: Parent-and-Carer-Toolkit",
-            "community: Young-children-and-screen-time---a-guide-for-parents-and-carers"
+            "enrichment: drama"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "116024",
-      "name": "Foxhills Infant School",
+      "urn": "146574",
+      "name": "Greenlands Primary School",
+      "la": "Kent",
+      "website": "https://www.greenlandsprimary.org.uk",
+      "assessedAt": "2026-09-05",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 33,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: Addition and Subtraction",
+            "curriculum: Length, Weight and Capacity",
+            "curriculum: Multiplication and Division",
+            "curriculum: Fractions and Decimals",
+            "curriculum: Fractions, Decimals and Percentages",
+            "curriculum: Autumn Drawing: Marvellous",
+            "curriculum: Autumn: Nature Wreath",
+            "curriculum: Chila Kumari Singh",
+            "curriculum: Derek O Boateng",
+            "curriculum: Easter- Egg Threading"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "116012",
+      "name": "Sarisbury Infant School",
       "la": "Hampshire",
-      "website": "https://www.foxhillsfederation.org.uk",
-      "assessedAt": "2026-08-10",
+      "website": "http://www.sarisburyinfants.co.uk",
+      "assessedAt": "2026-08-23",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 22,
+      "offeringsChecked": 37,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -189,15 +193,16 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: french club",
-            "enrichment: gymnastics",
-            "enrichment: football",
-            "enrichment: drama",
-            "enrichment: tennis",
-            "enrichment: Aerobathon",
-            "enrichment: Dodgeball",
-            "enrichment: childcare",
-            "ethos: Democracy"
+            "curriculum: mathematics",
+            "enrichment: Wraparound & Clubs",
+            "enrichment: after school club",
+            "send: Communication and Interaction",
+            "send: Family Links School Service",
+            "send: Health and Children’s Services",
+            "send: Heathfield Outreach Support",
+            "send: Social, Mental and Emotional Health",
+            "community: Family Links",
+            "community: Online Payment"
           ]
         }
       ],
@@ -207,6 +212,7 @@
   "notes": [
     "Live fetch; polite rate limit",
     "Automated checks approximate the human fidelity bar; ethos underclaim and PDF-only evidence still need human review (never auto-learned).",
-    "Sample capped at 21 (requested path stays O(sample) as corpus grows)."
+    "Sample capped at 21 (requested path stays O(sample) as corpus grows).",
+    "Rotated spot-check anchors out (≥3 identical warns): 130352"
   ]
 }
