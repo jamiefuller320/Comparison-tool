@@ -96,10 +96,10 @@
 
 - Status: **ok**
 - Property: `sc-domain:schoolcompass.uk`
-- Window: 2026-10-07 → 2026-11-07 (includes the 7 Oct 2026 meta deploy)
-- Fetched: `2026-11-10T10:25:58Z`
-- Clicks / impressions / CTR / position: **45** / **15383** / **0.29%** / **34.2**
-- Pages: **3055** (per-page rows are in the JSON digest)
+- Window: 2026-10-07 → 2026-11-09 (includes the 7 Oct 2026 meta deploy)
+- Fetched: `2026-11-12T15:29:52Z`
+- Clicks / impressions / CTR / position: **47** / **16297** / **0.29%** / **34.2**
+- Pages: **3099** (per-page rows are in the JSON digest)
 
 School-page rows are grouped by area, town, and school type (phase). Town hubs, area hubs, and stage landings stay in the page-kind table and are not mixed into those CTR figures.
 
@@ -107,15 +107,15 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 
 | Page kind | Clicks | Impressions | CTR | Position |
 | --- | ---: | ---: | ---: | ---: |
-| school | 36 | 13892 | 0.26% | 34.2 |
-| town | 5 | 1116 | 0.45% | 38.4 |
-| home | 3 | 152 | 1.97% | 12.4 |
-| area | 0 | 58 | 0.00% | 27.9 |
-| guide | 0 | 36 | 0.00% | 34.8 |
-| stage:primary | 1 | 34 | 2.94% | 43.1 |
-| stage:childminders | 0 | 33 | 0.00% | 11.8 |
-| towns-index | 0 | 26 | 0.00% | 27.5 |
-| stage:secondary | 0 | 19 | 0.00% | 46.0 |
+| school | 37 | 14684 | 0.25% | 34.2 |
+| town | 6 | 1200 | 0.50% | 38.1 |
+| home | 3 | 176 | 1.70% | 12.0 |
+| area | 0 | 61 | 0.00% | 27.4 |
+| guide | 0 | 39 | 0.00% | 33.0 |
+| stage:primary | 1 | 36 | 2.78% | 43.5 |
+| stage:childminders | 0 | 34 | 0.00% | 11.8 |
+| towns-index | 0 | 29 | 0.00% | 26.7 |
+| stage:secondary | 0 | 21 | 0.00% | 45.6 |
 | areas-index | 0 | 9 | 0.00% | 6.7 |
 | stage:early-years | 0 | 8 | 0.00% | 15.0 |
 
@@ -123,244 +123,245 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 
 | Segment | Clicks | Impressions | CTR | Position |
 | --- | ---: | ---: | ---: | ---: |
-| london school | 27 | 11049 | 0.24% | 34.9 |
-| south-east school | 9 | 2634 | 0.34% | 31.7 |
-| london town | 2 | 650 | 0.31% | 47.7 |
-| south-east town | 3 | 466 | 0.64% | 25.3 |
-| south-east area | 0 | 29 | 0.00% | 29.6 |
-| london area | 0 | 10 | 0.00% | 21.9 |
+| london school | 27 | 11649 | 0.23% | 35.0 |
+| south-east school | 10 | 2803 | 0.36% | 31.3 |
+| london town | 2 | 707 | 0.28% | 46.9 |
+| south-east town | 4 | 493 | 0.81% | 25.5 |
+| south-east area | 0 | 30 | 0.00% | 29.9 |
+| london area | 0 | 11 | 0.00% | 20.4 |
 
 ### By area (school pages)
 
 | Area | Region | Clicks | Impressions | CTR | Position |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| West Sussex | south-east | 2 | 1320 | 0.15% | 42.7 |
-| Wandsworth | london | 1 | 791 | 0.13% | 43.3 |
-| Tower Hamlets | london | 1 | 582 | 0.17% | 33.5 |
-| Croydon | london | 0 | 536 | 0.00% | 36.2 |
-| Barnet | london | 1 | 475 | 0.21% | 35.7 |
-| Hampshire | south-east | 2 | 439 | 0.46% | 18.8 |
-| Southwark | london | 4 | 422 | 0.95% | 38.5 |
-| Bromley | london | 1 | 413 | 0.24% | 41.4 |
-| Greenwich | london | 2 | 407 | 0.49% | 23.2 |
-| Brent | london | 1 | 401 | 0.25% | 32.0 |
-| Ealing | london | 1 | 399 | 0.25% | 39.5 |
-| Richmond upon Thames | london | 0 | 376 | 0.00% | 30.8 |
-| Hillingdon | london | 0 | 366 | 0.00% | 31.6 |
-| Hounslow | london | 1 | 361 | 0.28% | 32.2 |
-| Havering | london | 1 | 350 | 0.29% | 31.3 |
-| Hackney | london | 1 | 345 | 0.29% | 33.6 |
-| Enfield | london | 0 | 333 | 0.00% | 33.4 |
-| Hammersmith and Fulham | london | 1 | 328 | 0.30% | 39.6 |
-| Buckinghamshire | south-east | 0 | 305 | 0.00% | 18.1 |
-| Lewisham | london | 0 | 303 | 0.00% | 37.6 |
-| Barking and Dagenham | london | 0 | 302 | 0.00% | 37.5 |
-| Kensington and Chelsea | london | 0 | 300 | 0.00% | 43.5 |
-| Redbridge | london | 0 | 287 | 0.00% | 32.5 |
-| Newham | london | 2 | 285 | 0.70% | 35.6 |
-| Bexley | london | 1 | 274 | 0.36% | 28.5 |
-| Merton | london | 3 | 265 | 1.13% | 39.2 |
-| Waltham Forest | london | 0 | 258 | 0.00% | 31.4 |
-| Sutton | london | 1 | 256 | 0.39% | 33.4 |
-| Camden | london | 0 | 253 | 0.00% | 32.8 |
-| Lambeth | london | 0 | 252 | 0.00% | 36.4 |
-| Westminster | london | 0 | 250 | 0.00% | 37.9 |
-| Haringey | london | 0 | 247 | 0.00% | 33.1 |
-| Harrow | london | 0 | 230 | 0.00% | 28.0 |
-| Kingston upon Thames | london | 2 | 228 | 0.88% | 26.5 |
-| Dorset | south-east | 1 | 166 | 0.60% | 11.7 |
-| Islington | london | 2 | 157 | 1.27% | 28.8 |
-| Windsor and Maidenhead | south-east | 1 | 141 | 0.71% | 49.7 |
-| Medway | south-east | 0 | 77 | 0.00% | 14.1 |
-| Isle of Wight | south-east | 1 | 52 | 1.92% | 6.8 |
-| Slough | south-east | 0 | 52 | 0.00% | 21.4 |
-| Portsmouth | south-east | 2 | 46 | 4.35% | 19.7 |
-| Bracknell Forest | south-east | 0 | 36 | 0.00% | 22.0 |
-| City of London | london | 0 | 17 | 0.00% | 35.0 |
+| West Sussex | south-east | 3 | 1416 | 0.21% | 41.8 |
+| Wandsworth | london | 1 | 841 | 0.12% | 43.7 |
+| Tower Hamlets | london | 1 | 623 | 0.16% | 34.3 |
+| Croydon | london | 0 | 567 | 0.00% | 36.5 |
+| Barnet | london | 1 | 496 | 0.20% | 35.7 |
+| Hampshire | south-east | 2 | 476 | 0.42% | 19.5 |
+| Southwark | london | 4 | 445 | 0.90% | 38.7 |
+| Brent | london | 1 | 431 | 0.23% | 31.6 |
+| Bromley | london | 1 | 431 | 0.23% | 41.2 |
+| Ealing | london | 1 | 427 | 0.23% | 39.1 |
+| Greenwich | london | 2 | 425 | 0.47% | 23.6 |
+| Richmond upon Thames | london | 0 | 392 | 0.00% | 30.9 |
+| Hillingdon | london | 0 | 386 | 0.00% | 32.0 |
+| Hounslow | london | 1 | 383 | 0.26% | 32.9 |
+| Hackney | london | 1 | 372 | 0.27% | 33.0 |
+| Havering | london | 1 | 364 | 0.27% | 32.1 |
+| Enfield | london | 0 | 352 | 0.00% | 33.2 |
+| Hammersmith and Fulham | london | 1 | 344 | 0.29% | 39.9 |
+| Barking and Dagenham | london | 0 | 314 | 0.00% | 37.5 |
+| Buckinghamshire | south-east | 0 | 313 | 0.00% | 18.1 |
+| Lewisham | london | 0 | 313 | 0.00% | 37.7 |
+| Kensington and Chelsea | london | 0 | 307 | 0.00% | 43.4 |
+| Redbridge | london | 0 | 305 | 0.00% | 32.3 |
+| Newham | london | 2 | 300 | 0.67% | 35.5 |
+| Bexley | london | 1 | 290 | 0.34% | 27.9 |
+| Merton | london | 3 | 288 | 1.04% | 38.6 |
+| Waltham Forest | london | 0 | 273 | 0.00% | 32.1 |
+| Sutton | london | 1 | 270 | 0.37% | 33.9 |
+| Camden | london | 0 | 265 | 0.00% | 33.1 |
+| Lambeth | london | 0 | 264 | 0.00% | 36.5 |
+| Haringey | london | 0 | 259 | 0.00% | 33.6 |
+| Westminster | london | 0 | 254 | 0.00% | 37.7 |
+| Harrow | london | 0 | 243 | 0.00% | 28.3 |
+| Kingston upon Thames | london | 2 | 240 | 0.83% | 26.5 |
+| Dorset | south-east | 1 | 171 | 0.58% | 11.7 |
+| Islington | london | 2 | 165 | 1.21% | 29.6 |
+| Windsor and Maidenhead | south-east | 1 | 148 | 0.68% | 48.1 |
+| Medway | south-east | 0 | 83 | 0.00% | 14.1 |
+| Slough | south-east | 0 | 58 | 0.00% | 21.8 |
+| Isle of Wight | south-east | 1 | 54 | 1.85% | 6.7 |
+| Portsmouth | south-east | 2 | 47 | 4.26% | 19.5 |
+| Bracknell Forest | south-east | 0 | 37 | 0.00% | 21.6 |
+| City of London | london | 0 | 20 | 0.00% | 33.9 |
 
 ### By town (school pages)
 
 | Town | Area | Clicks | Impressions | CTR | Position |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| London | Wandsworth | 1 | 787 | 0.13% | 43.4 |
-| London | Tower Hamlets | 1 | 578 | 0.17% | 33.5 |
-| London | Southwark | 4 | 422 | 0.95% | 38.5 |
-| London | Greenwich | 2 | 385 | 0.52% | 22.2 |
-| London | Hackney | 1 | 341 | 0.29% | 33.8 |
-| London | Barnet | 0 | 332 | 0.00% | 38.5 |
-| Croydon | Croydon | 0 | 302 | 0.00% | 40.0 |
-| London | Kensington and Chelsea | 0 | 293 | 0.00% | 43.9 |
-| London | Newham | 2 | 278 | 0.72% | 35.3 |
-| London | Hammersmith and Fulham | 1 | 276 | 0.36% | 37.7 |
-| London | Waltham Forest | 0 | 258 | 0.00% | 31.4 |
-| London | Camden | 0 | 246 | 0.00% | 32.7 |
-| London | Lambeth | 0 | 240 | 0.00% | 35.3 |
-| London | Brent | 1 | 238 | 0.42% | 32.0 |
-| London | Haringey | 0 | 238 | 0.00% | 34.0 |
-| London | Lewisham | 0 | 235 | 0.00% | 34.9 |
-| London | Ealing | 0 | 217 | 0.00% | 46.5 |
-| London | Westminster | 0 | 215 | 0.00% | 38.9 |
-| London | Merton | 2 | 198 | 1.01% | 46.0 |
-| Littlehampton | West Sussex | 0 | 192 | 0.00% | 61.5 |
-| Ilford | Redbridge | 0 | 191 | 0.00% | 31.8 |
-| Dagenham | Barking and Dagenham | 0 | 171 | 0.00% | 29.9 |
-| Chichester | West Sussex | 0 | 169 | 0.00% | 45.6 |
-| Uxbridge | Hillingdon | 0 | 166 | 0.00% | 38.0 |
-| Crawley | West Sussex | 2 | 164 | 1.22% | 36.9 |
-| Horsham | West Sussex | 0 | 160 | 0.00% | 39.3 |
-| Romford | Havering | 1 | 159 | 0.63% | 30.3 |
-| Enfield | Enfield | 0 | 154 | 0.00% | 35.9 |
-| London | Enfield | 0 | 154 | 0.00% | 31.1 |
-| London | Islington | 2 | 152 | 1.32% | 29.3 |
-| Harrow | Harrow | 0 | 140 | 0.00% | 27.0 |
-| Hounslow | Hounslow | 0 | 140 | 0.00% | 36.6 |
-| Bromley | Bromley | 1 | 128 | 0.78% | 44.1 |
-| Twickenham | Richmond upon Thames | 0 | 127 | 0.00% | 26.8 |
-| Sutton | Sutton | 1 | 125 | 0.80% | 33.9 |
-| Worthing | West Sussex | 0 | 125 | 0.00% | 36.4 |
-| Wembley | Brent | 0 | 110 | 0.00% | 33.9 |
-| Feltham | Hounslow | 0 | 101 | 0.00% | 31.0 |
-| Kingston upon Thames | Kingston upon Thames | 0 | 98 | 0.00% | 25.5 |
-| Welling | Bexley | 0 | 94 | 0.00% | 30.6 |
-| Haywards Heath | West Sussex | 0 | 93 | 0.00% | 47.9 |
-| Hayes | Hillingdon | 0 | 89 | 0.00% | 17.3 |
-| Windsor | Windsor and Maidenhead | 0 | 87 | 0.00% | 70.1 |
-| London | Richmond upon Thames | 0 | 86 | 0.00% | 28.7 |
-| Richmond | Richmond upon Thames | 0 | 82 | 0.00% | 32.7 |
-| Hornchurch | Havering | 0 | 80 | 0.00% | 32.4 |
-| Orpington | Bromley | 0 | 79 | 0.00% | 32.4 |
-| Beckenham | Bromley | 0 | 78 | 0.00% | 51.3 |
-| Barking | Barking and Dagenham | 0 | 76 | 0.00% | 45.1 |
-| Southall | Ealing | 1 | 74 | 1.35% | 30.3 |
-| Aylesbury | Buckinghamshire | 0 | 73 | 0.00% | 13.1 |
-| Barnet | Barnet | 1 | 72 | 1.39% | 32.5 |
-| Upminster | Havering | 0 | 72 | 0.00% | 38.3 |
-| Chislehurst | Bromley | 0 | 64 | 0.00% | 37.6 |
-| London | Croydon | 0 | 61 | 0.00% | 20.9 |
-| Northwood | Hillingdon | 0 | 56 | 0.00% | 35.4 |
-| Burgess Hill | West Sussex | 0 | 56 | 0.00% | 50.5 |
-| Thornton Heath | Croydon | 0 | 55 | 0.00% | 34.8 |
-| Bognor Regis | West Sussex | 0 | 55 | 0.00% | 35.4 |
-| Greenford | Ealing | 0 | 53 | 0.00% | 31.2 |
+| London | Wandsworth | 1 | 837 | 0.12% | 43.8 |
+| London | Tower Hamlets | 1 | 619 | 0.16% | 34.3 |
+| London | Southwark | 4 | 445 | 0.90% | 38.7 |
+| London | Greenwich | 2 | 401 | 0.50% | 22.6 |
+| London | Hackney | 1 | 367 | 0.27% | 33.2 |
+| London | Barnet | 0 | 342 | 0.00% | 38.7 |
+| Croydon | Croydon | 0 | 317 | 0.00% | 40.0 |
+| London | Kensington and Chelsea | 0 | 300 | 0.00% | 43.8 |
+| London | Hammersmith and Fulham | 1 | 292 | 0.34% | 38.1 |
+| London | Newham | 2 | 291 | 0.69% | 35.0 |
+| London | Waltham Forest | 0 | 273 | 0.00% | 32.1 |
+| London | Brent | 1 | 258 | 0.39% | 31.1 |
+| London | Camden | 0 | 258 | 0.00% | 33.0 |
+| London | Lambeth | 0 | 251 | 0.00% | 35.5 |
+| London | Haringey | 0 | 250 | 0.00% | 34.5 |
+| London | Lewisham | 0 | 244 | 0.00% | 35.2 |
+| London | Ealing | 0 | 228 | 0.00% | 46.1 |
+| London | Westminster | 0 | 219 | 0.00% | 38.6 |
+| London | Merton | 2 | 210 | 0.95% | 46.0 |
+| Ilford | Redbridge | 0 | 204 | 0.00% | 31.6 |
+| Littlehampton | West Sussex | 0 | 194 | 0.00% | 61.1 |
+| Uxbridge | Hillingdon | 0 | 181 | 0.00% | 37.9 |
+| Dagenham | Barking and Dagenham | 0 | 179 | 0.00% | 30.4 |
+| Chichester | West Sussex | 0 | 179 | 0.00% | 44.6 |
+| Crawley | West Sussex | 2 | 178 | 1.12% | 36.8 |
+| Horsham | West Sussex | 0 | 178 | 0.00% | 38.4 |
+| Romford | Havering | 1 | 166 | 0.60% | 31.6 |
+| London | Enfield | 0 | 165 | 0.00% | 31.0 |
+| Enfield | Enfield | 0 | 162 | 0.00% | 35.6 |
+| London | Islington | 2 | 160 | 1.25% | 30.1 |
+| Harrow | Harrow | 0 | 149 | 0.00% | 27.6 |
+| Hounslow | Hounslow | 0 | 149 | 0.00% | 37.8 |
+| Worthing | West Sussex | 0 | 143 | 0.00% | 35.5 |
+| Twickenham | Richmond upon Thames | 0 | 132 | 0.00% | 26.5 |
+| Bromley | Bromley | 1 | 130 | 0.77% | 44.5 |
+| Sutton | Sutton | 1 | 129 | 0.78% | 34.4 |
+| Wembley | Brent | 0 | 113 | 0.00% | 34.2 |
+| Feltham | Hounslow | 0 | 106 | 0.00% | 32.1 |
+| Kingston upon Thames | Kingston upon Thames | 0 | 105 | 0.00% | 25.9 |
+| Welling | Bexley | 0 | 100 | 0.00% | 29.6 |
+| Haywards Heath | West Sussex | 0 | 96 | 0.00% | 47.5 |
+| Hayes | Hillingdon | 0 | 91 | 0.00% | 17.0 |
+| London | Richmond upon Thames | 0 | 89 | 0.00% | 27.9 |
+| Richmond | Richmond upon Thames | 0 | 88 | 0.00% | 34.9 |
+| Windsor | Windsor and Maidenhead | 0 | 88 | 0.00% | 69.4 |
+| Orpington | Bromley | 0 | 87 | 0.00% | 30.2 |
+| Hornchurch | Havering | 0 | 83 | 0.00% | 33.2 |
+| Beckenham | Bromley | 0 | 82 | 0.00% | 51.7 |
+| Southall | Ealing | 1 | 81 | 1.23% | 30.6 |
+| Barnet | Barnet | 1 | 80 | 1.25% | 31.4 |
+| Barking | Barking and Dagenham | 0 | 79 | 0.00% | 44.5 |
+| Upminster | Havering | 0 | 75 | 0.00% | 38.5 |
+| Aylesbury | Buckinghamshire | 0 | 74 | 0.00% | 13.0 |
+| Chislehurst | Bromley | 0 | 66 | 0.00% | 37.9 |
+| London | Croydon | 0 | 66 | 0.00% | 23.2 |
+| Winchester | Hampshire | 0 | 61 | 0.00% | 14.2 |
+| Bognor Regis | West Sussex | 0 | 61 | 0.00% | 34.5 |
+| Northwood | Hillingdon | 0 | 59 | 0.00% | 37.1 |
+| Burgess Hill | West Sussex | 0 | 59 | 0.00% | 50.6 |
+| Wallington | Sutton | 0 | 58 | 0.00% | 31.8 |
+| Greenford | Ealing | 0 | 57 | 0.00% | 31.7 |
+| Thornton Heath | Croydon | 0 | 56 | 0.00% | 35.5 |
+| Slough | Slough | 0 | 54 | 0.00% | 22.8 |
+| Edgware | Barnet | 0 | 53 | 0.00% | 26.0 |
+| Bexleyheath | Bexley | 0 | 53 | 0.00% | 35.7 |
+| High Wycombe | Buckinghamshire | 0 | 53 | 0.00% | 9.2 |
 | Basingstoke | Hampshire | 0 | 53 | 0.00% | 16.3 |
-| Bexleyheath | Bexley | 0 | 52 | 0.00% | 36.2 |
-| High Wycombe | Buckinghamshire | 0 | 52 | 0.00% | 9.1 |
-| Winchester | Hampshire | 0 | 52 | 0.00% | 12.3 |
-| Wallington | Sutton | 0 | 51 | 0.00% | 32.3 |
-| Edgware | Barnet | 0 | 50 | 0.00% | 25.2 |
-| Surbiton | Kingston upon Thames | 0 | 50 | 0.00% | 29.9 |
-| Slough | Slough | 0 | 49 | 0.00% | 22.2 |
-| Pinner | Harrow | 0 | 47 | 0.00% | 28.6 |
-| New Malden | Kingston upon Thames | 2 | 47 | 4.26% | 27.2 |
-| Sidcup | Bexley | 1 | 45 | 2.22% | 32.5 |
+| Surbiton | Kingston upon Thames | 0 | 51 | 0.00% | 30.2 |
+| Erith | Bexley | 0 | 49 | 0.00% | 17.1 |
+| Pinner | Harrow | 0 | 49 | 0.00% | 28.8 |
+| New Malden | Kingston upon Thames | 2 | 49 | 4.08% | 26.3 |
+| Northolt | Ealing | 0 | 48 | 0.00% | 30.6 |
+| Sidcup | Bexley | 1 | 47 | 2.13% | 32.5 |
+| Woodford Green | Redbridge | 0 | 46 | 0.00% | 39.5 |
+| Shoreham-by-Sea | West Sussex | 0 | 46 | 0.00% | 40.8 |
+| South Croydon | Croydon | 0 | 45 | 0.00% | 41.6 |
 | Teddington | Richmond upon Thames | 0 | 45 | 0.00% | 32.7 |
-| Shoreham-by-Sea | West Sussex | 0 | 45 | 0.00% | 40.2 |
-| Erith | Bexley | 0 | 44 | 0.00% | 18.1 |
+| Romford | Barking and Dagenham | 0 | 44 | 0.00% | 59.1 |
 | Isleworth | Hounslow | 0 | 44 | 0.00% | 31.0 |
-| Romford | Barking and Dagenham | 0 | 43 | 0.00% | 60.2 |
-| Maidenhead | Windsor and Maidenhead | 1 | 43 | 2.33% | 17.5 |
-| Northolt | Ealing | 0 | 42 | 0.00% | 31.4 |
-| Woodford Green | Redbridge | 0 | 42 | 0.00% | 42.0 |
-| South Croydon | Croydon | 0 | 41 | 0.00% | 40.9 |
+| Maidenhead | Windsor and Maidenhead | 1 | 44 | 2.27% | 18.7 |
+| Aldershot | Hampshire | 1 | 43 | 2.33% | 54.1 |
+| Amersham | Buckinghamshire | 0 | 42 | 0.00% | 31.9 |
+| Alton | Hampshire | 0 | 41 | 0.00% | 15.3 |
 | Romford | Redbridge | 0 | 41 | 0.00% | 33.3 |
-| Amersham | Buckinghamshire | 0 | 40 | 0.00% | 31.9 |
-| Alton | Hampshire | 0 | 39 | 0.00% | 15.7 |
+| Mitcham | Merton | 0 | 40 | 0.00% | 19.5 |
+| Hassocks | West Sussex | 1 | 40 | 2.50% | 35.5 |
+| East Grinstead | West Sussex | 0 | 39 | 0.00% | 30.5 |
+| Rainham | Havering | 0 | 38 | 0.00% | 18.6 |
 | London | Hounslow | 1 | 38 | 2.63% | 26.6 |
-| East Grinstead | West Sussex | 0 | 38 | 0.00% | 30.2 |
-| Rainham | Havering | 0 | 37 | 0.00% | 18.8 |
-| Carshalton | Sutton | 0 | 37 | 0.00% | 36.0 |
-| Hassocks | West Sussex | 0 | 36 | 0.00% | 38.6 |
-| Aldershot | Hampshire | 1 | 35 | 2.86% | 53.7 |
-| West Wickham | Bromley | 0 | 34 | 0.00% | 45.5 |
+| Carshalton | Sutton | 0 | 38 | 0.00% | 35.3 |
+| Brentford | Hounslow | 0 | 37 | 0.00% | 27.3 |
+| West Wickham | Bromley | 0 | 35 | 0.00% | 45.6 |
+| Southampton | Hampshire | 0 | 34 | 0.00% | 16.4 |
+| Portsmouth | Portsmouth | 2 | 34 | 5.88% | 15.5 |
 | Bromley | Lewisham | 0 | 33 | 0.00% | 37.8 |
-| Portsmouth | Portsmouth | 2 | 33 | 6.06% | 15.6 |
-| Mitcham | Merton | 0 | 32 | 0.00% | 18.9 |
-| Dorchester | Dorset | 0 | 31 | 0.00% | 10.3 |
-| Hampton | Richmond upon Thames | 0 | 31 | 0.00% | 49.5 |
-| Gillingham | Medway | 0 | 30 | 0.00% | 8.2 |
-| Coulsdon | Croydon | 0 | 29 | 0.00% | 41.0 |
-| Southampton | Hampshire | 0 | 29 | 0.00% | 13.4 |
-| Brentford | Hounslow | 0 | 29 | 0.00% | 27.0 |
+| Gillingham | Medway | 0 | 33 | 0.00% | 8.3 |
+| Dorchester | Dorset | 0 | 32 | 0.00% | 10.2 |
+| Hampton | Richmond upon Thames | 0 | 32 | 0.00% | 48.0 |
+| Coulsdon | Croydon | 0 | 31 | 0.00% | 41.4 |
+| Eastleigh | Hampshire | 0 | 29 | 0.00% | 14.9 |
+| Farnborough | Hampshire | 1 | 29 | 3.45% | 9.6 |
+| Lancing | West Sussex | 0 | 29 | 0.00% | 34.1 |
 | Wimborne | Dorset | 0 | 28 | 0.00% | 20.0 |
-| Eastleigh | Hampshire | 0 | 28 | 0.00% | 14.8 |
+| Chatham | Medway | 0 | 28 | 0.00% | 15.9 |
 | Blandford Forum | Dorset | 0 | 27 | 0.00% | 13.3 |
 | Ruislip | Hillingdon | 0 | 27 | 0.00% | 31.4 |
 | Bracknell | Bracknell Forest | 0 | 26 | 0.00% | 24.7 |
-| Farnborough | Hampshire | 1 | 26 | 3.85% | 9.7 |
-| Chatham | Medway | 0 | 26 | 0.00% | 15.3 |
 | Andover | Hampshire | 0 | 25 | 0.00% | 26.0 |
-| Lancing | West Sussex | 0 | 25 | 0.00% | 38.3 |
-| Great Missenden | Buckinghamshire | 0 | 23 | 0.00% | 29.9 |
+| Great Missenden | Buckinghamshire | 0 | 24 | 0.00% | 30.3 |
+| Morden | Merton | 0 | 24 | 0.00% | 16.9 |
+| Purley | Croydon | 0 | 23 | 0.00% | 17.4 |
+| Midhurst | West Sussex | 0 | 23 | 0.00% | 23.0 |
 | Pulborough | West Sussex | 0 | 23 | 0.00% | 15.3 |
+| Belvedere | Bexley | 0 | 22 | 0.00% | 22.2 |
 | Chesham | Buckinghamshire | 0 | 22 | 0.00% | 17.1 |
-| Purley | Croydon | 0 | 22 | 0.00% | 17.2 |
-| Belvedere | Bexley | 0 | 21 | 0.00% | 19.6 |
+| Fareham | Hampshire | 0 | 21 | 0.00% | 22.8 |
+| Stanmore | Harrow | 0 | 21 | 0.00% | 23.2 |
 | Rochester | Medway | 0 | 21 | 0.00% | 21.2 |
-| Morden | Merton | 0 | 21 | 0.00% | 18.2 |
-| Midhurst | West Sussex | 0 | 21 | 0.00% | 22.5 |
-| Fareham | Hampshire | 0 | 20 | 0.00% | 23.3 |
-| Stanmore | Harrow | 0 | 20 | 0.00% | 22.1 |
+| City of London | City of London | 0 | 20 | 0.00% | 33.9 |
 | Newport | Isle of Wight | 1 | 20 | 5.00% | 7.7 |
+| North Wembley | Brent | 0 | 19 | 0.00% | 51.0 |
 | Buckingham | Buckinghamshire | 0 | 19 | 0.00% | 25.1 |
-| City of London | City of London | 0 | 17 | 0.00% | 35.0 |
+| Arundel | West Sussex | 0 | 19 | 0.00% | 41.7 |
+| Weymouth | Dorset | 1 | 18 | 5.56% | 8.3 |
 | Sherborne | Dorset | 0 | 17 | 0.00% | 7.8 |
-| Weymouth | Dorset | 1 | 17 | 5.88% | 8.3 |
-| Billingshurst | West Sussex | 0 | 16 | 0.00% | 29.0 |
+| Billingshurst | West Sussex | 0 | 17 | 0.00% | 29.1 |
+| London | Bromley | 0 | 16 | 0.00% | 43.8 |
+| Milton Keynes | Buckinghamshire | 0 | 16 | 0.00% | 30.4 |
+| Edgware | Harrow | 0 | 16 | 0.00% | 48.2 |
 | Steyning | West Sussex | 0 | 16 | 0.00% | 66.7 |
-| North Wembley | Brent | 0 | 15 | 0.00% | 54.0 |
-| London | Bromley | 0 | 15 | 0.00% | 43.3 |
-| Milton Keynes | Buckinghamshire | 0 | 15 | 0.00% | 32.3 |
-| Edgware | Harrow | 0 | 15 | 0.00% | 50.9 |
-| Arundel | West Sussex | 0 | 15 | 0.00% | 44.5 |
-| Plumstead | Greenwich | 0 | 14 | 0.00% | 39.1 |
-| Harrow | Brent | 0 | 13 | 0.00% | 10.5 |
-| Petersfield | Hampshire | 0 | 13 | 0.00% | 19.1 |
-| Cowes | Isle of Wight | 0 | 13 | 0.00% | 5.5 |
+| Harrow | Brent | 0 | 15 | 0.00% | 10.3 |
+| Plumstead | Greenwich | 0 | 15 | 0.00% | 41.2 |
+| Waterlooville | Hampshire | 0 | 15 | 0.00% | 18.4 |
+| Cowes | Isle of Wight | 0 | 15 | 0.00% | 5.4 |
+| Petersfield | Hampshire | 0 | 14 | 0.00% | 18.2 |
 | Southsea | Portsmouth | 0 | 13 | 0.00% | 30.0 |
 | Slough | Buckinghamshire | 0 | 12 | 0.00% | 11.8 |
-| Waterlooville | Hampshire | 0 | 12 | 0.00% | 20.2 |
+| Worcester Park | Sutton | 0 | 12 | 0.00% | 36.8 |
+| Ascot | Windsor and Maidenhead | 0 | 12 | 0.00% | 9.2 |
 | Edmonton | Enfield | 0 | 11 | 0.00% | 27.3 |
 | Fordingbridge | Hampshire | 0 | 11 | 0.00% | 30.1 |
 | West Drayton | Hillingdon | 0 | 11 | 0.00% | 19.6 |
 | Chessington | Kingston upon Thames | 0 | 11 | 0.00% | 35.6 |
-| Worcester Park | Sutton | 0 | 11 | 0.00% | 32.2 |
+| Willesden | Brent | 0 | 10 | 0.00% | 36.0 |
 | Fulham | Hammersmith and Fulham | 0 | 10 | 0.00% | 38.4 |
 | Havant | Hampshire | 0 | 10 | 0.00% | 33.5 |
 | Brighton | West Sussex | 0 | 10 | 0.00% | 21.9 |
+| Emsworth | West Sussex | 0 | 10 | 0.00% | 43.9 |
 | Essex | Barking and Dagenham | 0 | 9 | 0.00% | 21.2 |
-| Willesden | Brent | 0 | 9 | 0.00% | 35.7 |
-| Emsworth | West Sussex | 0 | 9 | 0.00% | 46.0 |
-| Ascot | Windsor and Maidenhead | 0 | 9 | 0.00% | 10.1 |
+| Bridport | Dorset | 0 | 9 | 0.00% | 9.1 |
+| Bordon | Hampshire | 0 | 9 | 0.00% | 22.6 |
+| Stratford | Newham | 0 | 9 | 0.00% | 50.2 |
+| London | Redbridge | 0 | 9 | 0.00% | 17.8 |
+| Marlow | Buckinghamshire | 0 | 8 | 0.00% | 11.4 |
 | Potters Bar | Enfield | 0 | 8 | 0.00% | 39.9 |
 | Gosport | Hampshire | 0 | 8 | 0.00% | 8.9 |
-| London | Redbridge | 0 | 8 | 0.00% | 8.2 |
 | Purley | Sutton | 0 | 8 | 0.00% | 20.6 |
 | Leighton Buzzard | Buckinghamshire | 0 | 7 | 0.00% | 14.4 |
 | Ferndown | Dorset | 0 | 7 | 0.00% | 13.1 |
 | Verwood | Dorset | 0 | 7 | 0.00% | 9.7 |
-| Bordon | Hampshire | 0 | 7 | 0.00% | 27.1 |
+| Ringwood | Hampshire | 0 | 7 | 0.00% | 9.9 |
 | Ventnor | Isle of Wight | 0 | 7 | 0.00% | 7.4 |
-| Stratford | Newham | 0 | 7 | 0.00% | 47.7 |
 | Petworth | West Sussex | 0 | 7 | 0.00% | 37.7 |
-| Marlow | Buckinghamshire | 0 | 6 | 0.00% | 12.2 |
-| Bridport | Dorset | 0 | 6 | 0.00% | 8.3 |
+| Greenwich | Greenwich | 0 | 6 | 0.00% | 23.2 |
 | Fleet | Hampshire | 0 | 6 | 0.00% | 8.2 |
 | Lymington | Hampshire | 0 | 6 | 0.00% | 8.0 |
-| Ringwood | Hampshire | 0 | 6 | 0.00% | 9.7 |
 | Harefield | Hillingdon | 0 | 6 | 0.00% | 80.2 |
+| Epsom | Sutton | 0 | 6 | 0.00% | 27.2 |
 | Hampstead Garden Suburb | Barnet | 0 | 5 | 0.00% | 64.2 |
 | Wembley, Brent | Brent | 0 | 5 | 0.00% | 12.8 |
 | Westerham | Bromley | 0 | 5 | 0.00% | 14.4 |
 | Camden | Camden | 0 | 5 | 0.00% | 36.4 |
+| Kenley | Croydon | 0 | 5 | 0.00% | 47.8 |
 | Gillingham | Dorset | 0 | 5 | 0.00% | 8.0 |
-| Greenwich | Greenwich | 0 | 5 | 0.00% | 27.2 |
 | Botley | Hampshire | 0 | 5 | 0.00% | 7.6 |
 | Romsey | Hampshire | 0 | 5 | 0.00% | 8.0 |
 | Chiswick | Hounslow | 0 | 5 | 0.00% | 24.6 |
 | Sandown | Isle of Wight | 0 | 5 | 0.00% | 8.0 |
 | United Kingdom | Islington | 0 | 5 | 0.00% | 14.8 |
 | UK | Richmond upon Thames | 0 | 5 | 0.00% | 7.8 |
-| Epsom | Sutton | 0 | 5 | 0.00% | 13.8 |
 | Mitcham | Sutton | 0 | 5 | 0.00% | 25.6 |
 | Copthorne | West Sussex | 0 | 5 | 0.00% | 46.2 |
 | Fittleworth | West Sussex | 0 | 5 | 0.00% | 30.8 |
@@ -368,6 +369,8 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 | Henfield | West Sussex | 0 | 5 | 0.00% | 34.8 |
 | West Sussex | West Sussex | 0 | 5 | 0.00% | 38.8 |
 | Abbey Wood | Bexley | 0 | 4 | 0.00% | 9.5 |
+| Dartford | Bexley | 0 | 4 | 0.00% | 8.2 |
+| Sandhurst | Bracknell Forest | 0 | 4 | 0.00% | 5.0 |
 | Beaconsfield | Buckinghamshire | 0 | 4 | 0.00% | 9.0 |
 | Dagnall | Buckinghamshire | 0 | 4 | 0.00% | 9.0 |
 | Farnham Common | Buckinghamshire | 0 | 4 | 0.00% | 7.8 |
@@ -386,13 +389,10 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 | Morden | Sutton | 0 | 4 | 0.00% | 53.5 |
 | Barnehurst | Bexley | 0 | 3 | 0.00% | 5.7 |
 | Bexley | Bexley | 0 | 3 | 0.00% | 33.0 |
-| Dartford | Bexley | 0 | 3 | 0.00% | 8.7 |
 | London | Bexley | 0 | 3 | 0.00% | 51.3 |
-| Sandhurst | Bracknell Forest | 0 | 3 | 0.00% | 4.3 |
 | Sidcup | Bromley | 0 | 3 | 0.00% | 6.7 |
 | Burnham | Buckinghamshire | 0 | 3 | 0.00% | 9.3 |
 | Princes Risborough | Buckinghamshire | 0 | 3 | 0.00% | 6.3 |
-| Kenley | Croydon | 0 | 3 | 0.00% | 61.7 |
 | Dorset | Dorset | 0 | 3 | 0.00% | 8.3 |
 | Poole | Dorset | 0 | 3 | 0.00% | 8.7 |
 | Wareham | Dorset | 0 | 3 | 0.00% | 7.3 |
@@ -406,6 +406,7 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 | Surrey | Merton | 0 | 3 | 0.00% | 6.0 |
 | Chigwell | Redbridge | 0 | 3 | 0.00% | 10.0 |
 | Liphook | West Sussex | 0 | 3 | 0.00% | 16.3 |
+| Petersfield | West Sussex | 0 | 3 | 0.00% | 11.3 |
 | New Barnet | Barnet | 0 | 2 | 0.00% | 9.0 |
 | Reading | Bracknell Forest | 0 | 2 | 0.00% | 10.0 |
 | Brondesbury | Brent | 0 | 2 | 0.00% | 48.5 |
@@ -425,11 +426,14 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 | Osterley | Hounslow | 0 | 2 | 0.00% | 9.0 |
 | Ryde | Isle of Wight | 0 | 2 | 0.00% | 1.5 |
 | Swanley | Kensington and Chelsea | 0 | 2 | 0.00% | 29.0 |
+| London | Kingston upon Thames | 0 | 2 | 0.00% | 40.5 |
 | Surrey | Kingston upon Thames | 0 | 2 | 0.00% | 24.5 |
 | Worcester Park | Kingston upon Thames | 0 | 2 | 0.00% | 8.5 |
 | Dagenham | Redbridge | 0 | 2 | 0.00% | 11.0 |
+| Select | West Sussex | 0 | 2 | 0.00% | 34.0 |
 | Selsey | West Sussex | 0 | 2 | 0.00% | 41.5 |
 | Singleton | West Sussex | 0 | 2 | 0.00% | 59.5 |
+| Slough | Windsor and Maidenhead | 0 | 2 | 0.00% | 8.0 |
 | Ascot | Bracknell Forest | 0 | 1 | 0.00% | 11.0 |
 | Bracknell Forest | Bracknell Forest | 0 | 1 | 0.00% | 8.0 |
 | Crowthorne | Bracknell Forest | 0 | 1 | 0.00% | 84.0 |
@@ -450,48 +454,49 @@ School-page rows are grouped by area, town, and school type (phase). Town hubs, 
 | Hindhead | Hampshire | 0 | 1 | 0.00% | 6.0 |
 | Holbury | Hampshire | 0 | 1 | 0.00% | 9.0 |
 | Salisbury | Hampshire | 0 | 1 | 0.00% | 10.0 |
+| Stockbridge | Hampshire | 0 | 1 | 0.00% | 11.0 |
 | Woking | Hampshire | 0 | 1 | 0.00% | 3.0 |
 | Wood Green | Haringey | 0 | 1 | 0.00% | 9.0 |
 | Rainham. Essex | Havering | 0 | 1 | 0.00% | 40.0 |
 | Eastcote | Hillingdon | 0 | 1 | 0.00% | 8.0 |
 | Hillingdon | Hillingdon | 0 | 1 | 0.00% | 10.0 |
 | Whippingham | Isle of Wight | 0 | 1 | 0.00% | 9.0 |
-| London | Kingston upon Thames | 0 | 1 | 0.00% | 54.0 |
 | Clapham | Lambeth | 0 | 1 | 0.00% | 9.0 |
+| London | Medway | 0 | 1 | 0.00% | 5.0 |
 | Wimbledon | Merton | 0 | 1 | 0.00% | 7.0 |
+| Kingston upon Thames | Richmond upon Thames | 0 | 1 | 0.00% | 4.0 |
+| Colnbrook | Slough | 0 | 1 | 0.00% | 10.0 |
 | Langley | Slough | 0 | 1 | 0.00% | 10.0 |
-| Petersfield | West Sussex | 0 | 1 | 0.00% | 9.0 |
-| Select | West Sussex | 0 | 1 | 0.00% | 64.0 |
 | Southwick | West Sussex | 0 | 1 | 0.00% | 6.0 |
 | Marlow | Windsor and Maidenhead | 0 | 1 | 0.00% | 49.0 |
-| Slough | Windsor and Maidenhead | 0 | 1 | 0.00% | 9.0 |
+| Staines | Windsor and Maidenhead | 0 | 1 | 0.00% | 8.0 |
 
 ### By school type (school pages)
 
 | School type | Clicks | Impressions | CTR | Position |
 | --- | ---: | ---: | ---: | ---: |
-| Primary | 14 | 6476 | 0.22% | 31.5 |
-| Secondary | 14 | 4602 | 0.30% | 38.4 |
-| All-through | 3 | 1342 | 0.22% | 38.0 |
-| Special | 5 | 1263 | 0.40% | 29.5 |
+| Primary | 14 | 6887 | 0.20% | 31.6 |
+| Secondary | 14 | 4842 | 0.29% | 38.4 |
+| All-through | 4 | 1411 | 0.28% | 38.2 |
+| Special | 5 | 1312 | 0.38% | 29.5 |
 
 ### Top queries (current window)
 
 | Query | Class | Clicks | Impressions | CTR | Position |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| alderwood | nonBranded | 0 | 26 | 0.00% | 68.5 |
-| alperton community school | nonBranded | 0 | 15 | 0.00% | 65.9 |
+| alderwood | nonBranded | 0 | 32 | 0.00% | 67.0 |
+| alperton community school | nonBranded | 0 | 16 | 0.00% | 67.2 |
+| american school in london | nonBranded | 0 | 10 | 0.00% | 86.4 |
+| schoolcompass | branded | 1 | 10 | 10.00% | 4.4 |
 | "wellineii" school * * | nonBranded | 0 | 9 | 0.00% | 8.8 |
+| american school | nonBranded | 0 | 9 | 0.00% | 66.8 |
 | amersham school | nonBranded | 0 | 9 | 0.00% | 58.4 |
 | "wellineii" school or | nonBranded | 0 | 8 | 0.00% | 6.6 |
-| american school in london | nonBranded | 0 | 8 | 0.00% | 90.2 |
-| schoolcompass | branded | 1 | 8 | 12.50% | 4.1 |
 | abbs cross | nonBranded | 0 | 7 | 0.00% | 76.0 |
-| american school | nonBranded | 0 | 7 | 0.00% | 70.3 |
+| annunciation school | nonBranded | 0 | 7 | 0.00% | 45.7 |
 | albion school | nonBranded | 0 | 5 | 0.00% | 7.4 |
 | all saints catholic schools | nonBranded | 0 | 5 | 0.00% | 82.8 |
 | annunciation catholic school | nonBranded | 0 | 5 | 0.00% | 19.8 |
-| annunciation school | nonBranded | 0 | 5 | 0.00% | 48.4 |
 | ark elvin academy | nonBranded | 0 | 5 | 0.00% | 73.0 |
 | abingdon house | nonBranded | 0 | 4 | 0.00% | 60.0 |
 | ark pioneer academy | nonBranded | 0 | 4 | 0.00% | 72.8 |
@@ -506,38 +511,38 @@ _Showing 20 of 200. The JSON digest lists more (capped for size)._
 
 | Class | Clicks | Impressions | CTR | Position |
 | --- | ---: | ---: | ---: | ---: |
-| Branded queries | 1 | 8 | 12.50% | 4.1 |
-| Non-branded queries | 5 | 372 | 1.34% | 53.7 |
+| Branded queries | 1 | 10 | 10.00% | 4.4 |
+| Non-branded queries | 5 | 380 | 1.32% | 53.5 |
 
 ### Baseline comparison
 
 - Baseline window: **2026-09-07 → 2026-10-06**
-- Totals: current **0.29%** CTR (15383 impr.) vs baseline **0.49%** (5670 impr.)
-- CTR delta: **-0.20 pp**
+- Totals: current **0.29%** CTR (16297 impr.) vs baseline **0.49%** (5670 impr.)
+- CTR delta: **-0.21 pp**
 
 | Query class | Current CTR | Baseline CTR | Δ impr. |
 | --- | ---: | ---: | ---: |
-| Branded queries | 12.50% | 0.00% | +8 |
-| Non-branded queries | 1.34% | 0.00% | +84 |
+| Branded queries | 10.00% | 0.00% | +10 |
+| Non-branded queries | 1.32% | 0.00% | +92 |
 - Baseline is the calendar month before the 7 Oct 2026 meta deploy. Query segments use the query dimension plus page×query rollups; brandClass splits on “school compass” / “schoolcompass” in the query text.
 
 ### Cap, eviction, Wiltshire
 
 - This job does not raise the cap or remove pages. Use London vs South East school CTR and the eviction review list, then change the cap in one reviewed step.
 - School pages in coverage: **4856** / 5000 (144 left). Raise cap: **no**.
-- School pages with at least 50 impressions: **8**.
-- London school pages: **0.24%** CTR, position 34.9, 11049 impressions.
-- South East school pages: **0.34%** CTR, position 31.7, 2634 impressions.
+- School pages with at least 50 impressions: **9**.
+- London school pages: **0.23%** CTR, position 35.0, 11649 impressions.
+- South East school pages: **0.36%** CTR, position 31.3, 2803 impressions.
 - Zero impressions usually means not crawled yet. Town and area hubs are not eviction candidates. A page in positions 1–3 with a weak CTR is a snippet problem, not a removal. Confirm a URL was in the sitemap before 7 Oct 2026 before anyone removes it.
 - Eviction review (not applied): **5** school page(s).
 
 | Page | Area | School type | Impressions | CTR | Position | Why |
 | --- | --- | --- | ---: | ---: | ---: | --- |
 | `/schools/126170/` | West Sussex | Special | 96 | 0.00% | 60.2 | CTR below the South East school segment; average position outside the top 3; no website evidence |
-| `/schools/130921/` | Greenwich | Primary | 92 | 0.00% | 8.9 | CTR below the London school segment; average position outside the top 3; no inspection précis |
 | `/schools/141844/` | Windsor and Maidenhead | Secondary | 75 | 0.00% | 80.2 | CTR below the South East school segment; average position outside the top 3; no website evidence |
-| `/schools/152504/` | Croydon | Special | 69 | 0.00% | 43.0 | CTR below the London school segment; average position outside the top 3; no inspection précis |
-| `/schools/135794/` | Ealing | Special | 56 | 0.00% | 75.2 | CTR below the London school segment; average position outside the top 3; no inspection précis |
+| `/schools/152504/` | Croydon | Special | 73 | 0.00% | 44.0 | CTR below the London school segment; average position outside the top 3; no inspection précis |
+| `/schools/135794/` | Ealing | Special | 58 | 0.00% | 75.7 | CTR below the London school segment; average position outside the top 3; no inspection précis |
+| `/schools/100370/` | Hammersmith and Fulham | All-through | 51 | 0.00% | 45.3 | CTR below the London school segment; average position outside the top 3; no website evidence |
 
 - Wiltshire SEO: **off** (recommendation **keep-off**). Précis 21.4%.
   - This job does not turn Wiltshire SEO on and does not raise the cap.
