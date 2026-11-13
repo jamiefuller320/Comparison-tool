@@ -1,21 +1,20 @@
 {
-  "ranAt": "2026-11-12T18:10:14.952170+00:00",
+  "ranAt": "2026-11-13T17:44:26.878882+00:00",
   "dryRun": false,
   "mode": "apply",
   "limit": 250,
   "minScore": 1.5,
   "provider": "none",
   "before": {
-    "recordCount": 7876,
-    "suspectCount": 73,
+    "recordCount": 7990,
+    "suspectCount": 74,
     "flagCounts": {
-      "chrome": 35,
+      "chrome": 39,
       "cms_chrome": 14,
       "admissions": 13,
-      "implausible_offerings": 5,
       "high_score_thin_signals": 4,
-      "boilerplate": 2,
-      "policy_toc": 2
+      "boilerplate": 3,
+      "implausible_offerings": 3
     },
     "topSuspects": [
       {
@@ -27,40 +26,41 @@
         ]
       },
       {
-        "urn": "138496",
-        "name": "SGS Forest High School",
+        "urn": "136982",
+        "name": "St Peter's Catholic High School and Sixth Form Centre",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "136306",
-        "name": "Sir Thomas Rich's School",
+        "urn": "137149",
+        "name": "Staunton and Corse Church of England Primary School",
+        "score": 6.0,
+        "flags": [
+          "chrome",
+          "boilerplate"
+        ]
+      },
+      {
+        "urn": "115541",
+        "name": "Stroud Valley Community Primary School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "123720",
-        "name": "South Petherton Junior School",
+        "urn": "115739",
+        "name": "The British School",
         "score": 6.0,
         "flags": [
           "chrome"
         ]
       },
       {
-        "urn": "145676",
-        "name": "St Vigor & St John Church School",
-        "score": 6.0,
-        "flags": [
-          "chrome"
-        ]
-      },
-      {
-        "urn": "138843",
-        "name": "St. Michael's Academy",
+        "urn": "136578",
+        "name": "The Crypt School",
         "score": 6.0,
         "flags": [
           "chrome"
@@ -75,49 +75,50 @@
         ]
       },
       {
-        "urn": "136164",
-        "name": "Brighton Aldridge Community Academy",
-        "score": 5.0,
+        "urn": "146439",
+        "name": "The King Alfred School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "115872",
-        "name": "Chandler's Ford Infant School",
-        "score": 5.0,
+        "urn": "137410",
+        "name": "The Rosary Catholic Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "boilerplate",
+          "chrome"
         ]
       },
       {
-        "urn": "137605",
-        "name": "Dove House Academy",
-        "score": 5.0,
+        "urn": "115823",
+        "name": "The Shrubberies School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "149906",
-        "name": "Light Years School",
-        "score": 5.0,
+        "urn": "123849",
+        "name": "Thurlbear Church of England Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       },
       {
-        "urn": "116330",
-        "name": "Liphook Church of England Controlled Junior School",
-        "score": 5.0,
+        "urn": "115655",
+        "name": "Tutshill Church of England Primary School",
+        "score": 6.0,
         "flags": [
-          "cms_chrome"
+          "chrome"
         ]
       }
     ]
   },
   "after": {
-    "recordCount": 7876,
+    "recordCount": 7990,
     "suspectCount": 34,
     "flagCounts": {
       "cms_chrome": 14,
@@ -225,58 +226,64 @@
     ]
   },
   "qa": {
-    "reviewed": 73,
-    "changedSchools": 39,
-    "findingsApplied": 44,
-    "learningAdded": 10,
+    "reviewed": 74,
+    "changedSchools": 40,
+    "findingsApplied": 54,
+    "learningAdded": 25,
     "provider": "none"
   },
   "merged": true,
   "corpusSweep": {
     "shouldRun": true,
-    "reason": "phrase fingerprint changed (da768f53→10a62ad4)",
-    "shardsScanned": 7876,
-    "schoolsChanged": 0,
+    "reason": "phrase fingerprint changed (047607ef→a4cb247a)",
+    "shardsScanned": 7990,
+    "schoolsChanged": 1,
     "offeringsRemoved": 0,
-    "signalsRemoved": 0,
-    "deniedLabelCount": 692,
+    "signalsRemoved": 5,
+    "deniedLabelCount": 687,
     "removedByLabel": {},
-    "sample": [],
+    "sample": [
+      {
+        "urn": "140220",
+        "name": "Willowdown Primary School",
+        "removed": []
+      }
+    ],
     "dryRun": false
   },
   "trigger": {
     "shouldApply": true,
-    "reason": "eventCount +59 (>= 15)",
+    "reason": "eventCount +58 (>= 15)",
     "fingerprintBefore": {
-      "phraseHash": "10a62ad44e0efa6a4eae",
+      "phraseHash": "a4cb247afc9f48648302",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11581,
-      "updatedAt": "2026-11-12",
+      "eventCount": 11713,
+      "updatedAt": "2026-11-13",
       "chromeDenylistCount": 9
     },
     "fingerprintAfter": {
-      "phraseHash": "047607ef76911b443eaa",
+      "phraseHash": "c1cab978c0b2fcec967e",
       "phraseCount": 900,
       "candidateCount": 2000,
-      "eventCount": 11655,
-      "updatedAt": "2026-11-12",
+      "eventCount": 11778,
+      "updatedAt": "2026-11-13",
       "chromeDenylistCount": 9
     }
   },
   "notes": [
     "Rebalanced learned QA phrases: active=900 candidates=2000.",
-    "Learning fingerprint: {'phraseHash': '10a62ad44e0efa6a4eae', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11581, 'updatedAt': '2026-11-12', 'chromeDenylistCount': 9}",
-    "Apply decision: eventCount +59 (>= 15)",
-    "Corpus sweep decision: phrase fingerprint changed (da768f53→10a62ad4)",
-    "Corpus sweep removed 0 chrome offering(s) from 0 school(s) across 7876 shards.",
-    "Hydrated working sidecar from 7876 published URN shards (prior=0 → 7876).",
-    "Before: 73 suspects across 7876 records.",
-    "Applied QA fixes to 39 school(s) (44 area finding(s)).",
-    "Learned 10 new junk phrase(s) (store size 900).",
-    "Reviewed top 73 suspect(s); provider=none.",
+    "Learning fingerprint: {'phraseHash': 'a4cb247afc9f48648302', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11713, 'updatedAt': '2026-11-13', 'chromeDenylistCount': 9}",
+    "Apply decision: eventCount +58 (>= 15)",
+    "Corpus sweep decision: phrase fingerprint changed (047607ef→a4cb247a)",
+    "Corpus sweep removed 0 chrome offering(s) from 1 school(s) across 7990 shards.",
+    "Hydrated working sidecar from 7990 published URN shards (prior=0 → 7990).",
+    "Before: 74 suspects across 7990 records.",
+    "Applied QA fixes to 40 school(s) (54 area finding(s)).",
+    "Learned 25 new junk phrase(s) (store size 900).",
+    "Reviewed top 74 suspect(s); provider=none.",
     "Merged cleaned sidecar into 57 schools-index file(s).",
-    "After: 34 suspects across 7876 records.",
+    "After: 34 suspects across 7990 records.",
     "Updated output/learned-qa-apply-state.json"
   ]
 }
