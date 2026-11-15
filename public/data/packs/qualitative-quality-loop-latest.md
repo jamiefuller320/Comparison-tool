@@ -1,15 +1,15 @@
-# Qualitative quality loop — 2026-11-14T16:38:52.614364+00:00
+# Qualitative quality loop — 2026-11-15T16:47:55.899360+00:00
 
-- Mode: `apply`
+- Mode: `skip`
 - Provider: `none`
 - Limit / min-score: `250` / `1.5`
-- Records: `8016`
-- Suspects before → after: `37` → `35`
-- QA reviewed / changed: `37` / `3`
-- Findings applied: `3`
-- Learned phrases added: `3`
-- Merged to index: `True`
-- Apply trigger: `eventCount +17 (>= 15)`
+- Records: `8019`
+- Suspects before → after: `35` → `35`
+- QA reviewed / changed: `0` / `0`
+- Findings applied: `0`
+- Learned phrases added: `0`
+- Merged to index: `False`
+- Apply trigger: `learning library unchanged since last apply`
 
 - Corpus sweep: `phrase fingerprint unchanged`
 - Chrome offerings removed: `0` across `0` schools (0 shards scanned)
@@ -20,19 +20,13 @@
 - `admissions`: 13
 - `high_score_thin_signals`: 4
 - `implausible_offerings`: 4
-- `chrome`: 3
 
 ## Notes
 
 - Rebalanced learned QA phrases: active=900 candidates=2000.
-- Learning fingerprint: {'phraseHash': 'c1cab978c0b2fcec967e', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11795, 'updatedAt': '2026-11-14', 'chromeDenylistCount': 9}
-- Apply decision: eventCount +17 (>= 15)
+- Learning fingerprint: {'phraseHash': 'c1cab978c0b2fcec967e', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11812, 'updatedAt': '2026-11-15', 'chromeDenylistCount': 9}
+- Apply decision: learning library unchanged since last apply
 - Corpus sweep decision: phrase fingerprint unchanged
-- Hydrated working sidecar from 8016 published URN shards (prior=0 → 8016).
-- Before: 37 suspects across 8016 records.
-- Applied QA fixes to 3 school(s) (3 area finding(s)).
-- Learned 3 new junk phrase(s) (store size 900).
-- Reviewed top 37 suspect(s); provider=none.
-- Merged cleaned sidecar into 57 schools-index file(s).
-- After: 35 suspects across 8016 records.
-- Updated output/learned-qa-apply-state.json
+- Hydrated working sidecar from 8019 published URN shards (prior=0 → 8019).
+- Before: 35 suspects across 8019 records.
+- Skipped full apply — learning library unchanged (and within periodic max age). Analyse-only digest.
