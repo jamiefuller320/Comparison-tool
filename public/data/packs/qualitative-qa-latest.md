@@ -1,23 +1,23 @@
 # Qualitative QA loop
 
-- Ran at: `2026-11-15T14:42:46.286980+00:00`
+- Ran at: `2026-11-16T16:58:37.884417+00:00`
 - Provider: `none`
 - Reviewed: `16`
 - Schools changed: `1`
 - Findings applied: `2`
-- New learned phrases: `5`
+- New learned phrases: `0`
 - Dry run: `False`
 
 ## Notes
 
 - Applied QA fixes to 1 school(s) (2 area finding(s)).
-- Learned 5 new junk phrase(s) (store size 900).
+- Learned 0 new junk phrase(s) (store size 900).
 - Reviewed top 16 suspect(s); provider=none.
 
 ## Suspects
 
 - `125810` Boundstone Nursery School — score 10.0 flags=cms_chrome
-- `152644` Coombe Road Primary School — score 6.0 flags=chrome
+- `152647` Garratt Park School — score 6.0 flags=chrome
 - `147128` The Ferns Primary Academy — score 6.0 flags=admissions
 - `136164` Brighton Aldridge Community Academy — score 5.0 flags=cms_chrome
 - `115872` Chandler's Ford Infant School — score 5.0 flags=cms_chrome
