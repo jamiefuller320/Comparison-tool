@@ -1,8 +1,8 @@
-# Human-gated review digest — 2026-11-10T10:59:57+00:00
+# Human-gated review digest — 2026-11-16T23:13:26+00:00
 
 - Mode: `collate`
-- Open items: **15** (queue total `41` · done `12` · ignored `14`)
-- New / refreshed this run: `0`
+- Open items: **17** (queue total `44` · done `12` · ignored `15`)
+- New / refreshed this run: `3`
 - Auto-closed (already learned): `0`
 - Ethos rows closed (already in the published cell): `0`
 
@@ -19,8 +19,8 @@
 
 ## Open by kind
 
-- `unsupported_offerings`: 11
-- `ethos_underclaim`: 4
+- `unsupported_offerings`: 10
+- `ethos_underclaim`: 7
 
 ## Items
 
@@ -52,6 +52,27 @@
   - review:
     - `npm run enrich:qualitative -- --urn 148724`
     - `npm run review:human-gated -- --mark-done b95cf95d690bc057`
+- **ethos_underclaim** `572d0db443fadaba` Chadlington Church of England Primary School (URN `123096`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: church of england, our values
+  - review:
+    - `npm run enrich:qualitative -- --urn 123096`
+    - `npm run review:human-gated -- --mark-done 572d0db443fadaba`
+- **ethos_underclaim** `bcbe3dbfe7cfbcbc` Amberley CofE Primary School (URN `125970`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: church of england, our vision
+  - review:
+    - `npm run enrich:qualitative -- --urn 125970`
+    - `npm run review:human-gated -- --mark-done bcbe3dbfe7cfbcbc`
+- **ethos_underclaim** `c724cf9be1193c46` Tenterden Church of England Junior School (URN `143789`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: church of england
+  - review:
+    - `npm run enrich:qualitative -- --urn 143789`
+    - `npm run review:human-gated -- --mark-done c724cf9be1193c46`
 - **unsupported_offerings** `45b485a1d8d12e8d` Platanos College (URN `136450`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -59,13 +80,6 @@
   - review:
     - `npm run enrich:qualitative -- --urn 136450`
     - `npm run review:human-gated -- --mark-done 45b485a1d8d12e8d`
-- **unsupported_offerings** `f9c3b8ec657089f6` Rose Green Junior School (URN `141600`)
-  - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
-  - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
-  - excerpts: curriculum: computing, curriculum: geography, curriculum: Dreams and Goals, curriculum: Online Relationships Healthy Eating, curriculum: Foreign Language Overview
-  - review:
-    - `npm run enrich:qualitative -- --urn 141600`
-    - `npm run review:human-gated -- --mark-done f9c3b8ec657089f6`
 - **unsupported_offerings** `1ce4263f617a75df` Littlegreen Academy (URN `146274`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -138,5 +152,6 @@
 
 ## Notes
 
-- Marked done: 1 item(s)
+- GitHub [user-improvement] issues: none or gh unavailable
+- Downgraded 1 unsupported_offerings row(s) to digest-only (no PDF confirmation)
 - No spotcheck gated JSONL yet (expects output/spotcheck-human-gated-candidates.jsonl after auto-learn PR)
