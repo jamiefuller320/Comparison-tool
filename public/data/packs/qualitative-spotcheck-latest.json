@@ -1,19 +1,19 @@
 {
-  "ranAt": "2026-11-15T18:40:22.549789+00:00",
+  "ranAt": "2026-11-16T21:49:15.913046+00:00",
   "dryRun": false,
-  "seed": 992669236,
+  "seed": 2940233119,
   "rotatedAnchors": [],
   "activeAnchors": [],
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 4,
+    "warn": 5,
     "fetch_error": 1,
-    "pass": 2
+    "pass": 1
   },
   "failCount": 0,
-  "warnCount": 4,
+  "warnCount": 5,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -24,11 +24,38 @@
   "strict": false,
   "schools": [
     {
-      "urn": "102071",
-      "name": "Pembury House Nursery School",
-      "la": "Haringey",
-      "website": "https://www.pemburyhouse.haringey.sch.uk/",
-      "assessedAt": "2026-09-29",
+      "urn": "148774",
+      "name": "Field End Junior School",
+      "la": "Hillingdon",
+      "website": "https://www.fieldendjuniors.org.uk/",
+      "assessedAt": "2026-09-28",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 4,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: after school club",
+            "enrichment: breakfast club",
+            "enrichment: > after school clubs > parent"
+          ]
+        }
+      ],
+      "notes": [
+        "Merged PDF evidence from 1 document(s)"
+      ]
+    },
+    {
+      "urn": "139830",
+      "name": "Ark Franklin Primary Academy",
+      "la": "Brent",
+      "website": "https://www.arkfranklinprimary.org",
+      "assessedAt": "2026-09-28",
       "verdict": "warn",
       "pagesFetched": 3,
       "offeringsChecked": 18,
@@ -40,106 +67,30 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "community: Coleridge Primary School",
-            "community: School. Tower Hamlets",
-            "community: Seven Sisters Primary School",
-            "community: St Elizabeth Catholic Primary"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 3 document(s)"
-      ]
-    },
-    {
-      "urn": "142772",
-      "name": "Ashmole Primary School",
-      "la": "Barnet",
-      "website": "https://www.ashmoleprimary.org",
-      "assessedAt": "2026-09-24",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 21,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: computing",
-            "curriculum: geography",
-            "enrichment: computing",
-            "enrichment: geography",
-            "ethos: Admissions and Appeals",
-            "ethos: computing"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our vision"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 1 document(s)"
-      ]
-    },
-    {
-      "urn": "151043",
-      "name": "Holy Family Catholic Primary School",
-      "la": "Slough",
-      "website": "https://www.holyfamilycatholicschool.org.uk/",
-      "assessedAt": "2026-09-16",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 9,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
+            "curriculum: mathematics",
+            "curriculum: curiosity in mathematics",
+            "curriculum: music",
+            "curriculum: inclusive",
             "enrichment: music",
-            "enrichment: choir",
-            "enrichment: orchestra",
-            "enrichment: Bernard’s Catholic Grammar",
-            "enrichment: Ladbrooke Road, SL12SR",
-            "send: Penalty Notice Changes"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "catholic",
-            "faithful",
-            "our mission"
+            "ethos: kindness",
+            "ethos: honesty",
+            "ethos: respect",
+            "ethos: vision",
+            "ethos: inclusive"
           ]
         }
       ],
-      "notes": [
-        "Merged PDF evidence from 1 document(s)"
-      ]
+      "notes": []
     },
     {
-      "urn": "138436",
-      "name": "Newlands Primary School",
+      "urn": "147280",
+      "name": "Leigh Academy Horsmonden",
       "la": "Kent",
-      "website": "https://www.newlands-tkat.org",
-      "assessedAt": "2026-09-07",
+      "website": "https://leighacademyhorsmonden.org.uk/",
+      "assessedAt": "2026-09-06",
       "verdict": "fetch_error",
       "pagesFetched": 0,
-      "offeringsChecked": 17,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -150,48 +101,18 @@
         }
       ],
       "notes": [
-        "Homepage fetch failed for https://www.newlands-tkat.org"
+        "Homepage fetch failed for https://leighacademyhorsmonden.org.uk/"
       ]
     },
     {
-      "urn": "133943",
-      "name": "Sinclair Primary and Nursery School - Part of the Learning Federation Partnership of Schools",
-      "la": "Southampton",
-      "website": "https://www.sinclairlive.net",
-      "assessedAt": "2026-09-14",
-      "verdict": "pass",
-      "pagesFetched": 3,
-      "offeringsChecked": 3,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [],
-      "notes": [
-        "Merged PDF evidence from 2 document(s)"
-      ]
-    },
-    {
-      "urn": "116580",
-      "name": "King Edward VI School",
-      "la": "Southampton",
-      "website": "http://www.kes.hants.sch.uk",
-      "assessedAt": "2026-09-14",
-      "verdict": "pass",
-      "pagesFetched": 1,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [],
-      "notes": []
-    },
-    {
-      "urn": "110163",
-      "name": "Dolphin School",
-      "la": "Wokingham",
-      "website": "https://www.dolphinschool.com",
-      "assessedAt": "2026-09-14",
+      "urn": "125970",
+      "name": "Amberley CofE Primary School",
+      "la": "West Sussex",
+      "website": "http://www.amberleyschool.com",
+      "assessedAt": "2026-09-03",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 78,
+      "offeringsChecked": 23,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -200,19 +121,107 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: holiday club",
-            "curriculum: wraparound care",
-            "curriculum: Enquiry Form",
-            "curriculum: Forest School",
-            "curriculum: Governance Support",
-            "curriculum: Hot Lunch",
-            "curriculum: Inspection Reports",
-            "curriculum: Mission, Aims & Core Values",
-            "curriculum: Pre-prep Open Morning",
-            "enrichment: holiday club"
+            "enrichment: swimming",
+            "enrichment: gymnastics",
+            "enrichment: professional PE coaches, staff",
+            "enrichment: professional PE coaches."
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "church of england",
+            "our vision"
           ]
         }
       ],
+      "notes": [
+        "Merged PDF evidence from 3 document(s)"
+      ]
+    },
+    {
+      "urn": "143789",
+      "name": "Tenterden Church of England Junior School",
+      "la": "Kent",
+      "website": "https://www.tenterdenprimaryfederation.kent.sch.uk/",
+      "assessedAt": "2026-09-11",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 11,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: PE and Sports Premium Funding»"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "church of england"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "123096",
+      "name": "Chadlington Church of England Primary School",
+      "la": "Oxfordshire",
+      "website": "https://www.chadlington.oxon.sch.uk/",
+      "assessedAt": "2026-09-02",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 7,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: tennis",
+            "enrichment: cricket"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "church of england",
+            "our values"
+          ]
+        }
+      ],
+      "notes": [
+        "Merged PDF evidence from 1 document(s)"
+      ]
+    },
+    {
+      "urn": "139198",
+      "name": "Willow Primary School",
+      "la": "Slough",
+      "website": "https://www.marishacademytrust.co.uk",
+      "assessedAt": "2026-09-16",
+      "verdict": "pass",
+      "pagesFetched": 1,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
       "notes": []
     }
   ],

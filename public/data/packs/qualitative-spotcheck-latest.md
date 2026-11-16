@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-11-15T18:40:22.549789+00:00
+# Qualitative source spot-check — 2026-11-16T21:49:15.913046+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `992669236`
+- Seed: `2940233119`
 - Max pages / school: `3`
-- Verdicts: pass `2` · warn `4` · fail `0` · fetch_error `1` · skip `0`
+- Verdicts: pass `1` · warn `5` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -12,20 +12,22 @@
 
 ## Schools
 
-- **Pembury House Nursery School** (`102071`, Haringey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — community: Coleridge Primary School, community: School. Tower Hamlets, community: Seven Sisters Primary School, community: St Elizabeth Catholic Primary
-- **Ashmole Primary School** (`142772`, Barnet) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography, enrichment: computing, enrichment: geography
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Holy Family Catholic Primary School** (`151043`, Slough) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: music, enrichment: choir, enrichment: orchestra, enrichment: Bernard’s Catholic Grammar
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic, faithful, our mission
-- **Newlands Primary School** (`138436`, Kent) — `fetch_error`
+- **Field End Junior School** (`148774`, Hillingdon) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: after school club, enrichment: breakfast club, enrichment: > after school clubs > parent
+- **Ark Franklin Primary Academy** (`139830`, Brent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: curiosity in mathematics, curriculum: music, curriculum: inclusive
+- **Leigh Academy Horsmonden** (`147280`, Kent) — `fetch_error`
   - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Sinclair Primary and Nursery School - Part of the Learning Federation Partnership of Schools** (`133943`, Southampton) — `pass`
-- **King Edward VI School** (`116580`, Southampton) — `pass`
-- **Dolphin School** (`110163`, Wokingham) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: holiday club, curriculum: wraparound care, curriculum: Enquiry Form, curriculum: Forest School
+- **Amberley CofE Primary School** (`125970`, West Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: swimming, enrichment: gymnastics, enrichment: professional PE coaches, staff, enrichment: professional PE coaches.
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our vision
+- **Tenterden Church of England Junior School** (`143789`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: PE and Sports Premium Funding»
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
+- **Chadlington Church of England Primary School** (`123096`, Oxfordshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: tennis, enrichment: cricket
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our values
+- **Willow Primary School** (`139198`, Slough) — `pass`
 
 ## Notes
 
