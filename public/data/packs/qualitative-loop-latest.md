@@ -1,42 +1,43 @@
 # Qualitative capture loop
 
-- Ran at: `2026-11-16T16:59:14.644437+00:00`
-- Ingest policy / phase: `auto` / `se_tail`
+- Ran at: `2026-11-17T16:53:38.263307+00:00`
+- Ingest policy / phase: `auto` / `maintenance`
 - Scope: `parallel`
-- LA: `Hillingdon, Slough, Wandsworth`
-- Index: `public/data/packs/hillingdon/schools-index.json`
-- Remaining with website (pre-capture): `1`
-- Batch limit (per stream): `60`
-- Sidecar records before → after: `8019` → `8022`
+- LA: `Hampshire, Lambeth, Tower Hamlets`
+- Index: `public/data/schools-index.json`
+- Remaining with website (pre-capture): `0`
+- Batch limit (per stream): `15`
+- Sidecar records before → after: `8022` → `8022`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `1`
+- QA reviewed / changed: `16` / `0`
 - Learned terms: `500`
 - Learned QA phrases: `0`
 - Dry run: `False`
 
 ## Streams
 
-- `Hillingdon`: status=ok added=1 remaining=1 index=`public/data/packs/hillingdon/schools-index.json`
-- `Slough`: status=ok added=1 remaining=1 index=`public/data/packs/slough/schools-index.json`
-- `Wandsworth`: status=ok added=1 remaining=1 index=`public/data/packs/wandsworth/schools-index.json`
+- `Hampshire`: status=ok added=0 remaining=0 index=`public/data/schools-index.json`
+- `Lambeth`: status=ok added=0 remaining=0 index=`public/data/packs/lambeth/schools-index.json`
+- `Tower Hamlets`: status=ok added=0 remaining=0 index=`public/data/packs/tower-hamlets/schools-index.json`
 
 ## Notes
 
-- Hydrated working sidecar from 8019 published URN shards (prior=0 → 8019).
-- Ingest policy=auto phase=se_tail (non-London remaining=1, London remaining=2, pending London packs=0).
-- Stream preferred=Hampshire exhausted (remaining=0); advanced to Hillingdon (remaining=1).
-- Stream preferred=Dorset exhausted (remaining=0); advanced to Slough (remaining=1).
-- Stream preferred=East Sussex exhausted (remaining=0); advanced to Wandsworth (remaining=1).
+- Hydrated working sidecar from 8022 published URN shards (prior=0 → 8022).
+- Ingest policy=auto phase=maintenance (non-London remaining=0, London remaining=0, pending London packs=0).
+- Maintenance phase: core region website ingest complete — prioritise stale re-screens, qualitative-quality-loop, and pack-quality / selective Cursor polish; expand into adjacent LAs only when ready packs exist and maintenance budgets allow (see PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER).
+- Stream preferred=Hampshire exhausted (remaining=0); no replacement LA with website work.
+- Stream preferred=Lambeth exhausted (remaining=0); no replacement LA with website work.
+- Stream preferred=Tower Hamlets exhausted (remaining=0); no replacement LA with website work.
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Hillingdon index=public/data/packs/hillingdon/schools-index.json remainingWithWebsite=1.
-- Stream LA=Slough index=public/data/packs/slough/schools-index.json remainingWithWebsite=1.
-- Stream LA=Wandsworth index=public/data/packs/wandsworth/schools-index.json remainingWithWebsite=1.
-- Running 3 capture streams in parallel (limit 60 each).
+- Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=0.
+- Stream LA=Lambeth index=public/data/packs/lambeth/schools-index.json remainingWithWebsite=0.
+- Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.
+- Running 3 capture streams in parallel (limit 15 each).
 - Merged 3 partial sidecar(s) → 8022 records (union size 8022).
-- Captured batch (sidecar 8019 → 8022); learned terms now 512.
+- Captured batch (sidecar 8022 → 8022); learned terms now 511.
+- No new captures — website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 1, learned phrases +0.
-- Re-merged affected schools-index files after QA fixes.
+- QA provider=none: reviewed 16, changed 0, learned phrases +0.

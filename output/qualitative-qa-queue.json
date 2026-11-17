@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16",
+  "generatedAt": "2026-11-17",
   "dryRun": false,
   "count": 16,
   "schools": [
@@ -33,39 +33,6 @@
         }
       ],
       "status": "no_change"
-    },
-    {
-      "urn": "152647",
-      "name": "Garratt Park School",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "\u25fc To evaluate the effectiveness of safeguarding, the inspectors reviewed the single central record, took account of the views of leaders, staff and pupils and considered the extent to which the school has created an open and positive culture around safeguarding that puts pupils\u2019 interests first."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "send",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "These include the Visually Impaired Service, the Hearing Impaired Service, children\u2019s services in all of our students' home boroughs, Child and Adolescent Mental Health Services (CAMHS), the Educational Psychology Service and a range of charities and youth groups for children with SEND.",
-            "Admissions Information All students at Garratt Park School have a statement of Special Educational Need (SEN) or an Education Health Care Plan (EHCP) in which their major need has been identified as a moderate learning difficulty (MLD)."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
     },
     {
       "urn": "147128",
@@ -365,6 +332,27 @@
           "junkClass": "cms_chrome",
           "offendingExcerpts": [
             "Moderate publicly visible evidence for community and parental engagement (3 specific items). Listed provision includes Facebook, Instagram, LinkedIn."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "109748",
+      "name": "Blagdon Nursery School",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
           ],
           "source": "heuristic"
         }
