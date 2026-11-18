@@ -1,18 +1,18 @@
 {
-  "ranAt": "2026-11-17T20:40:40.363198+00:00",
+  "ranAt": "2026-11-18T20:14:23.225667+00:00",
   "dryRun": false,
-  "seed": 1956078515,
+  "seed": 1138441401,
   "rotatedAnchors": [],
   "activeAnchors": [],
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 5,
-    "fetch_error": 2
+    "warn": 6,
+    "fetch_error": 1
   },
   "failCount": 0,
-  "warnCount": 5,
+  "warnCount": 6,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -23,60 +23,46 @@
   "strict": false,
   "schools": [
     {
-      "urn": "101282",
-      "name": "Garden Suburb Infant School",
-      "la": "Barnet",
-      "website": "https://www.gardensuburbschools.co.uk",
-      "assessedAt": "2026-09-25",
+      "urn": "101082",
+      "name": "Newton Preparatory School",
+      "la": "Wandsworth",
+      "website": "https://www.newtonprepschool.co.uk",
+      "assessedAt": "2026-09-27",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 0,
+      "offeringsChecked": 42,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "possible_underclaim",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "our vision"
+            "curriculum: computing",
+            "curriculum: robotics",
+            "curriculum: including robotics",
+            "enrichment: collaboration",
+            "enrichment: football",
+            "enrichment: netball",
+            "enrichment: london wayfarers hockey",
+            "enrichment: spencer netball",
+            "enrichment: after school club",
+            "enrichment: after school clubs"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "148682",
-      "name": "Kenley Primary School",
-      "la": "Croydon",
-      "website": "https://www.kenleyprimary.org.uk",
-      "assessedAt": "2026-09-30",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.kenleyprimary.org.uk"
-      ]
-    },
-    {
-      "urn": "140873",
-      "name": "St Gregory's Catholic Primary School, Margate",
-      "la": "Kent",
-      "website": "https://www.st-gregorys.kent.sch.uk",
-      "assessedAt": "2026-09-10",
+      "urn": "102413",
+      "name": "Whiteheath Infant & Nursery School",
+      "la": "Hillingdon",
+      "website": "http://www.whiteheath-inf.hillingdon.sch.uk",
+      "assessedAt": "2026-10-08",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 25,
+      "offeringsChecked": 29,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -85,44 +71,30 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: geography",
-            "curriculum: such as history",
-            "curriculum: in subjects such as history",
             "curriculum: computing",
+            "curriculum: design technology",
+            "curriculum: geography",
+            "curriculum: mathematics",
             "curriculum: music",
-            "enrichment: after-school club",
-            "enrichment: music",
-            "enrichment: choir",
-            "ethos: Special-educational-needs-mainstream-core-standards",
-            "ethos: Special-educational-needs-mainstream-core-standards-guide-for-parents"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "catholic",
-            "our mission",
-            "our vision"
+            "curriculum: physical education",
+            "curriculum: religious education",
+            "curriculum: Philosophy for Children",
+            "curriculum: Reading and Phonics",
+            "enrichment: childcare"
           ]
         }
       ],
-      "notes": [
-        "Signal page fetch failed: https://www.st-gregorys.kent.sch.uk/Maths/",
-        "Signal page fetch failed: https://www.st-gregorys.kent.sch.uk/News/Science-Fun/"
-      ]
+      "notes": []
     },
     {
-      "urn": "123166",
-      "name": "St Nicolas Church of England Primary School, Abingdon",
-      "la": "Oxfordshire",
-      "website": "http://www.stnicolasprimary.co.uk",
-      "assessedAt": "2026-09-12",
+      "urn": "116058",
+      "name": "Crofton Hammond Junior School",
+      "la": "Hampshire",
+      "website": "https://www.croftonhjs.co.uk",
+      "assessedAt": "2026-08-08",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 14,
+      "offeringsChecked": 26,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -131,20 +103,73 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: geography",
-            "curriculum: computing",
-            "enrichment: orchestra",
-            "enrichment: choir",
-            "community: School News"
+            "curriculum: mathematics",
+            "enrichment: gymnastics",
+            "enrichment: gardening",
+            "community: Bereavement"
           ]
-        },
+        }
+      ],
+      "notes": [
+        "Merged PDF evidence from 2 document(s)"
+      ]
+    },
+    {
+      "urn": "125298",
+      "name": "Wallace Fields Junior School",
+      "la": "Surrey",
+      "website": "https://www.wallacefields-jun.surrey.sch.uk/",
+      "assessedAt": "2026-09-14",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 47,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
         {
-          "code": "possible_underclaim",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "our ethos"
+            "curriculum: Diversity Day Exhibition",
+            "curriculum: Year Five: Banksy",
+            "curriculum: Year Six: Rabindranath Tagore",
+            "enrichment: choir",
+            "enrichment: dance",
+            "enrichment: theatre arts",
+            "enrichment: coding",
+            "enrichment: complex coding",
+            "enrichment: for french",
+            "community: netball"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "145068",
+      "name": "Weston Park Primary School",
+      "la": "Southampton",
+      "website": "https://www.weston-park.org.uk",
+      "assessedAt": "2026-09-20",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 53,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: citizenship",
+            "curriculum: Bullying",
+            "curriculum: Caring Friendships and",
+            "curriculum: Change, Loss and Grief",
+            "curriculum: Drugs, Tobacco and",
+            "curriculum: Growing and Changing",
+            "enrichment: better in PE."
           ]
         }
       ],
@@ -153,45 +178,14 @@
       ]
     },
     {
-      "urn": "131933",
-      "name": "Westfield School",
-      "la": "Buckinghamshire",
-      "website": "https://www.westfieldschoolbucks.org",
-      "assessedAt": "2026-09-19",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 15,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: music",
-            "enrichment: Superhero Day Letter",
-            "enrichment: Animal Enrichment Day",
-            "enrichment: Cartoon Enrichment Day",
-            "enrichment: Animal Day Letter",
-            "enrichment: Sports Premium",
-            "send: Parent and Guardian Area",
-            "community: Parent Letter",
-            "community: Parent and Guardian Area"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "133292",
-      "name": "Micheldever CofE Primary School",
-      "la": "Hampshire",
-      "website": "http://www.micheldever.hants.sch.uk",
-      "assessedAt": "2026-08-19",
+      "urn": "147911",
+      "name": "Atelier21 Future School",
+      "la": "West Sussex",
+      "website": "https://atelier21schools.co.uk/",
+      "assessedAt": "2026-09-03",
       "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 24,
+      "pagesFetched": 3,
+      "offeringsChecked": 42,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -201,43 +195,26 @@
           "detail": "Could not fetch live school pages for source comparison"
         }
       ],
-      "notes": [
-        "Homepage fetch failed for http://www.micheldever.hants.sch.uk"
-      ]
+      "notes": []
     },
     {
-      "urn": "125974",
-      "name": "Boxgrove CofE Primary School",
-      "la": "West Sussex",
-      "website": "http://www.boxgrove.w-sussex.sch.uk",
-      "assessedAt": "2026-09-03",
+      "urn": "146624",
+      "name": "Goodwin Academy",
+      "la": "Kent",
+      "website": "https://www.goodwinacademy.org.uk/",
+      "assessedAt": "2026-09-04",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 12,
+      "offeringsChecked": 7,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: INFORMATION",
-            "enrichment: Sport Premium",
-            "enrichment: PE Sport Premium Report 2024-25 pdf",
-            "enrichment: cricket",
-            "enrichment: notably cricket",
-            "ethos: INFORMATION",
-            "send: INFORMATION"
-          ]
-        },
         {
           "code": "possible_underclaim",
           "severity": "warn",
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "church of england",
             "our ethos",
             "our values"
           ]
