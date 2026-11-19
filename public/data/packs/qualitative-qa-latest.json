@@ -1,10 +1,10 @@
 {
-  "ranAt": "2026-11-18T16:25:21.038967+00:00",
+  "ranAt": "2026-11-19T16:33:06.697118+00:00",
   "dryRun": false,
   "reviewed": 16,
-  "changedSchools": 0,
-  "findingsApplied": 0,
-  "learningAdded": 0,
+  "changedSchools": 2,
+  "findingsApplied": 4,
+  "learningAdded": 1,
   "suspects": [
     {
       "urn": "125810",
@@ -31,6 +31,69 @@
           "junkClass": "cms_chrome",
           "offendingExcerpts": [
             "Moderate publicly visible evidence for community and parental engagement (11 specific items). Listed provision includes Newsletters, Term Dates & INSET Days. 2 items corroborated a"
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "152325",
+      "name": "Elevated Futures Education",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Deputy Designated Safeguarding Lead: Doreen Sinclair-McCollin",
+            "PSHE and RSE, KCSIE 2025 Use for safeguarding-informed teaching, healthy relationships, identity, wellbeing and personal safety.",
+            "Safeguarding is embedded throughout our curriculum, pastoral work, coaching model, and wider culture.",
+            "Supporting Documents \u2022 Accessibility Plan \u2022 Behaviour and Relationships Policy \u2022 Equality and Diversity Policy \u2022 Safeguarding Policy \u2022 SEND and Inclusion Policy \u2022 Staff CPD Programme \u2022 Subject Schemes of Work \u2022 The IDENTITY Project Outline \u2022 Timetable 6."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "Supporting Documents \u2022 Accessibility Plan \u2022 Behaviour and Relationships Policy \u2022 Equality and Diversity Policy \u2022 Safeguarding Policy \u2022 SEND and Inclusion Policy \u2022 Staff CPD Programme \u2022 Subject Schemes of Work \u2022 The IDENTITY Project Outline \u2022 Timetable 6."
+          ],
+          "source": "heuristic"
+        }
+      ]
+    },
+    {
+      "urn": "152453",
+      "name": "Luminous Oak Academy",
+      "score": 6.0,
+      "flags": [
+        "chrome"
+      ],
+      "findings": [
+        {
+          "area": "behaviour",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "My leadership responsibilities have included quality of education, curriculum and assessment, inclusion, attendance, safeguarding, and behaviour, I am a qualified SENDCo."
+          ],
+          "source": "heuristic"
+        },
+        {
+          "area": "send",
+          "action": "strip",
+          "reason": "Signals are site chrome or nav chrome labels.",
+          "junkClass": "chrome",
+          "offendingExcerpts": [
+            "My leadership responsibilities have included quality of education, curriculum and assessment, inclusion, attendance, safeguarding, and behaviour, I am a qualified SENDCo."
           ],
           "source": "heuristic"
         }
@@ -305,49 +368,11 @@
           "source": "heuristic"
         }
       ]
-    },
-    {
-      "urn": "116383",
-      "name": "St Swithun Wells Catholic Primary School, Chandlers Ford",
-      "score": 5.0,
-      "flags": [
-        "cms_chrome"
-      ],
-      "findings": [
-        {
-          "area": "community",
-          "action": "strip",
-          "reason": "Narrative lists CMS chrome alongside real provision \u2014 strip chrome only.",
-          "junkClass": "cms_chrome",
-          "offendingExcerpts": [
-            "Moderate publicly visible evidence for community and parental engagement (3 specific items). Listed provision includes Facebook, Instagram, LinkedIn."
-          ],
-          "source": "heuristic"
-        }
-      ]
-    },
-    {
-      "urn": "109748",
-      "name": "Blagdon Nursery School",
-      "score": 3.0,
-      "flags": [
-        "admissions"
-      ],
-      "findings": [
-        {
-          "area": "curriculum",
-          "action": "strip",
-          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
-          "junkClass": "admissions",
-          "offendingExcerpts": [
-            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
-          ],
-          "source": "heuristic"
-        }
-      ]
     }
   ],
   "notes": [
+    "Applied QA fixes to 2 school(s) (4 area finding(s)).",
+    "Learned 1 new junk phrase(s) (store size 900).",
     "Reviewed top 16 suspect(s); provider=none."
   ],
   "provider": "none"
