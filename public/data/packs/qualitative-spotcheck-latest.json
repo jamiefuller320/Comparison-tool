@@ -1,7 +1,7 @@
 {
-  "ranAt": "2026-11-18T20:14:23.225667+00:00",
+  "ranAt": "2026-11-19T20:16:31.512813+00:00",
   "dryRun": false,
-  "seed": 1138441401,
+  "seed": 144586393,
   "rotatedAnchors": [],
   "activeAnchors": [],
   "requestedSampleSize": 7,
@@ -9,7 +9,7 @@
   "maxPages": 3,
   "verdictCounts": {
     "warn": 6,
-    "fetch_error": 1
+    "pass": 1
   },
   "failCount": 0,
   "warnCount": 6,
@@ -23,14 +23,14 @@
   "strict": false,
   "schools": [
     {
-      "urn": "101082",
-      "name": "Newton Preparatory School",
-      "la": "Wandsworth",
-      "website": "https://www.newtonprepschool.co.uk",
+      "urn": "145088",
+      "name": "Earlham Primary School",
+      "la": "Newham",
+      "website": "https://www.earlham.compasseko.uk/",
       "assessedAt": "2026-09-27",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 42,
+      "offeringsChecked": 43,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -39,137 +39,40 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: computing",
-            "curriculum: robotics",
-            "curriculum: including robotics",
-            "enrichment: collaboration",
-            "enrichment: football",
-            "enrichment: netball",
-            "enrichment: london wayfarers hockey",
-            "enrichment: spencer netball",
-            "enrichment: after school club",
-            "enrichment: after school clubs"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "102413",
-      "name": "Whiteheath Infant & Nursery School",
-      "la": "Hillingdon",
-      "website": "http://www.whiteheath-inf.hillingdon.sch.uk",
-      "assessedAt": "2026-10-08",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 29,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: computing",
-            "curriculum: design technology",
-            "curriculum: geography",
-            "curriculum: mathematics",
             "curriculum: music",
-            "curriculum: physical education",
-            "curriculum: religious education",
-            "curriculum: Philosophy for Children",
-            "curriculum: Reading and Phonics",
-            "enrichment: childcare"
+            "curriculum: computing",
+            "curriculum: » computing»",
+            "curriculum: geography",
+            "curriculum: » geography»",
+            "curriculum: » history»",
+            "enrichment: holiday club",
+            "enrichment: football",
+            "enrichment: build confidence through fine art techniques",
+            "enrichment: french club"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "116058",
-      "name": "Crofton Hammond Junior School",
-      "la": "Hampshire",
-      "website": "https://www.croftonhjs.co.uk",
-      "assessedAt": "2026-08-08",
+      "urn": "101996",
+      "name": "Hazelwood Junior School",
+      "la": "Enfield",
+      "website": "https://www.hazelwoodschools.org.uk/",
+      "assessedAt": "2026-09-27",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 26,
+      "offeringsChecked": 20,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "unsupported_offerings",
+          "code": "possible_underclaim",
           "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "curriculum: mathematics",
-            "enrichment: gymnastics",
-            "enrichment: gardening",
-            "community: Bereavement"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 2 document(s)"
-      ]
-    },
-    {
-      "urn": "125298",
-      "name": "Wallace Fields Junior School",
-      "la": "Surrey",
-      "website": "https://www.wallacefields-jun.surrey.sch.uk/",
-      "assessedAt": "2026-09-14",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 47,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: Diversity Day Exhibition",
-            "curriculum: Year Five: Banksy",
-            "curriculum: Year Six: Rabindranath Tagore",
-            "enrichment: choir",
-            "enrichment: dance",
-            "enrichment: theatre arts",
-            "enrichment: coding",
-            "enrichment: complex coding",
-            "enrichment: for french",
-            "community: netball"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "145068",
-      "name": "Weston Park Primary School",
-      "la": "Southampton",
-      "website": "https://www.weston-park.org.uk",
-      "assessedAt": "2026-09-20",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 53,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: citizenship",
-            "curriculum: Bullying",
-            "curriculum: Caring Friendships and",
-            "curriculum: Change, Loss and Grief",
-            "curriculum: Drugs, Tobacco and",
-            "curriculum: Growing and Changing",
-            "enrichment: better in PE."
+            "our values"
           ]
         }
       ],
@@ -178,31 +81,11 @@
       ]
     },
     {
-      "urn": "147911",
-      "name": "Atelier21 Future School",
-      "la": "West Sussex",
-      "website": "https://atelier21schools.co.uk/",
-      "assessedAt": "2026-09-03",
-      "verdict": "fetch_error",
-      "pagesFetched": 3,
-      "offeringsChecked": 42,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "146624",
-      "name": "Goodwin Academy",
-      "la": "Kent",
-      "website": "https://www.goodwinacademy.org.uk/",
-      "assessedAt": "2026-09-04",
+      "urn": "142103",
+      "name": "St Luke's Church of England Primary School",
+      "la": "Bournemouth, Christchurch and Poole",
+      "website": "http://www.stlukesbournemouth.co.uk",
+      "assessedAt": "2026-09-17",
       "verdict": "warn",
       "pagesFetched": 3,
       "offeringsChecked": 7,
@@ -215,8 +98,123 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our ethos",
-            "our values"
+            "church of england",
+            "our vision"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "114566",
+      "name": "St Marys Catholic Primary School",
+      "la": "East Sussex",
+      "website": "http://www.stmarysrc.e-sussex.sch.uk",
+      "assessedAt": "2026-08-27",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 35,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: Duolingo",
+            "curriculum: Times Table Rock Stars",
+            "curriculum: Whole School Termly Curriculum",
+            "curriculum: Example of Planning for Skills",
+            "curriculum: chemistry",
+            "curriculum: relating to physics",
+            "enrichment: childcare",
+            "enrichment: PE and Sport Premium",
+            "enrichment: Parents & Guardians",
+            "community: childcare"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "catholic"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "131556",
+      "name": "The Serendipity School",
+      "la": "Southampton",
+      "website": "http://www.serendipity-education.com",
+      "assessedAt": "2026-09-20",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": [
+        "Merged PDF evidence from 3 document(s)"
+      ]
+    },
+    {
+      "urn": "119044",
+      "name": "The Beacon Folkestone",
+      "la": "Kent",
+      "website": "https://www.thebeacon.kent.sch.uk",
+      "assessedAt": "2026-09-11",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 8,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our vision"
+          ]
+        }
+      ],
+      "notes": [
+        "Merged PDF evidence from 1 document(s)"
+      ]
+    },
+    {
+      "urn": "142834",
+      "name": "Woodlands Primary School",
+      "la": "Kent",
+      "website": "https://www.woodlands.kent.sch.uk",
+      "assessedAt": "2026-09-19",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 32,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: music",
+            "curriculum: challenging music curriculum",
+            "curriculum: » science» science “science",
+            "curriculum: computing",
+            "curriculum: geography",
+            "enrichment: music",
+            "enrichment: chemistry",
+            "enrichment: implications of chemistry",
+            "enrichment: orchestra",
+            "enrichment: basketball"
           ]
         }
       ],
