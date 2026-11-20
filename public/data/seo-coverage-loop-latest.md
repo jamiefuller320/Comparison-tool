@@ -1,16 +1,16 @@
 # SEO coverage loop
 
-- Generated: `2026-11-13T15:09:43Z`
+- Generated: `2026-11-20T15:57:23Z`
 - Dry run: **False**
-- Added areas: **1** (Southampton)
+- Added areas: **0** (none — budget full or no ready candidates)
 
 ## Totals
 
 | Metric | Before | After | Budget |
 | --- | ---: | ---: | ---: |
-| School pages | 4857 | 4940 | 5000 |
-| Town pages | 139 | 140 | 160 |
-| Town hubs | 43 | 44 | — |
+| School pages | 4940 | 4940 | 5000 |
+| Town pages | 140 | 140 | 160 |
+| Town hubs | 44 | 44 | — |
 
 # SEO coverage report
 
@@ -23,7 +23,7 @@
 
 | Area | Schools | Towns ≥min | Signal % | Precis % |
 | --- | ---: | ---: | ---: | ---: |
-| Hampshire | 599 | 21 | 94.5 | 87.0 |
+| Hampshire | 599 | 21 | 94.7 | 87.1 |
 | Isle of Wight | 50 | 2 | 100.0 | 98.0 |
 | Portsmouth | 65 | 2 | 100.0 | 96.9 |
 | Dorset | 179 | 7 | 99.4 | 95.5 |
@@ -42,18 +42,18 @@
 | Ealing | 112 | 4 | 99.1 | 88.4 |
 | Hackney | 105 | 1 | 97.1 | 71.4 |
 | Bromley | 117 | 6 | 98.3 | 94.0 |
-| Bexley | 90 | 5 | 97.8 | 63.3 |
+| Bexley | 90 | 5 | 98.9 | 94.4 |
 | Hounslow | 89 | 4 | 97.8 | 86.5 |
-| Havering | 90 | 4 | 96.7 | 64.4 |
+| Havering | 90 | 4 | 96.7 | 93.3 |
 | Southwark | 116 | 1 | 97.4 | 94.0 |
 | Islington | 67 | 1 | 100.0 | 85.1 |
 | Greenwich | 103 | 1 | 96.1 | 89.3 |
 | Barnet | 167 | 3 | 97.0 | 84.4 |
 | Sutton | 72 | 3 | 95.8 | 90.3 |
 | Barking and Dagenham | 67 | 2 | 94.0 | 89.6 |
-| Harrow | 72 | 3 | 95.8 | 80.6 |
+| Harrow | 72 | 3 | 97.2 | 93.1 |
 | Redbridge | 93 | 4 | 95.7 | 62.4 |
-| Hillingdon | 106 | 5 | 92.5 | 51.9 |
+| Hillingdon | 106 | 5 | 95.3 | 92.5 |
 | Croydon | 153 | 5 | 94.8 | 88.2 |
 | Haringey | 92 | 1 | 93.5 | 59.8 |
 | Merton | 72 | 3 | 91.7 | 76.4 |
@@ -70,9 +70,9 @@
 
 ## AEO / GEO readiness
 
-- llms.txt: `/llms.txt` (generated 2026-11-10T14:57:30.904Z)
-- School pages with Ofsted Q&A: **72%**
-- School pages with inspection précis: **80%**
+- llms.txt: `/llms.txt` (generated 2026-11-17T16:04:31.685Z)
+- School pages with Ofsted Q&A: **71%**
+- School pages with inspection précis: **86%**
 - School pages with website evidence (quality-gated): **25%**
 
 ## Candidate packs (not yet in coverage)
@@ -92,6 +92,7 @@
 | Bournemouth, Christchurch and Poole | 111 | 3 | 94.6 | 91.9 |
 | Gloucestershire | 329 | 9 | 92.7 | 0.0 |
 | Somerset | 301 | 13 | 92.0 | 0.0 |
+
 
 <!-- search-console:start -->
 ## Search Console
