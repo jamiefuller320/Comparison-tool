@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-11-19T20:16:31.512813+00:00
+# Qualitative source spot-check — 2026-11-20T19:50:19.453600+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `144586393`
+- Seed: `2265357068`
 - Max pages / school: `3`
-- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -12,20 +12,21 @@
 
 ## Schools
 
-- **Earlham Primary School** (`145088`, Newham) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: computing, curriculum: » computing», curriculum: geography
-- **Hazelwood Junior School** (`101996`, Enfield) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
-- **St Luke's Church of England Primary School** (`142103`, Bournemouth, Christchurch and Poole) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our vision
-- **St Marys Catholic Primary School** (`114566`, East Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Duolingo, curriculum: Times Table Rock Stars, curriculum: Whole School Termly Curriculum, curriculum: Example of Planning for Skills
+- **Lyndhurst Primary School** (`148574`, Southwark) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: orchestra, ethos: vision
+- **City of London Primary Academy, Islington** (`143020`, Islington) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: coding, curriculum: geography, curriculum: Systems and Searching, curriculum: Web Page Creation
+- **Cardinal Newman Catholic Primary School** (`143364`, Surrey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, curriculum: mathematics, curriculum: Flourish, curriculum: Modern Languages
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
-- **The Serendipity School** (`131556`, Southampton) — `pass`
-- **The Beacon Folkestone** (`119044`, Kent) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Woodlands Primary School** (`142834`, Kent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: challenging music curriculum, curriculum: » science» science “science, curriculum: computing
+- **Tadworth Primary School** (`152490`, Surrey) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Blackthorns Community Primary Academy** (`141892`, West Sussex) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission
+- **Leigh Academy Molehill** (`138195`, Kent) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our mission, our vision
+- **The Butts Primary School** (`116025`, Hampshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, curriculum: Animal Life Cycles, curriculum: Important Dates and Information, curriculum: Seacole and Florence Nightingale.
 
 ## Notes
 
