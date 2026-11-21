@@ -1,18 +1,18 @@
 {
-  "ranAt": "2026-11-20T19:50:19.453600+00:00",
+  "ranAt": "2026-11-21T18:55:02.714484+00:00",
   "dryRun": false,
-  "seed": 2265357068,
+  "seed": 2196804240,
   "rotatedAnchors": [],
   "activeAnchors": [],
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 6,
-    "fetch_error": 1
+    "pass": 3,
+    "warn": 4
   },
   "failCount": 0,
-  "warnCount": 6,
+  "warnCount": 4,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -23,14 +23,42 @@
   "strict": false,
   "schools": [
     {
-      "urn": "148574",
-      "name": "Lyndhurst Primary School",
-      "la": "Southwark",
-      "website": "https://lyndhurstprimaryschool.com/",
-      "assessedAt": "2026-10-06",
+      "urn": "101111",
+      "name": "Essendine Primary School",
+      "la": "Westminster",
+      "website": "https://www.essendineprimary.co.uk",
+      "assessedAt": "2026-10-01",
+      "verdict": "pass",
+      "pagesFetched": 1,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": []
+    },
+    {
+      "urn": "100674",
+      "name": "Beecroft Garden Primary",
+      "la": "Lewisham",
+      "website": "https://www.beecroftgarden.lewisham.sch.uk/",
+      "assessedAt": "2026-09-29",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 3,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": []
+    },
+    {
+      "urn": "149627",
+      "name": "West Ashtead Primary Academy",
+      "la": "Surrey",
+      "website": "https://www.west-ashtead.co.uk",
+      "assessedAt": "2026-09-14",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 10,
+      "offeringsChecked": 71,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -39,22 +67,30 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "enrichment: orchestra",
-            "ethos: vision"
+            "curriculum: holiday club",
+            "curriculum: breakfast club",
+            "curriculum: wrap around care",
+            "curriculum: Attendance and Absence",
+            "curriculum: Extra-Curricular Clubs",
+            "curriculum: Fees, Funding & Sessions",
+            "curriculum: Glossary of SEND Terms",
+            "curriculum: Governance",
+            "curriculum: Inclusion",
+            "curriculum: LEO Lottery"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "143020",
-      "name": "City of London Primary Academy, Islington",
-      "la": "Islington",
-      "website": "https://www.colpai.org.uk",
-      "assessedAt": "2026-10-05",
+      "urn": "136996",
+      "name": "Bournemouth School for Girls",
+      "la": "Bournemouth, Christchurch and Poole",
+      "website": "http://www.wearebsg.uk",
+      "assessedAt": "2026-09-11",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 32,
+      "offeringsChecked": 42,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -63,13 +99,56 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
+            "curriculum: Homework",
+            "curriculum: robotics",
             "curriculum: coding",
-            "curriculum: geography",
-            "curriculum: Systems and Searching",
-            "curriculum: Web Page Creation",
-            "curriculum: Anne Boleyn and Jane Seymour.",
-            "enrichment: breakfast club",
-            "enrichment: mathematics"
+            "curriculum: separate sciences (biology",
+            "enrichment: choir",
+            "enrichment: jazz band",
+            "enrichment: festival choir",
+            "enrichment: rock band",
+            "enrichment: robotics",
+            "enrichment: coding"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "144846",
+      "name": "Langstone Primary Academy",
+      "la": "Portsmouth",
+      "website": "https://langstoneprimary.chimat.uk/",
+      "assessedAt": "2026-09-16",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 3,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": [
+        "Merged PDF evidence from 1 document(s)"
+      ]
+    },
+    {
+      "urn": "135887",
+      "name": "Endeavour Primary School",
+      "la": "Hampshire",
+      "website": "http://www.endeavourprimary.org",
+      "assessedAt": "2026-08-09",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 14,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our vision"
           ]
         }
       ],
@@ -78,14 +157,14 @@
       ]
     },
     {
-      "urn": "143364",
-      "name": "Cardinal Newman Catholic Primary School",
+      "urn": "125008",
+      "name": "The Greville Primary School",
       "la": "Surrey",
-      "website": "http://www.cardinalnewmanschool.co.uk",
-      "assessedAt": "2026-09-02",
+      "website": "http://www.greville.surrey.sch.uk",
+      "assessedAt": "2026-09-14",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 37,
+      "offeringsChecked": 19,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -94,16 +173,7 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: geography",
-            "curriculum: mathematics",
-            "curriculum: Flourish",
-            "curriculum: Modern Languages",
-            "curriculum: Physical Processes.",
-            "curriculum: Sports Premium",
-            "curriculum: Mathszone",
-            "curriculum: swimming",
-            "enrichment: childcare",
-            "enrichment: after school club"
+            "ethos: Disability"
           ]
         },
         {
@@ -112,116 +182,13 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "catholic"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "152490",
-      "name": "Tadworth Primary School",
-      "la": "Surrey",
-      "website": "http://www.tadworthps.surrey.sch.uk",
-      "assessedAt": "2026-09-10",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 17,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for http://www.tadworthps.surrey.sch.uk"
-      ]
-    },
-    {
-      "urn": "141892",
-      "name": "Blackthorns Community Primary Academy",
-      "la": "West Sussex",
-      "website": "https://www.blackthornsprimaryacademy.org.uk/",
-      "assessedAt": "2026-09-03",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 36,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our mission"
+            "our ethos"
           ]
         }
       ],
       "notes": [
-        "Merged PDF evidence from 2 document(s)"
+        "Merged PDF evidence from 1 document(s)"
       ]
-    },
-    {
-      "urn": "138195",
-      "name": "Leigh Academy Molehill",
-      "la": "Kent",
-      "website": "https://www.leighacademymolehill.org.uk/",
-      "assessedAt": "2026-09-06",
-      "verdict": "warn",
-      "pagesFetched": 1,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our mission",
-            "our vision"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "116025",
-      "name": "The Butts Primary School",
-      "la": "Hampshire",
-      "website": "https://www.butts.hants.sch.uk",
-      "assessedAt": "2026-08-25",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 22,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: geography",
-            "curriculum: Animal Life Cycles",
-            "curriculum: Important Dates and Information",
-            "curriculum: Seacole and Florence Nightingale.",
-            "curriculum: Suggestions for Parental Involvement",
-            "enrichment: breakfast club",
-            "enrichment: music",
-            "enrichment: is based in the music room",
-            "enrichment: high-quality pe curriculum",
-            "enrichment: provided by the hampshire music service"
-          ]
-        }
-      ],
-      "notes": []
     }
   ],
   "notes": [
