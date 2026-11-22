@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-11-21T18:55:02.714484+00:00
+# Qualitative source spot-check — 2026-11-22T19:16:37.977004+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `2196804240`
+- Seed: `3750637864`
 - Max pages / school: `3`
-- Verdicts: pass `3` · warn `4` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -12,18 +12,21 @@
 
 ## Schools
 
-- **Essendine Primary School** (`101111`, Westminster) — `pass`
-- **Beecroft Garden Primary** (`100674`, Lewisham) — `pass`
-- **West Ashtead Primary Academy** (`149627`, Surrey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: holiday club, curriculum: breakfast club, curriculum: wrap around care, curriculum: Attendance and Absence
-- **Bournemouth School for Girls** (`136996`, Bournemouth, Christchurch and Poole) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Homework, curriculum: robotics, curriculum: coding, curriculum: separate sciences (biology
-- **Langstone Primary Academy** (`144846`, Portsmouth) — `pass`
-- **Endeavour Primary School** (`135887`, Hampshire) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **The Greville Primary School** (`125008`, Surrey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: Disability
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos
+- **Gifford Primary School** (`101898`, Ealing) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: breakfast club, enrichment: childcare, enrichment: Extended School Clubs
+- **Jessop Primary School** (`100572`, Lambeth) — `pass`
+- **Meon Junior School** (`144581`, Portsmouth) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
+- **Long Ditton St Mary's CofE (Aided) Junior School** (`125180`, Surrey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Appeals and Appeals Timetable, curriculum: swimming, enrichment: swimming, enrichment: music
+- **St Catherine's Catholic Primary School, Littlehampton** (`151256`, West Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: love for mathematics, enrichment: music, enrichment: childcare
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
+- **Burnt Oak Primary School** (`131527`, Medway) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — inspired to achieve
+- **Hailey Church of England Primary School** (`123108`, Oxfordshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography, curriculum: athletics, curriculum: Christian DistinctivenessChristian Distinctiveness
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our values
 
 ## Notes
 
