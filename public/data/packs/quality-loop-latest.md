@@ -1,4 +1,4 @@
-# Pack quality loop — 2026-11-18T15:22:50Z
+# Pack quality loop — 2026-11-23T17:46:15Z
 
 - Mode: `polish`
 - Max packs: 6
@@ -13,23 +13,23 @@
 
 | LA | Tier | Missing | Stall | Before indie% | After indie% | Before ISI | After ISI |
 |---|---|---:|---:|---:|---:|---|---|
-| Hackney | sitemap | 30 | 2 | 6.2 | 6.2 | 3/32 | 3/32 |
-| Hillingdon | sitemap | 8 | 1 | 40.0 | 40.0 | 8/10 | 8/10 |
-| Bexley | sitemap | 5 | 1 | 33.3 | 33.3 | 4/6 | 4/6 |
-| Harrow | sitemap | 5 | 1 | 58.3 | 58.3 | 9/12 | 9/12 |
-| Richmond upon Thames | sitemap | 11 | 2 | 54.2 | 54.2 | 18/24 | 18/24 |
-| Havering | sitemap | 6 | 1 | 50.0 | 50.0 | 4/8 | 4/8 |
+| Redbridge | sitemap | 35 | 0 | 42.9 | 42.9 | 8/14 | 8/14 |
+| Tower Hamlets | sitemap | 14 | 1 | 20.0 | 20.0 | 5/15 | 5/15 |
+| Islington | sitemap | 10 | 0 | 80.0 | 80.0 | 4/5 | 4/5 |
+| Greenwich | sitemap | 11 | 1 | 40.0 | 40.0 | 8/15 | 8/15 |
+| Waltham Forest | sitemap | 24 | 0 | 40.0 | 40.0 | 2/5 | 2/5 |
+| West Sussex | sitemap | 20 | 0 | 79.6 | 81.6 | 30/49 | 30/49 |
 
 ## Top interest signals
 
-- `gloucestershire`: score 3.414 (boost 13.7%)
-- `somerset`: score 3.409 (boost 13.6%)
-- `wiltshire`: score 2.447 (boost 9.8%)
-- `barking-and-dagenham`: score 0.427 (boost 1.7%)
-- `barnet`: score 0.427 (boost 1.7%)
-- `bexley`: score 0.427 (boost 1.7%)
-- `brent`: score 0.427 (boost 1.7%)
-- `bromley`: score 0.427 (boost 1.7%)
+- `gloucestershire`: score 3.156 (boost 12.6%)
+- `somerset`: score 3.152 (boost 12.6%)
+- `wiltshire`: score 2.262 (boost 9.0%)
+- `barking-and-dagenham`: score 0.395 (boost 1.6%)
+- `barnet`: score 0.395 (boost 1.6%)
+- `bexley`: score 0.395 (boost 1.6%)
+- `brent`: score 0.395 (boost 1.6%)
+- `bromley`: score 0.395 (boost 1.6%)
 
 ## Weakest packs (after)
 
@@ -41,18 +41,21 @@
 
 ## No précis/ISI movement
 
-- Hackney
-- Hillingdon
-- Bexley
-- Harrow
+- Tower Hamlets
+- Greenwich
+
+## Rotated (no movement for 2 runs)
+
 - Richmond upon Thames
-- Havering
+- Hackney
 
 ## Consecutive runs with no movement
 
 - `hackney`: 2
 - `richmond-upon-thames`: 2
 - `bexley`: 1
+- `greenwich`: 1
 - `harrow`: 1
 - `havering`: 1
 - `hillingdon`: 1
+- `tower-hamlets`: 1
