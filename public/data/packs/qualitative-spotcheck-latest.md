@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-11-22T19:16:37.977004+00:00
+# Qualitative source spot-check — 2026-11-23T23:38:52.134737+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3750637864`
+- Seed: `4036715454`
 - Max pages / school: `3`
-- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
+- Verdicts: pass `1` · warn `5` · fail `0` · fetch_error `1` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -12,21 +12,23 @@
 
 ## Schools
 
-- **Gifford Primary School** (`101898`, Ealing) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, enrichment: breakfast club, enrichment: childcare, enrichment: Extended School Clubs
-- **Jessop Primary School** (`100572`, Lambeth) — `pass`
-- **Meon Junior School** (`144581`, Portsmouth) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
-- **Long Ditton St Mary's CofE (Aided) Junior School** (`125180`, Surrey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Appeals and Appeals Timetable, curriculum: swimming, enrichment: swimming, enrichment: music
-- **St Catherine's Catholic Primary School, Littlehampton** (`151256`, West Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: love for mathematics, enrichment: music, enrichment: childcare
+- **Saint Christina's School** (`101169`, Westminster) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Charities, curriculum: Facilities, curriculum: Healthy Eating, curriculum: Metacognition
   - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
-- **Burnt Oak Primary School** (`131527`, Medway) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — inspired to achieve
-- **Hailey Church of England Primary School** (`123108`, Oxfordshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography, curriculum: athletics, curriculum: Christian DistinctivenessChristian Distinctiveness
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our values
+- **Bacon's College** (`145313`, Southwark) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computer science, curriculum: chemistry, curriculum: computing, curriculum: AQA Specification
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
+- **Inclusion School Aldershot** (`152155`, Hampshire) — `pass`
+- **Cornfield School, Littlehampton** (`126170`, West Sussex) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Sandy Lane Primary School** (`149386`, Bracknell Forest) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Phonics and Reading, curriculum: mathematics, curriculum: maths in mathematics, curriculum: to supplement our maths curriculum
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
+- **Swiss Gardens Primary School** (`125914`, West Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography, curriculum: mathematics, curriculum: music
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
+- **Sevenoaks Preparatory School** (`118953`, Kent) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: chess, enrichment: Bricks4Kids Lego, enrichment: Playball, enrichment: Recorder Club
 
 ## Notes
 
