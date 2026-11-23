@@ -1,6 +1,6 @@
 # Pack data refresh
 
-- Generated: `2026-11-22T12:38:55Z`
+- Generated: `2026-11-23T14:41:51Z`
 - Rota: daily `15 4 * * *` (04:15 UTC), 2 packs per run, 28 days for 56 ready packs.
 - Ofsted state-schools MI: **31 October 2026**
 - Schools moved onto that MI date: **0**
@@ -12,4 +12,4 @@
 
 ## Depth refreshed this run
 
-kensington-and-chelsea, kent
+kingston-upon-thames, lambeth
