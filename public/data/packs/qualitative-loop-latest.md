@@ -1,6 +1,6 @@
 # Qualitative capture loop
 
-- Ran at: `2026-11-22T15:12:44.604220+00:00`
+- Ran at: `2026-11-23T19:08:03.324433+00:00`
 - Ingest policy / phase: `auto` / `maintenance`
 - Scope: `parallel`
 - LA: `Hampshire, Lambeth, Tower Hamlets`
@@ -36,7 +36,7 @@
 - Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.
 - Running 3 capture streams in parallel (limit 15 each).
 - Merged 3 partial sidecar(s) → 8026 records (union size 8026).
-- Captured batch (sidecar 8026 → 8026); learned terms now 510.
+- Captured batch (sidecar 8026 → 8026); learned terms now 508.
 - No new captures — website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
