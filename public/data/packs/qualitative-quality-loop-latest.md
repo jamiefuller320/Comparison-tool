@@ -1,4 +1,4 @@
-# Qualitative quality loop — 2026-11-23T21:54:43.316229+00:00
+# Qualitative quality loop — 2026-11-24T20:31:33.012858+00:00
 
 - Mode: `skip`
 - Provider: `none`
@@ -24,7 +24,7 @@
 ## Notes
 
 - Rebalanced learned QA phrases: active=900 candidates=2000.
-- Learning fingerprint: {'phraseHash': 'c1cab978c0b2fcec967e', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11823, 'updatedAt': '2026-11-23', 'chromeDenylistCount': 9}
+- Learning fingerprint: {'phraseHash': 'c1cab978c0b2fcec967e', 'phraseCount': 900, 'candidateCount': 2000, 'eventCount': 11823, 'updatedAt': '2026-11-24', 'chromeDenylistCount': 9}
 - Apply decision: learning library unchanged since last apply
 - Corpus sweep decision: phrase fingerprint unchanged
 - Hydrated working sidecar from 8026 published URN shards (prior=0 → 8026).
