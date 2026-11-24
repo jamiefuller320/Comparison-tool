@@ -1,8 +1,8 @@
-# Human-gated review digest — 2026-11-16T23:13:26+00:00
+# Human-gated review digest — 2026-11-24T01:29:56+00:00
 
 - Mode: `collate`
-- Open items: **17** (queue total `44` · done `12` · ignored `15`)
-- New / refreshed this run: `3`
+- Open items: **21** (queue total `48` · done `12` · ignored `15`)
+- New / refreshed this run: `4`
 - Auto-closed (already learned): `0`
 - Ethos rows closed (already in the published cell): `0`
 
@@ -19,8 +19,8 @@
 
 ## Open by kind
 
+- `ethos_underclaim`: 11
 - `unsupported_offerings`: 10
-- `ethos_underclaim`: 7
 
 ## Items
 
@@ -73,6 +73,34 @@
   - review:
     - `npm run enrich:qualitative -- --urn 143789`
     - `npm run review:human-gated -- --mark-done c724cf9be1193c46`
+- **ethos_underclaim** `6190d0f5fc167b03` Saint Christina's School (URN `101169`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: catholic
+  - review:
+    - `npm run enrich:qualitative -- --urn 101169`
+    - `npm run review:human-gated -- --mark-done 6190d0f5fc167b03`
+- **ethos_underclaim** `711de1ba426ed1b8` Bacon's College (URN `145313`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: church of england
+  - review:
+    - `npm run enrich:qualitative -- --urn 145313`
+    - `npm run review:human-gated -- --mark-done 711de1ba426ed1b8`
+- **ethos_underclaim** `9a8e8b0f0e8cfa2f` Sandy Lane Primary School (URN `149386`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: our vision
+  - review:
+    - `npm run enrich:qualitative -- --urn 149386`
+    - `npm run review:human-gated -- --mark-done 9a8e8b0f0e8cfa2f`
+- **ethos_underclaim** `9c8a13408b2e3c4b` Swiss Gardens Primary School (URN `125914`)
+  - area `ethos`; flag `possible_underclaim`; source `qualitative-spotcheck-latest`
+  - Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells
+  - excerpts: our values
+  - review:
+    - `npm run enrich:qualitative -- --urn 125914`
+    - `npm run review:human-gated -- --mark-done 9c8a13408b2e3c4b`
 - **unsupported_offerings** `45b485a1d8d12e8d` Platanos College (URN `136450`)
   - flag `unsupported_offerings`; source `qualitative-spotcheck-latest`
   - Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)
@@ -153,5 +181,4 @@
 ## Notes
 
 - GitHub [user-improvement] issues: none or gh unavailable
-- Downgraded 1 unsupported_offerings row(s) to digest-only (no PDF confirmation)
 - No spotcheck gated JSONL yet (expects output/spotcheck-human-gated-candidates.jsonl after auto-learn PR)

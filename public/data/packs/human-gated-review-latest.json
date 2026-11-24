@@ -1,18 +1,18 @@
 {
-  "ranAt": "2026-11-16T23:13:26+00:00",
+  "ranAt": "2026-11-24T01:29:56+00:00",
   "dryRun": false,
-  "openCount": 17,
-  "queueSize": 44,
-  "upserted": 3,
-  "unsupportedDowngraded": 1,
+  "openCount": 21,
+  "queueSize": 48,
+  "upserted": 4,
+  "unsupportedDowngraded": 0,
   "ethosClosedReflected": 0,
   "autoClosedLearned": 0,
   "counts": {
-    "open": 17,
+    "open": 21,
     "done": 12,
     "ignored": 15,
     "byKind": {
-      "ethos_underclaim": 7,
+      "ethos_underclaim": 11,
       "unsupported_offerings": 10
     }
   },
@@ -164,6 +164,82 @@
       "lastSeen": "2026-11-16T23:13:26+00:00",
       "status": "open",
       "firstSeen": "2026-11-16T23:13:26+00:00"
+    },
+    {
+      "id": "6190d0f5fc167b03",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "101169",
+      "schoolName": "Saint Christina's School",
+      "la": "Westminster",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "catholic"
+      ],
+      "lastSeen": "2026-11-24T01:29:56+00:00",
+      "status": "open",
+      "firstSeen": "2026-11-24T01:29:56+00:00"
+    },
+    {
+      "id": "711de1ba426ed1b8",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "145313",
+      "schoolName": "Bacon's College",
+      "la": "Southwark",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "church of england"
+      ],
+      "lastSeen": "2026-11-24T01:29:56+00:00",
+      "status": "open",
+      "firstSeen": "2026-11-24T01:29:56+00:00"
+    },
+    {
+      "id": "9a8e8b0f0e8cfa2f",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "149386",
+      "schoolName": "Sandy Lane Primary School",
+      "la": "Bracknell Forest",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "our vision"
+      ],
+      "lastSeen": "2026-11-24T01:29:56+00:00",
+      "status": "open",
+      "firstSeen": "2026-11-24T01:29:56+00:00"
+    },
+    {
+      "id": "9c8a13408b2e3c4b",
+      "kind": "ethos_underclaim",
+      "source": "qualitative-spotcheck-latest",
+      "action": "targeted_refresh",
+      "urn": "125914",
+      "schoolName": "Swiss Gardens Primary School",
+      "la": "West Sussex",
+      "area": "ethos",
+      "flagCode": "possible_underclaim",
+      "severity": "warn",
+      "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+      "excerpts": [
+        "our values"
+      ],
+      "lastSeen": "2026-11-24T01:29:56+00:00",
+      "status": "open",
+      "firstSeen": "2026-11-24T01:29:56+00:00"
     },
     {
       "id": "45b485a1d8d12e8d",
@@ -421,7 +497,6 @@
   ],
   "notes": [
     "GitHub [user-improvement] issues: none or gh unavailable",
-    "Downgraded 1 unsupported_offerings row(s) to digest-only (no PDF confirmation)",
     "No spotcheck gated JSONL yet (expects output/spotcheck-human-gated-candidates.jsonl after auto-learn PR)"
   ],
   "issueUrl": null
