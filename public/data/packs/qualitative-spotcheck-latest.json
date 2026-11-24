@@ -1,19 +1,19 @@
 {
-  "ranAt": "2026-11-23T23:38:52.134737+00:00",
+  "ranAt": "2026-11-24T22:08:44.956320+00:00",
   "dryRun": false,
-  "seed": 4036715454,
+  "seed": 2754857146,
   "rotatedAnchors": [],
   "activeAnchors": [],
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 5,
     "pass": 1,
-    "fetch_error": 1
+    "warn": 4,
+    "fetch_error": 2
   },
   "failCount": 0,
-  "warnCount": 5,
+  "warnCount": 4,
   "candidatesWritten": 0,
   "autoLearnedCount": 0,
   "gatedCount": 0,
@@ -24,57 +24,28 @@
   "strict": false,
   "schools": [
     {
-      "urn": "101169",
-      "name": "Saint Christina's School",
-      "la": "Westminster",
-      "website": "https://www.saintchristinas.org.uk",
-      "assessedAt": "2026-10-01",
-      "verdict": "warn",
+      "urn": "103044",
+      "name": "Downsell Primary School",
+      "la": "Waltham Forest",
+      "website": "https://www.downsellprimary.org/",
+      "assessedAt": "2026-10-02",
+      "verdict": "pass",
       "pagesFetched": 3,
-      "offeringsChecked": 79,
+      "offeringsChecked": 1,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: Charities",
-            "curriculum: Facilities",
-            "curriculum: Healthy Eating",
-            "curriculum: Metacognition",
-            "enrichment: Charities",
-            "enrichment: Facilities",
-            "enrichment: Healthy Eating",
-            "enrichment: Metacognition",
-            "ethos: Charities",
-            "ethos: Facilities"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "catholic"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 1 document(s)"
-      ]
+      "flags": [],
+      "notes": []
     },
     {
-      "urn": "145313",
-      "name": "Bacon's College",
-      "la": "Southwark",
-      "website": "https://www.baconscollege.co.uk",
+      "urn": "137032",
+      "name": "Darrick Wood Infant & Nursery School",
+      "la": "Bromley",
+      "website": "https://www.darrickwoodinfant.co.uk",
       "assessedAt": "2026-09-26",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 24,
+      "offeringsChecked": 13,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -83,25 +54,7 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: computer science",
-            "curriculum: chemistry",
-            "curriculum: computing",
-            "curriculum: AQA Specification",
-            "curriculum: Author: Alistair Surrall and Adam",
-            "curriculum: Author: PG Online Ltd",
-            "curriculum: CGP Revision Guide",
-            "curriculum: Calculator",
-            "curriculum: Course & Assessment Overview",
-            "curriculum: Dividers"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "church of england"
+            "ethos: smsc"
           ]
         }
       ],
@@ -110,25 +63,72 @@
       ]
     },
     {
-      "urn": "152155",
-      "name": "Inclusion School Aldershot",
-      "la": "Hampshire",
-      "website": "https://isaldershot.org.uk/",
-      "assessedAt": "2026-10-14",
-      "verdict": "pass",
+      "urn": "140560",
+      "name": "Beaminster St Mary's Academy",
+      "la": "Dorset",
+      "website": "http://www.beaminsterstmarys.dsat.org.uk",
+      "assessedAt": "2026-08-25",
+      "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 9,
+      "offeringsChecked": 4,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
-      "flags": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "enrichment: breakfast club",
+            "ethos: Admission Appealpdf"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our values",
+            "our vision"
+          ]
+        }
+      ],
       "notes": []
     },
     {
-      "urn": "126170",
-      "name": "Cornfield School, Littlehampton",
-      "la": "West Sussex",
-      "website": "http://www.cornfieldschool.org.uk",
-      "assessedAt": "2026-09-03",
+      "urn": "110133",
+      "name": "Wellington College Prep",
+      "la": "Bracknell Forest",
+      "website": "https://www.wellingtoncollegeprep.org.uk",
+      "assessedAt": "2026-09-18",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 39,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "church of england",
+            "our values"
+          ]
+        }
+      ],
+      "notes": [
+        "Merged PDF evidence from 2 document(s)"
+      ]
+    },
+    {
+      "urn": "114541",
+      "name": "St Mary Magdalen Catholic Primary School",
+      "la": "Brighton and Hove",
+      "website": "https://www.stmarymags.brighton-hove.dbprimary.com/",
+      "assessedAt": "2026-09-15",
       "verdict": "fetch_error",
       "pagesFetched": 0,
       "offeringsChecked": 0,
@@ -142,114 +142,56 @@
         }
       ],
       "notes": [
-        "Homepage fetch failed for http://www.cornfieldschool.org.uk"
+        "Homepage fetch failed for https://www.stmarymags.brighton-hove.dbprimary.com/"
       ]
     },
     {
-      "urn": "149386",
-      "name": "Sandy Lane Primary School",
-      "la": "Bracknell Forest",
-      "website": "https://www.sandylanebracknell.com",
-      "assessedAt": "2026-09-18",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 13,
+      "urn": "145452",
+      "name": "King's Academy College Park (Infant)",
+      "la": "Portsmouth",
+      "website": "https://www.kgacollegepark.uk",
+      "assessedAt": "2026-09-16",
+      "verdict": "fetch_error",
+      "pagesFetched": 0,
+      "offeringsChecked": 3,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "unsupported_offerings",
+          "code": "fetch_failed",
           "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: Phonics and Reading",
-            "curriculum: mathematics",
-            "curriculum: maths in mathematics",
-            "curriculum: to supplement our maths curriculum",
-            "enrichment: to supplement our maths curriculum"
-          ]
-        },
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
+      "notes": [
+        "Homepage fetch failed for https://www.kgacollegepark.uk"
+      ]
+    },
+    {
+      "urn": "123146",
+      "name": "Cumnor Church of England School (Voluntary Controlled)",
+      "la": "Oxfordshire",
+      "website": "http://www.cumnorprimaryschool.co.uk",
+      "assessedAt": "2026-09-04",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
         {
           "code": "possible_underclaim",
           "severity": "warn",
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
+            "church of england",
+            "our values",
             "our vision"
           ]
         }
       ],
       "notes": []
-    },
-    {
-      "urn": "125914",
-      "name": "Swiss Gardens Primary School",
-      "la": "West Sussex",
-      "website": "https://www.sgprimary.co.uk",
-      "assessedAt": "2026-09-13",
-      "verdict": "warn",
-      "pagesFetched": 2,
-      "offeringsChecked": 19,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: computing",
-            "curriculum: geography",
-            "curriculum: mathematics",
-            "curriculum: music",
-            "curriculum: PE and Sport",
-            "curriculum: SATs Results",
-            "curriculum: Wellbeing",
-            "curriculum: Lisa Sharp",
-            "enrichment: Michela McManus"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our values"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 1 document(s)"
-      ]
-    },
-    {
-      "urn": "118953",
-      "name": "Sevenoaks Preparatory School",
-      "la": "Kent",
-      "website": "http://www.theprep.org.uk",
-      "assessedAt": "2026-09-09",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 33,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: chess",
-            "enrichment: Bricks4Kids Lego",
-            "enrichment: Playball",
-            "enrichment: Recorder Club"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 3 document(s)"
-      ]
     }
   ],
   "notes": [

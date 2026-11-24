@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-11-23T23:38:52.134737+00:00
+# Qualitative source spot-check — 2026-11-24T22:08:44.956320+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `4036715454`
+- Seed: `2754857146`
 - Max pages / school: `3`
-- Verdicts: pass `1` · warn `5` · fail `0` · fetch_error `1` · skip `0`
+- Verdicts: pass `1` · warn `4` · fail `0` · fetch_error `2` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -12,23 +12,20 @@
 
 ## Schools
 
-- **Saint Christina's School** (`101169`, Westminster) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Charities, curriculum: Facilities, curriculum: Healthy Eating, curriculum: Metacognition
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — catholic
-- **Bacon's College** (`145313`, Southwark) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computer science, curriculum: chemistry, curriculum: computing, curriculum: AQA Specification
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england
-- **Inclusion School Aldershot** (`152155`, Hampshire) — `pass`
-- **Cornfield School, Littlehampton** (`126170`, West Sussex) — `fetch_error`
+- **Downsell Primary School** (`103044`, Waltham Forest) — `pass`
+- **Darrick Wood Infant & Nursery School** (`137032`, Bromley) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — ethos: smsc
+- **Beaminster St Mary's Academy** (`140560`, Dorset) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: breakfast club, ethos: Admission Appealpdf
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values, our vision
+- **Wellington College Prep** (`110133`, Bracknell Forest) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our values
+- **St Mary Magdalen Catholic Primary School** (`114541`, Brighton and Hove) — `fetch_error`
   - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Sandy Lane Primary School** (`149386`, Bracknell Forest) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Phonics and Reading, curriculum: mathematics, curriculum: maths in mathematics, curriculum: to supplement our maths curriculum
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Swiss Gardens Primary School** (`125914`, West Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography, curriculum: mathematics, curriculum: music
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our values
-- **Sevenoaks Preparatory School** (`118953`, Kent) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: chess, enrichment: Bricks4Kids Lego, enrichment: Playball, enrichment: Recorder Club
+- **King's Academy College Park (Infant)** (`145452`, Portsmouth) — `fetch_error`
+  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
+- **Cumnor Church of England School (Voluntary Controlled)** (`123146`, Oxfordshire) — `warn`
+  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our values, our vision
 
 ## Notes
 
