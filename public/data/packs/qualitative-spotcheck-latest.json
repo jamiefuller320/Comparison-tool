@@ -1,16 +1,16 @@
 {
-  "ranAt": "2026-11-24T22:08:44.956320+00:00",
+  "ranAt": "2026-11-25T21:25:06.473933+00:00",
   "dryRun": false,
-  "seed": 2754857146,
+  "seed": 94216502,
   "rotatedAnchors": [],
   "activeAnchors": [],
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "pass": 1,
+    "fetch_error": 1,
     "warn": 4,
-    "fetch_error": 2
+    "pass": 2
   },
   "failCount": 0,
   "warnCount": 4,
@@ -24,28 +24,34 @@
   "strict": false,
   "schools": [
     {
-      "urn": "103044",
-      "name": "Downsell Primary School",
-      "la": "Waltham Forest",
-      "website": "https://www.downsellprimary.org/",
-      "assessedAt": "2026-10-02",
-      "verdict": "pass",
-      "pagesFetched": 3,
-      "offeringsChecked": 1,
+      "urn": "139616",
+      "name": "Heartlands High School",
+      "la": "Haringey",
+      "website": "http://heartlands.haringey.sch.uk/",
+      "assessedAt": "2026-09-29",
+      "verdict": "fetch_error",
+      "pagesFetched": 1,
+      "offeringsChecked": 0,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
-      "flags": [],
+      "flags": [
+        {
+          "code": "fetch_failed",
+          "severity": "warn",
+          "detail": "Could not fetch live school pages for source comparison"
+        }
+      ],
       "notes": []
     },
     {
-      "urn": "137032",
-      "name": "Darrick Wood Infant & Nursery School",
-      "la": "Bromley",
-      "website": "https://www.darrickwoodinfant.co.uk",
-      "assessedAt": "2026-09-26",
+      "urn": "136290",
+      "name": "Queen Elizabeth's School, Barnet",
+      "la": "Barnet",
+      "website": "https://www.qebarnet.co.uk",
+      "assessedAt": "2026-10-03",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 13,
+      "offeringsChecked": 7,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -54,33 +60,9 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "ethos: smsc"
-          ]
-        }
-      ],
-      "notes": [
-        "Merged PDF evidence from 3 document(s)"
-      ]
-    },
-    {
-      "urn": "140560",
-      "name": "Beaminster St Mary's Academy",
-      "la": "Dorset",
-      "website": "http://www.beaminsterstmarys.dsat.org.uk",
-      "assessedAt": "2026-08-25",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 4,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: breakfast club",
-            "ethos: Admission Appealpdf"
+            "enrichment: year 9 german exchange",
+            "enrichment: german theatre visits in year 9",
+            "ethos: kindness"
           ]
         },
         {
@@ -89,33 +71,95 @@
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "our values",
-            "our vision"
+            "our mission"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "110133",
-      "name": "Wellington College Prep",
-      "la": "Bracknell Forest",
-      "website": "https://www.wellingtoncollegeprep.org.uk",
-      "assessedAt": "2026-09-18",
+      "urn": "116103",
+      "name": "St John's Primary and Nursery School",
+      "la": "Southampton",
+      "website": "https://www.stjohnssouthampton.co.uk",
+      "assessedAt": "2026-09-14",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 0,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": []
+    },
+    {
+      "urn": "140760",
+      "name": "St James' Church of England Primary Academy",
+      "la": "Bournemouth, Christchurch and Poole",
+      "website": "https://www.stjamescebournemouth.com",
+      "assessedAt": "2026-09-17",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 39,
+      "offeringsChecked": 19,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: geography",
+            "curriculum: music",
+            "curriculum: Early Years Foundation Stage",
+            "curriculum: Languages",
+            "curriculum: football",
+            "curriculum: netball",
+            "enrichment: music",
+            "enrichment: breakfast club",
+            "enrichment: after-school clubs until 4.20pm"
+          ]
+        },
         {
           "code": "possible_underclaim",
           "severity": "warn",
           "area": "ethos",
           "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
           "excerpts": [
-            "church of england",
-            "our values"
+            "church of england"
+          ]
+        }
+      ],
+      "notes": [
+        "Merged PDF evidence from 1 document(s)"
+      ]
+    },
+    {
+      "urn": "122983",
+      "name": "Wheatley Nursery School",
+      "la": "Oxfordshire",
+      "website": "https://www.wheatleynurseryschool.org",
+      "assessedAt": "2026-09-18",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 12,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: Cardinality and Counting"
+          ]
+        },
+        {
+          "code": "possible_underclaim",
+          "severity": "warn",
+          "area": "ethos",
+          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "excerpts": [
+            "our vision"
           ]
         }
       ],
@@ -124,73 +168,51 @@
       ]
     },
     {
-      "urn": "114541",
-      "name": "St Mary Magdalen Catholic Primary School",
-      "la": "Brighton and Hove",
-      "website": "https://www.stmarymags.brighton-hove.dbprimary.com/",
-      "assessedAt": "2026-09-15",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.stmarymags.brighton-hove.dbprimary.com/"
-      ]
-    },
-    {
-      "urn": "145452",
-      "name": "King's Academy College Park (Infant)",
-      "la": "Portsmouth",
-      "website": "https://www.kgacollegepark.uk",
-      "assessedAt": "2026-09-16",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 3,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "fetch_failed",
-          "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
-        }
-      ],
-      "notes": [
-        "Homepage fetch failed for https://www.kgacollegepark.uk"
-      ]
-    },
-    {
-      "urn": "123146",
-      "name": "Cumnor Church of England School (Voluntary Controlled)",
-      "la": "Oxfordshire",
-      "website": "http://www.cumnorprimaryschool.co.uk",
-      "assessedAt": "2026-09-04",
+      "urn": "138583",
+      "name": "Chalfont Valley E-ACT Primary Academy",
+      "la": "Buckinghamshire",
+      "website": "https://chalfontvalleyacademy.e-act.org.uk/",
+      "assessedAt": "2026-09-05",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 0,
+      "offeringsChecked": 43,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "possible_underclaim",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "church of england",
-            "our values",
-            "our vision"
+            "curriculum: Autumn Shape Poem",
+            "curriculum: Dreams and Goals",
+            "curriculum: Easter Bonnet Parade",
+            "curriculum: Elmer and Rose",
+            "curriculum: Extra Problem Solving",
+            "curriculum: Five Minutes Peace",
+            "curriculum: Handa’s Noisy Night",
+            "curriculum: Kings and Queens",
+            "curriculum: Labels and Captions",
+            "curriculum: Oi Duck-billed Platypus"
           ]
         }
       ],
+      "notes": [
+        "Merged PDF evidence from 3 document(s)"
+      ]
+    },
+    {
+      "urn": "116505",
+      "name": "St Edmund's Catholic School",
+      "la": "Portsmouth",
+      "website": "http://www.saintedmunds.org.uk",
+      "assessedAt": "2026-09-16",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 77,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
       "notes": []
     }
   ],
