@@ -1,43 +1,42 @@
 # Qualitative capture loop
 
-- Ran at: `2026-11-24T18:48:47.414366+00:00`
-- Ingest policy / phase: `auto` / `maintenance`
+- Ran at: `2026-11-25T18:15:49.526965+00:00`
+- Ingest policy / phase: `auto` / `se_tail`
 - Scope: `parallel`
-- LA: `Hampshire, Lambeth, Tower Hamlets`
-- Index: `public/data/schools-index.json`
-- Remaining with website (pre-capture): `0`
-- Batch limit (per stream): `15`
-- Sidecar records before → after: `8026` → `8026`
+- LA: `Dorset, East Sussex, Milton Keynes`
+- Index: `public/data/packs/milton-keynes/schools-index.json`
+- Remaining with website (pre-capture): `1`
+- Batch limit (per stream): `60`
+- Sidecar records before → after: `8026` → `8027`
 - Parallel streams: `3`
 - Synthesize provider: `none`
 - QA provider: `none`
-- QA reviewed / changed: `16` / `0`
+- QA reviewed / changed: `16` / `1`
 - Learned terms: `500`
 - Learned QA phrases: `0`
 - Dry run: `False`
 
 ## Streams
 
-- `Hampshire`: status=ok added=0 remaining=0 index=`public/data/schools-index.json`
-- `Lambeth`: status=ok added=0 remaining=0 index=`public/data/packs/lambeth/schools-index.json`
-- `Tower Hamlets`: status=ok added=0 remaining=0 index=`public/data/packs/tower-hamlets/schools-index.json`
+- `Dorset`: status=ok added=0 remaining=0 index=`public/data/packs/dorset/schools-index.json`
+- `East Sussex`: status=ok added=0 remaining=0 index=`public/data/packs/east-sussex/schools-index.json`
+- `Milton Keynes`: status=ok added=1 remaining=1 index=`public/data/packs/milton-keynes/schools-index.json`
 
 ## Notes
 
 - Hydrated working sidecar from 8026 published URN shards (prior=0 → 8026).
-- Ingest policy=auto phase=maintenance (non-London remaining=0, London remaining=0, pending London packs=0).
-- Maintenance phase: core region website ingest complete — prioritise stale re-screens, qualitative-quality-loop, and pack-quality / selective Cursor polish; expand into adjacent LAs only when ready packs exist and maintenance budgets allow (see PROGRESSIVE_NATIONAL_PACK_BUILD_ORDER).
-- Stream preferred=Hampshire exhausted (remaining=0); no replacement LA with website work.
-- Stream preferred=Lambeth exhausted (remaining=0); no replacement LA with website work.
-- Stream preferred=Tower Hamlets exhausted (remaining=0); no replacement LA with website work.
+- Ingest policy=auto phase=se_tail (non-London remaining=1, London remaining=0, pending London packs=0).
+- Stream preferred=Hampshire exhausted (remaining=0); advanced to Milton Keynes (remaining=1).
+- Stream preferred=Dorset exhausted (remaining=0); no replacement LA with website work.
+- Stream preferred=East Sussex exhausted (remaining=0); no replacement LA with website work.
 - Enriched schoolWebsite from GIAS (seed + ready packs).
-- Stream LA=Hampshire index=public/data/schools-index.json remainingWithWebsite=0.
-- Stream LA=Lambeth index=public/data/packs/lambeth/schools-index.json remainingWithWebsite=0.
-- Stream LA=Tower Hamlets index=public/data/packs/tower-hamlets/schools-index.json remainingWithWebsite=0.
-- Running 3 capture streams in parallel (limit 15 each).
-- Merged 3 partial sidecar(s) → 8026 records (union size 8026).
-- Captured batch (sidecar 8026 → 8026); learned terms now 508.
-- No new captures — website pools exhausted for selected streams (allow-empty no-op); still running synth/QA/refresh budget.
+- Stream LA=Milton Keynes index=public/data/packs/milton-keynes/schools-index.json remainingWithWebsite=1.
+- Stream LA=Dorset index=public/data/packs/dorset/schools-index.json remainingWithWebsite=0.
+- Stream LA=East Sussex index=public/data/packs/east-sussex/schools-index.json remainingWithWebsite=0.
+- Running 3 capture streams in parallel (limit 60 each).
+- Merged 3 partial sidecar(s) → 8027 records (union size 8027).
+- Captured batch (sidecar 8026 → 8027); learned terms now 508.
 - Merged sidecar into 3 schools-index file(s).
 - Selective synth provider=none; learned terms after citation merge=500.
-- QA provider=none: reviewed 16, changed 0, learned phrases +0.
+- QA provider=none: reviewed 16, changed 1, learned phrases +0.
+- Re-merged affected schools-index files after QA fixes.
