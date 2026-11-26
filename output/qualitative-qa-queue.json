@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25",
+  "generatedAt": "2026-11-26",
   "dryRun": false,
   "count": 16,
   "schools": [
@@ -33,41 +33,6 @@
         }
       ],
       "status": "no_change"
-    },
-    {
-      "urn": "130316",
-      "name": "Dorchester Learning Centre",
-      "score": 6.0,
-      "flags": [
-        "chrome"
-      ],
-      "findings": [
-        {
-          "area": "ethos",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Catering The DLC kitchen aims to provide a safe, welcoming, and supportive environment where nutritious food contributes to the wellbeing, stability, and positive development of every pupil.",
-            "Admin Team The Admin Team\u2019s aim is to provide a well-organised and supportive environment through clear communication and a thoughtful, structured approach, helping students feel safe and well cared for throughout their time at school.",
-            "We foster a safe, supportive environment where students are encouraged to experiment, take creative risks, and develop confidence in their ideas.",
-            "Provide a safe and supportive environment: Create lessons where students feel comfortable making mistakes and trying again, building resilience."
-          ],
-          "source": "heuristic"
-        },
-        {
-          "area": "behaviour",
-          "action": "strip",
-          "reason": "Signals are site chrome or nav chrome labels.",
-          "junkClass": "chrome",
-          "offendingExcerpts": [
-            "Catering The DLC kitchen aims to provide a safe, welcoming, and supportive environment where nutritious food contributes to the wellbeing, stability, and positive development of every pupil."
-          ],
-          "source": "heuristic"
-        }
-      ],
-      "status": "auto_fixed",
-      "changes": 2
     },
     {
       "urn": "147128",
@@ -367,6 +332,27 @@
           "junkClass": "cms_chrome",
           "offendingExcerpts": [
             "Moderate publicly visible evidence for community and parental engagement (3 specific items). Listed provision includes Facebook, Instagram, LinkedIn."
+          ],
+          "source": "heuristic"
+        }
+      ],
+      "status": "no_change"
+    },
+    {
+      "urn": "109748",
+      "name": "Blagdon Nursery School",
+      "score": 3.0,
+      "flags": [
+        "admissions"
+      ],
+      "findings": [
+        {
+          "area": "curriculum",
+          "action": "strip",
+          "reason": "Admissions / settling-in marketing is not enrichment evidence.",
+          "junkClass": "admissions",
+          "offendingExcerpts": [
+            "The school website lists Federation Charter, Federation SEND Charter, Governors' Committees, Letters Home, New Starters Information, REYS Governing Board and 1 more. Information ap"
           ],
           "source": "heuristic"
         }
