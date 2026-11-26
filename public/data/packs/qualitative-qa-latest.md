@@ -1,16 +1,18 @@
 # Qualitative QA loop
 
-- Ran at: `2026-11-26T17:44:43.117273+00:00`
+- Ran at: `2026-11-26T19:26:52.496129+00:00`
 - Provider: `none`
-- Reviewed: `16`
-- Schools changed: `0`
-- Findings applied: `0`
+- Reviewed: `41`
+- Schools changed: `6`
+- Findings applied: `6`
 - New learned phrases: `0`
 - Dry run: `False`
 
 ## Notes
 
-- Reviewed top 16 suspect(s); provider=none.
+- Applied QA fixes to 6 school(s) (6 area finding(s)).
+- Learned 0 new junk phrase(s) (store size 900).
+- Reviewed top 41 suspect(s); provider=none.
 
 ## Suspects
 
@@ -30,3 +32,7 @@
 - `151930` St Peter's Catholic Primary School, Waterlooville — score 5.0 flags=cms_chrome
 - `116383` St Swithun Wells Catholic Primary School, Chandlers Ford — score 5.0 flags=cms_chrome
 - `109748` Blagdon Nursery School — score 3.0 flags=admissions
+- `141046` Blandford St Mary Church of England Primary School — score 3.0 flags=chrome
+- `142690` Bridport Primary School — score 3.0 flags=chrome
+- `101251` Brookhill Nursery School — score 3.0 flags=admissions
+- `114623` Cumnor House School — score 3.0 flags=chrome
