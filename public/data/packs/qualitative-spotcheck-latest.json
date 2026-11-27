@@ -1,15 +1,15 @@
 {
-  "ranAt": "2026-11-26T21:11:14.431797+00:00",
+  "ranAt": "2026-11-27T20:55:52.819024+00:00",
   "dryRun": false,
-  "seed": 3832732755,
+  "seed": 372294243,
   "rotatedAnchors": [],
   "activeAnchors": [],
   "requestedSampleSize": 7,
   "sampleSize": 7,
   "maxPages": 3,
   "verdictCounts": {
-    "warn": 6,
-    "fetch_error": 1
+    "pass": 1,
+    "warn": 6
   },
   "failCount": 0,
   "warnCount": 6,
@@ -23,14 +23,30 @@
   "strict": false,
   "schools": [
     {
-      "urn": "102365",
-      "name": "McMillan Nursery School",
-      "la": "Hillingdon",
-      "website": "https://mcmillannursery.co.uk",
-      "assessedAt": "2026-09-28",
+      "urn": "150750",
+      "name": "OMG Education",
+      "la": "Tower Hamlets",
+      "website": "http://omg.school/",
+      "assessedAt": "2026-09-24",
+      "verdict": "pass",
+      "pagesFetched": 3,
+      "offeringsChecked": 2,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [],
+      "notes": [
+        "Merged PDF evidence from 3 document(s)"
+      ]
+    },
+    {
+      "urn": "101690",
+      "name": "St David's Prep",
+      "la": "Bromley",
+      "website": "https://www.stdavidsprep.com",
+      "assessedAt": "2026-10-06",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 94,
+      "offeringsChecked": 23,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -39,66 +55,119 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: mathematics"
+            "curriculum: music",
+            "curriculum: which includes latin",
+            "enrichment: music",
+            "enrichment: choir",
+            "enrichment: including: “she’s learning spanish",
+            "enrichment: does pe",
+            "enrichment: after-school club",
+            "enrichment: wrap-around care",
+            "enrichment: holiday club",
+            "enrichment: after-school clubs"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "102593",
-      "name": "St Mary's CofE (Aided) Primary School",
-      "la": "Kingston upon Thames",
-      "website": "http://www.stmaryschessington.co.uk/",
-      "assessedAt": "2026-10-05",
-      "verdict": "fetch_error",
-      "pagesFetched": 0,
-      "offeringsChecked": 0,
+      "urn": "116483",
+      "name": "Calmore Junior School",
+      "la": "Hampshire",
+      "website": "https://www.calmorejunior.co.uk",
+      "assessedAt": "2026-08-07",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 8,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "fetch_failed",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "detail": "Could not fetch live school pages for source comparison"
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: computing",
+            "curriculum: geography"
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "urn": "143902",
+      "name": "Therfield School",
+      "la": "Surrey",
+      "website": "http://www.therfield.surrey.sch.uk",
+      "assessedAt": "2026-09-14",
+      "verdict": "warn",
+      "pagesFetched": 3,
+      "offeringsChecked": 41,
+      "chromeOfferings": [],
+      "pdfJunkOfferings": [],
+      "flags": [
+        {
+          "code": "unsupported_offerings",
+          "severity": "warn",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
+          "excerpts": [
+            "curriculum: chemistry",
+            "curriculum: mathematics",
+            "curriculum: computer science",
+            "curriculum: geography",
+            "curriculum: computing",
+            "curriculum: food technology",
+            "curriculum: Applicaa",
+            "curriculum: Business Studies",
+            "curriculum: Media Studies",
+            "curriculum: Politics"
+          ]
         }
       ],
       "notes": [
-        "Homepage fetch failed for http://www.stmaryschessington.co.uk/"
+        "Merged PDF evidence from 3 document(s)"
       ]
     },
     {
-      "urn": "148046",
-      "name": "Graduately Developing Futures",
-      "la": "Dorset",
-      "website": "https://www.graduatelydevelopingfutures.co.uk",
-      "assessedAt": "2026-08-25",
+      "urn": "142352",
+      "name": "Hill View Primary School",
+      "la": "Bournemouth, Christchurch and Poole",
+      "website": "https://www.hillviewacademy.org",
+      "assessedAt": "2026-09-11",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 16,
+      "offeringsChecked": 57,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
         {
-          "code": "possible_underclaim",
+          "code": "unsupported_offerings",
           "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
+          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "our ethos",
-            "our mission",
-            "our vision"
+            "curriculum: geography",
+            "curriculum: music",
+            "curriculum: Baseline Assessments.",
+            "curriculum: Book Swaps",
+            "curriculum: Librarians/ Reading Ambassadors.",
+            "curriculum: Library Books",
+            "curriculum: Library Visits/New Library.",
+            "curriculum: Nuffield Early Language Assessments",
+            "curriculum: Phonics Screening",
+            "curriculum: Reading Assemblies"
           ]
         }
       ],
-      "notes": []
+      "notes": [
+        "Merged PDF evidence from 2 document(s)"
+      ]
     },
     {
-      "urn": "143643",
-      "name": "East Claydon Church of England School",
-      "la": "Buckinghamshire",
-      "website": "https://www.eastclaydon.org.uk",
-      "assessedAt": "2026-09-07",
+      "urn": "125965",
+      "name": "Holbrook Primary School",
+      "la": "West Sussex",
+      "website": "https://www.holbrookschool.co.uk/",
+      "assessedAt": "2026-09-06",
       "verdict": "warn",
       "pagesFetched": 3,
       "offeringsChecked": 11,
@@ -110,33 +179,28 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
+            "curriculum: mathematics",
+            "curriculum: discovery that mathematics brings",
             "enrichment: music",
-            "ethos: Commitment"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "church of england",
-            "our values",
-            "our vision"
+            "enrichment: School Productions",
+            "enrichment: music enriches the lives of people",
+            "send: Inclusion",
+            "community: Horsham Schools Partnership",
+            "community: music"
           ]
         }
       ],
       "notes": []
     },
     {
-      "urn": "142163",
-      "name": "St Mary's School",
-      "la": "East Sussex",
-      "website": "http://www.sabden.org.uk",
-      "assessedAt": "2026-08-27",
+      "urn": "110008",
+      "name": "Brightwalton C.E. Aided Primary School",
+      "la": "West Berkshire",
+      "website": "https://www.brightwalton.w-berks.sch.uk",
+      "assessedAt": "2026-09-12",
       "verdict": "warn",
       "pagesFetched": 3,
-      "offeringsChecked": 25,
+      "offeringsChecked": 36,
       "chromeOfferings": [],
       "pdfJunkOfferings": [],
       "flags": [
@@ -145,86 +209,15 @@
           "severity": "warn",
           "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
           "excerpts": [
-            "curriculum: Academy Performance",
-            "curriculum: Consultation",
-            "curriculum: Cuckmere House School",
-            "curriculum: Frank Stanford",
-            "curriculum: New Horizons School",
-            "curriculum: St Mary's School",
-            "curriculum: Statement of Purpose",
-            "curriculum: Subjects",
-            "curriculum: Trustees",
-            "ethos: Frank Stanford"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "125273",
-      "name": "Oakwood School",
-      "la": "Surrey",
-      "website": "http://www.oakwood.surrey.sch.uk",
-      "assessedAt": "2026-09-06",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 66,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "curriculum: duke of edinburgh",
-            "curriculum: Anti-Radicalisation and Anti-Extremism",
-            "curriculum: Attendance",
-            "curriculum: Awards & Achievements",
-            "curriculum: Challenge Distinction Project",
-            "curriculum: Exams & Assessment",
-            "curriculum: Extra Curricular",
-            "curriculum: Groupcall Messenger",
-            "ethos: Anti-Radicalisation and Anti-Extremism",
-            "ethos: Challenge Distinction Project"
-          ]
-        },
-        {
-          "code": "possible_underclaim",
-          "severity": "warn",
-          "area": "ethos",
-          "detail": "Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells",
-          "excerpts": [
-            "our vision"
-          ]
-        }
-      ],
-      "notes": []
-    },
-    {
-      "urn": "116051",
-      "name": "Lymington Junior School",
-      "la": "Hampshire",
-      "website": "https://www.lymingtonjuniorschool.org/",
-      "assessedAt": "2026-08-19",
-      "verdict": "warn",
-      "pagesFetched": 3,
-      "offeringsChecked": 27,
-      "chromeOfferings": [],
-      "pdfJunkOfferings": [],
-      "flags": [
-        {
-          "code": "unsupported_offerings",
-          "severity": "warn",
-          "detail": "Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check)",
-          "excerpts": [
-            "enrichment: after school club",
-            "enrichment: childcare",
-            "ethos: Lower School Division Workshop",
-            "ethos: Upper School Division Workshop",
-            "send: SEND Information Report",
-            "community: Attendance",
-            "community: Communication"
+            "curriculum: Formative and Summative Assessment",
+            "curriculum: Introduction",
+            "curriculum: Professional Responsibilities",
+            "curriculum: Service Perseverance Wisdom Friendship Trust",
+            "enrichment: swimming",
+            "enrichment: PE and sport premium are sustainable?",
+            "enrichment: volleyball",
+            "enrichment: seated volleyball",
+            "enrichment: netball"
           ]
         }
       ],

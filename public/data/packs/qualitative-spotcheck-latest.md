@@ -1,10 +1,10 @@
-# Qualitative source spot-check — 2026-11-26T21:11:14.431797+00:00
+# Qualitative source spot-check — 2026-11-27T20:55:52.819024+00:00
 
 - Mode: `spotcheck`
 - Sample size: `7` (requested `7`)
-- Seed: `3832732755`
+- Seed: `372294243`
 - Max pages / school: `3`
-- Verdicts: pass `0` · warn `6` · fail `0` · fetch_error `1` · skip `0`
+- Verdicts: pass `1` · warn `6` · fail `0` · fetch_error `0` · skip `0`
 - Automated fail bar: chrome / PDF junk in offerings, or overclaim with chrome-heavy cells
 - Learning candidates written: `0` (auto `0` · gated `0`)
 - Auto-learned into learned store: `False`
@@ -12,22 +12,19 @@
 
 ## Schools
 
-- **McMillan Nursery School** (`102365`, Hillingdon) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics
-- **St Mary's CofE (Aided) Primary School** (`102593`, Kingston upon Thames) — `fetch_error`
-  - `warn` `fetch_failed`: Could not fetch live school pages for source comparison
-- **Graduately Developing Futures** (`148046`, Dorset) — `warn`
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our ethos, our mission, our vision
-- **East Claydon Church of England School** (`143643`, Buckinghamshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: music, ethos: Commitment
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — church of england, our values, our vision
-- **St Mary's School** (`142163`, East Sussex) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Academy Performance, curriculum: Consultation, curriculum: Cuckmere House School, curriculum: Frank Stanford
-- **Oakwood School** (`125273`, Surrey) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: duke of edinburgh, curriculum: Anti-Radicalisation and Anti-Extremism, curriculum: Attendance, curriculum: Awards & Achievements
-  - `warn` `possible_underclaim` [ethos]: Live pages show distinctive ethos/mission language weakly reflected in product ethos/behaviour cells — our vision
-- **Lymington Junior School** (`116051`, Hampshire) — `warn`
-  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — enrichment: after school club, enrichment: childcare, ethos: Lower School Division Workshop, ethos: Upper School Division Workshop
+- **OMG Education** (`150750`, Tower Hamlets) — `pass`
+- **St David's Prep** (`101690`, Bromley) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: music, curriculum: which includes latin, enrichment: music, enrichment: choir
+- **Calmore Junior School** (`116483`, Hampshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: computing, curriculum: geography
+- **Therfield School** (`143902`, Surrey) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: chemistry, curriculum: mathematics, curriculum: computer science, curriculum: geography
+- **Hill View Primary School** (`142352`, Bournemouth, Christchurch and Poole) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: geography, curriculum: music, curriculum: Baseline Assessments., curriculum: Book Swaps
+- **Holbrook Primary School** (`125965`, West Sussex) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: mathematics, curriculum: discovery that mathematics brings, enrichment: music, enrichment: School Productions
+- **Brightwalton C.E. Aided Primary School** (`110008`, West Berkshire) — `warn`
+  - `warn` `unsupported_offerings`: Offerings not clearly supported by fetched live page text (may be PDF-only evidence — human check) — curriculum: Formative and Summative Assessment, curriculum: Introduction, curriculum: Professional Responsibilities, curriculum: Service Perseverance Wisdom Friendship Trust
 
 ## Notes
 
