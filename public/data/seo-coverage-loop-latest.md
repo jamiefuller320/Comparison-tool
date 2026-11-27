@@ -1,6 +1,6 @@
 # SEO coverage loop
 
-- Generated: `2026-11-20T15:57:23Z`
+- Generated: `2026-11-27T17:17:17Z`
 - Dry run: **False**
 - Added areas: **0** (none — budget full or no ready candidates)
 
@@ -34,7 +34,7 @@
 | Bracknell Forest | 46 | 1 | 95.7 | 91.3 |
 | Lambeth | 95 | 1 | 94.7 | 57.9 |
 | Tower Hamlets | 109 | 1 | 97.2 | 87.2 |
-| Waltham Forest | 83 | 1 | 100.0 | 71.1 |
+| Waltham Forest | 83 | 1 | 100.0 | 96.4 |
 | Newham | 107 | 1 | 98.1 | 92.5 |
 | Lewisham | 95 | 2 | 97.9 | 61.1 |
 | Enfield | 107 | 2 | 99.1 | 95.3 |
@@ -46,13 +46,13 @@
 | Hounslow | 89 | 4 | 97.8 | 86.5 |
 | Havering | 90 | 4 | 96.7 | 93.3 |
 | Southwark | 116 | 1 | 97.4 | 94.0 |
-| Islington | 67 | 1 | 100.0 | 85.1 |
+| Islington | 67 | 1 | 100.0 | 95.5 |
 | Greenwich | 103 | 1 | 96.1 | 89.3 |
 | Barnet | 167 | 3 | 97.0 | 84.4 |
 | Sutton | 72 | 3 | 95.8 | 90.3 |
 | Barking and Dagenham | 67 | 2 | 94.0 | 89.6 |
 | Harrow | 72 | 3 | 97.2 | 93.1 |
-| Redbridge | 93 | 4 | 95.7 | 62.4 |
+| Redbridge | 93 | 4 | 95.7 | 91.4 |
 | Hillingdon | 106 | 5 | 95.3 | 92.5 |
 | Croydon | 153 | 5 | 94.8 | 88.2 |
 | Haringey | 92 | 1 | 93.5 | 59.8 |
@@ -64,15 +64,15 @@
 | Camden | 89 | 1 | 91.0 | 64.0 |
 | Westminster | 83 | 1 | 88.0 | 60.2 |
 | Kensington and Chelsea | 69 | 1 | 95.7 | 78.3 |
-| West Sussex | 332 | 12 | 97.9 | 94.0 |
+| West Sussex | 332 | 12 | 98.5 | 94.9 |
 | City of London | 6 | 1 | 100.0 | 100.0 |
 | Southampton | 83 | 1 | 97.6 | 96.4 |
 
 ## AEO / GEO readiness
 
-- llms.txt: `/llms.txt` (generated 2026-11-17T16:04:31.685Z)
+- llms.txt: `/llms.txt` (generated 2026-11-24T17:51:16.333Z)
 - School pages with Ofsted Q&A: **71%**
-- School pages with inspection précis: **86%**
+- School pages with inspection précis: **87%**
 - School pages with website evidence (quality-gated): **25%**
 
 ## Candidate packs (not yet in coverage)
@@ -84,14 +84,15 @@
 | Oxfordshire | 359 | 13 | 97.2 | 93.3 |
 | West Berkshire | 99 | 4 | 97.0 | 96.0 |
 | Wokingham | 84 | 2 | 96.4 | 92.9 |
-| Surrey | 507 | 23 | 96.3 | 93.1 |
-| Milton Keynes | 123 | 2 | 95.9 | 92.7 |
+| Surrey | 506 | 23 | 96.4 | 93.3 |
 | Reading | 71 | 1 | 95.8 | 93.0 |
 | East Sussex | 216 | 9 | 95.4 | 89.8 |
+| Milton Keynes | 124 | 2 | 95.2 | 91.9 |
 | Brighton and Hove | 74 | 2 | 94.6 | 90.5 |
 | Bournemouth, Christchurch and Poole | 111 | 3 | 94.6 | 91.9 |
 | Gloucestershire | 329 | 9 | 92.7 | 0.0 |
 | Somerset | 301 | 13 | 92.0 | 0.0 |
+
 
 <!-- search-console:start -->
 ## Search Console
